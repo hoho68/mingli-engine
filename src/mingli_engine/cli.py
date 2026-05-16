@@ -94,6 +94,8 @@ def _chart_from_dict(data: dict[str, Any]) -> BaziChart:
     )
     if not isinstance(data["pillars"], list):
         raise TypeError("pillars must be a list")
+    if len(data["pillars"]) != 4:
+        raise InputContractError("pillars must contain exactly four items")
     return BaziChart(
         birth_profile=_birth_profile_from_dict(
             data["birth_profile"],

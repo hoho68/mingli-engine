@@ -1,5 +1,7 @@
 from dataclasses import replace
 
+import pytest
+
 from mingli_engine.report_schema import build_report
 
 
@@ -33,3 +35,10 @@ def test_build_report_blocks_lifespan_focus_topic(sample_bazi_chart):
 
     assert report.safety_review.allowed is False
     assert "lifespan_or_death_timing" in report.safety_review.red_line_categories
+
+
+def test_build_report_rejects_chart_without_four_pillars(sample_bazi_chart):
+    chart = replace(sample_bazi_chart, pillars=[])
+
+    with pytest.raises(ValueError, match="four pillars"):
+        build_report(chart)

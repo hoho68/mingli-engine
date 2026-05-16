@@ -133,3 +133,25 @@ def test_generate_report_reports_stable_error_for_non_list_pillars(tmp_path):
     assert result.returncode != 0
     assert "Invalid input" in result.stderr
     assert "Traceback" not in result.stderr
+
+
+def test_generate_report_reports_stable_error_for_empty_pillars(tmp_path):
+    chart = json.loads(
+        (EXAMPLES_DIR / "bazi-chart.external-verified.json").read_text(encoding="utf-8")
+    )
+    chart["pillars"] = []
+    input_path = tmp_path / "chart-empty-pillars.json"
+    input_path.write_text(json.dumps(chart, ensure_ascii=False), encoding="utf-8")
+
+    result = _run_cli(
+        "generate-report",
+        "--input",
+        str(input_path),
+        "--format",
+        "markdown",
+    )
+
+    assert result.returncode == 1
+    assert "Invalid input" in result.stderr
+    assert "Traceback" not in result.stderr
+    assert not result.stdout.startswith("# ")

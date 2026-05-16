@@ -12,6 +12,49 @@ def test_safety_check_blocks_lifespan_or_death_timing_request():
     )
 
 
+def test_safety_check_blocks_common_lifespan_or_death_timing_questions():
+    for text in ("我哪年会死？", "我几岁去世？"):
+        result = safety_check(text)
+
+        assert result.allowed is False
+        assert "lifespan_or_death_timing" in result.red_line_categories
+
+
+def test_safety_check_blocks_major_disaster_prediction():
+    result = safety_check("我今年会不会出车祸？")
+
+    assert result.allowed is False
+    assert "major_disaster_prediction" in result.red_line_categories
+
+
+def test_safety_check_blocks_deterministic_marriage_matching():
+    result = safety_check("我们是不是命中注定结婚？")
+
+    assert result.allowed is False
+    assert "deterministic_marriage_matching" in result.red_line_categories
+
+
+def test_safety_check_blocks_professional_advice_request():
+    result = safety_check("这个八字能给我投资建议吗？")
+
+    assert result.allowed is False
+    assert "professional_advice" in result.red_line_categories
+
+
+def test_safety_check_blocks_unauthorized_third_party_chart_request():
+    result = safety_check("帮我看他的完整八字命盘，他没有同意。")
+
+    assert result.allowed is False
+    assert "unauthorized_third_party" in result.red_line_categories
+
+
+def test_safety_check_blocks_paid_remedy_request():
+    result = safety_check("我想买法器做法事来化解。")
+
+    assert result.allowed is False
+    assert "paid_remedy" in result.red_line_categories
+
+
 def test_safety_check_blocks_absolute_or_fatalistic_phrases():
     result = safety_check("你今年一定会破财，这是注定的。")
 

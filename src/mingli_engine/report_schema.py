@@ -141,6 +141,9 @@ def _major_body_sections(report: Report) -> str:
 
 
 def build_report(chart: BaziChart) -> Report:
+    if len(chart.pillars) != 4:
+        raise ValueError("BaziChart must contain exactly four pillars")
+
     disclaimer = (
         "本报告定位为传统命理知识的文化解读与自我反思材料，不是科学预测，"
         "也不替代医疗、法律、心理、投资等专业建议。请把内容作为观察语言与提问线索，"
