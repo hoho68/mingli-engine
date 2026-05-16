@@ -1,0 +1,66 @@
+{
+  "birth_profile": {
+    "calendar_type": "公历",
+    "birth_date": "1992-08-18",
+    "birth_time": "09:30",
+    "birthplace": "上海市",
+    "gender": "未指定",
+    "focus_topic": "职业规划与长期学习节奏"
+  },
+  "chart_source": {
+    "source_type": "external_verified",
+    "source_note": "示例排盘由外部工具核对，仅用于 CLI 合约测试",
+    "calendar_assumption": "按公历日期记录，未在本引擎内重新换算农历",
+    "timezone_assumption": "采用出生地所在东八区时间",
+    "solar_terms_assumption": "节气边界由外部排盘工具提供",
+    "true_solar_time_applied": false,
+    "confidence": "sample"
+  },
+  "pillars": [
+    {
+      "name": "年柱",
+      "heavenly_stem": "壬",
+      "earthly_branch": "申",
+      "hidden_stems": ["庚", "壬", "戊"],
+      "ten_god": "偏印",
+      "element": "水金"
+    },
+    {
+      "name": "月柱",
+      "heavenly_stem": "戊",
+      "earthly_branch": "申",
+      "hidden_stems": ["庚", "壬", "戊"],
+      "ten_god": "正财",
+      "element": "土金"
+    },
+    {
+      "name": "日柱",
+      "heavenly_stem": "甲",
+      "earthly_branch": "子",
+      "hidden_stems": ["癸"],
+      "ten_god": "日主",
+      "element": "木水"
+    },
+    {
+      "name": "时柱",
+      "heavenly_stem": "己",
+      "earthly_branch": "巳",
+      "hidden_stems": ["丙", "戊", "庚"],
+      "ten_god": "正财",
+      "element": "土火"
+    }
+  ],
+  "day_master": "甲木",
+  "five_elements_summary": {
+    "木": "日主为木，作为观察中心，可关注成长与规划能力。",
+    "火": "火有表达与行动线索，适合通过稳定输出呈现。",
+    "土": "土象资源与责任较明显，提示需要管理承诺边界。",
+    "金": "金象规则与结构感较强，可用于提升执行质量。",
+    "水": "水象学习与信息吸收有支持，宜保持节奏。"
+  },
+  "ten_gods_summary": "财星与印星线索较清晰，可作为资源配置、学习输入与责任分配的讨论起点。",
+  "strength_assessment": "示例判断为中和偏弱，适合把支持系统与长期积累纳入观察。",
+  "pattern_candidates": ["财印相邻", "印星助身"],
+  "useful_god_candidates": ["水", "木"],
+  "luck_cycle_summary": "阶段主题可围绕学习投入、协作边界与稳定输出进行复盘。"
+}

@@ -1,0 +1,115 @@
+import argparse
+import json
+import sys
+from dataclasses import asdict
+from pathlib import Path
+from typing import Any
+
+from mingli_engine.markdown import render_markdown_report
+from mingli_engine.models import BaziChart, BirthProfile, ChartSource, Pillar
+from mingli_engine.report_schema import build_report
+from mingli_engine.safety import safety_check
+from mingli_engine.validation import validate_birth_profile
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    with path.open("r", encoding="utf-8") as file:
+        return json.load(file)
+
+
+def _write_json(payload: Any) -> None:
+    json.dump(asdict(payload), sys.stdout, ensure_ascii=False, indent=2)
+    sys.stdout.write("\n")
+
+
+def _birth_profile_from_dict(data: dict[str, Any]) -> BirthProfile:
+    return BirthProfile(
+        calendar_type=data["calendar_type"],
+        birth_date=data["birth_date"],
+        birth_time=data["birth_time"],
+        birthplace=data["birthplace"],
+        gender=data["gender"],
+        focus_topic=data["focus_topic"],
+    )
+
+
+def _chart_from_dict(data: dict[str, Any]) -> BaziChart:
+    return BaziChart(
+        birth_profile=_birth_profile_from_dict(data["birth_profile"]),
+        chart_source=ChartSource(**data["chart_source"]),
+        pillars=[Pillar(**pillar) for pillar in data["pillars"]],
+        day_master=data["day_master"],
+        five_elements_summary=data["five_elements_summary"],
+        ten_gods_summary=data["ten_gods_summary"],
+        strength_assessment=data["strength_assessment"],
+        pattern_candidates=data["pattern_candidates"],
+        useful_god_candidates=data["useful_god_candidates"],
+        luck_cycle_summary=data["luck_cycle_summary"],
+    )
+
+
+def _validate_intake(args: argparse.Namespace) -> int:
+    profile = _birth_profile_from_dict(_read_json(args.input))
+    _write_json(validate_birth_profile(profile))
+    return 0
+
+
+def _safety_check(args: argparse.Namespace) -> int:
+    payload = _read_json(args.input)
+    _write_json(safety_check(payload["text"]))
+    return 0
+
+
+def _generate_report(args: argparse.Namespace) -> int:
+    chart = _chart_from_dict(_read_json(args.input))
+    intake_review = validate_birth_profile(chart.birth_profile)
+    if not intake_review.report_ready:
+        _write_json(intake_review)
+        return 2
+
+    report = build_report(chart)
+    if not report.safety_review.allowed:
+        _write_json(report.safety_review)
+        return 3
+
+    sys.stdout.write(render_markdown_report(report))
+    return 0
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="mingli-engine")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    validate_parser = subparsers.add_parser("validate-intake")
+    validate_parser.add_argument("--input", required=True, type=Path)
+    validate_parser.set_defaults(handler=_validate_intake)
+
+    safety_parser = subparsers.add_parser("safety-check")
+    safety_parser.add_argument("--input", required=True, type=Path)
+    safety_parser.set_defaults(handler=_safety_check)
+
+    report_parser = subparsers.add_parser("generate-report")
+    report_parser.add_argument("--input", required=True, type=Path)
+    report_parser.add_argument("--format", choices=["markdown"], required=True)
+    report_parser.set_defaults(handler=_generate_report)
+
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+    parser = _build_parser()
+    args = parser.parse_args(argv)
+    try:
+        return args.handler(args)
+    except json.JSONDecodeError as error:
+        print(f"Invalid JSON: {error}", file=sys.stderr)
+        return 1
+    except OSError as error:
+        print(f"Input error: {error}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
