@@ -31,3 +31,17 @@ def test_safety_check_allows_non_predictive_lifespan_statement():
 
     assert result.allowed is True
     assert result.red_line_categories == []
+
+
+def test_safety_check_blocks_later_unsafe_phrase_after_safe_disclaimer():
+    result = safety_check("本报告不保证一定会发生，但你今年一定会破财。")
+
+    assert result.allowed is False
+    assert "一定会" in result.prohibited_phrases
+
+
+def test_safety_check_blocks_later_lifespan_prediction_after_safe_disclaimer():
+    result = safety_check("本报告不预测寿命，但你想让我预测寿命也可以。")
+
+    assert result.allowed is False
+    assert result.red_line_categories == ["lifespan_or_death_timing"]

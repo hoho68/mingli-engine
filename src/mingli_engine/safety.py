@@ -36,12 +36,21 @@ def _is_safe_context(text: str, start_index: int) -> bool:
     return any(marker in nearby_context for marker in SAFE_CONTEXT_MARKERS)
 
 
+def _iter_match_starts(text: str, pattern: str):
+    start_index = text.find(pattern)
+    while start_index != -1:
+        yield start_index
+        start_index = text.find(pattern, start_index + len(pattern))
+
+
 def _find_unsafe_phrases(text: str, phrases: tuple[str, ...]) -> list[str]:
     unsafe_phrases: list[str] = []
 
     for phrase in phrases:
-        start_index = text.find(phrase)
-        if start_index != -1 and not _is_safe_context(text, start_index):
+        if any(
+            not _is_safe_context(text, start_index)
+            for start_index in _iter_match_starts(text, phrase)
+        ):
             unsafe_phrases.append(phrase)
 
     return unsafe_phrases
@@ -53,8 +62,10 @@ def _has_lifespan_or_death_timing_request(text: str) -> bool:
         return True
 
     for pattern in LIFESPAN_OR_DEATH_TIMING_PATTERNS:
-        start_index = text.find(pattern)
-        if start_index != -1 and not _is_safe_context(text, start_index):
+        if any(
+            not _is_safe_context(text, start_index)
+            for start_index in _iter_match_starts(text, pattern)
+        ):
             return True
 
     return False
