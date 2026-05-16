@@ -19,7 +19,7 @@ def test_render_markdown_report_contains_required_headings(sample_bazi_chart):
         "## 优势与议题",
         "## 阶段概览",
         "## 行动建议",
-        "## 术语简释",
+        "## 术语简注",
         "## 伦理边界提醒",
     ):
         assert heading in markdown

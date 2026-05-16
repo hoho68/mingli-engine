@@ -1,7 +1,10 @@
 from dataclasses import replace
 
-from mingli_engine.models import BaziChart, Report
+from mingli_engine.models import BaziChart, Report, SafetyReviewResult
 from mingli_engine.safety import safety_check
+
+
+LIFESPAN_FOCUS_TOPICS = frozenset({"寿命"})
 
 
 def _format_true_solar_time(value: bool | None) -> str:
@@ -16,6 +19,46 @@ def _format_list(values: list[str]) -> str:
     if not values:
         return "暂无明确候选"
     return "、".join(values)
+
+
+def _merge_safety_reviews(
+    *reviews: SafetyReviewResult, disclaimer_present: bool
+) -> SafetyReviewResult:
+    red_line_categories: list[str] = []
+    prohibited_phrases: list[str] = []
+    redirect_messages: list[str] = []
+
+    for review in reviews:
+        for category in review.red_line_categories:
+            if category not in red_line_categories:
+                red_line_categories.append(category)
+        for phrase in review.prohibited_phrases:
+            if phrase not in prohibited_phrases:
+                prohibited_phrases.append(phrase)
+        if review.redirect_message and review.redirect_message not in redirect_messages:
+            redirect_messages.append(review.redirect_message)
+
+    return SafetyReviewResult(
+        allowed=not red_line_categories and not prohibited_phrases,
+        red_line_categories=red_line_categories,
+        prohibited_phrases=prohibited_phrases,
+        disclaimer_present=disclaimer_present,
+        redirect_message="\n".join(redirect_messages),
+    )
+
+
+def _review_focus_topic(focus_topic: str) -> SafetyReviewResult:
+    review = safety_check(focus_topic, disclaimer_present=True)
+    if focus_topic.strip() not in LIFESPAN_FOCUS_TOPICS:
+        return review
+
+    lifespan_review = SafetyReviewResult(
+        allowed=False,
+        red_line_categories=["lifespan_or_death_timing"],
+        disclaimer_present=True,
+        redirect_message="不预测寿命或死亡时间。可改为讨论风险意识、身心节律与生活安排。",
+    )
+    return _merge_safety_reviews(review, lifespan_review, disclaimer_present=True)
 
 
 def _build_chart_card(chart: BaziChart) -> str:
@@ -173,5 +216,11 @@ def build_report(chart: BaziChart) -> Report:
             disclaimer_present=True,
         ),
     )
-    final_review = safety_check(_major_body_sections(draft_report), disclaimer_present=True)
+    body_review = safety_check(_major_body_sections(draft_report), disclaimer_present=True)
+    focus_topic_review = _review_focus_topic(chart.birth_profile.focus_topic)
+    final_review = _merge_safety_reviews(
+        body_review,
+        focus_topic_review,
+        disclaimer_present=True,
+    )
     return replace(draft_report, safety_review=final_review)

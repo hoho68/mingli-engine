@@ -25,7 +25,7 @@ def render_markdown_report(report: Report) -> str:
         report.phase_overview,
         "## 行动建议",
         report.action_suggestions,
-        "## 术语简释",
+        "## 术语简注",
         report.glossary,
         "## 伦理边界提醒",
         report.ethics_reminder,
