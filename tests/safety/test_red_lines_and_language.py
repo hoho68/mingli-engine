@@ -17,3 +17,17 @@ def test_safety_check_blocks_absolute_or_fatalistic_phrases():
 
     assert result.allowed is False
     assert {"注定", "一定会"}.issubset(set(result.prohibited_phrases))
+
+
+def test_safety_check_allows_safe_disclaimer_with_absolute_phrase():
+    result = safety_check("本报告不保证一定会发生，仅供自我观察。")
+
+    assert result.allowed is True
+    assert result.prohibited_phrases == []
+
+
+def test_safety_check_allows_non_predictive_lifespan_statement():
+    result = safety_check("本报告不预测寿命，只讨论风险意识和生活安排。")
+
+    assert result.allowed is True
+    assert result.red_line_categories == []

@@ -2,10 +2,24 @@ from mingli_engine.models import SafetyReviewResult
 
 
 PROHIBITED_PHRASES = ("必定", "注定", "一定会", "死定")
+SAFE_CONTEXT_MARKERS = (
+    "不保证",
+    "不一定",
+    "不是",
+    "并非",
+    "避免",
+    "不应",
+    "不能",
+    "禁止",
+    "不预测",
+)
 LIFESPAN_OR_DEATH_TIMING_PATTERNS = (
     "什么时候会死",
     "能活到几岁",
-    "寿命",
+    "看寿命",
+    "算寿命",
+    "预测寿命",
+    "寿命多长",
     "死期",
 )
 
@@ -15,14 +29,43 @@ LIFESPAN_OR_DEATH_TIMING_REDIRECT = (
 )
 
 
+def _is_safe_context(text: str, start_index: int) -> bool:
+    context_start = max(0, start_index - 8)
+    context_end = min(len(text), start_index + 8)
+    nearby_context = text[context_start:context_end]
+    return any(marker in nearby_context for marker in SAFE_CONTEXT_MARKERS)
+
+
+def _find_unsafe_phrases(text: str, phrases: tuple[str, ...]) -> list[str]:
+    unsafe_phrases: list[str] = []
+
+    for phrase in phrases:
+        start_index = text.find(phrase)
+        if start_index != -1 and not _is_safe_context(text, start_index):
+            unsafe_phrases.append(phrase)
+
+    return unsafe_phrases
+
+
+def _has_lifespan_or_death_timing_request(text: str) -> bool:
+    stripped_text = text.strip(" \t\r\n。！？?！")
+    if stripped_text == "寿命":
+        return True
+
+    for pattern in LIFESPAN_OR_DEATH_TIMING_PATTERNS:
+        start_index = text.find(pattern)
+        if start_index != -1 and not _is_safe_context(text, start_index):
+            return True
+
+    return False
+
+
 def safety_check(text: str, *, disclaimer_present: bool = False) -> SafetyReviewResult:
-    prohibited_phrases = [
-        phrase for phrase in PROHIBITED_PHRASES if phrase in text
-    ]
+    prohibited_phrases = _find_unsafe_phrases(text, PROHIBITED_PHRASES)
     red_line_categories: list[str] = []
     redirect_message = ""
 
-    if any(pattern in text for pattern in LIFESPAN_OR_DEATH_TIMING_PATTERNS):
+    if _has_lifespan_or_death_timing_request(text):
         red_line_categories.append("lifespan_or_death_timing")
         redirect_message = LIFESPAN_OR_DEATH_TIMING_REDIRECT
 
