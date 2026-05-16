@@ -92,3 +92,17 @@ def test_safety_check_reports_stable_error_for_missing_text(tmp_path):
     assert "Invalid input" in result.stderr
     assert "text" in result.stderr
     assert "Traceback" not in result.stderr
+
+
+def test_safety_check_reports_stable_error_for_non_string_text(tmp_path):
+    input_path = tmp_path / "non-string-text.json"
+    input_path.write_text(
+        json.dumps({"text": []}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    result = _run_cli("safety-check", "--input", str(input_path))
+
+    assert result.returncode != 0
+    assert "Invalid input" in result.stderr
+    assert "Traceback" not in result.stderr

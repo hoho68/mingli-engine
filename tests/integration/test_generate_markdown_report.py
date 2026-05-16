@@ -91,3 +91,45 @@ def test_generate_report_returns_exit_3_json_for_unsafe_focus_topic(tmp_path):
     payload = json.loads(result.stdout)
     assert payload["allowed"] is False
     assert "lifespan_or_death_timing" in payload["red_line_categories"]
+
+
+def test_generate_report_reports_stable_error_for_non_object_birth_profile(tmp_path):
+    chart = json.loads(
+        (EXAMPLES_DIR / "bazi-chart.external-verified.json").read_text(encoding="utf-8")
+    )
+    chart["birth_profile"] = []
+    input_path = tmp_path / "chart-list-birth-profile.json"
+    input_path.write_text(json.dumps(chart, ensure_ascii=False), encoding="utf-8")
+
+    result = _run_cli(
+        "generate-report",
+        "--input",
+        str(input_path),
+        "--format",
+        "markdown",
+    )
+
+    assert result.returncode != 0
+    assert "Invalid input" in result.stderr
+    assert "Traceback" not in result.stderr
+
+
+def test_generate_report_reports_stable_error_for_non_list_pillars(tmp_path):
+    chart = json.loads(
+        (EXAMPLES_DIR / "bazi-chart.external-verified.json").read_text(encoding="utf-8")
+    )
+    chart["pillars"] = {}
+    input_path = tmp_path / "chart-object-pillars.json"
+    input_path.write_text(json.dumps(chart, ensure_ascii=False), encoding="utf-8")
+
+    result = _run_cli(
+        "generate-report",
+        "--input",
+        str(input_path),
+        "--format",
+        "markdown",
+    )
+
+    assert result.returncode != 0
+    assert "Invalid input" in result.stderr
+    assert "Traceback" not in result.stderr

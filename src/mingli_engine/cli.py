@@ -51,11 +51,18 @@ def _require_fields(data: dict[str, Any], fields: tuple[str, ...]) -> None:
         )
 
 
+def _require_object(value: Any, field_name: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise TypeError(f"{field_name} must be an object")
+    return value
+
+
 def _birth_profile_from_dict(
     data: dict[str, Any],
     *,
     allow_missing: bool = False,
 ) -> BirthProfile:
+    data = _require_object(data, "birth_profile")
     if not allow_missing:
         _require_fields(data, _BIRTH_PROFILE_FIELDS)
 
@@ -85,12 +92,14 @@ def _chart_from_dict(data: dict[str, Any]) -> BaziChart:
             "luck_cycle_summary",
         ),
     )
+    if not isinstance(data["pillars"], list):
+        raise TypeError("pillars must be a list")
     return BaziChart(
         birth_profile=_birth_profile_from_dict(
             data["birth_profile"],
             allow_missing=True,
         ),
-        chart_source=ChartSource(**data["chart_source"]),
+        chart_source=ChartSource(**_require_object(data["chart_source"], "chart_source")),
         pillars=[Pillar(**pillar) for pillar in data["pillars"]],
         day_master=data["day_master"],
         five_elements_summary=data["five_elements_summary"],
@@ -111,6 +120,8 @@ def _validate_intake(args: argparse.Namespace) -> int:
 def _safety_check(args: argparse.Namespace) -> int:
     payload = _read_json(args.input)
     _require_fields(payload, ("text",))
+    if not isinstance(payload["text"], str):
+        raise TypeError("text must be a string")
     _write_json(safety_check(payload["text"]))
     return 0
 
@@ -162,6 +173,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Invalid JSON: {error}", file=sys.stderr)
         return 1
     except InputContractError as error:
+        print(f"Invalid input: {error}", file=sys.stderr)
+        return 1
+    except (KeyError, TypeError, AttributeError) as error:
         print(f"Invalid input: {error}", file=sys.stderr)
         return 1
     except OSError as error:
