@@ -9,7 +9,7 @@ description: "Task list template for feature implementation"
 
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
+**Tests**: For domain features, tests are REQUIRED for calculation rules, report schema transformations, missing-input handling, ethical refusals, disclaimer presence, and absolute-language filtering. Additional UI or integration tests should follow the feature specification.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -69,6 +69,9 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T007 Create base models/entities that all stories depend on
 - [ ] T008 Configure error handling and logging infrastructure
 - [ ] T009 Setup environment configuration management
+- [ ] T0XX [P] Add red-line request test cases for prohibited 命理 outputs
+- [ ] T0XX [P] Add report language checks for disclaimer presence and non-absolute phrasing
+- [ ] T0XX [P] Add missing birth-data validation tests before full report generation
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -86,6 +89,7 @@ Examples of foundational tasks (adjust based on your project):
 
 - [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
 - [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T0XX [P] [US1] Safety test for red-line and absolute-language behavior in tests/safety/test_[name].py
 
 ### Implementation for User Story 1
 
