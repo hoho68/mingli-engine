@@ -12,9 +12,30 @@ from mingli_engine.safety import safety_check
 from mingli_engine.validation import validate_birth_profile
 
 
+_BIRTH_PROFILE_FIELDS = (
+    "calendar_type",
+    "birth_date",
+    "birth_time",
+    "birthplace",
+    "gender",
+    "focus_topic",
+)
+
+
+class InputContractError(ValueError):
+    pass
+
+
 def _read_json(path: Path) -> dict[str, Any]:
-    with path.open("r", encoding="utf-8") as file:
-        return json.load(file)
+    if str(path) == "-":
+        payload = json.load(sys.stdin)
+    else:
+        with path.open("r", encoding="utf-8") as file:
+            payload = json.load(file)
+
+    if not isinstance(payload, dict):
+        raise InputContractError("top-level JSON value must be an object")
+    return payload
 
 
 def _write_json(payload: Any) -> None:
@@ -22,20 +43,53 @@ def _write_json(payload: Any) -> None:
     sys.stdout.write("\n")
 
 
-def _birth_profile_from_dict(data: dict[str, Any]) -> BirthProfile:
+def _require_fields(data: dict[str, Any], fields: tuple[str, ...]) -> None:
+    missing_fields = [field for field in fields if field not in data]
+    if missing_fields:
+        raise InputContractError(
+            "missing required field(s): " + ", ".join(missing_fields)
+        )
+
+
+def _birth_profile_from_dict(
+    data: dict[str, Any],
+    *,
+    allow_missing: bool = False,
+) -> BirthProfile:
+    if not allow_missing:
+        _require_fields(data, _BIRTH_PROFILE_FIELDS)
+
     return BirthProfile(
-        calendar_type=data["calendar_type"],
-        birth_date=data["birth_date"],
-        birth_time=data["birth_time"],
-        birthplace=data["birthplace"],
-        gender=data["gender"],
-        focus_topic=data["focus_topic"],
+        calendar_type=data.get("calendar_type", ""),
+        birth_date=data.get("birth_date", ""),
+        birth_time=data.get("birth_time", ""),
+        birthplace=data.get("birthplace", ""),
+        gender=data.get("gender", ""),
+        focus_topic=data.get("focus_topic", ""),
     )
 
 
 def _chart_from_dict(data: dict[str, Any]) -> BaziChart:
+    _require_fields(
+        data,
+        (
+            "birth_profile",
+            "chart_source",
+            "pillars",
+            "day_master",
+            "five_elements_summary",
+            "ten_gods_summary",
+            "strength_assessment",
+            "pattern_candidates",
+            "useful_god_candidates",
+            "luck_cycle_summary",
+        ),
+    )
     return BaziChart(
-        birth_profile=_birth_profile_from_dict(data["birth_profile"]),
+        birth_profile=_birth_profile_from_dict(
+            data["birth_profile"],
+            allow_missing=True,
+        ),
         chart_source=ChartSource(**data["chart_source"]),
         pillars=[Pillar(**pillar) for pillar in data["pillars"]],
         day_master=data["day_master"],
@@ -56,6 +110,7 @@ def _validate_intake(args: argparse.Namespace) -> int:
 
 def _safety_check(args: argparse.Namespace) -> int:
     payload = _read_json(args.input)
+    _require_fields(payload, ("text",))
     _write_json(safety_check(payload["text"]))
     return 0
 
@@ -105,6 +160,9 @@ def main(argv: list[str] | None = None) -> int:
         return args.handler(args)
     except json.JSONDecodeError as error:
         print(f"Invalid JSON: {error}", file=sys.stderr)
+        return 1
+    except InputContractError as error:
+        print(f"Invalid input: {error}", file=sys.stderr)
         return 1
     except OSError as error:
         print(f"Input error: {error}", file=sys.stderr)

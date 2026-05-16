@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import sys
@@ -44,3 +45,49 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     assert "## 术语简注" in markdown
     assert "## 伦理边界提醒" in markdown
     assert "示例排盘由外部工具核对，仅用于 CLI 合约测试" in markdown
+
+
+def test_generate_report_returns_exit_2_json_for_incomplete_birth_profile(tmp_path):
+    chart = json.loads(
+        (EXAMPLES_DIR / "bazi-chart.external-verified.json").read_text(encoding="utf-8")
+    )
+    del chart["birth_profile"]["birth_time"]
+    del chart["birth_profile"]["birthplace"]
+    input_path = tmp_path / "chart-missing-birth-fields.json"
+    input_path.write_text(json.dumps(chart, ensure_ascii=False), encoding="utf-8")
+
+    result = _run_cli(
+        "generate-report",
+        "--input",
+        str(input_path),
+        "--format",
+        "markdown",
+    )
+
+    assert result.returncode == 2, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["report_ready"] is False
+    assert "birth_time" in payload["missing_fields"]
+    assert "birthplace" in payload["missing_fields"]
+
+
+def test_generate_report_returns_exit_3_json_for_unsafe_focus_topic(tmp_path):
+    chart = json.loads(
+        (EXAMPLES_DIR / "bazi-chart.external-verified.json").read_text(encoding="utf-8")
+    )
+    chart["birth_profile"]["focus_topic"] = "寿命"
+    input_path = tmp_path / "chart-unsafe-focus-topic.json"
+    input_path.write_text(json.dumps(chart, ensure_ascii=False), encoding="utf-8")
+
+    result = _run_cli(
+        "generate-report",
+        "--input",
+        str(input_path),
+        "--format",
+        "markdown",
+    )
+
+    assert result.returncode == 3, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["allowed"] is False
+    assert "lifespan_or_death_timing" in payload["red_line_categories"]
