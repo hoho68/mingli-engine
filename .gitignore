@@ -1,0 +1,4 @@
+# Local agent/runtime data can contain credentials or private state.
+.agents/*
+!.agents/skills/
+!.agents/skills/**
