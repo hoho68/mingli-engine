@@ -2,3 +2,7 @@
 .agents/*
 !.agents/skills/
 !.agents/skills/**
+
+# Python test/runtime caches
+__pycache__/
+.pytest_cache/
