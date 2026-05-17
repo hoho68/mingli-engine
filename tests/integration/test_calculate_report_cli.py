@@ -44,6 +44,15 @@ def test_calculate_report_outputs_markdown_from_birth_profile():
     assert "auto_calculated" in markdown
     assert "未人工复核" in markdown
     assert "medium" in markdown
+    assert "五行信号观察" in markdown
+    assert "明面信号" in markdown
+    assert "藏干" in markdown
+    assert "观察中心" in markdown
+    assert "十神结构观察" in markdown
+    assert "基础结构观察" in markdown
+    assert "不做格局定论" in markdown
+    assert "不做用神定论" in markdown
+    assert "不做大运流年判断" in markdown
     for prohibited_phrase in ("必定", "注定", "一定会", "死定"):
         assert prohibited_phrase not in markdown
 

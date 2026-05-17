@@ -45,6 +45,15 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     assert "## 术语简注" in markdown
     assert "## 伦理边界提醒" in markdown
     assert "示例排盘由外部工具核对，仅用于 CLI 合约测试" in markdown
+    assert "五行信号观察" in markdown
+    assert "明面信号" in markdown
+    assert "藏干" in markdown
+    assert "观察中心" in markdown
+    assert "十神结构观察" in markdown
+    assert "基础结构观察" in markdown
+    assert "不做格局定论" in markdown
+    assert "不做用神定论" in markdown
+    assert "不做大运流年判断" in markdown
 
 
 def test_generate_report_returns_exit_2_json_for_incomplete_birth_profile(tmp_path):
