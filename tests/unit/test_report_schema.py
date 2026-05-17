@@ -5,6 +5,37 @@ import pytest
 from mingli_engine.report_schema import build_report
 
 
+RAW_READER_LABELS = (
+    "auto_calculated",
+    "external_verified",
+    "medium",
+    "gregorian",
+    "year：",
+    "month：",
+    "day：",
+    "hour：",
+)
+
+
+def _report_body(report) -> str:
+    return "\n".join(
+        [
+            report.quick_guide,
+            report.chart_card,
+            report.assumptions,
+            report.four_pillars_summary,
+            report.five_elements_summary,
+            report.ten_gods_summary,
+            report.structure_analysis,
+            report.personality_tendencies,
+            report.strengths_and_issues,
+            report.phase_overview,
+            report.action_suggestions,
+            report.interpretation_boundaries,
+        ]
+    )
+
+
 def test_build_report_returns_complete_safe_report(sample_bazi_chart):
     report = build_report(sample_bazi_chart)
 
@@ -69,14 +100,47 @@ def test_build_report_prepares_quick_guide_and_boundary_layer(sample_bazi_chart)
     ]
 
     assert 3 <= len(guide_lines) <= 5
-    assert sample_bazi_chart.chart_source.source_type in report.quick_guide
-    assert sample_bazi_chart.chart_source.confidence in report.quick_guide
+    assert "系统自动排盘" in report.quick_guide
+    assert "中等可信度" in report.quick_guide
     assert sample_bazi_chart.birth_profile.focus_topic in report.quick_guide
     assert "结构" in report.quick_guide
     assert "不做格局定论" in report.interpretation_boundaries
     assert "不做用神定论" in report.interpretation_boundaries
     assert "不做大运流年判断" in report.interpretation_boundaries
     assert report.interpretation_boundaries not in report.structure_analysis
+
+
+def test_build_report_uses_reader_facing_labels(sample_bazi_chart):
+    report = build_report(sample_bazi_chart)
+    body = _report_body(report)
+
+    assert "公历" in report.chart_card
+    assert "系统自动排盘" in report.quick_guide
+    assert "系统自动排盘" in report.assumptions
+    assert "中等可信度" in report.quick_guide
+    assert "中等可信度" in report.assumptions
+    for pillar_name in ("年柱", "月柱", "日柱", "时柱"):
+        assert f"- {pillar_name}：" in report.four_pillars_summary
+    for raw_label in RAW_READER_LABELS:
+        assert raw_label not in body
+
+
+def test_build_report_uses_conservative_placeholder_for_unspecified_gender(
+    sample_bazi_chart,
+):
+    report = build_report(sample_bazi_chart)
+
+    assert "性别标记：未说明" in report.chart_card
+
+
+def test_build_report_quick_guide_reads_like_plain_guidance(sample_bazi_chart):
+    report = build_report(sample_bazi_chart)
+
+    assert "这份盘的资料来自系统自动排盘" in report.quick_guide
+    assert "这份盘里" in report.quick_guide
+    assert "适合先从" in report.quick_guide
+    assert "不是命运结论" in report.quick_guide
+    assert "可复盘的小问题" in report.quick_guide
 
 
 def test_build_report_blocks_lifespan_focus_topic(sample_bazi_chart):

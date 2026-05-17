@@ -6,6 +6,44 @@ from mingli_engine.safety import safety_check
 
 
 LIFESPAN_FOCUS_TOPICS = frozenset({"寿命"})
+PLACEHOLDER_VALUES = frozenset({"", "未指定", "unspecified", "unknown", "none", "null"})
+
+SOURCE_TYPE_LABELS = {
+    "auto_calculated": "系统自动排盘",
+    "externally_verified": "系统自动排盘",
+    "external_verified": "外部排盘已核对",
+}
+CONFIDENCE_LABELS = {
+    "low": "低可信度",
+    "medium": "中等可信度",
+    "sample-high": "中等可信度",
+    "high": "高可信度",
+}
+CALENDAR_TYPE_LABELS = {
+    "gregorian": "公历",
+    "solar": "公历",
+}
+PILLAR_NAME_LABELS = {
+    "year": "年柱",
+    "month": "月柱",
+    "day": "日柱",
+    "hour": "时柱",
+    "年柱": "年柱",
+    "月柱": "月柱",
+    "日柱": "日柱",
+    "时柱": "时柱",
+}
+GENDER_LABELS = {
+    "female": "未说明",
+    "male": "未说明",
+}
+
+
+def _reader_label(value: str | None, labels: dict[str, str]) -> str:
+    normalized = (value or "").strip()
+    if normalized.lower() in PLACEHOLDER_VALUES or normalized in PLACEHOLDER_VALUES:
+        return "未说明"
+    return labels.get(normalized, normalized)
 
 
 def _format_true_solar_time(value: bool | None) -> str:
@@ -58,14 +96,17 @@ def _review_focus_topic(focus_topic: str) -> SafetyReviewResult:
 
 def _build_chart_card(chart: BaziChart) -> str:
     profile = chart.birth_profile
+    calendar_type = _reader_label(profile.calendar_type, CALENDAR_TYPE_LABELS)
+    gender = _reader_label(profile.gender, GENDER_LABELS)
+    focus_topic = _reader_label(profile.focus_topic, {})
     return "\n".join(
         [
-            f"- 历法类型：{profile.calendar_type}",
+            f"- 历法类型：{calendar_type}",
             f"- 出生日期：{profile.birth_date}",
             f"- 出生时间：{profile.birth_time}",
             f"- 出生地点：{profile.birthplace}",
-            f"- 性别标记：{profile.gender}",
-            f"- 关注主题：{profile.focus_topic}",
+            f"- 性别标记：{gender}",
+            f"- 关注主题：{focus_topic}",
             f"- 日主：{chart.day_master}",
         ]
     )
@@ -73,15 +114,17 @@ def _build_chart_card(chart: BaziChart) -> str:
 
 def _build_assumptions(chart: BaziChart) -> str:
     source = chart.chart_source
+    source_type = _reader_label(source.source_type, SOURCE_TYPE_LABELS)
+    confidence = _reader_label(source.confidence, CONFIDENCE_LABELS)
     return "\n".join(
         [
-            f"- 来源类型：{source.source_type}",
+            f"- 来源类型：{source_type}",
             f"- 来源说明：{source.source_note}",
             f"- 历法假设：{source.calendar_assumption}",
             f"- 时区假设：{source.timezone_assumption}",
             f"- 节气假设：{source.solar_terms_assumption}",
             f"- 真太阳时：{_format_true_solar_time(source.true_solar_time_applied)}",
-            f"- 可信度：{source.confidence}",
+            f"- 可信度：{confidence}",
         ]
     )
 
@@ -89,9 +132,10 @@ def _build_assumptions(chart: BaziChart) -> str:
 def _build_four_pillars_summary(chart: BaziChart) -> str:
     rows = []
     for pillar in chart.pillars:
+        pillar_name = _reader_label(pillar.name, PILLAR_NAME_LABELS)
         hidden_stems = "、".join(pillar.hidden_stems) if pillar.hidden_stems else "无"
         rows.append(
-            f"- {pillar.name}：{pillar.heavenly_stem}{pillar.earthly_branch}，"
+            f"- {pillar_name}：{pillar.heavenly_stem}{pillar.earthly_branch}，"
             f"藏干：{hidden_stems}，十神：{pillar.ten_god}，五行：{pillar.element}"
         )
     return "\n".join(rows)
@@ -104,14 +148,16 @@ def _format_elements_for_report(elements: list[str]) -> str:
 def _build_quick_guide(chart: BaziChart, interpretation) -> str:
     source = chart.chart_source
     focus_topic = chart.birth_profile.focus_topic.strip() or "当前关注主题"
+    source_label = _reader_label(source.source_type, SOURCE_TYPE_LABELS)
+    confidence_label = _reader_label(source.confidence, CONFIDENCE_LABELS)
     dominant = _format_elements_for_report(
         interpretation.element_distribution.dominant_elements
     )
     return "\n".join(
         [
-            f"- 来源：{source.source_type}，可信度：{source.confidence}。",
-            f"- 结构：当前可先观察{dominant}相关信号的分布。",
-            f"- 日主：{chart.day_master}作为观察中心，不作为命运结论。",
+            f"- 来源：这份盘的资料来自{source_label}，当前标记为{confidence_label}。",
+            f"- 结构：这份盘里，{dominant}的信号比较集中，适合先从这些方向看整体结构。",
+            f"- 日主：{chart.day_master}是本报告的观察中心，不是命运结论。",
             "- 边界：本报告不做格局定论、用神定论或大运流年判断。",
             f"- 提示：围绕{focus_topic}，把结构观察转成可复盘的小问题。",
         ]
@@ -179,8 +225,8 @@ def build_report(chart: BaziChart) -> Report:
         f"不推断具体事件结果。{phase_boundary}"
     )
     action_suggestions = (
-        f"行动上建议围绕{focus_topic}，承接{action_focus}，把关注点转成可记录的小步骤，"
-        "再用现实反馈复盘。"
+        f"围绕{focus_topic}，可以先承接{action_focus}，整理成一两个可记录的小步骤，"
+        "再用现实反馈慢慢复盘。这里给的是观察和整理方向，不是对结果的承诺。"
     )
     glossary = (
         "日主：以出生日天干作为观察中心。十神：传统命理中描述关系与功能的术语。"
