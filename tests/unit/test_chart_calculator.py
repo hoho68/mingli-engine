@@ -73,6 +73,10 @@ def test_calculate_bazi_chart_discloses_no_true_solar_time_for_boundary_case():
     )
 
     assert len(chart.pillars) == 4
+    assert [
+        f"{pillar.heavenly_stem}{pillar.earthly_branch}"
+        for pillar in chart.pillars
+    ] == ["辛未", "辛丑", "庚戌", "戊寅"]
     assert chart.chart_source.true_solar_time_applied is False
     assert "节气" in chart.chart_source.calendar_assumption
     assert "UTC+08:00" in chart.chart_source.timezone_assumption
