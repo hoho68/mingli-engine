@@ -36,6 +36,33 @@ def _report_body(report) -> str:
     )
 
 
+def _chart_with_contract_labels(sample_bazi_chart):
+    birth_profile = replace(
+        sample_bazi_chart.birth_profile,
+        calendar_type="gregorian",
+        gender="未指定",
+    )
+    chart_source = replace(
+        sample_bazi_chart.chart_source,
+        source_type="auto_calculated",
+        confidence="medium",
+    )
+    pillars = [
+        replace(pillar, name=name)
+        for pillar, name in zip(
+            sample_bazi_chart.pillars,
+            ("year", "month", "day", "hour"),
+            strict=True,
+        )
+    ]
+    return replace(
+        sample_bazi_chart,
+        birth_profile=birth_profile,
+        chart_source=chart_source,
+        pillars=pillars,
+    )
+
+
 def test_build_report_returns_complete_safe_report(sample_bazi_chart):
     report = build_report(sample_bazi_chart)
 
@@ -94,7 +121,8 @@ def test_build_report_includes_basic_interpretation_sections(sample_bazi_chart):
 
 
 def test_build_report_prepares_quick_guide_and_boundary_layer(sample_bazi_chart):
-    report = build_report(sample_bazi_chart)
+    chart = _chart_with_contract_labels(sample_bazi_chart)
+    report = build_report(chart)
     guide_lines = [
         line for line in report.quick_guide.splitlines() if line.startswith("- ")
     ]
@@ -102,7 +130,7 @@ def test_build_report_prepares_quick_guide_and_boundary_layer(sample_bazi_chart)
     assert 3 <= len(guide_lines) <= 5
     assert "系统自动排盘" in report.quick_guide
     assert "中等可信度" in report.quick_guide
-    assert sample_bazi_chart.birth_profile.focus_topic in report.quick_guide
+    assert chart.birth_profile.focus_topic in report.quick_guide
     assert "结构" in report.quick_guide
     assert "不做格局定论" in report.interpretation_boundaries
     assert "不做用神定论" in report.interpretation_boundaries
@@ -111,7 +139,8 @@ def test_build_report_prepares_quick_guide_and_boundary_layer(sample_bazi_chart)
 
 
 def test_build_report_uses_reader_facing_labels(sample_bazi_chart):
-    report = build_report(sample_bazi_chart)
+    chart = _chart_with_contract_labels(sample_bazi_chart)
+    report = build_report(chart)
     body = _report_body(report)
 
     assert "公历" in report.chart_card
@@ -128,13 +157,27 @@ def test_build_report_uses_reader_facing_labels(sample_bazi_chart):
 def test_build_report_uses_conservative_placeholder_for_unspecified_gender(
     sample_bazi_chart,
 ):
-    report = build_report(sample_bazi_chart)
+    birth_profile = replace(sample_bazi_chart.birth_profile, gender="未指定")
+    chart = replace(sample_bazi_chart, birth_profile=birth_profile)
+    report = build_report(chart)
 
     assert "性别标记：未说明" in report.chart_card
 
 
-def test_build_report_quick_guide_reads_like_plain_guidance(sample_bazi_chart):
+def test_build_report_preserves_unknown_non_empty_labels(sample_bazi_chart):
     report = build_report(sample_bazi_chart)
+
+    assert "历法类型：solar" in report.chart_card
+    assert "性别标记：female" in report.chart_card
+    assert "externally_verified" in report.quick_guide
+    assert "externally_verified" in report.assumptions
+    assert "sample-high" in report.quick_guide
+    assert "sample-high" in report.assumptions
+
+
+def test_build_report_quick_guide_reads_like_plain_guidance(sample_bazi_chart):
+    chart = _chart_with_contract_labels(sample_bazi_chart)
+    report = build_report(chart)
 
     assert "这份盘的资料来自系统自动排盘" in report.quick_guide
     assert "这份盘里" in report.quick_guide

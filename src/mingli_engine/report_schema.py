@@ -10,18 +10,15 @@ PLACEHOLDER_VALUES = frozenset({"", "未指定", "unspecified", "unknown", "none
 
 SOURCE_TYPE_LABELS = {
     "auto_calculated": "系统自动排盘",
-    "externally_verified": "系统自动排盘",
     "external_verified": "外部排盘已核对",
 }
 CONFIDENCE_LABELS = {
     "low": "低可信度",
     "medium": "中等可信度",
-    "sample-high": "中等可信度",
     "high": "高可信度",
 }
 CALENDAR_TYPE_LABELS = {
     "gregorian": "公历",
-    "solar": "公历",
 }
 PILLAR_NAME_LABELS = {
     "year": "年柱",
@@ -32,10 +29,6 @@ PILLAR_NAME_LABELS = {
     "月柱": "月柱",
     "日柱": "日柱",
     "时柱": "时柱",
-}
-GENDER_LABELS = {
-    "female": "未说明",
-    "male": "未说明",
 }
 
 
@@ -97,7 +90,7 @@ def _review_focus_topic(focus_topic: str) -> SafetyReviewResult:
 def _build_chart_card(chart: BaziChart) -> str:
     profile = chart.birth_profile
     calendar_type = _reader_label(profile.calendar_type, CALENDAR_TYPE_LABELS)
-    gender = _reader_label(profile.gender, GENDER_LABELS)
+    gender = _reader_label(profile.gender, {})
     focus_topic = _reader_label(profile.focus_topic, {})
     return "\n".join(
         [
