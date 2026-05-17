@@ -59,6 +59,18 @@ def concentrated_chart() -> BaziChart:
     )
 
 
+def unknown_only_chart() -> BaziChart:
+    return make_chart(
+        [
+            Pillar("year", "A", "B", ["C"], "", ""),
+            Pillar("month", "D", "E", ["F"], "unknown", ""),
+            Pillar("day", "G", "H", ["I"], "Unknown", ""),
+            Pillar("hour", "J", "K", ["L"], "UNKNOWN", ""),
+        ],
+        day_master=" ",
+    )
+
+
 def test_count_element_distribution_distinguishes_direct_and_hidden_signals():
     distribution = count_element_distribution(balanced_chart())
 
@@ -169,3 +181,30 @@ def test_build_basic_interpretation_uses_neutral_language_for_missing_signals():
     assert "不等于现实能力缺失" in joined
     for prohibited_phrase in ("必定", "注定", "一定会", "死定"):
         assert prohibited_phrase not in joined
+
+
+def test_build_basic_interpretation_records_missing_ten_gods_when_all_unknown():
+    summary = build_basic_interpretation(unknown_only_chart())
+
+    assert "当前没有可读的十神信号" in summary.ten_gods_summary
+    assert "未识别十神位置：年柱、月柱、日柱、时柱，本层不作补猜。" in (
+        summary.ten_gods_summary
+    )
+
+
+def test_build_basic_interpretation_uses_limitation_suggestions_without_counts():
+    summary = build_basic_interpretation(unknown_only_chart())
+
+    assert "暂无可计数五行信号" in summary.focus_suggestions
+    assert "较集中的信号" not in summary.focus_suggestions
+    assert "日主未标明" in summary.day_master_summary
+    assert "观察中心" in summary.day_master_summary
+
+
+def test_build_basic_interpretation_reports_unknown_signals_in_limitations():
+    summary = build_basic_interpretation(unknown_only_chart())
+
+    assert "另有未识别信号：A、B、C、D、E、F、G、H、I、J、K、L" in (
+        summary.five_elements_summary
+    )
+    assert "存在未识别信号" in summary.limitations

@@ -157,12 +157,17 @@ def _format_missing_elements(elements: list[str]) -> str:
     return "、".join(elements)
 
 
+def _is_unknown_ten_god(ten_god: str) -> bool:
+    normalized = ten_god.strip()
+    return not normalized or normalized.casefold() == "unknown"
+
+
 def summarize_ten_god_placements(chart: BaziChart) -> list[TenGodPlacement]:
     placement_by_ten_god: dict[str, list[str]] = {}
 
     for pillar in chart.pillars:
         ten_god = pillar.ten_god.strip()
-        if not ten_god or ten_god == "unknown":
+        if _is_unknown_ten_god(ten_god):
             continue
 
         placement_by_ten_god.setdefault(ten_god, []).append(
@@ -217,13 +222,16 @@ def _build_ten_gods_text(chart: BaziChart) -> str:
     for pillar in chart.pillars:
         pillar_name = _display_pillar_name(pillar.name)
         ten_god = pillar.ten_god.strip()
-        if not ten_god or ten_god == "unknown":
+        if _is_unknown_ten_god(ten_god):
             missing_pillars.append(pillar_name)
             continue
         pillar_lines.append(f"{pillar_name}：{ten_god}")
 
     if not pillar_lines:
-        return "十神结构观察：当前没有可读的十神信号，本层保留为空白观察。"
+        text = "十神结构观察：当前没有可读的十神信号，本层保留为空白观察。"
+        if missing_pillars:
+            text += f"\n未识别十神位置：{'、'.join(missing_pillars)}，本层不作补猜。"
+        return text
 
     text = "十神结构观察：\n" + "\n".join(pillar_lines)
     placements = summarize_ten_god_placements(chart)
@@ -261,9 +269,14 @@ def _build_suggestion_text(
     distribution: ElementDistribution,
 ) -> str:
     focus_topic = chart.birth_profile.focus_topic.strip() or "当前关注主题"
-    suggestions = [
-        f"围绕{focus_topic}，可先把较集中的信号视为稳定出现的观察材料。",
-    ]
+    if distribution.dominant_elements:
+        suggestions = [
+            f"围绕{focus_topic}，可先把较集中的信号视为稳定出现的观察材料。",
+        ]
+    else:
+        suggestions = [
+            f"围绕{focus_topic}，当前暂无可计数五行信号，建议先核对输入来源再继续解读。",
+        ]
     if distribution.missing_elements:
         missing = _format_missing_elements(distribution.missing_elements)
         suggestions.append(
