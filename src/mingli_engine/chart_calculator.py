@@ -41,7 +41,8 @@ def _validate_supported_profile(profile: BirthProfile) -> None:
         missing = ", ".join(validation_result.missing_fields)
         raise ChartCalculationError(f"missing required field(s): {missing}")
 
-    if profile.calendar_type not in SUPPORTED_GREGORIAN_VALUES:
+    normalized_calendar_type = profile.calendar_type.strip().lower()
+    if normalized_calendar_type not in SUPPORTED_GREGORIAN_VALUES:
         raise ChartCalculationError(
             "calendar_type must be one of: gregorian, solar, 公历"
         )
@@ -52,7 +53,7 @@ def _to_pillar(provider_pillar: ProviderPillar) -> Pillar:
         name=provider_pillar.name,
         heavenly_stem=provider_pillar.heavenly_stem,
         earthly_branch=provider_pillar.earthly_branch,
-        hidden_stems=provider_pillar.hidden_stems,
+        hidden_stems=list(provider_pillar.hidden_stems),
         ten_god=provider_pillar.ten_god,
         element=provider_pillar.element,
     )
@@ -62,16 +63,29 @@ def _five_elements_summary(provider_pillars: list[ProviderPillar]) -> dict[str, 
     return {pillar.name: pillar.element for pillar in provider_pillars}
 
 
+def _get_day_pillar(provider_pillars: list[ProviderPillar]) -> ProviderPillar:
+    day_pillars = [pillar for pillar in provider_pillars if pillar.name == "day"]
+    if len(day_pillars) != 1:
+        raise ChartCalculationError("expected exactly one day pillar")
+
+    return day_pillars[0]
+
+
 def calculate_bazi_chart(profile: BirthProfile) -> BaziChart:
     _validate_supported_profile(profile)
     birth_datetime = _parse_birth_datetime(profile)
-    provider_pillars = calculate_provider_pillars(birth_datetime)
+    try:
+        provider_pillars = calculate_provider_pillars(birth_datetime)
+    except ChartCalculationError:
+        raise
+    except Exception as exc:
+        raise ChartCalculationError("chart calculation failed") from exc
 
     if len(provider_pillars) != 4:
         raise ChartCalculationError("expected four provider pillars")
 
     pillars = [_to_pillar(pillar) for pillar in provider_pillars]
-    day_pillar = provider_pillars[2]
+    day_pillar = _get_day_pillar(provider_pillars)
 
     return BaziChart(
         birth_profile=profile,
