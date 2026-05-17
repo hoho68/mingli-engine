@@ -861,7 +861,7 @@ Run:
 
 ```powershell
 $env:PYTHONPATH='src'
-python -m mingli_engine.cli calculate-chart --input examples\birth-profile.auto-gregorian.json
+uv run python -m mingli_engine.cli calculate-chart --input examples\birth-profile.auto-gregorian.json
 ```
 
 Expected: JSON contains `auto_calculated`, `medium`, and four pillars.
@@ -872,7 +872,7 @@ Run:
 
 ```powershell
 $env:PYTHONPATH='src'
-python -m mingli_engine.cli calculate-report --input examples\birth-profile.auto-gregorian.json --format markdown
+uv run python -m mingli_engine.cli calculate-report --input examples\birth-profile.auto-gregorian.json --format markdown
 ```
 
 Expected: Markdown contains `# 八字结构化报告`, `## 排盘来源与假设`, `未人工复核`, `medium`, and no prohibited absolute phrases.
@@ -883,7 +883,7 @@ Run:
 
 ```powershell
 $env:PYTHONPATH='src'
-python -m mingli_engine.cli calculate-report --input examples\birth-profile.unsafe-focus.json --format markdown
+uv run python -m mingli_engine.cli calculate-report --input examples\birth-profile.unsafe-focus.json --format markdown
 ```
 
 Expected: non-zero exit and JSON safety response with `allowed: false`.

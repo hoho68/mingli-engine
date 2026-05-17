@@ -36,7 +36,7 @@ Run:
 
 ```powershell
 $env:PYTHONPATH='src'
-python -m mingli_engine.cli calculate-chart --input examples\birth-profile.auto-gregorian.json
+uv run python -m mingli_engine.cli calculate-chart --input examples\birth-profile.auto-gregorian.json
 ```
 
 Expected result:
@@ -54,7 +54,7 @@ Run:
 
 ```powershell
 $env:PYTHONPATH='src'
-python -m mingli_engine.cli calculate-report --input examples\birth-profile.auto-gregorian.json --format markdown
+uv run python -m mingli_engine.cli calculate-report --input examples\birth-profile.auto-gregorian.json --format markdown
 ```
 
 Expected result:
@@ -84,7 +84,7 @@ Run:
 
 ```powershell
 $env:PYTHONPATH='src'
-python -m mingli_engine.cli calculate-chart --input examples\birth-profile.unsupported-lunar.json
+uv run python -m mingli_engine.cli calculate-chart --input examples\birth-profile.unsupported-lunar.json
 ```
 
 Expected result:
@@ -102,7 +102,7 @@ Run:
 
 ```powershell
 $env:PYTHONPATH='src'
-python -m mingli_engine.cli calculate-report --input examples\birth-profile.unsafe-focus.json --format markdown
+uv run python -m mingli_engine.cli calculate-report --input examples\birth-profile.unsafe-focus.json --format markdown
 ```
 
 Expected result:
