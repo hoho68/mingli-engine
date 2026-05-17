@@ -28,6 +28,12 @@ def _run_cli(*args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def _assert_in_order(text: str, headings: tuple[str, ...]) -> None:
+    lines = text.splitlines()
+    positions = [lines.index(heading) for heading in headings]
+    assert positions == sorted(positions)
+
+
 def test_calculate_report_outputs_markdown_from_birth_profile():
     result = _run_cli(
         "calculate-report",
@@ -40,7 +46,19 @@ def test_calculate_report_outputs_markdown_from_birth_profile():
     assert result.returncode == 0, result.stderr
     markdown = result.stdout
     assert "# 八字结构化报告" in markdown
-    assert "## 排盘来源与假设" in markdown
+    _assert_in_order(
+        markdown,
+        (
+            "## 快速导读",
+            "## 第一层：基础资料",
+            "## 第二层：结构观察",
+            "## 第三层：解读边界",
+            "## 第四层：行动反思",
+        ),
+    )
+    assert "### 排盘来源与假设" in markdown.splitlines()
+    assert "### 四柱与五行摘要" in markdown.splitlines()
+    assert "### 行动建议" in markdown.splitlines()
     assert "auto_calculated" in markdown
     assert "未人工复核" in markdown
     assert "medium" in markdown

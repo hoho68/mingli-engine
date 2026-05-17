@@ -39,8 +39,11 @@ def test_generated_auto_report_avoids_absolute_or_fatalistic_phrases():
     )
 
     assert result.returncode == 0, result.stderr
+    markdown = result.stdout
+    assert "## 快速导读" in markdown.splitlines()
+    assert "## 第三层：解读边界" in markdown.splitlines()
     for prohibited_phrase in ("必定", "注定", "一定会", "死定"):
-        assert prohibited_phrase not in result.stdout
+        assert prohibited_phrase not in markdown
 
 
 def test_safety_check_blocks_lifespan_or_death_timing_request():

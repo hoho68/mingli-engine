@@ -28,6 +28,12 @@ def _run_cli(*args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def _assert_in_order(text: str, headings: tuple[str, ...]) -> None:
+    lines = text.splitlines()
+    positions = [lines.index(heading) for heading in headings]
+    assert positions == sorted(positions)
+
+
 def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     result = _run_cli(
         "generate-report",
@@ -41,9 +47,19 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     markdown = result.stdout
     assert "# 八字结构化报告" in markdown
     assert "## 免责声明" in markdown
-    assert "## 排盘来源与假设" in markdown
-    assert "## 术语简注" in markdown
-    assert "## 伦理边界提醒" in markdown
+    _assert_in_order(
+        markdown,
+        (
+            "## 快速导读",
+            "## 第一层：基础资料",
+            "## 第二层：结构观察",
+            "## 第三层：解读边界",
+            "## 第四层：行动反思",
+        ),
+    )
+    assert "### 排盘来源与假设" in markdown.splitlines()
+    assert "### 四柱与五行摘要" in markdown.splitlines()
+    assert "### 行动建议" in markdown.splitlines()
     assert "示例排盘由外部工具核对，仅用于 CLI 合约测试" in markdown
     assert "五行信号观察" in markdown
     assert "明面信号" in markdown
