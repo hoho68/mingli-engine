@@ -6,4 +6,6 @@ __all__ = [
     "safety",
     "report_schema",
     "markdown",
+    "calendar_provider",
+    "chart_calculator",
 ]
