@@ -33,3 +33,14 @@ def test_render_markdown_report_keeps_chart_source_transparent(sample_bazi_chart
     assert sample_bazi_chart.chart_source.source_note in markdown
     assert sample_bazi_chart.chart_source.calendar_assumption in markdown
     assert markdown.endswith("\n")
+
+
+def test_render_markdown_report_includes_interpretation_boundaries(sample_bazi_chart):
+    report = build_report(sample_bazi_chart)
+
+    markdown = render_markdown_report(report)
+
+    assert report.interpretation_boundaries in markdown
+    assert "不做格局定论" in markdown
+    assert "不做用神定论" in markdown
+    assert "不做大运流年判断" in markdown

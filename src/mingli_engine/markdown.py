@@ -17,6 +17,7 @@ def render_markdown_report(report: Report) -> str:
         report.ten_gods_summary,
         "## 结构分析",
         report.structure_analysis,
+        report.interpretation_boundaries,
         "## 性格倾向",
         report.personality_tendencies,
         "## 优势与议题",
