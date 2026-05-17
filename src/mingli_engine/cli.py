@@ -5,8 +5,15 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+from mingli_engine.chart_calculator import ChartCalculationError, calculate_bazi_chart
 from mingli_engine.markdown import render_markdown_report
-from mingli_engine.models import BaziChart, BirthProfile, ChartSource, Pillar
+from mingli_engine.models import (
+    BaziChart,
+    BirthProfile,
+    ChartSource,
+    Pillar,
+    SafetyReviewResult,
+)
 from mingli_engine.report_schema import build_report
 from mingli_engine.safety import safety_check
 from mingli_engine.validation import validate_birth_profile
@@ -39,8 +46,16 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 
 def _write_json(payload: Any) -> None:
-    json.dump(asdict(payload), sys.stdout, ensure_ascii=False, indent=2)
+    json.dump(_to_json_payload(payload), sys.stdout, ensure_ascii=False, indent=2)
     sys.stdout.write("\n")
+
+
+def _to_json_payload(payload: Any) -> Any:
+    data = asdict(payload)
+    if isinstance(payload, BaziChart):
+        for pillar in data["pillars"]:
+            pillar["gan_zhi"] = pillar["heavenly_stem"] + pillar["earthly_branch"]
+    return data
 
 
 def _require_fields(data: dict[str, Any], fields: tuple[str, ...]) -> None:
@@ -102,7 +117,16 @@ def _chart_from_dict(data: dict[str, Any]) -> BaziChart:
             allow_missing=True,
         ),
         chart_source=ChartSource(**_require_object(data["chart_source"], "chart_source")),
-        pillars=[Pillar(**pillar) for pillar in data["pillars"]],
+        pillars=[
+            Pillar(
+                **{
+                    key: value
+                    for key, value in pillar.items()
+                    if key != "gan_zhi"
+                }
+            )
+            for pillar in data["pillars"]
+        ],
         day_master=data["day_master"],
         five_elements_summary=data["five_elements_summary"],
         ten_gods_summary=data["ten_gods_summary"],
@@ -125,6 +149,37 @@ def _safety_check(args: argparse.Namespace) -> int:
     if not isinstance(payload["text"], str):
         raise TypeError("text must be a string")
     _write_json(safety_check(payload["text"]))
+    return 0
+
+
+def _safety_review_focus_topic(
+    profile: BirthProfile,
+    *,
+    disclaimer_present: bool,
+) -> SafetyReviewResult:
+    review = safety_check(
+        profile.focus_topic,
+        disclaimer_present=disclaimer_present,
+    )
+    if review.allowed and profile.focus_topic.strip() == "寿命":
+        return SafetyReviewResult(
+            allowed=False,
+            red_line_categories=["lifespan_or_death_timing"],
+            prohibited_phrases=[],
+            disclaimer_present=disclaimer_present,
+            redirect_message=review.redirect_message,
+        )
+    return review
+
+
+def _calculate_chart(args: argparse.Namespace) -> int:
+    profile = _birth_profile_from_dict(_read_json(args.input))
+    safety_review = _safety_review_focus_topic(profile, disclaimer_present=False)
+    if not safety_review.allowed:
+        _write_json(safety_review)
+        return 3
+
+    _write_json(calculate_bazi_chart(profile))
     return 0
 
 
@@ -156,6 +211,10 @@ def _build_parser() -> argparse.ArgumentParser:
     safety_parser.add_argument("--input", required=True, type=Path)
     safety_parser.set_defaults(handler=_safety_check)
 
+    calculate_parser = subparsers.add_parser("calculate-chart")
+    calculate_parser.add_argument("--input", required=True, type=Path)
+    calculate_parser.set_defaults(handler=_calculate_chart)
+
     report_parser = subparsers.add_parser("generate-report")
     report_parser.add_argument("--input", required=True, type=Path)
     report_parser.add_argument("--format", choices=["markdown"], required=True)
@@ -165,6 +224,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    sys.stdin.reconfigure(encoding="utf-8")
     sys.stdout.reconfigure(encoding="utf-8")
     sys.stderr.reconfigure(encoding="utf-8")
     parser = _build_parser()
@@ -175,6 +235,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Invalid JSON: {error}", file=sys.stderr)
         return 1
     except InputContractError as error:
+        print(f"Invalid input: {error}", file=sys.stderr)
+        return 1
+    except ChartCalculationError as error:
         print(f"Invalid input: {error}", file=sys.stderr)
         return 1
     except (KeyError, TypeError, AttributeError) as error:
