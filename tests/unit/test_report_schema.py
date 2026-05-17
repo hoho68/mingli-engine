@@ -20,6 +20,8 @@ def test_build_report_returns_complete_safe_report(sample_bazi_chart):
         "action_suggestions",
         "glossary",
         "ethics_reminder",
+        "interpretation_boundaries",
+        "quick_guide",
     ):
         assert getattr(report, field_name)
 
@@ -38,6 +40,7 @@ def test_build_report_includes_basic_interpretation_sections(sample_bazi_chart):
             report.strengths_and_issues,
             report.phase_overview,
             report.action_suggestions,
+            report.interpretation_boundaries,
         ]
     )
 
@@ -57,6 +60,23 @@ def test_build_report_includes_basic_interpretation_sections(sample_bazi_chart):
     assert sample_bazi_chart.birth_profile.focus_topic in report.action_suggestions
     assert "结构" in report.action_suggestions
     assert report.strengths_and_issues not in report.action_suggestions
+
+
+def test_build_report_prepares_quick_guide_and_boundary_layer(sample_bazi_chart):
+    report = build_report(sample_bazi_chart)
+    guide_lines = [
+        line for line in report.quick_guide.splitlines() if line.startswith("- ")
+    ]
+
+    assert 3 <= len(guide_lines) <= 5
+    assert sample_bazi_chart.chart_source.source_type in report.quick_guide
+    assert sample_bazi_chart.chart_source.confidence in report.quick_guide
+    assert sample_bazi_chart.birth_profile.focus_topic in report.quick_guide
+    assert "结构" in report.quick_guide
+    assert "不做格局定论" in report.interpretation_boundaries
+    assert "不做用神定论" in report.interpretation_boundaries
+    assert "不做大运流年判断" in report.interpretation_boundaries
+    assert report.interpretation_boundaries not in report.structure_analysis
 
 
 def test_build_report_blocks_lifespan_focus_topic(sample_bazi_chart):

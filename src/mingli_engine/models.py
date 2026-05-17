@@ -66,6 +66,7 @@ class BaziChart:
 class Report:
     title: str
     disclaimer: str
+    quick_guide: str
     chart_card: str
     assumptions: str
     four_pillars_summary: str
@@ -76,6 +77,7 @@ class Report:
     strengths_and_issues: str
     phase_overview: str
     action_suggestions: str
+    interpretation_boundaries: str
     glossary: str
     ethics_reminder: str
     safety_review: SafetyReviewResult

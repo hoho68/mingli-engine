@@ -97,10 +97,32 @@ def _build_four_pillars_summary(chart: BaziChart) -> str:
     return "\n".join(rows)
 
 
+def _format_elements_for_report(elements: list[str]) -> str:
+    return "、".join(elements) if elements else "暂无突出信号"
+
+
+def _build_quick_guide(chart: BaziChart, interpretation) -> str:
+    source = chart.chart_source
+    focus_topic = chart.birth_profile.focus_topic.strip() or "当前关注主题"
+    dominant = _format_elements_for_report(
+        interpretation.element_distribution.dominant_elements
+    )
+    return "\n".join(
+        [
+            f"- 来源：{source.source_type}，可信度：{source.confidence}。",
+            f"- 结构：当前可先观察{dominant}相关信号的分布。",
+            f"- 日主：{chart.day_master}作为观察中心，不作为命运结论。",
+            "- 边界：本报告不做格局定论、用神定论或大运流年判断。",
+            f"- 提示：围绕{focus_topic}，把结构观察转成可复盘的小问题。",
+        ]
+    )
+
+
 def _major_body_sections(report: Report) -> str:
     return "\n\n".join(
         [
             report.disclaimer,
+            report.quick_guide,
             report.chart_card,
             report.assumptions,
             report.four_pillars_summary,
@@ -111,6 +133,7 @@ def _major_body_sections(report: Report) -> str:
             report.strengths_and_issues,
             report.phase_overview,
             report.action_suggestions,
+            report.interpretation_boundaries,
             report.glossary,
             report.ethics_reminder,
         ]
@@ -130,16 +153,13 @@ def build_report(chart: BaziChart) -> Report:
     assumptions = _build_assumptions(chart)
     four_pillars_summary = _build_four_pillars_summary(chart)
     interpretation = build_basic_interpretation(chart)
+    quick_guide = _build_quick_guide(chart, interpretation)
     five_elements_summary = interpretation.five_elements_summary
     ten_gods_summary = interpretation.ten_gods_summary
-    structure_analysis = "\n".join(
-        [
-            interpretation.structure_observations,
-            interpretation.limitations,
-        ]
-    )
+    structure_analysis = interpretation.structure_observations
     personality_tendencies = interpretation.day_master_summary
     strengths_and_issues = interpretation.focus_suggestions
+    interpretation_boundaries = interpretation.limitations
     phase_boundary = (
         "当前基础结构解读层不做大运流年判断。"
         if "不做大运流年判断" in interpretation.limitations
@@ -174,6 +194,7 @@ def build_report(chart: BaziChart) -> Report:
     draft_report = Report(
         title="八字结构化报告",
         disclaimer=disclaimer,
+        quick_guide=quick_guide,
         chart_card=chart_card,
         assumptions=assumptions,
         four_pillars_summary=four_pillars_summary,
@@ -184,12 +205,14 @@ def build_report(chart: BaziChart) -> Report:
         strengths_and_issues=strengths_and_issues,
         phase_overview=phase_overview,
         action_suggestions=action_suggestions,
+        interpretation_boundaries=interpretation_boundaries,
         glossary=glossary,
         ethics_reminder=ethics_reminder,
         safety_review=safety_check(
             "\n\n".join(
                 [
                     disclaimer,
+                    quick_guide,
                     chart_card,
                     assumptions,
                     four_pillars_summary,
@@ -200,6 +223,7 @@ def build_report(chart: BaziChart) -> Report:
                     strengths_and_issues,
                     phase_overview,
                     action_suggestions,
+                    interpretation_boundaries,
                     glossary,
                     ethics_reminder,
                 ]
