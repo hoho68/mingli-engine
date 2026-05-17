@@ -3,7 +3,7 @@ name = "mingli-engine"
 version = "0.1.0"
 description = "Local bazi knowledge and markdown report engine"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = ["lunar-python==1.4.8"]
 
 [project.scripts]
 mingli-engine = "mingli_engine.cli:main"
