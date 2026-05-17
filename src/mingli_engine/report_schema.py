@@ -16,12 +16,6 @@ def _format_true_solar_time(value: bool | None) -> str:
     return "未说明"
 
 
-def _format_list(values: list[str]) -> str:
-    if not values:
-        return "暂无明确候选"
-    return "、".join(values)
-
-
 def _merge_safety_reviews(
     *reviews: SafetyReviewResult, disclaimer_present: bool
 ) -> SafetyReviewResult:
@@ -103,24 +97,6 @@ def _build_four_pillars_summary(chart: BaziChart) -> str:
     return "\n".join(rows)
 
 
-def _build_five_elements_summary(chart: BaziChart) -> str:
-    return "\n".join(
-        f"- {element}：{description}"
-        for element, description in chart.five_elements_summary.items()
-    )
-
-
-def _build_structure_analysis(chart: BaziChart) -> str:
-    pattern_candidates = _format_list(chart.pattern_candidates)
-    useful_god_candidates = _format_list(chart.useful_god_candidates)
-    return (
-        f"以{chart.day_master}为观察中心，强弱评估为：{chart.strength_assessment}。"
-        f"结构上可记录的格局候选包括：{pattern_candidates}；"
-        f"用神候选包括：{useful_god_candidates}。这些判断属于传统命理框架下的倾向性整理，"
-        "需要结合排盘来源、历法假设与个人现实处境理解。"
-    )
-
-
 def _major_body_sections(report: Report) -> str:
     return "\n\n".join(
         [
@@ -164,14 +140,19 @@ def build_report(chart: BaziChart) -> Report:
     )
     personality_tendencies = interpretation.day_master_summary
     strengths_and_issues = interpretation.focus_suggestions
+    phase_boundary = (
+        "当前基础结构解读层不做大运流年判断。"
+        if "不做大运流年判断" in interpretation.limitations
+        else "当前基础结构解读层保留阶段判断边界。"
+    )
+    action_focus = "上述观察" if interpretation.focus_suggestions else "当前观察"
     phase_overview = (
         f"{chart.luck_cycle_summary} 阶段概览只描述可反思的主题变化，"
-        "不推断具体事件结果。\n"
-        f"{interpretation.limitations}"
+        f"不推断具体事件结果。{phase_boundary}"
     )
     action_suggestions = (
-        f"{interpretation.focus_suggestions} "
-        "行动上建议先把观察转成可记录的小步骤，再用现实反馈复盘。"
+        f"行动上建议承接{action_focus}，把关注点转成可记录的小步骤，"
+        "再用现实反馈复盘。"
     )
     glossary = (
         "日主：以出生日天干作为观察中心。十神：传统命理中描述关系与功能的术语。"
