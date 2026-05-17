@@ -3,7 +3,8 @@ from mingli_engine.report_schema import build_report
 
 
 def _assert_in_order(text: str, headings: tuple[str, ...]) -> None:
-    positions = [text.index(heading) for heading in headings]
+    lines = text.splitlines()
+    positions = [lines.index(heading) for heading in headings]
     assert positions == sorted(positions)
 
 
@@ -11,6 +12,7 @@ def test_render_markdown_report_contains_required_headings(sample_bazi_chart):
     report = build_report(sample_bazi_chart)
 
     markdown = render_markdown_report(report)
+    lines = markdown.splitlines()
 
     for heading in (
         "# 八字结构化报告",
@@ -23,7 +25,7 @@ def test_render_markdown_report_contains_required_headings(sample_bazi_chart):
         "## 术语简注",
         "## 伦理边界提醒",
     ):
-        assert heading in markdown
+        assert heading in lines
 
 
 def test_render_markdown_report_uses_layered_reading_order(sample_bazi_chart):
@@ -72,6 +74,7 @@ def test_render_markdown_report_includes_interpretation_boundaries(sample_bazi_c
     markdown = render_markdown_report(report)
 
     assert report.interpretation_boundaries in markdown
+    assert markdown.count(report.interpretation_boundaries) == 1
     assert "不做格局定论" in markdown
     assert "不做用神定论" in markdown
     assert "不做大运流年判断" in markdown
