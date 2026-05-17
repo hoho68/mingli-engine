@@ -96,3 +96,42 @@ def test_count_element_distribution_records_missing_and_concentrated_signals():
     assert distribution.total_counts["木"] == 12
     assert distribution.total_counts["金"] == 0
     assert distribution.total_counts["水"] == 0
+
+
+def test_count_element_distribution_has_no_dominant_elements_without_countable_signals():
+    distribution = count_element_distribution(
+        make_chart(
+            [
+                Pillar("year", "A", "B", ["C"], "unknown", ""),
+                Pillar("month", "D", "E", ["F"], "unknown", ""),
+                Pillar("day", "G", "H", ["I"], "unknown", ""),
+                Pillar("hour", "J", "K", ["L"], "unknown", ""),
+            ]
+        )
+    )
+
+    assert distribution.total_counts == {
+        "木": 0,
+        "火": 0,
+        "土": 0,
+        "金": 0,
+        "水": 0,
+    }
+    assert distribution.dominant_elements == []
+    assert distribution.missing_elements == ["木", "火", "土", "金", "水"]
+
+
+def test_count_element_distribution_strips_signals_and_ignores_blanks():
+    distribution = count_element_distribution(
+        make_chart(
+            [
+                Pillar("year", " 甲 ", " 子 ", ["", " ", " 癸 "], "unknown", ""),
+                Pillar("month", " 未知 ", "", ["  未知藏干  "], "unknown", ""),
+            ]
+        )
+    )
+
+    assert distribution.direct_counts["木"] == 1
+    assert distribution.direct_counts["水"] == 1
+    assert distribution.hidden_counts["水"] == 1
+    assert distribution.unknown_signals == ["未知", "未知藏干"]

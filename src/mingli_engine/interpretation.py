@@ -54,6 +54,10 @@ def _count_signal(
     mapping: dict[str, str],
     unknown_signals: list[str],
 ) -> None:
+    signal = signal.strip()
+    if not signal:
+        return
+
     element = mapping.get(signal)
     if element is None:
         unknown_signals.append(signal)
@@ -94,14 +98,21 @@ def count_element_distribution(chart: BaziChart) -> ElementDistribution:
         for element in FIVE_ELEMENTS
     }
     highest_count = max(total_counts.values())
+    dominant_elements = (
+        []
+        if highest_count == 0
+        else [
+            element
+            for element in FIVE_ELEMENTS
+            if total_counts[element] == highest_count
+        ]
+    )
 
     return ElementDistribution(
         direct_counts=direct_counts,
         hidden_counts=hidden_counts,
         total_counts=total_counts,
-        dominant_elements=[
-            element for element in FIVE_ELEMENTS if total_counts[element] == highest_count
-        ],
+        dominant_elements=dominant_elements,
         missing_elements=[
             element for element in FIVE_ELEMENTS if total_counts[element] == 0
         ],
