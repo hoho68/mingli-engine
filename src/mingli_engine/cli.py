@@ -58,6 +58,12 @@ def _to_json_payload(payload: Any) -> Any:
     return data
 
 
+def _configure_stream_encoding(stream: Any) -> None:
+    reconfigure = getattr(stream, "reconfigure", None)
+    if reconfigure is not None:
+        reconfigure(encoding="utf-8")
+
+
 def _require_fields(data: dict[str, Any], fields: tuple[str, ...]) -> None:
     missing_fields = [field for field in fields if field not in data]
     if missing_fields:
@@ -224,9 +230,9 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    sys.stdin.reconfigure(encoding="utf-8")
-    sys.stdout.reconfigure(encoding="utf-8")
-    sys.stderr.reconfigure(encoding="utf-8")
+    _configure_stream_encoding(sys.stdin)
+    _configure_stream_encoding(sys.stdout)
+    _configure_stream_encoding(sys.stderr)
     parser = _build_parser()
     args = parser.parse_args(argv)
     try:

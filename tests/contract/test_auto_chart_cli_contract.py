@@ -1,8 +1,11 @@
+import io
 import json
 import os
 import subprocess
 import sys
 from pathlib import Path
+
+import mingli_engine.cli as cli
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -62,6 +65,23 @@ def test_calculate_chart_accepts_profile_from_stdin():
 
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
+    assert len(payload["pillars"]) == 4
+
+
+def test_calculate_chart_main_accepts_stringio_streams(monkeypatch):
+    profile = (EXAMPLES_DIR / "birth-profile.auto-gregorian.json").read_text(
+        encoding="utf-8"
+    )
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+    monkeypatch.setattr(cli.sys, "stdin", io.StringIO(profile))
+    monkeypatch.setattr(cli.sys, "stdout", stdout)
+    monkeypatch.setattr(cli.sys, "stderr", stderr)
+
+    return_code = cli.main(["calculate-chart", "--input", "-"])
+
+    assert return_code == 0, stderr.getvalue()
+    payload = json.loads(stdout.getvalue())
     assert len(payload["pillars"]) == 4
 
 
