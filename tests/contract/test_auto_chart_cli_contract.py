@@ -98,6 +98,42 @@ def test_calculate_chart_reports_stable_error_for_unsupported_lunar_calendar():
     assert "Traceback" not in result.stderr
 
 
+def test_calculate_chart_rejects_invalid_date(tmp_path):
+    payload = json.loads(
+        (EXAMPLES_DIR / "birth-profile.auto-gregorian.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    payload["birth_date"] = "1992-02-31"
+    input_path = tmp_path / "invalid-date.json"
+    input_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+    result = _run_cli("calculate-chart", "--input", str(input_path))
+
+    assert result.returncode == 1
+    assert "Invalid input" in result.stderr
+    assert "birth_date" in result.stderr
+    assert "Traceback" not in result.stderr
+
+
+def test_calculate_chart_rejects_invalid_time(tmp_path):
+    payload = json.loads(
+        (EXAMPLES_DIR / "birth-profile.auto-gregorian.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    payload["birth_time"] = "25:99"
+    input_path = tmp_path / "invalid-time.json"
+    input_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+    result = _run_cli("calculate-chart", "--input", str(input_path))
+
+    assert result.returncode == 1
+    assert "Invalid input" in result.stderr
+    assert "birth_time" in result.stderr
+    assert "Traceback" not in result.stderr
+
+
 def test_calculate_chart_outputs_safety_review_for_unsafe_focus():
     result = _run_cli(
         "calculate-chart",

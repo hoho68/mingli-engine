@@ -62,6 +62,22 @@ def test_rejects_non_strict_birth_time_format():
         calculate_bazi_chart(complete_profile(birth_time="9:30"))
 
 
+def test_calculate_bazi_chart_discloses_no_true_solar_time_for_boundary_case():
+    chart = calculate_bazi_chart(
+        complete_profile(
+            birth_date="1992-02-04",
+            birth_time="04:50",
+            birthplace="北京市",
+            focus_topic="整体结构观察",
+        )
+    )
+
+    assert len(chart.pillars) == 4
+    assert chart.chart_source.true_solar_time_applied is False
+    assert "节气" in chart.chart_source.calendar_assumption
+    assert "UTC+08:00" in chart.chart_source.timezone_assumption
+
+
 def test_normalizes_provider_exceptions(monkeypatch):
     def raise_provider_error(_birth_datetime):
         raise RuntimeError("provider down")
