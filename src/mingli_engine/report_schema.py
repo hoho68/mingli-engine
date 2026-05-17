@@ -166,7 +166,8 @@ def build_report(chart: BaziChart) -> Report:
     strengths_and_issues = interpretation.focus_suggestions
     phase_overview = (
         f"{chart.luck_cycle_summary} 阶段概览只描述可反思的主题变化，"
-        "不推断具体事件结果。当前基础结构解读层不做大运流年判断。"
+        "不推断具体事件结果。\n"
+        f"{interpretation.limitations}"
     )
     action_suggestions = (
         f"{interpretation.focus_suggestions} "

@@ -46,6 +46,8 @@ def test_build_report_includes_basic_interpretation_sections(sample_bazi_chart):
     assert "观察中心" in report.personality_tendencies
     assert "十神结构观察" in report.ten_gods_summary
     assert "基础结构观察" in report.structure_analysis
+    assert "不做格局定论" in report.phase_overview
+    assert "不做用神定论" in report.phase_overview
     assert "不做格局定论" in combined
     assert "不做用神定论" in combined
     assert "不做大运流年判断" in combined
