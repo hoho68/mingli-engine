@@ -189,6 +189,23 @@ def _calculate_chart(args: argparse.Namespace) -> int:
     return 0
 
 
+def _calculate_report(args: argparse.Namespace) -> int:
+    profile = _birth_profile_from_dict(_read_json(args.input))
+    safety_review = _safety_review_focus_topic(profile, disclaimer_present=True)
+    if not safety_review.allowed:
+        _write_json(safety_review)
+        return 3
+
+    chart = calculate_bazi_chart(profile)
+    report = build_report(chart)
+    if not report.safety_review.allowed:
+        _write_json(report.safety_review)
+        return 3
+
+    sys.stdout.write(render_markdown_report(report))
+    return 0
+
+
 def _generate_report(args: argparse.Namespace) -> int:
     chart = _chart_from_dict(_read_json(args.input))
     intake_review = validate_birth_profile(chart.birth_profile)
@@ -220,6 +237,11 @@ def _build_parser() -> argparse.ArgumentParser:
     calculate_parser = subparsers.add_parser("calculate-chart")
     calculate_parser.add_argument("--input", required=True, type=Path)
     calculate_parser.set_defaults(handler=_calculate_chart)
+
+    calculated_report_parser = subparsers.add_parser("calculate-report")
+    calculated_report_parser.add_argument("--input", required=True, type=Path)
+    calculated_report_parser.add_argument("--format", choices=["markdown"], required=True)
+    calculated_report_parser.set_defaults(handler=_calculate_report)
 
     report_parser = subparsers.add_parser("generate-report")
     report_parser.add_argument("--input", required=True, type=Path)
