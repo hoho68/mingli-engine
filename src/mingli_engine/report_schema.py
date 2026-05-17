@@ -1,5 +1,6 @@
 from dataclasses import replace
 
+from mingli_engine.interpretation import build_basic_interpretation
 from mingli_engine.models import BaziChart, Report, SafetyReviewResult
 from mingli_engine.safety import safety_check
 
@@ -152,27 +153,24 @@ def build_report(chart: BaziChart) -> Report:
     chart_card = _build_chart_card(chart)
     assumptions = _build_assumptions(chart)
     four_pillars_summary = _build_four_pillars_summary(chart)
-    five_elements_summary = _build_five_elements_summary(chart)
-    ten_gods_summary = (
-        f"{chart.ten_gods_summary} 十神信息宜用于观察关系、资源与行动风格的倾向，"
-        "不作为固定标签。"
+    interpretation = build_basic_interpretation(chart)
+    five_elements_summary = interpretation.five_elements_summary
+    ten_gods_summary = interpretation.ten_gods_summary
+    structure_analysis = "\n".join(
+        [
+            interpretation.structure_observations,
+            interpretation.limitations,
+        ]
     )
-    structure_analysis = _build_structure_analysis(chart)
-    personality_tendencies = (
-        "性格倾向可从日主、十神与五行分布交叉观察：此盘更适合以弹性、学习力、"
-        "边界感和执行节奏作为自我反思关键词。"
-    )
-    strengths_and_issues = (
-        "优势可关注资源整合、理解复杂信息与持续学习；议题可关注计划落地、压力管理、"
-        "表达边界与长期节奏。"
-    )
+    personality_tendencies = interpretation.day_master_summary
+    strengths_and_issues = interpretation.focus_suggestions
     phase_overview = (
         f"{chart.luck_cycle_summary} 阶段概览只描述可反思的主题变化，"
-        "不推断具体事件结果。"
+        "不推断具体事件结果。当前基础结构解读层不做大运流年判断。"
     )
     action_suggestions = (
-        "建议把关注主题拆成可执行的小步骤：记录现实证据、区分情绪与事实、"
-        "为重要决定咨询相应专业人士，并定期复盘行动反馈。"
+        f"{interpretation.focus_suggestions} "
+        "行动上建议先把观察转成可记录的小步骤，再用现实反馈复盘。"
     )
     glossary = (
         "日主：以出生日天干作为观察中心。十神：传统命理中描述关系与功能的术语。"

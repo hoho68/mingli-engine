@@ -4,6 +4,7 @@ __all__ = [
     "models",
     "validation",
     "safety",
+    "interpretation",
     "report_schema",
     "markdown",
     "calendar_provider",
