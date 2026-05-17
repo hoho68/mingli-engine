@@ -71,6 +71,18 @@ def unknown_only_chart() -> BaziChart:
     )
 
 
+def chinese_unknown_ten_god_chart() -> BaziChart:
+    return make_chart(
+        [
+            Pillar("year", "甲", "子", ["癸"], "未知", "木水"),
+            Pillar("month", "丙", "寅", ["甲", "丙", "戊"], "未说明", "火木"),
+            Pillar("day", "戊", "申", ["庚", "壬", "戊"], "无", "土金"),
+            Pillar("hour", "辛", "酉", ["辛"], "UNKNOWN", "金金"),
+        ],
+        day_master="戊",
+    )
+
+
 def test_count_element_distribution_distinguishes_direct_and_hidden_signals():
     distribution = count_element_distribution(balanced_chart())
 
@@ -190,6 +202,18 @@ def test_build_basic_interpretation_records_missing_ten_gods_when_all_unknown():
     assert "未识别十神位置：年柱、月柱、日柱、时柱，本层不作补猜。" in (
         summary.ten_gods_summary
     )
+
+
+def test_build_basic_interpretation_treats_chinese_unknown_ten_gods_as_missing():
+    summary = build_basic_interpretation(chinese_unknown_ten_god_chart())
+
+    assert "当前没有可读的十神信号" in summary.ten_gods_summary
+    assert "未识别十神位置：年柱、月柱、日柱、时柱，本层不作补猜。" in (
+        summary.ten_gods_summary
+    )
+    assert "年柱：未知" not in summary.ten_gods_summary
+    assert "月柱：未说明" not in summary.ten_gods_summary
+    assert "日柱：无" not in summary.ten_gods_summary
 
 
 def test_build_basic_interpretation_uses_limitation_suggestions_without_counts():

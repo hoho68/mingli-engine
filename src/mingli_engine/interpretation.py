@@ -66,7 +66,10 @@ PILLAR_DISPLAY_NAMES = {
     "month": "月柱",
     "day": "日柱",
     "hour": "时柱",
+    "time": "时柱",
 }
+
+UNKNOWN_TEN_GODS = frozenset({"unknown", "未知", "未说明", "未标明", "无", "暂无"})
 
 
 def _empty_counts() -> dict[str, int]:
@@ -89,6 +92,14 @@ def _count_signal(
         return
 
     counts[element] += 1
+
+
+def _dedupe_preserving_order(values: list[str]) -> list[str]:
+    deduped: list[str] = []
+    for value in values:
+        if value not in deduped:
+            deduped.append(value)
+    return deduped
 
 
 def count_element_distribution(chart: BaziChart) -> ElementDistribution:
@@ -141,7 +152,7 @@ def count_element_distribution(chart: BaziChart) -> ElementDistribution:
         missing_elements=[
             element for element in FIVE_ELEMENTS if total_counts[element] == 0
         ],
-        unknown_signals=unknown_signals,
+        unknown_signals=_dedupe_preserving_order(unknown_signals),
     )
 
 
@@ -159,7 +170,7 @@ def _format_missing_elements(elements: list[str]) -> str:
 
 def _is_unknown_ten_god(ten_god: str) -> bool:
     normalized = ten_god.strip()
-    return not normalized or normalized.casefold() == "unknown"
+    return not normalized or normalized.casefold() in UNKNOWN_TEN_GODS
 
 
 def summarize_ten_god_placements(chart: BaziChart) -> list[TenGodPlacement]:

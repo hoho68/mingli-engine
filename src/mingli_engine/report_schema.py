@@ -145,13 +145,21 @@ def build_report(chart: BaziChart) -> Report:
         if "不做大运流年判断" in interpretation.limitations
         else "当前基础结构解读层保留阶段判断边界。"
     )
-    action_focus = "上述观察" if interpretation.focus_suggestions else "当前观察"
+    focus_topic = chart.birth_profile.focus_topic.strip() or "当前关注主题"
+    dominant_elements = interpretation.element_distribution.dominant_elements
+    missing_elements = interpretation.element_distribution.missing_elements
+    if dominant_elements:
+        action_focus = f"{'、'.join(dominant_elements)}等较集中的结构信号"
+    elif missing_elements:
+        action_focus = "暂未形成可计数信号的结构边界"
+    else:
+        action_focus = "当前结构观察"
     phase_overview = (
         f"{chart.luck_cycle_summary} 阶段概览只描述可反思的主题变化，"
         f"不推断具体事件结果。{phase_boundary}"
     )
     action_suggestions = (
-        f"行动上建议承接{action_focus}，把关注点转成可记录的小步骤，"
+        f"行动上建议围绕{focus_topic}，承接{action_focus}，把关注点转成可记录的小步骤，"
         "再用现实反馈复盘。"
     )
     glossary = (

@@ -54,6 +54,8 @@ def test_build_report_includes_basic_interpretation_sections(sample_bazi_chart):
     assert "不做大运流年判断" in combined
     assert combined.count("不做格局定论") == 1
     assert combined.count("不做用神定论") == 1
+    assert sample_bazi_chart.birth_profile.focus_topic in report.action_suggestions
+    assert "结构" in report.action_suggestions
     assert report.strengths_and_issues not in report.action_suggestions
 
 
