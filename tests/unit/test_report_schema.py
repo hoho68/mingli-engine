@@ -180,11 +180,14 @@ def test_build_report_normalizes_placeholder_focus_topic(sample_bazi_chart):
     chart = replace(sample_bazi_chart, birth_profile=birth_profile)
 
     report = build_report(chart)
+    body = _report_body(report)
 
     assert "unknown" not in report.quick_guide
     assert "unknown" not in report.action_suggestions
+    assert "unknown" not in body
     assert "当前关注主题" in report.quick_guide
     assert "当前关注主题" in report.action_suggestions
+    assert "当前关注主题" in report.strengths_and_issues
 
 
 def test_build_report_quick_guide_reads_like_plain_guidance(sample_bazi_chart):

@@ -46,6 +46,14 @@ def _focus_topic_label(value: str) -> str:
     return label
 
 
+def _normalize_focus_topic_text(text: str, raw_focus_topic: str) -> str:
+    raw = raw_focus_topic.strip()
+    label = _focus_topic_label(raw_focus_topic)
+    if raw and label != raw:
+        return text.replace(raw, label)
+    return text
+
+
 def _format_true_solar_time(value: bool | None) -> str:
     if value is True:
         return "已应用"
@@ -204,7 +212,10 @@ def build_report(chart: BaziChart) -> Report:
     ten_gods_summary = interpretation.ten_gods_summary
     structure_analysis = interpretation.structure_observations
     personality_tendencies = interpretation.day_master_summary
-    strengths_and_issues = interpretation.focus_suggestions
+    strengths_and_issues = _normalize_focus_topic_text(
+        interpretation.focus_suggestions,
+        chart.birth_profile.focus_topic,
+    )
     interpretation_boundaries = interpretation.limitations
     phase_boundary = (
         "当前基础结构解读层不做大运流年判断。"
