@@ -102,12 +102,13 @@ def test_build_report_includes_basic_interpretation_sections(sample_bazi_chart):
         ]
     )
 
-    assert "五行信号观察" in report.five_elements_summary
-    assert "明面信号" in report.five_elements_summary
-    assert "藏干" in report.five_elements_summary
+    assert "五行数量可以先作为结构观察材料来看" in report.five_elements_summary
+    assert "明面信号：" in report.five_elements_summary
+    assert "藏干信号：" in report.five_elements_summary
+    assert "合计信号：" in report.five_elements_summary
     assert "观察中心" in report.personality_tendencies
-    assert "十神结构观察" in report.ten_gods_summary
-    assert "基础结构观察" in report.structure_analysis
+    assert "十神关系可以先按四个柱位理解为结构线索" in report.ten_gods_summary
+    assert "基础结构可以先看分布是否集中" in report.structure_analysis
     assert "基础结构解读层" in report.phase_overview
     assert "不做大运流年判断" in report.phase_overview
     assert "不做格局定论" in combined
@@ -118,6 +119,18 @@ def test_build_report_includes_basic_interpretation_sections(sample_bazi_chart):
     assert sample_bazi_chart.birth_profile.focus_topic in report.action_suggestions
     assert "结构" in report.action_suggestions
     assert report.strengths_and_issues not in report.action_suggestions
+    for old_phrase in (
+        "五行信号观察：明面信号为",
+        "这些数量用于观察结构分布",
+        "基础结构观察：五行分布先看有无、多少与集中度。",
+    ):
+        assert old_phrase not in "\n".join(
+            [
+                report.five_elements_summary,
+                report.ten_gods_summary,
+                report.structure_analysis,
+            ]
+        )
 
 
 def test_build_report_prepares_quick_guide_and_boundary_layer(sample_bazi_chart):

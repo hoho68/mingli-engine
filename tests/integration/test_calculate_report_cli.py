@@ -83,15 +83,22 @@ def test_calculate_report_outputs_markdown_from_birth_profile():
     assert "系统自动排盘" in markdown
     assert "未人工复核" in markdown
     assert "中等可信度" in markdown
-    assert "五行信号观察" in markdown
-    assert "明面信号" in markdown
-    assert "藏干" in markdown
+    assert "五行数量可以先作为结构观察材料来看" in markdown
+    assert "明面信号：" in markdown
+    assert "藏干信号：" in markdown
+    assert "合计信号：" in markdown
     assert "观察中心" in markdown
-    assert "十神结构观察" in markdown
-    assert "基础结构观察" in markdown
+    assert "十神关系可以先按四个柱位理解为结构线索" in markdown
+    assert "基础结构可以先看分布是否集中" in markdown
     assert "不做格局定论" in markdown
     assert "不做用神定论" in markdown
     assert "不做大运流年判断" in markdown
+    for old_phrase in (
+        "五行信号观察：明面信号为",
+        "这些数量用于观察结构分布",
+        "基础结构观察：五行分布先看有无、多少与集中度。",
+    ):
+        assert old_phrase not in markdown
     for prohibited_phrase in ("必定", "注定", "一定会", "死定"):
         assert prohibited_phrase not in markdown
 

@@ -69,10 +69,10 @@
 
 ### Tests for User Story 2
 
-- [ ] T014 [P] [US2] Update assembled report wording assertions in `tests/unit/test_report_schema.py`
-- [ ] T015 [P] [US2] Update automatic chart CLI Markdown assertions in `tests/integration/test_calculate_report_cli.py`
-- [ ] T016 [P] [US2] Update external chart CLI Markdown assertions in `tests/integration/test_generate_markdown_report.py`
-- [ ] T017 [US2] Run `uv run --with pytest python -m pytest tests/unit/test_report_schema.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm the new assertions fail before implementation for `tests/unit/test_report_schema.py`
+- [x] T014 [P] [US2] Update assembled report wording assertions in `tests/unit/test_report_schema.py`
+- [x] T015 [P] [US2] Update automatic chart CLI Markdown assertions in `tests/integration/test_calculate_report_cli.py`
+- [x] T016 [P] [US2] Update external chart CLI Markdown assertions in `tests/integration/test_generate_markdown_report.py`
+- [x] T017 [US2] Run `uv run --with pytest python -m pytest tests/unit/test_report_schema.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm the new assertions fail before implementation for `tests/unit/test_report_schema.py`
 
 ### Implementation for User Story 2
 

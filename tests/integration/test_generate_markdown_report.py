@@ -83,15 +83,22 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     assert "示例排盘由外部工具核对，仅用于 CLI 合约测试" in markdown
     _assert_plain_language_report(markdown)
     assert "外部排盘已核对" in markdown
-    assert "五行信号观察" in markdown
-    assert "明面信号" in markdown
-    assert "藏干" in markdown
+    assert "五行数量可以先作为结构观察材料来看" in markdown
+    assert "明面信号：" in markdown
+    assert "藏干信号：" in markdown
+    assert "合计信号：" in markdown
     assert "观察中心" in markdown
-    assert "十神结构观察" in markdown
-    assert "基础结构观察" in markdown
+    assert "十神关系可以先按四个柱位理解为结构线索" in markdown
+    assert "基础结构可以先看分布是否集中" in markdown
     assert "不做格局定论" in markdown
     assert "不做用神定论" in markdown
     assert "不做大运流年判断" in markdown
+    for old_phrase in (
+        "五行信号观察：明面信号为",
+        "这些数量用于观察结构分布",
+        "基础结构观察：五行分布先看有无、多少与集中度。",
+    ):
+        assert old_phrase not in markdown
 
 
 def test_generate_report_returns_exit_2_json_for_incomplete_birth_profile(tmp_path):
