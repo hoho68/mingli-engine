@@ -92,15 +92,15 @@
 
 ### Tests for User Story 3
 
-- [ ] T021 [P] [US3] Review prohibited phrase coverage in `tests/safety/test_red_lines_and_language.py`
-- [ ] T022 [US3] Run `uv run --with pytest python -m pytest tests/safety/test_red_lines_and_language.py -v` and confirm safety behavior passes for `tests/safety/test_red_lines_and_language.py`
-- [ ] T023 [US3] Run `uv run --with pytest python -m pytest` and confirm the full suite passes for `tests/`
-- [ ] T024 [US3] Generate sample Markdown through `src/mingli_engine/cli.py` with `examples/birth-profile.auto-gregorian.json` and confirm the output keeps safe observation language
+- [x] T021 [P] [US3] Review prohibited phrase coverage in `tests/safety/test_red_lines_and_language.py`
+- [x] T022 [US3] Run `uv run --with pytest python -m pytest tests/safety/test_red_lines_and_language.py -v` and confirm safety behavior passes for `tests/safety/test_red_lines_and_language.py`
+- [x] T023 [US3] Run `uv run --with pytest python -m pytest` and confirm the full suite passes for `tests/`
+- [x] T024 [US3] Generate sample Markdown through `src/mingli_engine/cli.py` with `examples/birth-profile.auto-gregorian.json` and confirm the output keeps safe observation language
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Add a targeted safety assertion in `tests/safety/test_red_lines_and_language.py` only if T021 shows the current safety test does not cover the new structure wording
-- [ ] T026 [US3] Commit any User Story 3 test adjustment from `tests/safety/test_red_lines_and_language.py`
+- [x] T025 [US3] Add a targeted safety assertion in `tests/safety/test_red_lines_and_language.py` only if T021 shows the current safety test does not cover the new structure wording
+- [x] T026 [US3] Commit any User Story 3 test adjustment from `tests/safety/test_red_lines_and_language.py`
 
 **Checkpoint**: All user stories should now be independently functional and safety-verified.
 
@@ -110,10 +110,10 @@
 
 **Purpose**: Final checks and handoff.
 
-- [ ] T027 Run `git diff --check` for formatting validation across `src/mingli_engine/interpretation.py` and `tests/`
-- [ ] T028 Run the quickstart verification commands in `specs/006-structure-observation-language/quickstart.md`
-- [ ] T029 Inspect `git status --short --branch` and recent commits for `006-structure-observation-language`
-- [ ] T030 Prepare final completion summary referencing `specs/006-structure-observation-language/tasks.md`
+- [x] T027 Run `git diff --check` for formatting validation across `src/mingli_engine/interpretation.py` and `tests/`
+- [x] T028 Run the quickstart verification commands in `specs/006-structure-observation-language/quickstart.md`
+- [x] T029 Inspect `git status --short --branch` and recent commits for `006-structure-observation-language`
+- [x] T030 Prepare final completion summary referencing `specs/006-structure-observation-language/tasks.md`
 
 ---
 
