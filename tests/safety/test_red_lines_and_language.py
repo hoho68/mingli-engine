@@ -40,6 +40,10 @@ def test_generated_auto_report_avoids_absolute_or_fatalistic_phrases():
 
     assert result.returncode == 0, result.stderr
     markdown = result.stdout
+    assert "系统自动排盘" in markdown
+    assert "中等可信度" in markdown
+    for raw_label in ("auto_calculated", "medium", "gregorian"):
+        assert raw_label not in markdown
     assert "## 快速导读" in markdown.splitlines()
     assert "## 第三层：解读边界" in markdown.splitlines()
     for prohibited_phrase in ("必定", "注定", "一定会", "死定"):

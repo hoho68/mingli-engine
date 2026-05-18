@@ -34,6 +34,26 @@ def _assert_in_order(text: str, headings: tuple[str, ...]) -> None:
     assert positions == sorted(positions)
 
 
+RAW_READER_LABELS = (
+    "auto_calculated",
+    "external_verified",
+    "medium",
+    "gregorian",
+    "year：",
+    "month：",
+    "day：",
+    "hour：",
+)
+
+
+def _assert_plain_language_report(markdown: str) -> None:
+    assert "公历" in markdown
+    for pillar_name in ("年柱", "月柱", "日柱", "时柱"):
+        assert f"- {pillar_name}：" in markdown
+    for raw_label in RAW_READER_LABELS:
+        assert raw_label not in markdown
+
+
 def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     result = _run_cli(
         "generate-report",
@@ -61,6 +81,8 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     assert "### 四柱与五行摘要" in markdown.splitlines()
     assert "### 行动建议" in markdown.splitlines()
     assert "示例排盘由外部工具核对，仅用于 CLI 合约测试" in markdown
+    _assert_plain_language_report(markdown)
+    assert "外部排盘已核对" in markdown
     assert "五行信号观察" in markdown
     assert "明面信号" in markdown
     assert "藏干" in markdown
