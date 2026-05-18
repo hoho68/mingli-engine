@@ -18,10 +18,10 @@
 
 **Purpose**: Confirm the active feature context and the existing code boundary before changing tests or implementation.
 
-- [ ] T001 Confirm the active feature pointer in `.specify/feature.json` and the 006 plan reference in `AGENTS.md`
-- [ ] T002 [P] Review the implementation boundary in `specs/006-structure-observation-language/plan.md` and `specs/006-structure-observation-language/research.md`
-- [ ] T003 [P] Review the Markdown behavior contract in `specs/006-structure-observation-language/contracts/structure-observation-markdown-contract.md`
-- [ ] T004 [P] Review the current structure text generators in `src/mingli_engine/interpretation.py`
+- [x] T001 Confirm the active feature pointer in `.specify/feature.json` and the 006 plan reference in `AGENTS.md`
+- [x] T002 [P] Review the implementation boundary in `specs/006-structure-observation-language/plan.md` and `specs/006-structure-observation-language/research.md`
+- [x] T003 [P] Review the Markdown behavior contract in `specs/006-structure-observation-language/contracts/structure-observation-markdown-contract.md`
+- [x] T004 [P] Review the current structure text generators in `src/mingli_engine/interpretation.py`
 
 ---
 
@@ -31,8 +31,8 @@
 
 **Critical**: No wording implementation should begin until these checks identify the current old phrases and affected test files.
 
-- [ ] T005 Locate existing old-phrase assertions in `tests/unit/test_interpretation.py`, `tests/unit/test_report_schema.py`, `tests/integration/test_calculate_report_cli.py`, and `tests/integration/test_generate_markdown_report.py`
-- [ ] T006 Generate current sample Markdown through `src/mingli_engine/cli.py` with `examples/birth-profile.auto-gregorian.json` and confirm it still contains the old structure phrases before implementation
+- [x] T005 Locate existing old-phrase assertions in `tests/unit/test_interpretation.py`, `tests/unit/test_report_schema.py`, `tests/integration/test_calculate_report_cli.py`, and `tests/integration/test_generate_markdown_report.py`
+- [x] T006 Generate current sample Markdown through `src/mingli_engine/cli.py` with `examples/birth-profile.auto-gregorian.json` and confirm it still contains the old structure phrases before implementation
 
 **Checkpoint**: Foundation ready. User story work can begin.
 
@@ -46,9 +46,9 @@
 
 ### Tests for User Story 1
 
-- [ ] T007 [US1] Update `test_build_basic_interpretation_explains_day_master_and_ten_gods` in `tests/unit/test_interpretation.py` to expect smoother five-element and basic structure wording
-- [ ] T008 [US1] Add `test_build_basic_interpretation_avoids_system_like_structure_phrases` in `tests/unit/test_interpretation.py`
-- [ ] T009 [US1] Run `uv run --with pytest python -m pytest tests/unit/test_interpretation.py -v` and confirm the new assertions fail before implementation in `tests/unit/test_interpretation.py`
+- [x] T007 [US1] Update `test_build_basic_interpretation_explains_day_master_and_ten_gods` in `tests/unit/test_interpretation.py` to expect smoother five-element and basic structure wording
+- [x] T008 [US1] Add `test_build_basic_interpretation_avoids_system_like_structure_phrases` in `tests/unit/test_interpretation.py`
+- [x] T009 [US1] Run `uv run --with pytest python -m pytest tests/unit/test_interpretation.py -v` and confirm the new assertions fail before implementation in `tests/unit/test_interpretation.py`
 
 ### Implementation for User Story 1
 

@@ -164,19 +164,42 @@ def test_count_element_distribution_strips_signals_and_ignores_blanks():
 def test_build_basic_interpretation_explains_day_master_and_ten_gods():
     summary = build_basic_interpretation(balanced_chart())
 
-    assert "五行信号观察" in summary.five_elements_summary
-    assert "明面信号" in summary.five_elements_summary
-    assert "藏干" in summary.five_elements_summary
+    assert "五行数量可以先作为结构观察材料来看" in summary.five_elements_summary
+    assert "明面信号：" in summary.five_elements_summary
+    assert "藏干信号：" in summary.five_elements_summary
+    assert "合计信号：" in summary.five_elements_summary
+    assert "不等同于完整旺衰模型" in summary.five_elements_summary
     assert "日主戊" in summary.day_master_summary
     assert "观察中心" in summary.day_master_summary
+    assert "十神关系可以先按四个柱位理解为结构线索" in summary.ten_gods_summary
     assert "年柱：七杀" in summary.ten_gods_summary
     assert "月柱：食神" in summary.ten_gods_summary
     assert "日柱：日主" in summary.ten_gods_summary
     assert "时柱：伤官" in summary.ten_gods_summary
-    assert "基础结构观察" in summary.structure_observations
+    assert "基础结构可以先看分布是否集中、哪些信号可见、哪些信号暂时不明显" in (
+        summary.structure_observations
+    )
     assert "不做格局定论" in summary.limitations
     assert "不做用神定论" in summary.limitations
     assert "不做大运流年判断" in summary.limitations
+
+
+def test_build_basic_interpretation_avoids_system_like_structure_phrases():
+    summary = build_basic_interpretation(balanced_chart())
+    joined = "\n".join(
+        [
+            summary.five_elements_summary,
+            summary.ten_gods_summary,
+            summary.structure_observations,
+        ]
+    )
+
+    for old_phrase in (
+        "五行信号观察：明面信号为",
+        "这些数量用于观察结构分布",
+        "基础结构观察：五行分布先看有无、多少与集中度。",
+    ):
+        assert old_phrase not in joined
 
 
 def test_build_basic_interpretation_uses_neutral_language_for_missing_signals():
