@@ -196,13 +196,18 @@ def _build_five_elements_text(distribution: ElementDistribution) -> str:
     hidden_text = _format_counts(distribution.hidden_counts)
     total_text = _format_counts(distribution.total_counts)
     parts = [
-        f"五行信号观察：明面信号为{direct_text}；藏干信号为{hidden_text}；合计为{total_text}。",
-        "这些数量用于观察结构分布，不等同于完整旺衰模型。",
+        (
+            "五行数量可以先作为结构观察材料来看："
+            f"明面信号：{direct_text}；"
+            f"藏干信号：{hidden_text}；"
+            f"合计信号：{total_text}。"
+        ),
+        "这些数字只用来帮助观察分布和集中度，不等同于完整旺衰模型，也不是最终结论。",
     ]
 
     if distribution.dominant_elements:
         dominant = "、".join(distribution.dominant_elements)
-        parts.append(f"当前可计数信号中，{dominant}较为集中，可作为后续观察重点。")
+        parts.append(f"当前可计数信号中，{dominant}相对更集中，适合作为后续观察重点。")
 
     if distribution.missing_elements:
         missing = _format_missing_elements(distribution.missing_elements)
@@ -239,12 +244,12 @@ def _build_ten_gods_text(chart: BaziChart) -> str:
         pillar_lines.append(f"{pillar_name}：{ten_god}")
 
     if not pillar_lines:
-        text = "十神结构观察：当前没有可读的十神信号，本层保留为空白观察。"
+        text = "十神关系可以先按四个柱位理解为结构线索；当前没有可读的十神信号，本层保留为空白观察。"
         if missing_pillars:
             text += f"\n未识别十神位置：{'、'.join(missing_pillars)}，本层不作补猜。"
         return text
 
-    text = "十神结构观察：\n" + "\n".join(pillar_lines)
+    text = "十神关系可以先按四个柱位理解为结构线索：\n" + "\n".join(pillar_lines)
     placements = summarize_ten_god_placements(chart)
     repeated = [
         placement
@@ -263,7 +268,7 @@ def _build_ten_gods_text(chart: BaziChart) -> str:
 
 
 def _build_structure_text(distribution: ElementDistribution) -> str:
-    observations = ["基础结构观察：五行分布先看有无、多少与集中度。"]
+    observations = ["基础结构可以先看分布是否集中、哪些信号可见、哪些信号暂时不明显。"]
     if distribution.dominant_elements:
         dominant = "、".join(distribution.dominant_elements)
         observations.append(f"{dominant}信号相对突出，可观察其在明面与藏干中的来源。")

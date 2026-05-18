@@ -52,10 +52,10 @@
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Replace the five-element opening prose in `_build_five_elements_text` in `src/mingli_engine/interpretation.py`
-- [ ] T011 [US1] Replace the basic structure opening prose in `_build_structure_text` in `src/mingli_engine/interpretation.py`
-- [ ] T012 [US1] Run `uv run --with pytest python -m pytest tests/unit/test_interpretation.py -v` and confirm User Story 1 passes for `tests/unit/test_interpretation.py`
-- [ ] T013 [US1] Commit User Story 1 changes from `tests/unit/test_interpretation.py` and `src/mingli_engine/interpretation.py`
+- [x] T010 [US1] Replace the five-element opening prose in `_build_five_elements_text` in `src/mingli_engine/interpretation.py`
+- [x] T011 [US1] Replace the basic structure opening prose in `_build_structure_text` in `src/mingli_engine/interpretation.py`
+- [x] T012 [US1] Run `uv run --with pytest python -m pytest tests/unit/test_interpretation.py -v` and confirm User Story 1 passes for `tests/unit/test_interpretation.py`
+- [x] T013 [US1] Commit User Story 1 changes from `tests/unit/test_interpretation.py` and `src/mingli_engine/interpretation.py`
 
 **Checkpoint**: User Story 1 should now be independently functional and testable.
 
@@ -76,9 +76,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Replace the readable ten-god prefix and no-readable-signal wording in `_build_ten_gods_text` in `src/mingli_engine/interpretation.py`
-- [ ] T019 [US2] Run `uv run --with pytest python -m pytest tests/unit/test_report_schema.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm User Story 2 passes for `tests/integration/test_calculate_report_cli.py`
-- [ ] T020 [US2] Commit User Story 2 changes from `tests/unit/test_report_schema.py`, `tests/integration/test_calculate_report_cli.py`, `tests/integration/test_generate_markdown_report.py`, and `src/mingli_engine/interpretation.py`
+- [x] T018 [US2] Replace the readable ten-god prefix and no-readable-signal wording in `_build_ten_gods_text` in `src/mingli_engine/interpretation.py`
+- [x] T019 [US2] Run `uv run --with pytest python -m pytest tests/unit/test_report_schema.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm User Story 2 passes for `tests/integration/test_calculate_report_cli.py`
+- [x] T020 [US2] Commit User Story 2 changes from `tests/unit/test_report_schema.py`, `tests/integration/test_calculate_report_cli.py`, `tests/integration/test_generate_markdown_report.py`, and `src/mingli_engine/interpretation.py`
 
 **Checkpoint**: User Stories 1 and 2 should both work independently.
 
