@@ -39,6 +39,13 @@ def _reader_label(value: str | None, labels: dict[str, str]) -> str:
     return labels.get(normalized, normalized)
 
 
+def _focus_topic_label(value: str) -> str:
+    label = _reader_label(value, {})
+    if label == "未说明":
+        return "当前关注主题"
+    return label
+
+
 def _format_true_solar_time(value: bool | None) -> str:
     if value is True:
         return "已应用"
@@ -140,7 +147,7 @@ def _format_elements_for_report(elements: list[str]) -> str:
 
 def _build_quick_guide(chart: BaziChart, interpretation) -> str:
     source = chart.chart_source
-    focus_topic = chart.birth_profile.focus_topic.strip() or "当前关注主题"
+    focus_topic = _focus_topic_label(chart.birth_profile.focus_topic)
     source_label = _reader_label(source.source_type, SOURCE_TYPE_LABELS)
     confidence_label = _reader_label(source.confidence, CONFIDENCE_LABELS)
     dominant = _format_elements_for_report(
@@ -204,7 +211,7 @@ def build_report(chart: BaziChart) -> Report:
         if "不做大运流年判断" in interpretation.limitations
         else "当前基础结构解读层保留阶段判断边界。"
     )
-    focus_topic = chart.birth_profile.focus_topic.strip() or "当前关注主题"
+    focus_topic = _focus_topic_label(chart.birth_profile.focus_topic)
     dominant_elements = interpretation.element_distribution.dominant_elements
     missing_elements = interpretation.element_distribution.missing_elements
     if dominant_elements:
