@@ -83,6 +83,13 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     assert "示例排盘由外部工具核对，仅用于 CLI 合约测试" in markdown
     _assert_plain_language_report(markdown)
     assert "外部排盘已核对" in markdown
+    assert "先核对资料与假设" in markdown
+    assert "再看结构观察" in markdown
+    assert "最后转成行动反思" in markdown
+    assert "这些基础资料只说明排盘依据与采用假设，不直接构成命理结论" in markdown
+    assert "结构观察提供的是线索，不是最终判断" in markdown
+    assert "这些边界是为了防止过度断言" in markdown
+    assert "行动反思只作为复盘提示" in markdown
     assert "五行数量可以先作为结构观察材料来看" in markdown
     assert "明面信号：" in markdown
     assert "藏干信号：" in markdown

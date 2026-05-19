@@ -143,12 +143,38 @@ def test_build_report_prepares_quick_guide_and_boundary_layer(sample_bazi_chart)
     assert 3 <= len(guide_lines) <= 5
     assert "系统自动排盘" in report.quick_guide
     assert "中等可信度" in report.quick_guide
+    assert "先核对资料与假设" in report.quick_guide
+    assert "再看结构观察" in report.quick_guide
+    assert "最后转成行动反思" in report.quick_guide
     assert chart.birth_profile.focus_topic in report.quick_guide
     assert "结构" in report.quick_guide
     assert "不做格局定论" in report.interpretation_boundaries
     assert "不做用神定论" in report.interpretation_boundaries
     assert "不做大运流年判断" in report.interpretation_boundaries
     assert report.interpretation_boundaries not in report.structure_analysis
+
+
+def test_build_report_connects_source_and_structure_layers(sample_bazi_chart):
+    report = build_report(_chart_with_contract_labels(sample_bazi_chart))
+
+    assert (
+        "这些基础资料只说明排盘依据与采用假设，不直接构成命理结论"
+        in report.assumptions
+    )
+    assert "结构观察提供的是线索，不是最终判断" in report.structure_analysis
+    assert "五行数量可以先作为结构观察材料来看" in report.five_elements_summary
+    assert "十神关系可以先按四个柱位理解为结构线索" in report.ten_gods_summary
+    assert "基础结构可以先看分布是否集中" in report.structure_analysis
+
+
+def test_build_report_connects_boundaries_to_action_reflection(sample_bazi_chart):
+    report = build_report(_chart_with_contract_labels(sample_bazi_chart))
+
+    assert "这些边界是为了防止过度断言" in report.interpretation_boundaries
+    assert "把可观察的线索转成复盘问题" in report.interpretation_boundaries
+    assert "行动反思只作为复盘提示" in report.strengths_and_issues
+    assert "不替代现实判断" in report.strengths_and_issues
+    assert "不是对结果的承诺" in report.action_suggestions
 
 
 def test_build_report_uses_reader_facing_labels(sample_bazi_chart):

@@ -20,12 +20,12 @@
 
 **Purpose**: Confirm the current feature context and keep implementation scoped to the existing report assembly boundary.
 
-- [ ] T001 Confirm the branch is `007-report-transition-language` and the worktree is clean before implementation in `.git`
-- [ ] T002 Review implementation scope in `specs/007-report-transition-language/plan.md`
-- [ ] T003 [P] Review the Markdown output contract in `specs/007-report-transition-language/contracts/report-transition-markdown-contract.md`
-- [ ] T004 [P] Review existing report assembly boundaries in `src/mingli_engine/report_schema.py`
-- [ ] T005 [P] Review existing Markdown heading rendering in `src/mingli_engine/markdown.py`
-- [ ] T006 [P] Review existing safety language tests in `tests/safety/test_red_lines_and_language.py`
+- [X] T001 Confirm the branch is `007-report-transition-language` and the worktree is clean before implementation in `.git`
+- [X] T002 Review implementation scope in `specs/007-report-transition-language/plan.md`
+- [X] T003 [P] Review the Markdown output contract in `specs/007-report-transition-language/contracts/report-transition-markdown-contract.md`
+- [X] T004 [P] Review existing report assembly boundaries in `src/mingli_engine/report_schema.py`
+- [X] T005 [P] Review existing Markdown heading rendering in `src/mingli_engine/markdown.py`
+- [X] T006 [P] Review existing safety language tests in `tests/safety/test_red_lines_and_language.py`
 
 ---
 
@@ -35,12 +35,12 @@
 
 **Critical**: No user story implementation should begin until these baseline checks are understood.
 
-- [ ] T007 Identify existing 004 heading-order assertions in `tests/unit/test_markdown_renderer.py`
-- [ ] T008 Identify existing 005 reader-friendly label assertions in `tests/unit/test_report_schema.py`
-- [ ] T009 Identify existing 006 structure-observation wording assertions in `tests/unit/test_report_schema.py`
-- [ ] T010 [P] Identify automatic-chart Markdown integration coverage in `tests/integration/test_calculate_report_cli.py`
-- [ ] T011 [P] Identify external-chart Markdown integration coverage in `tests/integration/test_generate_markdown_report.py`
-- [ ] T012 [P] Identify unsafe-focus JSON refusal coverage in `tests/safety/test_red_lines_and_language.py`
+- [X] T007 Identify existing 004 heading-order assertions in `tests/unit/test_markdown_renderer.py`
+- [X] T008 Identify existing 005 reader-friendly label assertions in `tests/unit/test_report_schema.py`
+- [X] T009 Identify existing 006 structure-observation wording assertions in `tests/unit/test_report_schema.py`
+- [X] T010 [P] Identify automatic-chart Markdown integration coverage in `tests/integration/test_calculate_report_cli.py`
+- [X] T011 [P] Identify external-chart Markdown integration coverage in `tests/integration/test_generate_markdown_report.py`
+- [X] T012 [P] Identify unsafe-focus JSON refusal coverage in `tests/safety/test_red_lines_and_language.py`
 
 **Checkpoint**: Existing output contracts are located before adding any new transition tests or prose.
 
@@ -56,20 +56,20 @@
 
 > Write these tests first and confirm they fail before implementation.
 
-- [ ] T013 [US1] Add quick-guide reading-path assertions in `tests/unit/test_report_schema.py`
-- [ ] T014 [US1] Add source-as-basis and structure-as-clue report field assertions in `tests/unit/test_report_schema.py`
-- [ ] T015 [P] [US1] Add final Markdown transition assertions while preserving heading order in `tests/unit/test_markdown_renderer.py`
-- [ ] T016 [P] [US1] Add automatic-chart Markdown transition assertions in `tests/integration/test_calculate_report_cli.py`
-- [ ] T017 [P] [US1] Add external-chart Markdown transition assertions in `tests/integration/test_generate_markdown_report.py`
-- [ ] T018 [US1] Run `uv run --with pytest python -m pytest tests/unit/test_report_schema.py tests/unit/test_markdown_renderer.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm the new assertions fail before implementation in `tests/`
+- [X] T013 [US1] Add quick-guide reading-path assertions in `tests/unit/test_report_schema.py`
+- [X] T014 [US1] Add source-as-basis and structure-as-clue report field assertions in `tests/unit/test_report_schema.py`
+- [X] T015 [P] [US1] Add final Markdown transition assertions while preserving heading order in `tests/unit/test_markdown_renderer.py`
+- [X] T016 [P] [US1] Add automatic-chart Markdown transition assertions in `tests/integration/test_calculate_report_cli.py`
+- [X] T017 [P] [US1] Add external-chart Markdown transition assertions in `tests/integration/test_generate_markdown_report.py`
+- [X] T018 [US1] Run `uv run --with pytest python -m pytest tests/unit/test_report_schema.py tests/unit/test_markdown_renderer.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm the new assertions fail before implementation in `tests/`
 
 ### Implementation for User Story 1
 
-- [ ] T019 [US1] Add concise transition constants for reading path, source basis, and structure boundary in `src/mingli_engine/report_schema.py`
-- [ ] T020 [US1] Update quick guide assembly to include the reading-path cue while keeping the concise bullet pattern in `src/mingli_engine/report_schema.py`
-- [ ] T021 [US1] Append source-as-basis wording to the assumptions field in `src/mingli_engine/report_schema.py`
-- [ ] T022 [US1] Append structure-as-clue wording after existing 006 structure observations in `src/mingli_engine/report_schema.py`
-- [ ] T023 [US1] Run focused US1 tests and confirm they pass in `tests/unit/test_report_schema.py`, `tests/unit/test_markdown_renderer.py`, `tests/integration/test_calculate_report_cli.py`, and `tests/integration/test_generate_markdown_report.py`
+- [X] T019 [US1] Add concise transition constants for reading path, source basis, and structure boundary in `src/mingli_engine/report_schema.py`
+- [X] T020 [US1] Update quick guide assembly to include the reading-path cue while keeping the concise bullet pattern in `src/mingli_engine/report_schema.py`
+- [X] T021 [US1] Append source-as-basis wording to the assumptions field in `src/mingli_engine/report_schema.py`
+- [X] T022 [US1] Append structure-as-clue wording after existing 006 structure observations in `src/mingli_engine/report_schema.py`
+- [X] T023 [US1] Run focused US1 tests and confirm they pass in `tests/unit/test_report_schema.py`, `tests/unit/test_markdown_renderer.py`, `tests/integration/test_calculate_report_cli.py`, and `tests/integration/test_generate_markdown_report.py`
 
 **Checkpoint**: User Story 1 is complete when safe reports explain the reading order and first two layer transitions without changing headings or existing labels.
 
@@ -83,19 +83,19 @@
 
 ### Tests for User Story 2
 
-- [ ] T024 [US2] Add boundary-to-action report field assertions in `tests/unit/test_report_schema.py`
-- [ ] T025 [US2] Add action-reflection-not-promise report field assertions in `tests/unit/test_report_schema.py`
-- [ ] T026 [P] [US2] Add final Markdown boundary-to-reflection assertions in `tests/unit/test_markdown_renderer.py`
-- [ ] T027 [P] [US2] Add automatic-chart boundary-to-reflection assertions in `tests/integration/test_calculate_report_cli.py`
-- [ ] T028 [P] [US2] Add external-chart boundary-to-reflection assertions in `tests/integration/test_generate_markdown_report.py`
-- [ ] T029 [US2] Run `uv run --with pytest python -m pytest tests/unit/test_report_schema.py tests/unit/test_markdown_renderer.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm the new US2 assertions fail before implementation in `tests/`
+- [X] T024 [US2] Add boundary-to-action report field assertions in `tests/unit/test_report_schema.py`
+- [X] T025 [US2] Add action-reflection-not-promise report field assertions in `tests/unit/test_report_schema.py`
+- [X] T026 [P] [US2] Add final Markdown boundary-to-reflection assertions in `tests/unit/test_markdown_renderer.py`
+- [X] T027 [P] [US2] Add automatic-chart boundary-to-reflection assertions in `tests/integration/test_calculate_report_cli.py`
+- [X] T028 [P] [US2] Add external-chart boundary-to-reflection assertions in `tests/integration/test_generate_markdown_report.py`
+- [X] T029 [US2] Run `uv run --with pytest python -m pytest tests/unit/test_report_schema.py tests/unit/test_markdown_renderer.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm the new US2 assertions fail before implementation in `tests/`
 
 ### Implementation for User Story 2
 
-- [ ] T030 [US2] Add concise boundary-action and action-reflection transition constants in `src/mingli_engine/report_schema.py`
-- [ ] T031 [US2] Append boundary-action wording to interpretation boundaries in `src/mingli_engine/report_schema.py`
-- [ ] T032 [US2] Add action-reflection wording to the fourth-layer action content in `src/mingli_engine/report_schema.py`
-- [ ] T033 [US2] Run focused US2 tests and confirm they pass in `tests/unit/test_report_schema.py`, `tests/unit/test_markdown_renderer.py`, `tests/integration/test_calculate_report_cli.py`, and `tests/integration/test_generate_markdown_report.py`
+- [X] T030 [US2] Add concise boundary-action and action-reflection transition constants in `src/mingli_engine/report_schema.py`
+- [X] T031 [US2] Append boundary-action wording to interpretation boundaries in `src/mingli_engine/report_schema.py`
+- [X] T032 [US2] Add action-reflection wording to the fourth-layer action content in `src/mingli_engine/report_schema.py`
+- [X] T033 [US2] Run focused US2 tests and confirm they pass in `tests/unit/test_report_schema.py`, `tests/unit/test_markdown_renderer.py`, `tests/integration/test_calculate_report_cli.py`, and `tests/integration/test_generate_markdown_report.py`
 
 **Checkpoint**: User Story 2 is complete when the report naturally moves from “不能过度断言” to “把线索转成复盘问题”.
 
@@ -109,19 +109,19 @@
 
 ### Tests for User Story 3
 
-- [ ] T034 [P] [US3] Add or strengthen 004 heading-order compatibility assertions in `tests/unit/test_markdown_renderer.py`
-- [ ] T035 [P] [US3] Add or strengthen 005 reader-facing label compatibility assertions in `tests/unit/test_report_schema.py`
-- [ ] T036 [US3] Add or strengthen 006 structure-observation compatibility assertions in `tests/unit/test_report_schema.py`
-- [ ] T037 [P] [US3] Add or strengthen 006 structure-observation final Markdown assertions in `tests/integration/test_calculate_report_cli.py`
-- [ ] T038 [P] [US3] Add or strengthen external-report compatibility assertions in `tests/integration/test_generate_markdown_report.py`
-- [ ] T039 [P] [US3] Confirm unsafe-focus Markdown requests still return safety JSON in `tests/safety/test_red_lines_and_language.py`
+- [X] T034 [P] [US3] Add or strengthen 004 heading-order compatibility assertions in `tests/unit/test_markdown_renderer.py`
+- [X] T035 [P] [US3] Add or strengthen 005 reader-facing label compatibility assertions in `tests/unit/test_report_schema.py`
+- [X] T036 [US3] Add or strengthen 006 structure-observation compatibility assertions in `tests/unit/test_report_schema.py`
+- [X] T037 [P] [US3] Add or strengthen 006 structure-observation final Markdown assertions in `tests/integration/test_calculate_report_cli.py`
+- [X] T038 [P] [US3] Add or strengthen external-report compatibility assertions in `tests/integration/test_generate_markdown_report.py`
+- [X] T039 [P] [US3] Confirm unsafe-focus Markdown requests still return safety JSON in `tests/safety/test_red_lines_and_language.py`
 
 ### Implementation for User Story 3
 
-- [ ] T040 [US3] Keep `src/mingli_engine/markdown.py` layout-only unless tests show an unavoidable placement issue
-- [ ] T041 [US3] Keep `src/mingli_engine/interpretation.py` 006 structure wording unchanged unless tests show an unavoidable adjacency issue
-- [ ] T042 [US3] Run safety tests with `uv run --with pytest python -m pytest tests/safety/test_red_lines_and_language.py -v` for `tests/safety/test_red_lines_and_language.py`
-- [ ] T043 [US3] Run focused report tests with `uv run --with pytest python -m pytest tests/unit/test_report_schema.py tests/unit/test_markdown_renderer.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py tests/safety/test_red_lines_and_language.py -v` for `tests/`
+- [X] T040 [US3] Keep `src/mingli_engine/markdown.py` layout-only unless tests show an unavoidable placement issue
+- [X] T041 [US3] Keep `src/mingli_engine/interpretation.py` 006 structure wording unchanged unless tests show an unavoidable adjacency issue
+- [X] T042 [US3] Run safety tests with `uv run --with pytest python -m pytest tests/safety/test_red_lines_and_language.py -v` for `tests/safety/test_red_lines_and_language.py`
+- [X] T043 [US3] Run focused report tests with `uv run --with pytest python -m pytest tests/unit/test_report_schema.py tests/unit/test_markdown_renderer.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py tests/safety/test_red_lines_and_language.py -v` for `tests/`
 
 **Checkpoint**: User Story 3 is complete when compatibility and safety tests pass without changing CLI behavior or safety JSON shape.
 
@@ -131,12 +131,12 @@
 
 **Purpose**: Final verification, sample output review, and cleanup.
 
-- [ ] T044 Generate one automatic-chart Markdown sample with `uv run python -m mingli_engine.cli calculate-report --input examples/birth-profile.auto-gregorian.json --format markdown` and inspect transition wording against `specs/007-report-transition-language/quickstart.md`
-- [ ] T045 Generate one external-chart Markdown sample with `uv run python -m mingli_engine.cli generate-report --input examples/bazi-chart.external-verified.json --format markdown` and inspect source-label compatibility against `specs/007-report-transition-language/quickstart.md`
-- [ ] T046 Run the full test suite with `uv run --with pytest python -m pytest` for `tests/`
-- [ ] T047 [P] Run a prohibited absolute-language check for new transition wording in `src/mingli_engine/report_schema.py`
-- [ ] T048 [P] Run `git diff --check` before final commit in `.git`
-- [ ] T049 Update task completion checkboxes as implementation proceeds in `specs/007-report-transition-language/tasks.md`
+- [X] T044 Generate one automatic-chart Markdown sample with `uv run python -m mingli_engine.cli calculate-report --input examples/birth-profile.auto-gregorian.json --format markdown` and inspect transition wording against `specs/007-report-transition-language/quickstart.md`
+- [X] T045 Generate one external-chart Markdown sample with `uv run python -m mingli_engine.cli generate-report --input examples/bazi-chart.external-verified.json --format markdown` and inspect source-label compatibility against `specs/007-report-transition-language/quickstart.md`
+- [X] T046 Run the full test suite with `uv run --with pytest python -m pytest` for `tests/`
+- [X] T047 [P] Run a prohibited absolute-language check for new transition wording in `src/mingli_engine/report_schema.py`
+- [X] T048 [P] Run `git diff --check` before final commit in `.git`
+- [X] T049 Update task completion checkboxes as implementation proceeds in `specs/007-report-transition-language/tasks.md`
 
 ---
 

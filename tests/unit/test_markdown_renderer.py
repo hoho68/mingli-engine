@@ -56,6 +56,12 @@ def test_render_markdown_report_uses_layered_reading_order(sample_bazi_chart):
             "## 伦理边界提醒",
         ),
     )
+    assert "先核对资料与假设" in markdown
+    assert "再看结构观察" in markdown
+    assert "这些基础资料只说明排盘依据与采用假设，不直接构成命理结论" in markdown
+    assert "结构观察提供的是线索，不是最终判断" in markdown
+    assert "这些边界是为了防止过度断言" in markdown
+    assert "行动反思只作为复盘提示" in markdown
 
 
 def test_render_markdown_report_keeps_chart_source_transparent(sample_bazi_chart):

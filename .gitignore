@@ -5,4 +5,9 @@
 
 # Python test/runtime caches
 __pycache__/
+*.pyc
 .pytest_cache/
+.venv/
+venv/
+dist/
+*.egg-info/

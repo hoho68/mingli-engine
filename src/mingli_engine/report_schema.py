@@ -30,6 +30,22 @@ PILLAR_NAME_LABELS = {
     "日柱": "日柱",
     "时柱": "时柱",
 }
+READING_PATH_TRANSITION = (
+    "阅读时可以先核对资料与假设，再看结构观察，再看解读边界，"
+    "最后转成行动反思。"
+)
+SOURCE_BASIS_TRANSITION = (
+    "这些基础资料只说明排盘依据与采用假设，不直接构成命理结论。"
+)
+STRUCTURE_BOUNDARY_TRANSITION = (
+    "结构观察提供的是线索，不是最终判断；下一层会说明哪些地方不能过度解读。"
+)
+BOUNDARY_ACTION_TRANSITION = (
+    "这些边界是为了防止过度断言；在边界内，再把可观察的线索转成复盘问题。"
+)
+ACTION_REFLECTION_TRANSITION = (
+    "行动反思只作为复盘提示，用来整理可观察的线索，不替代现实判断。"
+)
 
 
 def _reader_label(value: str | None, labels: dict[str, str]) -> str:
@@ -166,7 +182,7 @@ def _build_quick_guide(chart: BaziChart, interpretation) -> str:
             f"- 来源：这份盘的资料来自{source_label}，当前标记为{confidence_label}。",
             f"- 结构：这份盘里，{dominant}的信号比较集中，适合先从这些方向看整体结构。",
             f"- 日主：{chart.day_master}是本报告的观察中心，不是命运结论。",
-            "- 边界：本报告不做格局定论、用神定论或大运流年判断。",
+            f"- 路径：{READING_PATH_TRANSITION}",
             f"- 提示：围绕{focus_topic}，把结构观察转成可复盘的小问题。",
         ]
     )
@@ -204,19 +220,24 @@ def build_report(chart: BaziChart) -> Report:
         "而非对人生结果的断言。"
     )
     chart_card = _build_chart_card(chart)
-    assumptions = _build_assumptions(chart)
+    assumptions = f"{_build_assumptions(chart)}\n{SOURCE_BASIS_TRANSITION}"
     four_pillars_summary = _build_four_pillars_summary(chart)
     interpretation = build_basic_interpretation(chart)
     quick_guide = _build_quick_guide(chart, interpretation)
     five_elements_summary = interpretation.five_elements_summary
     ten_gods_summary = interpretation.ten_gods_summary
-    structure_analysis = interpretation.structure_observations
+    structure_analysis = (
+        f"{interpretation.structure_observations}\n{STRUCTURE_BOUNDARY_TRANSITION}"
+    )
     personality_tendencies = interpretation.day_master_summary
     strengths_and_issues = _normalize_focus_topic_text(
         interpretation.focus_suggestions,
         chart.birth_profile.focus_topic,
     )
-    interpretation_boundaries = interpretation.limitations
+    strengths_and_issues = f"{ACTION_REFLECTION_TRANSITION}\n{strengths_and_issues}"
+    interpretation_boundaries = (
+        f"{interpretation.limitations}\n{BOUNDARY_ACTION_TRANSITION}"
+    )
     phase_boundary = (
         "当前基础结构解读层不做大运流年判断。"
         if "不做大运流年判断" in interpretation.limitations
