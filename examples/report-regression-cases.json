@@ -1,0 +1,26 @@
+[
+  {
+    "id": "safe-auto-gregorian",
+    "kind": "safe_markdown",
+    "command": "calculate-report",
+    "input": "examples/birth-profile.auto-gregorian.json",
+    "purpose": "Guards automatic chart Markdown report structure, reader-facing labels, structure observation wording, and transition wording.",
+    "source_type": "auto_calculated"
+  },
+  {
+    "id": "safe-external-verified",
+    "kind": "safe_markdown",
+    "command": "generate-report",
+    "input": "examples/bazi-chart.external-verified.json",
+    "purpose": "Guards external verified Markdown report structure, external source labeling, structure observation wording, and transition wording.",
+    "source_type": "external_verified"
+  },
+  {
+    "id": "unsafe-lifespan-focus",
+    "kind": "safety_json",
+    "command": "calculate-report",
+    "input": "examples/birth-profile.unsafe-focus.json",
+    "purpose": "Guards red-line refusal behavior for lifespan or death timing focus topics.",
+    "expected_category": "lifespan_or_death_timing"
+  }
+]

@@ -20,11 +20,11 @@
 
 **Purpose**: Confirm the current workspace and implementation references before changing files.
 
-- [ ] T001 Confirm the current branch is `008-report-regression-cases` and inspect outstanding changes with `git status --short --branch` in `.git`
-- [ ] T002 Review the implementation scope and no-production-code default in `specs/008-report-regression-cases/plan.md`
-- [ ] T003 [P] Review manifest fields and supported values in `specs/008-report-regression-cases/data-model.md`
-- [ ] T004 [P] Review the contract assertions required for safe Markdown and safety JSON in `specs/008-report-regression-cases/contracts/report-regression-cases-contract.md`
-- [ ] T005 [P] Review the detailed Superpowers implementation guide in `docs/superpowers/plans/2026-05-20-report-regression-cases.md`
+- [X] T001 Confirm the current branch is `008-report-regression-cases` and inspect outstanding changes with `git status --short --branch` in `.git`
+- [X] T002 Review the implementation scope and no-production-code default in `specs/008-report-regression-cases/plan.md`
+- [X] T003 [P] Review manifest fields and supported values in `specs/008-report-regression-cases/data-model.md`
+- [X] T004 [P] Review the contract assertions required for safe Markdown and safety JSON in `specs/008-report-regression-cases/contracts/report-regression-cases-contract.md`
+- [X] T005 [P] Review the detailed Superpowers implementation guide in `docs/superpowers/plans/2026-05-20-report-regression-cases.md`
 
 ---
 
@@ -34,12 +34,12 @@
 
 **Critical**: No user story implementation should begin until this phase is complete.
 
-- [ ] T006 Inspect existing automatic report CLI test patterns in `tests/integration/test_calculate_report_cli.py`
-- [ ] T007 Inspect existing external verified report test patterns in `tests/integration/test_generate_markdown_report.py`
-- [ ] T008 [P] Confirm the safe automatic input exists and remains anonymized in `examples/birth-profile.auto-gregorian.json`
-- [ ] T009 [P] Confirm the safe external verified input exists and remains anonymized in `examples/bazi-chart.external-verified.json`
-- [ ] T010 [P] Confirm the unsafe focus input exists and targets a red-line topic in `examples/birth-profile.unsafe-focus.json`
-- [ ] T011 Identify existing safety refusal expectations and exit-code behavior in `tests/safety/test_red_lines_and_language.py`
+- [X] T006 Inspect existing automatic report CLI test patterns in `tests/integration/test_calculate_report_cli.py`
+- [X] T007 Inspect existing external verified report test patterns in `tests/integration/test_generate_markdown_report.py`
+- [X] T008 [P] Confirm the safe automatic input exists and remains anonymized in `examples/birth-profile.auto-gregorian.json`
+- [X] T009 [P] Confirm the safe external verified input exists and remains anonymized in `examples/bazi-chart.external-verified.json`
+- [X] T010 [P] Confirm the unsafe focus input exists and targets a red-line topic in `examples/birth-profile.unsafe-focus.json`
+- [X] T011 Identify existing safety refusal expectations and exit-code behavior in `tests/safety/test_red_lines_and_language.py`
 
 **Checkpoint**: Existing examples, CLI patterns, and safety behavior are understood; user story work can start.
 
@@ -55,16 +55,16 @@
 
 > Write these tests first and verify they fail before adding the manifest.
 
-- [ ] T012 [US1] Create a failing manifest loader and safe Markdown CLI contract test in `tests/integration/test_report_regression_cases.py`
-- [ ] T013 [US1] Add assertions in `tests/integration/test_report_regression_cases.py` for formal report heading, quick guide, four layer headings, source disclosure, assumptions, reader-facing labels, structure observation wording, transition wording, raw-label absence, and absolute-language absence
-- [ ] T014 [US1] Run `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py -v` and confirm the expected missing-manifest failure for `tests/integration/test_report_regression_cases.py`
+- [X] T012 [US1] Create a failing manifest loader and safe Markdown CLI contract test in `tests/integration/test_report_regression_cases.py`
+- [X] T013 [US1] Add assertions in `tests/integration/test_report_regression_cases.py` for formal report heading, quick guide, four layer headings, source disclosure, assumptions, reader-facing labels, structure observation wording, transition wording, raw-label absence, and absolute-language absence
+- [X] T014 [US1] Run `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py -v` and confirm the expected missing-manifest failure for `tests/integration/test_report_regression_cases.py`
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Create `examples/report-regression-cases.json` with a `safe-auto-gregorian` case using `examples/birth-profile.auto-gregorian.json`
-- [ ] T016 [US1] Add a `safe-external-verified` case to `examples/report-regression-cases.json` using `examples/bazi-chart.external-verified.json`
-- [ ] T017 [US1] Verify source-specific expectations in `tests/integration/test_report_regression_cases.py` distinguish `auto_calculated` from `external_verified`
-- [ ] T018 [US1] Run `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py -v` and confirm safe Markdown cases pass for `tests/integration/test_report_regression_cases.py`
+- [X] T015 [US1] Create `examples/report-regression-cases.json` with a `safe-auto-gregorian` case using `examples/birth-profile.auto-gregorian.json`
+- [X] T016 [US1] Add a `safe-external-verified` case to `examples/report-regression-cases.json` using `examples/bazi-chart.external-verified.json`
+- [X] T017 [US1] Verify source-specific expectations in `tests/integration/test_report_regression_cases.py` distinguish `auto_calculated` from `external_verified`
+- [X] T018 [US1] Run `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py -v` and confirm safe Markdown cases pass for `tests/integration/test_report_regression_cases.py`
 
 **Checkpoint**: Safe automatic and safe external Markdown cases are listed, exercised, and protected against 004-007 report regressions.
 
@@ -78,14 +78,14 @@
 
 ### Tests for User Story 2
 
-- [ ] T019 [US2] Extend `tests/integration/test_report_regression_cases.py` with safety JSON assertions for refusal exit code, parseable JSON, `allowed == false`, expected category, and no Markdown report heading
-- [ ] T020 [US2] Run `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py -v` and confirm the expected safety-case coverage failure for `tests/integration/test_report_regression_cases.py`
+- [X] T019 [US2] Extend `tests/integration/test_report_regression_cases.py` with safety JSON assertions for refusal exit code, parseable JSON, `allowed == false`, expected category, and no Markdown report heading
+- [X] T020 [US2] Run `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py -v` and confirm the expected safety-case coverage failure for `tests/integration/test_report_regression_cases.py`
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Add an `unsafe-lifespan-focus` case to `examples/report-regression-cases.json` using `examples/birth-profile.unsafe-focus.json`
-- [ ] T022 [US2] Set `expected_category` for the unsafe case in `examples/report-regression-cases.json` to the existing red-line category expected by safety tests
-- [ ] T023 [US2] Run `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py -v` and confirm safety JSON cases pass for `tests/integration/test_report_regression_cases.py`
+- [X] T021 [US2] Add an `unsafe-lifespan-focus` case to `examples/report-regression-cases.json` using `examples/birth-profile.unsafe-focus.json`
+- [X] T022 [US2] Set `expected_category` for the unsafe case in `examples/report-regression-cases.json` to the existing red-line category expected by safety tests
+- [X] T023 [US2] Run `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py -v` and confirm safety JSON cases pass for `tests/integration/test_report_regression_cases.py`
 
 **Checkpoint**: Unsafe red-line examples are listed, exercised, and prevented from generating formal Markdown reports.
 
@@ -99,14 +99,14 @@
 
 ### Tests for User Story 3
 
-- [ ] T024 [US3] Add manifest shape assertions in `tests/integration/test_report_regression_cases.py` for required fields, unique IDs, supported `kind`, supported `command`, existing `input`, and non-empty `purpose`
-- [ ] T025 [US3] Add kind-specific assertions in `tests/integration/test_report_regression_cases.py` requiring `source_type` for `safe_markdown` and `expected_category` for `safety_json`
-- [ ] T026 [US3] Add coverage assertions in `tests/integration/test_report_regression_cases.py` requiring at least one automatic safe case, one external safe case, and one safety JSON case
+- [X] T024 [US3] Add manifest shape assertions in `tests/integration/test_report_regression_cases.py` for required fields, unique IDs, supported `kind`, supported `command`, existing `input`, and non-empty `purpose`
+- [X] T025 [US3] Add kind-specific assertions in `tests/integration/test_report_regression_cases.py` requiring `source_type` for `safe_markdown` and `expected_category` for `safety_json`
+- [X] T026 [US3] Add coverage assertions in `tests/integration/test_report_regression_cases.py` requiring at least one automatic safe case, one external safe case, and one safety JSON case
 
 ### Implementation for User Story 3
 
-- [ ] T027 [US3] Adjust `examples/report-regression-cases.json` so every case satisfies the manifest shape and kind-specific requirements
-- [ ] T028 [US3] Run `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py -v` and confirm all manifest validation passes for `tests/integration/test_report_regression_cases.py`
+- [X] T027 [US3] Adjust `examples/report-regression-cases.json` so every case satisfies the manifest shape and kind-specific requirements
+- [X] T028 [US3] Run `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py -v` and confirm all manifest validation passes for `tests/integration/test_report_regression_cases.py`
 
 **Checkpoint**: The manifest is a durable extension point, and every listed case is automatically exercised.
 
@@ -116,12 +116,12 @@
 
 **Purpose**: Verify the new regression library works with existing report and safety tests without changing CLI behavior.
 
-- [ ] T029 Run report integration tests from `specs/008-report-regression-cases/quickstart.md` with `uv run --with pytest python -m pytest tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py tests/integration/test_report_regression_cases.py -v`
-- [ ] T030 Run safety tests with `uv run --with pytest python -m pytest tests/safety/test_red_lines_and_language.py -v`
-- [ ] T031 Run the full suite with `uv run --with pytest python -m pytest` for repository root `tests`
-- [ ] T032 [P] Run whitespace validation with `git diff --check` for changed files under `examples/` and `tests/`
-- [ ] T033 Inspect final changes with `git status --short --branch` and ensure only intentional files changed in `.git`
-- [ ] T034 Update task checkboxes in `specs/008-report-regression-cases/tasks.md` as implementation checkpoints are completed
+- [X] T029 Run report integration tests from `specs/008-report-regression-cases/quickstart.md` with `uv run --with pytest python -m pytest tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py tests/integration/test_report_regression_cases.py -v`
+- [X] T030 Run safety tests with `uv run --with pytest python -m pytest tests/safety/test_red_lines_and_language.py -v`
+- [X] T031 Run the full suite with `uv run --with pytest python -m pytest` for repository root `tests`
+- [X] T032 [P] Run whitespace validation with `git diff --check` for changed files under `examples/` and `tests/`
+- [X] T033 Inspect final changes with `git status --short --branch` and ensure only intentional files changed in `.git`
+- [X] T034 Update task checkboxes in `specs/008-report-regression-cases/tasks.md` as implementation checkpoints are completed
 
 ---
 
