@@ -26,6 +26,7 @@ def _report_body(report) -> str:
             report.four_pillars_summary,
             report.five_elements_summary,
             report.ten_gods_summary,
+            report.evidence_notes,
             report.structure_analysis,
             report.personality_tendencies,
             report.strengths_and_issues,
@@ -73,6 +74,7 @@ def test_build_report_returns_complete_safe_report(sample_bazi_chart):
         "four_pillars_summary",
         "five_elements_summary",
         "ten_gods_summary",
+        "evidence_notes",
         "structure_analysis",
         "phase_overview",
         "action_suggestions",
@@ -131,6 +133,26 @@ def test_build_report_includes_basic_interpretation_sections(sample_bazi_chart):
                 report.structure_analysis,
             ]
         )
+
+
+def test_build_report_explains_observation_basis(sample_bazi_chart):
+    report = build_report(_chart_with_contract_labels(sample_bazi_chart))
+
+    assert "来源依据：" in report.evidence_notes
+    assert "排盘来源" in report.evidence_notes
+    assert "历法" in report.evidence_notes
+    assert "四柱依据：" in report.evidence_notes
+    for pillar_name in ("年柱", "月柱", "日柱", "时柱"):
+        assert pillar_name in report.evidence_notes
+    assert "五行依据：" in report.evidence_notes
+    assert "明面信号" in report.evidence_notes
+    assert "藏干信号" in report.evidence_notes
+    assert "合计信号" in report.evidence_notes
+    assert "十神依据：" in report.evidence_notes
+    assert "关系线索" in report.evidence_notes
+    assert "行动依据：" in report.evidence_notes
+    assert "复盘问题" in report.evidence_notes
+    assert "不预测具体结果" in report.evidence_notes
 
 
 def test_build_report_prepares_quick_guide_and_boundary_layer(sample_bazi_chart):

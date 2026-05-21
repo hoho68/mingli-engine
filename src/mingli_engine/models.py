@@ -72,6 +72,7 @@ class Report:
     four_pillars_summary: str
     five_elements_summary: str
     ten_gods_summary: str
+    evidence_notes: str
     structure_analysis: str
     personality_tendencies: str
     strengths_and_issues: str

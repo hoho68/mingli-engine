@@ -45,6 +45,7 @@ def test_render_markdown_report_uses_layered_reading_order(sample_bazi_chart):
             "## 第二层：结构观察",
             "### 四柱与五行摘要",
             "### 十神摘要",
+            "### 观察依据",
             "### 结构分析",
             "### 性格倾向",
             "## 第三层：解读边界",
@@ -62,6 +63,17 @@ def test_render_markdown_report_uses_layered_reading_order(sample_bazi_chart):
     assert "结构观察提供的是线索，不是最终判断" in markdown
     assert "这些边界是为了防止过度断言" in markdown
     assert "行动反思只作为复盘提示" in markdown
+
+
+def test_render_markdown_report_includes_observation_basis(sample_bazi_chart):
+    report = build_report(sample_bazi_chart)
+
+    markdown = render_markdown_report(report)
+
+    assert "### 观察依据" in markdown.splitlines()
+    assert report.evidence_notes in markdown
+    assert markdown.count("### 观察依据") == 1
+    assert markdown.count(report.evidence_notes) == 1
 
 
 def test_render_markdown_report_keeps_chart_source_transparent(sample_bazi_chart):

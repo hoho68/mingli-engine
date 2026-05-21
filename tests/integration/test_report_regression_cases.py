@@ -34,6 +34,15 @@ LAYER_HEADINGS = (
     "## 第三层：解读边界",
     "## 第四层：行动反思",
 )
+EVIDENCE_NOTE_PHRASES = (
+    "### 观察依据",
+    "来源依据：",
+    "四柱依据：",
+    "五行依据：",
+    "十神依据：",
+    "行动依据：",
+    "不预测具体结果",
+)
 
 
 def _run_cli(*args: str) -> subprocess.CompletedProcess[str]:
@@ -120,6 +129,18 @@ def _assert_safe_markdown(
     assert markdown.startswith("# 八字结构化报告")
     assert "## 免责声明" in markdown
     _assert_in_order(markdown, LAYER_HEADINGS)
+    _assert_in_order(
+        markdown,
+        (
+            "### 四柱与五行摘要",
+            "### 十神摘要",
+            "### 观察依据",
+            "### 结构分析",
+            "### 性格倾向",
+        ),
+    )
+    for phrase in EVIDENCE_NOTE_PHRASES:
+        assert phrase in markdown
     assert "### 排盘来源与假设" in markdown.splitlines()
     assert "### 四柱与五行摘要" in markdown.splitlines()
     assert "### 行动建议" in markdown.splitlines()
@@ -150,6 +171,7 @@ def _assert_safety_json(
 ) -> None:
     assert result.returncode == 3, result.stderr
     assert not result.stdout.startswith("# 八字结构化报告")
+    assert "### 观察依据" not in result.stdout
     payload = json.loads(result.stdout)
     assert payload["allowed"] is False
     assert case["expected_category"] in payload["red_line_categories"]

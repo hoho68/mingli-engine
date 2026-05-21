@@ -47,6 +47,8 @@ def test_generated_auto_report_avoids_absolute_or_fatalistic_phrases():
     assert "## 快速导读" in markdown.splitlines()
     assert "## 第三层：解读边界" in markdown.splitlines()
     assert "先核对资料与假设" in markdown
+    assert "### 观察依据" in markdown
+    assert "不预测具体结果" in markdown
     assert "这些边界是为了防止过度断言" in markdown
     assert "行动反思只作为复盘提示" in markdown
     for prohibited_phrase in ("必定", "注定", "一定会", "死定"):

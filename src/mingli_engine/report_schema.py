@@ -188,6 +188,18 @@ def _build_quick_guide(chart: BaziChart, interpretation) -> str:
     )
 
 
+def _build_evidence_notes() -> str:
+    return "\n".join(
+        [
+            "- 来源依据：先看排盘来源与历法、时区、节气等假设，避免把前提当成结论。",
+            "- 四柱依据：年柱、月柱、日柱、时柱只提供结构位置和组合线索，不单独断事。",
+            "- 五行依据：明面信号、藏干信号和合计信号用于观察分布，不用于给人生下定论。",
+            "- 十神依据：十神关系按柱位理解为关系线索，需要结合解读边界一起阅读。",
+            "- 行动依据：行动反思只把可观察线索转成复盘问题，不预测具体结果。",
+        ]
+    )
+
+
 def _major_body_sections(report: Report) -> str:
     return "\n\n".join(
         [
@@ -198,6 +210,7 @@ def _major_body_sections(report: Report) -> str:
             report.four_pillars_summary,
             report.five_elements_summary,
             report.ten_gods_summary,
+            report.evidence_notes,
             report.structure_analysis,
             report.personality_tendencies,
             report.strengths_and_issues,
@@ -226,6 +239,7 @@ def build_report(chart: BaziChart) -> Report:
     quick_guide = _build_quick_guide(chart, interpretation)
     five_elements_summary = interpretation.five_elements_summary
     ten_gods_summary = interpretation.ten_gods_summary
+    evidence_notes = _build_evidence_notes()
     structure_analysis = (
         f"{interpretation.structure_observations}\n{STRUCTURE_BOUNDARY_TRANSITION}"
     )
@@ -278,6 +292,7 @@ def build_report(chart: BaziChart) -> Report:
         four_pillars_summary=four_pillars_summary,
         five_elements_summary=five_elements_summary,
         ten_gods_summary=ten_gods_summary,
+        evidence_notes=evidence_notes,
         structure_analysis=structure_analysis,
         personality_tendencies=personality_tendencies,
         strengths_and_issues=strengths_and_issues,
@@ -296,6 +311,7 @@ def build_report(chart: BaziChart) -> Report:
                     four_pillars_summary,
                     five_elements_summary,
                     ten_gods_summary,
+                    evidence_notes,
                     structure_analysis,
                     personality_tendencies,
                     strengths_and_issues,
