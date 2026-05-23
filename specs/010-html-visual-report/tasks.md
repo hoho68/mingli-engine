@@ -107,16 +107,17 @@
 > Write these tests first and confirm they fail before implementation.
 
 - [ ] T029 [US3] Add failing HTML escaping, no-script, and no-external-resource tests in `tests/unit/test_html_renderer.py`.
-- [ ] T030 [US3] Add failing unsafe `--format html` safety JSON assertions in `tests/safety/test_red_lines_and_language.py`.
-- [ ] T031 [US3] Add failing invalid-input and no-partial-HTML assertions for `--format html` in `tests/integration/test_generate_markdown_report.py`.
-- [ ] T032 [US3] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/safety/test_red_lines_and_language.py tests/integration/test_generate_markdown_report.py -v` and confirm expected failures where implementation is incomplete.
+- [ ] T030 [US3] Add failing HTML non-absolute destiny language assertions in `tests/safety/test_red_lines_and_language.py`.
+- [ ] T031 [US3] Add failing unsafe `--format html` safety JSON assertions in `tests/safety/test_red_lines_and_language.py`.
+- [ ] T032 [US3] Add failing invalid-input and no-partial-HTML assertions for `--format html` in `tests/integration/test_generate_markdown_report.py`.
+- [ ] T033 [US3] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/safety/test_red_lines_and_language.py tests/integration/test_generate_markdown_report.py -v` and confirm expected failures where implementation is incomplete.
 
 ### Implementation for User Story 3
 
-- [ ] T033 [US3] Escape all report text and preserve readable paragraph or list line breaks in `src/mingli_engine/html.py`.
-- [ ] T034 [US3] Ensure generated HTML contains no `<script>`, inline event handlers, external URLs, external stylesheets, fonts, images, or CDN references in `src/mingli_engine/html.py`.
-- [ ] T035 [US3] Confirm `src/mingli_engine/cli.py` returns existing safety JSON and invalid-input behavior before renderer dispatch.
-- [ ] T036 [US3] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/safety/test_red_lines_and_language.py tests/integration/test_generate_markdown_report.py -v` and confirm escaping, safety, and invalid-input checks pass.
+- [ ] T034 [US3] Escape all report text and preserve readable paragraph or list line breaks in `src/mingli_engine/html.py`.
+- [ ] T035 [US3] Ensure generated HTML contains no `<script>`, inline event handlers, external URLs, external stylesheets, fonts, images, or CDN references in `src/mingli_engine/html.py`.
+- [ ] T036 [US3] Confirm `src/mingli_engine/cli.py` returns existing safety JSON, invalid-input behavior, and non-absolute report language before renderer dispatch.
+- [ ] T037 [US3] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/safety/test_red_lines_and_language.py tests/integration/test_generate_markdown_report.py -v` and confirm escaping, safety, invalid-input, and non-absolute language checks pass.
 
 **Checkpoint**: User Story 3 protects the browser-facing report boundary.
 
@@ -126,13 +127,13 @@
 
 **Purpose**: Confirm focused scenarios, regression coverage, and the full project suite after all desired stories are complete.
 
-- [ ] T037 Run renderer quickstart tests with `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py -v`.
-- [ ] T038 Run CLI HTML tests with `uv run --with pytest python -m pytest tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v`.
-- [ ] T039 Run regression and safety tests with `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py tests/safety/test_red_lines_and_language.py -v`.
-- [ ] T040 Run the full suite with `uv run --with pytest python -m pytest`.
-- [ ] T041 [P] Run whitespace validation with `git diff --check` from `E:/命理演绎`.
-- [ ] T042 Inspect final changed files with `git status --short --branch` from `E:/命理演绎`.
-- [ ] T043 Update completed checkboxes in `specs/010-html-visual-report/tasks.md` for every finished implementation checkpoint.
+- [ ] T038 Run renderer quickstart tests with `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py -v`.
+- [ ] T039 Run CLI HTML tests with `uv run --with pytest python -m pytest tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v`.
+- [ ] T040 Run regression and safety tests with `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py tests/safety/test_red_lines_and_language.py -v`.
+- [ ] T041 Run the full suite with `uv run --with pytest python -m pytest`.
+- [ ] T042 [P] Run whitespace validation with `git diff --check` from `E:/命理演绎`.
+- [ ] T043 Inspect final changed files with `git status --short --branch` from `E:/命理演绎`.
+- [ ] T044 Update completed checkboxes in `specs/010-html-visual-report/tasks.md` for every finished implementation checkpoint.
 
 ---
 
@@ -169,8 +170,8 @@
 - Foundational inspection tasks T011-T014 can run in parallel.
 - US1 tests T015-T017 touch different test files and can be drafted in parallel.
 - US2 tasks touching regression checks can be prepared after US1 while renderer order work is done separately.
-- US3 safety and invalid-input tests T030-T031 can be drafted in parallel with renderer escaping tests T029.
-- Polish checks T041-T042 can run after test commands finish.
+- US3 language, safety, and invalid-input tests T030-T032 can be drafted in parallel with renderer escaping tests T029.
+- Polish checks T042-T043 can run after test commands finish.
 
 ---
 
