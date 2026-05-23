@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from mingli_engine.chart_calculator import ChartCalculationError, calculate_bazi_chart
+from mingli_engine.html import render_html_report
 from mingli_engine.markdown import render_markdown_report
 from mingli_engine.models import (
     BaziChart,
@@ -189,6 +190,12 @@ def _calculate_chart(args: argparse.Namespace) -> int:
     return 0
 
 
+def _render_report(report: Any, report_format: str) -> str:
+    if report_format == "html":
+        return render_html_report(report)
+    return render_markdown_report(report)
+
+
 def _calculate_report(args: argparse.Namespace) -> int:
     profile = _birth_profile_from_dict(_read_json(args.input))
     safety_review = _safety_review_focus_topic(profile, disclaimer_present=True)
@@ -202,7 +209,7 @@ def _calculate_report(args: argparse.Namespace) -> int:
         _write_json(report.safety_review)
         return 3
 
-    sys.stdout.write(render_markdown_report(report))
+    sys.stdout.write(_render_report(report, args.format))
     return 0
 
 
@@ -218,7 +225,7 @@ def _generate_report(args: argparse.Namespace) -> int:
         _write_json(report.safety_review)
         return 3
 
-    sys.stdout.write(render_markdown_report(report))
+    sys.stdout.write(_render_report(report, args.format))
     return 0
 
 
@@ -240,12 +247,16 @@ def _build_parser() -> argparse.ArgumentParser:
 
     calculated_report_parser = subparsers.add_parser("calculate-report")
     calculated_report_parser.add_argument("--input", required=True, type=Path)
-    calculated_report_parser.add_argument("--format", choices=["markdown"], required=True)
+    calculated_report_parser.add_argument(
+        "--format",
+        choices=["markdown", "html"],
+        required=True,
+    )
     calculated_report_parser.set_defaults(handler=_calculate_report)
 
     report_parser = subparsers.add_parser("generate-report")
     report_parser.add_argument("--input", required=True, type=Path)
-    report_parser.add_argument("--format", choices=["markdown"], required=True)
+    report_parser.add_argument("--format", choices=["markdown", "html"], required=True)
     report_parser.set_defaults(handler=_generate_report)
 
     return parser

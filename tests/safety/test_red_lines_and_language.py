@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import sys
@@ -53,6 +54,42 @@ def test_generated_auto_report_avoids_absolute_or_fatalistic_phrases():
     assert "行动反思只作为复盘提示" in markdown
     for prohibited_phrase in ("必定", "注定", "一定会", "死定"):
         assert prohibited_phrase not in markdown
+
+
+def test_generated_html_report_avoids_absolute_or_fatalistic_phrases():
+    result = _run_cli(
+        "calculate-report",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.auto-gregorian.json"),
+        "--format",
+        "html",
+    )
+
+    assert result.returncode == 0, result.stderr
+    html = result.stdout
+    assert html.startswith("<!doctype html>")
+    assert safety_check(html).allowed is True
+    assert "<script" not in html.lower()
+    assert "onclick=" not in html.lower()
+    for raw_label in ("auto_calculated", "medium", "gregorian"):
+        assert raw_label not in html
+
+
+def test_unsafe_focus_with_html_format_still_returns_safety_json():
+    result = _run_cli(
+        "calculate-report",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.unsafe-focus.json"),
+        "--format",
+        "html",
+    )
+
+    assert result.returncode == 3, result.stderr
+    assert not result.stdout.startswith("<!doctype html>")
+    assert "<main" not in result.stdout
+    payload = json.loads(result.stdout)
+    assert payload["allowed"] is False
+    assert "lifespan_or_death_timing" in payload["red_line_categories"]
 
 
 def test_safety_check_blocks_lifespan_or_death_timing_request():

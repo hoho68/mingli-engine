@@ -166,6 +166,43 @@ def _assert_safe_markdown(
         assert "来源类型：系统自动排盘" not in markdown
 
 
+def _assert_safe_html(
+    case: dict[str, Any], result: subprocess.CompletedProcess[str]
+) -> None:
+    assert result.returncode == 0, result.stderr
+    assert result.stderr == ""
+    html = result.stdout
+    assert html.startswith("<!doctype html>")
+    assert '<html lang="zh-CN">' in html
+    assert '<meta charset="utf-8">' in html
+    assert "<title>" in html
+    assert "<style>" in html
+    assert html.count("<main") == 1
+    assert html.rstrip().endswith("</html>")
+    assert "# " not in html
+    assert "<script" not in html.lower()
+    assert "onclick=" not in html.lower()
+    html_layer_headings = tuple(
+        heading.removeprefix("## ") for heading in LAYER_HEADINGS
+    )
+    _assert_in_order(html, html_layer_headings)
+    evidence_heading = EVIDENCE_NOTE_PHRASES[0].removeprefix("### ")
+    structure_position = html.find(html_layer_headings[2])
+    evidence_position = html.find(evidence_heading)
+    boundary_position = html.find(html_layer_headings[3])
+    assert structure_position < evidence_position < boundary_position
+    for phrase in (evidence_heading, *EVIDENCE_NOTE_PHRASES[1:]):
+        assert phrase in html
+    for raw_label in RAW_READER_LABELS:
+        assert raw_label not in html
+    for phrase in ABSOLUTE_DESTINY_PHRASES:
+        assert phrase not in html
+    if case["source_type"] == "auto_calculated":
+        assert "external_verified" not in html
+    if case["source_type"] == "external_verified":
+        assert "auto_calculated" not in html
+
+
 def _assert_safety_json(
     case: dict[str, Any], result: subprocess.CompletedProcess[str]
 ) -> None:
@@ -249,6 +286,20 @@ def test_safe_markdown_regression_cases_keep_report_contracts():
             "markdown",
         )
         _assert_safe_markdown(case, result)
+
+
+def test_safe_regression_cases_keep_html_report_contracts():
+    cases = _safe_markdown_cases()
+    assert {case["source_type"] for case in cases} == SAFE_SOURCE_TYPES
+    for case in cases:
+        result = _run_cli(
+            case["command"],
+            "--input",
+            str(REPO_ROOT / case["input"]),
+            "--format",
+            "html",
+        )
+        _assert_safe_html(case, result)
 
 
 def test_safety_json_regression_cases_keep_refusal_contracts():

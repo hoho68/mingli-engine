@@ -110,6 +110,31 @@ def test_calculate_report_outputs_markdown_from_birth_profile():
         assert prohibited_phrase not in markdown
 
 
+def test_calculate_report_outputs_complete_html_from_birth_profile():
+    result = _run_cli(
+        "calculate-report",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.auto-gregorian.json"),
+        "--format",
+        "html",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert result.stderr == ""
+    html = result.stdout
+    assert html.startswith("<!doctype html>")
+    assert '<html lang="zh-CN">' in html
+    assert '<meta charset="utf-8">' in html
+    assert "<title>" in html
+    assert "<style>" in html
+    assert html.count("<main") == 1
+    assert html.rstrip().endswith("</html>")
+    assert "# " not in html
+    _assert_plain_language_report(html)
+    assert "<script" not in html.lower()
+    assert "onclick=" not in html.lower()
+
+
 def test_calculate_report_returns_exit_3_json_for_unsafe_focus_topic():
     result = _run_cli(
         "calculate-report",

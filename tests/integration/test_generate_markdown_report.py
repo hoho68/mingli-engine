@@ -108,6 +108,31 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
         assert old_phrase not in markdown
 
 
+def test_generate_report_outputs_complete_html_from_external_verified_chart():
+    result = _run_cli(
+        "generate-report",
+        "--input",
+        str(EXAMPLES_DIR / "bazi-chart.external-verified.json"),
+        "--format",
+        "html",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert result.stderr == ""
+    html = result.stdout
+    assert html.startswith("<!doctype html>")
+    assert '<html lang="zh-CN">' in html
+    assert '<meta charset="utf-8">' in html
+    assert "<title>" in html
+    assert "<style>" in html
+    assert html.count("<main") == 1
+    assert html.rstrip().endswith("</html>")
+    assert "# " not in html
+    _assert_plain_language_report(html)
+    assert "<script" not in html.lower()
+    assert "onclick=" not in html.lower()
+
+
 def test_generate_report_returns_exit_2_json_for_incomplete_birth_profile(tmp_path):
     chart = json.loads(
         (EXAMPLES_DIR / "bazi-chart.external-verified.json").read_text(encoding="utf-8")
@@ -216,3 +241,27 @@ def test_generate_report_reports_stable_error_for_empty_pillars(tmp_path):
     assert "Invalid input" in result.stderr
     assert "Traceback" not in result.stderr
     assert not result.stdout.startswith("# ")
+
+
+def test_generate_report_invalid_input_with_html_does_not_emit_partial_html(tmp_path):
+    chart = json.loads(
+        (EXAMPLES_DIR / "bazi-chart.external-verified.json").read_text(encoding="utf-8")
+    )
+    chart["pillars"] = []
+    input_path = tmp_path / "chart-empty-pillars-html.json"
+    input_path.write_text(json.dumps(chart, ensure_ascii=False), encoding="utf-8")
+
+    result = _run_cli(
+        "generate-report",
+        "--input",
+        str(input_path),
+        "--format",
+        "html",
+    )
+
+    assert result.returncode == 1
+    assert "Invalid input" in result.stderr
+    assert "Traceback" not in result.stderr
+    assert not result.stdout.startswith("<!doctype html>")
+    assert "<main" not in result.stdout
+    assert "</html>" not in result.stdout

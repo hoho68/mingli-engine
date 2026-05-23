@@ -20,13 +20,13 @@
 
 **Purpose**: Confirm branch state and load the 010 design artifacts before writing tests or code.
 
-- [ ] T001 Run `git status --short --branch` from `E:/命理演绎` and confirm the branch is `010-html-visual-report`.
-- [ ] T002 Review `specs/010-html-visual-report/plan.md` for technology, constraints, and target file structure.
-- [ ] T003 [P] Review user stories and acceptance criteria in `specs/010-html-visual-report/spec.md`.
-- [ ] T004 [P] Review design decisions in `specs/010-html-visual-report/research.md`.
-- [ ] T005 [P] Review renderer entities and validation rules in `specs/010-html-visual-report/data-model.md`.
-- [ ] T006 [P] Review CLI and HTML output contract in `specs/010-html-visual-report/contracts/html-report-contract.md`.
-- [ ] T007 [P] Review verification commands in `specs/010-html-visual-report/quickstart.md`.
+- [X] T001 Run `git status --short --branch` from `E:/命理演绎` and confirm the branch is `010-html-visual-report`.
+- [X] T002 Review `specs/010-html-visual-report/plan.md` for technology, constraints, and target file structure.
+- [X] T003 [P] Review user stories and acceptance criteria in `specs/010-html-visual-report/spec.md`.
+- [X] T004 [P] Review design decisions in `specs/010-html-visual-report/research.md`.
+- [X] T005 [P] Review renderer entities and validation rules in `specs/010-html-visual-report/data-model.md`.
+- [X] T006 [P] Review CLI and HTML output contract in `specs/010-html-visual-report/contracts/html-report-contract.md`.
+- [X] T007 [P] Review verification commands in `specs/010-html-visual-report/quickstart.md`.
 
 ---
 
@@ -36,13 +36,13 @@
 
 **Checkpoint**: No user-story test or implementation task should begin until this phase is complete.
 
-- [ ] T008 Inspect current report format parsing and output dispatch in `src/mingli_engine/cli.py`.
-- [ ] T009 Inspect current Markdown report ordering in `src/mingli_engine/markdown.py`.
-- [ ] T010 Inspect the existing `Report` data contract in `src/mingli_engine/models.py`.
-- [ ] T011 [P] Inspect CLI integration test patterns in `tests/integration/test_calculate_report_cli.py`.
-- [ ] T012 [P] Inspect external verified chart report test patterns in `tests/integration/test_generate_markdown_report.py`.
-- [ ] T013 [P] Inspect regression manifest checks in `tests/integration/test_report_regression_cases.py`.
-- [ ] T014 [P] Inspect red-line and report-language safety checks in `tests/safety/test_red_lines_and_language.py`.
+- [X] T008 Inspect current report format parsing and output dispatch in `src/mingli_engine/cli.py`.
+- [X] T009 Inspect current Markdown report ordering in `src/mingli_engine/markdown.py`.
+- [X] T010 Inspect the existing `Report` data contract in `src/mingli_engine/models.py`.
+- [X] T011 [P] Inspect CLI integration test patterns in `tests/integration/test_calculate_report_cli.py`.
+- [X] T012 [P] Inspect external verified chart report test patterns in `tests/integration/test_generate_markdown_report.py`.
+- [X] T013 [P] Inspect regression manifest checks in `tests/integration/test_report_regression_cases.py`.
+- [X] T014 [P] Inspect red-line and report-language safety checks in `tests/safety/test_red_lines_and_language.py`.
 
 ---
 
@@ -56,17 +56,17 @@
 
 > Write these tests first and confirm they fail before implementation.
 
-- [ ] T015 [US1] Create failing complete-document and required-section renderer tests in `tests/unit/test_html_renderer.py`.
-- [ ] T016 [US1] Add failing `calculate-report --format html` integration assertions in `tests/integration/test_calculate_report_cli.py`.
-- [ ] T017 [US1] Add failing `generate-report --format html` integration assertions in `tests/integration/test_generate_markdown_report.py`.
-- [ ] T018 [US1] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm the expected missing renderer or invalid format failures.
+- [X] T015 [US1] Create failing complete-document and required-section renderer tests in `tests/unit/test_html_renderer.py`.
+- [X] T016 [US1] Add failing `calculate-report --format html` integration assertions in `tests/integration/test_calculate_report_cli.py`.
+- [X] T017 [US1] Add failing `generate-report --format html` integration assertions in `tests/integration/test_generate_markdown_report.py`.
+- [X] T018 [US1] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm the expected missing renderer or invalid format failures.
 
 ### Implementation for User Story 1
 
-- [ ] T019 [US1] Add `render_html_report(report)` with complete static document rendering in `src/mingli_engine/html.py`.
-- [ ] T020 [US1] Extend report `--format` choices to include `html` in `src/mingli_engine/cli.py`.
-- [ ] T021 [US1] Dispatch safe report output to Markdown or HTML renderers in `src/mingli_engine/cli.py`.
-- [ ] T022 [US1] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm US1 passes with Markdown behavior preserved.
+- [X] T019 [US1] Add `render_html_report(report)` with complete static document rendering in `src/mingli_engine/html.py`.
+- [X] T020 [US1] Extend report `--format` choices to include `html` in `src/mingli_engine/cli.py`.
+- [X] T021 [US1] Dispatch safe report output to Markdown or HTML renderers in `src/mingli_engine/cli.py`.
+- [X] T022 [US1] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v` and confirm US1 passes with Markdown behavior preserved.
 
 **Checkpoint**: User Story 1 is usable as the MVP.
 
@@ -82,15 +82,15 @@
 
 > Write these tests first and confirm they fail before implementation.
 
-- [ ] T023 [US2] Add failing HTML section-order assertions in `tests/unit/test_html_renderer.py`.
-- [ ] T024 [US2] Add failing source-wording and `观察依据` placement checks in `tests/integration/test_report_regression_cases.py`.
-- [ ] T025 [US2] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/integration/test_report_regression_cases.py -v` and confirm the expected ordering or contract failures.
+- [X] T023 [US2] Add failing HTML section-order assertions in `tests/unit/test_html_renderer.py`.
+- [X] T024 [US2] Add failing source-wording and `观察依据` placement checks in `tests/integration/test_report_regression_cases.py`.
+- [X] T025 [US2] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/integration/test_report_regression_cases.py -v` and confirm the expected ordering or contract failures.
 
 ### Implementation for User Story 2
 
-- [ ] T026 [US2] Refine semantic sections and headings to mirror Markdown hierarchy in `src/mingli_engine/html.py`.
-- [ ] T027 [US2] Extend regression helper checks so safe automatic and external verified cases verify HTML contract in `tests/integration/test_report_regression_cases.py`.
-- [ ] T028 [US2] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/integration/test_report_regression_cases.py -v` and confirm order, source, and evidence checks pass.
+- [X] T026 [US2] Refine semantic sections and headings to mirror Markdown hierarchy in `src/mingli_engine/html.py`.
+- [X] T027 [US2] Extend regression helper checks so safe automatic and external verified cases verify HTML contract in `tests/integration/test_report_regression_cases.py`.
+- [X] T028 [US2] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/integration/test_report_regression_cases.py -v` and confirm order, source, and evidence checks pass.
 
 **Checkpoint**: User Story 2 preserves report meaning across formats.
 
@@ -106,18 +106,18 @@
 
 > Write these tests first and confirm they fail before implementation.
 
-- [ ] T029 [US3] Add failing HTML escaping, no-script, and no-external-resource tests in `tests/unit/test_html_renderer.py`.
-- [ ] T030 [US3] Add failing HTML non-absolute destiny language assertions in `tests/safety/test_red_lines_and_language.py`.
-- [ ] T031 [US3] Add failing unsafe `--format html` safety JSON assertions in `tests/safety/test_red_lines_and_language.py`.
-- [ ] T032 [US3] Add failing invalid-input and no-partial-HTML assertions for `--format html` in `tests/integration/test_generate_markdown_report.py`.
-- [ ] T033 [US3] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/safety/test_red_lines_and_language.py tests/integration/test_generate_markdown_report.py -v` and confirm expected failures where implementation is incomplete.
+- [X] T029 [US3] Add failing HTML escaping, no-script, and no-external-resource tests in `tests/unit/test_html_renderer.py`.
+- [X] T030 [US3] Add failing HTML non-absolute destiny language assertions in `tests/safety/test_red_lines_and_language.py`.
+- [X] T031 [US3] Add failing unsafe `--format html` safety JSON assertions in `tests/safety/test_red_lines_and_language.py`.
+- [X] T032 [US3] Add failing invalid-input and no-partial-HTML assertions for `--format html` in `tests/integration/test_generate_markdown_report.py`.
+- [X] T033 [US3] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/safety/test_red_lines_and_language.py tests/integration/test_generate_markdown_report.py -v` and confirm expected failures where implementation is incomplete.
 
 ### Implementation for User Story 3
 
-- [ ] T034 [US3] Escape all report text and preserve readable paragraph or list line breaks in `src/mingli_engine/html.py`.
-- [ ] T035 [US3] Ensure generated HTML contains no `<script>`, inline event handlers, external URLs, external stylesheets, fonts, images, or CDN references in `src/mingli_engine/html.py`.
-- [ ] T036 [US3] Confirm `src/mingli_engine/cli.py` returns existing safety JSON, invalid-input behavior, and non-absolute report language before renderer dispatch.
-- [ ] T037 [US3] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/safety/test_red_lines_and_language.py tests/integration/test_generate_markdown_report.py -v` and confirm escaping, safety, invalid-input, and non-absolute language checks pass.
+- [X] T034 [US3] Escape all report text and preserve readable paragraph or list line breaks in `src/mingli_engine/html.py`.
+- [X] T035 [US3] Ensure generated HTML contains no `<script>`, inline event handlers, external URLs, external stylesheets, fonts, images, or CDN references in `src/mingli_engine/html.py`.
+- [X] T036 [US3] Confirm `src/mingli_engine/cli.py` returns existing safety JSON, invalid-input behavior, and non-absolute report language before renderer dispatch.
+- [X] T037 [US3] Run `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py tests/safety/test_red_lines_and_language.py tests/integration/test_generate_markdown_report.py -v` and confirm escaping, safety, invalid-input, and non-absolute language checks pass.
 
 **Checkpoint**: User Story 3 protects the browser-facing report boundary.
 
@@ -127,13 +127,13 @@
 
 **Purpose**: Confirm focused scenarios, regression coverage, and the full project suite after all desired stories are complete.
 
-- [ ] T038 Run renderer quickstart tests with `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py -v`.
-- [ ] T039 Run CLI HTML tests with `uv run --with pytest python -m pytest tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v`.
-- [ ] T040 Run regression and safety tests with `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py tests/safety/test_red_lines_and_language.py -v`.
-- [ ] T041 Run the full suite with `uv run --with pytest python -m pytest`.
-- [ ] T042 [P] Run whitespace validation with `git diff --check` from `E:/命理演绎`.
-- [ ] T043 Inspect final changed files with `git status --short --branch` from `E:/命理演绎`.
-- [ ] T044 Update completed checkboxes in `specs/010-html-visual-report/tasks.md` for every finished implementation checkpoint.
+- [X] T038 Run renderer quickstart tests with `uv run --with pytest python -m pytest tests/unit/test_html_renderer.py -v`.
+- [X] T039 Run CLI HTML tests with `uv run --with pytest python -m pytest tests/integration/test_calculate_report_cli.py tests/integration/test_generate_markdown_report.py -v`.
+- [X] T040 Run regression and safety tests with `uv run --with pytest python -m pytest tests/integration/test_report_regression_cases.py tests/safety/test_red_lines_and_language.py -v`.
+- [X] T041 Run the full suite with `uv run --with pytest python -m pytest`.
+- [X] T042 [P] Run whitespace validation with `git diff --check` from `E:/命理演绎`.
+- [X] T043 Inspect final changed files with `git status --short --branch` from `E:/命理演绎`.
+- [X] T044 Update completed checkboxes in `specs/010-html-visual-report/tasks.md` for every finished implementation checkpoint.
 
 ---
 
