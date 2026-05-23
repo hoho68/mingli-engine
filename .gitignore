@@ -2,6 +2,7 @@
 .agents/*
 !.agents/skills/
 !.agents/skills/**
+.superpowers/
 
 # Python test/runtime caches
 __pycache__/
