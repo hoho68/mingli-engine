@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read
-specs/009-report-evidence-notes/plan.md
+specs/010-html-visual-report/plan.md
 <!-- SPECKIT END -->
