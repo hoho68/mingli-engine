@@ -93,6 +93,7 @@ Create `E:\hermes-mingli-agent\.gitignore`:
 ```gitignore
 .venv/
 __pycache__/
+*.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -137,6 +138,9 @@ dependencies = [
 
 [project.scripts]
 mingli-report-mcp = "mingli_agent.mcp_server:main"
+
+[tool.uv]
+package = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
