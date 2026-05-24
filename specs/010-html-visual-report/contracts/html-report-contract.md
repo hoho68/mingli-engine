@@ -9,6 +9,7 @@ This contract defines static HTML output for existing formal safe report command
 Existing Markdown commands remain valid:
 
 ```powershell
+$env:PYTHONPATH='src'
 uv run python -m mingli_engine.cli calculate-report --input examples\birth-profile.auto-gregorian.json --format markdown
 uv run python -m mingli_engine.cli generate-report --input examples\bazi-chart.external-verified.json --format markdown
 ```
@@ -16,6 +17,7 @@ uv run python -m mingli_engine.cli generate-report --input examples\bazi-chart.e
 New HTML format commands:
 
 ```powershell
+$env:PYTHONPATH='src'
 uv run python -m mingli_engine.cli calculate-report --input examples\birth-profile.auto-gregorian.json --format html
 uv run python -m mingli_engine.cli generate-report --input examples\bazi-chart.external-verified.json --format html
 ```

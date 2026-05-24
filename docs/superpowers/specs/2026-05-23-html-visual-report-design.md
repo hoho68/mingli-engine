@@ -131,6 +131,7 @@ The output should not include:
 The existing Markdown behavior should remain valid:
 
 ```powershell
+$env:PYTHONPATH='src'
 uv run python -m mingli_engine.cli calculate-report --input examples\birth-profile.auto-gregorian.json --format markdown
 uv run python -m mingli_engine.cli generate-report --input examples\bazi-chart.external-verified.json --format markdown
 ```
@@ -138,6 +139,7 @@ uv run python -m mingli_engine.cli generate-report --input examples\bazi-chart.e
 The feature adds equivalent HTML output:
 
 ```powershell
+$env:PYTHONPATH='src'
 uv run python -m mingli_engine.cli calculate-report --input examples\birth-profile.auto-gregorian.json --format html
 uv run python -m mingli_engine.cli generate-report --input examples\bazi-chart.external-verified.json --format html
 ```
