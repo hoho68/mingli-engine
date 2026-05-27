@@ -49,14 +49,19 @@ EXPANDED_EVIDENCE_PHRASES = (
     "正式判断：",
     "证据：",
     "盘面：",
+    "分歧说明：",
 )
 EXPANDED_RULE_FAMILIES = (
     "pattern_strength",
     "five_element_balance",
+    "useful_god_candidate",
+    "taboo_god_candidate",
     "ten_god_relation",
     "branch_interaction",
     "blind_image_method",
     "luck_cycle",
+    "remedy_boundary",
+    "high_risk_signal",
 )
 
 

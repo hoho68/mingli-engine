@@ -3,14 +3,24 @@ from pathlib import Path
 from typing import Any
 
 from mingli_engine.models import (
+    CONFIDENCE_LEVELS,
+    CONFLICT_RESOLUTION_STATUSES,
+    CONFLICT_SEVERITIES,
+    CONFLICT_TYPES,
+    CURATION_BATCH_REVIEW_STATUSES,
     EXTRACTION_STATUSES,
+    REPORT_USABLE_BATCH_REVIEW_STATUSES,
     REPORT_USABLE_REVIEW_STATUS,
     REVIEW_STATUSES,
     RISK_TIERS,
     RULE_FAMILIES,
     SOURCE_TYPES,
     ClassicalSource,
+    CurationGap,
+    CurationBatch,
     EvidenceUnit,
+    SourceConflict,
+    SOURCE_QUALITIES,
 )
 
 
@@ -43,6 +53,12 @@ def _read_json_list(path: Path) -> list[dict[str, Any]]:
     return payload
 
 
+def _read_optional_json_list(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    return _read_json_list(path)
+
+
 def _require_text(value: str, field_name: str, entry_id: str) -> None:
     if not isinstance(value, str) or not value.strip():
         raise ClassicalEvidenceError(f"{entry_id} has empty {field_name}")
@@ -53,6 +69,13 @@ def _require_string_list(value: Any, field_name: str, entry_id: str) -> None:
         isinstance(item, str) and item.strip() for item in value
     ):
         raise ClassicalEvidenceError(f"{entry_id} has invalid {field_name}")
+
+
+def _has_source_ref_prefix(value: str) -> bool:
+    return any(
+        prefix in value
+        for prefix in ("page:", "chapter:", "heading:", "review-note:")
+    )
 
 
 def _source_from_dict(data: dict[str, Any]) -> ClassicalSource:
@@ -106,6 +129,16 @@ def _evidence_unit_from_dict(data: dict[str, Any]) -> EvidenceUnit:
         _require_text(getattr(unit, field_name), field_name, unit.evidence_id or "?")
     _require_string_list(unit.applicability, "applicability", unit.evidence_id)
     _require_string_list(unit.limitations, "limitations", unit.evidence_id)
+    _require_string_list(unit.conflict_ids, "conflict_ids", unit.evidence_id)
+    if unit.curation_batch_id and not isinstance(unit.curation_batch_id, str):
+        raise ClassicalEvidenceError(
+            f"{unit.evidence_id} has invalid curation_batch_id"
+        )
+    if not _has_source_ref_prefix(unit.source_ref):
+        raise ClassicalEvidenceError(
+            f"{unit.evidence_id} source_ref must include page:, chapter:, "
+            "heading:, or review-note:"
+        )
     if unit.rule_family not in RULE_FAMILIES:
         raise ClassicalEvidenceError(
             f"{unit.evidence_id} has unsupported rule_family: {unit.rule_family}"
@@ -118,11 +151,93 @@ def _evidence_unit_from_dict(data: dict[str, Any]) -> EvidenceUnit:
         raise ClassicalEvidenceError(
             f"{unit.evidence_id} high_risk unit requires limitations"
         )
+    if unit.risk_tier == "high_risk":
+        limitation_text = "；".join(unit.limitations)
+        if not any(marker in limitation_text for marker in ("精确", "不输出", "拒绝", "不得")):
+            raise ClassicalEvidenceError(
+                f"{unit.evidence_id} high_risk unit requires non-exact limitations"
+            )
+    if unit.confidence not in CONFIDENCE_LEVELS:
+        raise ClassicalEvidenceError(
+            f"{unit.evidence_id} has invalid confidence: {unit.confidence}"
+        )
+    if unit.source_quality not in SOURCE_QUALITIES:
+        raise ClassicalEvidenceError(
+            f"{unit.evidence_id} has invalid source_quality: {unit.source_quality}"
+        )
     if len(unit.summary) > 280:
         raise ClassicalEvidenceError(
             f"{unit.evidence_id} summary is too long for an evidence unit"
         )
     return unit
+
+
+def _curation_batch_from_dict(data: dict[str, Any]) -> CurationBatch:
+    try:
+        batch = CurationBatch(**data)
+    except TypeError as error:
+        raise ClassicalEvidenceError(f"invalid curation batch: {error}") from error
+
+    for field_name in ("batch_id", "review_status", "review_notes"):
+        _require_text(getattr(batch, field_name), field_name, batch.batch_id or "?")
+    _require_string_list(batch.source_ids, "source_ids", batch.batch_id)
+    _require_string_list(batch.evidence_ids, "evidence_ids", batch.batch_id)
+    _require_string_list(
+        batch.unresolved_issues,
+        "unresolved_issues",
+        batch.batch_id,
+    )
+    if batch.review_status not in CURATION_BATCH_REVIEW_STATUSES:
+        raise ClassicalEvidenceError(
+            f"{batch.batch_id} has invalid review_status: {batch.review_status}"
+        )
+    return batch
+
+
+def _source_conflict_from_dict(data: dict[str, Any]) -> SourceConflict:
+    try:
+        conflict = SourceConflict(**data)
+    except TypeError as error:
+        raise ClassicalEvidenceError(f"invalid source conflict: {error}") from error
+
+    for field_name in (
+        "conflict_id",
+        "rule_family",
+        "conflict_type",
+        "reader_note",
+        "severity",
+        "resolution_status",
+    ):
+        _require_text(
+            getattr(conflict, field_name),
+            field_name,
+            conflict.conflict_id or "?",
+        )
+    _require_string_list(
+        conflict.evidence_ids,
+        "evidence_ids",
+        conflict.conflict_id,
+    )
+    if conflict.rule_family not in RULE_FAMILIES:
+        raise ClassicalEvidenceError(
+            f"{conflict.conflict_id} has unsupported rule_family: "
+            f"{conflict.rule_family}"
+        )
+    if conflict.conflict_type not in CONFLICT_TYPES:
+        raise ClassicalEvidenceError(
+            f"{conflict.conflict_id} has invalid conflict_type: "
+            f"{conflict.conflict_type}"
+        )
+    if conflict.severity not in CONFLICT_SEVERITIES:
+        raise ClassicalEvidenceError(
+            f"{conflict.conflict_id} has invalid severity: {conflict.severity}"
+        )
+    if conflict.resolution_status not in CONFLICT_RESOLUTION_STATUSES:
+        raise ClassicalEvidenceError(
+            f"{conflict.conflict_id} has invalid resolution_status: "
+            f"{conflict.resolution_status}"
+        )
+    return conflict
 
 
 def _ensure_unique(ids: list[str], id_name: str) -> None:
@@ -140,13 +255,38 @@ def load_classical_sources(data_dir: Path | str | None = None) -> list[Classical
     return sources
 
 
+def _load_evidence_units_without_batch_validation(
+    data_dir: Path | str | None = None,
+) -> list[EvidenceUnit]:
+    corpus_dir = _data_dir(data_dir)
+    path = corpus_dir / "evidence_units.json"
+    units = [_evidence_unit_from_dict(item) for item in _read_json_list(path)]
+    _ensure_unique([unit.evidence_id for unit in units], "evidence_id")
+    return units
+
+
+def _load_curation_batches_without_cross_reference_validation(
+    data_dir: Path | str | None = None,
+) -> list[CurationBatch]:
+    path = _data_dir(data_dir) / "curation_batches.json"
+    batches = [
+        _curation_batch_from_dict(item) for item in _read_optional_json_list(path)
+    ]
+    _ensure_unique([batch.batch_id for batch in batches], "batch_id")
+    return batches
+
+
 def load_evidence_units(data_dir: Path | str | None = None) -> list[EvidenceUnit]:
     corpus_dir = _data_dir(data_dir)
     sources = load_classical_sources(corpus_dir)
     sources_by_id = {source.source_id: source for source in sources}
-    path = corpus_dir / "evidence_units.json"
-    units = [_evidence_unit_from_dict(item) for item in _read_json_list(path)]
-    _ensure_unique([unit.evidence_id for unit in units], "evidence_id")
+    units = _load_evidence_units_without_batch_validation(corpus_dir)
+    batches_by_id = {
+        batch.batch_id: batch
+        for batch in _load_curation_batches_without_cross_reference_validation(
+            corpus_dir
+        )
+    }
     for unit in units:
         source = sources_by_id.get(unit.source_id)
         if source is None:
@@ -158,6 +298,18 @@ def load_evidence_units(data_dir: Path | str | None = None) -> list[EvidenceUnit
                 f"{unit.evidence_id} requires an approved source, "
                 f"got {source.review_status}: {unit.source_id}"
             )
+        if unit.curation_batch_id:
+            batch = batches_by_id.get(unit.curation_batch_id)
+            if batch is None:
+                raise ClassicalEvidenceError(
+                    f"{unit.evidence_id} references unknown curation batch: "
+                    f"{unit.curation_batch_id}"
+                )
+            if batch.review_status not in REPORT_USABLE_BATCH_REVIEW_STATUSES:
+                raise ClassicalEvidenceError(
+                    f"{unit.evidence_id} requires a reviewed or approved batch, "
+                    f"got {batch.review_status}: {batch.batch_id}"
+                )
     return units
 
 
@@ -165,3 +317,74 @@ def load_approved_evidence_units(
     data_dir: Path | str | None = None,
 ) -> list[EvidenceUnit]:
     return load_evidence_units(data_dir)
+
+
+def load_curation_batches(
+    data_dir: Path | str | None = None,
+) -> list[CurationBatch]:
+    corpus_dir = _data_dir(data_dir)
+    sources_by_id = {
+        source.source_id: source for source in load_classical_sources(corpus_dir)
+    }
+    evidence_by_id = {
+        unit.evidence_id: unit
+        for unit in _load_evidence_units_without_batch_validation(corpus_dir)
+    }
+    batches = _load_curation_batches_without_cross_reference_validation(corpus_dir)
+
+    for batch in batches:
+        for source_id in batch.source_ids:
+            if source_id not in sources_by_id:
+                raise ClassicalEvidenceError(
+                    f"{batch.batch_id} references unknown source: {source_id}"
+                )
+        for evidence_id in batch.evidence_ids:
+            if evidence_id not in evidence_by_id:
+                raise ClassicalEvidenceError(
+                    f"{batch.batch_id} references unknown evidence: {evidence_id}"
+                )
+    return batches
+
+
+def load_source_conflicts(
+    data_dir: Path | str | None = None,
+) -> list[SourceConflict]:
+    corpus_dir = _data_dir(data_dir)
+    evidence_by_id = {
+        unit.evidence_id: unit for unit in load_evidence_units(corpus_dir)
+    }
+    path = corpus_dir / "source_conflicts.json"
+    conflicts = [
+        _source_conflict_from_dict(item) for item in _read_optional_json_list(path)
+    ]
+    _ensure_unique([conflict.conflict_id for conflict in conflicts], "conflict_id")
+
+    for conflict in conflicts:
+        for evidence_id in conflict.evidence_ids:
+            if evidence_id not in evidence_by_id:
+                raise ClassicalEvidenceError(
+                    f"{conflict.conflict_id} references unknown evidence: "
+                    f"{evidence_id}"
+                )
+    return conflicts
+
+
+def derive_curation_gaps(
+    sources: list[ClassicalSource],
+    evidence_units: list[EvidenceUnit],
+) -> list[CurationGap]:
+    evidence_source_ids = {unit.source_id for unit in evidence_units}
+    gaps: list[CurationGap] = []
+    for source in sources:
+        if source.source_id in evidence_source_ids and not source.curation_gap_reason:
+            continue
+        reason = source.curation_gap_reason or "No approved evidence unit is available."
+        gaps.append(
+            CurationGap(
+                gap_id=f"gap_{source.source_id}",
+                source_id=source.source_id,
+                reason=reason,
+                blocks_report_use=source.source_id not in evidence_source_ids,
+            )
+        )
+    return gaps

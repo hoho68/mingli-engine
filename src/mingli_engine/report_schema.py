@@ -1,6 +1,9 @@
 from dataclasses import replace
 
-from mingli_engine.classical_sources import load_approved_evidence_units
+from mingli_engine.classical_sources import (
+    load_approved_evidence_units,
+    load_source_conflicts,
+)
 from mingli_engine.formal_interpretation import build_formal_interpretation
 from mingli_engine.high_risk import classify_high_risk_request
 from mingli_engine.interpretation import build_basic_interpretation
@@ -211,6 +214,8 @@ def _format_expanded_evidence_notes(expanded_evidence: ExpandedReportEvidence) -
             f"{conclusion.title}｜{conclusion.rule_family}｜{conclusion.strength}｜"
             f"证据：{evidence_ids}｜盘面：{chart_signals}"
         )
+        if conclusion.trace.disagreement_note:
+            lines.append(f"- 分歧说明：{conclusion.trace.disagreement_note}")
 
     if expanded_evidence.high_risk_notes:
         lines.append("- 高风险材料边界：相关材料只作为传统风险信号，不输出精确结果或专业建议。")
@@ -278,6 +283,7 @@ def build_report(chart: BaziChart) -> Report:
     expanded_evidence = build_formal_interpretation(
         chart,
         load_approved_evidence_units(),
+        load_source_conflicts(),
     )
     evidence_notes = _build_evidence_notes(expanded_evidence)
     structure_analysis = (
