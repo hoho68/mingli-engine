@@ -1,8 +1,12 @@
 from dataclasses import replace
+from dataclasses import fields
 
 import pytest
 
 from mingli_engine.report_schema import build_report
+from mingli_engine.report_schema import _format_expanded_evidence_notes
+from mingli_engine.models import Report
+from mingli_engine.models import ExpandedReportEvidence, EvidenceTrace, FormalConclusion
 
 
 RAW_READER_LABELS = (
@@ -308,3 +312,76 @@ def test_build_report_rejects_chart_without_four_pillars(sample_bazi_chart):
 
     with pytest.raises(ValueError, match="four pillars"):
         build_report(chart)
+
+
+def test_report_public_contract_fields_remain_stable_for_012():
+    assert [field.name for field in fields(Report)] == [
+        "title",
+        "disclaimer",
+        "quick_guide",
+        "chart_card",
+        "assumptions",
+        "four_pillars_summary",
+        "five_elements_summary",
+        "ten_gods_summary",
+        "evidence_notes",
+        "structure_analysis",
+        "personality_tendencies",
+        "strengths_and_issues",
+        "phase_overview",
+        "action_suggestions",
+        "interpretation_boundaries",
+        "glossary",
+        "ethics_reminder",
+        "expanded_evidence",
+        "safety_review",
+    ]
+
+
+def test_expanded_evidence_notes_include_conflict_notes_without_new_report_fields():
+    expanded = ExpandedReportEvidence(
+        source_summary=["source / useful_god_candidate / ordinary"],
+        formal_conclusions=[
+            FormalConclusion(
+                conclusion_id="formal_useful_god_candidate",
+                title="用神候选边界",
+                body="用神候选存在不同口径。",
+                rule_family="useful_god_candidate",
+                strength="candidate",
+                risk_tier="ordinary",
+                trace=EvidenceTrace(
+                    trace_id="trace_useful_god_candidate",
+                    conclusion_id="formal_useful_god_candidate",
+                    chart_signals=["木:偏弱"],
+                    evidence_ids=["duan_useful_god_candidate_001"],
+                    assumptions=["rule_family:useful_god_candidate"],
+                    disagreement_note="用神候选存在流派优先级差异。",
+                ),
+            )
+        ],
+    )
+
+    notes = _format_expanded_evidence_notes(expanded)
+
+    assert "分歧说明：用神候选存在流派优先级差异。" in notes
+    assert [field.name for field in fields(Report)] == [
+        "title",
+        "disclaimer",
+        "quick_guide",
+        "chart_card",
+        "assumptions",
+        "four_pillars_summary",
+        "five_elements_summary",
+        "ten_gods_summary",
+        "evidence_notes",
+        "structure_analysis",
+        "personality_tendencies",
+        "strengths_and_issues",
+        "phase_overview",
+        "action_suggestions",
+        "interpretation_boundaries",
+        "glossary",
+        "ethics_reminder",
+        "expanded_evidence",
+        "safety_review",
+    ]

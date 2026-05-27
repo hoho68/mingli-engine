@@ -1,0 +1,26 @@
+[
+  {
+    "conflict_id": "conflict_useful_god_school_001",
+    "rule_family": "useful_god_candidate",
+    "evidence_ids": [
+      "duan_useful_god_candidate_001",
+      "teacher_useful_god_candidate_001"
+    ],
+    "conflict_type": "school_difference",
+    "reader_note": "段氏与师传口径对用神候选的优先入口不同，报告应保留候选而非唯一结论。",
+    "severity": "moderate",
+    "resolution_status": "documented"
+  },
+  {
+    "conflict_id": "conflict_high_risk_scope_001",
+    "rule_family": "high_risk_signal",
+    "evidence_ids": [
+      "northeast_high_risk_signal_001",
+      "life_death_high_risk_signal_003"
+    ],
+    "conflict_type": "scope_mismatch",
+    "reader_note": "盲派取象与生死寿夭材料的适用范围不同，高风险结论必须降级并强调边界。",
+    "severity": "severe",
+    "resolution_status": "open"
+  }
+]

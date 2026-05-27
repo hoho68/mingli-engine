@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 from mingli_engine.safety import safety_check
+from mingli_engine.classical_sources import load_approved_evidence_units
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -79,3 +80,26 @@ def test_cli_allows_lifespan_focus_as_narrowed_markdown(tmp_path):
     assert "传统风险信号" in result.stdout
     for prohibited_phrase in ("必定", "注定", "一定会", "死定"):
         assert prohibited_phrase not in result.stdout
+
+
+def test_high_risk_evidence_units_have_non_exact_limitations():
+    high_risk_units = [
+        unit
+        for unit in load_approved_evidence_units()
+        if unit.risk_tier == "high_risk"
+    ]
+
+    assert len(high_risk_units) >= 4
+    for unit in high_risk_units:
+        limitation_text = "；".join(unit.limitations)
+        assert "精确" in limitation_text or "不输出" in limitation_text
+        for prohibited_phrase in ("必定", "注定", "一定会", "死定"):
+            assert prohibited_phrase not in unit.summary
+            assert prohibited_phrase not in limitation_text
+
+
+def test_expanded_corpus_summaries_avoid_absolute_destiny_phrases():
+    for unit in load_approved_evidence_units():
+        combined = "；".join([unit.summary, *unit.limitations])
+        for prohibited_phrase in ("必定", "注定", "一定会", "死定"):
+            assert prohibited_phrase not in combined

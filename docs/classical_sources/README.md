@@ -7,6 +7,14 @@ Runtime report generation does not parse PDFs or Markdown extracts directly.
 Only curated JSON files under `src/mingli_engine/data/classical_sources/` are
 loaded by the engine.
 
+## Preparation Materials
+
+Root-level PDF files and the root `Markdown/` directory are user-provided
+preparation material. Do not move, delete, rewrite, or commit those files unless
+the user explicitly asks for that operation. Review notes in this directory may
+refer to those materials, but runtime code must continue to load only curated
+JSON from `src/mingli_engine/data/classical_sources/`.
+
 ## Review States
 
 - `not_started`: the source is registered but no readable extract has been

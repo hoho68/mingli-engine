@@ -6,12 +6,32 @@ EXTRACTION_STATUSES = frozenset({"not_started", "converted", "partial", "failed"
 REVIEW_STATUSES = frozenset({"unreviewed", "reviewed", "approved", "blocked"})
 REPORT_USABLE_REVIEW_STATUS = "approved"
 RISK_TIERS = frozenset({"ordinary", "sensitive", "high_risk"})
+CURATION_BATCH_REVIEW_STATUSES = frozenset(
+    {"draft", "reviewed", "approved", "blocked"}
+)
+REPORT_USABLE_BATCH_REVIEW_STATUSES = frozenset({"reviewed", "approved"})
+CONFIDENCE_LEVELS = frozenset({"strong", "moderate", "weak"})
+SOURCE_QUALITIES = frozenset(
+    {"direct_extract", "review_note", "secondary_index", "needs_recheck"}
+)
+CONFLICT_TYPES = frozenset(
+    {
+        "school_difference",
+        "textual_disagreement",
+        "scope_mismatch",
+        "insufficient_context",
+    }
+)
+CONFLICT_SEVERITIES = frozenset({"minor", "moderate", "severe"})
+CONFLICT_RESOLUTION_STATUSES = frozenset({"open", "documented", "resolved"})
 CONCLUSION_STRENGTHS = frozenset(
     {"decided", "candidate", "weakly_supported", "disputed", "unavailable"}
 )
 RULE_FAMILIES = frozenset(
     {
         "pattern_strength",
+        "useful_god_candidate",
+        "taboo_god_candidate",
         "ten_god_relation",
         "five_element_balance",
         "branch_interaction",
@@ -59,6 +79,8 @@ class ClassicalSource:
     review_status: str
     scope_notes: str
     risk_notes: list[str] = field(default_factory=list)
+    curation_gap_reason: str = ""
+    review_reference: str = ""
 
 
 @dataclass(frozen=True)
@@ -73,6 +95,52 @@ class EvidenceUnit:
     applicability: list[str]
     limitations: list[str]
     school: str = ""
+    curation_batch_id: str = ""
+    confidence: str = "moderate"
+    source_quality: str = "review_note"
+    conflict_ids: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CurationBatch:
+    batch_id: str
+    source_ids: list[str]
+    evidence_ids: list[str]
+    review_status: str
+    review_notes: str
+    unresolved_issues: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class SourceConflict:
+    conflict_id: str
+    rule_family: str
+    evidence_ids: list[str]
+    conflict_type: str
+    reader_note: str
+    severity: str
+    resolution_status: str
+
+
+@dataclass(frozen=True)
+class CurationGap:
+    gap_id: str
+    source_id: str
+    reason: str
+    rule_family: str = ""
+    blocks_report_use: bool = False
+
+
+@dataclass(frozen=True)
+class CoverageReport:
+    source_counts: dict[str, int]
+    rule_family_counts: dict[str, int]
+    risk_tier_counts: dict[str, int]
+    approved_evidence_count: int
+    sources_with_gaps: list[str] = field(default_factory=list)
+    open_conflicts: list[str] = field(default_factory=list)
+    high_risk_without_limitations: list[str] = field(default_factory=list)
+    long_summary_violations: list[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)

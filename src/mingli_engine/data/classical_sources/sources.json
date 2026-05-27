@@ -7,7 +7,9 @@
     "extraction_status": "partial",
     "review_status": "approved",
     "scope_notes": "盲派象法、结构取象与应事口径的初始证据来源。",
-    "risk_notes": ["high_risk_signal"]
+    "risk_notes": ["high_risk_signal"],
+    "curation_gap_reason": "",
+    "review_reference": "docs/classical_sources/extracts/northeast_blind_peak.md"
   },
   {
     "source_id": "duan_plain_mingxue_outline",
@@ -17,7 +19,9 @@
     "extraction_status": "partial",
     "review_status": "approved",
     "scope_notes": "段氏口径、十神关系与结构分析的初始证据来源。",
-    "risk_notes": []
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "docs/classical_sources/extracts/duan_plain_mingxue_outline.md"
   },
   {
     "source_id": "blind_school_secret",
@@ -27,7 +31,9 @@
     "extraction_status": "partial",
     "review_status": "approved",
     "scope_notes": "盲派组合、刑冲合害与象法判断的初始证据来源。",
-    "risk_notes": ["high_risk_signal"]
+    "risk_notes": ["high_risk_signal"],
+    "curation_gap_reason": "",
+    "review_reference": "docs/classical_sources/extracts/blind_school_secret.md"
   },
   {
     "source_id": "blind_life_manual",
@@ -37,7 +43,9 @@
     "extraction_status": "partial",
     "review_status": "reviewed",
     "scope_notes": "断语体材料，当前仅保留为来源清单，待进一步拆解为证据卡。",
-    "risk_notes": ["high_risk_signal"]
+    "risk_notes": ["high_risk_signal"],
+    "curation_gap_reason": "断语体和高风险口径尚未完成条件化改写，暂不支撑正式结论。",
+    "review_reference": "docs/classical_sources/extracts/blind_life_manual.md"
   },
   {
     "source_id": "mingli_true_formula_teacher",
@@ -47,7 +55,9 @@
     "extraction_status": "partial",
     "review_status": "approved",
     "scope_notes": "格局、旺衰、取用与岁运触发条件的初始证据来源。",
-    "risk_notes": []
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "docs/classical_sources/extracts/mingli_true_formula_teacher.md"
   },
   {
     "source_id": "mingxue_golden_voice",
@@ -57,7 +67,9 @@
     "extraction_status": "partial",
     "review_status": "approved",
     "scope_notes": "五行十神、强弱平衡与传统术语解释的初始证据来源。",
-    "risk_notes": []
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "docs/classical_sources/extracts/mingxue_golden_voice.md"
   },
   {
     "source_id": "fortune_reading_hongfu_qitian",
@@ -67,7 +79,9 @@
     "extraction_status": "partial",
     "review_status": "approved",
     "scope_notes": "通俗命理、调整说法与低风险行动边界的初始证据来源。",
-    "risk_notes": ["remedy_boundary"]
+    "risk_notes": ["remedy_boundary"],
+    "curation_gap_reason": "",
+    "review_reference": "docs/classical_sources/extracts/fortune_reading_hongfu_qitian.md"
   },
   {
     "source_id": "immortal_fortune_jianghu_secret",
@@ -77,7 +91,9 @@
     "extraction_status": "not_started",
     "review_status": "unreviewed",
     "scope_notes": "江湖术材料，需人工清理恐吓式或付费化解口径后才能引用。",
-    "risk_notes": ["high_risk_signal", "remedy_boundary"]
+    "risk_notes": ["high_risk_signal", "remedy_boundary"],
+    "curation_gap_reason": "尚未开始抽取和安全改写，恐吓式或付费化解口径未审，暂不支撑正式结论。",
+    "review_reference": "docs/classical_sources/extracts/immortal_fortune_jianghu_secret.md"
   },
   {
     "source_id": "life_death_book_100_pages",
@@ -87,6 +103,8 @@
     "extraction_status": "converted",
     "review_status": "approved",
     "scope_notes": "生死寿夭材料，只可作为高风险传统信号的有边界证据来源。",
-    "risk_notes": ["high_risk_signal", "lifespan_or_death_timing"]
+    "risk_notes": ["high_risk_signal", "lifespan_or_death_timing"],
+    "curation_gap_reason": "",
+    "review_reference": "docs/classical_sources/extracts/life_death_book_100_pages.md"
   }
 ]
