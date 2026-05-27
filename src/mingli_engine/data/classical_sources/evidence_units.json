@@ -1,0 +1,98 @@
+[
+  {
+    "evidence_id": "duan_ten_god_relation_001",
+    "source_id": "duan_plain_mingxue_outline",
+    "source_ref": "review-note:ten-god-relationships",
+    "theme": "十神关系",
+    "rule_family": "ten_god_relation",
+    "risk_tier": "ordinary",
+    "school": "段氏",
+    "summary": "十神关系应结合柱位、组合与日主关系观察功能，不宜脱离整体结构单断。",
+    "applicability": ["ten_god_available", "four_pillars_complete"],
+    "limitations": ["缺少十神标注或柱位信息时降级为不可用。"]
+  },
+  {
+    "evidence_id": "mingxue_five_element_balance_001",
+    "source_id": "mingxue_golden_voice",
+    "source_ref": "review-note:five-element-balance",
+    "theme": "五行强弱",
+    "rule_family": "five_element_balance",
+    "risk_tier": "ordinary",
+    "school": "通论",
+    "summary": "五行旺衰需要同时看明透、藏干、季令与组合，数量只能作为初步结构线索。",
+    "applicability": ["five_elements_summary_available", "month_pillar_available"],
+    "limitations": ["没有月令或藏干资料时只能作弱支持。"]
+  },
+  {
+    "evidence_id": "teacher_pattern_strength_001",
+    "source_id": "mingli_true_formula_teacher",
+    "source_ref": "review-note:pattern-strength",
+    "theme": "格局旺衰",
+    "rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "school": "师传口径",
+    "summary": "格局和旺衰判断应先看月令、日主根气与干支配合，证据不足时只列候选。",
+    "applicability": ["four_pillars_complete", "month_pillar_available"],
+    "limitations": ["缺少节气或月令校验时不得下决定性格局结论。"]
+  },
+  {
+    "evidence_id": "blind_branch_interaction_001",
+    "source_id": "blind_school_secret",
+    "source_ref": "review-note:branch-interactions",
+    "theme": "刑冲合害",
+    "rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "school": "盲派",
+    "summary": "刑冲合害应结合位置、引动条件与整体结构观察，不直接等同于现实事件。",
+    "applicability": ["earthly_branches_available", "four_pillars_complete"],
+    "limitations": ["没有岁运触发时只作为结构压力或互动线索。"]
+  },
+  {
+    "evidence_id": "northeast_blind_image_001",
+    "source_id": "northeast_blind_peak",
+    "source_ref": "review-note:image-method",
+    "theme": "盲派象法",
+    "rule_family": "blind_image_method",
+    "risk_tier": "ordinary",
+    "school": "东北盲派",
+    "summary": "盲派象法重在从干支组合取象，再回到原局结构与应期条件中校验。",
+    "applicability": ["gan_zhi_available", "four_pillars_complete"],
+    "limitations": ["取象不能脱离结构证据，也不能直接作唯一结论。"]
+  },
+  {
+    "evidence_id": "teacher_luck_cycle_trigger_001",
+    "source_id": "mingli_true_formula_teacher",
+    "source_ref": "review-note:luck-cycle-trigger",
+    "theme": "大运流年",
+    "rule_family": "luck_cycle",
+    "risk_tier": "sensitive",
+    "school": "师传口径",
+    "summary": "大运流年重在观察原局被引动的主题、条件与阶段变化，不宜保证具体结果。",
+    "applicability": ["luck_cycle_available", "four_pillars_complete"],
+    "limitations": ["缺少大运起运或流年资料时只能说明阶段主题候选。"]
+  },
+  {
+    "evidence_id": "fortune_remedy_boundary_001",
+    "source_id": "fortune_reading_hongfu_qitian",
+    "source_ref": "review-note:remedy-boundary",
+    "theme": "趋避与调整",
+    "rule_family": "remedy_boundary",
+    "risk_tier": "sensitive",
+    "school": "通俗命理",
+    "summary": "趋避调整只能描述传统说法和低风险反思方向，不得承诺效果或诱导付费。",
+    "applicability": ["user_requests_remedy_or_adjustment"],
+    "limitations": ["不得用于保证改运、制造焦虑或销售法器法事。"]
+  },
+  {
+    "evidence_id": "life_death_high_risk_signal_001",
+    "source_id": "life_death_book_100_pages",
+    "source_ref": "review-note:life-death-risk-signal",
+    "theme": "生死寿夭材料",
+    "rule_family": "high_risk_signal",
+    "risk_tier": "high_risk",
+    "school": "传统高风险材料",
+    "summary": "生死寿夭材料只可转写为传统高风险信号，说明条件和不确定性，不输出寿命终点。",
+    "applicability": ["formal_report_requested", "high_risk_context_allowed"],
+    "limitations": ["拒绝精确死亡时间、寿命长短、疾病诊断、治疗方案和恐吓式断语。"]
+  }
+]

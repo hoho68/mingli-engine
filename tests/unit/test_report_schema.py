@@ -155,6 +155,37 @@ def test_build_report_explains_observation_basis(sample_bazi_chart):
     assert "不预测具体结果" in report.evidence_notes
 
 
+def test_build_report_attaches_expanded_source_backed_evidence(sample_bazi_chart):
+    report = build_report(sample_bazi_chart)
+
+    expanded = report.expanded_evidence
+
+    assert expanded.source_summary
+    assert expanded.formal_conclusions
+    assert {item.rule_family for item in expanded.formal_conclusions}.issuperset(
+        {
+            "pattern_strength",
+            "five_element_balance",
+            "ten_god_relation",
+            "branch_interaction",
+            "blind_image_method",
+            "luck_cycle",
+        }
+    )
+    for conclusion in expanded.formal_conclusions:
+        assert conclusion.strength in {
+            "decided",
+            "candidate",
+            "weakly_supported",
+            "disputed",
+            "unavailable",
+        }
+        assert conclusion.trace.conclusion_id == conclusion.conclusion_id
+        assert conclusion.trace.chart_signals
+        assert conclusion.trace.evidence_ids
+        assert conclusion.trace.assumptions
+
+
 def test_build_report_prepares_quick_guide_and_boundary_layer(sample_bazi_chart):
     chart = _chart_with_contract_labels(sample_bazi_chart)
     report = build_report(chart)
@@ -262,8 +293,8 @@ def test_build_report_quick_guide_reads_like_plain_guidance(sample_bazi_chart):
     assert "可复盘的小问题" in report.quick_guide
 
 
-def test_build_report_blocks_lifespan_focus_topic(sample_bazi_chart):
-    birth_profile = replace(sample_bazi_chart.birth_profile, focus_topic="寿命")
+def test_build_report_blocks_exact_lifespan_focus_topic(sample_bazi_chart):
+    birth_profile = replace(sample_bazi_chart.birth_profile, focus_topic="寿命多长")
     chart = replace(sample_bazi_chart, birth_profile=birth_profile)
 
     report = build_report(chart)

@@ -1,0 +1,92 @@
+[
+  {
+    "source_id": "northeast_blind_peak",
+    "title": "东北盲派巅峰",
+    "file_name": "东北盲派巅峰.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "盲派象法、结构取象与应事口径的初始证据来源。",
+    "risk_notes": ["high_risk_signal"]
+  },
+  {
+    "source_id": "duan_plain_mingxue_outline",
+    "title": "段氏白話命學綱要",
+    "file_name": "段氏白話命學綱要（2014年，心一堂出版，段方撰，编号82132）.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "段氏口径、十神关系与结构分析的初始证据来源。",
+    "risk_notes": []
+  },
+  {
+    "source_id": "blind_school_secret",
+    "title": "盲派绝学",
+    "file_name": "盲派绝学.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "盲派组合、刑冲合害与象法判断的初始证据来源。",
+    "risk_notes": ["high_risk_signal"]
+  },
+  {
+    "source_id": "blind_life_manual",
+    "title": "盲人断命秘典",
+    "file_name": "盲人断命秘典.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "reviewed",
+    "scope_notes": "断语体材料，当前仅保留为来源清单，待进一步拆解为证据卡。",
+    "risk_notes": ["high_risk_signal"]
+  },
+  {
+    "source_id": "mingli_true_formula_teacher",
+    "title": "命理真诀师传",
+    "file_name": "命理真诀师传.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "格局、旺衰、取用与岁运触发条件的初始证据来源。",
+    "risk_notes": []
+  },
+  {
+    "source_id": "mingxue_golden_voice",
+    "title": "命學金聲",
+    "file_name": "命學金聲（2016，心一堂出版，黃雲樵作，编号150788）.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "五行十神、强弱平衡与传统术语解释的初始证据来源。",
+    "risk_notes": []
+  },
+  {
+    "source_id": "fortune_reading_hongfu_qitian",
+    "title": "算命一讀通：鴻福齊天",
+    "file_name": "算命一讀通：鴻福齊天（2013年，心一堂出版，不空居士, 覺先居士合纂，编号85862）.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "通俗命理、调整说法与低风险行动边界的初始证据来源。",
+    "risk_notes": ["remedy_boundary"]
+  },
+  {
+    "source_id": "immortal_fortune_jianghu_secret",
+    "title": "神仙算命术江湖秘本",
+    "file_name": "[神仙算命术江湖秘本.pdf",
+    "source_type": "pdf",
+    "extraction_status": "not_started",
+    "review_status": "unreviewed",
+    "scope_notes": "江湖术材料，需人工清理恐吓式或付费化解口径后才能引用。",
+    "risk_notes": ["high_risk_signal", "remedy_boundary"]
+  },
+  {
+    "source_id": "life_death_book_100_pages",
+    "title": "命理生死之书",
+    "file_name": "2800.《命理生死之书》100页.pdf",
+    "source_type": "pdf",
+    "extraction_status": "converted",
+    "review_status": "approved",
+    "scope_notes": "生死寿夭材料，只可作为高风险传统信号的有边界证据来源。",
+    "risk_notes": ["high_risk_signal", "lifespan_or_death_timing"]
+  }
+]

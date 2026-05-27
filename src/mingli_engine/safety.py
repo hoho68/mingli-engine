@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from mingli_engine.high_risk import classify_high_risk_request
 from mingli_engine.models import SafetyReviewResult
 
 
@@ -14,6 +15,12 @@ SAFE_CONTEXT_MARKERS = (
     "不能",
     "禁止",
     "不预测",
+    "不做",
+    "不提供",
+    "不输出",
+    "不保证",
+    "不承诺",
+    "不要",
 )
 
 
@@ -32,7 +39,6 @@ RED_LINE_RULES: dict[str, RedLineRule] = {
             "死亡时间",
             "什么时候会死",
             "能活到几岁",
-            "看寿命",
             "算寿命",
             "预测寿命",
             "寿命多长",
@@ -175,13 +181,14 @@ def _matches_rule(text: str, rule: RedLineRule) -> bool:
 
 def _has_lifespan_or_death_timing_request(text: str) -> bool:
     stripped_text = text.strip(" \t\r\n。！？?")
-    if stripped_text == "寿命":
+    if stripped_text in {"死亡时间", "死期"}:
         return True
 
     return _matches_rule(text, RED_LINE_RULES["lifespan_or_death_timing"])
 
 
 def safety_check(text: str, *, disclaimer_present: bool = False) -> SafetyReviewResult:
+    high_risk_review = classify_high_risk_request(text)
     prohibited_phrases = _find_unsafe_phrases(text, PROHIBITED_PHRASES)
     red_line_categories: list[str] = []
     redirect_messages: list[str] = []
@@ -192,9 +199,25 @@ def safety_check(text: str, *, disclaimer_present: bool = False) -> SafetyReview
             if category == "lifespan_or_death_timing"
             else _matches_rule(text, rule)
         )
+        if (
+            category == "major_disaster_prediction"
+            and high_risk_review.allowed
+            and high_risk_review.requires_narrowing
+        ):
+            matches = False
         if matches:
             red_line_categories.append(category)
             redirect_messages.append(rule.redirect_message)
+
+    if not high_risk_review.allowed:
+        for category in high_risk_review.categories:
+            if category not in red_line_categories:
+                red_line_categories.append(category)
+        if (
+            high_risk_review.redirect_message
+            and high_risk_review.redirect_message not in redirect_messages
+        ):
+            redirect_messages.append(high_risk_review.redirect_message)
 
     return SafetyReviewResult(
         allowed=not red_line_categories and not prohibited_phrases,

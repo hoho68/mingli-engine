@@ -40,11 +40,11 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- Cultural tool, not fate verdict: confirm the feature avoids scientific prediction claims and absolute destiny language.
-- Transparent calculation boundary: identify chart data source, calendar assumptions, timezone/place handling, solar-term handling, and whether true solar time applies.
-- Ethical red lines: document refusal or redirection behavior for lifespan, death, disaster, deterministic marriage matching, medical, legal, psychological, investment, third-party, anxiety, and paid-remedy requests.
-- Reviewable reports: ensure major conclusions trace to input data, intermediate objects, or explicit assumptions, and include uncertainty where school rules differ.
-- Test-first quality gates: plan tests for calculation rules, schema transformations, missing-input handling, red-line refusals, disclaimer presence, and absolute-language filtering.
+- Evidence-based traditional analysis: confirm formal judgments are chart-backed, source-backed, and not presented as scientific proof or guaranteed outcomes.
+- Transparent calculation and evidence boundary: identify chart data source, calendar assumptions, timezone/place handling, solar-term handling, true solar time status, and evidence sources.
+- Expanded high-risk boundaries: document narrowing/refusal behavior for guaranteed death timing, exact lifespan, medical/legal/psychological/investment instructions, coercive matching, anxiety creation, and paid-remedy upsells.
+- Reviewable classical evidence: ensure major conclusions trace to input data, intermediate objects, source entries, evidence cards, or explicit assumptions, and include uncertainty where schools differ.
+- Test-first quality gates: plan tests for calculation rules, evidence mapping, schema transformations, missing-input handling, high-risk handling, disclaimer presence, and absolute-language filtering.
 - Privacy: describe how personal birth data is minimized, anonymized, or retained only by explicit user request.
 
 ## Project Structure

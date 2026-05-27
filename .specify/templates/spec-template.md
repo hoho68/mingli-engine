@@ -100,11 +100,12 @@
 
 ### Safety & Ethics Requirements *(mandatory for domain features)*
 
-- **SE-001**: System MUST present outputs as cultural interpretation and self-reflection, not scientific prediction or fate verdict.
-- **SE-002**: System MUST refuse or safely redirect requests involving lifespan, death timing, major disaster prediction, deterministic marriage matching, medical advice, legal advice, psychological treatment, investment instruction, unauthorized third-party full-chart analysis, anxiety creation, or paid remedy upsells.
+- **SE-001**: System MAY make substantive traditional 命理 judgments when they are backed by chart data and classical evidence.
+- **SE-002**: System MUST present those judgments as traditional evidence analysis, not scientific proof, destiny enforcement, or guaranteed real-world outcomes.
 - **SE-003**: System MUST include a disclaimer in every formal report.
 - **SE-004**: System MUST avoid absolute destiny language such as 必定, 注定, 一定会, 死定, or equivalent phrasing.
-- **SE-005**: System MUST expose chart data source and key calculation assumptions where reports depend on calendrical or school-specific rules.
+- **SE-005**: System MUST expose chart data source, key calculation assumptions, and evidence sources where reports depend on calendrical or school-specific rules.
+- **SE-006**: System MAY discuss traditionally high-risk signals when source-backed, but MUST label uncertainty and MUST refuse guaranteed death timing, exact lifespan, medical diagnosis or treatment, legal instruction, psychological treatment, investment instruction, coercive matching, anxiety creation, and paid-remedy upsells.
 
 ### Key Entities *(include if feature involves data)*
 

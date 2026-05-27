@@ -1,11 +1,18 @@
 from dataclasses import replace
 
+from mingli_engine.classical_sources import load_approved_evidence_units
+from mingli_engine.formal_interpretation import build_formal_interpretation
+from mingli_engine.high_risk import classify_high_risk_request
 from mingli_engine.interpretation import build_basic_interpretation
-from mingli_engine.models import BaziChart, Report, SafetyReviewResult
+from mingli_engine.models import (
+    BaziChart,
+    ExpandedReportEvidence,
+    Report,
+    SafetyReviewResult,
+)
 from mingli_engine.safety import safety_check
 
 
-LIFESPAN_FOCUS_TOPICS = frozenset({"寿命"})
 PLACEHOLDER_VALUES = frozenset({"", "未指定", "unspecified", "unknown", "none", "null"})
 
 SOURCE_TYPE_LABELS = {
@@ -106,16 +113,17 @@ def _merge_safety_reviews(
 
 def _review_focus_topic(focus_topic: str) -> SafetyReviewResult:
     review = safety_check(focus_topic, disclaimer_present=True)
-    if focus_topic.strip() not in LIFESPAN_FOCUS_TOPICS:
+    high_risk_review = classify_high_risk_request(focus_topic)
+    if high_risk_review.allowed:
         return review
 
-    lifespan_review = SafetyReviewResult(
+    narrowed_review = SafetyReviewResult(
         allowed=False,
-        red_line_categories=["lifespan_or_death_timing"],
+        red_line_categories=high_risk_review.categories,
         disclaimer_present=True,
-        redirect_message="不预测寿命或死亡时间。可改为讨论风险意识、身心节律与生活安排。",
+        redirect_message=high_risk_review.redirect_message,
     )
-    return _merge_safety_reviews(review, lifespan_review, disclaimer_present=True)
+    return _merge_safety_reviews(review, narrowed_review, disclaimer_present=True)
 
 
 def _build_chart_card(chart: BaziChart) -> str:
@@ -188,7 +196,34 @@ def _build_quick_guide(chart: BaziChart, interpretation) -> str:
     )
 
 
-def _build_evidence_notes() -> str:
+def _format_expanded_evidence_notes(expanded_evidence: ExpandedReportEvidence) -> str:
+    lines = [
+        "- 命理依据：正式判断来自已审核的经典证据单元，并保留规则家族、结论强度和盘面信号。",
+    ]
+    if expanded_evidence.source_summary:
+        lines.append("- 来源摘要：" + "；".join(expanded_evidence.source_summary))
+
+    for conclusion in expanded_evidence.formal_conclusions:
+        evidence_ids = "、".join(conclusion.trace.evidence_ids) or "暂无可用证据"
+        chart_signals = "；".join(conclusion.trace.chart_signals[:3]) or "暂无盘面信号"
+        lines.append(
+            "- 正式判断："
+            f"{conclusion.title}｜{conclusion.rule_family}｜{conclusion.strength}｜"
+            f"证据：{evidence_ids}｜盘面：{chart_signals}"
+        )
+
+    if expanded_evidence.high_risk_notes:
+        lines.append("- 高风险材料边界：相关材料只作为传统风险信号，不输出精确结果或专业建议。")
+    if expanded_evidence.unavailable_conclusions:
+        lines.append(
+            "- 不足项："
+            + "；".join(expanded_evidence.unavailable_conclusions)
+            + " 当前证据不足，保留为不可用或待核。"
+        )
+    return "\n".join(lines)
+
+
+def _build_evidence_notes(expanded_evidence: ExpandedReportEvidence) -> str:
     return "\n".join(
         [
             "- 来源依据：先看排盘来源与历法、时区、节气等假设，避免把前提当成结论。",
@@ -196,6 +231,7 @@ def _build_evidence_notes() -> str:
             "- 五行依据：明面信号、藏干信号和合计信号用于观察分布，不用于给人生下定论。",
             "- 十神依据：十神关系按柱位理解为关系线索，需要结合解读边界一起阅读。",
             "- 行动依据：行动反思只把可观察线索转成复盘问题，不预测具体结果。",
+            _format_expanded_evidence_notes(expanded_evidence),
         ]
     )
 
@@ -239,7 +275,11 @@ def build_report(chart: BaziChart) -> Report:
     quick_guide = _build_quick_guide(chart, interpretation)
     five_elements_summary = interpretation.five_elements_summary
     ten_gods_summary = interpretation.ten_gods_summary
-    evidence_notes = _build_evidence_notes()
+    expanded_evidence = build_formal_interpretation(
+        chart,
+        load_approved_evidence_units(),
+    )
+    evidence_notes = _build_evidence_notes(expanded_evidence)
     structure_analysis = (
         f"{interpretation.structure_observations}\n{STRUCTURE_BOUNDARY_TRANSITION}"
     )
@@ -301,6 +341,7 @@ def build_report(chart: BaziChart) -> Report:
         interpretation_boundaries=interpretation_boundaries,
         glossary=glossary,
         ethics_reminder=ethics_reminder,
+        expanded_evidence=expanded_evidence,
         safety_review=safety_check(
             "\n\n".join(
                 [

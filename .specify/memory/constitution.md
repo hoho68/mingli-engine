@@ -1,8 +1,13 @@
 <!--
 Sync Impact Report
-Version change: template -> 1.0.0
-Modified principles: placeholder principles -> domain-specific constitution
-Added sections: Domain Boundaries; Development Workflow and Quality Gates
+Version change: 1.0.0 -> 2.0.0
+Modified principles:
+- I. Cultural Tool, Not Fate Verdict -> Evidence-Based Traditional Analysis, Not Unbounded Authority
+- II. Transparent Calculation Boundary -> Transparent Calculation and Evidence Boundary
+- III. Ethical Red Lines -> Expanded High-Risk Boundaries
+- IV. Reviewable Knowledge and Reports -> Reviewable Classical Evidence and Reports
+- V. Test-First Quality Gates -> Test-First Quality Gates
+Added sections: Classical Source Corpus and Report Scope
 Removed sections: none
 Templates requiring updates:
 - updated: .specify/templates/plan-template.md
@@ -16,51 +21,73 @@ Deferred follow-ups: none
 
 ## Core Principles
 
-### I. Cultural Tool, Not Fate Verdict
+### I. Evidence-Based Traditional Analysis, Not Unbounded Authority
 
-Every feature MUST present 命理 as a traditional cultural interpretation and
-self-reflection tool, not as scientific prediction or destiny enforcement.
-Reports MUST use language such as tendency, structure, phase, reminder, and
-suggestion. Reports MUST NOT use absolute claims such as 必定, 注定, 一定会,
-死定, or other wording that removes user agency.
+Every formal report MAY make substantive traditional 命理 judgments when those
+judgments are backed by chart data and classical evidence. Permitted judgment
+families include pattern candidates, strength tendency, useful-god and taboo-god
+candidates, ten-god combinations, body-use relations, branch interactions,
+blind-school image methods, luck-cycle themes, and timing triggers.
 
-Rationale: The project must be honest about epistemic limits while still
-making traditional knowledge useful and readable.
+Every such judgment MUST remain framed as traditional evidence analysis, not as
+scientific proof, destiny enforcement, or guaranteed real-world outcome.
+Reports MUST NOT use absolute claims such as 必定, 注定, 一定会, 死定, or other
+wording that removes user agency.
 
-### II. Transparent Calculation Boundary
+Rationale: The project is moving from light reflection into formal traditional
+analysis while keeping epistemic honesty and user agency visible.
 
-Calculation, interpretation, and report writing MUST remain separate concerns.
-Any generated report MUST expose the source of its chart data and the rules or
-assumptions used, including calendar type, birth time precision, birthplace
-handling, timezone, solar terms, and whether true solar time was applied.
-Missing required birth data MUST stop full report generation and return a clear
-request for the missing fields.
+### II. Transparent Calculation and Evidence Boundary
+
+Calculation, evidence selection, interpretation, and report writing MUST remain
+separate concerns. Any generated report MUST expose the source of its chart data
+and the rules or assumptions used, including calendar type, birth time precision,
+birthplace handling, timezone, solar terms, and whether true solar time was
+applied.
+
+Any major interpretive conclusion MUST be traceable to one or more of: chart
+data, derived intermediate structure, an explicit school rule, or a named source
+from the classical evidence corpus. Missing required birth data MUST stop full
+report generation and return a clear request for the missing fields.
 
 Rationale: Users and maintainers need to audit how a conclusion was reached,
-especially where calendrical rules differ across schools.
+especially where calendrical rules and schools differ.
 
-### III. Ethical Red Lines
+### III. Expanded High-Risk Boundaries
 
-The system MUST refuse, redirect, or safely narrow requests involving lifespan,
-death timing, major disaster prediction, deterministic marriage matching,
-medical advice, legal advice, psychological treatment, investment instruction,
-unauthorized third-party full-chart analysis, anxiety creation, or paid remedy
-upsells. Every formal report MUST include a disclaimer that decisions remain
-with the user and that professional domains require qualified professionals.
+The system MAY discuss traditionally high-risk signals, including health
+tendencies, disaster risk language, major relationship risk, financial pressure,
+and life-death materials, when the user requests a formal 命理 report and when
+the analysis is source-backed. Such content MUST be labeled as traditional
+high-risk signal analysis and MUST use probability, condition, evidence, and
+uncertainty language.
 
-Rationale: A 命理 product can be reflective and helpful only if it avoids
-high-risk claims and coercive behavior.
+The system MUST refuse, redirect, or narrow requests that ask for guaranteed
+death timing, exact lifespan, medical diagnosis or treatment, legal instruction,
+psychological treatment, investment instruction, coercive marriage matching,
+unauthorized third-party harm, anxiety creation, or paid-remedy upsells. Remedy
+or adjustment content MAY describe traditional claims, but MUST NOT promise
+guaranteed effects or pressure the user to buy services.
 
-### IV. Reviewable Knowledge and Reports
+Every formal report MUST include a disclaimer that decisions remain with the
+user and that professional domains require qualified professionals.
 
-Knowledge rules, intermediate objects, and report sections MUST be structured
-so each major conclusion can be traced to input data or an explicit assumption.
-Report generation MUST include a safety and language review step before output.
-When a conclusion is uncertain or school-dependent, the output MUST say so
-instead of hiding uncertainty behind authoritative wording.
+Rationale: The product can use the full traditional corpus as evidence while
+still blocking coercive, absolute, or professional-advice outputs.
 
-Rationale: The core product value is not mystical authority; it is a readable,
-auditable synthesis.
+### IV. Reviewable Classical Evidence and Reports
+
+Knowledge rules, intermediate objects, source excerpts, evidence cards, and
+report sections MUST be structured so each major conclusion can be traced to
+input data or explicit evidence. Report generation MUST include source,
+confidence, disagreement, and language review before output.
+
+When a conclusion is uncertain, school-dependent, textually disputed, or based
+on high-risk material, the output MUST say so instead of hiding uncertainty
+behind authoritative wording.
+
+Rationale: The core product value is a readable, auditable synthesis of
+traditional evidence, not unsupported mystical authority.
 
 ### V. Test-First Quality Gates
 
@@ -73,14 +100,19 @@ omit a disclaimer, or pass through prohibited deterministic language.
 Rationale: This domain is especially prone to confident but unsafe prose, so
 quality gates must cover both data behavior and language behavior.
 
-## Domain Boundaries
+## Classical Source Corpus and Report Scope
 
-The first product slice is the 八字 knowledge and report engine. It may accept
-manually supplied chart data or externally verified chart outputs during MVP,
-but the product contract must keep room for automatic calendrical calculation.
-紫微斗数, 六爻, HTML visualization, PNG/PDF export, Web UI, accounts, payments,
-and long-term case archives are future extensions unless a feature spec
-explicitly scopes them in.
+The primary product scope is the 八字 knowledge and report engine. It may accept
+manually supplied chart data, externally verified chart outputs, or automatic
+calendrical calculation. Classical source material MAY become first-class
+evidence for formal reports when it is converted into reviewable source entries
+and evidence cards.
+
+Initial report scope MAY include formal traditional analysis across pattern,
+strength, useful-god candidates, ten-god relations, branch interactions,
+blind-school image methods, luck-cycle themes, and high-risk signal review.
+紫微斗数, 六爻, PNG/PDF export, Web UI, accounts, payments, and long-term case
+archives are future extensions unless a feature spec explicitly scopes them in.
 
 All personal birth data is sensitive. Features MUST minimize storage by
 default, avoid retaining identifiable data unless the user explicitly requests
@@ -89,11 +121,12 @@ it, and keep sample cases anonymized.
 ## Development Workflow and Quality Gates
 
 Every feature spec MUST state user value, required inputs, output boundaries,
-ethical red lines, and measurable success criteria. Implementation plans MUST
-include a Constitution Check covering calculation transparency, ethical
-handling, report traceability, privacy, and tests. Task lists MUST include
-validation of red-line refusals and non-absolute report language for every
-report-producing feature.
+classical evidence scope, high-risk handling, and measurable success criteria.
+Implementation plans MUST include a Constitution Check covering calculation
+transparency, evidence traceability, high-risk narrowing, privacy, and tests.
+Task lists MUST include validation of source-backed conclusions, high-risk
+content handling, disclaimer presence, and non-absolute report language for
+every report-producing feature.
 
 The preferred delivery order is: constitution alignment, feature specification,
 clarification if needed, implementation plan, tasks, test-first implementation,
@@ -116,4 +149,4 @@ All specs, plans, and reviews MUST verify compliance with this constitution.
 Any exception must be documented in the relevant plan with risk, rationale, and
 the simpler compliant alternative that was rejected.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-05-16
+**Version**: 2.0.0 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-05-27

@@ -13,7 +13,7 @@ EXAMPLES_DIR = REPO_ROOT / "examples"
 MANIFEST_PATH = EXAMPLES_DIR / "report-regression-cases.json"
 
 REQUIRED_FIELDS = {"id", "kind", "command", "input", "purpose"}
-SUPPORTED_KINDS = {"safe_markdown", "safety_json"}
+SUPPORTED_KINDS = {"safe_markdown", "high_risk_markdown", "safety_json"}
 SUPPORTED_COMMANDS = {"calculate-report", "generate-report"}
 SAFE_SOURCE_TYPES = {"auto_calculated", "external_verified"}
 RAW_READER_LABELS = (
@@ -42,6 +42,21 @@ EVIDENCE_NOTE_PHRASES = (
     "十神依据：",
     "行动依据：",
     "不预测具体结果",
+)
+EXPANDED_EVIDENCE_PHRASES = (
+    "命理依据：",
+    "来源摘要：",
+    "正式判断：",
+    "证据：",
+    "盘面：",
+)
+EXPANDED_RULE_FAMILIES = (
+    "pattern_strength",
+    "five_element_balance",
+    "ten_god_relation",
+    "branch_interaction",
+    "blind_image_method",
+    "luck_cycle",
 )
 
 
@@ -96,9 +111,22 @@ def _safety_json_cases() -> list[dict[str, Any]]:
     return cases
 
 
+def _high_risk_markdown_cases() -> list[dict[str, Any]]:
+    cases = [
+        case for case in _load_cases() if case.get("kind") == "high_risk_markdown"
+    ]
+    assert cases
+    return cases
+
+
 def _assert_safe_case_shape(case: dict[str, Any]) -> None:
     _assert_manifest_case_shape(case)
     assert case.get("kind") == "safe_markdown"
+
+
+def _assert_high_risk_case_shape(case: dict[str, Any]) -> None:
+    _assert_manifest_case_shape(case)
+    assert case.get("kind") == "high_risk_markdown"
 
 
 def _assert_safety_case_shape(case: dict[str, Any]) -> None:
@@ -115,7 +143,7 @@ def _assert_manifest_case_shape(case: dict[str, Any]) -> None:
     input_ref = case.get("input")
     assert isinstance(input_ref, str)
     assert (REPO_ROOT / input_ref).exists(), case
-    if case["kind"] == "safe_markdown":
+    if case["kind"] in {"safe_markdown", "high_risk_markdown"}:
         assert case.get("source_type") in SAFE_SOURCE_TYPES
     if case["kind"] == "safety_json":
         assert case.get("expected_category")
@@ -141,6 +169,10 @@ def _assert_safe_markdown(
     )
     for phrase in EVIDENCE_NOTE_PHRASES:
         assert phrase in markdown
+    for phrase in EXPANDED_EVIDENCE_PHRASES:
+        assert phrase in markdown
+    for rule_family in EXPANDED_RULE_FAMILIES:
+        assert rule_family in markdown
     assert "### 排盘来源与假设" in markdown.splitlines()
     assert "### 四柱与五行摘要" in markdown.splitlines()
     assert "### 行动建议" in markdown.splitlines()
@@ -193,6 +225,10 @@ def _assert_safe_html(
     assert structure_position < evidence_position < boundary_position
     for phrase in (evidence_heading, *EVIDENCE_NOTE_PHRASES[1:]):
         assert phrase in html
+    for phrase in EXPANDED_EVIDENCE_PHRASES:
+        assert phrase in html
+    for rule_family in EXPANDED_RULE_FAMILIES:
+        assert rule_family in html
     for raw_label in RAW_READER_LABELS:
         assert raw_label not in html
     for phrase in ABSOLUTE_DESTINY_PHRASES:
@@ -201,6 +237,16 @@ def _assert_safe_html(
         assert "external_verified" not in html
     if case["source_type"] == "external_verified":
         assert "auto_calculated" not in html
+
+
+def _assert_high_risk_markdown(
+    case: dict[str, Any], result: subprocess.CompletedProcess[str]
+) -> None:
+    _assert_safe_markdown(case, result)
+    markdown = result.stdout
+    assert "高风险材料边界" in markdown
+    assert "传统风险信号" in markdown
+    assert "不输出精确结果" in markdown
 
 
 def _assert_safety_json(
@@ -227,6 +273,11 @@ def test_manifest_lists_safety_json_regression_cases():
         _assert_safety_case_shape(case)
 
 
+def test_manifest_lists_high_risk_markdown_regression_cases():
+    for case in _high_risk_markdown_cases():
+        _assert_high_risk_case_shape(case)
+
+
 def test_report_regression_manifest_is_self_validating():
     cases = _load_cases()
     ids = [case["id"] for case in cases]
@@ -244,6 +295,7 @@ def test_report_regression_manifest_is_self_validating():
         for case in cases
     )
     assert any(case["kind"] == "safety_json" for case in cases)
+    assert any(case["kind"] == "high_risk_markdown" for case in cases)
 
 
 def test_manifest_validation_rejects_invalid_case_shapes():
@@ -300,6 +352,18 @@ def test_safe_regression_cases_keep_html_report_contracts():
             "html",
         )
         _assert_safe_html(case, result)
+
+
+def test_high_risk_markdown_regression_cases_keep_narrowed_contracts():
+    for case in _high_risk_markdown_cases():
+        result = _run_cli(
+            case["command"],
+            "--input",
+            str(REPO_ROOT / case["input"]),
+            "--format",
+            "markdown",
+        )
+        _assert_high_risk_markdown(case, result)
 
 
 def test_safety_json_regression_cases_keep_refusal_contracts():

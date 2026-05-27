@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from mingli_engine.chart_calculator import ChartCalculationError, calculate_bazi_chart
+from mingli_engine.high_risk import classify_high_risk_request
 from mingli_engine.html import render_html_report
 from mingli_engine.markdown import render_markdown_report
 from mingli_engine.models import (
@@ -168,13 +169,14 @@ def _safety_review_focus_topic(
         profile.focus_topic,
         disclaimer_present=disclaimer_present,
     )
-    if review.allowed and profile.focus_topic.strip() == "寿命":
+    high_risk_review = classify_high_risk_request(profile.focus_topic)
+    if review.allowed and not high_risk_review.allowed:
         return SafetyReviewResult(
             allowed=False,
-            red_line_categories=["lifespan_or_death_timing"],
+            red_line_categories=high_risk_review.categories,
             prohibited_phrases=[],
             disclaimer_present=disclaimer_present,
-            redirect_message=review.redirect_message,
+            redirect_message=high_risk_review.redirect_message,
         )
     return review
 

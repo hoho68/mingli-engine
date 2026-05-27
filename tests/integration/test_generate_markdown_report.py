@@ -161,7 +161,7 @@ def test_generate_report_returns_exit_3_json_for_unsafe_focus_topic(tmp_path):
     chart = json.loads(
         (EXAMPLES_DIR / "bazi-chart.external-verified.json").read_text(encoding="utf-8")
     )
-    chart["birth_profile"]["focus_topic"] = "寿命"
+    chart["birth_profile"]["focus_topic"] = "寿命多长"
     input_path = tmp_path / "chart-unsafe-focus-topic.json"
     input_path.write_text(json.dumps(chart, ensure_ascii=False), encoding="utf-8")
 
