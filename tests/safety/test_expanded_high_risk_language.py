@@ -4,6 +4,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
+from mingli_engine import source_intake
 from mingli_engine.safety import safety_check
 from mingli_engine.classical_sources import load_approved_evidence_units
 
@@ -103,3 +106,60 @@ def test_expanded_corpus_summaries_avoid_absolute_destiny_phrases():
         combined = "；".join([unit.summary, *unit.limitations])
         for prohibited_phrase in ("必定", "注定", "一定会", "死定"):
             assert prohibited_phrase not in combined
+
+
+@pytest.mark.parametrize(
+    "prohibited_phrase",
+    [
+        "\u5fc5\u5b9a",
+        "\u6ce8\u5b9a",
+        "\u4e00\u5b9a\u4f1a",
+        "\u6b7b\u5b9a",
+    ],
+)
+def test_candidate_extracts_reject_absolute_outcome_language(
+    tmp_path,
+    prohibited_phrase,
+):
+    (tmp_path / "source_materials.json").write_text(
+        json.dumps(
+            [
+                {
+                    "material_id": "material_001",
+                    "title": "Material One",
+                    "material_type": "pdf",
+                    "file_label": "material-one.pdf",
+                    "tracking_status": "external_untracked",
+                    "preparation_status": "indexed",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "candidate_extracts.json").write_text(
+        json.dumps(
+            [
+                {
+                    "candidate_id": "candidate_absolute",
+                    "material_id": "material_001",
+                    "source_locator": "review-note:absolute",
+                    "extracted_meaning": (
+                        f"Candidate language claims the outcome {prohibited_phrase} "
+                        "happen."
+                    ),
+                    "proposed_rule_family": "high_risk_signal",
+                    "risk_tier": "high_risk",
+                    "status": "pending_review",
+                    "proposed_limitations": [
+                        "Reject exact outcome and lifespan language."
+                    ],
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(source_intake.SourceIntakeError, match="absolute language"):
+        source_intake.load_candidate_extracts(tmp_path)

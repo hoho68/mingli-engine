@@ -371,6 +371,24 @@ def test_high_risk_markdown_regression_cases_keep_narrowed_contracts():
         _assert_high_risk_markdown(case, result)
 
 
+def test_pending_source_intake_candidates_are_not_formal_report_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import load_candidate_extracts
+
+    candidates = load_candidate_extracts()
+    pending_candidate_ids = {
+        candidate.candidate_id
+        for candidate in candidates
+        if candidate.status == "pending_review"
+    }
+    formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+
+    assert pending_candidate_ids
+    assert pending_candidate_ids.isdisjoint(formal_evidence_ids)
+
+
 def test_safety_json_regression_cases_keep_refusal_contracts():
     for case in _safety_json_cases():
         result = _run_cli(

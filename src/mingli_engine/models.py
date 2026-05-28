@@ -14,6 +14,20 @@ CONFIDENCE_LEVELS = frozenset({"strong", "moderate", "weak"})
 SOURCE_QUALITIES = frozenset(
     {"direct_extract", "review_note", "secondary_index", "needs_recheck"}
 )
+MATERIAL_TYPES = frozenset({"pdf", "markdown", "review_note", "other"})
+MATERIAL_TRACKING_STATUSES = frozenset(
+    {"external_untracked", "project_tracked", "derived_note"}
+)
+MATERIAL_PREPARATION_STATUSES = frozenset(
+    {"not_started", "indexed", "partially_reviewed", "reviewed", "blocked"}
+)
+CANDIDATE_EXTRACT_STATUSES = frozenset(
+    {"draft", "pending_review", "returned", "approved", "rejected", "blocked", "promoted"}
+)
+REVIEW_DECISIONS = frozenset({"approved", "returned", "rejected", "blocked"})
+PROMOTION_BATCH_REVIEW_STATUSES = frozenset(
+    {"draft", "reviewed", "approved", "blocked"}
+)
 CONFLICT_TYPES = frozenset(
     {
         "school_difference",
@@ -141,6 +155,78 @@ class CoverageReport:
     open_conflicts: list[str] = field(default_factory=list)
     high_risk_without_limitations: list[str] = field(default_factory=list)
     long_summary_violations: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class SourceMaterial:
+    material_id: str
+    title: str
+    material_type: str
+    file_label: str
+    tracking_status: str
+    preparation_status: str
+    related_source_id: str = ""
+    scope_notes: str = ""
+    rights_notes: str = ""
+    gap_reason: str = ""
+
+
+@dataclass(frozen=True)
+class CandidateExtract:
+    candidate_id: str
+    material_id: str
+    source_locator: str
+    extracted_meaning: str
+    proposed_rule_family: str
+    risk_tier: str
+    status: str
+    proposed_limitations: list[str] = field(default_factory=list)
+    short_quote: str = ""
+    related_evidence_ids: list[str] = field(default_factory=list)
+    related_conflict_ids: list[str] = field(default_factory=list)
+    related_gap_ids: list[str] = field(default_factory=list)
+    duplicate_of: str = ""
+    created_by: str = ""
+    created_at: str = ""
+
+
+@dataclass(frozen=True)
+class ReviewDecision:
+    decision_id: str
+    candidate_id: str
+    decision: str
+    reviewer: str
+    reviewed_at: str
+    rationale: str
+    required_changes: list[str] = field(default_factory=list)
+    rejection_reason: str = ""
+    approval_limitations: list[str] = field(default_factory=list)
+    source_quality: str = "review_note"
+    confidence: str = "moderate"
+
+
+@dataclass(frozen=True)
+class PromotionBatch:
+    promotion_batch_id: str
+    candidate_ids: list[str]
+    target_evidence_ids: list[str]
+    review_status: str
+    review_notes: str
+    unresolved_issues: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class IntakeProgressReport:
+    material_counts: dict[str, int]
+    candidate_counts: dict[str, int]
+    risk_tier_counts: dict[str, int]
+    rule_family_counts: dict[str, int]
+    pending_review_count: int
+    approved_not_promoted_count: int
+    blocked_or_rejected_count: int
+    duplicate_candidates: list[str] = field(default_factory=list)
+    conflict_link_count: int = 0
+    gap_link_count: int = 0
 
 
 @dataclass(frozen=True)

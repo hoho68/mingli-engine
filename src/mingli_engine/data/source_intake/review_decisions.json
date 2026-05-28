@@ -1,0 +1,67 @@
+[
+  {
+    "decision_id": "review_candidate_life_death_boundary_001",
+    "candidate_id": "candidate_life_death_boundary_001",
+    "decision": "approved",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-05-28",
+    "rationale": "The candidate is framed as a bounded high-risk signal and explicitly refuses exact lifespan or death timing claims.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": ["Use only as traditional high-risk signal context with uncertainty language."],
+    "source_quality": "review_note",
+    "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_candidate_blind_life_manual_gap_001",
+    "candidate_id": "candidate_blind_life_manual_gap_001",
+    "decision": "returned",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-05-28",
+    "rationale": "The summary needs a narrower locator and safer conditional rewrite before approval.",
+    "required_changes": ["Add a page or heading-level locator and rewrite as conditional evidence."],
+    "rejection_reason": "",
+    "approval_limitations": [],
+    "source_quality": "needs_recheck",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_candidate_mingxue_golden_voice_scope_001",
+    "candidate_id": "candidate_mingxue_golden_voice_scope_001",
+    "decision": "rejected",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-05-28",
+    "rationale": "The candidate cannot be mapped to a reviewable rule without overgeneralizing the source.",
+    "required_changes": [],
+    "rejection_reason": "Insufficient locator specificity for promotion.",
+    "approval_limitations": [],
+    "source_quality": "secondary_index",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_candidate_blind_school_secret_blocked_001",
+    "candidate_id": "candidate_blind_school_secret_blocked_001",
+    "decision": "blocked",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-05-28",
+    "rationale": "The source cannot be reviewed until access and quoting boundaries are clarified.",
+    "required_changes": [],
+    "rejection_reason": "Rights and locator review are blocked.",
+    "approval_limitations": [],
+    "source_quality": "needs_recheck",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_candidate_northeast_blind_image_duplicate_001",
+    "candidate_id": "candidate_northeast_blind_image_duplicate_001",
+    "decision": "rejected",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-05-28",
+    "rationale": "The candidate duplicates the existing pending image-method candidate and overlaps a reviewed evidence unit.",
+    "required_changes": [],
+    "rejection_reason": "Rejected as duplicate intake material already represented by candidate_northeast_blind_image_001.",
+    "approval_limitations": [],
+    "source_quality": "review_note",
+    "confidence": "moderate"
+  }
+]

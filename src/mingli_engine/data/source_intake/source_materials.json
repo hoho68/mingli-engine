@@ -1,0 +1,110 @@
+[
+  {
+    "material_id": "material_northeast_blind_peak_pdf",
+    "title": "Northeast Blind Peak",
+    "material_type": "pdf",
+    "file_label": "northeast_blind_peak.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "partially_reviewed",
+    "related_source_id": "northeast_blind_peak",
+    "scope_notes": "Blind-school image and structure material for candidate extraction.",
+    "rights_notes": "Do not copy long passages; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_duan_plain_mingxue_outline_pdf",
+    "title": "Duan Plain Mingxue Outline",
+    "material_type": "pdf",
+    "file_label": "duan_plain_mingxue_outline.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "partially_reviewed",
+    "related_source_id": "duan_plain_mingxue_outline",
+    "scope_notes": "Ten-god and structural relation material for candidate extraction.",
+    "rights_notes": "Do not copy long passages; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_blind_school_secret_pdf",
+    "title": "Blind School Secret",
+    "material_type": "pdf",
+    "file_label": "blind_school_secret.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "partially_reviewed",
+    "related_source_id": "blind_school_secret",
+    "scope_notes": "Blind-school combination and image-method material for candidate extraction.",
+    "rights_notes": "Do not copy long passages; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_blind_life_manual_pdf",
+    "title": "Blind Life Manual",
+    "material_type": "pdf",
+    "file_label": "blind_life_manual.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "indexed",
+    "related_source_id": "blind_life_manual",
+    "scope_notes": "Aphoristic blind-school material that requires conditional rewrite.",
+    "rights_notes": "Do not copy long passages; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_mingli_true_formula_teacher_pdf",
+    "title": "Mingli True Formula Teacher",
+    "material_type": "pdf",
+    "file_label": "mingli_true_formula_teacher.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "partially_reviewed",
+    "related_source_id": "mingli_true_formula_teacher",
+    "scope_notes": "Pattern, strength, useful-god, and luck-trigger material for candidate extraction.",
+    "rights_notes": "Do not copy long passages; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_mingxue_golden_voice_pdf",
+    "title": "Mingxue Golden Voice",
+    "material_type": "pdf",
+    "file_label": "mingxue_golden_voice.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "partially_reviewed",
+    "related_source_id": "mingxue_golden_voice",
+    "scope_notes": "Five-element, ten-god, and terminology material for candidate extraction.",
+    "rights_notes": "Do not copy long passages; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_fortune_reading_hongfu_qitian_pdf",
+    "title": "Fortune Reading Hongfu Qitian",
+    "material_type": "pdf",
+    "file_label": "fortune_reading_hongfu_qitian.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "partially_reviewed",
+    "related_source_id": "fortune_reading_hongfu_qitian",
+    "scope_notes": "General practice and remedy-boundary material for candidate extraction.",
+    "rights_notes": "Do not copy long passages; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_immortal_fortune_jianghu_secret_pdf",
+    "title": "Immortal Fortune Jianghu Secret",
+    "material_type": "pdf",
+    "file_label": "immortal_fortune_jianghu_secret.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "not_started",
+    "related_source_id": "immortal_fortune_jianghu_secret",
+    "scope_notes": "Jianghu-style material requiring safety review before candidate extraction.",
+    "rights_notes": "Do not copy long passages; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_life_death_book_100_pages_pdf",
+    "title": "Life Death Book 100 Pages",
+    "material_type": "pdf",
+    "file_label": "life_death_book_100_pages.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "partially_reviewed",
+    "related_source_id": "life_death_book_100_pages",
+    "scope_notes": "High-risk life-death material usable only as bounded traditional signal input.",
+    "rights_notes": "Do not copy long passages; store concise paraphrases only.",
+    "gap_reason": ""
+  }
+]
