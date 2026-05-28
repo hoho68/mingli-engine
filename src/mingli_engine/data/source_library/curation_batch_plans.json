@@ -1,0 +1,37 @@
+[
+  {
+    "batch_plan_id": "batch_plan_high_risk_boundaries_001",
+    "title": "High-risk boundary source review",
+    "goal": "Prepare sources that can clarify life-risk, aphoristic, and remedy-boundary material without exact-outcome claims.",
+    "entry_ids": [
+      "entry_blind_life_manual_pdf",
+      "entry_life_death_book_100_pages_pdf",
+      "entry_immortal_fortune_jianghu_secret_pdf"
+    ],
+    "target_gap_ids": ["gap_blind_life_manual"],
+    "target_rule_families": ["high_risk_signal", "blind_image_method", "remedy_boundary"],
+    "risk_boundary": "high_risk",
+    "expected_output": ["candidate_extracts", "gap_notes", "conflict_notes"],
+    "status": "planned",
+    "review_capacity": "Small high-risk batch; reviewer must preserve uncertainty and refusal boundaries.",
+    "completion_summary": "",
+    "recommended_next_batch": ""
+  },
+  {
+    "batch_plan_id": "batch_plan_blind_image_method_001",
+    "title": "Blind image-method source review",
+    "goal": "Prepare ready blind-school image-method materials for conditional candidate extraction.",
+    "entry_ids": [
+      "entry_northeast_blind_peak_pdf",
+      "entry_blind_life_manual_pdf"
+    ],
+    "target_gap_ids": ["gap_blind_life_manual"],
+    "target_rule_families": ["blind_image_method", "branch_interaction"],
+    "risk_boundary": "sensitive",
+    "expected_output": ["candidate_extracts", "conflict_notes"],
+    "status": "planned",
+    "review_capacity": "Focused batch for image-method and branch-interaction candidates.",
+    "completion_summary": "",
+    "recommended_next_batch": ""
+  }
+]

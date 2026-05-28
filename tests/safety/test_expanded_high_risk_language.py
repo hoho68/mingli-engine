@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from mingli_engine import source_intake
+from mingli_engine import source_intake, source_library
 from mingli_engine.safety import safety_check
 from mingli_engine.classical_sources import load_approved_evidence_units
 
@@ -163,3 +163,69 @@ def test_candidate_extracts_reject_absolute_outcome_language(
 
     with pytest.raises(source_intake.SourceIntakeError, match="absolute language"):
         source_intake.load_candidate_extracts(tmp_path)
+
+
+def _write_source_library_quality_fixture(
+    tmp_path: Path,
+    source_quality_notes: str = "Reviewable source notes.",
+    risk_notes: list[str] | None = None,
+) -> None:
+    (tmp_path / "source_library_entries.json").write_text(
+        json.dumps(
+            [
+                {
+                    "entry_id": "entry_high_risk_language",
+                    "material_id": "material_high_risk_language",
+                    "title": "High Risk Language Source",
+                    "material_type": "pdf",
+                    "local_reference": "high-risk-language.pdf",
+                    "tracking_status": "external_untracked",
+                    "readiness_status": "ready_for_extraction",
+                    "topic_tags": ["high-risk"],
+                    "rule_families": ["high_risk_signal"],
+                    "source_quality_notes": source_quality_notes,
+                    "rights_notes": "Do not copy long passages.",
+                    "risk_tier": "high_risk",
+                    "risk_notes": risk_notes or ["Needs high-risk review boundary."],
+                    "priority_level": "medium",
+                    "next_action": "extract_candidates",
+                    "outcome_reason": "",
+                    "created_at": "2026-05-28",
+                    "updated_at": "2026-05-28",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "source_priority_assessments.json").write_text(
+        "[]",
+        encoding="utf-8",
+    )
+    (tmp_path / "curation_batch_plans.json").write_text("[]", encoding="utf-8")
+
+
+def test_source_library_quality_rejects_absolute_destiny_language(tmp_path):
+    _write_source_library_quality_fixture(
+        tmp_path,
+        source_quality_notes=(
+            "Unsafe source summary claims the outcome \u5fc5\u5b9a happens."
+        ),
+    )
+
+    failures = source_library.validate_source_library_quality(tmp_path)
+
+    assert any("absolute language" in failure for failure in failures)
+
+
+def test_source_library_quality_rejects_prohibited_high_risk_wording(tmp_path):
+    _write_source_library_quality_fixture(
+        tmp_path,
+        risk_notes=[
+            "Unsafe note says to diagnose illness and prescribe treatment."
+        ],
+    )
+
+    failures = source_library.validate_source_library_quality(tmp_path)
+
+    assert any("prohibited high-risk wording" in failure for failure in failures)

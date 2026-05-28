@@ -31,6 +31,22 @@ The intake queue may reference root PDF labels or root `Markdown/` labels for
 audit purposes. It must not copy long passages, track raw source files, or
 change the user's external preparation materials.
 
+## Source Library Boundary
+
+The 014 source-library workflow adds a planning layer under
+`src/mingli_engine/data/source_library/`. Source-library records describe which
+materials exist, how ready they are, what rule families they may support, and
+what the next action should be. They are not candidate extracts, promotion
+batches, formal evidence, or report-ready evidence.
+
+See [source_library.md](source_library.md) for the current source-library
+snapshot, value summaries, and trust-boundary notes. Registered entries may
+reference root PDF labels or root `Markdown/` labels, but they must not move,
+delete, convert, commit, or read those raw source files as part of report
+generation. `validate_source_library_quality()` rejects source-library metadata
+that leaks into report-evidence language, copies long passages, or uses
+absolute/high-risk wording.
+
 ## Review States
 
 - `not_started`: the source is registered but no readable extract has been

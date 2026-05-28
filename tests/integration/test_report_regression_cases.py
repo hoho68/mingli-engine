@@ -389,6 +389,83 @@ def test_pending_source_intake_candidates_are_not_formal_report_evidence():
     assert pending_candidate_ids.isdisjoint(formal_evidence_ids)
 
 
+def test_report_evidence_loading_ignores_source_library_metadata(tmp_path):
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_library import validate_source_library_quality
+
+    classical_dir = tmp_path / "classical_sources"
+    source_library_dir = tmp_path / "source_library"
+    classical_dir.mkdir()
+    source_library_dir.mkdir()
+    for file_name in (
+        "sources.json",
+        "evidence_units.json",
+        "curation_batches.json",
+        "source_conflicts.json",
+    ):
+        (classical_dir / file_name).write_text("[]", encoding="utf-8")
+    (source_library_dir / "source_library_entries.json").write_text(
+        json.dumps(
+            [
+                {
+                    "entry_id": "entry_planning_only",
+                    "material_id": "material_planning_only",
+                    "title": "Planning Only Source",
+                    "material_type": "pdf",
+                    "local_reference": "planning-only.pdf",
+                    "tracking_status": "external_untracked",
+                    "readiness_status": "not_started",
+                    "topic_tags": [],
+                    "rule_families": [],
+                    "source_quality_notes": (
+                        "Planning metadata that must never become report evidence."
+                    ),
+                    "rights_notes": "Do not copy long passages.",
+                    "risk_tier": "ordinary",
+                    "risk_notes": [],
+                    "priority_level": "medium",
+                    "next_action": "prepare_material",
+                    "outcome_reason": "",
+                    "created_at": "2026-05-28",
+                    "updated_at": "2026-05-28",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (source_library_dir / "source_priority_assessments.json").write_text(
+        "[]",
+        encoding="utf-8",
+    )
+    (source_library_dir / "curation_batch_plans.json").write_text(
+        json.dumps(
+            [
+                {
+                    "batch_plan_id": "batch_plan_planning_only",
+                    "title": "Planning Only Batch",
+                    "goal": "Prepare planning material before extraction.",
+                    "entry_ids": ["entry_planning_only"],
+                    "target_gap_ids": ["gap_planning_only"],
+                    "target_rule_families": [],
+                    "risk_boundary": "ordinary",
+                    "expected_output": ["formal_evidence"],
+                    "status": "planned",
+                    "review_capacity": "Small planning batch.",
+                    "completion_summary": "",
+                    "recommended_next_batch": "",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    assert load_approved_evidence_units(classical_dir) == []
+    failures = validate_source_library_quality(source_library_dir)
+    assert any("report evidence boundary" in failure for failure in failures)
+
+
 def test_safety_json_regression_cases_keep_refusal_contracts():
     for case in _safety_json_cases():
         result = _run_cli(

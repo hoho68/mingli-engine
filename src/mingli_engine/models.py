@@ -28,6 +28,62 @@ REVIEW_DECISIONS = frozenset({"approved", "returned", "rejected", "blocked"})
 PROMOTION_BATCH_REVIEW_STATUSES = frozenset(
     {"draft", "reviewed", "approved", "blocked"}
 )
+SOURCE_LIBRARY_MATERIAL_TYPES = frozenset(
+    {"pdf", "markdown", "review_note", "book_excerpt", "other"}
+)
+SOURCE_LIBRARY_READINESS_STATUSES = frozenset(
+    {
+        "not_started",
+        "needs_preparation",
+        "ready_for_extraction",
+        "in_extraction",
+        "review_completed",
+        "exhausted",
+        "deferred",
+        "duplicate",
+        "blocked",
+    }
+)
+SOURCE_LIBRARY_PRIORITY_LEVELS = frozenset(
+    {"critical", "high", "medium", "low", "deferred"}
+)
+SOURCE_LIBRARY_EXPECTED_VALUES = frozenset(
+    {
+        "fills_gap",
+        "clarifies_conflict",
+        "confirms_existing_rule",
+        "improves_high_risk_boundary",
+        "broadens_school_coverage",
+        "documents_non_usefulness",
+    }
+)
+SOURCE_LIBRARY_EFFORT_LEVELS = frozenset({"low", "medium", "high"})
+SOURCE_LIBRARY_NEXT_ACTIONS = frozenset(
+    {
+        "prepare_material",
+        "extract_candidates",
+        "review_candidates",
+        "promote_approved",
+        "revisit_conflict",
+        "defer",
+        "block",
+        "no_action",
+    }
+)
+SOURCE_LIBRARY_BATCH_STATUSES = frozenset(
+    {"planned", "active", "review_ready", "completed", "deferred", "blocked"}
+)
+SOURCE_LIBRARY_VALUE_STATUSES = frozenset(
+    {
+        "not_started",
+        "in_progress",
+        "value_produced",
+        "non_useful_documented",
+        "deferred",
+        "blocked",
+    }
+)
+SOURCE_LIBRARY_SUBJECT_TYPES = frozenset({"source", "batch"})
 CONFLICT_TYPES = frozenset(
     {
         "school_difference",
@@ -227,6 +283,100 @@ class IntakeProgressReport:
     duplicate_candidates: list[str] = field(default_factory=list)
     conflict_link_count: int = 0
     gap_link_count: int = 0
+
+
+@dataclass(frozen=True)
+class SourceLibraryEntry:
+    entry_id: str
+    title: str
+    material_type: str
+    local_reference: str
+    tracking_status: str
+    readiness_status: str
+    material_id: str = ""
+    topic_tags: list[str] = field(default_factory=list)
+    rule_families: list[str] = field(default_factory=list)
+    source_quality_notes: str = ""
+    rights_notes: str = ""
+    risk_tier: str = "ordinary"
+    risk_notes: list[str] = field(default_factory=list)
+    priority_level: str = "medium"
+    next_action: str = "no_action"
+    outcome_reason: str = ""
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class SourcePriorityAssessment:
+    assessment_id: str
+    entry_id: str
+    priority_level: str
+    expected_value: str
+    rationale: str
+    target_gap_ids: list[str] = field(default_factory=list)
+    target_rule_families: list[str] = field(default_factory=list)
+    source_quality: str = "moderate"
+    effort_level: str = "medium"
+    risk_tier: str = "ordinary"
+    assessed_by: str = ""
+    assessed_at: str = ""
+
+
+@dataclass(frozen=True)
+class CurationBatchPlan:
+    batch_plan_id: str
+    title: str
+    goal: str
+    entry_ids: list[str]
+    target_gap_ids: list[str] = field(default_factory=list)
+    target_rule_families: list[str] = field(default_factory=list)
+    risk_boundary: str = "ordinary"
+    expected_output: list[str] = field(default_factory=list)
+    status: str = "planned"
+    review_capacity: str = ""
+    completion_summary: str = ""
+    recommended_next_batch: str = ""
+
+
+@dataclass(frozen=True)
+class EvidenceGapTarget:
+    gap_target_id: str
+    description: str
+    rule_family: str = ""
+    source_entry_ids: list[str] = field(default_factory=list)
+    related_gap_ids: list[str] = field(default_factory=list)
+    related_conflict_ids: list[str] = field(default_factory=list)
+    priority_level: str = "medium"
+    blocks_report_use: bool = False
+
+
+@dataclass(frozen=True)
+class SourceValueSummary:
+    subject_id: str
+    subject_type: str
+    candidate_count: int = 0
+    approved_candidate_count: int = 0
+    rejected_or_blocked_count: int = 0
+    conflict_count: int = 0
+    gap_count: int = 0
+    promoted_evidence_count: int = 0
+    value_status: str = "not_started"
+    recommended_next_action: str = "no_action"
+
+
+@dataclass(frozen=True)
+class SourceLibraryProgressReport:
+    readiness_counts: dict[str, int]
+    priority_counts: dict[str, int]
+    risk_tier_counts: dict[str, int]
+    rule_family_counts: dict[str, int]
+    ready_for_extraction_count: int = 0
+    high_priority_count: int = 0
+    blocked_or_deferred_count: int = 0
+    next_source_ids: list[str] = field(default_factory=list)
+    value_status_counts: dict[str, int] = field(default_factory=dict)
+    high_risk_entry_ids: list[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
