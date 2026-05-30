@@ -6,6 +6,14 @@ Root PDF files and the root `Markdown/` directory are external preparation
 materials. Do not move, delete, convert, or commit those materials unless the
 user explicitly asks for that action.
 
+Related maintainer references:
+
+- [README.md](README.md): overall classical source review workflow.
+- [source_library.md](source_library.md): 014 source registration, priority,
+  batch planning, and value summaries.
+- [materials_audit.md](materials_audit.md): 015 local-material inventory,
+  preparation readiness, and next-action queue before candidate extraction.
+
 ## Audit Links
 
 - Duplicate candidates stay in the intake queue with `duplicate_of` and a
@@ -16,6 +24,9 @@ user explicitly asks for that action.
   corpus, so unresolved coverage is visible before promotion.
 - Rejected and blocked candidates must keep durable reasons that explain why
   the material is not promotion-ready.
+- 015 materials-audit queue items are pre-intake planning records. They must be
+  converted into 013 candidate extracts and review decisions before any later
+  promotion can occur.
 
 ## Current Computed Snapshot
 

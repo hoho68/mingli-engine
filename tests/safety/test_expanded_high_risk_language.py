@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from mingli_engine import source_intake, source_library
+from mingli_engine import materials_audit, source_intake, source_library
 from mingli_engine.safety import safety_check
 from mingli_engine.classical_sources import load_approved_evidence_units
 
@@ -229,3 +229,112 @@ def test_source_library_quality_rejects_prohibited_high_risk_wording(tmp_path):
     failures = source_library.validate_source_library_quality(tmp_path)
 
     assert any("prohibited high-risk wording" in failure for failure in failures)
+
+
+def _write_materials_audit_quality_fixture(
+    tmp_path: Path,
+    *,
+    readiness_note: str,
+) -> None:
+    (tmp_path / "material_audit_records.json").write_text(
+        json.dumps(
+            [
+                {
+                    "audit_id": "audit_quality",
+                    "canonical_title": "Quality Fixture",
+                    "alternate_titles": [],
+                    "material_scope": "bazi",
+                    "primary_material_type": "pdf",
+                    "representations": ["repr_quality"],
+                    "source_library_entry_id": "",
+                    "source_identity_confidence": "uncertain",
+                    "preparation_state": "raw_available",
+                    "source_boundary": "external_untracked",
+                    "topic_tags": [],
+                    "rule_families": [],
+                    "risk_tier": "high_risk",
+                    "risk_notes": ["Needs high-risk boundary review."],
+                    "rights_notes": "Do not copy long passages.",
+                    "missing_prerequisites": ["risk_review"],
+                    "recommended_next_action": "risk_review",
+                    "outcome_reason": "",
+                    "created_at": "2026-05-30",
+                    "updated_at": "2026-05-30",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "material_representations.json").write_text(
+        json.dumps(
+            [
+                {
+                    "representation_id": "repr_quality",
+                    "audit_id": "audit_quality",
+                    "representation_type": "root_pdf",
+                    "local_reference": "quality-fixture.pdf",
+                    "tracking_status": "external_untracked",
+                    "text_quality": "not_text",
+                    "locator_quality": "file_only",
+                    "size_hint": "",
+                    "modified_hint": "",
+                    "contains_images": True,
+                    "notes": "Raw PDF remains preparation material.",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "source_alignment_findings.json").write_text("[]", encoding="utf-8")
+    (tmp_path / "preparation_readiness_findings.json").write_text(
+        json.dumps(
+            [
+                {
+                    "readiness_id": "ready_quality",
+                    "audit_id": "audit_quality",
+                    "readiness_state": "needs_risk_review",
+                    "text_preparation_status": "raw_only",
+                    "locator_confidence": "weak",
+                    "source_quality": "moderate",
+                    "risk_boundary": "high_risk",
+                    "missing_prerequisites": ["risk_review"],
+                    "ready_reasons": [],
+                    "blockers": [readiness_note],
+                    "recommended_next_action": "risk_review",
+                    "assessed_by": "maintainer",
+                    "assessed_at": "2026-05-30",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "extraction_queue_items.json").write_text("[]", encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    ("unsafe_note", "expected_marker"),
+    [
+        ("Unsafe readiness note says the outcome \u5fc5\u5b9a happens.", "absolute language"),
+        ("Unsafe readiness note predicts exact death timing.", "exact death"),
+        ("Unsafe readiness note tells reviewer to diagnose illness.", "prohibited high-risk wording"),
+        ("Unsafe readiness note gives legal instruction.", "prohibited high-risk wording"),
+        ("Unsafe readiness note gives psychological treatment.", "prohibited high-risk wording"),
+        ("Unsafe readiness note gives investment instruction.", "prohibited high-risk wording"),
+        ("Unsafe readiness note uses coercive matching language.", "prohibited high-risk wording"),
+        ("Unsafe readiness note is designed to create anxiety.", "prohibited high-risk wording"),
+        ("Unsafe readiness note promotes a paid remedy upsell.", "prohibited high-risk wording"),
+    ],
+)
+def test_materials_audit_readiness_quality_rejects_high_risk_language(
+    tmp_path,
+    unsafe_note,
+    expected_marker,
+):
+    _write_materials_audit_quality_fixture(tmp_path, readiness_note=unsafe_note)
+
+    failures = materials_audit.validate_materials_audit_quality(tmp_path)
+
+    assert any(expected_marker in failure for failure in failures)

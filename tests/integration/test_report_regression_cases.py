@@ -466,6 +466,286 @@ def test_report_evidence_loading_ignores_source_library_metadata(tmp_path):
     assert any("report evidence boundary" in failure for failure in failures)
 
 
+def test_materials_audit_preparation_artifacts_do_not_become_formal_evidence(
+    tmp_path,
+):
+    from mingli_engine import materials_audit
+    from mingli_engine.classical_sources import load_approved_evidence_units
+
+    classical_dir = tmp_path / "classical_sources"
+    audit_dir = tmp_path / "materials_audit"
+    classical_dir.mkdir()
+    audit_dir.mkdir()
+    for file_name in (
+        "sources.json",
+        "evidence_units.json",
+        "curation_batches.json",
+        "source_conflicts.json",
+    ):
+        (classical_dir / file_name).write_text("[]", encoding="utf-8")
+    (audit_dir / "material_audit_records.json").write_text(
+        json.dumps(
+            [
+                {
+                    "audit_id": "audit_cleaned_markdown_boundary",
+                    "canonical_title": "Cleaned Markdown Boundary",
+                    "alternate_titles": ["Markdown/source_batch_001_cleaned"],
+                    "material_scope": "bazi",
+                    "primary_material_type": "markdown",
+                    "representations": ["repr_cleaned_markdown_boundary"],
+                    "source_library_entry_id": "",
+                    "source_identity_confidence": "uncertain",
+                    "preparation_state": "cleaned_text_available",
+                    "source_boundary": "external_untracked",
+                    "topic_tags": ["prepared-batch"],
+                    "rule_families": [],
+                    "risk_tier": "ordinary",
+                    "risk_notes": [],
+                    "rights_notes": "Preparation artifact only.",
+                    "missing_prerequisites": ["source_library_alignment_review"],
+                    "recommended_next_action": "register_source",
+                    "outcome_reason": "",
+                    "created_at": "2026-05-30",
+                    "updated_at": "2026-05-30",
+                },
+                {
+                    "audit_id": "audit_knowledge_skeleton_boundary",
+                    "canonical_title": "Knowledge Skeleton Boundary",
+                    "alternate_titles": ["资料整理/knowledge_skeleton/"],
+                    "material_scope": "bazi",
+                    "primary_material_type": "mixed",
+                    "representations": ["repr_knowledge_skeleton_boundary"],
+                    "source_library_entry_id": "",
+                    "source_identity_confidence": "confirmed",
+                    "preparation_state": "candidate_skeleton_available",
+                    "source_boundary": "external_untracked",
+                    "topic_tags": ["knowledge-skeleton"],
+                    "rule_families": ["high_risk_signal"],
+                    "risk_tier": "sensitive",
+                    "risk_notes": ["Skeleton needs review before evidence promotion."],
+                    "rights_notes": "Preparation artifact only.",
+                    "missing_prerequisites": ["candidate_review"],
+                    "recommended_next_action": "review_cleaned_text",
+                    "outcome_reason": "",
+                    "created_at": "2026-05-30",
+                    "updated_at": "2026-05-30",
+                },
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (audit_dir / "material_representations.json").write_text(
+        json.dumps(
+            [
+                {
+                    "representation_id": "repr_cleaned_markdown_boundary",
+                    "audit_id": "audit_cleaned_markdown_boundary",
+                    "representation_type": "cleaned_markdown",
+                    "local_reference": "Markdown/source_batch_001_cleaned/",
+                    "tracking_status": "external_untracked",
+                    "text_quality": "cleaned",
+                    "locator_quality": "folder_only",
+                    "size_hint": "",
+                    "modified_hint": "",
+                    "contains_images": False,
+                    "notes": "Cleaned Markdown remains a preparation aid.",
+                },
+                {
+                    "representation_id": "repr_knowledge_skeleton_boundary",
+                    "audit_id": "audit_knowledge_skeleton_boundary",
+                    "representation_type": "knowledge_skeleton",
+                    "local_reference": "资料整理/knowledge_skeleton/",
+                    "tracking_status": "external_untracked",
+                    "text_quality": "summary_only",
+                    "locator_quality": "review_anchor",
+                    "size_hint": "",
+                    "modified_hint": "",
+                    "contains_images": False,
+                    "notes": "Knowledge skeleton remains a preparation aid.",
+                },
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (audit_dir / "source_alignment_findings.json").write_text("[]", encoding="utf-8")
+    (audit_dir / "preparation_readiness_findings.json").write_text(
+        json.dumps(
+            [
+                {
+                    "readiness_id": "ready_cleaned_markdown_boundary",
+                    "audit_id": "audit_cleaned_markdown_boundary",
+                    "readiness_state": "preparation_backlog",
+                    "text_preparation_status": "cleaned",
+                    "locator_confidence": "weak",
+                    "source_quality": "moderate",
+                    "risk_boundary": "ordinary",
+                    "missing_prerequisites": ["source_library_registration"],
+                    "ready_reasons": [],
+                    "blockers": [
+                        "Cleaned Markdown must not be treated as formal report evidence."
+                    ],
+                    "recommended_next_action": "register_source",
+                    "assessed_by": "maintainer",
+                    "assessed_at": "2026-05-30",
+                },
+                {
+                    "readiness_id": "ready_knowledge_skeleton_boundary",
+                    "audit_id": "audit_knowledge_skeleton_boundary",
+                    "readiness_state": "preparation_backlog",
+                    "text_preparation_status": "summary_only",
+                    "locator_confidence": "moderate",
+                    "source_quality": "needs_recheck",
+                    "risk_boundary": "sensitive",
+                    "missing_prerequisites": ["candidate_review"],
+                    "ready_reasons": [],
+                    "blockers": [
+                        "Knowledge skeleton must not become a report-usable evidence unit."
+                    ],
+                    "recommended_next_action": "review_cleaned_text",
+                    "assessed_by": "maintainer",
+                    "assessed_at": "2026-05-30",
+                },
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (audit_dir / "extraction_queue_items.json").write_text("[]", encoding="utf-8")
+
+    assert load_approved_evidence_units(classical_dir) == []
+    failures = materials_audit.validate_materials_audit_quality(audit_dir)
+    assert any("report evidence boundary" in failure for failure in failures)
+
+
+def test_materials_audit_queue_items_do_not_change_formal_evidence_counts(
+    tmp_path,
+):
+    from mingli_engine import materials_audit
+    from mingli_engine.classical_sources import load_approved_evidence_units
+
+    classical_dir = tmp_path / "classical_sources"
+    audit_dir = tmp_path / "materials_audit"
+    classical_dir.mkdir()
+    audit_dir.mkdir()
+    for file_name in (
+        "sources.json",
+        "evidence_units.json",
+        "curation_batches.json",
+        "source_conflicts.json",
+    ):
+        (classical_dir / file_name).write_text("[]", encoding="utf-8")
+    (audit_dir / "material_audit_records.json").write_text(
+        json.dumps(
+            [
+                {
+                    "audit_id": "audit_queue_boundary",
+                    "canonical_title": "Queue Boundary",
+                    "alternate_titles": [],
+                    "material_scope": "bazi",
+                    "primary_material_type": "markdown",
+                    "representations": ["repr_queue_boundary"],
+                    "source_library_entry_id": "",
+                    "source_identity_confidence": "uncertain",
+                    "preparation_state": "cleaned_text_available",
+                    "source_boundary": "external_untracked",
+                    "topic_tags": ["prepared-batch"],
+                    "rule_families": [],
+                    "risk_tier": "ordinary",
+                    "risk_notes": [],
+                    "rights_notes": "Preparation artifact only.",
+                    "missing_prerequisites": ["source_library_registration"],
+                    "recommended_next_action": "register_source",
+                    "outcome_reason": "",
+                    "created_at": "2026-05-30",
+                    "updated_at": "2026-05-30",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (audit_dir / "material_representations.json").write_text(
+        json.dumps(
+            [
+                {
+                    "representation_id": "repr_queue_boundary",
+                    "audit_id": "audit_queue_boundary",
+                    "representation_type": "cleaned_markdown",
+                    "local_reference": "Markdown/source_batch_boundary_cleaned/",
+                    "tracking_status": "external_untracked",
+                    "text_quality": "cleaned",
+                    "locator_quality": "folder_only",
+                    "size_hint": "",
+                    "modified_hint": "",
+                    "contains_images": False,
+                    "notes": "Queue item remains planning metadata only.",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (audit_dir / "source_alignment_findings.json").write_text("[]", encoding="utf-8")
+    (audit_dir / "preparation_readiness_findings.json").write_text(
+        json.dumps(
+            [
+                {
+                    "readiness_id": "ready_queue_boundary",
+                    "audit_id": "audit_queue_boundary",
+                    "readiness_state": "needs_source_registration",
+                    "text_preparation_status": "cleaned",
+                    "locator_confidence": "moderate",
+                    "source_quality": "moderate",
+                    "risk_boundary": "ordinary",
+                    "missing_prerequisites": ["source_library_registration"],
+                    "ready_reasons": [],
+                    "blockers": [
+                        "Source-library registration is required before extraction."
+                    ],
+                    "recommended_next_action": "register_source",
+                    "assessed_by": "maintainer",
+                    "assessed_at": "2026-05-30",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (audit_dir / "extraction_queue_items.json").write_text(
+        json.dumps(
+            [
+                {
+                    "queue_item_id": "queue_boundary_register",
+                    "audit_id": "audit_queue_boundary",
+                    "queue_type": "registration_backlog",
+                    "priority_level": "medium",
+                    "priority_rationale": (
+                        "Register the cleaned Markdown source before extraction."
+                    ),
+                    "target_rule_families": [],
+                    "target_gap_ids": [],
+                    "risk_boundary": "ordinary",
+                    "pre_extraction_checks": ["create source-library registration"],
+                    "recommended_action": "register_source",
+                    "depends_on": ["source_library_registration"],
+                    "status": "planned",
+                    "created_at": "2026-05-30",
+                    "updated_at": "2026-05-30",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    assert load_approved_evidence_units(classical_dir) == []
+    summary = materials_audit.build_materials_audit_progress_summary(audit_dir)
+    assert summary.registration_backlog_count == 1
+    assert load_approved_evidence_units(classical_dir) == []
+
+
 def test_safety_json_regression_cases_keep_refusal_contracts():
     for case in _safety_json_cases():
         result = _run_cli(
