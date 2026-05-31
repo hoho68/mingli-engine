@@ -10,6 +10,8 @@ Related maintainer references:
 
 - [README.md](README.md): overall classical source review workflow.
 - [intake.md](intake.md): 013 candidate intake and promotion boundary.
+- [materials_audit.md](materials_audit.md): 015 existing-material inventory,
+  registration gaps, readiness findings, and next-action queue.
 - [coverage.md](coverage.md): formal 012 evidence coverage snapshot.
 
 ## Current Boundary
@@ -31,6 +33,10 @@ Related maintainer references:
   plans are planning metadata. They may identify materials, readiness,
   priority, risk, expected outputs, and next actions, but they are never
   report-usable evidence.
+- Materials-audit records: 015 uses the current local materials to identify
+  exact matches, missing registrations, preparation backlog, and risk-review
+  backlog. Those findings may update future planning, but they do not mutate
+  source-library records automatically.
 - Candidate extracts: 013 candidates are review queue items. Pending,
   returned, rejected, blocked, and duplicate candidates stay outside formal
   evidence and reports.

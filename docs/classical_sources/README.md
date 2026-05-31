@@ -45,7 +45,26 @@ reference root PDF labels or root `Markdown/` labels, but they must not move,
 delete, convert, commit, or read those raw source files as part of report
 generation. `validate_source_library_quality()` rejects source-library metadata
 that leaks into report-evidence language, copies long passages, or uses
-absolute/high-risk wording.
+absolute/high-risk wording. The 015 [materials audit](materials_audit.md)
+checks which current local material groups match those source-library entries
+and which ones still need registration, locator review, or risk review.
+
+## Materials Audit Boundary
+
+The 015 materials-audit workflow adds an inventory layer under
+`src/mingli_engine/data/materials_audit/`. It records current root PDFs,
+prepared Markdown batches, cleaned Markdown folders, learning notes,
+processing-status notes, and knowledge-skeleton artifacts as auditable
+preparation metadata.
+
+See [materials_audit.md](materials_audit.md) for the current inventory snapshot
+and raw-file non-mutation boundary. The audit may reference external material
+labels such as root PDF names or `Markdown/` folders, but it must not move,
+delete, convert, rewrite, or commit those raw files unless the user explicitly
+asks for that operation. Audit records are not candidate extracts and are not
+formal report evidence. Extraction-ready audit queue items still have to enter
+the 013 [source-intake workflow](intake.md) before they can become reviewed
+candidate extracts.
 
 ## Review States
 

@@ -84,6 +84,115 @@ SOURCE_LIBRARY_VALUE_STATUSES = frozenset(
     }
 )
 SOURCE_LIBRARY_SUBJECT_TYPES = frozenset({"source", "batch"})
+MATERIAL_AUDIT_SCOPES = frozenset(
+    {"bazi", "ziwei", "qimen", "ritual_remedy", "mixed", "out_of_scope"}
+)
+MATERIAL_REPRESENTATION_TYPES = frozenset(
+    {
+        "root_pdf",
+        "raw_markdown",
+        "cleaned_markdown",
+        "learning_note",
+        "processing_status_note",
+        "knowledge_skeleton",
+        "image_asset",
+        "raw_folder",
+        "other",
+    }
+)
+MATERIAL_AUDIT_SOURCE_BOUNDARIES = frozenset(
+    {"external_untracked", "project_tracked_metadata", "derived_note_only"}
+)
+MATERIAL_AUDIT_IDENTITY_CONFIDENCES = frozenset(
+    {"confirmed", "likely", "uncertain", "conflicting"}
+)
+MATERIAL_AUDIT_PREPARATION_STATES = frozenset(
+    {
+        "not_started",
+        "raw_available",
+        "prepared_text_available",
+        "cleaned_text_available",
+        "notes_available",
+        "candidate_skeleton_available",
+        "ready_for_extraction_review",
+        "deferred",
+        "blocked",
+    }
+)
+MATERIAL_AUDIT_MATCH_TYPES = frozenset(
+    {
+        "exact",
+        "likely",
+        "possible_duplicate",
+        "edition_variant",
+        "missing_source_library_entry",
+        "blocked_source_library_entry",
+        "out_of_scope",
+        "uncertain",
+    }
+)
+MATERIAL_AUDIT_READINESS_STATES = frozenset(
+    {
+        "ready_for_extraction_review",
+        "needs_cleaning",
+        "needs_locator_review",
+        "needs_source_registration",
+        "needs_identity_clarification",
+        "needs_rights_review",
+        "needs_risk_review",
+        "preparation_backlog",
+        "deferred",
+        "blocked",
+    }
+)
+MATERIAL_AUDIT_QUEUE_TYPES = frozenset(
+    {
+        "extraction_ready",
+        "preparation_backlog",
+        "registration_backlog",
+        "risk_review_backlog",
+        "blocked_backlog",
+    }
+)
+MATERIAL_AUDIT_ACTIONS = frozenset(
+    {
+        "register_source",
+        "clarify_identity",
+        "prepare_text",
+        "review_cleaned_text",
+        "risk_review",
+        "extract_candidates",
+        "defer",
+        "block",
+        "no_action",
+    }
+)
+MATERIAL_AUDIT_TEXT_QUALITIES = frozenset(
+    {"unknown", "raw_ocr", "noisy", "usable", "cleaned", "summary_only", "not_text"}
+)
+MATERIAL_AUDIT_LOCATOR_QUALITIES = frozenset(
+    {
+        "none",
+        "folder_only",
+        "file_only",
+        "heading",
+        "line_window",
+        "page_or_section",
+        "review_anchor",
+    }
+)
+MATERIAL_AUDIT_TEXT_PREPARATION_STATUSES = frozenset(
+    {"not_started", "raw_only", "prepared", "cleaned", "summary_only", "not_applicable"}
+)
+MATERIAL_AUDIT_LOCATOR_CONFIDENCES = frozenset(
+    {"none", "weak", "moderate", "strong"}
+)
+MATERIAL_AUDIT_SOURCE_QUALITIES = frozenset(
+    {"strong", "moderate", "weak", "needs_recheck"}
+)
+MATERIAL_AUDIT_QUEUE_STATUSES = frozenset(
+    {"planned", "active", "completed", "deferred", "blocked"}
+)
 CONFLICT_TYPES = frozenset(
     {
         "school_difference",
@@ -377,6 +486,122 @@ class SourceLibraryProgressReport:
     next_source_ids: list[str] = field(default_factory=list)
     value_status_counts: dict[str, int] = field(default_factory=dict)
     high_risk_entry_ids: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class MaterialAuditRecord:
+    audit_id: str
+    canonical_title: str
+    material_scope: str
+    primary_material_type: str
+    source_identity_confidence: str
+    preparation_state: str
+    source_boundary: str
+    alternate_titles: list[str] = field(default_factory=list)
+    representations: list[str] = field(default_factory=list)
+    source_library_entry_id: str = ""
+    topic_tags: list[str] = field(default_factory=list)
+    rule_families: list[str] = field(default_factory=list)
+    risk_tier: str = "ordinary"
+    risk_notes: list[str] = field(default_factory=list)
+    rights_notes: str = ""
+    missing_prerequisites: list[str] = field(default_factory=list)
+    recommended_next_action: str = "no_action"
+    outcome_reason: str = ""
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class MaterialRepresentation:
+    representation_id: str
+    audit_id: str
+    representation_type: str
+    local_reference: str
+    tracking_status: str
+    text_quality: str = "unknown"
+    locator_quality: str = "none"
+    size_hint: str = ""
+    modified_hint: str = ""
+    contains_images: bool = False
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class SourceAlignmentFinding:
+    alignment_id: str
+    audit_id: str
+    match_type: str
+    confidence: str
+    evidence: str
+    source_library_entry_id: str = ""
+    source_material_id: str = ""
+    registration_recommendation: str = ""
+    duplicate_or_variant_notes: str = ""
+    reviewer: str = ""
+    reviewed_at: str = ""
+
+
+@dataclass(frozen=True)
+class PreparationReadinessFinding:
+    readiness_id: str
+    audit_id: str
+    readiness_state: str
+    text_preparation_status: str
+    locator_confidence: str
+    source_quality: str
+    risk_boundary: str
+    missing_prerequisites: list[str] = field(default_factory=list)
+    ready_reasons: list[str] = field(default_factory=list)
+    blockers: list[str] = field(default_factory=list)
+    recommended_next_action: str = "no_action"
+    assessed_by: str = ""
+    assessed_at: str = ""
+
+
+@dataclass(frozen=True)
+class ExtractionQueueItem:
+    queue_item_id: str
+    audit_id: str
+    queue_type: str
+    priority_level: str
+    priority_rationale: str
+    risk_boundary: str
+    recommended_action: str
+    target_rule_families: list[str] = field(default_factory=list)
+    target_gap_ids: list[str] = field(default_factory=list)
+    pre_extraction_checks: list[str] = field(default_factory=list)
+    depends_on: list[str] = field(default_factory=list)
+    status: str = "planned"
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class AuditProgressSummary:
+    material_group_counts: dict[str, int]
+    representation_counts: dict[str, int]
+    source_alignment_counts: dict[str, int]
+    readiness_counts: dict[str, int]
+    queue_counts: dict[str, int]
+    risk_tier_counts: dict[str, int]
+    out_of_scope_count: int = 0
+    missing_registration_count: int = 0
+    extraction_ready_count: int = 0
+    preparation_backlog_count: int = 0
+    registration_backlog_count: int = 0
+    risk_review_backlog_count: int = 0
+    blocked_backlog_count: int = 0
+    deferred_queue_count: int = 0
+    blocked_queue_count: int = 0
+    next_action_ids: list[str] = field(default_factory=list)
+    source_boundary_counts: dict[str, int] = field(default_factory=dict)
+    material_scope_counts: dict[str, int] = field(default_factory=dict)
+    text_preparation_counts: dict[str, int] = field(default_factory=dict)
+    locator_confidence_counts: dict[str, int] = field(default_factory=dict)
+    source_quality_counts: dict[str, int] = field(default_factory=dict)
+    risk_boundary_counts: dict[str, int] = field(default_factory=dict)
+    missing_prerequisite_counts: dict[str, int] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
