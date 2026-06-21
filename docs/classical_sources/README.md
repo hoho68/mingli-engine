@@ -66,6 +66,27 @@ formal report evidence. Extraction-ready audit queue items still have to enter
 the 013 [source-intake workflow](intake.md) before they can become reviewed
 candidate extracts.
 
+## Extraction Queue Intake Boundary
+
+The 016 [extraction queue intake](extraction_queue_intake.md) workflow converts
+the 015 next-action queue into a bounded handoff package for future manual 013
+candidate extraction. It stores package metadata and extraction task records
+under `src/mingli_engine/data/extraction_queue_intake/`, validates links back
+to 015 audit/readiness/alignment records plus 014/013 source ids, and keeps all
+package records outside candidate extracts, promotion batches, and formal
+report evidence.
+
+## Learning Reference Curation Boundary
+
+The 017 [learning reference curation](learning_reference_curation.md) workflow
+turns ready 016 extraction tasks into maintainer-readable learning notes,
+learning points, and candidate-intake decisions, while preserving non-ready 016
+backlog work as prerequisite action notes. These records trace back to
+016/015/014/013 ids, preserve overlap warnings, and help plan later candidate
+intake. A maintainer-selected `create_candidate` decision may be applied into
+013 as a normal pending-review candidate. It still does not create review
+decisions, promotion batches, or formal report evidence.
+
 ## Review States
 
 - `not_started`: the source is registered but no readable extract has been

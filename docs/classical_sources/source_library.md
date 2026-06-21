@@ -12,6 +12,12 @@ Related maintainer references:
 - [intake.md](intake.md): 013 candidate intake and promotion boundary.
 - [materials_audit.md](materials_audit.md): 015 existing-material inventory,
   registration gaps, readiness findings, and next-action queue.
+- [extraction_queue_intake.md](extraction_queue_intake.md): 016 handoff package
+  that turns eligible 015 queue items into extraction tasks while preserving
+  prerequisite backlog records.
+- [learning_reference_curation.md](learning_reference_curation.md): 017 study
+  notes, learning points, candidate-intake decisions, and prerequisite action
+  notes derived from the current 016 package.
 - [coverage.md](coverage.md): formal 012 evidence coverage snapshot.
 
 ## Current Boundary
@@ -37,6 +43,14 @@ Related maintainer references:
   exact matches, missing registrations, preparation backlog, and risk-review
   backlog. Those findings may update future planning, but they do not mutate
   source-library records automatically.
+- Extraction queue intake records: 016 packages may reference source-library
+  entries and 013 source material ids for traceability, but they remain
+  planning metadata outside candidate extracts and formal report evidence.
+- Learning reference records: 017 notes, points, decisions, and prerequisite
+  actions may reference source-library entries through 016/015 trace links. A
+  maintainer-selected 017 create-candidate decision can create a normal 013
+  pending-review candidate, but it still remains outside formal report evidence
+  until ordinary 013 review and promotion rules pass.
 - Candidate extracts: 013 candidates are review queue items. Pending,
   returned, rejected, blocked, and duplicate candidates stay outside formal
   evidence and reports.
@@ -112,12 +126,11 @@ effort, and risk tier before they can guide extraction planning.
 ## Source Value Snapshot
 
 Computed with `build_source_library_progress_report()`,
-`build_source_value_summary()`, and `build_batch_value_summary()` after US3
-implementation:
+`build_source_value_summary()`, and `build_batch_value_summary()` after 017
+candidate application:
 
 - Value status counts:
-  `value_produced=1`, `in_progress=2`, `non_useful_documented=1`,
-  `blocked=1`, and `not_started=4`.
+  `in_progress=6`, `blocked=1`, `not_started=1`, and `value_produced=1`.
 - `entry_life_death_book_100_pages_pdf`: `candidate_count=1`,
   `approved_candidate_count=1`, `conflict_count=1`, `gap_count=0`,
   `promoted_evidence_count=0`, `value_status=value_produced`.
@@ -128,11 +141,29 @@ implementation:
   `approved_candidate_count=0`, `rejected_or_blocked_count=1`,
   `value_status=in_progress`, because one duplicate/rejected candidate is
   visible while another candidate still awaits review.
-- `entry_mingxue_golden_voice_pdf`: `candidate_count=1`,
-  `rejected_or_blocked_count=1`, `value_status=non_useful_documented`.
+- `entry_mingli_true_formula_teacher_pdf`: `candidate_count=1`,
+  `approved_candidate_count=0`, `value_status=in_progress`, because the 017
+  pattern-strength candidate is pending review.
+- `entry_duan_plain_mingxue_outline_pdf`: `candidate_count=1`,
+  `approved_candidate_count=0`, `value_status=in_progress`, because the 017
+  ten-god relation candidate is pending review.
+- `entry_mingxue_golden_voice_pdf`: `candidate_count=2`,
+  `rejected_or_blocked_count=1`, `value_status=in_progress`, because the
+  rejected broad-scope candidate is preserved while the narrower 017
+  five-element candidate is pending review.
+- `entry_fortune_reading_hongfu_qitian_pdf`: `candidate_count=1`,
+  `approved_candidate_count=0`, `value_status=in_progress`, because the 017
+  remedy-boundary candidate is pending review.
+- `entry_blind_school_secret_pdf`: `candidate_count=1`,
+  `rejected_or_blocked_count=1`, `value_status=blocked`.
+- `entry_immortal_fortune_jianghu_secret_pdf`: `candidate_count=0`,
+  `value_status=not_started`.
 - `batch_plan_high_risk_boundaries_001`: `candidate_count=2`,
   `approved_candidate_count=1`, `conflict_count=1`, `gap_count=1`,
   `promoted_evidence_count=0`, `value_status=value_produced`.
+- `batch_plan_blind_image_method_001`: `candidate_count=3`,
+  `approved_candidate_count=0`, `rejected_or_blocked_count=1`,
+  `gap_count=1`, `promoted_evidence_count=0`, `value_status=in_progress`.
 
 `promoted_evidence_count` only counts reviewed/approved 013 promotion targets
 that also exist as formal 012 evidence units. Approved but unpromoted

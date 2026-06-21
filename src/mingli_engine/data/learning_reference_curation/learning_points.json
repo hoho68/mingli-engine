@@ -1,0 +1,75 @@
+[
+  {
+    "learning_point_id": "lp_northeast_blind_image_001",
+    "note_id": "note_northeast_blind_peak_001",
+    "point_label": "Blind image method conditional signal",
+    "source_locator": "page_or_section_required",
+    "summary": "Blind image statements should be framed as conditional traditional signals tied to chart structure.",
+    "proposed_rule_family": "blind_image_method",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "State uncertainty and school dependency.",
+      "Include limitation language; do not use as standalone verdict."
+    ],
+    "candidate_readiness": "duplicate_review",
+    "candidate_decision_id": "decision_northeast_blind_image_001"
+  },
+  {
+    "learning_point_id": "lp_mingli_pattern_strength_001",
+    "note_id": "note_mingli_true_formula_teacher_001",
+    "point_label": "Pattern strength candidate framing",
+    "source_locator": "page_or_section_required",
+    "summary": "Pattern strength material should stay conditional until source locator and chart context are reviewed.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "State uncertainty for timing and pattern interpretation.",
+      "Include limitation language; do not guarantee outcome timing."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_mingli_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_duan_ten_god_relation_001",
+    "note_id": "note_duan_plain_mingxue_outline_001",
+    "point_label": "Ten-god relation taxonomy framing",
+    "source_locator": "page_or_section_required",
+    "summary": "Duan Plain Mingxue Outline can organize ten-god relationships and pattern-strength review as source-backed taxonomy.",
+    "proposed_rule_family": "ten_god_relation",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Keep as structural taxonomy until locator and chart context are reviewed."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_duan_ten_god_relation_001"
+  },
+  {
+    "learning_point_id": "lp_mingxue_five_element_balance_001",
+    "note_id": "note_mingxue_golden_voice_001",
+    "point_label": "Five-element terminology boundary",
+    "source_locator": "page_or_section_required",
+    "summary": "Mingxue Golden Voice can support five-element terminology only after narrower locator review.",
+    "proposed_rule_family": "five_element_balance",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Keep as terminology taxonomy until locator and chart context are reviewed."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_mingxue_five_element_balance_001"
+  },
+  {
+    "learning_point_id": "lp_hongfu_remedy_boundary_001",
+    "note_id": "note_fortune_reading_hongfu_qitian_001",
+    "point_label": "Remedy boundary framing",
+    "source_locator": "page_or_section_required",
+    "summary": "Hongfu Qitian remedy-boundary material should stay conditional until locator and safety context are reviewed.",
+    "proposed_rule_family": "remedy_boundary",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "State uncertainty for remedy-boundary interpretation.",
+      "Include limitation language; avoid certainty about effects."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_hongfu_remedy_boundary_001"
+  }
+]

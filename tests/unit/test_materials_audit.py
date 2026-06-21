@@ -1084,6 +1084,17 @@ def test_extraction_queue_items_load_and_reference_audit_records():
     assert all(item.audit_id in audit_ids for item in queue_items)
 
 
+def test_knowledge_skeleton_enters_preparation_backlog_queue():
+    queue_items = materials_audit.load_extraction_queue_items()
+    queue_items_by_id = {item.queue_item_id: item for item in queue_items}
+
+    item = queue_items_by_id["queue_knowledge_skeleton_prepare"]
+    assert item.audit_id == "audit_knowledge_skeleton"
+    assert item.queue_type == "preparation_backlog"
+    assert item.recommended_action == "review_cleaned_text"
+    assert set(item.depends_on) == {"component_source_links", "candidate_review"}
+
+
 def test_extraction_queue_items_reject_unknown_audit_records(tmp_path):
     _write_materials_audit_fixture(
         tmp_path,
@@ -1315,7 +1326,7 @@ def test_audit_progress_summary_includes_next_five_queue_items_and_backlog_count
         "queue_blind_school_secret_blocked",
     ]
     assert summary.extraction_ready_count == 5
-    assert summary.preparation_backlog_count == 1
+    assert summary.preparation_backlog_count == 2
     assert summary.registration_backlog_count == 3
     assert summary.risk_review_backlog_count == 4
     assert summary.deferred_queue_count == 1

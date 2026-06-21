@@ -29,3 +29,30 @@ PDF preparation material; no runtime parser reads this note.
 
 - Add page or chapter anchors after a readable extract is reviewed.
 - Split pattern strength and luck-cycle triggers into finer condition groups.
+
+## 017 Learning Reference
+
+- Note id: `note_mingli_true_formula_teacher_001`
+- Source trace: `task_mingli_true_formula_teacher_extract_001` ->
+  `queue_mingli_true_formula_teacher_extract` ->
+  `entry_mingli_true_formula_teacher_pdf` ->
+  `material_mingli_true_formula_teacher_pdf`
+- Learning scope: pattern-strength, useful-god candidate, and luck-cycle study
+  metadata for later candidate-intake review.
+- Locator requirement: page or section anchor must be recorded during manual
+  extraction before any candidate can be reviewed.
+- Boundary: keep concise paraphrases only; this section is not formal report
+  evidence and does not create or approve 013 candidates.
+- Candidate-intake readiness: `lp_mingli_pattern_strength_001` is structured as
+  candidate-ready planning metadata.
+- Learning point: `lp_mingli_pattern_strength_001` keeps pattern-strength
+  material as conditional study metadata with uncertainty and limitation
+  language.
+- Candidate-intake decision: `decision_mingli_pattern_strength_001` is an
+  applied `create_candidate` decision. It created
+  `candidate_mingli_pattern_strength_017_001` as a 013 `pending_review`
+  candidate; no review decision, promotion batch, or formal report evidence was
+  created.
+- Overlap warning: preserve `candidate_mingli_pattern_strength_017_001` as an
+  existing pending 013 candidate before deciding whether later Mingli learning
+  points should reuse, avoid, or create additional candidate data.

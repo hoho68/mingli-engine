@@ -1,0 +1,194 @@
+[
+  {
+    "action_note_id": "action_markdown_batch_001_registration_001",
+    "backlog_id": "backlog_markdown_batch_001_registration_001",
+    "package_id": "package_next_candidates_001",
+    "queue_item_id": "queue_markdown_source_batch_001_register",
+    "audit_id": "audit_markdown_source_batch_001",
+    "action_type": "registration",
+    "missing_prerequisites": [
+      "source_library_registration"
+    ],
+    "durable_reason": "Cleaned Markdown batch needs source-library registration before extraction can begin.",
+    "recommended_action": "register_source",
+    "risk_boundary": "ordinary",
+    "status": "planned",
+    "created_at": "2026-05-31",
+    "updated_at": "2026-05-31"
+  },
+  {
+    "action_note_id": "action_blind_life_manual_risk_review_001",
+    "backlog_id": "backlog_blind_life_manual_risk_review_001",
+    "package_id": "package_next_candidates_001",
+    "queue_item_id": "queue_blind_life_manual_risk_review",
+    "audit_id": "audit_blind_life_manual",
+    "action_type": "risk_review",
+    "missing_prerequisites": [
+      "risk_review"
+    ],
+    "durable_reason": "High-risk aphoristic material needs boundary review before candidate extraction.",
+    "recommended_action": "risk_review",
+    "risk_boundary": "high_risk",
+    "status": "planned",
+    "created_at": "2026-05-31",
+    "updated_at": "2026-05-31"
+  },
+  {
+    "action_note_id": "action_blind_school_secret_blocked_001",
+    "backlog_id": "backlog_blind_school_secret_blocked_001",
+    "package_id": "package_next_candidates_001",
+    "queue_item_id": "queue_blind_school_secret_blocked",
+    "audit_id": "audit_blind_school_secret",
+    "action_type": "blocked",
+    "missing_prerequisites": [
+      "source_access_clarification",
+      "quotation_boundary_review"
+    ],
+    "durable_reason": "Source remains blocked until access and quotation boundaries are clarified.",
+    "recommended_action": "block",
+    "risk_boundary": "sensitive",
+    "status": "blocked",
+    "created_at": "2026-05-31",
+    "updated_at": "2026-05-31"
+  },
+  {
+    "action_note_id": "action_markdown_batch_002_registration_001",
+    "backlog_id": "backlog_markdown_batch_002_registration_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_markdown_source_batch_002_register",
+    "audit_id": "audit_markdown_source_batch_002",
+    "action_type": "registration",
+    "missing_prerequisites": [
+      "source_library_registration"
+    ],
+    "durable_reason": "Cleaned Markdown batch needs source-library registration before extraction can begin.",
+    "recommended_action": "register_source",
+    "risk_boundary": "ordinary",
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "action_note_id": "action_markdown_batch_003_registration_001",
+    "backlog_id": "backlog_markdown_batch_003_registration_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_markdown_source_batch_003_register",
+    "audit_id": "audit_markdown_source_batch_003",
+    "action_type": "registration",
+    "missing_prerequisites": [
+      "source_library_registration"
+    ],
+    "durable_reason": "Cleaned Markdown batch needs source-library registration before extraction can begin.",
+    "recommended_action": "register_source",
+    "risk_boundary": "ordinary",
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "action_note_id": "action_immortal_fortune_jianghu_secret_risk_review_001",
+    "backlog_id": "backlog_immortal_fortune_jianghu_secret_risk_review_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_immortal_fortune_jianghu_secret_risk_review",
+    "audit_id": "audit_immortal_fortune_jianghu_secret",
+    "action_type": "risk_review",
+    "missing_prerequisites": [
+      "risk_review",
+      "cleaned_text"
+    ],
+    "durable_reason": "High-risk Jianghu-style source needs boundary review and prepared text before extraction.",
+    "recommended_action": "risk_review",
+    "risk_boundary": "high_risk",
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "action_note_id": "action_life_death_book_100_pages_risk_review_001",
+    "backlog_id": "backlog_life_death_book_100_pages_risk_review_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_life_death_book_100_pages_risk_review",
+    "audit_id": "audit_life_death_book_100_pages",
+    "action_type": "risk_review",
+    "missing_prerequisites": [
+      "risk_review"
+    ],
+    "durable_reason": "Life-risk source needs boundary review before extraction can begin.",
+    "recommended_action": "risk_review",
+    "risk_boundary": "high_risk",
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "action_note_id": "action_markdown_batch_005_risk_review_001",
+    "backlog_id": "backlog_markdown_batch_005_risk_review_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_markdown_source_batch_005_risk_review",
+    "audit_id": "audit_markdown_source_batch_005",
+    "action_type": "risk_review",
+    "missing_prerequisites": [
+      "risk_review",
+      "identity_clarification"
+    ],
+    "durable_reason": "High-risk prepared batch needs identity and boundary review before extraction.",
+    "recommended_action": "risk_review",
+    "risk_boundary": "high_risk",
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "action_note_id": "action_markdown_batch_004_locator_review_001",
+    "backlog_id": "backlog_markdown_batch_004_locator_review_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_markdown_source_batch_004_prepare",
+    "audit_id": "audit_markdown_source_batch_004",
+    "action_type": "locator_review",
+    "missing_prerequisites": [
+      "locator_review",
+      "edition_variant_review"
+    ],
+    "durable_reason": "Possible edition variant needs locator review before extraction planning.",
+    "recommended_action": "clarify_identity",
+    "risk_boundary": "sensitive",
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "action_note_id": "action_source_processing_status_deferred_001",
+    "backlog_id": "backlog_source_processing_status_deferred_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_source_processing_status_deferred",
+    "audit_id": "audit_source_processing_status",
+    "action_type": "deferred",
+    "missing_prerequisites": [
+      "out_of_scope_non_source_note"
+    ],
+    "durable_reason": "Processing-status note is workflow metadata rather than source text.",
+    "recommended_action": "defer",
+    "risk_boundary": "ordinary",
+    "status": "deferred",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "action_note_id": "action_knowledge_skeleton_preparation_001",
+    "backlog_id": "backlog_knowledge_skeleton_preparation_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "action_type": "preparation",
+    "missing_prerequisites": [
+      "component_source_links",
+      "candidate_review"
+    ],
+    "durable_reason": "Knowledge skeleton is an aggregate preparation aid until component sources are reviewed.",
+    "recommended_action": "review_cleaned_text",
+    "risk_boundary": "sensitive",
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  }
+]

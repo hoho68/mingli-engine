@@ -15,6 +15,12 @@ Related maintainer references:
   alignment findings and registration backlog items.
 - [intake.md](intake.md): 013 candidate-intake workflow that extraction-ready
   queue items must enter before review or promotion.
+- [extraction_queue_intake.md](extraction_queue_intake.md): 016 package handoff
+  that turns eligible 015 next-action queue items into extraction tasks without
+  creating candidate extracts.
+- [learning_reference_curation.md](learning_reference_curation.md): 017
+  learning/reference layer that turns ready 016 tasks into study metadata and
+  keeps non-ready 016 backlog records as prerequisite action notes.
 - [coverage.md](coverage.md): formal 012 evidence coverage snapshot used by
   reports.
 
@@ -126,8 +132,9 @@ Current queue snapshot:
   source-library registration before extraction review.
 - 4 `risk_review_backlog` items: high-risk material that must complete
   boundary review before any candidate extraction.
-- 1 `preparation_backlog` item: a possible edition variant needing locator and
-  identity clarification.
+- 2 `preparation_backlog` items: a possible edition variant needing locator and
+  identity clarification, plus the knowledge skeleton aggregate that needs
+  component source links and candidate review before extraction planning.
 - 2 `blocked_backlog` items: one blocked source and one deferred workflow note.
 
 The next five recommended actions are selected as a deliberately limited work
@@ -150,6 +157,9 @@ Queue rules:
 - Queue items are planning metadata only. They are not candidate extracts,
   review decisions, promotion batches, approved evidence units, or formal report
   evidence.
+- 017 learning reference notes, learning points, candidate-intake decisions, and
+  prerequisite action notes consume the 016 package as metadata only; they do
+  not mutate the 015 queue or mark any material as formal evidence.
 
 Quick validation command:
 
@@ -164,8 +174,9 @@ Expected computed summary:
   `risk_review_backlog=4`, `preparation_backlog=1`, and
   `blocked_backlog=2`.
 - Backlog counters: `registration_backlog_count=3`,
-  `risk_review_backlog_count=4`, `blocked_backlog_count=2`,
-  `deferred_queue_count=1`, and `blocked_queue_count=1`.
+  `risk_review_backlog_count=4`, `preparation_backlog_count=2`,
+  `blocked_backlog_count=2`, `deferred_queue_count=1`, and
+  `blocked_queue_count=1`.
 - Next recommended queue item ids:
   `queue_northeast_blind_peak_extract`,
   `queue_mingli_true_formula_teacher_extract`,

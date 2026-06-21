@@ -1,0 +1,141 @@
+[
+  {
+    "note_id": "note_northeast_blind_peak_001",
+    "task_id": "task_northeast_blind_peak_extract_001",
+    "package_id": "package_next_candidates_001",
+    "queue_item_id": "queue_northeast_blind_peak_extract",
+    "audit_id": "audit_northeast_blind_peak",
+    "source_library_entry_id": "entry_northeast_blind_peak_pdf",
+    "source_material_id": "material_northeast_blind_peak_pdf",
+    "source_title": "Northeast Blind Peak",
+    "target_rule_families": [
+      "blind_image_method",
+      "branch_interaction"
+    ],
+    "locator_requirement": "page_or_section",
+    "risk_boundary": "sensitive",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "source_quality_note": "Confirm page or section locator before manual extraction.",
+    "learning_points": [
+      "lp_northeast_blind_image_001"
+    ],
+    "overlap_candidate_ids": [
+      "candidate_northeast_blind_image_001",
+      "candidate_northeast_blind_image_duplicate_001"
+    ],
+    "status": "draft",
+    "created_at": "2026-05-31",
+    "updated_at": "2026-05-31"
+  },
+  {
+    "note_id": "note_mingli_true_formula_teacher_001",
+    "task_id": "task_mingli_true_formula_teacher_extract_001",
+    "package_id": "package_next_candidates_001",
+    "queue_item_id": "queue_mingli_true_formula_teacher_extract",
+    "audit_id": "audit_mingli_true_formula_teacher",
+    "source_library_entry_id": "entry_mingli_true_formula_teacher_pdf",
+    "source_material_id": "material_mingli_true_formula_teacher_pdf",
+    "source_title": "Mingli True Formula Teacher",
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate",
+      "luck_cycle"
+    ],
+    "locator_requirement": "page_or_section",
+    "risk_boundary": "sensitive",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "source_quality_note": "Confirm locator anchors before manual extraction.",
+    "learning_points": [
+      "lp_mingli_pattern_strength_001"
+    ],
+    "overlap_candidate_ids": [
+      "candidate_mingli_pattern_strength_017_001"
+    ],
+    "status": "draft",
+    "created_at": "2026-05-31",
+    "updated_at": "2026-05-31"
+  },
+  {
+    "note_id": "note_duan_plain_mingxue_outline_001",
+    "task_id": "task_duan_plain_mingxue_outline_extract_001",
+    "package_id": "package_next_candidates_002",
+    "queue_item_id": "queue_duan_plain_mingxue_outline_extract",
+    "audit_id": "audit_duan_plain_mingxue_outline",
+    "source_library_entry_id": "entry_duan_plain_mingxue_outline_pdf",
+    "source_material_id": "material_duan_plain_mingxue_outline_pdf",
+    "source_title": "Duan Plain Mingxue Outline",
+    "target_rule_families": [
+      "ten_god_relation",
+      "pattern_strength"
+    ],
+    "locator_requirement": "page_or_section",
+    "risk_boundary": "ordinary",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "source_quality_note": "Confirm page or section locator before manual extraction.",
+    "learning_points": [
+      "lp_duan_ten_god_relation_001"
+    ],
+    "overlap_candidate_ids": [
+      "candidate_duan_ten_god_relation_017_001"
+    ],
+    "status": "draft",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "note_id": "note_mingxue_golden_voice_001",
+    "task_id": "task_mingxue_golden_voice_extract_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_mingxue_golden_voice_extract",
+    "audit_id": "audit_mingxue_golden_voice",
+    "source_library_entry_id": "entry_mingxue_golden_voice_pdf",
+    "source_material_id": "material_mingxue_golden_voice_pdf",
+    "source_title": "Mingxue Golden Voice",
+    "target_rule_families": [
+      "five_element_balance",
+      "ten_god_relation",
+      "pattern_strength"
+    ],
+    "locator_requirement": "page_or_section",
+    "risk_boundary": "ordinary",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "source_quality_note": "Confirm terminology and structure locators before manual extraction.",
+    "learning_points": [
+      "lp_mingxue_five_element_balance_001"
+    ],
+    "overlap_candidate_ids": [
+      "candidate_mingxue_golden_voice_scope_001",
+      "candidate_mingxue_five_element_balance_017_001"
+    ],
+    "status": "draft",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "note_id": "note_fortune_reading_hongfu_qitian_001",
+    "task_id": "task_fortune_reading_hongfu_qitian_extract_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_fortune_reading_hongfu_qitian_extract",
+    "audit_id": "audit_fortune_reading_hongfu_qitian",
+    "source_library_entry_id": "entry_fortune_reading_hongfu_qitian_pdf",
+    "source_material_id": "material_fortune_reading_hongfu_qitian_pdf",
+    "source_title": "Fortune Reading Hongfu Qitian",
+    "target_rule_families": [
+      "remedy_boundary",
+      "pattern_strength"
+    ],
+    "locator_requirement": "page_or_section",
+    "risk_boundary": "sensitive",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "source_quality_note": "Confirm remedy-boundary locators before manual extraction.",
+    "learning_points": [
+      "lp_hongfu_remedy_boundary_001"
+    ],
+    "overlap_candidate_ids": [
+      "candidate_hongfu_remedy_boundary_017_001"
+    ],
+    "status": "draft",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  }
+]

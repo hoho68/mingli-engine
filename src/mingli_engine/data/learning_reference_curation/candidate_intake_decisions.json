@@ -1,0 +1,67 @@
+[
+  {
+    "decision_id": "decision_northeast_blind_image_001",
+    "learning_point_id": "lp_northeast_blind_image_001",
+    "decision": "reuse_existing",
+    "source_material_id": "material_northeast_blind_peak_pdf",
+    "candidate_id": "candidate_northeast_blind_image_001",
+    "overlap_candidate_ids": [
+      "candidate_northeast_blind_image_001",
+      "candidate_northeast_blind_image_duplicate_001"
+    ],
+    "rationale": "Reuse the existing pending candidate and keep the rejected duplicate as an overlap warning.",
+    "status": "applied",
+    "created_at": "2026-05-31",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "decision_id": "decision_mingli_pattern_strength_001",
+    "learning_point_id": "lp_mingli_pattern_strength_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_mingli_true_formula_teacher_pdf",
+    "candidate_id": "candidate_mingli_pattern_strength_017_001",
+    "overlap_candidate_ids": [],
+    "rationale": "No existing 013 candidate overlaps this source and rule family; create a planned candidate only after manual extraction.",
+    "status": "applied",
+    "created_at": "2026-05-31",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "decision_id": "decision_duan_ten_god_relation_001",
+    "learning_point_id": "lp_duan_ten_god_relation_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_duan_plain_mingxue_outline_pdf",
+    "candidate_id": "candidate_duan_ten_god_relation_017_001",
+    "overlap_candidate_ids": [],
+    "rationale": "Create a focused ten-god relation candidate while keeping the locator requirement explicit.",
+    "status": "applied",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "decision_id": "decision_mingxue_five_element_balance_001",
+    "learning_point_id": "lp_mingxue_five_element_balance_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_mingxue_golden_voice_pdf",
+    "candidate_id": "candidate_mingxue_five_element_balance_017_001",
+    "overlap_candidate_ids": [
+      "candidate_mingxue_golden_voice_scope_001"
+    ],
+    "rationale": "Create a narrower five-element candidate and keep the rejected broad-scope candidate as an overlap warning.",
+    "status": "applied",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "decision_id": "decision_hongfu_remedy_boundary_001",
+    "learning_point_id": "lp_hongfu_remedy_boundary_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_fortune_reading_hongfu_qitian_pdf",
+    "candidate_id": "candidate_hongfu_remedy_boundary_017_001",
+    "overlap_candidate_ids": [],
+    "rationale": "Create a sensitive remedy-boundary candidate with uncertainty and limitation requirements preserved.",
+    "status": "applied",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  }
+]

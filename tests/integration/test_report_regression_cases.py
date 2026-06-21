@@ -389,6 +389,3986 @@ def test_pending_source_intake_candidates_are_not_formal_report_evidence():
     assert pending_candidate_ids.isdisjoint(formal_evidence_ids)
 
 
+def test_pending_candidate_review_worklist_does_not_change_formal_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        list_pending_candidate_review_worklist,
+        load_candidate_extracts,
+    )
+
+    before_candidate_ids = {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+
+    worklist = list_pending_candidate_review_worklist()
+
+    assert {item.candidate_id for item in worklist} == {
+        "candidate_northeast_blind_image_001",
+        "candidate_mingli_pattern_strength_017_001",
+        "candidate_duan_ten_god_relation_017_001",
+        "candidate_mingxue_five_element_balance_017_001",
+        "candidate_hongfu_remedy_boundary_017_001",
+    }
+    assert {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    } == before_candidate_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_decision_packets_do_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        list_pending_candidate_review_decision_packets,
+        load_candidate_extracts,
+        load_review_decisions,
+    )
+
+    before_candidate_ids = {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+
+    packets = list_pending_candidate_review_decision_packets()
+
+    assert {packet.candidate_id for packet in packets} == {
+        "candidate_northeast_blind_image_001",
+        "candidate_mingli_pattern_strength_017_001",
+        "candidate_duan_ten_god_relation_017_001",
+        "candidate_mingxue_five_element_balance_017_001",
+        "candidate_hongfu_remedy_boundary_017_001",
+    }
+    assert {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    } == before_candidate_ids
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_packet_summary_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_packet_summary,
+        load_candidate_extracts,
+        load_review_decisions,
+    )
+
+    before_candidate_ids = {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+
+    summary = build_pending_candidate_review_packet_summary()
+
+    assert summary.packet_count == 5
+    assert summary.review_decision_delta == 0
+    assert summary.formal_evidence_delta == 0
+    assert {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    } == before_candidate_ids
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_action_queue_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_action_queue,
+        load_candidate_extracts,
+        load_review_decisions,
+    )
+
+    before_candidate_ids = {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+
+    queue = build_pending_candidate_review_action_queue()
+
+    assert [item.candidate_id for item in queue] == [
+        "candidate_northeast_blind_image_001",
+        "candidate_mingli_pattern_strength_017_001",
+        "candidate_duan_ten_god_relation_017_001",
+        "candidate_mingxue_five_element_balance_017_001",
+        "candidate_hongfu_remedy_boundary_017_001",
+    ]
+    assert {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    } == before_candidate_ids
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_action_markdown_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_action_queue_markdown,
+    )
+
+    before_candidate_ids = {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+
+    markdown = render_pending_candidate_review_action_queue_markdown()
+
+    assert markdown.startswith("# Pending Candidate Review Action Queue")
+    assert {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    } == before_candidate_ids
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_input_templates_do_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        list_pending_candidate_review_input_templates,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_input_templates_markdown,
+    )
+
+    before_candidate_ids = {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+
+    templates = list_pending_candidate_review_input_templates()
+    markdown = render_pending_candidate_review_input_templates_markdown()
+
+    assert [template.candidate_id for template in templates] == [
+        "candidate_northeast_blind_image_001",
+        "candidate_mingli_pattern_strength_017_001",
+        "candidate_duan_ten_god_relation_017_001",
+        "candidate_mingxue_five_element_balance_017_001",
+        "candidate_hongfu_remedy_boundary_017_001",
+    ]
+    assert markdown.startswith("# Pending Candidate Review Input Templates")
+    assert {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    } == before_candidate_ids
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_draft_validation_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_draft_validation_markdown,
+        validate_pending_candidate_review_decision_draft,
+    )
+
+    before_candidate_ids = {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_hongfu_remedy_boundary_017_001",
+        "candidate_id": "candidate_hongfu_remedy_boundary_017_001",
+        "review_outcome": "approved",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "source:hongfu-qitian#section-remedy-boundary",
+        "source_page_or_section_locator": "source:hongfu-qitian#section-remedy-boundary",
+        "source_quality": "review_note",
+        "confidence": "moderate",
+        "rationale": "Locator and conditional safety language are reviewable.",
+        "approval_limitations": [
+            "Use only as conditional traditional remedy-boundary context."
+        ],
+        "uncertainty_and_limitation_language": (
+            "Frame as uncertain traditional context, not guaranteed effect."
+        ),
+        "required_changes": [],
+        "rejection_reason": "",
+    }
+
+    result = validate_pending_candidate_review_decision_draft(draft)
+    markdown = render_pending_candidate_review_draft_validation_markdown([draft])
+
+    assert result.ready_for_manual_application is True
+    assert markdown.startswith("# Pending Candidate Review Draft Validation")
+    assert {
+        candidate.candidate_id for candidate in load_candidate_extracts()
+    } == before_candidate_ids
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_application_guard_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_application_guard,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_application_guard_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_hongfu_remedy_boundary_017_001",
+        "candidate_id": "candidate_hongfu_remedy_boundary_017_001",
+        "review_outcome": "approved",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "source:hongfu-qitian#section-remedy-boundary",
+        "source_page_or_section_locator": "source:hongfu-qitian#section-remedy-boundary",
+        "source_quality": "review_note",
+        "confidence": "moderate",
+        "rationale": "Locator and conditional safety language are reviewable.",
+        "approval_limitations": [
+            "Use only as conditional traditional remedy-boundary context."
+        ],
+        "uncertainty_and_limitation_language": (
+            "Frame as uncertain traditional context, not guaranteed effect."
+        ),
+        "required_changes": [],
+        "rejection_reason": "",
+    }
+
+    guard = build_pending_candidate_review_application_guard([draft])[0]
+    markdown = render_pending_candidate_review_application_guard_markdown([draft])
+
+    assert guard.ready_to_apply is True
+    assert guard.preview_review_decision_delta == 1
+    assert markdown.startswith("# Pending Candidate Review Application Guard")
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_application_packets_do_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_application_packets,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_application_packets_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_application_packets([draft])[0]
+    markdown = render_pending_candidate_review_application_packets_markdown([draft])
+
+    assert packet.ready_to_export is True
+    assert packet.preview_review_decision_delta == 1
+    assert markdown.startswith("# Pending Candidate Review Application Packets")
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_application_audit_summary_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_application_audit_summary,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_application_audit_summary_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    summary = build_pending_candidate_review_application_audit_summary([draft])
+    markdown = render_pending_candidate_review_application_audit_summary_markdown(
+        [draft]
+    )
+
+    assert summary.packet_exportable_count == 1
+    assert markdown.startswith("# Pending Candidate Review Application Audit Summary")
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_action_dashboard_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_action_dashboard,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_action_dashboard_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    dashboard = build_pending_candidate_review_manual_action_dashboard([draft])
+    markdown = render_pending_candidate_review_manual_action_dashboard_markdown(
+        [draft]
+    )
+
+    assert dashboard.action_counts["apply_manual_application_packet"] == 1
+    assert dashboard.applied_review_decision_delta == 0
+    assert dashboard.applied_candidate_status_delta == 0
+    assert dashboard.formal_evidence_delta == 0
+    assert markdown.startswith("# Pending Candidate Review Manual Action Dashboard")
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_dry_run_guide_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_dry_run_guide,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_dry_run_guide_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    guide = build_pending_candidate_review_manual_application_dry_run_guide([draft])
+    markdown = render_pending_candidate_review_manual_application_dry_run_guide_markdown(
+        [draft]
+    )
+
+    assert guide.step_count == 5
+    assert guide.applied_review_decision_delta == 0
+    assert guide.applied_candidate_status_delta == 0
+    assert guide.formal_evidence_delta == 0
+    assert markdown.startswith("# Pending Candidate Review Manual Application Dry-Run Guide")
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_preflight_report_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_preflight_report,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_preflight_report_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    report = build_pending_candidate_review_manual_application_preflight_report([draft])
+    markdown = (
+        render_pending_candidate_review_manual_application_preflight_report_markdown(
+            [draft]
+        )
+    )
+
+    assert report.preflight_check_count == 5
+    assert report.ready_candidate_ids == [
+        "candidate_duan_ten_god_relation_017_001"
+    ]
+    assert report.applied_review_decision_delta == 0
+    assert report.applied_candidate_status_delta == 0
+    assert report.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Preflight Report"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_handoff_summary_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_handoff_summary,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_handoff_summary_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    summary = build_pending_candidate_review_manual_application_handoff_summary(
+        [draft]
+    )
+    markdown = (
+        render_pending_candidate_review_manual_application_handoff_summary_markdown(
+            [draft]
+        )
+    )
+
+    assert summary.handoff_item_count == 5
+    assert summary.ready_candidate_ids == [
+        "candidate_duan_ten_god_relation_017_001"
+    ]
+    assert summary.applied_review_decision_delta == 0
+    assert summary.applied_candidate_status_delta == 0
+    assert summary.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Handoff Summary"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_readiness_ledger_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_readiness_ledger,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_readiness_ledger_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    ledger = build_pending_candidate_review_manual_application_readiness_ledger(
+        [draft]
+    )
+    markdown = (
+        render_pending_candidate_review_manual_application_readiness_ledger_markdown(
+            [draft]
+        )
+    )
+
+    assert ledger.ledger_row_count == 5
+    assert ledger.ready_candidate_ids == [
+        "candidate_duan_ten_god_relation_017_001"
+    ]
+    assert ledger.applied_review_decision_delta == 0
+    assert ledger.applied_candidate_status_delta == 0
+    assert ledger.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Readiness Ledger"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_session_packet_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_session_packet,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_session_packet_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_manual_application_session_packet(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_session_packet_markdown(
+        [draft]
+    )
+
+    assert packet.ready_action_count == 1
+    assert packet.applied_review_decision_delta == 0
+    assert packet.applied_candidate_status_delta == 0
+    assert packet.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Session Packet"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_session_outcome_preview_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_session_outcome_preview,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_session_outcome_preview_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    preview = build_pending_candidate_review_manual_application_session_outcome_preview(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_session_outcome_preview_markdown(
+        [draft]
+    )
+
+    assert preview.ready_applied_candidate_ids == [
+        "candidate_duan_ten_god_relation_017_001"
+    ]
+    assert preview.projected_review_decision_delta == 1
+    assert preview.projected_candidate_status_delta == 1
+    assert preview.applied_review_decision_delta == 0
+    assert preview.applied_candidate_status_delta == 0
+    assert preview.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Session Outcome Preview"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_post_session_verification_report_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_post_session_verification_report,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_post_session_verification_report_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    report = build_pending_candidate_review_manual_application_post_session_verification_report(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_post_session_verification_report_markdown(
+        [draft]
+    )
+
+    assert report.expected_ready_candidate_count == 1
+    assert report.post_session_status == "blocked"
+    assert report.applied_review_decision_delta == 0
+    assert report.applied_candidate_status_delta == 0
+    assert report.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Post-Session Verification Report"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_reconciliation_dashboard_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_reconciliation_dashboard,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_reconciliation_dashboard_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    dashboard = build_pending_candidate_review_manual_application_reconciliation_dashboard(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_reconciliation_dashboard_markdown(
+        [draft]
+    )
+
+    assert dashboard.action_counts["append_missing_review_decision"] == 1
+    assert dashboard.applied_review_decision_delta == 0
+    assert dashboard.applied_candidate_status_delta == 0
+    assert dashboard.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Reconciliation Dashboard"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_closure_packet_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_closure_packet,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_closure_packet_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_manual_application_closure_packet(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_closure_packet_markdown(
+        [draft]
+    )
+
+    assert packet.closure_action_counts["carry_forward_missing_review_decision"] == 1
+    assert packet.applied_review_decision_delta == 0
+    assert packet.applied_candidate_status_delta == 0
+    assert packet.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Closure Packet"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_starter_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_starter,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_starter_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    starter = build_pending_candidate_review_manual_application_next_session_starter(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_starter_markdown(
+        [draft]
+    )
+
+    assert starter.starter_lane_counts["missing_review_decision"] == 1
+    assert starter.applied_review_decision_delta == 0
+    assert starter.applied_candidate_status_delta == 0
+    assert starter.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Starter"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_packet_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_packet,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_packet_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_manual_application_next_session_packet(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_packet_markdown(
+        [draft]
+    )
+
+    assert packet.correction_candidate_ids == [
+        "candidate_duan_ten_god_relation_017_001"
+    ]
+    assert packet.applied_review_decision_delta == 0
+    assert packet.applied_candidate_status_delta == 0
+    assert packet.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Packet"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_audit_summary_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_audit_summary,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_audit_summary_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    summary = build_pending_candidate_review_manual_application_next_session_audit_summary(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_audit_summary_markdown(
+        [draft]
+    )
+
+    assert summary.correction_queue_count == 1
+    assert summary.coverage_checks["starter_to_packet_order"] == "covered"
+    assert summary.applied_review_decision_delta == 0
+    assert summary.applied_candidate_status_delta == 0
+    assert summary.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Audit Summary"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_operator_checklist_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_operator_checklist,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_operator_checklist_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    checklist = build_pending_candidate_review_manual_application_next_session_operator_checklist(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_operator_checklist_markdown(
+        [draft]
+    )
+
+    assert checklist.action_sequence[0] == "apply_correction_queue_first"
+    assert checklist.applied_review_decision_delta == 0
+    assert checklist.applied_candidate_status_delta == 0
+    assert checklist.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Operator Checklist"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_execution_handoff_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_execution_handoff,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_execution_handoff_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    handoff = build_pending_candidate_review_manual_application_next_session_execution_handoff(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_execution_handoff_markdown(
+        [draft]
+    )
+
+    assert handoff.first_action == "apply_correction_queue_first"
+    assert handoff.applied_review_decision_delta == 0
+    assert handoff.applied_candidate_status_delta == 0
+    assert handoff.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Execution Handoff"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_completion_criteria_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_completion_criteria,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_completion_criteria_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    criteria = build_pending_candidate_review_manual_application_next_session_completion_criteria(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_completion_criteria_markdown(
+        [draft]
+    )
+
+    assert criteria.first_action == "apply_correction_queue_first"
+    assert criteria.applied_review_decision_delta == 0
+    assert criteria.applied_candidate_status_delta == 0
+    assert criteria.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Completion Criteria"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_retry_planner_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_retry_planner,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_retry_planner_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    planner = build_pending_candidate_review_manual_application_next_session_retry_planner(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_retry_planner_markdown(
+        [draft]
+    )
+
+    assert planner.first_action == "apply_correction_queue_first"
+    assert planner.applied_review_decision_delta == 0
+    assert planner.applied_candidate_status_delta == 0
+    assert planner.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Retry Planner"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_final_readiness_summary_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_final_readiness_summary,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_final_readiness_summary_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    summary = build_pending_candidate_review_manual_application_next_session_final_readiness_summary(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_final_readiness_summary_markdown(
+        [draft]
+    )
+
+    assert summary.readiness_status == "ready_to_start_next_manual_session"
+    assert summary.applied_review_decision_delta == 0
+    assert summary.applied_candidate_status_delta == 0
+    assert summary.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Final Readiness Summary"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_note_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_launch_note,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_launch_note_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    note = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_note(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_note_markdown(
+        [draft]
+    )
+
+    assert note.launch_status == "ready_to_launch_manual_execution"
+    assert note.applied_review_decision_delta == 0
+    assert note.applied_candidate_status_delta == 0
+    assert note.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Note"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_launch_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_launch_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_audit_markdown(
+        [draft]
+    )
+
+    assert audit.audit_status == "launch_audit_ready"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_launch_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_launch_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_seal_markdown(
+        [draft]
+    )
+
+    assert seal.seal_status == "sealed_for_manual_execution"
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    runbook = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_markdown(
+        [draft]
+    )
+
+    assert runbook.runbook_status == "ready_for_manual_execution_runbook"
+    assert runbook.applied_review_decision_delta == 0
+    assert runbook.applied_candidate_status_delta == 0
+    assert runbook.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Runbook"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_markdown(
+        [draft]
+    )
+
+    assert audit.audit_status == "runbook_audit_ready"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Runbook Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_seal_markdown(
+        [draft]
+    )
+
+    assert seal.seal_status == "sealed_for_manual_execution_runbook_audit"
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Runbook Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_markdown(
+        [draft]
+    )
+
+    assert packet.launch_packet_status == "ready_for_final_manual_launch_packet"
+    assert packet.applied_review_decision_delta == 0
+    assert packet.applied_candidate_status_delta == 0
+    assert packet.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Launch Packet"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_markdown(
+        [draft]
+    )
+
+    assert audit.handoff_readiness == "ready_for_operator_handoff"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Launch Packet Handoff Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_seal_markdown(
+        [draft]
+    )
+
+    assert seal.seal_status == "sealed_for_operator_manual_execution_go"
+    assert seal.go_no_go_decision == "go_for_operator_manual_execution"
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Launch Packet Handoff Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_operator_go_no_go_seal_launch_receipt_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_operator_go_no_go_seal_launch_receipt,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_operator_go_no_go_seal_launch_receipt_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    receipt = build_pending_candidate_review_manual_application_next_session_manual_execution_operator_go_no_go_seal_launch_receipt(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_operator_go_no_go_seal_launch_receipt_markdown(
+        [draft]
+    )
+
+    assert receipt.receipt_status == "ready_for_operator_launch_receipt"
+    assert receipt.receipt_decision == "receipt_ready_to_start_manual_execution"
+    assert receipt.applied_review_decision_delta == 0
+    assert receipt.applied_candidate_status_delta == 0
+    assert receipt.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Operator Go/No-Go Seal Launch Receipt"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_markdown(
+        [draft]
+    )
+
+    assert audit.final_boundary_readiness == "ready_for_final_boundary_audit"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Receipt Final Boundary Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_markdown(
+        [draft]
+    )
+
+    assert seal.seal_status == "sealed_for_launch_receipt_final_boundary"
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Receipt Final Boundary Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_markdown(
+        [draft]
+    )
+
+    assert packet.packet_status == "ready_for_operator_start_packet"
+    assert packet.start_authorization == "authorized_to_start_manual_execution"
+    assert packet.applied_review_decision_delta == 0
+    assert packet.applied_candidate_status_delta == 0
+    assert packet.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Receipt Final Boundary Audit Seal Operator Start Packet"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_operator_start_packet_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit_markdown(
+        [draft]
+    )
+
+    assert audit.audit_status == "operator_start_packet_audit_ready"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Operator Start Packet Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_operator_start_packet_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit_seal_markdown(
+        [draft]
+    )
+
+    assert seal.seal_status == "sealed_for_operator_start_packet_audit"
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Operator Start Packet Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    receipt = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_markdown(
+        [draft]
+    )
+
+    assert receipt.receipt_status == "ready_for_manual_execution_start_authorization_receipt"
+    assert receipt.applied_review_decision_delta == 0
+    assert receipt.applied_candidate_status_delta == 0
+    assert receipt.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Receipt"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_markdown(
+        [draft]
+    )
+
+    assert audit.coverage_audit_status == "start_authorization_receipt_coverage_audit_ready"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Receipt Coverage Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_seal_markdown(
+        [draft]
+    )
+
+    assert seal.seal_status == "sealed_for_start_authorization_receipt_coverage_audit"
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Receipt Coverage Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_markdown(
+        [draft]
+    )
+
+    assert packet.packet_status == "ready_for_manual_execution_authorization_packet"
+    assert packet.applied_review_decision_delta == 0
+    assert packet.applied_candidate_status_delta == 0
+    assert packet.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Authorization Packet"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_markdown(
+        [draft]
+    )
+
+    assert audit.audit_status == "manual_execution_authorization_packet_coverage_audit_ready"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Authorization Packet Coverage Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_markdown(
+        [draft]
+    )
+
+    assert seal.seal_status == "sealed_for_manual_execution_authorization_packet_coverage_audit"
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Authorization Packet Coverage Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_start_docket_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_start_docket,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_start_docket_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    docket = build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_start_docket(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_start_docket_markdown(
+        [draft]
+    )
+
+    assert docket.docket_status == "ready_for_manual_execution_start_docket"
+    assert docket.applied_review_decision_delta == 0
+    assert docket.applied_candidate_status_delta == 0
+    assert docket.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Authorization Packet Coverage Audit Seal Start Docket"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_markdown(
+        [draft]
+    )
+
+    assert audit.audit_status == "manual_execution_start_docket_coverage_audit_ready"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Docket Coverage Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_markdown(
+        [draft]
+    )
+
+    assert seal.seal_status == "sealed_for_manual_execution_start_docket_coverage_audit"
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Docket Coverage Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_final_start_packet_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_final_start_packet,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_final_start_packet_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_final_start_packet(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_final_start_packet_markdown(
+        [draft]
+    )
+
+    assert packet.packet_status == "ready_for_manual_execution_final_start_packet"
+    assert packet.applied_review_decision_delta == 0
+    assert packet.applied_candidate_status_delta == 0
+    assert packet.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Start Packet"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_markdown(
+        [draft]
+    )
+
+    assert audit.handoff_readiness == "ready_for_manual_execution_final_start_packet_handoff"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Start Packet Handoff Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_markdown(
+        [draft]
+    )
+
+    assert seal.seal_status == "sealed_for_manual_execution_final_start_packet_handoff"
+    assert seal.go_no_go_start_decision == "go_for_operator_manual_execution"
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Start Packet Handoff Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_start_authorization_packet,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_start_authorization_packet_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_start_authorization_packet(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_start_authorization_packet_markdown(
+        [draft]
+    )
+
+    assert packet.packet_status == "ready_for_manual_execution_start_authorization_packet"
+    assert packet.start_authorization == "authorized_to_start_manual_execution"
+    assert packet.applied_review_decision_delta == 0
+    assert packet.applied_candidate_status_delta == 0
+    assert packet.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Packet"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_markdown(
+        [draft]
+    )
+
+    assert (
+        audit.audit_status
+        == "manual_execution_start_authorization_packet_coverage_audit_ready"
+    )
+    assert (
+        audit.packet_status
+        == "ready_for_manual_execution_start_authorization_packet"
+    )
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Packet Coverage Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_markdown(
+        [draft]
+    )
+
+    assert (
+        seal.seal_status
+        == "sealed_for_manual_execution_start_authorization_packet_coverage_audit"
+    )
+    assert (
+        seal.audit_status
+        == "manual_execution_start_authorization_packet_coverage_audit_ready"
+    )
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Packet Coverage Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_markdown(
+        [draft]
+    )
+
+    assert packet.packet_status == "ready_for_manual_execution_start_clearance_packet"
+    assert packet.start_authorization == "authorized_to_start_manual_execution"
+    assert packet.applied_review_decision_delta == 0
+    assert packet.applied_candidate_status_delta == 0
+    assert packet.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_coverage_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_markdown(
+        [draft]
+    )
+
+    assert (
+        audit.audit_status
+        == "manual_execution_start_clearance_packet_coverage_audit_ready"
+    )
+    assert audit.packet_status == "ready_for_manual_execution_start_clearance_packet"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Coverage Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_markdown(
+        [draft]
+    )
+
+    assert (
+        seal.seal_status
+        == "sealed_for_manual_execution_start_clearance_packet_coverage_audit"
+    )
+    assert (
+        seal.audit_status
+        == "manual_execution_start_clearance_packet_coverage_audit_ready"
+    )
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Coverage Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_final_start_authorization_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    authorization = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_markdown(
+        [draft]
+    )
+
+    assert (
+        authorization.authorization_status
+        == "authorized_for_manual_execution_start_from_clearance_packet"
+    )
+    assert (
+        authorization.start_authorization == "authorized_to_start_manual_execution"
+    )
+    assert authorization.applied_review_decision_delta == 0
+    assert authorization.applied_candidate_status_delta == 0
+    assert authorization.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Final Start Authorization"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_final_start_authorization_coverage_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_markdown(
+        [draft]
+    )
+
+    assert (
+        audit.audit_status
+        == "manual_execution_start_clearance_packet_final_start_authorization_coverage_audit_ready"
+    )
+    assert (
+        audit.authorization_status
+        == "authorized_for_manual_execution_start_from_clearance_packet"
+    )
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Final Start Authorization Coverage Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_final_start_authorization_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_markdown(
+        [draft]
+    )
+
+    assert (
+        seal.seal_status
+        == "sealed_for_manual_execution_start_clearance_packet_final_start_authorization_coverage_audit"
+    )
+    assert (
+        seal.audit_status
+        == "manual_execution_start_clearance_packet_final_start_authorization_coverage_audit_ready"
+    )
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Final Start Authorization Coverage Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_handoff_packet_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_markdown(
+        [draft]
+    )
+
+    assert (
+        packet.handoff_packet_status
+        == "ready_for_manual_execution_start_handoff_packet"
+    )
+    assert (
+        packet.handoff_status
+        == "ready_for_operator_manual_execution_start_handoff"
+    )
+    assert packet.applied_review_decision_delta == 0
+    assert packet.applied_candidate_status_delta == 0
+    assert packet.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Final Start Authorization Coverage Audit Seal Start Handoff Packet"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_handoff_packet_coverage_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_markdown(
+        [draft]
+    )
+
+    assert audit.audit_status == "manual_execution_start_handoff_packet_coverage_audit_ready"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Handoff Packet Coverage Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_handoff_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_markdown(
+        [draft]
+    )
+
+    assert (
+        seal.seal_status
+        == "sealed_for_manual_execution_start_handoff_packet_coverage_audit"
+    )
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Handoff Packet Coverage Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_packet_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    packet = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_markdown(
+        [draft]
+    )
+
+    assert packet.start_packet_status == "ready_for_operator_manual_execution_start_packet"
+    assert packet.applied_review_decision_delta == 0
+    assert packet.applied_candidate_status_delta == 0
+    assert packet.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Packet"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_packet_coverage_audit_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit_markdown(
+        [draft]
+    )
+
+    assert audit.audit_status == "manual_execution_start_packet_coverage_audit_ready"
+    assert audit.applied_review_decision_delta == 0
+    assert audit.applied_candidate_status_delta == 0
+    assert audit.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Packet Coverage Audit"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+    from mingli_engine.classical_sources import load_approved_evidence_units
+    from mingli_engine.source_intake import (
+        build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit_seal,
+        load_candidate_extracts,
+        load_review_decisions,
+        render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit_seal_markdown,
+    )
+
+    before_candidate_statuses = {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    }
+    before_decision_ids = {
+        decision.decision_id for decision in load_review_decisions()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+    draft = {
+        "decision_id": "review_candidate_duan_ten_god_relation_017_001",
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "review_outcome": "returned",
+        "reviewer": "maintainer",
+        "reviewed_at": "2026-06-01",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001",
+        "source_quality": "review_note",
+        "confidence": "weak",
+        "rationale": "Returned until source page or section locator is supplied.",
+        "required_changes": ["Replace learning-reference locator before approval."],
+        "approval_limitations": [],
+        "rejection_reason": "",
+    }
+
+    seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit_seal(
+        [draft]
+    )
+    markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit_seal_markdown(
+        [draft]
+    )
+
+    assert seal.seal_status == "sealed_for_manual_execution_start_packet_coverage_audit"
+    assert seal.applied_review_decision_delta == 0
+    assert seal.applied_candidate_status_delta == 0
+    assert seal.formal_evidence_delta == 0
+    assert markdown.startswith(
+        "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Packet Coverage Audit Seal"
+    )
+    assert {
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+    } == before_candidate_statuses
+    assert {
+        decision.decision_id for decision in load_review_decisions()
+    } == before_decision_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
 def test_report_evidence_loading_ignores_source_library_metadata(tmp_path):
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_library import validate_source_library_quality
@@ -744,6 +4724,355 @@ def test_materials_audit_queue_items_do_not_change_formal_evidence_counts(
     summary = materials_audit.build_materials_audit_progress_summary(audit_dir)
     assert summary.registration_backlog_count == 1
     assert load_approved_evidence_units(classical_dir) == []
+
+
+def test_candidate_draft_slots_do_not_change_candidate_or_formal_evidence_counts(
+    tmp_path,
+):
+    from mingli_engine import extraction_queue_intake, source_intake
+    from mingli_engine.classical_sources import load_approved_evidence_units
+
+    classical_dir = tmp_path / "classical_sources"
+    intake_dir = tmp_path / "source_intake"
+    extraction_dir = tmp_path / "extraction_queue_intake"
+    classical_dir.mkdir()
+    intake_dir.mkdir()
+    extraction_dir.mkdir()
+    for file_name in (
+        "sources.json",
+        "evidence_units.json",
+        "curation_batches.json",
+        "source_conflicts.json",
+    ):
+        (classical_dir / file_name).write_text("[]", encoding="utf-8")
+    (intake_dir / "source_materials.json").write_text(
+        json.dumps(
+            [
+                {
+                    "material_id": "material_boundary",
+                    "title": "Boundary Material",
+                    "material_type": "pdf",
+                    "file_label": "boundary.pdf",
+                    "tracking_status": "external_untracked",
+                    "preparation_status": "partially_reviewed",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    for file_name in (
+        "candidate_extracts.json",
+        "review_decisions.json",
+        "promotion_batches.json",
+    ):
+        (intake_dir / file_name).write_text("[]", encoding="utf-8")
+    (extraction_dir / "extraction_work_packages.json").write_text(
+        json.dumps(
+            [
+                {
+                    "package_id": "package_boundary",
+                    "package_label": "Boundary package",
+                    "source_queue_snapshot_ids": ["queue_boundary"],
+                    "selected_task_ids": ["task_boundary"],
+                    "backlog_record_ids": [],
+                    "status": "planned",
+                    "created_at": "2026-05-31",
+                    "updated_at": "2026-05-31",
+                    "notes": "Draft slots are planning metadata only.",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (extraction_dir / "extraction_tasks.json").write_text(
+        json.dumps(
+            [
+                {
+                    "task_id": "task_boundary",
+                    "package_id": "package_boundary",
+                    "queue_item_id": "queue_boundary",
+                    "audit_id": "audit_boundary",
+                    "source_library_entry_id": "entry_boundary",
+                    "intended_source_material_id": "material_boundary",
+                    "priority_level": "medium",
+                    "priority_rationale": "Ready boundary task.",
+                    "target_rule_families": ["blind_image_method"],
+                    "target_gap_ids": [],
+                    "risk_boundary": "ordinary",
+                    "locator_requirement": "page_or_section",
+                    "source_quality_note": "Review before extraction.",
+                    "rights_note": "Do not copy long passages.",
+                    "pre_extraction_checks": ["confirm source locator"],
+                    "overlap_warnings": [],
+                    "recommended_action": "extract_candidates",
+                    "status": "planned",
+                    "created_at": "2026-05-31",
+                    "updated_at": "2026-05-31",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (extraction_dir / "candidate_draft_slots.json").write_text(
+        json.dumps(
+            [
+                {
+                    "draft_slot_id": "slot_boundary",
+                    "task_id": "task_boundary",
+                    "intended_candidate_label": "Future boundary candidate",
+                    "target_rule_family": "blind_image_method",
+                    "target_gap_id": "",
+                    "locator_requirement": "page_or_section",
+                    "expected_review_notes": ["Record locator during manual extraction."],
+                    "risk_boundary": "ordinary",
+                    "safety_requirements": ["No absolute destiny language."],
+                    "status": "planned",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (extraction_dir / "prerequisite_backlog_records.json").write_text(
+        "[]",
+        encoding="utf-8",
+    )
+
+    assert len(source_intake.load_candidate_extracts(intake_dir)) == 0
+    assert len(load_approved_evidence_units(classical_dir)) == 0
+    slots = extraction_queue_intake.load_candidate_draft_slots(extraction_dir)
+    assert [slot.draft_slot_id for slot in slots] == ["slot_boundary"]
+    assert len(source_intake.load_candidate_extracts(intake_dir)) == 0
+    assert len(load_approved_evidence_units(classical_dir)) == 0
+
+
+def test_extraction_queue_intake_records_do_not_change_formal_evidence_counts(
+    tmp_path,
+):
+    from mingli_engine import extraction_queue_intake, source_intake
+    from mingli_engine.classical_sources import load_approved_evidence_units
+
+    classical_dir = tmp_path / "classical_sources"
+    intake_dir = tmp_path / "source_intake"
+    extraction_dir = tmp_path / "extraction_queue_intake"
+    classical_dir.mkdir()
+    intake_dir.mkdir()
+    extraction_dir.mkdir()
+    for file_name in (
+        "sources.json",
+        "evidence_units.json",
+        "curation_batches.json",
+        "source_conflicts.json",
+    ):
+        (classical_dir / file_name).write_text("[]", encoding="utf-8")
+    (intake_dir / "source_materials.json").write_text(
+        json.dumps(
+            [
+                {
+                    "material_id": "material_boundary",
+                    "title": "Boundary Material",
+                    "material_type": "pdf",
+                    "file_label": "boundary.pdf",
+                    "tracking_status": "external_untracked",
+                    "preparation_status": "partially_reviewed",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    for file_name in (
+        "candidate_extracts.json",
+        "review_decisions.json",
+        "promotion_batches.json",
+    ):
+        (intake_dir / file_name).write_text("[]", encoding="utf-8")
+    (extraction_dir / "extraction_work_packages.json").write_text(
+        json.dumps(
+            [
+                {
+                    "package_id": "package_boundary",
+                    "package_label": "Boundary package",
+                    "source_queue_snapshot_ids": [
+                        "queue_task_boundary",
+                        "queue_backlog_boundary",
+                    ],
+                    "selected_task_ids": ["task_boundary"],
+                    "backlog_record_ids": ["backlog_boundary"],
+                    "status": "planned",
+                    "created_at": "2026-05-31",
+                    "updated_at": "2026-05-31",
+                    "notes": "Extraction queue records are planning metadata only.",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (extraction_dir / "extraction_tasks.json").write_text(
+        json.dumps(
+            [
+                {
+                    "task_id": "task_boundary",
+                    "package_id": "package_boundary",
+                    "queue_item_id": "queue_task_boundary",
+                    "audit_id": "audit_task_boundary",
+                    "source_library_entry_id": "entry_boundary",
+                    "intended_source_material_id": "material_boundary",
+                    "priority_level": "medium",
+                    "priority_rationale": "Ready boundary task.",
+                    "target_rule_families": ["blind_image_method"],
+                    "target_gap_ids": [],
+                    "risk_boundary": "ordinary",
+                    "locator_requirement": "page_or_section",
+                    "source_quality_note": "Review before extraction.",
+                    "rights_note": "Do not copy long passages.",
+                    "pre_extraction_checks": ["confirm source locator"],
+                    "overlap_warnings": [],
+                    "recommended_action": "extract_candidates",
+                    "status": "planned",
+                    "created_at": "2026-05-31",
+                    "updated_at": "2026-05-31",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (extraction_dir / "candidate_draft_slots.json").write_text(
+        json.dumps(
+            [
+                {
+                    "draft_slot_id": "slot_boundary",
+                    "task_id": "task_boundary",
+                    "intended_candidate_label": "Future boundary candidate",
+                    "target_rule_family": "blind_image_method",
+                    "target_gap_id": "",
+                    "locator_requirement": "page_or_section",
+                    "expected_review_notes": ["Record locator during manual extraction."],
+                    "risk_boundary": "ordinary",
+                    "safety_requirements": ["No absolute destiny language."],
+                    "status": "planned",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (extraction_dir / "prerequisite_backlog_records.json").write_text(
+        json.dumps(
+            [
+                {
+                    "backlog_id": "backlog_boundary",
+                    "package_id": "package_boundary",
+                    "queue_item_id": "queue_backlog_boundary",
+                    "audit_id": "audit_backlog_boundary",
+                    "backlog_type": "registration",
+                    "missing_prerequisites": ["source_library_registration"],
+                    "durable_reason": (
+                        "Source-library registration is required before extraction."
+                    ),
+                    "recommended_action": "register_source",
+                    "risk_boundary": "ordinary",
+                    "status": "planned",
+                    "created_at": "2026-05-31",
+                    "updated_at": "2026-05-31",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    assert len(source_intake.load_candidate_extracts(intake_dir)) == 0
+    assert len(load_approved_evidence_units(classical_dir)) == 0
+    assert extraction_queue_intake.load_extraction_work_packages(extraction_dir)
+    assert extraction_queue_intake.load_extraction_tasks(extraction_dir)
+    assert extraction_queue_intake.load_candidate_draft_slots(extraction_dir)
+    assert extraction_queue_intake.load_prerequisite_backlog_records(extraction_dir)
+    assert len(source_intake.load_candidate_extracts(intake_dir)) == 0
+    assert len(load_approved_evidence_units(classical_dir)) == 0
+
+
+def test_learning_reference_intake_decisions_do_not_change_candidate_or_formal_evidence_counts():
+    from mingli_engine import learning_reference_curation, source_intake
+    from mingli_engine.classical_sources import load_approved_evidence_units
+
+    before_candidate_ids = {
+        candidate.candidate_id for candidate in source_intake.load_candidate_extracts()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+
+    points = learning_reference_curation.load_learning_points()
+    decisions = learning_reference_curation.load_candidate_intake_decisions()
+
+    assert {point.learning_point_id for point in points} == {
+        "lp_northeast_blind_image_001",
+        "lp_mingli_pattern_strength_001",
+        "lp_duan_ten_god_relation_001",
+        "lp_mingxue_five_element_balance_001",
+        "lp_hongfu_remedy_boundary_001",
+    }
+    assert {decision.decision_id for decision in decisions} == {
+        "decision_northeast_blind_image_001",
+        "decision_mingli_pattern_strength_001",
+        "decision_duan_ten_god_relation_001",
+        "decision_mingxue_five_element_balance_001",
+        "decision_hongfu_remedy_boundary_001",
+    }
+    assert {
+        candidate.candidate_id for candidate in source_intake.load_candidate_extracts()
+    } == before_candidate_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
+
+
+def test_learning_reference_prerequisite_actions_do_not_change_formal_evidence_counts():
+    from mingli_engine import learning_reference_curation, source_intake
+    from mingli_engine.classical_sources import load_approved_evidence_units
+
+    before_candidate_ids = {
+        candidate.candidate_id for candidate in source_intake.load_candidate_extracts()
+    }
+    before_formal_evidence_ids = {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    }
+
+    notes = learning_reference_curation.load_learning_reference_notes()
+    points = learning_reference_curation.load_learning_points()
+    decisions = learning_reference_curation.load_candidate_intake_decisions()
+    action_notes = learning_reference_curation.load_prerequisite_action_notes()
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+
+    assert notes
+    assert points
+    assert decisions
+    assert {action.action_note_id for action in action_notes} == {
+        "action_markdown_batch_001_registration_001",
+        "action_blind_life_manual_risk_review_001",
+        "action_blind_school_secret_blocked_001",
+        "action_markdown_batch_002_registration_001",
+        "action_markdown_batch_003_registration_001",
+        "action_immortal_fortune_jianghu_secret_risk_review_001",
+        "action_life_death_book_100_pages_risk_review_001",
+        "action_markdown_batch_005_risk_review_001",
+        "action_markdown_batch_004_locator_review_001",
+        "action_source_processing_status_deferred_001",
+        "action_knowledge_skeleton_preparation_001",
+    }
+    assert summary.formal_evidence_delta == 0
+    assert {
+        candidate.candidate_id for candidate in source_intake.load_candidate_extracts()
+    } == before_candidate_ids
+    assert {
+        evidence.evidence_id for evidence in load_approved_evidence_units()
+    } == before_formal_evidence_ids
 
 
 def test_safety_json_regression_cases_keep_refusal_contracts():

@@ -8,7 +8,9 @@
     "proposed_rule_family": "blind_image_method",
     "risk_tier": "sensitive",
     "status": "pending_review",
-    "proposed_limitations": ["Use only as conditional traditional signal material."],
+    "proposed_limitations": [
+      "Use only as conditional traditional signal material."
+    ],
     "related_evidence_ids": [],
     "related_conflict_ids": [],
     "related_gap_ids": [],
@@ -25,10 +27,14 @@
     "proposed_rule_family": "blind_image_method",
     "risk_tier": "high_risk",
     "status": "returned",
-    "proposed_limitations": ["Do not use for exact outcomes or standalone verdicts."],
+    "proposed_limitations": [
+      "Do not use for exact outcomes or standalone verdicts."
+    ],
     "related_evidence_ids": [],
     "related_conflict_ids": [],
-    "related_gap_ids": ["gap_blind_life_manual"],
+    "related_gap_ids": [
+      "gap_blind_life_manual"
+    ],
     "duplicate_of": "",
     "created_by": "maintainer",
     "created_at": "2026-05-28"
@@ -42,9 +48,13 @@
     "proposed_rule_family": "high_risk_signal",
     "risk_tier": "high_risk",
     "status": "approved",
-    "proposed_limitations": ["Refuse exact death timing, exact lifespan, and professional-advice use."],
+    "proposed_limitations": [
+      "Refuse exact death timing, exact lifespan, and professional-advice use."
+    ],
     "related_evidence_ids": [],
-    "related_conflict_ids": ["conflict_high_risk_scope_001"],
+    "related_conflict_ids": [
+      "conflict_high_risk_scope_001"
+    ],
     "related_gap_ids": [],
     "duplicate_of": "",
     "created_by": "maintainer",
@@ -59,7 +69,9 @@
     "proposed_rule_family": "pattern_strength",
     "risk_tier": "ordinary",
     "status": "rejected",
-    "proposed_limitations": ["Do not promote broad unsourced summaries."],
+    "proposed_limitations": [
+      "Do not promote broad unsourced summaries."
+    ],
     "related_evidence_ids": [],
     "related_conflict_ids": [],
     "related_gap_ids": [],
@@ -76,7 +88,9 @@
     "proposed_rule_family": "blind_image_method",
     "risk_tier": "sensitive",
     "status": "blocked",
-    "proposed_limitations": ["Keep blocked until source access and quoting boundaries are reviewed."],
+    "proposed_limitations": [
+      "Keep blocked until source access and quoting boundaries are reviewed."
+    ],
     "related_evidence_ids": [],
     "related_conflict_ids": [],
     "related_gap_ids": [],
@@ -93,12 +107,94 @@
     "proposed_rule_family": "blind_image_method",
     "risk_tier": "sensitive",
     "status": "rejected",
-    "proposed_limitations": ["Do not promote duplicate candidate records."],
-    "related_evidence_ids": ["northeast_blind_image_001"],
+    "proposed_limitations": [
+      "Do not promote duplicate candidate records."
+    ],
+    "related_evidence_ids": [
+      "northeast_blind_image_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "candidate_northeast_blind_image_001",
     "created_by": "maintainer",
     "created_at": "2026-05-28"
+  },
+  {
+    "candidate_id": "candidate_mingli_pattern_strength_017_001",
+    "material_id": "material_mingli_true_formula_teacher_pdf",
+    "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001; locator_requirement=page_or_section_required",
+    "extracted_meaning": "Pattern strength material should stay conditional until source locator and chart context are reviewed.",
+    "short_quote": "",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "sensitive",
+    "status": "pending_review",
+    "proposed_limitations": [
+      "State uncertainty for timing and pattern interpretation.",
+      "Include limitation language; do not guarantee outcome timing."
+    ],
+    "related_evidence_ids": [],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-01"
+  },
+  {
+    "candidate_id": "candidate_duan_ten_god_relation_017_001",
+    "material_id": "material_duan_plain_mingxue_outline_pdf",
+    "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001; locator_requirement=page_or_section_required",
+    "extracted_meaning": "Duan Plain Mingxue Outline can organize ten-god relationships and pattern-strength review as source-backed taxonomy.",
+    "short_quote": "",
+    "proposed_rule_family": "ten_god_relation",
+    "risk_tier": "ordinary",
+    "status": "pending_review",
+    "proposed_limitations": [
+      "Keep as structural taxonomy until locator and chart context are reviewed."
+    ],
+    "related_evidence_ids": [],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-01"
+  },
+  {
+    "candidate_id": "candidate_mingxue_five_element_balance_017_001",
+    "material_id": "material_mingxue_golden_voice_pdf",
+    "source_locator": "learning-reference:note_mingxue_golden_voice_001#lp_mingxue_five_element_balance_001; locator_requirement=page_or_section_required",
+    "extracted_meaning": "Mingxue Golden Voice can support five-element terminology only after narrower locator review.",
+    "short_quote": "",
+    "proposed_rule_family": "five_element_balance",
+    "risk_tier": "ordinary",
+    "status": "pending_review",
+    "proposed_limitations": [
+      "Keep as terminology taxonomy until locator and chart context are reviewed."
+    ],
+    "related_evidence_ids": [],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-01"
+  },
+  {
+    "candidate_id": "candidate_hongfu_remedy_boundary_017_001",
+    "material_id": "material_fortune_reading_hongfu_qitian_pdf",
+    "source_locator": "learning-reference:note_fortune_reading_hongfu_qitian_001#lp_hongfu_remedy_boundary_001; locator_requirement=page_or_section_required",
+    "extracted_meaning": "Hongfu Qitian remedy-boundary material should stay conditional until locator and safety context are reviewed.",
+    "short_quote": "",
+    "proposed_rule_family": "remedy_boundary",
+    "risk_tier": "sensitive",
+    "status": "pending_review",
+    "proposed_limitations": [
+      "State uncertainty for remedy-boundary interpretation.",
+      "Include limitation language; avoid certainty about effects."
+    ],
+    "related_evidence_ids": [],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-01"
   }
 ]
