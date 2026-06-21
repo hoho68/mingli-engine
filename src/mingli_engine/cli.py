@@ -19,6 +19,8 @@ from mingli_engine.models import (
 from mingli_engine.report_schema import build_report
 from mingli_engine.safety import safety_check
 from mingli_engine.validation import validate_birth_profile
+from mingli_engine import promotion
+from mingli_engine.models import PromotionPlan, PromotionResult
 
 
 _BIRTH_PROFILE_FIELDS = (
@@ -229,6 +231,30 @@ def _generate_report(args: argparse.Namespace) -> int:
 
     sys.stdout.write(_render_report(report, args.format))
     return 0
+def _promote(args: argparse.Namespace) -> int:
+    overrides = _read_json(args.overrides)
+    if not isinstance(overrides, dict):
+        raise InputContractError("overrides must be a JSON object keyed by target evidence id")
+
+    if args.apply:
+        result = promotion.apply_promotion(
+            intake_dir=args.intake_dir,
+            corpus_dir=args.corpus_dir,
+            promotion_batch_id=args.batch,
+            evidence_overrides=overrides,
+            curation_batch_id=args.curation_batch or "",
+        )
+        _write_json(result)
+    else:
+        plan = promotion.plan_promotion(
+            intake_dir=args.intake_dir,
+            corpus_dir=args.corpus_dir,
+            promotion_batch_id=args.batch,
+            evidence_overrides=overrides,
+            curation_batch_id=args.curation_batch or "",
+        )
+        _write_json(plan)
+    return 0
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -260,6 +286,14 @@ def _build_parser() -> argparse.ArgumentParser:
     report_parser.add_argument("--input", required=True, type=Path)
     report_parser.add_argument("--format", choices=["markdown", "html"], required=True)
     report_parser.set_defaults(handler=_generate_report)
+    promote_parser = subparsers.add_parser("promote")
+    promote_parser.add_argument("--batch", required=True)
+    promote_parser.add_argument("--overrides", required=True, type=Path)
+    promote_parser.add_argument("--curation-batch", default="")
+    promote_parser.add_argument("--intake-dir", default=None)
+    promote_parser.add_argument("--corpus-dir", default=None)
+    promote_parser.add_argument("--apply", action="store_true")
+    promote_parser.set_defaults(handler=_promote)
 
     return parser
 
@@ -280,6 +314,9 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     except ChartCalculationError as error:
         print(f"Invalid input: {error}", file=sys.stderr)
+        return 1
+    except promotion.PromotionError as error:
+        print(f"Promotion error: {error}", file=sys.stderr)
         return 1
     except (KeyError, TypeError, AttributeError) as error:
         print(f"Invalid input: {error}", file=sys.stderr)
