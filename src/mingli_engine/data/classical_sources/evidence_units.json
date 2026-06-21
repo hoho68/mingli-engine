@@ -1266,5 +1266,27 @@
     "conflict_ids": [
       "conflict_high_risk_scope_001"
     ]
+  },
+  {
+    "evidence_id": "northeast_blind_image_007",
+    "source_id": "northeast_blind_peak",
+    "source_ref": "review-note:northeast_blind_peak.md#blind-image-method",
+    "theme": "象法条件信号",
+    "rule_family": "blind_image_method",
+    "risk_tier": "sensitive",
+    "summary": "Blind-school image statements should be registered as conditional signals tied to chart structure.",
+    "applicability": [
+      "gan_zhi_available",
+      "four_pillars_complete"
+    ],
+    "limitations": [
+      "Use only as conditional traditional signal material.",
+      "Keep as conditional traditional signal; do not equate image with concrete event."
+    ],
+    "school": "东北盲派",
+    "curation_batch_id": "batch_012_taxonomy_001",
+    "confidence": "moderate",
+    "source_quality": "review_note",
+    "conflict_ids": []
   }
 ]

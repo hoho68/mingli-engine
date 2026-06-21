@@ -1,10 +1,26 @@
 [
   {
     "promotion_batch_id": "promotion_013_seed_001",
-    "candidate_ids": ["candidate_life_death_boundary_001"],
-    "target_evidence_ids": ["life_death_book_boundary_signal_001"],
+    "candidate_ids": [
+      "candidate_life_death_boundary_001"
+    ],
+    "target_evidence_ids": [
+      "life_death_book_boundary_signal_001"
+    ],
     "review_status": "reviewed",
     "review_notes": "Approved high-risk boundary candidate prepared for a future formal evidence update.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_northeast_blind_image_007_001",
+    "candidate_ids": [
+      "candidate_northeast_blind_image_001"
+    ],
+    "target_evidence_ids": [
+      "northeast_blind_image_007"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved blind-image conditional signal for promotion.",
     "unresolved_issues": []
   }
 ]

@@ -7,7 +7,7 @@
     "short_quote": "",
     "proposed_rule_family": "blind_image_method",
     "risk_tier": "sensitive",
-    "status": "pending_review",
+    "status": "promoted",
     "proposed_limitations": [
       "Use only as conditional traditional signal material."
     ],
