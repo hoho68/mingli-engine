@@ -9,4 +9,9 @@ __all__ = [
     "markdown",
     "calendar_provider",
     "chart_calculator",
+    "source_intake",
+    "source_library",
+    "materials_audit",
+    "extraction_queue_intake",
+    "learning_reference_curation",
 ]

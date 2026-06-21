@@ -193,6 +193,87 @@ MATERIAL_AUDIT_SOURCE_QUALITIES = frozenset(
 MATERIAL_AUDIT_QUEUE_STATUSES = frozenset(
     {"planned", "active", "completed", "deferred", "blocked"}
 )
+EXTRACTION_PACKAGE_STATUSES = frozenset(
+    {"planned", "active", "completed", "deferred", "blocked"}
+)
+EXTRACTION_TASK_STATUSES = frozenset(
+    {"planned", "active", "completed", "deferred", "blocked"}
+)
+CANDIDATE_DRAFT_SLOT_STATUSES = frozenset(
+    {"planned", "ready_for_manual_extraction", "deferred", "blocked"}
+)
+PREREQUISITE_BACKLOG_TYPES = frozenset(
+    {"registration", "preparation", "locator_review", "risk_review", "deferred", "blocked"}
+)
+EXTRACTION_PACKAGE_PRIORITY_LEVELS = frozenset(
+    {"critical", "high", "medium", "low"}
+)
+EXTRACTION_PACKAGE_RISK_BOUNDARIES = RISK_TIERS
+EXTRACTION_PACKAGE_LOCATOR_REQUIREMENTS = frozenset(
+    {"file_only", "heading", "line_window", "page_or_section", "review_anchor"}
+)
+EXTRACTION_PACKAGE_MANUAL_ACTIONS = frozenset(
+    {
+        "extract_candidates",
+        "register_source",
+        "clarify_identity",
+        "prepare_text",
+        "review_cleaned_text",
+        "risk_review",
+        "defer",
+        "block",
+        "no_action",
+    }
+)
+LEARNING_REFERENCE_NOTE_STATUSES = frozenset(
+    {
+        "draft",
+        "ready_for_candidate_intake",
+        "candidate_intake_started",
+        "deferred",
+        "blocked",
+    }
+)
+LEARNING_POINT_READINESSES = frozenset(
+    {
+        "ready",
+        "needs_locator",
+        "needs_risk_review",
+        "duplicate_review",
+        "deferred",
+        "blocked",
+    }
+)
+CANDIDATE_INTAKE_DECISIONS = frozenset(
+    {
+        "create_candidate",
+        "reuse_existing",
+        "avoid_duplicate",
+        "defer",
+        "manual_review",
+    }
+)
+CANDIDATE_INTAKE_DECISION_STATUSES = frozenset(
+    {"planned", "applied", "deferred", "blocked"}
+)
+PREREQUISITE_ACTION_TYPES = PREREQUISITE_BACKLOG_TYPES
+PREREQUISITE_ACTION_STATUSES = EXTRACTION_PACKAGE_STATUSES
+LEARNING_REFERENCE_MANUAL_ACTIONS = frozenset(
+    {
+        "create_candidate",
+        "reuse_existing",
+        "avoid_duplicate",
+        "manual_review",
+        "register_source",
+        "clarify_identity",
+        "prepare_text",
+        "review_cleaned_text",
+        "risk_review",
+        "defer",
+        "block",
+        "no_action",
+    }
+)
 CONFLICT_TYPES = frozenset(
     {
         "school_difference",
@@ -392,6 +473,1959 @@ class IntakeProgressReport:
     duplicate_candidates: list[str] = field(default_factory=list)
     conflict_link_count: int = 0
     gap_link_count: int = 0
+
+
+@dataclass(frozen=True)
+class CandidateReviewWorkItem:
+    candidate_id: str
+    material_id: str
+    status: str
+    proposed_rule_family: str
+    risk_tier: str
+    source_locator: str
+    required_review_actions: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewDecisionPacket:
+    candidate_id: str
+    material_id: str
+    candidate_status: str
+    decision_options: list[str]
+    required_review_inputs: list[str] = field(default_factory=list)
+    approval_blockers: list[str] = field(default_factory=list)
+    packet_actions: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewPacketSummary:
+    packet_count: int
+    candidate_ids: list[str]
+    decision_option_counts: dict[str, int]
+    required_input_counts: dict[str, int]
+    approval_blocker_counts: dict[str, int]
+    packet_action_counts: dict[str, int]
+    review_decision_delta: int = 0
+    formal_evidence_delta: int = 0
+
+
+@dataclass(frozen=True)
+class CandidateReviewActionQueueItem:
+    candidate_id: str
+    priority: str
+    primary_action: str
+    reason: str
+    blocking_inputs: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewInputTemplate:
+    candidate_id: str
+    material_id: str
+    candidate_status: str
+    decision_id_hint: str
+    current_source_locator: str
+    base_fields: list[str] = field(default_factory=list)
+    outcome_fields: dict[str, list[str]] = field(default_factory=dict)
+    conditional_fields: list[str] = field(default_factory=list)
+    blocking_inputs: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewDraftValidationResult:
+    candidate_id: str
+    decision_id: str
+    review_outcome: str
+    ready_for_manual_application: bool
+    missing_fields: list[str] = field(default_factory=list)
+    blocking_issues: list[str] = field(default_factory=list)
+    normalized_review_decision: dict[str, object] = field(default_factory=dict)
+    review_decision_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewApplicationGuardResult:
+    candidate_id: str
+    decision_id: str
+    review_outcome: str
+    ready_to_apply: bool
+    current_candidate_status: str = ""
+    next_candidate_status: str = ""
+    review_decision_preview: dict[str, object] = field(default_factory=dict)
+    candidate_status_preview: dict[str, str] = field(default_factory=dict)
+    validation_missing_fields: list[str] = field(default_factory=list)
+    blocking_issues: list[str] = field(default_factory=list)
+    preview_review_decision_delta: int = 0
+    preview_candidate_status_delta: int = 0
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewApplicationPacket:
+    candidate_id: str
+    decision_id: str
+    ready_to_export: bool
+    review_decision_json: dict[str, object] = field(default_factory=dict)
+    candidate_status_update: dict[str, str] = field(default_factory=dict)
+    manual_checklist: list[str] = field(default_factory=list)
+    rollback_notes: list[str] = field(default_factory=list)
+    blocking_issues: list[str] = field(default_factory=list)
+    preview_review_decision_delta: int = 0
+    preview_candidate_status_delta: int = 0
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewApplicationAuditSummary:
+    pending_template_count: int
+    draft_count: int
+    validation_ready_count: int
+    validation_blocked_count: int
+    guard_ready_count: int
+    packet_exportable_count: int
+    packet_blocked_count: int
+    pending_candidate_ids: list[str] = field(default_factory=list)
+    draft_candidate_ids: list[str] = field(default_factory=list)
+    exportable_candidate_ids: list[str] = field(default_factory=list)
+    blocked_candidate_ids: list[str] = field(default_factory=list)
+    missing_draft_candidate_ids: list[str] = field(default_factory=list)
+    candidate_next_actions: dict[str, str] = field(default_factory=dict)
+    preview_review_decision_delta: int = 0
+    preview_candidate_status_delta: int = 0
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualActionDashboard:
+    pending_candidate_count: int
+    action_counts: dict[str, int]
+    candidates_by_action: dict[str, list[str]]
+    recommended_action_sequence: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    preview_review_decision_delta: int = 0
+    preview_candidate_status_delta: int = 0
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationDryRunStep:
+    candidate_id: str
+    action: str
+    dry_run_status: str
+    required_inputs: list[str] = field(default_factory=list)
+    manual_steps: list[str] = field(default_factory=list)
+    ready_criteria: list[str] = field(default_factory=list)
+    post_apply_checks: list[str] = field(default_factory=list)
+    rollback_notes: list[str] = field(default_factory=list)
+    blocking_issues: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationDryRunGuide:
+    pending_candidate_count: int
+    step_count: int
+    steps: list[CandidateReviewManualApplicationDryRunStep]
+    recommended_processing_order: list[str] = field(default_factory=list)
+    preview_review_decision_delta: int = 0
+    preview_candidate_status_delta: int = 0
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationPreflightCheck:
+    candidate_id: str
+    decision_id: str
+    ready_for_manual_application: bool
+    decision_id_unique: bool
+    candidate_status_patch_matches_pending: bool
+    packet_delta_matches_preview: bool
+    expected_review_decision_delta: int = 0
+    expected_candidate_status_delta: int = 0
+    expected_candidate_status_update: dict[str, str] = field(default_factory=dict)
+    preflight_blockers: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationPreflightReport:
+    pending_candidate_count: int
+    preflight_check_count: int
+    checks: list[CandidateReviewManualApplicationPreflightCheck]
+    ready_candidate_ids: list[str] = field(default_factory=list)
+    blocked_candidate_ids: list[str] = field(default_factory=list)
+    preview_review_decision_delta: int = 0
+    preview_candidate_status_delta: int = 0
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationHandoffItem:
+    candidate_id: str
+    action: str
+    readiness_status: str
+    shortest_next_action: str
+    decision_id: str = ""
+    required_inputs: list[str] = field(default_factory=list)
+    manual_steps: list[str] = field(default_factory=list)
+    preflight_checks: list[str] = field(default_factory=list)
+    post_apply_checks: list[str] = field(default_factory=list)
+    rollback_notes: list[str] = field(default_factory=list)
+    blocking_issues: list[str] = field(default_factory=list)
+    expected_candidate_status_update: dict[str, str] = field(default_factory=dict)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationHandoffSummary:
+    pending_candidate_count: int
+    handoff_item_count: int
+    items: list[CandidateReviewManualApplicationHandoffItem]
+    ready_candidate_ids: list[str] = field(default_factory=list)
+    blocked_candidate_ids: list[str] = field(default_factory=list)
+    missing_draft_candidate_ids: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    preview_review_decision_delta: int = 0
+    preview_candidate_status_delta: int = 0
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationReadinessLedgerRow:
+    candidate_id: str
+    sequence_number: int
+    ledger_status: str
+    action: str
+    checkboxes: list[str] = field(default_factory=list)
+    required_inputs: list[str] = field(default_factory=list)
+    blocking_issues: list[str] = field(default_factory=list)
+    expected_candidate_status_update: dict[str, str] = field(default_factory=dict)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationReadinessLedger:
+    pending_candidate_count: int
+    ledger_row_count: int
+    rows: list[CandidateReviewManualApplicationReadinessLedgerRow]
+    ready_candidate_ids: list[str] = field(default_factory=list)
+    blocked_candidate_ids: list[str] = field(default_factory=list)
+    missing_draft_candidate_ids: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    unchecked_checkbox_count: int = 0
+    preview_review_decision_delta: int = 0
+    preview_candidate_status_delta: int = 0
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationSessionAction:
+    candidate_id: str
+    sequence_number: int
+    action_type: str
+    ledger_status: str
+    checkboxes: list[str] = field(default_factory=list)
+    blocking_issues: list[str] = field(default_factory=list)
+    expected_candidate_status_update: dict[str, str] = field(default_factory=dict)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationSessionPacket:
+    session_id: str
+    session_title: str
+    session_scope: str
+    pending_candidate_count: int
+    ready_action_queue: list[CandidateReviewManualApplicationSessionAction]
+    blocked_follow_ups: list[CandidateReviewManualApplicationSessionAction]
+    missing_draft_follow_ups: list[CandidateReviewManualApplicationSessionAction]
+    post_session_verification: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    unchecked_checkbox_count: int = 0
+    preview_review_decision_delta: int = 0
+    preview_candidate_status_delta: int = 0
+    ready_action_count: int = 0
+    blocked_follow_up_count: int = 0
+    missing_draft_follow_up_count: int = 0
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationSessionOutcomeItem:
+    candidate_id: str
+    sequence_number: int
+    session_lane: str
+    action_type: str
+    current_candidate_status: str
+    projected_candidate_status: str
+    projected_outcome: str
+    projected_review_decision_delta: int = 0
+    projected_candidate_status_delta: int = 0
+    remaining_follow_up_action: str = ""
+    blocking_issues: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationSessionOutcomePreview:
+    session_id: str
+    preview_scope: str
+    pending_candidate_count: int
+    preview_item_count: int
+    items: list[CandidateReviewManualApplicationSessionOutcomeItem]
+    ready_applied_candidate_ids: list[str] = field(default_factory=list)
+    projected_non_pending_candidate_ids: list[str] = field(default_factory=list)
+    projected_remaining_pending_candidate_ids: list[str] = field(default_factory=list)
+    follow_up_candidate_ids: list[str] = field(default_factory=list)
+    post_session_next_actions: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    projected_review_decision_delta: int = 0
+    projected_candidate_status_delta: int = 0
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationPostSessionVerificationItem:
+    candidate_id: str
+    sequence_number: int
+    verification_lane: str
+    expected_candidate_status: str
+    actual_candidate_status: str
+    expected_review_decision_id: str = ""
+    actual_review_decision_id: str = ""
+    actual_review_decision: str = ""
+    verification_status: str = ""
+    blocking_issues: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationPostSessionVerificationReport:
+    session_id: str
+    verification_scope: str
+    post_session_status: str
+    verification_item_count: int
+    items: list[CandidateReviewManualApplicationPostSessionVerificationItem]
+    expected_ready_candidate_count: int = 0
+    verified_ready_candidate_ids: list[str] = field(default_factory=list)
+    blocked_ready_candidate_ids: list[str] = field(default_factory=list)
+    verified_follow_up_candidate_ids: list[str] = field(default_factory=list)
+    blocked_follow_up_candidate_ids: list[str] = field(default_factory=list)
+    expected_review_decision_delta: int = 0
+    expected_candidate_status_delta: int = 0
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationReconciliationItem:
+    candidate_id: str
+    sequence_number: int
+    source_verification_lane: str
+    verification_status: str
+    recommended_action: str
+    reason_codes: list[str] = field(default_factory=list)
+    blocking_issues: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationReconciliationDashboard:
+    session_id: str
+    reconciliation_scope: str
+    post_session_status: str
+    reconciliation_item_count: int
+    items: list[CandidateReviewManualApplicationReconciliationItem]
+    action_counts: dict[str, int] = field(default_factory=dict)
+    candidates_by_action: dict[str, list[str]] = field(default_factory=dict)
+    recommended_action_sequence: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationClosureItem:
+    candidate_id: str
+    sequence_number: int
+    closure_lane: str
+    closure_action: str
+    closure_status: str
+    source_reconciliation_action: str
+    reason_codes: list[str] = field(default_factory=list)
+    blocking_issues: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationClosurePacket:
+    session_id: str
+    closure_scope: str
+    closure_status: str
+    closure_item_count: int
+    items: list[CandidateReviewManualApplicationClosureItem]
+    close_candidate_ids: list[str] = field(default_factory=list)
+    carry_forward_candidate_ids: list[str] = field(default_factory=list)
+    closure_action_counts: dict[str, int] = field(default_factory=dict)
+    candidates_by_closure_action: dict[str, list[str]] = field(default_factory=dict)
+    recommended_next_session_setup: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionStarterItem:
+    candidate_id: str
+    sequence_number: int
+    starter_lane: str
+    starter_action: str
+    starter_status: str
+    source_closure_action: str
+    checklist: list[str] = field(default_factory=list)
+    reason_codes: list[str] = field(default_factory=list)
+    blocking_issues: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionStarter:
+    session_id: str
+    starter_scope: str
+    starter_status: str
+    starter_item_count: int
+    items: list[CandidateReviewManualApplicationNextSessionStarterItem]
+    starter_lane_counts: dict[str, int] = field(default_factory=dict)
+    candidates_by_starter_lane: dict[str, list[str]] = field(default_factory=dict)
+    recommended_start_order: list[str] = field(default_factory=list)
+    kickoff_checklist: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionPacketItem:
+    candidate_id: str
+    sequence_number: int
+    packet_lane: str
+    starter_lane: str
+    packet_action: str
+    starter_action: str
+    packet_status: str
+    source_closure_action: str
+    checklist: list[str] = field(default_factory=list)
+    reason_codes: list[str] = field(default_factory=list)
+    blocking_issues: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionPacket:
+    session_id: str
+    packet_scope: str
+    packet_status: str
+    packet_item_count: int
+    items: list[CandidateReviewManualApplicationNextSessionPacketItem]
+    correction_queue: list[CandidateReviewManualApplicationNextSessionPacketItem]
+    follow_up_queue: list[CandidateReviewManualApplicationNextSessionPacketItem]
+    correction_candidate_ids: list[str] = field(default_factory=list)
+    follow_up_candidate_ids: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    kickoff_checklist: list[str] = field(default_factory=list)
+    post_session_verification: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionAuditSummary:
+    session_id: str
+    audit_scope: str
+    audit_status: str
+    closure_status: str
+    starter_status: str
+    packet_status: str
+    closure_item_count: int
+    starter_item_count: int
+    packet_item_count: int
+    correction_queue_count: int
+    follow_up_queue_count: int
+    correction_candidate_ids: list[str] = field(default_factory=list)
+    follow_up_candidate_ids: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    shortest_next_actions: list[str] = field(default_factory=list)
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    kickoff_checklist: list[str] = field(default_factory=list)
+    post_session_verification: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionOperatorChecklistItem:
+    action_id: str
+    sequence_number: int
+    operator_action: str
+    action_status: str
+    target_candidates: list[str] = field(default_factory=list)
+    ready_criteria: list[str] = field(default_factory=list)
+    operator_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionOperatorChecklist:
+    session_id: str
+    checklist_scope: str
+    checklist_status: str
+    checklist_item_count: int
+    items: list[CandidateReviewManualApplicationNextSessionOperatorChecklistItem]
+    action_sequence: list[str] = field(default_factory=list)
+    target_candidates_by_action: dict[str, list[str]] = field(default_factory=dict)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    kickoff_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionExecutionHandoff:
+    session_id: str
+    handoff_scope: str
+    handoff_status: str
+    first_action: str
+    first_action_targets: list[str] = field(default_factory=list)
+    ready_conditions: list[str] = field(default_factory=list)
+    blocked_conditions: list[str] = field(default_factory=list)
+    action_sequence: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    kickoff_checklist: list[str] = field(default_factory=list)
+    verification_chain: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionCompletionCriteria:
+    session_id: str
+    criteria_scope: str
+    criteria_status: str
+    first_action: str
+    first_action_targets: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    done_conditions: list[str] = field(default_factory=list)
+    blocked_conditions: list[str] = field(default_factory=list)
+    retry_conditions: list[str] = field(default_factory=list)
+    verification_entrypoints: list[str] = field(default_factory=list)
+    action_sequence: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionRetryPlanner:
+    session_id: str
+    retry_scope: str
+    retry_status: str
+    first_action: str
+    first_action_targets: list[str] = field(default_factory=list)
+    failure_entrypoints: list[str] = field(default_factory=list)
+    retry_conditions: list[str] = field(default_factory=list)
+    retry_sequence: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    verification_entrypoints: list[str] = field(default_factory=list)
+    return_to_handoff_path: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionFinalReadinessSummary:
+    session_id: str
+    readiness_scope: str
+    readiness_status: str
+    start_gate: str
+    first_action: str
+    first_action_targets: list[str] = field(default_factory=list)
+    ready_conditions: list[str] = field(default_factory=list)
+    blocked_conditions: list[str] = field(default_factory=list)
+    retry_conditions: list[str] = field(default_factory=list)
+    failure_entrypoints: list[str] = field(default_factory=list)
+    verification_entrypoints: list[str] = field(default_factory=list)
+    return_to_handoff_path: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    recommended_processing_order: list[str] = field(default_factory=list)
+    final_readiness_checks: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionLaunchNote:
+    session_id: str
+    launch_scope: str
+    launch_status: str
+    start_gate: str
+    first_command: str
+    first_command_targets: list[str] = field(default_factory=list)
+    candidate_order: list[str] = field(default_factory=list)
+    abort_conditions: list[str] = field(default_factory=list)
+    return_paths: list[str] = field(default_factory=list)
+    verification_commands: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    launch_checks: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionLaunchAudit:
+    session_id: str
+    audit_scope: str
+    audit_status: str
+    readiness_status: str
+    launch_status: str
+    start_gate: str
+    first_command: str
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: list[str] = field(default_factory=list)
+    candidate_order: list[str] = field(default_factory=list)
+    return_paths: list[str] = field(default_factory=list)
+    verification_commands: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionLaunchSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    audit_status: str
+    launch_status: str
+    start_gate: str
+    sealed_first_command: str
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    verification_commands: list[str] = field(default_factory=list)
+    rollback_entrypoints: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionLaunchRunbook:
+    session_id: str
+    runbook_scope: str
+    runbook_status: str
+    seal_status: str
+    start_gate: str
+    first_step: str
+    execution_order: list[str] = field(default_factory=list)
+    step_verification: dict[str, list[str]] = field(default_factory=dict)
+    failure_rollback: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    runbook_checks: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionLaunchRunbookAudit:
+    session_id: str
+    audit_scope: str
+    audit_status: str
+    runbook_status: str
+    seal_status: str
+    start_gate: str
+    first_step: str
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: list[str] = field(default_factory=list)
+    candidate_order: list[str] = field(default_factory=list)
+    execution_order: list[str] = field(default_factory=list)
+    step_verification: dict[str, list[str]] = field(default_factory=dict)
+    failure_rollback: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    verification_commands: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionLaunchRunbookAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    audit_status: str
+    runbook_status: str
+    launch_seal_status: str
+    start_gate: str
+    sealed_first_step: str
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    verification_commands: list[str] = field(default_factory=list)
+    rollback_entrypoints: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionFinalLaunchPacket:
+    session_id: str
+    launch_packet_scope: str
+    launch_packet_status: str
+    audit_seal_status: str
+    sealed_first_step: str
+    candidate_order: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionFinalLaunchPacketHandoffAudit:
+    session_id: str
+    handoff_audit_scope: str
+    handoff_readiness: str
+    launch_packet_status: str
+    audit_seal_status: str
+    sealed_first_step: str
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    operator_safe_start_boundary: list[str] = field(default_factory=list)
+    candidate_order: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionFinalLaunchPacketHandoffAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    handoff_readiness: str
+    go_no_go_decision: str
+    launch_packet_status: str
+    audit_seal_status: str
+    sealed_first_step: str
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    operator_safe_start_boundary: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionOperatorGoNoGoSealLaunchReceipt:
+    session_id: str
+    receipt_scope: str
+    receipt_status: str
+    seal_status: str
+    handoff_readiness: str
+    go_no_go_decision: str
+    receipt_decision: str
+    signed_first_step: str
+    signed_candidate_order: list[str] = field(default_factory=list)
+    operator_receipt_checklist: list[str] = field(default_factory=list)
+    pre_execution_confirmation: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionLaunchReceiptFinalBoundaryAudit:
+    session_id: str
+    boundary_audit_scope: str
+    final_boundary_readiness: str
+    receipt_status: str
+    seal_status: str
+    go_no_go_decision: str
+    receipt_decision: str
+    signed_first_step: str
+    receipt_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    final_boundary_confirmation: list[str] = field(default_factory=list)
+    signed_candidate_order: list[str] = field(default_factory=list)
+    operator_receipt_checklist: list[str] = field(default_factory=list)
+    pre_execution_confirmation: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionLaunchReceiptFinalBoundaryAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    final_boundary_readiness: str
+    receipt_status: str
+    go_no_go_decision: str
+    receipt_decision: str
+    sealed_first_step: str
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    receipt_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    final_boundary_confirmation: list[str] = field(default_factory=list)
+    pre_execution_confirmation: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionLaunchReceiptFinalBoundaryAuditSealOperatorStartPacket:
+    session_id: str
+    packet_scope: str
+    packet_status: str
+    seal_status: str
+    final_boundary_readiness: str
+    receipt_status: str
+    go_no_go_decision: str
+    receipt_decision: str
+    start_authorization: str
+    sealed_first_step: str
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    pre_execution_confirmation: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    packet_checks: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionLaunchReceiptFinalBoundaryAuditSealOperatorStartPacketAudit:
+    session_id: str
+    audit_scope: str
+    audit_status: str
+    packet_status: str
+    seal_status: str
+    start_authorization: str
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionLaunchReceiptFinalBoundaryAuditSealOperatorStartPacketAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    audit_status: str
+    packet_status: str
+    start_authorization: str
+    blocked_reasons: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationReceipt:
+    session_id: str
+    receipt_scope: str
+    receipt_status: str
+    seal_status: str
+    audit_status: str
+    packet_status: str
+    start_authorization: str
+    sealed_first_step: str
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    receipt_checks: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationReceiptCoverageAudit:
+    session_id: str
+    audit_scope: str
+    coverage_audit_status: str
+    receipt_status: str
+    seal_status: str
+    operator_start_packet_audit_status: str
+    packet_status: str
+    start_authorization: str
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationReceiptCoverageAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    coverage_audit_status: str
+    receipt_status: str
+    operator_start_packet_audit_seal_status: str
+    operator_start_packet_audit_status: str
+    packet_status: str
+    start_authorization: str
+    blocked_reasons: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionAuthorizationPacket:
+    session_id: str
+    packet_scope: str
+    packet_status: str
+    seal_status: str
+    coverage_audit_status: str
+    receipt_status: str
+    operator_start_packet_audit_status: str
+    start_authorization: str
+    sealed_first_step: str
+    authorization_checks: list[str] = field(default_factory=list)
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionAuthorizationPacketCoverageAudit:
+    session_id: str
+    audit_scope: str
+    audit_status: str
+    packet_status: str
+    seal_status: str
+    coverage_audit_status: str
+    receipt_status: str
+    operator_start_packet_audit_status: str
+    start_authorization: str
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionAuthorizationPacketCoverageAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    audit_status: str
+    packet_status: str
+    authorization_packet_seal_status: str
+    coverage_audit_status: str
+    receipt_status: str
+    operator_start_packet_audit_status: str
+    start_authorization: str
+    seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionAuthorizationPacketCoverageAuditSealStartDocket:
+    session_id: str
+    docket_scope: str
+    docket_status: str
+    seal_status: str
+    audit_status: str
+    packet_status: str
+    authorization_packet_seal_status: str
+    coverage_audit_status: str
+    receipt_status: str
+    operator_start_packet_audit_status: str
+    start_authorization: str
+    docket_checks: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartDocketCoverageAudit:
+    session_id: str
+    audit_scope: str
+    audit_status: str
+    docket_status: str
+    seal_status: str
+    audit_source_status: str
+    packet_status: str
+    authorization_packet_seal_status: str
+    coverage_audit_status: str
+    receipt_status: str
+    operator_start_packet_audit_status: str
+    start_authorization: str
+    docket_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartDocketCoverageAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    audit_status: str
+    docket_status: str
+    source_seal_status: str
+    audit_source_status: str
+    packet_status: str
+    authorization_packet_seal_status: str
+    coverage_audit_status: str
+    receipt_status: str
+    operator_start_packet_audit_status: str
+    start_authorization: str
+    seal_checks: list[str] = field(default_factory=list)
+    docket_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartDocketCoverageAuditSealFinalStartPacket:
+    session_id: str
+    packet_scope: str
+    packet_status: str
+    seal_status: str
+    audit_status: str
+    docket_status: str
+    source_seal_status: str
+    audit_source_status: str
+    packet_source_status: str
+    authorization_packet_seal_status: str
+    coverage_audit_status: str
+    receipt_status: str
+    operator_start_packet_audit_status: str
+    start_authorization: str
+    packet_checks: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionFinalStartPacketHandoffAudit:
+    session_id: str
+    handoff_audit_scope: str
+    handoff_readiness: str
+    packet_status: str
+    seal_status: str
+    audit_status: str
+    docket_status: str
+    source_seal_status: str
+    audit_source_status: str
+    packet_source_status: str
+    authorization_packet_seal_status: str
+    coverage_audit_status: str
+    receipt_status: str
+    operator_start_packet_audit_status: str
+    start_authorization: str
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    operator_safe_start_boundary: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionFinalStartPacketHandoffAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    packet_status: str
+    seal_source_status: str
+    audit_status: str
+    docket_status: str
+    start_authorization: str
+    seal_checks: list[str] = field(default_factory=list)
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    operator_safe_start_boundary: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionFinalStartPacketHandoffAuditSealStartAuthorizationPacket:
+    session_id: str
+    packet_scope: str
+    packet_status: str
+    seal_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    audit_status: str
+    docket_status: str
+    authorization_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAudit:
+    session_id: str
+    audit_scope: str
+    audit_status: str
+    packet_status: str
+    seal_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    authorization_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    audit_status: str
+    packet_status: str
+    seal_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    authorization_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacket:
+    session_id: str
+    packet_scope: str
+    packet_status: str
+    seal_status: str
+    audit_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacketCoverageAudit:
+    session_id: str
+    audit_scope: str
+    audit_status: str
+    packet_status: str
+    seal_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacketCoverageAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    audit_status: str
+    packet_status: str
+    seal_source_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacketCoverageAuditSealFinalStartAuthorization:
+    session_id: str
+    authorization_scope: str
+    authorization_status: str
+    seal_status: str
+    audit_status: str
+    packet_status: str
+    seal_source_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    authorization_checks: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacketCoverageAuditSealFinalStartAuthorizationCoverageAudit:
+    session_id: str
+    audit_scope: str
+    audit_status: str
+    authorization_status: str
+    seal_status: str
+    packet_status: str
+    seal_source_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    authorization_coverage_checks: dict[str, str] = field(default_factory=dict)
+    authorization_checks: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacketCoverageAuditSealFinalStartAuthorizationCoverageAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    audit_status: str
+    authorization_status: str
+    seal_source_status: str
+    packet_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    seal_checks: list[str] = field(default_factory=list)
+    authorization_coverage_checks: dict[str, str] = field(default_factory=dict)
+    authorization_checks: list[str] = field(default_factory=list)
+    coverage_seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacketCoverageAuditSealFinalStartAuthorizationCoverageAuditSealStartHandoffPacket:
+    session_id: str
+    packet_scope: str
+    handoff_packet_status: str
+    handoff_status: str
+    seal_status: str
+    audit_status: str
+    authorization_status: str
+    seal_source_status: str
+    packet_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    handoff_checks: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    authorization_coverage_checks: dict[str, str] = field(default_factory=dict)
+    authorization_checks: list[str] = field(default_factory=list)
+    coverage_seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacketCoverageAuditSealFinalStartAuthorizationCoverageAuditSealStartHandoffPacketCoverageAudit:
+    session_id: str
+    audit_scope: str
+    audit_status: str
+    handoff_packet_status: str
+    handoff_status: str
+    seal_status: str
+    coverage_audit_status: str
+    authorization_status: str
+    packet_status: str
+    seal_source_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    handoff_checks: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    authorization_coverage_checks: dict[str, str] = field(default_factory=dict)
+    authorization_checks: list[str] = field(default_factory=list)
+    coverage_seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacketCoverageAuditSealFinalStartAuthorizationCoverageAuditSealStartHandoffPacketCoverageAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    audit_status: str
+    handoff_packet_status: str
+    handoff_status: str
+    final_start_authorization_coverage_audit_seal_status: str
+    coverage_audit_status: str
+    authorization_status: str
+    packet_status: str
+    seal_source_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    seal_checks: list[str] = field(default_factory=list)
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    handoff_checks: list[str] = field(default_factory=list)
+    source_seal_checks: list[str] = field(default_factory=list)
+    authorization_coverage_checks: dict[str, str] = field(default_factory=dict)
+    authorization_checks: list[str] = field(default_factory=list)
+    coverage_seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacketCoverageAuditSealFinalStartAuthorizationCoverageAuditSealStartHandoffPacketCoverageAuditSealStartPacket:
+    session_id: str
+    packet_scope: str
+    start_packet_status: str
+    seal_status: str
+    audit_status: str
+    handoff_packet_status: str
+    handoff_status: str
+    final_start_authorization_coverage_audit_seal_status: str
+    coverage_audit_status: str
+    authorization_status: str
+    packet_status: str
+    seal_source_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    start_checks: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    handoff_checks: list[str] = field(default_factory=list)
+    source_seal_checks: list[str] = field(default_factory=list)
+    authorization_coverage_checks: dict[str, str] = field(default_factory=dict)
+    authorization_checks: list[str] = field(default_factory=list)
+    coverage_seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacketCoverageAuditSealFinalStartAuthorizationCoverageAuditSealStartHandoffPacketCoverageAuditSealStartPacketCoverageAudit:
+    session_id: str
+    audit_scope: str
+    audit_status: str
+    start_packet_status: str
+    seal_status: str
+    start_packet_source_audit_status: str
+    handoff_packet_status: str
+    handoff_status: str
+    final_start_authorization_coverage_audit_seal_status: str
+    coverage_audit_status: str
+    authorization_status: str
+    packet_status: str
+    seal_source_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    source_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    start_checks: list[str] = field(default_factory=list)
+    seal_checks: list[str] = field(default_factory=list)
+    handoff_checks: list[str] = field(default_factory=list)
+    source_seal_checks: list[str] = field(default_factory=list)
+    authorization_coverage_checks: dict[str, str] = field(default_factory=dict)
+    authorization_checks: list[str] = field(default_factory=list)
+    coverage_seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class CandidateReviewManualApplicationNextSessionManualExecutionStartAuthorizationPacketCoverageAuditSealStartClearancePacketCoverageAuditSealFinalStartAuthorizationCoverageAuditSealStartHandoffPacketCoverageAuditSealStartPacketCoverageAuditSeal:
+    session_id: str
+    seal_scope: str
+    seal_status: str
+    audit_status: str
+    start_packet_status: str
+    start_packet_source_audit_status: str
+    start_handoff_packet_coverage_audit_seal_status: str
+    handoff_packet_status: str
+    handoff_status: str
+    final_start_authorization_coverage_audit_seal_status: str
+    coverage_audit_status: str
+    authorization_status: str
+    packet_status: str
+    seal_source_status: str
+    packet_source_status: str
+    handoff_readiness: str
+    go_no_go_start_decision: str
+    start_authorization: str
+    source_audit_status: str
+    docket_status: str
+    seal_checks: list[str] = field(default_factory=list)
+    coverage_checks: dict[str, str] = field(default_factory=dict)
+    source_coverage_checks: dict[str, str] = field(default_factory=dict)
+    missing_coverage: list[str] = field(default_factory=list)
+    boundary_checks: dict[str, str] = field(default_factory=dict)
+    start_checks: list[str] = field(default_factory=list)
+    source_seal_checks: list[str] = field(default_factory=list)
+    handoff_checks: list[str] = field(default_factory=list)
+    authorization_coverage_checks: dict[str, str] = field(default_factory=dict)
+    authorization_checks: list[str] = field(default_factory=list)
+    coverage_seal_checks: list[str] = field(default_factory=list)
+    packet_coverage_checks: dict[str, str] = field(default_factory=dict)
+    clearance_checklist: list[str] = field(default_factory=list)
+    sealed_first_step: str = ""
+    sealed_candidate_order: list[str] = field(default_factory=list)
+    operator_authorization_checklist: list[str] = field(default_factory=list)
+    operator_start_checklist: list[str] = field(default_factory=list)
+    verification_checklist: list[str] = field(default_factory=list)
+    rollback_path: list[str] = field(default_factory=list)
+    post_completion_review: list[str] = field(default_factory=list)
+    target_candidates: list[str] = field(default_factory=list)
+    blocked_reasons: list[str] = field(default_factory=list)
+    boundary_confirmation: list[str] = field(default_factory=list)
+    applied_review_decision_delta: int = 0
+    applied_candidate_status_delta: int = 0
+    formal_evidence_delta: int = 0
+    boundary_notes: list[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -602,6 +2636,174 @@ class AuditProgressSummary:
     source_quality_counts: dict[str, int] = field(default_factory=dict)
     risk_boundary_counts: dict[str, int] = field(default_factory=dict)
     missing_prerequisite_counts: dict[str, int] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class ExtractionWorkPackage:
+    package_id: str
+    package_label: str
+    source_queue_snapshot_ids: list[str]
+    selected_task_ids: list[str]
+    backlog_record_ids: list[str]
+    status: str
+    created_at: str = ""
+    updated_at: str = ""
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class ExtractionTask:
+    task_id: str
+    package_id: str
+    queue_item_id: str
+    audit_id: str
+    priority_level: str
+    priority_rationale: str
+    risk_boundary: str
+    locator_requirement: str
+    source_quality_note: str
+    rights_note: str
+    source_library_entry_id: str = ""
+    intended_source_material_id: str = ""
+    target_rule_families: list[str] = field(default_factory=list)
+    target_gap_ids: list[str] = field(default_factory=list)
+    pre_extraction_checks: list[str] = field(default_factory=list)
+    overlap_warnings: list[str] = field(default_factory=list)
+    recommended_action: str = "extract_candidates"
+    status: str = "planned"
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class CandidateDraftSlot:
+    draft_slot_id: str
+    task_id: str
+    intended_candidate_label: str
+    target_rule_family: str
+    locator_requirement: str
+    risk_boundary: str
+    target_gap_id: str = ""
+    expected_review_notes: list[str] = field(default_factory=list)
+    safety_requirements: list[str] = field(default_factory=list)
+    status: str = "planned"
+
+
+@dataclass(frozen=True)
+class PrerequisiteBacklogRecord:
+    backlog_id: str
+    package_id: str
+    queue_item_id: str
+    audit_id: str
+    backlog_type: str
+    durable_reason: str
+    recommended_action: str
+    risk_boundary: str
+    missing_prerequisites: list[str] = field(default_factory=list)
+    status: str = "planned"
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class PackageProgressSummary:
+    package_counts: dict[str, int]
+    task_counts: dict[str, int]
+    draft_slot_counts: dict[str, int]
+    backlog_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    overlap_warning_count: int = 0
+    extraction_task_count: int = 0
+    candidate_draft_slot_count: int = 0
+    blocked_or_deferred_count: int = 0
+    next_manual_action_ids: list[str] = field(default_factory=list)
+    priority_counts: dict[str, int] = field(default_factory=dict)
+    selected_source_queue_ids: list[str] = field(default_factory=list)
+    draft_slot_rule_family_counts: dict[str, int] = field(default_factory=dict)
+    draft_slot_readiness_counts: dict[str, int] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class LearningReferenceNote:
+    note_id: str
+    task_id: str
+    package_id: str
+    queue_item_id: str
+    audit_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    source_title: str
+    locator_requirement: str
+    risk_boundary: str
+    rights_note: str
+    source_quality_note: str
+    target_rule_families: list[str] = field(default_factory=list)
+    learning_points: list[str] = field(default_factory=list)
+    overlap_candidate_ids: list[str] = field(default_factory=list)
+    status: str = "draft"
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class LearningPoint:
+    learning_point_id: str
+    note_id: str
+    point_label: str
+    source_locator: str
+    summary: str
+    proposed_rule_family: str
+    risk_tier: str
+    candidate_readiness: str
+    limitations: list[str] = field(default_factory=list)
+    candidate_decision_id: str = ""
+
+
+@dataclass(frozen=True)
+class CandidateIntakeDecision:
+    decision_id: str
+    learning_point_id: str
+    decision: str
+    source_material_id: str
+    rationale: str
+    candidate_id: str = ""
+    overlap_candidate_ids: list[str] = field(default_factory=list)
+    status: str = "planned"
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class PrerequisiteActionNote:
+    action_note_id: str
+    backlog_id: str
+    package_id: str
+    queue_item_id: str
+    audit_id: str
+    action_type: str
+    durable_reason: str
+    recommended_action: str
+    risk_boundary: str
+    missing_prerequisites: list[str] = field(default_factory=list)
+    status: str = "planned"
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class LearningReferenceProgressSummary:
+    note_counts: dict[str, int]
+    learning_point_counts: dict[str, int]
+    decision_counts: dict[str, int]
+    prerequisite_action_counts: dict[str, int]
+    risk_tier_counts: dict[str, int]
+    overlap_warning_count: int = 0
+    candidate_ready_count: int = 0
+    candidate_decision_count: int = 0
+    formal_evidence_delta: int = 0
+    next_action_ids: list[str] = field(default_factory=list)
+    note_rule_family_counts: dict[str, int] = field(default_factory=dict)
+    selected_task_ids: list[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)

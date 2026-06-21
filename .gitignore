@@ -12,3 +12,21 @@ __pycache__/
 venv/
 dist/
 *.egg-info/
+
+# External preparation materials (never tracked, per 017 plan boundary)
+.codex-test-logs/
+Markdown/
+# raw source PDFs at repo root
+2800.《命理生死之书》100页.pdf
+[神仙算命术江湖秘本.pdf
+东北盲派巅峰.pdf
+命學金聲*.pdf
+命理真诀师传.pdf
+段氏白話命學綱要*.pdf
+盲人断命秘典.pdf
+盲派绝学.pdf
+算命一讀通*.pdf
+/*.pdf
+# raw source preparation directories
+资料原文/
+资料整理/

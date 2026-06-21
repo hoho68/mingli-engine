@@ -238,5 +238,37 @@
     "status": "deferred",
     "created_at": "2026-05-30",
     "updated_at": "2026-05-30"
+  },
+  {
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "queue_type": "preparation_backlog",
+    "priority_level": "medium",
+    "priority_rationale": "Derived knowledge skeleton needs component source links and candidate review before extraction planning.",
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate",
+      "branch_interaction",
+      "luck_cycle",
+      "high_risk_signal"
+    ],
+    "target_gap_ids": [
+      "gap_component_source_links",
+      "gap_candidate_review"
+    ],
+    "risk_boundary": "sensitive",
+    "pre_extraction_checks": [
+      "separate component source links",
+      "review candidate skeleton against source-library entries",
+      "keep derived aggregate outside formal evidence"
+    ],
+    "recommended_action": "review_cleaned_text",
+    "depends_on": [
+      "component_source_links",
+      "candidate_review"
+    ],
+    "status": "planned",
+    "created_at": "2026-05-31",
+    "updated_at": "2026-05-31"
   }
 ]

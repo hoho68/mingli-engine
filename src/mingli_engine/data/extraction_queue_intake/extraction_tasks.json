@@ -1,0 +1,160 @@
+[
+  {
+    "task_id": "task_northeast_blind_peak_extract_001",
+    "package_id": "package_next_candidates_001",
+    "queue_item_id": "queue_northeast_blind_peak_extract",
+    "audit_id": "audit_northeast_blind_peak",
+    "source_library_entry_id": "entry_northeast_blind_peak_pdf",
+    "intended_source_material_id": "material_northeast_blind_peak_pdf",
+    "priority_level": "high",
+    "priority_rationale": "Ready blind-school source with strong locator confidence and reviewed source-library alignment.",
+    "target_rule_families": [
+      "blind_image_method",
+      "branch_interaction"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "sensitive",
+    "locator_requirement": "page_or_section",
+    "source_quality_note": "Strong readiness finding; confirm page or section locator before manual extraction.",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "pre_extraction_checks": [
+      "confirm source-library alignment",
+      "rewrite verdict language conditionally",
+      "store concise paraphrases only"
+    ],
+    "overlap_warnings": [
+      "013 candidate overlap: candidate_northeast_blind_image_001 pending_review for material_northeast_blind_peak_pdf blind_image_method.",
+      "013 candidate overlap: candidate_northeast_blind_image_duplicate_001 rejected for material_northeast_blind_peak_pdf blind_image_method."
+    ],
+    "recommended_action": "extract_candidates",
+    "status": "planned",
+    "created_at": "2026-05-31",
+    "updated_at": "2026-05-31"
+  },
+  {
+    "task_id": "task_mingli_true_formula_teacher_extract_001",
+    "package_id": "package_next_candidates_001",
+    "queue_item_id": "queue_mingli_true_formula_teacher_extract",
+    "audit_id": "audit_mingli_true_formula_teacher",
+    "source_library_entry_id": "entry_mingli_true_formula_teacher_pdf",
+    "intended_source_material_id": "material_mingli_true_formula_teacher_pdf",
+    "priority_level": "high",
+    "priority_rationale": "Ready pattern and useful-god source with source-library alignment and timing boundary notes.",
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate",
+      "luck_cycle"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "sensitive",
+    "locator_requirement": "page_or_section",
+    "source_quality_note": "Strong readiness finding; confirm locator anchors before manual extraction.",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "pre_extraction_checks": [
+      "confirm locator anchors",
+      "avoid guaranteed timing wording",
+      "store concise paraphrases only"
+    ],
+    "overlap_warnings": [
+      "013 candidate overlap: candidate_mingli_pattern_strength_017_001 pending_review for material_mingli_true_formula_teacher_pdf pattern_strength."
+    ],
+    "recommended_action": "extract_candidates",
+    "status": "planned",
+    "created_at": "2026-05-31",
+    "updated_at": "2026-05-31"
+  },
+  {
+    "task_id": "task_duan_plain_mingxue_outline_extract_001",
+    "package_id": "package_next_candidates_002",
+    "queue_item_id": "queue_duan_plain_mingxue_outline_extract",
+    "audit_id": "audit_duan_plain_mingxue_outline",
+    "source_library_entry_id": "entry_duan_plain_mingxue_outline_pdf",
+    "intended_source_material_id": "material_duan_plain_mingxue_outline_pdf",
+    "priority_level": "medium",
+    "priority_rationale": "Ready ordinary-risk source can support ten-god and structure review after locator confirmation.",
+    "target_rule_families": [
+      "ten_god_relation",
+      "pattern_strength"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "locator_requirement": "page_or_section",
+    "source_quality_note": "Strong readiness finding; confirm page or section locator before manual extraction.",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "pre_extraction_checks": [
+      "confirm locator anchors",
+      "store concise paraphrases only"
+    ],
+    "overlap_warnings": [
+      "013 candidate overlap: candidate_duan_ten_god_relation_017_001 pending_review for material_duan_plain_mingxue_outline_pdf ten_god_relation."
+    ],
+    "recommended_action": "extract_candidates",
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "task_id": "task_mingxue_golden_voice_extract_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_mingxue_golden_voice_extract",
+    "audit_id": "audit_mingxue_golden_voice",
+    "source_library_entry_id": "entry_mingxue_golden_voice_pdf",
+    "intended_source_material_id": "material_mingxue_golden_voice_pdf",
+    "priority_level": "medium",
+    "priority_rationale": "Ready terminology source can support five-element and ten-god coverage.",
+    "target_rule_families": [
+      "five_element_balance",
+      "ten_god_relation",
+      "pattern_strength"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "locator_requirement": "page_or_section",
+    "source_quality_note": "Partially reviewed terminology and structure source; confirm locator anchors before manual extraction.",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "pre_extraction_checks": [
+      "confirm locator anchors",
+      "store concise paraphrases only"
+    ],
+    "overlap_warnings": [
+      "013 candidate overlap: candidate_mingxue_golden_voice_scope_001 rejected for material_mingxue_golden_voice_pdf pattern_strength.",
+      "013 candidate overlap: candidate_mingxue_five_element_balance_017_001 pending_review for material_mingxue_golden_voice_pdf five_element_balance."
+    ],
+    "recommended_action": "extract_candidates",
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  },
+  {
+    "task_id": "task_fortune_reading_hongfu_qitian_extract_001",
+    "package_id": "package_next_candidates_003",
+    "queue_item_id": "queue_fortune_reading_hongfu_qitian_extract",
+    "audit_id": "audit_fortune_reading_hongfu_qitian",
+    "source_library_entry_id": "entry_fortune_reading_hongfu_qitian_pdf",
+    "intended_source_material_id": "material_fortune_reading_hongfu_qitian_pdf",
+    "priority_level": "medium",
+    "priority_rationale": "Ready remedy-boundary source can support safety wording after sensitive review.",
+    "target_rule_families": [
+      "remedy_boundary",
+      "pattern_strength"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "sensitive",
+    "locator_requirement": "page_or_section",
+    "source_quality_note": "Partially reviewed general-practice source; confirm remedy-boundary locator anchors before manual extraction.",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "pre_extraction_checks": [
+      "confirm locator anchors",
+      "avoid guaranteed remedy wording",
+      "avoid certainty about remedy effects",
+      "store concise paraphrases only"
+    ],
+    "overlap_warnings": [
+      "013 candidate overlap: candidate_hongfu_remedy_boundary_017_001 pending_review for material_fortune_reading_hongfu_qitian_pdf remedy_boundary."
+    ],
+    "recommended_action": "extract_candidates",
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01"
+  }
+]

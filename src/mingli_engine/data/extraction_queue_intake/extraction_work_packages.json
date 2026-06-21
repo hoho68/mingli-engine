@@ -1,0 +1,75 @@
+[
+  {
+    "package_id": "package_next_candidates_001",
+    "package_label": "Next candidate extraction package 001",
+    "source_queue_snapshot_ids": [
+      "queue_northeast_blind_peak_extract",
+      "queue_mingli_true_formula_teacher_extract",
+      "queue_markdown_source_batch_001_register",
+      "queue_blind_life_manual_risk_review",
+      "queue_blind_school_secret_blocked"
+    ],
+    "selected_task_ids": [
+      "task_northeast_blind_peak_extract_001",
+      "task_mingli_true_formula_teacher_extract_001"
+    ],
+    "backlog_record_ids": [
+      "backlog_markdown_batch_001_registration_001",
+      "backlog_blind_life_manual_risk_review_001",
+      "backlog_blind_school_secret_blocked_001"
+    ],
+    "status": "planned",
+    "created_at": "2026-05-31",
+    "updated_at": "2026-05-31",
+    "notes": "Initial package from the 015 next-action queue; extraction-ready items are tasks and non-ready items stay in prerequisite backlog."
+  },
+  {
+    "package_id": "package_next_candidates_002",
+    "package_label": "Next candidate extraction package 002",
+    "source_queue_snapshot_ids": [
+      "queue_duan_plain_mingxue_outline_extract"
+    ],
+    "selected_task_ids": [
+      "task_duan_plain_mingxue_outline_extract_001"
+    ],
+    "backlog_record_ids": [],
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01",
+    "notes": "Second package extends the learning-reference queue with the next ordinary ready source."
+  },
+  {
+    "package_id": "package_next_candidates_003",
+    "package_label": "Next candidate extraction package 003",
+    "source_queue_snapshot_ids": [
+      "queue_mingxue_golden_voice_extract",
+      "queue_fortune_reading_hongfu_qitian_extract",
+      "queue_markdown_source_batch_002_register",
+      "queue_markdown_source_batch_003_register",
+      "queue_immortal_fortune_jianghu_secret_risk_review",
+      "queue_life_death_book_100_pages_risk_review",
+      "queue_markdown_source_batch_005_risk_review",
+      "queue_markdown_source_batch_004_prepare",
+      "queue_source_processing_status_deferred",
+      "queue_knowledge_skeleton_prepare"
+    ],
+    "selected_task_ids": [
+      "task_mingxue_golden_voice_extract_001",
+      "task_fortune_reading_hongfu_qitian_extract_001"
+    ],
+    "backlog_record_ids": [
+      "backlog_markdown_batch_002_registration_001",
+      "backlog_markdown_batch_003_registration_001",
+      "backlog_immortal_fortune_jianghu_secret_risk_review_001",
+      "backlog_life_death_book_100_pages_risk_review_001",
+      "backlog_markdown_batch_005_risk_review_001",
+      "backlog_markdown_batch_004_locator_review_001",
+      "backlog_source_processing_status_deferred_001",
+      "backlog_knowledge_skeleton_preparation_001"
+    ],
+    "status": "planned",
+    "created_at": "2026-06-01",
+    "updated_at": "2026-06-01",
+    "notes": "Third package closes the remaining 015 queue coverage: ready sources become extraction tasks while registration, review, deferred, and preparation items stay in prerequisite backlog."
+  }
+]

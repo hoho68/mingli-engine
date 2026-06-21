@@ -1,0 +1,96 @@
+[
+  {
+    "draft_slot_id": "slot_northeast_blind_image_001",
+    "task_id": "task_northeast_blind_peak_extract_001",
+    "intended_candidate_label": "Northeast Blind Peak blind image-method candidate",
+    "target_rule_family": "blind_image_method",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Record exact source locator during manual extraction.",
+      "Capture uncertainty and limitation notes before candidate review."
+    ],
+    "risk_boundary": "sensitive",
+    "safety_requirements": [
+      "State uncertainty and school dependency.",
+      "Include limitation notes; this is not a standalone verdict.",
+      "No absolute destiny language."
+    ],
+    "status": "planned"
+  },
+  {
+    "draft_slot_id": "slot_mingli_pattern_strength_001",
+    "task_id": "task_mingli_true_formula_teacher_extract_001",
+    "intended_candidate_label": "Mingli True Formula Teacher pattern-strength candidate",
+    "target_rule_family": "pattern_strength",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Record exact source locator during manual extraction.",
+      "Capture uncertainty and limitation notes before candidate review."
+    ],
+    "risk_boundary": "sensitive",
+    "safety_requirements": [
+      "State uncertainty for timing and pattern interpretation.",
+      "Include limitation notes; do not guarantee outcome timing.",
+      "No absolute destiny language."
+    ],
+    "status": "planned"
+  },
+  {
+    "draft_slot_id": "slot_duan_ten_god_relation_001",
+    "task_id": "task_duan_plain_mingxue_outline_extract_001",
+    "intended_candidate_label": "Duan Plain Mingxue Outline ten-god relation candidate",
+    "target_rule_family": "ten_god_relation",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Record exact source locator during manual extraction.",
+      "Capture structural scope and chart-context limitations before candidate review."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep the rule framed as structural taxonomy.",
+      "Do not treat pillar-position notes as standalone verdicts."
+    ],
+    "status": "planned"
+  },
+  {
+    "draft_slot_id": "slot_mingxue_five_element_balance_001",
+    "task_id": "task_mingxue_golden_voice_extract_001",
+    "intended_candidate_label": "Mingxue Golden Voice five-element balance candidate",
+    "target_rule_family": "five_element_balance",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Record exact source locator during manual extraction.",
+      "Separate terminology notes from pattern-strength conclusions before candidate review."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep terminology as source-backed taxonomy.",
+      "Do not promote broad unsourced summaries."
+    ],
+    "status": "planned"
+  },
+  {
+    "draft_slot_id": "slot_hongfu_remedy_boundary_001",
+    "task_id": "task_fortune_reading_hongfu_qitian_extract_001",
+    "intended_candidate_label": "Fortune Reading Hongfu Qitian remedy-boundary candidate",
+    "target_rule_family": "remedy_boundary",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Record exact source locator during manual extraction.",
+      "Capture uncertainty and limitation notes before any candidate review."
+    ],
+    "risk_boundary": "sensitive",
+    "safety_requirements": [
+      "State uncertainty for remedy-boundary interpretation.",
+      "Avoid certainty about remedy effects.",
+      "No paid-pressure or anxiety-creating language.",
+      "State limitations for general-practice material."
+    ],
+    "status": "planned"
+  }
+]
