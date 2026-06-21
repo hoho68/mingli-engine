@@ -47,9 +47,10 @@
     "short_quote": "",
     "proposed_rule_family": "high_risk_signal",
     "risk_tier": "high_risk",
-    "status": "approved",
+    "status": "promoted",
     "proposed_limitations": [
-      "Refuse exact death timing, exact lifespan, and professional-advice use."
+      "Refuse exact death timing, exact lifespan, and professional-advice use.",
+      "不得输出精确寿命、死亡时间与诊断结论，仅作为条件化高风险信号。"
     ],
     "related_evidence_ids": [],
     "related_conflict_ids": [

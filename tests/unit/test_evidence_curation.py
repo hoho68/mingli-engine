@@ -1,4 +1,4 @@
-from mingli_engine.models import ClassicalSource, EvidenceUnit, SourceConflict
+﻿from mingli_engine.models import ClassicalSource, EvidenceUnit, SourceConflict
 
 
 def test_project_corpus_coverage_exposes_per_source_counts_and_gaps():
@@ -81,7 +81,7 @@ def test_build_coverage_report_counts_sources_families_risks_and_gaps():
             evidence_id="ordinary_signal",
             source_id="source_with_evidence",
             source_ref="review-note:ordinary",
-            theme="格局",
+            theme="鏍煎眬",
             rule_family="pattern_strength",
             risk_tier="ordinary",
             summary="A concise ordinary signal.",
@@ -92,7 +92,7 @@ def test_build_coverage_report_counts_sources_families_risks_and_gaps():
             evidence_id="high_risk_signal",
             source_id="source_with_evidence",
             source_ref="review-note:risk",
-            theme="风险",
+            theme="椋庨櫓",
             rule_family="high_risk_signal",
             risk_tier="high_risk",
             summary="A concise high-risk signal.",
@@ -145,7 +145,7 @@ def test_validate_curation_quality_reports_blocking_failures():
             evidence_id="long_signal",
             source_id="approved_source",
             source_ref="review-note:long",
-            theme="格局",
+            theme="鏍煎眬",
             rule_family="pattern_strength",
             risk_tier="ordinary",
             summary="x" * 281,
@@ -156,7 +156,7 @@ def test_validate_curation_quality_reports_blocking_failures():
             evidence_id="high_risk_without_limits",
             source_id="approved_source",
             source_ref="review-note:risk",
-            theme="风险",
+            theme="椋庨櫓",
             rule_family="high_risk_signal",
             risk_tier="high_risk",
             summary="A high-risk signal.",
@@ -188,7 +188,7 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
 
     report = build_coverage_report(sources, evidence_units, conflicts)
 
-    assert report.approved_evidence_count == 60
+    assert report.approved_evidence_count == 61
     assert report.open_conflicts == ["conflict_high_risk_scope_001"]
     assert set(report.sources_with_gaps) == {
         "blind_life_manual",
@@ -217,7 +217,7 @@ def test_validate_curation_quality_reports_unusable_source_failures():
             evidence_id="blocked_signal",
             source_id="blocked_source",
             source_ref="review-note:blocked",
-            theme="格局",
+            theme="鏍煎眬",
             rule_family="pattern_strength",
             risk_tier="ordinary",
             summary="A signal that should not be report usable.",
@@ -228,7 +228,7 @@ def test_validate_curation_quality_reports_unusable_source_failures():
             evidence_id="unknown_signal",
             source_id="unknown_source",
             source_ref="review-note:unknown",
-            theme="格局",
+            theme="鏍煎眬",
             rule_family="pattern_strength",
             risk_tier="ordinary",
             summary="A signal with missing source.",

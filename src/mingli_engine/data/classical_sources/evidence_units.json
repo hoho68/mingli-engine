@@ -8,8 +8,13 @@
     "risk_tier": "ordinary",
     "school": "段氏",
     "summary": "十神关系应结合柱位、组合与日主关系观察功能，不宜脱离整体结构单断。",
-    "applicability": ["ten_god_available", "four_pillars_complete"],
-    "limitations": ["缺少十神标注或柱位信息时降级为不可用。"],
+    "applicability": [
+      "ten_god_available",
+      "four_pillars_complete"
+    ],
+    "limitations": [
+      "缺少十神标注或柱位信息时降级为不可用。"
+    ],
     "curation_batch_id": "batch_012_seed_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -24,8 +29,13 @@
     "risk_tier": "ordinary",
     "school": "通论",
     "summary": "五行旺衰需要同时看明透、藏干、季令与组合，数量只能作为初步结构线索。",
-    "applicability": ["five_elements_summary_available", "month_pillar_available"],
-    "limitations": ["没有月令或藏干资料时只能作弱支持。"],
+    "applicability": [
+      "five_elements_summary_available",
+      "month_pillar_available"
+    ],
+    "limitations": [
+      "没有月令或藏干资料时只能作弱支持。"
+    ],
     "curation_batch_id": "batch_012_seed_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -40,8 +50,13 @@
     "risk_tier": "ordinary",
     "school": "师传口径",
     "summary": "格局和旺衰判断应先看月令、日主根气与干支配合，证据不足时只列候选。",
-    "applicability": ["four_pillars_complete", "month_pillar_available"],
-    "limitations": ["缺少节气或月令校验时不得下决定性格局结论。"],
+    "applicability": [
+      "four_pillars_complete",
+      "month_pillar_available"
+    ],
+    "limitations": [
+      "缺少节气或月令校验时不得下决定性格局结论。"
+    ],
     "curation_batch_id": "batch_012_seed_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -56,8 +71,13 @@
     "risk_tier": "ordinary",
     "school": "盲派",
     "summary": "刑冲合害应结合位置、引动条件与整体结构观察，不直接等同于现实事件。",
-    "applicability": ["earthly_branches_available", "four_pillars_complete"],
-    "limitations": ["没有岁运触发时只作为结构压力或互动线索。"],
+    "applicability": [
+      "earthly_branches_available",
+      "four_pillars_complete"
+    ],
+    "limitations": [
+      "没有岁运触发时只作为结构压力或互动线索。"
+    ],
     "curation_batch_id": "batch_012_seed_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -72,8 +92,13 @@
     "risk_tier": "ordinary",
     "school": "东北盲派",
     "summary": "盲派象法重在从干支组合取象，再回到原局结构与应期条件中校验。",
-    "applicability": ["gan_zhi_available", "four_pillars_complete"],
-    "limitations": ["取象不能脱离结构证据，也不能直接作唯一结论。"],
+    "applicability": [
+      "gan_zhi_available",
+      "four_pillars_complete"
+    ],
+    "limitations": [
+      "取象不能脱离结构证据，也不能直接作唯一结论。"
+    ],
     "curation_batch_id": "batch_012_seed_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -88,8 +113,13 @@
     "risk_tier": "sensitive",
     "school": "师传口径",
     "summary": "大运流年重在观察原局被引动的主题、条件与阶段变化，不宜保证具体结果。",
-    "applicability": ["luck_cycle_available", "four_pillars_complete"],
-    "limitations": ["缺少大运起运或流年资料时只能说明阶段主题候选。"],
+    "applicability": [
+      "luck_cycle_available",
+      "four_pillars_complete"
+    ],
+    "limitations": [
+      "缺少大运起运或流年资料时只能说明阶段主题候选。"
+    ],
     "curation_batch_id": "batch_012_seed_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -104,8 +134,12 @@
     "risk_tier": "sensitive",
     "school": "通俗命理",
     "summary": "趋避调整只能描述传统说法和低风险反思方向，不得承诺效果或诱导付费。",
-    "applicability": ["user_requests_remedy_or_adjustment"],
-    "limitations": ["不得用于保证改运、制造焦虑或销售法器法事。"],
+    "applicability": [
+      "user_requests_remedy_or_adjustment"
+    ],
+    "limitations": [
+      "不得用于保证改运、制造焦虑或销售法器法事。"
+    ],
     "curation_batch_id": "batch_012_seed_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -120,8 +154,13 @@
     "risk_tier": "high_risk",
     "school": "传统高风险材料",
     "summary": "生死寿夭材料只可转写为传统高风险信号，说明条件和不确定性，不输出寿命终点。",
-    "applicability": ["formal_report_requested", "high_risk_context_allowed"],
-    "limitations": ["拒绝精确死亡时间、寿命长短、疾病诊断、治疗方案和恐吓式断语。"],
+    "applicability": [
+      "formal_report_requested",
+      "high_risk_context_allowed"
+    ],
+    "limitations": [
+      "拒绝精确死亡时间、寿命长短、疾病诊断、治疗方案和恐吓式断语。"
+    ],
     "curation_batch_id": "batch_012_seed_001",
     "confidence": "weak",
     "source_quality": "direct_extract",
@@ -136,8 +175,13 @@
     "risk_tier": "ordinary",
     "school": "东北盲派",
     "summary": "干支取象应先分清柱位，再判断象意是否与原局结构相互印证。",
-    "applicability": ["gan_zhi_available", "pillar_positions_available"],
-    "limitations": ["缺少柱位或结构校验时只保留为取象候选。"],
+    "applicability": [
+      "gan_zhi_available",
+      "pillar_positions_available"
+    ],
+    "limitations": [
+      "缺少柱位或结构校验时只保留为取象候选。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -152,8 +196,13 @@
     "risk_tier": "ordinary",
     "school": "东北盲派",
     "summary": "组合取象宜看相邻、透藏和动静关系，不宜把单一字象直接等同现实事件。",
-    "applicability": ["gan_zhi_available", "hidden_stems_available"],
-    "limitations": ["没有组合关系时不得单字定事。"],
+    "applicability": [
+      "gan_zhi_available",
+      "hidden_stems_available"
+    ],
+    "limitations": [
+      "没有组合关系时不得单字定事。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -168,8 +217,13 @@
     "risk_tier": "ordinary",
     "school": "东北盲派",
     "summary": "象法结论需要回到旺衰、十神和刑冲合害中互证，互证不足时降级。",
-    "applicability": ["formal_report_requested", "structure_signals_available"],
-    "limitations": ["缺少互证时不得作为决定性结论。"],
+    "applicability": [
+      "formal_report_requested",
+      "structure_signals_available"
+    ],
+    "limitations": [
+      "缺少互证时不得作为决定性结论。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -184,8 +238,13 @@
     "risk_tier": "sensitive",
     "school": "东北盲派",
     "summary": "应期或阶段判断须有岁运引动条件，静态原局只能说明潜在主题。",
-    "applicability": ["luck_cycle_available", "gan_zhi_available"],
-    "limitations": ["没有岁运资料时不输出具体应期。"],
+    "applicability": [
+      "luck_cycle_available",
+      "gan_zhi_available"
+    ],
+    "limitations": [
+      "没有岁运资料时不输出具体应期。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -200,8 +259,12 @@
     "risk_tier": "sensitive",
     "school": "东北盲派",
     "summary": "盲派断语材料进入报告前应改写为条件化观察，避免制造恐惧。",
-    "applicability": ["report_language_review_required"],
-    "limitations": ["不得沿用恐吓式断语。"],
+    "applicability": [
+      "report_language_review_required"
+    ],
+    "limitations": [
+      "不得沿用恐吓式断语。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -216,8 +279,12 @@
     "risk_tier": "ordinary",
     "school": "东北盲派",
     "summary": "地支互动可作为取象线索，但需结合合冲刑害的实际成立条件。",
-    "applicability": ["earthly_branches_available"],
-    "limitations": ["互动条件不明时只作为待核线索。"],
+    "applicability": [
+      "earthly_branches_available"
+    ],
+    "limitations": [
+      "互动条件不明时只作为待核线索。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -232,12 +299,19 @@
     "risk_tier": "high_risk",
     "school": "东北盲派",
     "summary": "盲派高风险取象只能作为传统风险信号，须同时说明条件、证据和不确定性。",
-    "applicability": ["high_risk_context_allowed", "formal_report_requested"],
-    "limitations": ["拒绝精确灾期、诊断治疗、恐吓式断语和保证结果。"],
+    "applicability": [
+      "high_risk_context_allowed",
+      "formal_report_requested"
+    ],
+    "limitations": [
+      "拒绝精确灾期、诊断治疗、恐吓式断语和保证结果。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
-    "conflict_ids": ["conflict_high_risk_scope_001"]
+    "conflict_ids": [
+      "conflict_high_risk_scope_001"
+    ]
   },
   {
     "evidence_id": "duan_ten_god_relation_002",
@@ -248,8 +322,13 @@
     "risk_tier": "ordinary",
     "school": "段氏",
     "summary": "十神意义须随年、月、日、时位置变化，不宜离开柱位统一套用。",
-    "applicability": ["ten_god_available", "pillar_positions_available"],
-    "limitations": ["缺少柱位时只保留十神名称，不作关系判断。"],
+    "applicability": [
+      "ten_god_available",
+      "pillar_positions_available"
+    ],
+    "limitations": [
+      "缺少柱位时只保留十神名称，不作关系判断。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -264,8 +343,13 @@
     "risk_tier": "ordinary",
     "school": "段氏",
     "summary": "十神组合须与日主强弱、五行流通和格局候选同看，才能形成报告结论。",
-    "applicability": ["ten_god_available", "day_master_available"],
-    "limitations": ["结构证据不足时降级为弱支持。"],
+    "applicability": [
+      "ten_god_available",
+      "day_master_available"
+    ],
+    "limitations": [
+      "结构证据不足时降级为弱支持。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -280,8 +364,13 @@
     "risk_tier": "ordinary",
     "school": "段氏",
     "summary": "格局候选应作为结构语境，不应越过月令、透藏和十神组合直接定格。",
-    "applicability": ["four_pillars_complete", "month_pillar_available"],
-    "limitations": ["缺少月令或透藏信息时只列候选。"],
+    "applicability": [
+      "four_pillars_complete",
+      "month_pillar_available"
+    ],
+    "limitations": [
+      "缺少月令或透藏信息时只列候选。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -296,12 +385,19 @@
     "risk_tier": "ordinary",
     "school": "段氏",
     "summary": "用神候选应从结构平衡和流通需要推得，不宜只按五行数量选择。",
-    "applicability": ["five_elements_summary_available", "day_master_available"],
-    "limitations": ["证据不足时只列候选，不作定论。"],
+    "applicability": [
+      "five_elements_summary_available",
+      "day_master_available"
+    ],
+    "limitations": [
+      "证据不足时只列候选，不作定论。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
-    "conflict_ids": ["conflict_useful_god_school_001"]
+    "conflict_ids": [
+      "conflict_useful_god_school_001"
+    ]
   },
   {
     "evidence_id": "duan_useful_god_candidate_002",
@@ -312,8 +408,12 @@
     "risk_tier": "ordinary",
     "school": "段氏",
     "summary": "用神候选须说明成立条件和反例条件，避免把调候或扶抑混为一类。",
-    "applicability": ["formal_report_requested"],
-    "limitations": ["条件不清时不得输出唯一用神。"],
+    "applicability": [
+      "formal_report_requested"
+    ],
+    "limitations": [
+      "条件不清时不得输出唯一用神。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -328,8 +428,13 @@
     "risk_tier": "ordinary",
     "school": "段氏",
     "summary": "忌神候选应从过旺、受制失衡或破坏流通处观察，不可只凭名称判断。",
-    "applicability": ["five_elements_summary_available", "structure_signals_available"],
-    "limitations": ["缺少强弱证据时只列结构压力线索。"],
+    "applicability": [
+      "five_elements_summary_available",
+      "structure_signals_available"
+    ],
+    "limitations": [
+      "缺少强弱证据时只列结构压力线索。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -344,8 +449,12 @@
     "risk_tier": "ordinary",
     "school": "段氏",
     "summary": "忌神判断须随结构语境变化，某五行在不同格局中可能承担不同功能。",
-    "applicability": ["pattern_candidates_available"],
-    "limitations": ["格局不明时不得固定某五行为忌。"],
+    "applicability": [
+      "pattern_candidates_available"
+    ],
+    "limitations": [
+      "格局不明时不得固定某五行为忌。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -360,8 +469,13 @@
     "risk_tier": "ordinary",
     "school": "盲派",
     "summary": "刑冲合害需辨明发生位置和所涉十神，不能只按地支名称推结论。",
-    "applicability": ["earthly_branches_available", "ten_god_available"],
-    "limitations": ["缺少位置和十神时只作为互动线索。"],
+    "applicability": [
+      "earthly_branches_available",
+      "ten_god_available"
+    ],
+    "limitations": [
+      "缺少位置和十神时只作为互动线索。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -376,8 +490,13 @@
     "risk_tier": "sensitive",
     "school": "盲派",
     "summary": "原局互动在岁运引动时才更适合说明阶段主题，静态互动不等于具体事件。",
-    "applicability": ["earthly_branches_available", "luck_cycle_available"],
-    "limitations": ["没有岁运触发时不得推具体应事。"],
+    "applicability": [
+      "earthly_branches_available",
+      "luck_cycle_available"
+    ],
+    "limitations": [
+      "没有岁运触发时不得推具体应事。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -392,8 +511,13 @@
     "risk_tier": "ordinary",
     "school": "盲派",
     "summary": "地支互动强弱须结合月令、透干和合化是否成立，不宜单列地支定性。",
-    "applicability": ["month_pillar_available", "heavenly_stems_available"],
-    "limitations": ["合化条件不明时保留为候选。"],
+    "applicability": [
+      "month_pillar_available",
+      "heavenly_stems_available"
+    ],
+    "limitations": [
+      "合化条件不明时保留为候选。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -408,8 +532,13 @@
     "risk_tier": "ordinary",
     "school": "盲派",
     "summary": "盲派象法可补充结构解读，但必须和可见干支、十神、支象互动互相校验。",
-    "applicability": ["gan_zhi_available", "ten_god_available"],
-    "limitations": ["无互证时不得作为正式判断。"],
+    "applicability": [
+      "gan_zhi_available",
+      "ten_god_available"
+    ],
+    "limitations": [
+      "无互证时不得作为正式判断。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -424,8 +553,12 @@
     "risk_tier": "ordinary",
     "school": "盲派",
     "summary": "象法语言进入报告时应从断语改写为可审查的条件、信号和限制。",
-    "applicability": ["report_language_review_required"],
-    "limitations": ["不得输出无法追溯的断语。"],
+    "applicability": [
+      "report_language_review_required"
+    ],
+    "limitations": [
+      "不得输出无法追溯的断语。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -440,8 +573,12 @@
     "risk_tier": "high_risk",
     "school": "盲派",
     "summary": "涉及灾厄或健康风险的盲派材料只能作为传统风险信号，不作现实保证。",
-    "applicability": ["high_risk_context_allowed"],
-    "limitations": ["拒绝精确灾期、疾病诊断、治疗方案和保证结果。"],
+    "applicability": [
+      "high_risk_context_allowed"
+    ],
+    "limitations": [
+      "拒绝精确灾期、疾病诊断、治疗方案和保证结果。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -456,8 +593,12 @@
     "risk_tier": "sensitive",
     "school": "盲派",
     "summary": "涉及趋避的材料只能作为低风险反思提示，不得承诺化解效果。",
-    "applicability": ["user_requests_remedy_or_adjustment"],
-    "limitations": ["不得制造焦虑或引导付费化解。"],
+    "applicability": [
+      "user_requests_remedy_or_adjustment"
+    ],
+    "limitations": [
+      "不得制造焦虑或引导付费化解。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -472,8 +613,13 @@
     "risk_tier": "ordinary",
     "school": "师传口径",
     "summary": "旺衰判断须看日主根气、月令得失与干支配合，不宜只看数量。",
-    "applicability": ["day_master_available", "month_pillar_available"],
-    "limitations": ["缺少根气或月令资料时只作弱支持。"],
+    "applicability": [
+      "day_master_available",
+      "month_pillar_available"
+    ],
+    "limitations": [
+      "缺少根气或月令资料时只作弱支持。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -488,8 +634,12 @@
     "risk_tier": "ordinary",
     "school": "师传口径",
     "summary": "格局证据不完整时应列为候选或弱支持，等待更多结构证据互证。",
-    "applicability": ["pattern_candidates_available"],
-    "limitations": ["不得在证据不足时输出决定性格局。"],
+    "applicability": [
+      "pattern_candidates_available"
+    ],
+    "limitations": [
+      "不得在证据不足时输出决定性格局。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -504,8 +654,13 @@
     "risk_tier": "sensitive",
     "school": "师传口径",
     "summary": "岁运判断应说明被引动的原局主题和条件，不宜保证外部事件结果。",
-    "applicability": ["luck_cycle_available", "four_pillars_complete"],
-    "limitations": ["缺少起运或流年资料时仅保留阶段主题。"],
+    "applicability": [
+      "luck_cycle_available",
+      "four_pillars_complete"
+    ],
+    "limitations": [
+      "缺少起运或流年资料时仅保留阶段主题。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -520,12 +675,18 @@
     "risk_tier": "ordinary",
     "school": "师传口径",
     "summary": "取用须先辨结构病处和流通需要，再列可扶可抑的候选方向。",
-    "applicability": ["structure_signals_available"],
-    "limitations": ["结构病处不明时不输出唯一用神。"],
+    "applicability": [
+      "structure_signals_available"
+    ],
+    "limitations": [
+      "结构病处不明时不输出唯一用神。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
-    "conflict_ids": ["conflict_useful_god_school_001"]
+    "conflict_ids": [
+      "conflict_useful_god_school_001"
+    ]
   },
   {
     "evidence_id": "teacher_useful_god_candidate_002",
@@ -536,8 +697,13 @@
     "risk_tier": "ordinary",
     "school": "师传口径",
     "summary": "季令寒暖燥湿可影响用神候选，但须与日主强弱和格局条件并看。",
-    "applicability": ["month_pillar_available", "five_elements_summary_available"],
-    "limitations": ["调候证据不足时只作辅助线索。"],
+    "applicability": [
+      "month_pillar_available",
+      "five_elements_summary_available"
+    ],
+    "limitations": [
+      "调候证据不足时只作辅助线索。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -552,8 +718,12 @@
     "risk_tier": "ordinary",
     "school": "师传口径",
     "summary": "忌神候选常来自破坏平衡或阻断流通的结构点，需要列明对应证据。",
-    "applicability": ["structure_signals_available"],
-    "limitations": ["证据不足时只说明压力来源。"],
+    "applicability": [
+      "structure_signals_available"
+    ],
+    "limitations": [
+      "证据不足时只说明压力来源。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -568,8 +738,13 @@
     "risk_tier": "sensitive",
     "school": "师传口径",
     "summary": "忌神被岁运引动时只可说明阶段压力主题，不能保证具体结果。",
-    "applicability": ["luck_cycle_available", "taboo_candidates_available"],
-    "limitations": ["不得把阶段压力说成必然事件。"],
+    "applicability": [
+      "luck_cycle_available",
+      "taboo_candidates_available"
+    ],
+    "limitations": [
+      "不得把阶段压力说成必然事件。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -584,8 +759,13 @@
     "risk_tier": "ordinary",
     "school": "师传口径",
     "summary": "十神功能须回到日主关系和格局语境，不能只按名称作性格定论。",
-    "applicability": ["ten_god_available", "day_master_available"],
-    "limitations": ["缺少格局语境时降级为关系线索。"],
+    "applicability": [
+      "ten_god_available",
+      "day_master_available"
+    ],
+    "limitations": [
+      "缺少格局语境时降级为关系线索。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -600,8 +780,13 @@
     "risk_tier": "ordinary",
     "school": "通论",
     "summary": "五行强弱须结合季令，不宜用出现次数替代旺衰判断。",
-    "applicability": ["five_elements_summary_available", "month_pillar_available"],
-    "limitations": ["季令缺失时只作初步观察。"],
+    "applicability": [
+      "five_elements_summary_available",
+      "month_pillar_available"
+    ],
+    "limitations": [
+      "季令缺失时只作初步观察。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -616,8 +801,13 @@
     "risk_tier": "ordinary",
     "school": "通论",
     "summary": "五行平衡还要看相生相克和流通路径，偏枯或阻滞才形成结构压力。",
-    "applicability": ["five_elements_summary_available", "structure_signals_available"],
-    "limitations": ["流通证据不足时不得下定论。"],
+    "applicability": [
+      "five_elements_summary_available",
+      "structure_signals_available"
+    ],
+    "limitations": [
+      "流通证据不足时不得下定论。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -632,8 +822,12 @@
     "risk_tier": "ordinary",
     "school": "通论",
     "summary": "十神术语用于描述关系功能，不应被报告写成固定人格或现实身份。",
-    "applicability": ["ten_god_available"],
-    "limitations": ["缺少组合证据时只解释术语含义。"],
+    "applicability": [
+      "ten_god_available"
+    ],
+    "limitations": [
+      "缺少组合证据时只解释术语含义。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -648,8 +842,13 @@
     "risk_tier": "ordinary",
     "school": "通论",
     "summary": "十神关系要和五行强弱同看，过旺或受制才形成需要说明的结构倾向。",
-    "applicability": ["ten_god_available", "five_elements_summary_available"],
-    "limitations": ["五行资料不足时降级。"],
+    "applicability": [
+      "ten_god_available",
+      "five_elements_summary_available"
+    ],
+    "limitations": [
+      "五行资料不足时降级。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -664,8 +863,12 @@
     "risk_tier": "ordinary",
     "school": "通论",
     "summary": "用神候选宜从补偏救弊和促进流通两方面观察，并保留候选强度。",
-    "applicability": ["five_elements_summary_available"],
-    "limitations": ["不以单一数量差异确定用神。"],
+    "applicability": [
+      "five_elements_summary_available"
+    ],
+    "limitations": [
+      "不以单一数量差异确定用神。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -680,8 +883,12 @@
     "risk_tier": "ordinary",
     "school": "通论",
     "summary": "忌神候选来自偏旺、偏枯或阻滞处，报告应说明它只是结构压力。",
-    "applicability": ["five_elements_summary_available"],
-    "limitations": ["不得把忌神候选写成现实坏事。"],
+    "applicability": [
+      "five_elements_summary_available"
+    ],
+    "limitations": [
+      "不得把忌神候选写成现实坏事。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -696,8 +903,12 @@
     "risk_tier": "ordinary",
     "school": "通论",
     "summary": "格局术语应作为结构分类语言，需要与旺衰和用忌候选一并说明。",
-    "applicability": ["pattern_candidates_available"],
-    "limitations": ["不能只凭术语名称断定层次。"],
+    "applicability": [
+      "pattern_candidates_available"
+    ],
+    "limitations": [
+      "不能只凭术语名称断定层次。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -712,8 +923,12 @@
     "risk_tier": "sensitive",
     "school": "通俗命理",
     "summary": "调整建议应转化为低风险反思或现实行动，不得承诺改运效果。",
-    "applicability": ["user_requests_remedy_or_adjustment"],
-    "limitations": ["不得保证效果或诱导购买。"],
+    "applicability": [
+      "user_requests_remedy_or_adjustment"
+    ],
+    "limitations": [
+      "不得保证效果或诱导购买。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -728,8 +943,12 @@
     "risk_tier": "sensitive",
     "school": "通俗命理",
     "summary": "趋避语言应避免制造焦虑，优先说明传统说法、限制和自主选择。",
-    "applicability": ["formal_report_requested"],
-    "limitations": ["不得制造紧迫感或依赖。"],
+    "applicability": [
+      "formal_report_requested"
+    ],
+    "limitations": [
+      "不得制造紧迫感或依赖。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "moderate",
     "source_quality": "review_note",
@@ -744,8 +963,12 @@
     "risk_tier": "sensitive",
     "school": "通俗命理",
     "summary": "涉及法器法事或付费化解的材料不得进入正式建议，只能记录为边界。",
-    "applicability": ["user_requests_remedy_or_adjustment"],
-    "limitations": ["不得引导付费化解或承诺结果。"],
+    "applicability": [
+      "user_requests_remedy_or_adjustment"
+    ],
+    "limitations": [
+      "不得引导付费化解或承诺结果。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "strong",
     "source_quality": "review_note",
@@ -760,8 +983,12 @@
     "risk_tier": "sensitive",
     "school": "通俗命理",
     "summary": "面向读者的岁运说明宜写成阶段主题和复盘问题，不宜写成事件承诺。",
-    "applicability": ["luck_cycle_available"],
-    "limitations": ["不预测具体结果。"],
+    "applicability": [
+      "luck_cycle_available"
+    ],
+    "limitations": [
+      "不预测具体结果。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -776,8 +1003,12 @@
     "risk_tier": "ordinary",
     "school": "通俗命理",
     "summary": "通俗报告中的十神说明应保持关系线索口径，不替代现实人格评价。",
-    "applicability": ["ten_god_available"],
-    "limitations": ["不得贴固定人格标签。"],
+    "applicability": [
+      "ten_god_available"
+    ],
+    "limitations": [
+      "不得贴固定人格标签。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -792,8 +1023,12 @@
     "risk_tier": "ordinary",
     "school": "通俗命理",
     "summary": "用神候选在通俗报告中可转成平衡方向，但必须保留候选和限制。",
-    "applicability": ["useful_god_candidates_available"],
-    "limitations": ["不得写成唯一人生答案。"],
+    "applicability": [
+      "useful_god_candidates_available"
+    ],
+    "limitations": [
+      "不得写成唯一人生答案。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -808,8 +1043,12 @@
     "risk_tier": "ordinary",
     "school": "通俗命理",
     "summary": "忌神候选在通俗报告中只说明需要留意的结构压力，不指向现实坏事。",
-    "applicability": ["taboo_candidates_available"],
-    "limitations": ["不得制造焦虑或确定化现实结果。"],
+    "applicability": [
+      "taboo_candidates_available"
+    ],
+    "limitations": [
+      "不得制造焦虑或确定化现实结果。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "review_note",
@@ -824,8 +1063,12 @@
     "risk_tier": "high_risk",
     "school": "传统高风险材料",
     "summary": "生死寿夭主题本身具有高风险和争议性，报告只能保留不确定性说明。",
-    "applicability": ["high_risk_context_allowed"],
-    "limitations": ["拒绝精确寿命、死亡时间和保证结果。"],
+    "applicability": [
+      "high_risk_context_allowed"
+    ],
+    "limitations": [
+      "拒绝精确寿命、死亡时间和保证结果。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "direct_extract",
@@ -840,12 +1083,19 @@
     "risk_tier": "high_risk",
     "school": "传统高风险材料",
     "summary": "古籍式高风险公式必须改写为条件化风险信号，不能沿用绝对原话。",
-    "applicability": ["high_risk_context_allowed", "report_language_review_required"],
-    "limitations": ["拒绝精确死亡时间、恐吓式断语和专业建议。"],
+    "applicability": [
+      "high_risk_context_allowed",
+      "report_language_review_required"
+    ],
+    "limitations": [
+      "拒绝精确死亡时间、恐吓式断语和专业建议。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "direct_extract",
-    "conflict_ids": ["conflict_high_risk_scope_001"]
+    "conflict_ids": [
+      "conflict_high_risk_scope_001"
+    ]
   },
   {
     "evidence_id": "life_death_high_risk_signal_004",
@@ -856,8 +1106,12 @@
     "risk_tier": "high_risk",
     "school": "传统高风险材料",
     "summary": "高风险实践材料进入系统时只能说明传统条件，不提供诊断、治疗或保证。",
-    "applicability": ["high_risk_context_allowed"],
-    "limitations": ["拒绝精确寿命、诊断治疗和保证化解。"],
+    "applicability": [
+      "high_risk_context_allowed"
+    ],
+    "limitations": [
+      "拒绝精确寿命、诊断治疗和保证化解。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "direct_extract",
@@ -872,8 +1126,13 @@
     "risk_tier": "sensitive",
     "school": "传统高风险材料",
     "summary": "限运材料可转写为阶段风险主题，但必须脱离精确应期和现实保证。",
-    "applicability": ["luck_cycle_available", "high_risk_context_allowed"],
-    "limitations": ["不输出精确应期或保证结果。"],
+    "applicability": [
+      "luck_cycle_available",
+      "high_risk_context_allowed"
+    ],
+    "limitations": [
+      "不输出精确应期或保证结果。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "direct_extract",
@@ -888,8 +1147,13 @@
     "risk_tier": "sensitive",
     "school": "传统高风险材料",
     "summary": "流年与原局的动态关系只能支撑阶段性条件说明，不支撑精确结果。",
-    "applicability": ["luck_cycle_available", "four_pillars_complete"],
-    "limitations": ["不输出精确时间点或现实结果承诺。"],
+    "applicability": [
+      "luck_cycle_available",
+      "four_pillars_complete"
+    ],
+    "limitations": [
+      "不输出精确时间点或现实结果承诺。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "direct_extract",
@@ -904,8 +1168,13 @@
     "risk_tier": "high_risk",
     "school": "传统高风险材料",
     "summary": "格局类高风险材料须先还原为格局、身强弱和岁运条件的组合信号。",
-    "applicability": ["pattern_candidates_available", "high_risk_context_allowed"],
-    "limitations": ["拒绝精确寿命、死亡时间和恐吓式断语。"],
+    "applicability": [
+      "pattern_candidates_available",
+      "high_risk_context_allowed"
+    ],
+    "limitations": [
+      "拒绝精确寿命、死亡时间和恐吓式断语。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "direct_extract",
@@ -920,8 +1189,13 @@
     "risk_tier": "high_risk",
     "school": "传统高风险材料",
     "summary": "涉及合会刑冲的高风险材料只能说明条件组合，不得直接推出灾事。",
-    "applicability": ["earthly_branches_available", "high_risk_context_allowed"],
-    "limitations": ["拒绝精确灾期、事故判断和恐吓式断语。"],
+    "applicability": [
+      "earthly_branches_available",
+      "high_risk_context_allowed"
+    ],
+    "limitations": [
+      "拒绝精确灾期、事故判断和恐吓式断语。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "direct_extract",
@@ -936,8 +1210,13 @@
     "risk_tier": "high_risk",
     "school": "传统高风险材料",
     "summary": "解灾材料只能作为传统文本中的主张记录，不得变成报告建议或承诺。",
-    "applicability": ["user_requests_remedy_or_adjustment", "high_risk_context_allowed"],
-    "limitations": ["拒绝保证化解、付费诱导和专业建议，不输出精确结果。"],
+    "applicability": [
+      "user_requests_remedy_or_adjustment",
+      "high_risk_context_allowed"
+    ],
+    "limitations": [
+      "拒绝保证化解、付费诱导和专业建议，不输出精确结果。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "direct_extract",
@@ -952,11 +1231,40 @@
     "risk_tier": "high_risk",
     "school": "传统高风险材料",
     "summary": "高风险材料不得转成医疗、法律、心理或投资行动指令，只能提示求助边界。",
-    "applicability": ["high_risk_context_allowed"],
-    "limitations": ["拒绝诊断治疗、法律心理投资指令和保证结果，不输出精确结果。"],
+    "applicability": [
+      "high_risk_context_allowed"
+    ],
+    "limitations": [
+      "拒绝诊断治疗、法律心理投资指令和保证结果，不输出精确结果。"
+    ],
     "curation_batch_id": "batch_012_taxonomy_001",
     "confidence": "weak",
     "source_quality": "direct_extract",
     "conflict_ids": []
+  },
+  {
+    "evidence_id": "life_death_book_boundary_signal_001",
+    "source_id": "life_death_book_100_pages",
+    "source_ref": "review-note:life_death_book_100_pages.md#risk-boundary",
+    "theme": "生死高风险边界",
+    "rule_family": "high_risk_signal",
+    "risk_tier": "high_risk",
+    "summary": "Life-death material can only support bounded high-risk signal notes, never exact timing or lifespan claims.",
+    "applicability": [
+      "high_risk_context_allowed",
+      "formal_report_requested"
+    ],
+    "limitations": [
+      "Refuse exact death timing, exact lifespan, and professional-advice use.",
+      "不得输出精确寿命、死亡时间与诊断结论，仅作为条件化高风险信号。",
+      "Use only as traditional high-risk signal context with uncertainty language."
+    ],
+    "school": "传统高风险材料",
+    "curation_batch_id": "batch_012_taxonomy_001",
+    "confidence": "moderate",
+    "source_quality": "review_note",
+    "conflict_ids": [
+      "conflict_high_risk_scope_001"
+    ]
   }
 ]

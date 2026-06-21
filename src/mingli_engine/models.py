@@ -476,6 +476,27 @@ class IntakeProgressReport:
 
 
 @dataclass(frozen=True)
+class PromotionPlan:
+    """Read-only plan describing the evidence units a promotion would create."""
+
+    promotion_batch_id: str
+    evidence_units: list[EvidenceUnit] = field(default_factory=list)
+    promoted_count: int = 0
+    target_evidence_ids: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class PromotionResult:
+    """Outcome of an explicitly applied promotion."""
+
+    promotion_batch_id: str
+    promoted_count: int
+    target_evidence_ids: list[str] = field(default_factory=list)
+    promoted_candidate_ids: list[str] = field(default_factory=list)
+
+
+
+@dataclass(frozen=True)
 class CandidateReviewWorkItem:
     candidate_id: str
     material_id: str
