@@ -919,7 +919,6 @@ def test_list_pending_candidate_review_worklist_surfaces_checked_in_pending_cand
     worklist = source_intake.list_pending_candidate_review_worklist()
 
     assert [item.candidate_id for item in worklist] == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -947,7 +946,7 @@ def test_list_pending_candidate_review_worklist_surfaces_checked_in_pending_cand
         )
     assert (
         "confirm_uncertainty_and_limitation_language"
-        in actions_by_id["candidate_northeast_blind_image_001"]
+        in actions_by_id["candidate_mingli_pattern_strength_017_001"]
     )
     assert (
         "confirm_uncertainty_and_limitation_language"
@@ -1013,7 +1012,6 @@ def test_list_pending_candidate_review_decision_packets_prepare_manual_review_in
     packets = source_intake.list_pending_candidate_review_decision_packets()
 
     assert [packet.candidate_id for packet in packets] == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -1045,15 +1043,9 @@ def test_list_pending_candidate_review_decision_packets_prepare_manual_review_in
 
     packets_by_id = {packet.candidate_id: packet for packet in packets}
     assert (
-        "duplicate_or_reuse_resolution_before_approval"
-        in packets_by_id[
-            "candidate_northeast_blind_image_001"
-        ].approval_blockers
-    )
-    assert (
         "uncertainty_limitations_not_confirmed"
         in packets_by_id[
-            "candidate_northeast_blind_image_001"
+            "candidate_mingli_pattern_strength_017_001"
         ].approval_blockers
     )
     for candidate_id in (
@@ -1131,34 +1123,31 @@ def test_list_pending_candidate_review_decision_packets_exclude_non_pending_cand
 def test_build_pending_candidate_review_packet_summary_counts_blockers_and_inputs():
     summary = source_intake.build_pending_candidate_review_packet_summary()
 
-    assert summary.packet_count == 5
+    assert summary.packet_count == 4
     assert summary.candidate_ids == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
     ]
     assert summary.decision_option_counts == {
-        "approved": 5,
-        "returned": 5,
-        "rejected": 5,
-        "blocked": 5,
+        "approved": 4,
+        "returned": 4,
+        "rejected": 4,
+        "blocked": 4,
     }
-    assert summary.required_input_counts["reviewer"] == 5
-    assert summary.required_input_counts["reviewed_at"] == 5
+    assert summary.required_input_counts["reviewer"] == 4
+    assert summary.required_input_counts["reviewed_at"] == 4
     assert summary.required_input_counts["source_page_or_section_locator"] == 4
-    assert summary.required_input_counts["uncertainty_and_limitation_language"] == 3
-    assert summary.required_input_counts["duplicate_or_reuse_resolution"] == 1
+    assert summary.required_input_counts["uncertainty_and_limitation_language"] == 2
     assert summary.approval_blocker_counts == {
-        "source_locator_not_verified": 5,
-        "candidate_meaning_not_verified": 5,
-        "review_outcome_not_selected": 5,
-        "uncertainty_limitations_not_confirmed": 3,
-        "duplicate_or_reuse_resolution_before_approval": 1,
+        "source_locator_not_verified": 4,
+        "candidate_meaning_not_verified": 4,
+        "review_outcome_not_selected": 4,
+        "uncertainty_limitations_not_confirmed": 2,
         "learning_reference_locator_not_replaced": 4,
     }
-    assert summary.packet_action_counts["draft_review_decision_after_manual_checks"] == 5
+    assert summary.packet_action_counts["draft_review_decision_after_manual_checks"] == 4
     assert summary.review_decision_delta == 0
     assert summary.formal_evidence_delta == 0
 
@@ -1220,33 +1209,23 @@ def test_build_pending_candidate_review_action_queue_prioritizes_next_manual_ste
     queue = source_intake.build_pending_candidate_review_action_queue()
 
     assert [item.candidate_id for item in queue] == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
     ]
     assert [item.primary_action for item in queue] == [
-        "resolve_duplicate_or_reuse_context",
         "replace_learning_reference_locator",
         "replace_learning_reference_locator",
         "replace_learning_reference_locator",
         "replace_learning_reference_locator",
     ]
     assert all(item.priority == "high" for item in queue)
-    assert (
-        "duplicate_or_reuse_resolution"
-        in queue[0].blocking_inputs
-    )
-    for item in queue[1:]:
+    for item in queue:
         assert "source_page_or_section_locator" in item.blocking_inputs
     assert all(
         "Action queue items are planning metadata only." in item.boundary_notes
         for item in queue
-    )
-    assert queue[0].reason == (
-        "Resolve duplicate or reuse context before any review decision can be "
-        "written."
     )
     assert queue[1].reason == (
         "Replace the learning-reference locator with a source page, section, "
@@ -1286,17 +1265,11 @@ def test_render_pending_candidate_review_action_queue_markdown_lists_summary_and
     markdown = source_intake.render_pending_candidate_review_action_queue_markdown()
 
     assert markdown.startswith("# Pending Candidate Review Action Queue\n")
-    assert "- Queue items: `5`" in markdown
+    assert "- Queue items: `4`" in markdown
     assert "- Review decision delta: `0`" in markdown
     assert "- Formal evidence delta: `0`" in markdown
     assert "## Action Items" in markdown
-    assert markdown.count("- [ ] Candidate: `") == 5
-    assert (
-        "- [ ] Candidate: `candidate_northeast_blind_image_001`\n"
-        "  - Priority: `high`\n"
-        "  - Primary action: `resolve_duplicate_or_reuse_context`\n"
-        "  - Blocking inputs: `duplicate_or_reuse_resolution`"
-    ) in markdown
+    assert markdown.count("- [ ] Candidate: `") == 4
     for candidate_id in (
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
@@ -1346,7 +1319,6 @@ def test_list_pending_candidate_review_input_templates_prepare_fillable_fields()
     templates = source_intake.list_pending_candidate_review_input_templates()
 
     assert [template.candidate_id for template in templates] == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -1385,15 +1357,14 @@ def test_list_pending_candidate_review_input_templates_prepare_fillable_fields()
     )
 
     templates_by_id = {template.candidate_id: template for template in templates}
-    northeast = templates_by_id["candidate_northeast_blind_image_001"]
+    mingli = templates_by_id["candidate_mingli_pattern_strength_017_001"]
     assert (
-        northeast.decision_id_hint
-        == "review_candidate_northeast_blind_image_001"
+        mingli.decision_id_hint
+        == "review_candidate_mingli_pattern_strength_017_001"
     )
-    assert northeast.current_source_locator
-    assert "duplicate_or_reuse_resolution" in northeast.conditional_fields
-    assert "uncertainty_and_limitation_language" in northeast.conditional_fields
-    assert "duplicate_or_reuse_resolution" in northeast.blocking_inputs
+    assert mingli.current_source_locator
+    assert "uncertainty_and_limitation_language" in mingli.conditional_fields
+    assert "uncertainty_and_limitation_language" in mingli.blocking_inputs
 
     for candidate_id in (
         "candidate_mingli_pattern_strength_017_001",
@@ -1410,14 +1381,14 @@ def test_render_pending_candidate_review_input_templates_markdown_lists_fields()
     markdown = source_intake.render_pending_candidate_review_input_templates_markdown()
 
     assert markdown.startswith("# Pending Candidate Review Input Templates\n")
-    assert "- Template count: `5`" in markdown
+    assert "- Template count: `4`" in markdown
     assert "- Review decision delta: `0`" in markdown
     assert "- Formal evidence delta: `0`" in markdown
     assert "## Templates" in markdown
-    assert markdown.count("- [ ] Candidate: `") == 5
+    assert markdown.count("- [ ] Candidate: `") == 4
     assert (
-        "- [ ] Candidate: `candidate_northeast_blind_image_001`\n"
-        "  - Decision id hint: `review_candidate_northeast_blind_image_001`"
+        "- [ ] Candidate: `candidate_mingli_pattern_strength_017_001`\n"
+        "  - Decision id hint: `review_candidate_mingli_pattern_strength_017_001`"
     ) in markdown
     for field_name in (
         "reviewer:",
@@ -1430,7 +1401,6 @@ def test_render_pending_candidate_review_input_templates_markdown_lists_fields()
         "approval_limitations:",
         "required_changes:",
         "rejection_reason:",
-        "duplicate_or_reuse_resolution:",
         "source_page_or_section_locator:",
         "uncertainty_and_limitation_language:",
     ):
@@ -1527,18 +1497,17 @@ def test_validate_pending_candidate_review_decision_draft_accepts_complete_appro
 
 def test_validate_pending_candidate_review_decision_draft_blocks_unresolved_approval():
     draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     result = source_intake.validate_pending_candidate_review_decision_draft(draft)
@@ -1547,13 +1516,14 @@ def test_validate_pending_candidate_review_decision_draft_blocks_unresolved_appr
     assert result.normalized_review_decision == {}
     assert result.missing_fields == [
         "approval_limitations",
+        "source_page_or_section_locator",
         "uncertainty_and_limitation_language",
-        "duplicate_or_reuse_resolution",
     ]
     assert result.blocking_issues == [
         "approved_candidate_requires_approval_limitations",
+        "source_page_or_section_locator_required",
         "uncertainty_and_limitation_language_required",
-        "duplicate_or_reuse_resolution_required",
+        "approved_candidate_source_locator_still_learning_reference",
         "approved_candidate_cannot_use_needs_recheck",
     ]
     assert result.review_decision_delta == 0
@@ -1657,18 +1627,17 @@ def test_build_pending_candidate_review_application_guard_previews_ready_draft()
 
 def test_build_pending_candidate_review_application_guard_blocks_invalid_draft():
     draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     guard = source_intake.build_pending_candidate_review_application_guard([draft])[0]
@@ -1683,8 +1652,8 @@ def test_build_pending_candidate_review_application_guard_blocks_invalid_draft()
     assert guard.formal_evidence_delta == 0
     assert guard.validation_missing_fields == [
         "approval_limitations",
+        "source_page_or_section_locator",
         "uncertainty_and_limitation_language",
-        "duplicate_or_reuse_resolution",
     ]
     assert "approved_candidate_cannot_use_needs_recheck" in guard.blocking_issues
 
@@ -1887,25 +1856,24 @@ def test_build_pending_candidate_review_application_audit_summary_counts_layers(
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     summary = source_intake.build_pending_candidate_review_application_audit_summary(
         [ready_draft, blocked_draft]
     )
 
-    assert summary.pending_template_count == 5
+    assert summary.pending_template_count == 4
     assert summary.draft_count == 2
     assert summary.validation_ready_count == 1
     assert summary.validation_blocked_count == 1
@@ -1915,9 +1883,8 @@ def test_build_pending_candidate_review_application_audit_summary_counts_layers(
     assert summary.exportable_candidate_ids == [
         "candidate_duan_ten_god_relation_017_001"
     ]
-    assert summary.blocked_candidate_ids == ["candidate_northeast_blind_image_001"]
+    assert summary.blocked_candidate_ids == ["candidate_mingli_pattern_strength_017_001"]
     assert summary.missing_draft_candidate_ids == [
-        "candidate_mingli_pattern_strength_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
     ]
@@ -1925,7 +1892,7 @@ def test_build_pending_candidate_review_application_audit_summary_counts_layers(
         "candidate_duan_ten_god_relation_017_001"
     ] == "apply_manual_application_packet"
     assert summary.candidate_next_actions[
-        "candidate_northeast_blind_image_001"
+        "candidate_mingli_pattern_strength_017_001"
     ] == "resolve_draft_blocking_issues"
     assert summary.candidate_next_actions[
         "candidate_hongfu_remedy_boundary_017_001"
@@ -1957,18 +1924,17 @@ def test_render_pending_candidate_review_application_audit_summary_markdown():
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     markdown = (
@@ -1978,17 +1944,17 @@ def test_render_pending_candidate_review_application_audit_summary_markdown():
     )
 
     assert markdown.startswith("# Pending Candidate Review Application Audit Summary\n")
-    assert "- Pending templates: `5`" in markdown
+    assert "- Pending templates: `4`" in markdown
     assert "- Drafts supplied: `2`" in markdown
     assert "- Exportable application packets: `1`" in markdown
     assert "- Blocked application packets: `1`" in markdown
-    assert "- Missing draft candidates: `3`" in markdown
+    assert "- Missing draft candidates: `2`" in markdown
     assert "- Applied review decision delta: `0`" in markdown
     assert "- Formal evidence delta: `0`" in markdown
     assert "## Exportable Candidates" in markdown
     assert "`candidate_duan_ten_god_relation_017_001`: `apply_manual_application_packet`" in markdown
     assert "## Blocked Candidates" in markdown
-    assert "`candidate_northeast_blind_image_001`: `resolve_draft_blocking_issues`" in markdown
+    assert "`candidate_mingli_pattern_strength_017_001`: `resolve_draft_blocking_issues`" in markdown
     assert "## Missing Draft Candidates" in markdown
     assert "`candidate_hongfu_remedy_boundary_017_001`: `fill_review_input_template`" in markdown
     assert "Audit summary is read-only planning metadata." in markdown
@@ -1997,12 +1963,11 @@ def test_render_pending_candidate_review_application_audit_summary_markdown():
 def test_pending_candidate_review_application_audit_summary_handles_no_drafts():
     summary = source_intake.build_pending_candidate_review_application_audit_summary([])
 
-    assert summary.pending_template_count == 5
+    assert summary.pending_template_count == 4
     assert summary.draft_count == 0
     assert summary.packet_exportable_count == 0
     assert summary.packet_blocked_count == 0
     assert summary.missing_draft_candidate_ids == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -2031,39 +1996,37 @@ def test_build_pending_candidate_review_manual_action_dashboard_groups_shortest_
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     dashboard = source_intake.build_pending_candidate_review_manual_action_dashboard(
         [ready_draft, blocked_draft]
     )
 
-    assert dashboard.pending_candidate_count == 5
+    assert dashboard.pending_candidate_count == 4
     assert dashboard.action_counts == {
         "apply_manual_application_packet": 1,
         "resolve_draft_blocking_issues": 1,
-        "fill_review_input_template": 3,
+        "fill_review_input_template": 2,
     }
     assert dashboard.candidates_by_action == {
         "apply_manual_application_packet": [
             "candidate_duan_ten_god_relation_017_001"
         ],
         "resolve_draft_blocking_issues": [
-            "candidate_northeast_blind_image_001"
+            "candidate_mingli_pattern_strength_017_001"
         ],
         "fill_review_input_template": [
-            "candidate_mingli_pattern_strength_017_001",
             "candidate_mingxue_five_element_balance_017_001",
             "candidate_hongfu_remedy_boundary_017_001",
         ],
@@ -2075,7 +2038,6 @@ def test_build_pending_candidate_review_manual_action_dashboard_groups_shortest_
     ]
     assert dashboard.recommended_processing_order == [
         "candidate_duan_ten_god_relation_017_001",
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
@@ -2107,18 +2069,17 @@ def test_render_pending_candidate_review_manual_action_dashboard_markdown():
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_action_dashboard_markdown(
@@ -2126,10 +2087,10 @@ def test_render_pending_candidate_review_manual_action_dashboard_markdown():
     )
 
     assert markdown.startswith("# Pending Candidate Review Manual Action Dashboard\n")
-    assert "- Pending candidates: `5`" in markdown
+    assert "- Pending candidates: `4`" in markdown
     assert "- `apply_manual_application_packet`: `1`" in markdown
     assert "- `resolve_draft_blocking_issues`: `1`" in markdown
-    assert "- `fill_review_input_template`: `3`" in markdown
+    assert "- `fill_review_input_template`: `2`" in markdown
     assert "- Applied review decision delta: `0`" in markdown
     assert "- Applied candidate status delta: `0`" in markdown
     assert "- Formal evidence delta: `0`" in markdown
@@ -2137,7 +2098,7 @@ def test_render_pending_candidate_review_manual_action_dashboard_markdown():
     assert "### apply_manual_application_packet" in markdown
     assert "`candidate_duan_ten_god_relation_017_001`" in markdown
     assert "### resolve_draft_blocking_issues" in markdown
-    assert "`candidate_northeast_blind_image_001`" in markdown
+    assert "`candidate_mingli_pattern_strength_017_001`" in markdown
     assert "### fill_review_input_template" in markdown
     assert "`candidate_hongfu_remedy_boundary_017_001`" in markdown
     assert "## Recommended Processing Order" in markdown
@@ -2146,11 +2107,11 @@ def test_render_pending_candidate_review_manual_action_dashboard_markdown():
         "`apply_manual_application_packet`"
     ) in markdown
     assert (
-        "2. `candidate_northeast_blind_image_001`: "
+        "2. `candidate_mingli_pattern_strength_017_001`: "
         "`resolve_draft_blocking_issues`"
     ) in markdown
     assert (
-        "5. `candidate_hongfu_remedy_boundary_017_001`: "
+        "4. `candidate_hongfu_remedy_boundary_017_001`: "
         "`fill_review_input_template`"
     ) in markdown
     assert "Manual action dashboard is read-only planning metadata." in markdown
@@ -2162,17 +2123,15 @@ def test_pending_candidate_review_manual_action_dashboard_handles_no_drafts():
     assert dashboard.action_counts == {
         "apply_manual_application_packet": 0,
         "resolve_draft_blocking_issues": 0,
-        "fill_review_input_template": 5,
+        "fill_review_input_template": 4,
     }
     assert dashboard.candidates_by_action["fill_review_input_template"] == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
     ]
     assert dashboard.recommended_processing_order == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -2199,29 +2158,27 @@ def test_build_pending_candidate_review_manual_application_dry_run_guide_lists_s
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     guide = source_intake.build_pending_candidate_review_manual_application_dry_run_guide(
         [ready_draft, blocked_draft]
     )
 
-    assert guide.pending_candidate_count == 5
-    assert guide.step_count == 5
+    assert guide.pending_candidate_count == 4
+    assert guide.step_count == 4
     assert guide.recommended_processing_order == [
         "candidate_duan_ten_god_relation_017_001",
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
@@ -2249,13 +2206,13 @@ def test_build_pending_candidate_review_manual_application_dry_run_guide_lists_s
         "Restore candidate status from returned to pending_review if manual application is abandoned.",
     ]
 
-    blocked_step = steps_by_id["candidate_northeast_blind_image_001"]
+    blocked_step = steps_by_id["candidate_mingli_pattern_strength_017_001"]
     assert blocked_step.action == "resolve_draft_blocking_issues"
     assert blocked_step.dry_run_status == "blocked_until_draft_issues_resolved"
     assert blocked_step.required_inputs == [
         "approval_limitations",
+        "source_page_or_section_locator",
         "uncertainty_and_limitation_language",
-        "duplicate_or_reuse_resolution",
     ]
     assert "approved_candidate_cannot_use_needs_recheck" in blocked_step.blocking_issues
     assert blocked_step.manual_steps == [
@@ -2310,18 +2267,17 @@ def test_render_pending_candidate_review_manual_application_dry_run_guide_markdo
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     markdown = (
@@ -2331,8 +2287,8 @@ def test_render_pending_candidate_review_manual_application_dry_run_guide_markdo
     )
 
     assert markdown.startswith("# Pending Candidate Review Manual Application Dry-Run Guide\n")
-    assert "- Pending candidates: `5`" in markdown
-    assert "- Dry-run steps: `5`" in markdown
+    assert "- Pending candidates: `4`" in markdown
+    assert "- Dry-run steps: `4`" in markdown
     assert "- Applied review decision delta: `0`" in markdown
     assert "- Applied candidate status delta: `0`" in markdown
     assert "- Formal evidence delta: `0`" in markdown
@@ -2341,7 +2297,7 @@ def test_render_pending_candidate_review_manual_application_dry_run_guide_markdo
     assert "Status: `ready_for_manual_application`" in markdown
     assert "append_review_decision_entry" in markdown
     assert "verify_formal_evidence_delta_zero" in markdown
-    assert "Candidate: `candidate_northeast_blind_image_001`" in markdown
+    assert "Candidate: `candidate_mingli_pattern_strength_017_001`" in markdown
     assert "Status: `blocked_until_draft_issues_resolved`" in markdown
     assert "approved_candidate_cannot_use_needs_recheck" in markdown
     assert "Candidate: `candidate_hongfu_remedy_boundary_017_001`" in markdown
@@ -2360,10 +2316,9 @@ def test_pending_candidate_review_manual_application_dry_run_guide_handles_no_dr
         []
     )
 
-    assert guide.pending_candidate_count == 5
-    assert guide.step_count == 5
+    assert guide.pending_candidate_count == 4
+    assert guide.step_count == 4
     assert guide.recommended_processing_order == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -2394,18 +2349,17 @@ def test_build_pending_candidate_review_manual_application_preflight_report_chec
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     report = (
@@ -2414,12 +2368,12 @@ def test_build_pending_candidate_review_manual_application_preflight_report_chec
         )
     )
 
-    assert report.pending_candidate_count == 5
-    assert report.preflight_check_count == 5
+    assert report.pending_candidate_count == 4
+    assert report.preflight_check_count == 4
     assert report.ready_candidate_ids == [
         "candidate_duan_ten_god_relation_017_001"
     ]
-    assert "candidate_northeast_blind_image_001" in report.blocked_candidate_ids
+    assert "candidate_mingli_pattern_strength_017_001" in report.blocked_candidate_ids
     assert "candidate_hongfu_remedy_boundary_017_001" in report.blocked_candidate_ids
 
     checks_by_id = {check.candidate_id: check for check in report.checks}
@@ -2438,7 +2392,7 @@ def test_build_pending_candidate_review_manual_application_preflight_report_chec
     }
     assert ready_check.preflight_blockers == []
 
-    blocked_check = checks_by_id["candidate_northeast_blind_image_001"]
+    blocked_check = checks_by_id["candidate_mingli_pattern_strength_017_001"]
     assert blocked_check.ready_for_manual_application is False
     assert "manual_application_packet_not_exportable" in blocked_check.preflight_blockers
     assert (
@@ -2524,18 +2478,17 @@ def test_render_pending_candidate_review_manual_application_preflight_report_mar
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_application_preflight_report_markdown(
@@ -2545,10 +2498,10 @@ def test_render_pending_candidate_review_manual_application_preflight_report_mar
     assert markdown.startswith(
         "# Pending Candidate Review Manual Application Preflight Report\n"
     )
-    assert "- Pending candidates: `5`" in markdown
-    assert "- Preflight checks: `5`" in markdown
+    assert "- Pending candidates: `4`" in markdown
+    assert "- Preflight checks: `4`" in markdown
     assert "- Ready candidates: `1`" in markdown
-    assert "- Blocked candidates: `4`" in markdown
+    assert "- Blocked candidates: `3`" in markdown
     assert "- Applied review decision delta: `0`" in markdown
     assert "- Applied candidate status delta: `0`" in markdown
     assert "- Formal evidence delta: `0`" in markdown
@@ -2570,11 +2523,10 @@ def test_pending_candidate_review_manual_application_preflight_report_handles_no
         )
     )
 
-    assert report.pending_candidate_count == 5
-    assert report.preflight_check_count == 5
+    assert report.pending_candidate_count == 4
+    assert report.preflight_check_count == 4
     assert report.ready_candidate_ids == []
     assert report.blocked_candidate_ids == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -2605,18 +2557,17 @@ def test_build_pending_candidate_review_manual_application_handoff_summary_group
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     summary = (
@@ -2625,20 +2576,18 @@ def test_build_pending_candidate_review_manual_application_handoff_summary_group
         )
     )
 
-    assert summary.pending_candidate_count == 5
-    assert summary.handoff_item_count == 5
+    assert summary.pending_candidate_count == 4
+    assert summary.handoff_item_count == 4
     assert summary.ready_candidate_ids == [
         "candidate_duan_ten_god_relation_017_001"
     ]
-    assert summary.blocked_candidate_ids == ["candidate_northeast_blind_image_001"]
+    assert summary.blocked_candidate_ids == ["candidate_mingli_pattern_strength_017_001"]
     assert summary.missing_draft_candidate_ids == [
-        "candidate_mingli_pattern_strength_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
     ]
     assert summary.recommended_processing_order == [
         "candidate_duan_ten_god_relation_017_001",
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
@@ -2669,7 +2618,7 @@ def test_build_pending_candidate_review_manual_application_handoff_summary_group
     }
     assert ready_item.blocking_issues == []
 
-    blocked_item = items_by_id["candidate_northeast_blind_image_001"]
+    blocked_item = items_by_id["candidate_mingli_pattern_strength_017_001"]
     assert blocked_item.action == "resolve_draft_blocking_issues"
     assert blocked_item.readiness_status == "blocked_until_draft_issues_resolved"
     assert blocked_item.shortest_next_action == "resolve_draft_blocking_issues"
@@ -2709,18 +2658,17 @@ def test_render_pending_candidate_review_manual_application_handoff_summary_mark
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_application_handoff_summary_markdown(
@@ -2730,10 +2678,10 @@ def test_render_pending_candidate_review_manual_application_handoff_summary_mark
     assert markdown.startswith(
         "# Pending Candidate Review Manual Application Handoff Summary\n"
     )
-    assert "- Pending candidates: `5`" in markdown
+    assert "- Pending candidates: `4`" in markdown
     assert "- Ready candidates: `1`" in markdown
     assert "- Blocked candidates: `1`" in markdown
-    assert "- Missing draft candidates: `3`" in markdown
+    assert "- Missing draft candidates: `2`" in markdown
     assert "- Applied review decision delta: `0`" in markdown
     assert "- Applied candidate status delta: `0`" in markdown
     assert "- Formal evidence delta: `0`" in markdown
@@ -2761,12 +2709,11 @@ def test_pending_candidate_review_manual_application_handoff_summary_handles_no_
         )
     )
 
-    assert summary.pending_candidate_count == 5
-    assert summary.handoff_item_count == 5
+    assert summary.pending_candidate_count == 4
+    assert summary.handoff_item_count == 4
     assert summary.ready_candidate_ids == []
     assert summary.blocked_candidate_ids == []
     assert summary.missing_draft_candidate_ids == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -2798,18 +2745,17 @@ def test_build_pending_candidate_review_manual_application_readiness_ledger_list
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     ledger = (
@@ -2818,20 +2764,18 @@ def test_build_pending_candidate_review_manual_application_readiness_ledger_list
         )
     )
 
-    assert ledger.pending_candidate_count == 5
-    assert ledger.ledger_row_count == 5
+    assert ledger.pending_candidate_count == 4
+    assert ledger.ledger_row_count == 4
     assert ledger.ready_candidate_ids == [
         "candidate_duan_ten_god_relation_017_001"
     ]
-    assert ledger.blocked_candidate_ids == ["candidate_northeast_blind_image_001"]
+    assert ledger.blocked_candidate_ids == ["candidate_mingli_pattern_strength_017_001"]
     assert ledger.missing_draft_candidate_ids == [
-        "candidate_mingli_pattern_strength_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
     ]
     assert ledger.recommended_processing_order == [
         "candidate_duan_ten_god_relation_017_001",
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
@@ -2858,7 +2802,7 @@ def test_build_pending_candidate_review_manual_application_readiness_ledger_list
         "to_status": "returned",
     }
 
-    blocked_row = rows_by_id["candidate_northeast_blind_image_001"]
+    blocked_row = rows_by_id["candidate_mingli_pattern_strength_017_001"]
     assert blocked_row.sequence_number == 2
     assert blocked_row.ledger_status == "blocked_resolve_draft_issues"
     assert blocked_row.checkboxes == [
@@ -2908,18 +2852,17 @@ def test_render_pending_candidate_review_manual_application_readiness_ledger_mar
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_application_readiness_ledger_markdown(
@@ -2929,12 +2872,12 @@ def test_render_pending_candidate_review_manual_application_readiness_ledger_mar
     assert markdown.startswith(
         "# Pending Candidate Review Manual Application Readiness Ledger\n"
     )
-    assert "- Pending candidates: `5`" in markdown
-    assert "- Ledger rows: `5`" in markdown
+    assert "- Pending candidates: `4`" in markdown
+    assert "- Ledger rows: `4`" in markdown
     assert "- Ready rows: `1`" in markdown
     assert "- Blocked rows: `1`" in markdown
-    assert "- Missing draft rows: `3`" in markdown
-    assert "- Unchecked checkbox count: `27`" in markdown
+    assert "- Missing draft rows: `2`" in markdown
+    assert "- Unchecked checkbox count: `22`" in markdown
     assert "- Applied review decision delta: `0`" in markdown
     assert "- Applied candidate status delta: `0`" in markdown
     assert "- Formal evidence delta: `0`" in markdown
@@ -2942,7 +2885,7 @@ def test_render_pending_candidate_review_manual_application_readiness_ledger_mar
     assert "1. `candidate_duan_ten_god_relation_017_001`: `ready_to_apply_manual_packet`" in markdown
     assert "- [ ] confirm_decision_id_unique" in markdown
     assert "- [ ] append_review_decision_entry" in markdown
-    assert "2. `candidate_northeast_blind_image_001`: `blocked_resolve_draft_issues`" in markdown
+    assert "2. `candidate_mingli_pattern_strength_017_001`: `blocked_resolve_draft_issues`" in markdown
     assert "- [ ] resolve_draft_blocking_issues" in markdown
     assert "manual_application_packet_not_exportable" in markdown
     assert "`candidate_hongfu_remedy_boundary_017_001`: `needs_review_input_template`" in markdown
@@ -2958,12 +2901,11 @@ def test_pending_candidate_review_manual_application_readiness_ledger_handles_no
         )
     )
 
-    assert ledger.pending_candidate_count == 5
-    assert ledger.ledger_row_count == 5
+    assert ledger.pending_candidate_count == 4
+    assert ledger.ledger_row_count == 4
     assert ledger.ready_candidate_ids == []
     assert ledger.blocked_candidate_ids == []
     assert ledger.missing_draft_candidate_ids == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -2998,18 +2940,17 @@ def test_build_pending_candidate_review_manual_application_session_packet_groups
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     packet = (
@@ -3021,14 +2962,13 @@ def test_build_pending_candidate_review_manual_application_session_packet_groups
     assert packet.session_id == "pending_review_manual_application_session"
     assert packet.session_title == "Pending Review Manual Application Session"
     assert packet.session_scope == "ready_first_manual_application"
-    assert packet.pending_candidate_count == 5
+    assert packet.pending_candidate_count == 4
     assert packet.ready_action_count == 1
     assert packet.blocked_follow_up_count == 1
-    assert packet.missing_draft_follow_up_count == 3
-    assert packet.unchecked_checkbox_count == 27
+    assert packet.missing_draft_follow_up_count == 2
+    assert packet.unchecked_checkbox_count == 22
     assert packet.recommended_processing_order == [
         "candidate_duan_ten_god_relation_017_001",
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
@@ -3055,7 +2995,7 @@ def test_build_pending_candidate_review_manual_application_session_packet_groups
     }
 
     blocked_follow_up = packet.blocked_follow_ups[0]
-    assert blocked_follow_up.candidate_id == "candidate_northeast_blind_image_001"
+    assert blocked_follow_up.candidate_id == "candidate_mingli_pattern_strength_017_001"
     assert blocked_follow_up.action_type == "resolve_draft_blocking_issues"
     assert blocked_follow_up.ledger_status == "blocked_resolve_draft_issues"
     assert "manual_application_packet_not_exportable" in blocked_follow_up.blocking_issues
@@ -3064,7 +3004,6 @@ def test_build_pending_candidate_review_manual_application_session_packet_groups
         action.candidate_id for action in packet.missing_draft_follow_ups
     ]
     assert missing_follow_up_ids == [
-        "candidate_mingli_pattern_strength_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
     ]
@@ -3101,18 +3040,17 @@ def test_render_pending_candidate_review_manual_application_session_packet_markd
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_application_session_packet_markdown(
@@ -3127,7 +3065,7 @@ def test_render_pending_candidate_review_manual_application_session_packet_markd
     assert "- Session scope: `ready_first_manual_application`" in markdown
     assert "- Ready actions: `1`" in markdown
     assert "- Blocked follow-ups: `1`" in markdown
-    assert "- Missing draft follow-ups: `3`" in markdown
+    assert "- Missing draft follow-ups: `2`" in markdown
     assert "- Applied review decision delta: `0`" in markdown
     assert "- Applied candidate status delta: `0`" in markdown
     assert "- Formal evidence delta: `0`" in markdown
@@ -3135,7 +3073,7 @@ def test_render_pending_candidate_review_manual_application_session_packet_markd
     assert "1. `candidate_duan_ten_god_relation_017_001`: `apply_manual_application_packet`" in markdown
     assert "- [ ] append_review_decision_entry" in markdown
     assert "## Blocked Follow-Ups" in markdown
-    assert "`candidate_northeast_blind_image_001`: `resolve_draft_blocking_issues`" in markdown
+    assert "`candidate_mingli_pattern_strength_017_001`: `resolve_draft_blocking_issues`" in markdown
     assert "manual_application_packet_not_exportable" in markdown
     assert "## Missing Draft Follow-Ups" in markdown
     assert "`candidate_hongfu_remedy_boundary_017_001`: `fill_review_input_template`" in markdown
@@ -3152,16 +3090,15 @@ def test_pending_candidate_review_manual_application_session_packet_handles_no_d
         )
     )
 
-    assert packet.pending_candidate_count == 5
+    assert packet.pending_candidate_count == 4
     assert packet.ready_action_count == 0
     assert packet.blocked_follow_up_count == 0
-    assert packet.missing_draft_follow_up_count == 5
+    assert packet.missing_draft_follow_up_count == 4
     assert packet.ready_action_queue == []
     assert packet.blocked_follow_ups == []
     assert [
         action.candidate_id for action in packet.missing_draft_follow_ups
     ] == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -3192,18 +3129,17 @@ def test_build_pending_candidate_review_manual_application_session_outcome_previ
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     preview = source_intake.build_pending_candidate_review_manual_application_session_outcome_preview(
@@ -3212,8 +3148,8 @@ def test_build_pending_candidate_review_manual_application_session_outcome_previ
 
     assert preview.session_id == "pending_review_manual_application_session"
     assert preview.preview_scope == "ready_actions_only"
-    assert preview.pending_candidate_count == 5
-    assert preview.preview_item_count == 5
+    assert preview.pending_candidate_count == 4
+    assert preview.preview_item_count == 4
     assert preview.projected_review_decision_delta == 1
     assert preview.projected_candidate_status_delta == 1
     assert preview.ready_applied_candidate_ids == [
@@ -3223,13 +3159,11 @@ def test_build_pending_candidate_review_manual_application_session_outcome_previ
         "candidate_duan_ten_god_relation_017_001"
     ]
     assert preview.projected_remaining_pending_candidate_ids == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
     ]
     assert preview.follow_up_candidate_ids == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
@@ -3251,7 +3185,7 @@ def test_build_pending_candidate_review_manual_application_session_outcome_previ
     assert ready_item.projected_candidate_status_delta == 1
     assert ready_item.remaining_follow_up_action == ""
 
-    blocked_item = items_by_id["candidate_northeast_blind_image_001"]
+    blocked_item = items_by_id["candidate_mingli_pattern_strength_017_001"]
     assert blocked_item.session_lane == "blocked_follow_up"
     assert blocked_item.projected_candidate_status == "pending_review"
     assert blocked_item.projected_outcome == "remains_pending_review"
@@ -3283,18 +3217,17 @@ def test_render_pending_candidate_review_manual_application_session_outcome_prev
         "rejection_reason": "",
     }
     blocked_draft = {
-        "decision_id": "review_candidate_northeast_blind_image_001",
-        "candidate_id": "candidate_northeast_blind_image_001",
+        "decision_id": "review_candidate_mingli_pattern_strength_017_001",
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
         "review_outcome": "approved",
         "reviewer": "maintainer",
         "reviewed_at": "2026-06-01",
-        "source_locator": "review-note:northeast_blind_peak.md#blind-image-method",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001",
         "source_quality": "needs_recheck",
         "confidence": "moderate",
-        "rationale": "Draft still lacks duplicate and safety resolution.",
+        "rationale": "Draft still lacks safety resolution.",
         "approval_limitations": [],
         "uncertainty_and_limitation_language": "",
-        "duplicate_or_reuse_resolution": "",
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_application_session_outcome_preview_markdown(
@@ -3312,7 +3245,7 @@ def test_render_pending_candidate_review_manual_application_session_outcome_prev
     assert "## Projected Status Changes" in markdown
     assert "`candidate_duan_ten_god_relation_017_001`: `pending_review` -> `returned`" in markdown
     assert "## Remaining Pending Follow-Ups" in markdown
-    assert "`candidate_northeast_blind_image_001`: `resolve_draft_blocking_issues`" in markdown
+    assert "`candidate_mingli_pattern_strength_017_001`: `resolve_draft_blocking_issues`" in markdown
     assert "`candidate_hongfu_remedy_boundary_017_001`: `fill_review_input_template`" in markdown
     assert "## Post-Session Next Actions" in markdown
     assert "- [ ] rerun_readiness_ledger" in markdown
@@ -3324,12 +3257,11 @@ def test_pending_candidate_review_manual_application_session_outcome_preview_han
         []
     )
 
-    assert preview.pending_candidate_count == 5
-    assert preview.preview_item_count == 5
+    assert preview.pending_candidate_count == 4
+    assert preview.preview_item_count == 4
     assert preview.ready_applied_candidate_ids == []
     assert preview.projected_non_pending_candidate_ids == []
     assert preview.projected_remaining_pending_candidate_ids == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",

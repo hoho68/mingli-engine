@@ -406,7 +406,6 @@ def test_pending_candidate_review_worklist_does_not_change_formal_evidence():
     worklist = list_pending_candidate_review_worklist()
 
     assert {item.candidate_id for item in worklist} == {
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -441,7 +440,6 @@ def test_pending_candidate_review_decision_packets_do_not_write_review_decisions
     packets = list_pending_candidate_review_decision_packets()
 
     assert {packet.candidate_id for packet in packets} == {
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -478,7 +476,7 @@ def test_pending_candidate_review_packet_summary_does_not_write_review_decisions
 
     summary = build_pending_candidate_review_packet_summary()
 
-    assert summary.packet_count == 5
+    assert summary.packet_count == 4
     assert summary.review_decision_delta == 0
     assert summary.formal_evidence_delta == 0
     assert {
@@ -513,7 +511,6 @@ def test_pending_candidate_review_action_queue_does_not_write_review_decisions_o
     queue = build_pending_candidate_review_action_queue()
 
     assert [item.candidate_id for item in queue] == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -585,7 +582,6 @@ def test_pending_candidate_review_input_templates_do_not_write_review_decisions_
     markdown = render_pending_candidate_review_input_templates_markdown()
 
     assert [template.candidate_id for template in templates] == [
-        "candidate_northeast_blind_image_001",
         "candidate_mingli_pattern_strength_017_001",
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
@@ -907,7 +903,7 @@ def test_pending_candidate_review_manual_application_dry_run_guide_does_not_writ
         [draft]
     )
 
-    assert guide.step_count == 5
+    assert guide.step_count == 4
     assert guide.applied_review_decision_delta == 0
     assert guide.applied_candidate_status_delta == 0
     assert guide.formal_evidence_delta == 0
@@ -963,7 +959,7 @@ def test_pending_candidate_review_manual_application_preflight_report_does_not_w
         )
     )
 
-    assert report.preflight_check_count == 5
+    assert report.preflight_check_count == 4
     assert report.ready_candidate_ids == [
         "candidate_duan_ten_god_relation_017_001"
     ]
@@ -1026,7 +1022,7 @@ def test_pending_candidate_review_manual_application_handoff_summary_does_not_wr
         )
     )
 
-    assert summary.handoff_item_count == 5
+    assert summary.handoff_item_count == 4
     assert summary.ready_candidate_ids == [
         "candidate_duan_ten_god_relation_017_001"
     ]
@@ -1089,7 +1085,7 @@ def test_pending_candidate_review_manual_application_readiness_ledger_does_not_w
         )
     )
 
-    assert ledger.ledger_row_count == 5
+    assert ledger.ledger_row_count == 4
     assert ledger.ready_candidate_ids == [
         "candidate_duan_ten_god_relation_017_001"
     ]

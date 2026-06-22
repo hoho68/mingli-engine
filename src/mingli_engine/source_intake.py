@@ -3,6 +3,7 @@
 from collections import Counter
 from contextvars import ContextVar
 import json
+import functools
 from pathlib import Path
 from typing import Any
 
@@ -569,13 +570,16 @@ def _source_intake_call_cache_key(
     return (cache_name, str(_data_dir(data_dir)), *parts)
 
 
+_SOURCE_INTAKE_FALLBACK_CACHE: dict[tuple[Any, ...], tuple[Any, ...]] = {}
+
+
 def _source_intake_call_cache_get(
     key: tuple[Any, ...],
 ) -> tuple[Any, ...] | None:
     cache = _SOURCE_INTAKE_CALL_CACHE.get()
-    if cache is None:
-        return None
-    return cache.get(key)
+    if cache is not None:
+        return cache.get(key)
+    return _SOURCE_INTAKE_FALLBACK_CACHE.get(key)
 
 
 def _source_intake_call_cache_store(
@@ -585,6 +589,46 @@ def _source_intake_call_cache_store(
     cache = _SOURCE_INTAKE_CALL_CACHE.get()
     if cache is not None:
         cache[key] = tuple(values)
+    else:
+        _SOURCE_INTAKE_FALLBACK_CACHE[key] = tuple(values)
+
+
+def _source_intake_file_signature(path: Path) -> tuple[Any, ...] | None:
+    try:
+        stat = path.stat()
+    except OSError:
+        return None
+    return (stat.st_mtime_ns, stat.st_size)
+
+
+def _source_intake_drafts_cache_key(
+    cache_name: str,
+    drafts: list[dict[str, Any]],
+    data_dir: Path | str | None,
+) -> tuple[Any, ...]:
+    return (cache_name, str(_data_dir(data_dir)), json.dumps(drafts, sort_keys=True, ensure_ascii=False))
+
+
+def _cache_drafts_builder(func):
+    cache_name = func.__name__
+
+    @functools.wraps(func)
+    def wrapper(drafts, data_dir=None, **kwargs):
+        if kwargs:
+            return func(drafts, data_dir, **kwargs)
+        resolved_dir = _data_dir(data_dir)
+        key = _source_intake_drafts_cache_key(cache_name, drafts, resolved_dir) + (
+            _source_intake_file_signature(resolved_dir / "candidate_extracts.json"),
+            _source_intake_file_signature(resolved_dir / "source_materials.json"),
+        )
+        cached = _source_intake_call_cache_get(key)
+        if cached is not None:
+            return cached[0]
+        result = func(drafts, data_dir)
+        _source_intake_call_cache_store(key, [result])
+        return result
+
+    return wrapper
 
 
 def _start_source_intake_call_cache():
@@ -718,6 +762,7 @@ def load_source_materials(
         "load_source_materials",
         intake_dir,
         known_source_key,
+        _source_intake_file_signature(intake_dir / "source_materials.json"),
     )
     cached_materials = _source_intake_call_cache_get(cache_key)
     if cached_materials is not None:
@@ -822,7 +867,12 @@ def load_candidate_extracts(
     data_dir: Path | str | None = None,
 ) -> list[CandidateExtract]:
     intake_dir = _data_dir(data_dir)
-    cache_key = _source_intake_call_cache_key("load_candidate_extracts", intake_dir)
+    cache_key = (
+        "load_candidate_extracts",
+        str(intake_dir),
+        _source_intake_file_signature(intake_dir / "candidate_extracts.json"),
+        _source_intake_file_signature(intake_dir / "source_materials.json"),
+    )
     cached_candidates = _source_intake_call_cache_get(cache_key)
     if cached_candidates is not None:
         return list(cached_candidates)
@@ -978,7 +1028,12 @@ def load_review_decisions(
     data_dir: Path | str | None = None,
 ) -> list[ReviewDecision]:
     intake_dir = _data_dir(data_dir)
-    cache_key = _source_intake_call_cache_key("load_review_decisions", intake_dir)
+    cache_key = (
+        "load_review_decisions",
+        str(intake_dir),
+        _source_intake_file_signature(intake_dir / "review_decisions.json"),
+        _source_intake_file_signature(intake_dir / "candidate_extracts.json"),
+    )
     cached_decisions = _source_intake_call_cache_get(cache_key)
     if cached_decisions is not None:
         return list(cached_decisions)
@@ -1229,6 +1284,15 @@ def list_pending_candidate_review_decision_packets(
     data_dir: Path | str | None = None,
 ) -> list[CandidateReviewDecisionPacket]:
     intake_dir = _data_dir(data_dir)
+    packets_cache_key = _source_intake_call_cache_key(
+        "list_pending_candidate_review_decision_packets",
+        intake_dir,
+        _source_intake_file_signature(intake_dir / "candidate_extracts.json"),
+        _source_intake_file_signature(intake_dir / "source_materials.json"),
+    )
+    cached_packets = _source_intake_call_cache_get(packets_cache_key)
+    if cached_packets is not None:
+        return [packet for packet in cached_packets]
     candidates_by_id = {
         candidate.candidate_id: candidate
         for candidate in load_candidate_extracts(intake_dir)
@@ -1256,6 +1320,7 @@ def list_pending_candidate_review_decision_packets(
                 boundary_notes=_decision_packet_boundary_notes(work_item),
             )
         )
+    _source_intake_call_cache_store(packets_cache_key, packets)
     return packets
 
 
@@ -1405,6 +1470,15 @@ def list_pending_candidate_review_input_templates(
     data_dir: Path | str | None = None,
 ) -> list[CandidateReviewInputTemplate]:
     intake_dir = _data_dir(data_dir)
+    templates_cache_key = _source_intake_call_cache_key(
+        "list_pending_candidate_review_input_templates",
+        intake_dir,
+        _source_intake_file_signature(intake_dir / "candidate_extracts.json"),
+        _source_intake_file_signature(intake_dir / "source_materials.json"),
+    )
+    cached_templates = _source_intake_call_cache_get(templates_cache_key)
+    if cached_templates is not None:
+        return [template for template in cached_templates]
     candidates_by_id = {
         candidate.candidate_id: candidate
         for candidate in load_candidate_extracts(intake_dir)
@@ -1431,6 +1505,7 @@ def list_pending_candidate_review_input_templates(
                 boundary_notes=list(REVIEW_INPUT_TEMPLATE_BOUNDARY_NOTES),
             )
         )
+    _source_intake_call_cache_store(templates_cache_key, templates)
     return templates
 
 
@@ -1609,10 +1684,23 @@ def validate_pending_candidate_review_decision_drafts(
     drafts: list[dict[str, Any]],
     data_dir: Path | str | None = None,
 ) -> list[CandidateReviewDraftValidationResult]:
-    return [
+    drafts_cache_key = _source_intake_drafts_cache_key(
+        "validate_pending_candidate_review_decision_drafts",
+        drafts,
+        data_dir,
+    ) + (
+        _source_intake_file_signature(_data_dir(data_dir) / "candidate_extracts.json"),
+        _source_intake_file_signature(_data_dir(data_dir) / "source_materials.json"),
+    )
+    cached_validations = _source_intake_call_cache_get(drafts_cache_key)
+    if cached_validations is not None:
+        return [validation for validation in cached_validations]
+    validations = [
         validate_pending_candidate_review_decision_draft(draft, data_dir)
         for draft in drafts
     ]
+    _source_intake_call_cache_store(drafts_cache_key, validations)
+    return validations
 
 
 def render_pending_candidate_review_draft_validation_markdown(
@@ -1674,6 +1762,17 @@ def build_pending_candidate_review_application_guard(
     drafts: list[dict[str, Any]],
     data_dir: Path | str | None = None,
 ) -> list[CandidateReviewApplicationGuardResult]:
+    drafts_cache_key = _source_intake_drafts_cache_key(
+        "build_pending_candidate_review_application_guard",
+        drafts,
+        data_dir,
+    ) + (
+        _source_intake_file_signature(_data_dir(data_dir) / "candidate_extracts.json"),
+        _source_intake_file_signature(_data_dir(data_dir) / "source_materials.json"),
+    )
+    cached_results = _source_intake_call_cache_get(drafts_cache_key)
+    if cached_results is not None:
+        return [result for result in cached_results]
     candidate_statuses = _candidate_status_by_id(data_dir)
     results: list[CandidateReviewApplicationGuardResult] = []
     for validation in validate_pending_candidate_review_decision_drafts(
@@ -1722,6 +1821,7 @@ def build_pending_candidate_review_application_guard(
                 boundary_notes=list(REVIEW_APPLICATION_GUARD_BOUNDARY_NOTES),
             )
         )
+    _source_intake_call_cache_store(drafts_cache_key, results)
     return results
 
 
@@ -1806,6 +1906,17 @@ def build_pending_candidate_review_application_packets(
     drafts: list[dict[str, Any]],
     data_dir: Path | str | None = None,
 ) -> list[CandidateReviewApplicationPacket]:
+    drafts_cache_key = _source_intake_drafts_cache_key(
+        "build_pending_candidate_review_application_packets",
+        drafts,
+        data_dir,
+    ) + (
+        _source_intake_file_signature(_data_dir(data_dir) / "candidate_extracts.json"),
+        _source_intake_file_signature(_data_dir(data_dir) / "source_materials.json"),
+    )
+    cached_packets = _source_intake_call_cache_get(drafts_cache_key)
+    if cached_packets is not None:
+        return [packet for packet in cached_packets]
     packets: list[CandidateReviewApplicationPacket] = []
     for guard in build_pending_candidate_review_application_guard(drafts, data_dir):
         if not guard.ready_to_apply:
@@ -1839,6 +1950,7 @@ def build_pending_candidate_review_application_packets(
                 boundary_notes=list(REVIEW_APPLICATION_PACKET_BOUNDARY_NOTES),
             )
         )
+    _source_intake_call_cache_store(drafts_cache_key, packets)
     return packets
 
 
@@ -1924,6 +2036,17 @@ def build_pending_candidate_review_application_audit_summary(
     drafts: list[dict[str, Any]],
     data_dir: Path | str | None = None,
 ) -> CandidateReviewApplicationAuditSummary:
+    drafts_cache_key = _source_intake_drafts_cache_key(
+        "build_pending_candidate_review_application_audit_summary",
+        drafts,
+        data_dir,
+    ) + (
+        _source_intake_file_signature(_data_dir(data_dir) / "candidate_extracts.json"),
+        _source_intake_file_signature(_data_dir(data_dir) / "source_materials.json"),
+    )
+    cached_summary = _source_intake_call_cache_get(drafts_cache_key)
+    if cached_summary is not None:
+        return cached_summary[0]
     templates = list_pending_candidate_review_input_templates(data_dir)
     validations = validate_pending_candidate_review_decision_drafts(drafts, data_dir)
     guards = build_pending_candidate_review_application_guard(drafts, data_dir)
@@ -1954,7 +2077,7 @@ def build_pending_candidate_review_application_audit_summary(
         {candidate_id: "apply_manual_application_packet" for candidate_id in exportable_candidate_ids}
     )
 
-    return CandidateReviewApplicationAuditSummary(
+    summary = CandidateReviewApplicationAuditSummary(
         pending_template_count=len(templates),
         draft_count=len(drafts),
         validation_ready_count=sum(
@@ -1983,6 +2106,8 @@ def build_pending_candidate_review_application_audit_summary(
         formal_evidence_delta=0,
         boundary_notes=list(REVIEW_APPLICATION_AUDIT_BOUNDARY_NOTES),
     )
+    _source_intake_call_cache_store(drafts_cache_key, [summary])
+    return summary
 
 
 def _append_candidate_actions(
@@ -2049,6 +2174,7 @@ def render_pending_candidate_review_application_audit_summary_markdown(
     return "\n".join(lines) + "\n"
 
 
+@_cache_drafts_builder
 def build_pending_candidate_review_manual_action_dashboard(
     drafts: list[dict[str, Any]],
     data_dir: Path | str | None = None,
@@ -2230,6 +2356,7 @@ def _dry_run_step_for_action(
     )
 
 
+@_cache_drafts_builder
 def build_pending_candidate_review_manual_application_dry_run_guide(
     drafts: list[dict[str, Any]],
     data_dir: Path | str | None = None,
@@ -2503,6 +2630,7 @@ def _preflight_check_for_step(
     )
 
 
+@_cache_drafts_builder
 def build_pending_candidate_review_manual_application_preflight_report(
     drafts: list[dict[str, Any]],
     data_dir: Path | str | None = None,
@@ -2694,6 +2822,7 @@ def _handoff_item(
     )
 
 
+@_cache_drafts_builder
 def build_pending_candidate_review_manual_application_handoff_summary(
     drafts: list[dict[str, Any]],
     data_dir: Path | str | None = None,
@@ -2893,6 +3022,7 @@ def _ledger_row_from_handoff_item(
     )
 
 
+@_cache_drafts_builder
 def build_pending_candidate_review_manual_application_readiness_ledger(
     drafts: list[dict[str, Any]],
     data_dir: Path | str | None = None,
@@ -3013,6 +3143,7 @@ def _session_action_from_ledger_row(
     )
 
 
+@_cache_drafts_builder
 def build_pending_candidate_review_manual_application_session_packet(
     drafts: list[dict[str, Any]],
     data_dir: Path | str | None = None,
@@ -3186,6 +3317,7 @@ def _session_outcome_item_from_action(
     )
 
 
+@_cache_drafts_builder
 def build_pending_candidate_review_manual_application_session_outcome_preview(
     drafts: list[dict[str, Any]],
     data_dir: Path | str | None = None,
