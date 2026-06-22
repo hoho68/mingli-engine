@@ -188,7 +188,7 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
 
     report = build_coverage_report(sources, evidence_units, conflicts)
 
-    assert report.approved_evidence_count == 62
+    assert report.approved_evidence_count == 66
     assert report.open_conflicts == ["conflict_high_risk_scope_001"]
     assert set(report.sources_with_gaps) == {
         "blind_life_manual",

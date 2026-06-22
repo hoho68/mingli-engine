@@ -255,6 +255,129 @@ def _write_candidate_extracts(path: Path, candidates: list[dict[str, object]]) -
     _write_json(path / "candidate_extracts.json", candidates)
 
 
+
+def _manual_application_candidate_ids() -> list[str]:
+    return [
+        "candidate_mingli_pattern_strength_017_001",
+        "candidate_duan_ten_god_relation_017_001",
+        "candidate_mingxue_five_element_balance_017_001",
+        "candidate_hongfu_remedy_boundary_017_001",
+    ]
+
+
+def _manual_application_candidate_payloads() -> list[dict[str, object]]:
+    """Replicate the four 017 pending_review candidates as fixture seed data."""
+    return [
+        {
+            "candidate_id": "candidate_mingli_pattern_strength_017_001",
+            "material_id": "material_mingli_true_formula_teacher_pdf",
+            "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001; locator_requirement=page_or_section_required",
+            "extracted_meaning": "Pattern strength material should stay conditional until source locator and chart context are reviewed.",
+            "short_quote": "",
+            "proposed_rule_family": "pattern_strength",
+            "risk_tier": "sensitive",
+            "status": "pending_review",
+            "proposed_limitations": [
+                "State uncertainty for timing and pattern interpretation.",
+                "Include limitation language; do not guarantee outcome timing.",
+            ],
+            "related_evidence_ids": [],
+            "related_conflict_ids": [],
+            "related_gap_ids": [],
+            "duplicate_of": "",
+            "created_by": "learning_reference_curation",
+            "created_at": "2026-06-01",
+        },
+        {
+            "candidate_id": "candidate_duan_ten_god_relation_017_001",
+            "material_id": "material_duan_plain_mingxue_outline_pdf",
+            "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001; locator_requirement=page_or_section_required",
+            "extracted_meaning": "Duan Plain Mingxue Outline can organize ten-god relationships and pattern-strength review as source-backed taxonomy.",
+            "short_quote": "",
+            "proposed_rule_family": "ten_god_relation",
+            "risk_tier": "ordinary",
+            "status": "pending_review",
+            "proposed_limitations": [
+                "Keep as structural taxonomy until locator and chart context are reviewed.",
+            ],
+            "related_evidence_ids": [],
+            "related_conflict_ids": [],
+            "related_gap_ids": [],
+            "duplicate_of": "",
+            "created_by": "learning_reference_curation",
+            "created_at": "2026-06-01",
+        },
+        {
+            "candidate_id": "candidate_mingxue_five_element_balance_017_001",
+            "material_id": "material_mingxue_golden_voice_pdf",
+            "source_locator": "learning-reference:note_mingxue_golden_voice_001#lp_mingxue_five_element_balance_001; locator_requirement=page_or_section_required",
+            "extracted_meaning": "Mingxue Golden Voice can support five-element terminology only after narrower locator review.",
+            "short_quote": "",
+            "proposed_rule_family": "five_element_balance",
+            "risk_tier": "ordinary",
+            "status": "pending_review",
+            "proposed_limitations": [
+                "Keep as terminology taxonomy until locator and chart context are reviewed.",
+            ],
+            "related_evidence_ids": [],
+            "related_conflict_ids": [],
+            "related_gap_ids": [],
+            "duplicate_of": "",
+            "created_by": "learning_reference_curation",
+            "created_at": "2026-06-01",
+        },
+        {
+            "candidate_id": "candidate_hongfu_remedy_boundary_017_001",
+            "material_id": "material_fortune_reading_hongfu_qitian_pdf",
+            "source_locator": "learning-reference:note_fortune_reading_hongfu_qitian_001#lp_hongfu_remedy_boundary_001; locator_requirement=page_or_section_required",
+            "extracted_meaning": "Hongfu Qitian remedy-boundary material should stay conditional until locator and safety context are reviewed.",
+            "short_quote": "",
+            "proposed_rule_family": "remedy_boundary",
+            "risk_tier": "sensitive",
+            "status": "pending_review",
+            "proposed_limitations": [
+                "State uncertainty for remedy-boundary interpretation.",
+                "Include limitation language; avoid certainty about effects.",
+            ],
+            "related_evidence_ids": [],
+            "related_conflict_ids": [],
+            "related_gap_ids": [],
+            "duplicate_of": "",
+            "created_by": "learning_reference_curation",
+            "created_at": "2026-06-01",
+        },
+    ]
+
+
+def _write_manual_application_materials(path: Path) -> None:
+    _write_json(
+        path / "source_materials.json",
+        [
+            {
+                "material_id": material_id,
+                "title": title,
+                "material_type": "pdf",
+                "file_label": file_label,
+                "tracking_status": "external_untracked",
+                "preparation_status": "indexed",
+            }
+            for material_id, title, file_label in [
+                ("material_mingli_true_formula_teacher_pdf", "Mingli True Formula Teacher", "mingli-true-formula-teacher.pdf"),
+                ("material_duan_plain_mingxue_outline_pdf", "Duan Plain Mingxue Outline", "duan-plain-mingxue-outline.pdf"),
+                ("material_mingxue_golden_voice_pdf", "Mingxue Golden Voice", "mingxue-golden-voice.pdf"),
+                ("material_fortune_reading_hongfu_qitian_pdf", "Fortune Reading Hongfu Qitian", "fortune-reading-hongfu-qitian.pdf"),
+            ]
+        ],
+    )
+
+
+def _write_manual_application_fixture(path: Path) -> None:
+    """Seed a tmp_path with the four pending_review candidates."""
+    _write_manual_application_materials(path)
+    _write_json(path / "candidate_extracts.json", _manual_application_candidate_payloads())
+    _write_json(path / "review_decisions.json", [])
+
+
 def test_load_candidate_extracts_accepts_pending_review_candidates(tmp_path):
     _write_minimal_materials(tmp_path)
     _write_json(
@@ -915,8 +1038,9 @@ def test_build_intake_progress_report_counts_readiness_duplicates_and_links(
     assert report.gap_link_count == 1
 
 
-def test_list_pending_candidate_review_worklist_surfaces_checked_in_pending_candidates():
-    worklist = source_intake.list_pending_candidate_review_worklist()
+def test_list_pending_candidate_review_worklist_surfaces_checked_in_pending_candidates(tmp_path):
+    _write_manual_application_fixture(tmp_path)
+    worklist = source_intake.list_pending_candidate_review_worklist(tmp_path)
 
     assert [item.candidate_id for item in worklist] == [
         "candidate_mingli_pattern_strength_017_001",
@@ -1008,8 +1132,9 @@ def test_list_pending_candidate_review_worklist_excludes_non_pending_candidates(
     ]
 
 
-def test_list_pending_candidate_review_decision_packets_prepare_manual_review_inputs():
-    packets = source_intake.list_pending_candidate_review_decision_packets()
+def test_list_pending_candidate_review_decision_packets_prepare_manual_review_inputs(tmp_path):
+    _write_manual_application_fixture(tmp_path)
+    packets = source_intake.list_pending_candidate_review_decision_packets(tmp_path)
 
     assert [packet.candidate_id for packet in packets] == [
         "candidate_mingli_pattern_strength_017_001",
@@ -1120,8 +1245,9 @@ def test_list_pending_candidate_review_decision_packets_exclude_non_pending_cand
     ]
 
 
-def test_build_pending_candidate_review_packet_summary_counts_blockers_and_inputs():
-    summary = source_intake.build_pending_candidate_review_packet_summary()
+def test_build_pending_candidate_review_packet_summary_counts_blockers_and_inputs(tmp_path):
+    _write_manual_application_fixture(tmp_path)
+    summary = source_intake.build_pending_candidate_review_packet_summary(tmp_path)
 
     assert summary.packet_count == 4
     assert summary.candidate_ids == [
@@ -1205,8 +1331,9 @@ def test_build_pending_candidate_review_packet_summary_handles_no_pending_candid
     assert summary.formal_evidence_delta == 0
 
 
-def test_build_pending_candidate_review_action_queue_prioritizes_next_manual_steps():
-    queue = source_intake.build_pending_candidate_review_action_queue()
+def test_build_pending_candidate_review_action_queue_prioritizes_next_manual_steps(tmp_path):
+    _write_manual_application_fixture(tmp_path)
+    queue = source_intake.build_pending_candidate_review_action_queue(tmp_path)
 
     assert [item.candidate_id for item in queue] == [
         "candidate_mingli_pattern_strength_017_001",
@@ -1261,8 +1388,9 @@ def test_build_pending_candidate_review_action_queue_handles_no_pending_candidat
     assert source_intake.build_pending_candidate_review_action_queue(tmp_path) == []
 
 
-def test_render_pending_candidate_review_action_queue_markdown_lists_summary_and_tasks():
-    markdown = source_intake.render_pending_candidate_review_action_queue_markdown()
+def test_render_pending_candidate_review_action_queue_markdown_lists_summary_and_tasks(tmp_path):
+    _write_manual_application_fixture(tmp_path)
+    markdown = source_intake.render_pending_candidate_review_action_queue_markdown(tmp_path)
 
     assert markdown.startswith("# Pending Candidate Review Action Queue\n")
     assert "- Queue items: `4`" in markdown
@@ -1315,8 +1443,9 @@ def test_render_pending_candidate_review_action_queue_markdown_handles_empty_que
     assert "No pending candidate review actions." in markdown
 
 
-def test_list_pending_candidate_review_input_templates_prepare_fillable_fields():
-    templates = source_intake.list_pending_candidate_review_input_templates()
+def test_list_pending_candidate_review_input_templates_prepare_fillable_fields(tmp_path):
+    _write_manual_application_fixture(tmp_path)
+    templates = source_intake.list_pending_candidate_review_input_templates(tmp_path)
 
     assert [template.candidate_id for template in templates] == [
         "candidate_mingli_pattern_strength_017_001",
@@ -1377,8 +1506,9 @@ def test_list_pending_candidate_review_input_templates_prepare_fillable_fields()
         assert "source_page_or_section_locator" in template.blocking_inputs
 
 
-def test_render_pending_candidate_review_input_templates_markdown_lists_fields():
-    markdown = source_intake.render_pending_candidate_review_input_templates_markdown()
+def test_render_pending_candidate_review_input_templates_markdown_lists_fields(tmp_path):
+    _write_manual_application_fixture(tmp_path)
+    markdown = source_intake.render_pending_candidate_review_input_templates_markdown(tmp_path)
 
     assert markdown.startswith("# Pending Candidate Review Input Templates\n")
     assert "- Template count: `4`" in markdown
@@ -1442,7 +1572,8 @@ def test_pending_candidate_review_input_templates_handle_empty_queue(tmp_path):
     assert "No pending candidate review input templates." in markdown
 
 
-def test_validate_pending_candidate_review_decision_draft_accepts_complete_approval():
+def test_validate_pending_candidate_review_decision_draft_accepts_complete_approval(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     draft = {
         "decision_id": "review_candidate_hongfu_remedy_boundary_017_001",
         "candidate_id": "candidate_hongfu_remedy_boundary_017_001",
@@ -1464,7 +1595,7 @@ def test_validate_pending_candidate_review_decision_draft_accepts_complete_appro
         "rejection_reason": "",
     }
 
-    result = source_intake.validate_pending_candidate_review_decision_draft(draft)
+    result = source_intake.validate_pending_candidate_review_decision_draft(draft, tmp_path)
 
     assert result.ready_for_manual_application is True
     assert result.candidate_id == "candidate_hongfu_remedy_boundary_017_001"
@@ -1495,7 +1626,8 @@ def test_validate_pending_candidate_review_decision_draft_accepts_complete_appro
     )
 
 
-def test_validate_pending_candidate_review_decision_draft_blocks_unresolved_approval():
+def test_validate_pending_candidate_review_decision_draft_blocks_unresolved_approval(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     draft = {
         "decision_id": "review_candidate_mingli_pattern_strength_017_001",
         "candidate_id": "candidate_mingli_pattern_strength_017_001",
@@ -1510,7 +1642,7 @@ def test_validate_pending_candidate_review_decision_draft_blocks_unresolved_appr
         "uncertainty_and_limitation_language": "",
     }
 
-    result = source_intake.validate_pending_candidate_review_decision_draft(draft)
+    result = source_intake.validate_pending_candidate_review_decision_draft(draft, tmp_path)
 
     assert result.ready_for_manual_application is False
     assert result.normalized_review_decision == {}
@@ -1530,7 +1662,8 @@ def test_validate_pending_candidate_review_decision_draft_blocks_unresolved_appr
     assert result.formal_evidence_delta == 0
 
 
-def test_render_pending_candidate_review_draft_validation_markdown_summarizes_results():
+def test_render_pending_candidate_review_draft_validation_markdown_summarizes_results(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     valid_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -1561,8 +1694,7 @@ def test_render_pending_candidate_review_draft_validation_markdown_summarizes_re
     }
 
     markdown = source_intake.render_pending_candidate_review_draft_validation_markdown(
-        [valid_draft, blocked_draft]
-    )
+        [valid_draft, blocked_draft], tmp_path)
 
     assert markdown.startswith("# Pending Candidate Review Draft Validation\n")
     assert "- Draft count: `2`" in markdown
@@ -1577,7 +1709,8 @@ def test_render_pending_candidate_review_draft_validation_markdown_summarizes_re
     assert "Draft validation does not write review_decisions.json." in markdown
 
 
-def test_build_pending_candidate_review_application_guard_previews_ready_draft():
+def test_build_pending_candidate_review_application_guard_previews_ready_draft(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     draft = {
         "decision_id": "review_candidate_hongfu_remedy_boundary_017_001",
         "candidate_id": "candidate_hongfu_remedy_boundary_017_001",
@@ -1599,7 +1732,7 @@ def test_build_pending_candidate_review_application_guard_previews_ready_draft()
         "rejection_reason": "",
     }
 
-    guards = source_intake.build_pending_candidate_review_application_guard([draft])
+    guards = source_intake.build_pending_candidate_review_application_guard([draft], tmp_path)
 
     assert len(guards) == 1
     guard = guards[0]
@@ -1625,7 +1758,8 @@ def test_build_pending_candidate_review_application_guard_previews_ready_draft()
     )
 
 
-def test_build_pending_candidate_review_application_guard_blocks_invalid_draft():
+def test_build_pending_candidate_review_application_guard_blocks_invalid_draft(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     draft = {
         "decision_id": "review_candidate_mingli_pattern_strength_017_001",
         "candidate_id": "candidate_mingli_pattern_strength_017_001",
@@ -1640,7 +1774,7 @@ def test_build_pending_candidate_review_application_guard_blocks_invalid_draft()
         "uncertainty_and_limitation_language": "",
     }
 
-    guard = source_intake.build_pending_candidate_review_application_guard([draft])[0]
+    guard = source_intake.build_pending_candidate_review_application_guard([draft], tmp_path)[0]
 
     assert guard.ready_to_apply is False
     assert guard.review_decision_preview == {}
@@ -1658,7 +1792,8 @@ def test_build_pending_candidate_review_application_guard_blocks_invalid_draft()
     assert "approved_candidate_cannot_use_needs_recheck" in guard.blocking_issues
 
 
-def test_render_pending_candidate_review_application_guard_markdown_lists_preview():
+def test_render_pending_candidate_review_application_guard_markdown_lists_preview(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -1689,8 +1824,7 @@ def test_render_pending_candidate_review_application_guard_markdown_lists_previe
     }
 
     markdown = source_intake.render_pending_candidate_review_application_guard_markdown(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert markdown.startswith("# Pending Candidate Review Application Guard\n")
     assert "- Draft count: `2`" in markdown
@@ -1707,7 +1841,8 @@ def test_render_pending_candidate_review_application_guard_markdown_lists_previe
     assert "Application guard previews manual changes only." in markdown
 
 
-def test_build_pending_candidate_review_application_packets_exports_ready_snippets():
+def test_build_pending_candidate_review_application_packets_exports_ready_snippets(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -1723,7 +1858,7 @@ def test_build_pending_candidate_review_application_packets_exports_ready_snippe
         "rejection_reason": "",
     }
 
-    packets = source_intake.build_pending_candidate_review_application_packets([draft])
+    packets = source_intake.build_pending_candidate_review_application_packets([draft], tmp_path)
 
     assert len(packets) == 1
     packet = packets[0]
@@ -1788,7 +1923,8 @@ def test_build_pending_candidate_review_application_packets_blocks_invalid_previ
     assert packet.formal_evidence_delta == 0
 
 
-def test_render_pending_candidate_review_application_packets_markdown_exports_json():
+def test_render_pending_candidate_review_application_packets_markdown_exports_json(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -1819,8 +1955,7 @@ def test_render_pending_candidate_review_application_packets_markdown_exports_js
     }
 
     markdown = source_intake.render_pending_candidate_review_application_packets_markdown(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert markdown.startswith("# Pending Candidate Review Application Packets\n")
     assert "- Packet count: `2`" in markdown
@@ -1840,7 +1975,8 @@ def test_render_pending_candidate_review_application_packets_markdown_exports_js
     assert "Application packets are export-only manual instructions." in markdown
 
 
-def test_build_pending_candidate_review_application_audit_summary_counts_layers():
+def test_build_pending_candidate_review_application_audit_summary_counts_layers(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -1870,8 +2006,7 @@ def test_build_pending_candidate_review_application_audit_summary_counts_layers(
     }
 
     summary = source_intake.build_pending_candidate_review_application_audit_summary(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert summary.pending_template_count == 4
     assert summary.draft_count == 2
@@ -1908,7 +2043,8 @@ def test_build_pending_candidate_review_application_audit_summary_counts_layers(
     )
 
 
-def test_render_pending_candidate_review_application_audit_summary_markdown():
+def test_render_pending_candidate_review_application_audit_summary_markdown(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -1939,8 +2075,7 @@ def test_render_pending_candidate_review_application_audit_summary_markdown():
 
     markdown = (
         source_intake.render_pending_candidate_review_application_audit_summary_markdown(
-            [ready_draft, blocked_draft]
-        )
+            [ready_draft, blocked_draft], tmp_path)
     )
 
     assert markdown.startswith("# Pending Candidate Review Application Audit Summary\n")
@@ -1960,8 +2095,9 @@ def test_render_pending_candidate_review_application_audit_summary_markdown():
     assert "Audit summary is read-only planning metadata." in markdown
 
 
-def test_pending_candidate_review_application_audit_summary_handles_no_drafts():
-    summary = source_intake.build_pending_candidate_review_application_audit_summary([])
+def test_pending_candidate_review_application_audit_summary_handles_no_drafts(tmp_path):
+    _write_manual_application_fixture(tmp_path)
+    summary = source_intake.build_pending_candidate_review_application_audit_summary([], tmp_path)
 
     assert summary.pending_template_count == 4
     assert summary.draft_count == 0
@@ -1980,7 +2116,8 @@ def test_pending_candidate_review_application_audit_summary_handles_no_drafts():
     assert summary.formal_evidence_delta == 0
 
 
-def test_build_pending_candidate_review_manual_action_dashboard_groups_shortest_actions():
+def test_build_pending_candidate_review_manual_action_dashboard_groups_shortest_actions(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2010,8 +2147,7 @@ def test_build_pending_candidate_review_manual_action_dashboard_groups_shortest_
     }
 
     dashboard = source_intake.build_pending_candidate_review_manual_action_dashboard(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert dashboard.pending_candidate_count == 4
     assert dashboard.action_counts == {
@@ -2053,7 +2189,8 @@ def test_build_pending_candidate_review_manual_action_dashboard_groups_shortest_
     )
 
 
-def test_render_pending_candidate_review_manual_action_dashboard_markdown():
+def test_render_pending_candidate_review_manual_action_dashboard_markdown(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2083,8 +2220,7 @@ def test_render_pending_candidate_review_manual_action_dashboard_markdown():
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_action_dashboard_markdown(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert markdown.startswith("# Pending Candidate Review Manual Action Dashboard\n")
     assert "- Pending candidates: `4`" in markdown
@@ -2117,8 +2253,9 @@ def test_render_pending_candidate_review_manual_action_dashboard_markdown():
     assert "Manual action dashboard is read-only planning metadata." in markdown
 
 
-def test_pending_candidate_review_manual_action_dashboard_handles_no_drafts():
-    dashboard = source_intake.build_pending_candidate_review_manual_action_dashboard([])
+def test_pending_candidate_review_manual_action_dashboard_handles_no_drafts(tmp_path):
+    _write_manual_application_fixture(tmp_path)
+    dashboard = source_intake.build_pending_candidate_review_manual_action_dashboard([], tmp_path)
 
     assert dashboard.action_counts == {
         "apply_manual_application_packet": 0,
@@ -2142,7 +2279,8 @@ def test_pending_candidate_review_manual_action_dashboard_handles_no_drafts():
     assert dashboard.formal_evidence_delta == 0
 
 
-def test_build_pending_candidate_review_manual_application_dry_run_guide_lists_steps():
+def test_build_pending_candidate_review_manual_application_dry_run_guide_lists_steps(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2172,8 +2310,7 @@ def test_build_pending_candidate_review_manual_application_dry_run_guide_lists_s
     }
 
     guide = source_intake.build_pending_candidate_review_manual_application_dry_run_guide(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert guide.pending_candidate_count == 4
     assert guide.step_count == 4
@@ -2251,7 +2388,8 @@ def test_build_pending_candidate_review_manual_application_dry_run_guide_lists_s
     )
 
 
-def test_render_pending_candidate_review_manual_application_dry_run_guide_markdown():
+def test_render_pending_candidate_review_manual_application_dry_run_guide_markdown(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2282,8 +2420,7 @@ def test_render_pending_candidate_review_manual_application_dry_run_guide_markdo
 
     markdown = (
         source_intake.render_pending_candidate_review_manual_application_dry_run_guide_markdown(
-            [ready_draft, blocked_draft]
-        )
+            [ready_draft, blocked_draft], tmp_path)
     )
 
     assert markdown.startswith("# Pending Candidate Review Manual Application Dry-Run Guide\n")
@@ -2311,10 +2448,10 @@ def test_render_pending_candidate_review_manual_application_dry_run_guide_markdo
     assert "Manual application dry-run guide is read-only planning metadata." in markdown
 
 
-def test_pending_candidate_review_manual_application_dry_run_guide_handles_no_drafts():
+def test_pending_candidate_review_manual_application_dry_run_guide_handles_no_drafts(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     guide = source_intake.build_pending_candidate_review_manual_application_dry_run_guide(
-        []
-    )
+        [], tmp_path)
 
     assert guide.pending_candidate_count == 4
     assert guide.step_count == 4
@@ -2333,7 +2470,8 @@ def test_pending_candidate_review_manual_application_dry_run_guide_handles_no_dr
     assert guide.formal_evidence_delta == 0
 
 
-def test_build_pending_candidate_review_manual_application_preflight_report_checks_ready_packet():
+def test_build_pending_candidate_review_manual_application_preflight_report_checks_ready_packet(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2364,8 +2502,7 @@ def test_build_pending_candidate_review_manual_application_preflight_report_chec
 
     report = (
         source_intake.build_pending_candidate_review_manual_application_preflight_report(
-            [ready_draft, blocked_draft]
-        )
+            [ready_draft, blocked_draft], tmp_path)
     )
 
     assert report.pending_candidate_count == 4
@@ -2410,7 +2547,8 @@ def test_build_pending_candidate_review_manual_application_preflight_report_chec
     assert report.formal_evidence_delta == 0
 
 
-def test_build_pending_candidate_review_manual_application_preflight_report_blocks_duplicate_decision_id():
+def test_build_pending_candidate_review_manual_application_preflight_report_blocks_duplicate_decision_id(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     duan_draft = {
         "decision_id": "review_duplicate_pending_manual_decision",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2442,8 +2580,7 @@ def test_build_pending_candidate_review_manual_application_preflight_report_bloc
 
     report = (
         source_intake.build_pending_candidate_review_manual_application_preflight_report(
-            [duan_draft, mingxue_draft]
-        )
+            [duan_draft, mingxue_draft], tmp_path)
     )
 
     checks_by_id = {check.candidate_id: check for check in report.checks}
@@ -2462,7 +2599,8 @@ def test_build_pending_candidate_review_manual_application_preflight_report_bloc
     assert report.formal_evidence_delta == 0
 
 
-def test_render_pending_candidate_review_manual_application_preflight_report_markdown():
+def test_render_pending_candidate_review_manual_application_preflight_report_markdown(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2492,8 +2630,7 @@ def test_render_pending_candidate_review_manual_application_preflight_report_mar
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_application_preflight_report_markdown(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert markdown.startswith(
         "# Pending Candidate Review Manual Application Preflight Report\n"
@@ -2516,11 +2653,11 @@ def test_render_pending_candidate_review_manual_application_preflight_report_mar
     assert "Manual application preflight report is read-only planning metadata." in markdown
 
 
-def test_pending_candidate_review_manual_application_preflight_report_handles_no_drafts():
+def test_pending_candidate_review_manual_application_preflight_report_handles_no_drafts(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     report = (
         source_intake.build_pending_candidate_review_manual_application_preflight_report(
-            []
-        )
+            [], tmp_path)
     )
 
     assert report.pending_candidate_count == 4
@@ -2541,7 +2678,8 @@ def test_pending_candidate_review_manual_application_preflight_report_handles_no
     assert report.formal_evidence_delta == 0
 
 
-def test_build_pending_candidate_review_manual_application_handoff_summary_groups_execution_lanes():
+def test_build_pending_candidate_review_manual_application_handoff_summary_groups_execution_lanes(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2572,8 +2710,7 @@ def test_build_pending_candidate_review_manual_application_handoff_summary_group
 
     summary = (
         source_intake.build_pending_candidate_review_manual_application_handoff_summary(
-            [ready_draft, blocked_draft]
-        )
+            [ready_draft, blocked_draft], tmp_path)
     )
 
     assert summary.pending_candidate_count == 4
@@ -2642,7 +2779,8 @@ def test_build_pending_candidate_review_manual_application_handoff_summary_group
     )
 
 
-def test_render_pending_candidate_review_manual_application_handoff_summary_markdown():
+def test_render_pending_candidate_review_manual_application_handoff_summary_markdown(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2672,8 +2810,7 @@ def test_render_pending_candidate_review_manual_application_handoff_summary_mark
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_application_handoff_summary_markdown(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert markdown.startswith(
         "# Pending Candidate Review Manual Application Handoff Summary\n"
@@ -2702,11 +2839,11 @@ def test_render_pending_candidate_review_manual_application_handoff_summary_mark
     assert "Manual application handoff summary is read-only planning metadata." in markdown
 
 
-def test_pending_candidate_review_manual_application_handoff_summary_handles_no_drafts():
+def test_pending_candidate_review_manual_application_handoff_summary_handles_no_drafts(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     summary = (
         source_intake.build_pending_candidate_review_manual_application_handoff_summary(
-            []
-        )
+            [], tmp_path)
     )
 
     assert summary.pending_candidate_count == 4
@@ -2729,7 +2866,8 @@ def test_pending_candidate_review_manual_application_handoff_summary_handles_no_
     assert summary.formal_evidence_delta == 0
 
 
-def test_build_pending_candidate_review_manual_application_readiness_ledger_lists_checkboxes():
+def test_build_pending_candidate_review_manual_application_readiness_ledger_lists_checkboxes(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2760,8 +2898,7 @@ def test_build_pending_candidate_review_manual_application_readiness_ledger_list
 
     ledger = (
         source_intake.build_pending_candidate_review_manual_application_readiness_ledger(
-            [ready_draft, blocked_draft]
-        )
+            [ready_draft, blocked_draft], tmp_path)
     )
 
     assert ledger.pending_candidate_count == 4
@@ -2836,7 +2973,8 @@ def test_build_pending_candidate_review_manual_application_readiness_ledger_list
     assert ledger.formal_evidence_delta == 0
 
 
-def test_render_pending_candidate_review_manual_application_readiness_ledger_markdown():
+def test_render_pending_candidate_review_manual_application_readiness_ledger_markdown(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2866,8 +3004,7 @@ def test_render_pending_candidate_review_manual_application_readiness_ledger_mar
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_application_readiness_ledger_markdown(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert markdown.startswith(
         "# Pending Candidate Review Manual Application Readiness Ledger\n"
@@ -2894,11 +3031,11 @@ def test_render_pending_candidate_review_manual_application_readiness_ledger_mar
     assert "Readiness ledger is read-only planning metadata." in markdown
 
 
-def test_pending_candidate_review_manual_application_readiness_ledger_handles_no_drafts():
+def test_pending_candidate_review_manual_application_readiness_ledger_handles_no_drafts(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ledger = (
         source_intake.build_pending_candidate_review_manual_application_readiness_ledger(
-            []
-        )
+            [], tmp_path)
     )
 
     assert ledger.pending_candidate_count == 4
@@ -2924,7 +3061,8 @@ def test_pending_candidate_review_manual_application_readiness_ledger_handles_no
     assert ledger.formal_evidence_delta == 0
 
 
-def test_build_pending_candidate_review_manual_application_session_packet_groups_session_work():
+def test_build_pending_candidate_review_manual_application_session_packet_groups_session_work(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -2955,8 +3093,7 @@ def test_build_pending_candidate_review_manual_application_session_packet_groups
 
     packet = (
         source_intake.build_pending_candidate_review_manual_application_session_packet(
-            [ready_draft, blocked_draft]
-        )
+            [ready_draft, blocked_draft], tmp_path)
     )
 
     assert packet.session_id == "pending_review_manual_application_session"
@@ -3024,7 +3161,8 @@ def test_build_pending_candidate_review_manual_application_session_packet_groups
     )
 
 
-def test_render_pending_candidate_review_manual_application_session_packet_markdown():
+def test_render_pending_candidate_review_manual_application_session_packet_markdown(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -3054,8 +3192,7 @@ def test_render_pending_candidate_review_manual_application_session_packet_markd
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_application_session_packet_markdown(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert markdown.startswith(
         "# Pending Candidate Review Manual Application Session Packet\n"
@@ -3083,11 +3220,11 @@ def test_render_pending_candidate_review_manual_application_session_packet_markd
     assert "Manual application session packet is read-only planning metadata." in markdown
 
 
-def test_pending_candidate_review_manual_application_session_packet_handles_no_drafts():
+def test_pending_candidate_review_manual_application_session_packet_handles_no_drafts(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     packet = (
         source_intake.build_pending_candidate_review_manual_application_session_packet(
-            []
-        )
+            [], tmp_path)
     )
 
     assert packet.pending_candidate_count == 4
@@ -3113,7 +3250,8 @@ def test_pending_candidate_review_manual_application_session_packet_handles_no_d
     assert packet.formal_evidence_delta == 0
 
 
-def test_build_pending_candidate_review_manual_application_session_outcome_preview_projects_ready_actions_only():
+def test_build_pending_candidate_review_manual_application_session_outcome_preview_projects_ready_actions_only(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -3143,8 +3281,7 @@ def test_build_pending_candidate_review_manual_application_session_outcome_previ
     }
 
     preview = source_intake.build_pending_candidate_review_manual_application_session_outcome_preview(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert preview.session_id == "pending_review_manual_application_session"
     assert preview.preview_scope == "ready_actions_only"
@@ -3201,7 +3338,8 @@ def test_build_pending_candidate_review_manual_application_session_outcome_previ
     assert preview.formal_evidence_delta == 0
 
 
-def test_render_pending_candidate_review_manual_application_session_outcome_preview_markdown():
+def test_render_pending_candidate_review_manual_application_session_outcome_preview_markdown(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     ready_draft = {
         "decision_id": "review_candidate_duan_ten_god_relation_017_001",
         "candidate_id": "candidate_duan_ten_god_relation_017_001",
@@ -3231,8 +3369,7 @@ def test_render_pending_candidate_review_manual_application_session_outcome_prev
     }
 
     markdown = source_intake.render_pending_candidate_review_manual_application_session_outcome_preview_markdown(
-        [ready_draft, blocked_draft]
-    )
+        [ready_draft, blocked_draft], tmp_path)
 
     assert markdown.startswith(
         "# Pending Candidate Review Manual Application Session Outcome Preview\n"
@@ -3252,10 +3389,10 @@ def test_render_pending_candidate_review_manual_application_session_outcome_prev
     assert "Session outcome preview is read-only planning metadata." in markdown
 
 
-def test_pending_candidate_review_manual_application_session_outcome_preview_handles_no_drafts():
+def test_pending_candidate_review_manual_application_session_outcome_preview_handles_no_drafts(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     preview = source_intake.build_pending_candidate_review_manual_application_session_outcome_preview(
-        []
-    )
+        [], tmp_path)
 
     assert preview.pending_candidate_count == 4
     assert preview.preview_item_count == 4

@@ -8,6 +8,117 @@ from typing import Any
 import pytest
 
 
+_MANUAL_APPLICATION_FIXTURE_CANDIDATES = [
+    {
+        "candidate_id": "candidate_mingli_pattern_strength_017_001",
+        "material_id": "material_mingli_true_formula_teacher_pdf",
+        "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001; locator_requirement=page_or_section_required",
+        "extracted_meaning": "Pattern strength material should stay conditional until source locator and chart context are reviewed.",
+        "short_quote": "",
+        "proposed_rule_family": "pattern_strength",
+        "risk_tier": "sensitive",
+        "status": "pending_review",
+        "proposed_limitations": [
+            "State uncertainty for timing and pattern interpretation.",
+            "Include limitation language; do not guarantee outcome timing.",
+        ],
+        "related_evidence_ids": [],
+        "related_conflict_ids": [],
+        "related_gap_ids": [],
+        "duplicate_of": "",
+        "created_by": "learning_reference_curation",
+        "created_at": "2026-06-01",
+    },
+    {
+        "candidate_id": "candidate_duan_ten_god_relation_017_001",
+        "material_id": "material_duan_plain_mingxue_outline_pdf",
+        "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001; locator_requirement=page_or_section_required",
+        "extracted_meaning": "Duan Plain Mingxue Outline can organize ten-god relationships and pattern-strength review as source-backed taxonomy.",
+        "short_quote": "",
+        "proposed_rule_family": "ten_god_relation",
+        "risk_tier": "ordinary",
+        "status": "pending_review",
+        "proposed_limitations": [
+            "Keep as structural taxonomy until locator and chart context are reviewed.",
+        ],
+        "related_evidence_ids": [],
+        "related_conflict_ids": [],
+        "related_gap_ids": [],
+        "duplicate_of": "",
+        "created_by": "learning_reference_curation",
+        "created_at": "2026-06-01",
+    },
+    {
+        "candidate_id": "candidate_mingxue_five_element_balance_017_001",
+        "material_id": "material_mingxue_golden_voice_pdf",
+        "source_locator": "learning-reference:note_mingxue_golden_voice_001#lp_mingxue_five_element_balance_001; locator_requirement=page_or_section_required",
+        "extracted_meaning": "Mingxue Golden Voice can support five-element terminology only after narrower locator review.",
+        "short_quote": "",
+        "proposed_rule_family": "five_element_balance",
+        "risk_tier": "ordinary",
+        "status": "pending_review",
+        "proposed_limitations": [
+            "Keep as terminology taxonomy until locator and chart context are reviewed.",
+        ],
+        "related_evidence_ids": [],
+        "related_conflict_ids": [],
+        "related_gap_ids": [],
+        "duplicate_of": "",
+        "created_by": "learning_reference_curation",
+        "created_at": "2026-06-01",
+    },
+    {
+        "candidate_id": "candidate_hongfu_remedy_boundary_017_001",
+        "material_id": "material_fortune_reading_hongfu_qitian_pdf",
+        "source_locator": "learning-reference:note_fortune_reading_hongfu_qitian_001#lp_hongfu_remedy_boundary_001; locator_requirement=page_or_section_required",
+        "extracted_meaning": "Hongfu Qitian remedy-boundary material should stay conditional until locator and safety context are reviewed.",
+        "short_quote": "",
+        "proposed_rule_family": "remedy_boundary",
+        "risk_tier": "sensitive",
+        "status": "pending_review",
+        "proposed_limitations": [
+            "State uncertainty for remedy-boundary interpretation.",
+            "Include limitation language; avoid certainty about effects.",
+        ],
+        "related_evidence_ids": [],
+        "related_conflict_ids": [],
+        "related_gap_ids": [],
+        "duplicate_of": "",
+        "created_by": "learning_reference_curation",
+        "created_at": "2026-06-01",
+    },
+]
+
+
+def _write_json_fixture(path, payload):
+    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+
+def _write_manual_application_fixture(path):
+    _write_json_fixture(
+        path / "source_materials.json",
+        [
+            {
+                "material_id": material_id,
+                "title": title,
+                "material_type": "pdf",
+                "file_label": file_label,
+                "tracking_status": "external_untracked",
+                "preparation_status": "indexed",
+            }
+            for material_id, title, file_label in [
+                ("material_mingli_true_formula_teacher_pdf", "Mingli True Formula Teacher", "mingli-true-formula-teacher.pdf"),
+                ("material_duan_plain_mingxue_outline_pdf", "Duan Plain Mingxue Outline", "duan-plain-mingxue-outline.pdf"),
+                ("material_mingxue_golden_voice_pdf", "Mingxue Golden Voice", "mingxue-golden-voice.pdf"),
+                ("material_fortune_reading_hongfu_qitian_pdf", "Fortune Reading Hongfu Qitian", "fortune-reading-hongfu-qitian.pdf"),
+            ]
+        ],
+    )
+    _write_json_fixture(path / "candidate_extracts.json", _MANUAL_APPLICATION_FIXTURE_CANDIDATES)
+    _write_json_fixture(path / "review_decisions.json", [])
+
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EXAMPLES_DIR = REPO_ROOT / "examples"
 MANIFEST_PATH = EXAMPLES_DIR / "report-regression-cases.json"
@@ -371,11 +482,12 @@ def test_high_risk_markdown_regression_cases_keep_narrowed_contracts():
         _assert_high_risk_markdown(case, result)
 
 
-def test_pending_source_intake_candidates_are_not_formal_report_evidence():
+def test_pending_source_intake_candidates_are_not_formal_report_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import load_candidate_extracts
 
-    candidates = load_candidate_extracts()
+    candidates = load_candidate_extracts(tmp_path)
     pending_candidate_ids = {
         candidate.candidate_id
         for candidate in candidates
@@ -389,7 +501,8 @@ def test_pending_source_intake_candidates_are_not_formal_report_evidence():
     assert pending_candidate_ids.isdisjoint(formal_evidence_ids)
 
 
-def test_pending_candidate_review_worklist_does_not_change_formal_evidence():
+def test_pending_candidate_review_worklist_does_not_change_formal_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         list_pending_candidate_review_worklist,
@@ -397,13 +510,13 @@ def test_pending_candidate_review_worklist_does_not_change_formal_evidence():
     )
 
     before_candidate_ids = {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     }
 
-    worklist = list_pending_candidate_review_worklist()
+    worklist = list_pending_candidate_review_worklist(tmp_path)
 
     assert {item.candidate_id for item in worklist} == {
         "candidate_mingli_pattern_strength_017_001",
@@ -412,14 +525,15 @@ def test_pending_candidate_review_worklist_does_not_change_formal_evidence():
         "candidate_hongfu_remedy_boundary_017_001",
     }
     assert {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_decision_packets_do_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_decision_packets_do_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         list_pending_candidate_review_decision_packets,
@@ -428,16 +542,16 @@ def test_pending_candidate_review_decision_packets_do_not_write_review_decisions
     )
 
     before_candidate_ids = {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     }
 
-    packets = list_pending_candidate_review_decision_packets()
+    packets = list_pending_candidate_review_decision_packets(tmp_path)
 
     assert {packet.candidate_id for packet in packets} == {
         "candidate_mingli_pattern_strength_017_001",
@@ -446,17 +560,18 @@ def test_pending_candidate_review_decision_packets_do_not_write_review_decisions
         "candidate_hongfu_remedy_boundary_017_001",
     }
     assert {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_ids
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_packet_summary_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_packet_summary_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_packet_summary,
@@ -465,32 +580,33 @@ def test_pending_candidate_review_packet_summary_does_not_write_review_decisions
     )
 
     before_candidate_ids = {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     }
 
-    summary = build_pending_candidate_review_packet_summary()
+    summary = build_pending_candidate_review_packet_summary(tmp_path)
 
     assert summary.packet_count == 4
     assert summary.review_decision_delta == 0
     assert summary.formal_evidence_delta == 0
     assert {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_ids
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_action_queue_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_action_queue_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_action_queue,
@@ -499,16 +615,16 @@ def test_pending_candidate_review_action_queue_does_not_write_review_decisions_o
     )
 
     before_candidate_ids = {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     }
 
-    queue = build_pending_candidate_review_action_queue()
+    queue = build_pending_candidate_review_action_queue(tmp_path)
 
     assert [item.candidate_id for item in queue] == [
         "candidate_mingli_pattern_strength_017_001",
@@ -517,17 +633,18 @@ def test_pending_candidate_review_action_queue_does_not_write_review_decisions_o
         "candidate_hongfu_remedy_boundary_017_001",
     ]
     assert {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_ids
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_action_markdown_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_action_markdown_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         load_candidate_extracts,
@@ -536,30 +653,31 @@ def test_pending_candidate_review_action_markdown_does_not_write_review_decision
     )
 
     before_candidate_ids = {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     }
 
-    markdown = render_pending_candidate_review_action_queue_markdown()
+    markdown = render_pending_candidate_review_action_queue_markdown(tmp_path)
 
     assert markdown.startswith("# Pending Candidate Review Action Queue")
     assert {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_ids
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_input_templates_do_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_input_templates_do_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         list_pending_candidate_review_input_templates,
@@ -569,17 +687,17 @@ def test_pending_candidate_review_input_templates_do_not_write_review_decisions_
     )
 
     before_candidate_ids = {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     }
 
-    templates = list_pending_candidate_review_input_templates()
-    markdown = render_pending_candidate_review_input_templates_markdown()
+    templates = list_pending_candidate_review_input_templates(tmp_path)
+    markdown = render_pending_candidate_review_input_templates_markdown(tmp_path)
 
     assert [template.candidate_id for template in templates] == [
         "candidate_mingli_pattern_strength_017_001",
@@ -589,17 +707,18 @@ def test_pending_candidate_review_input_templates_do_not_write_review_decisions_
     ]
     assert markdown.startswith("# Pending Candidate Review Input Templates")
     assert {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_ids
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_draft_validation_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_draft_validation_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         load_candidate_extracts,
@@ -609,10 +728,10 @@ def test_pending_candidate_review_draft_validation_does_not_write_review_decisio
     )
 
     before_candidate_ids = {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -638,23 +757,24 @@ def test_pending_candidate_review_draft_validation_does_not_write_review_decisio
         "rejection_reason": "",
     }
 
-    result = validate_pending_candidate_review_decision_draft(draft)
-    markdown = render_pending_candidate_review_draft_validation_markdown([draft])
+    result = validate_pending_candidate_review_decision_draft(draft, tmp_path)
+    markdown = render_pending_candidate_review_draft_validation_markdown([draft], tmp_path)
 
     assert result.ready_for_manual_application is True
     assert markdown.startswith("# Pending Candidate Review Draft Validation")
     assert {
-        candidate.candidate_id for candidate in load_candidate_extracts()
+        candidate.candidate_id for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_ids
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_application_guard_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_application_guard_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_application_guard,
@@ -664,10 +784,10 @@ def test_pending_candidate_review_application_guard_does_not_write_review_decisi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -693,24 +813,25 @@ def test_pending_candidate_review_application_guard_does_not_write_review_decisi
         "rejection_reason": "",
     }
 
-    guard = build_pending_candidate_review_application_guard([draft])[0]
-    markdown = render_pending_candidate_review_application_guard_markdown([draft])
+    guard = build_pending_candidate_review_application_guard([draft], tmp_path)[0]
+    markdown = render_pending_candidate_review_application_guard_markdown([draft], tmp_path)
 
     assert guard.ready_to_apply is True
     assert guard.preview_review_decision_delta == 1
     assert markdown.startswith("# Pending Candidate Review Application Guard")
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_application_packets_do_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_application_packets_do_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_application_packets,
@@ -720,10 +841,10 @@ def test_pending_candidate_review_application_packets_do_not_write_review_decisi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -743,24 +864,25 @@ def test_pending_candidate_review_application_packets_do_not_write_review_decisi
         "rejection_reason": "",
     }
 
-    packet = build_pending_candidate_review_application_packets([draft])[0]
-    markdown = render_pending_candidate_review_application_packets_markdown([draft])
+    packet = build_pending_candidate_review_application_packets([draft], tmp_path)[0]
+    markdown = render_pending_candidate_review_application_packets_markdown([draft], tmp_path)
 
     assert packet.ready_to_export is True
     assert packet.preview_review_decision_delta == 1
     assert markdown.startswith("# Pending Candidate Review Application Packets")
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_application_audit_summary_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_application_audit_summary_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_application_audit_summary,
@@ -770,10 +892,10 @@ def test_pending_candidate_review_application_audit_summary_does_not_write_revie
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -793,25 +915,25 @@ def test_pending_candidate_review_application_audit_summary_does_not_write_revie
         "rejection_reason": "",
     }
 
-    summary = build_pending_candidate_review_application_audit_summary([draft])
+    summary = build_pending_candidate_review_application_audit_summary([draft], tmp_path)
     markdown = render_pending_candidate_review_application_audit_summary_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert summary.packet_exportable_count == 1
     assert markdown.startswith("# Pending Candidate Review Application Audit Summary")
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_action_dashboard_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_action_dashboard_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_action_dashboard,
@@ -821,10 +943,10 @@ def test_pending_candidate_review_manual_action_dashboard_does_not_write_review_
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -844,10 +966,9 @@ def test_pending_candidate_review_manual_action_dashboard_does_not_write_review_
         "rejection_reason": "",
     }
 
-    dashboard = build_pending_candidate_review_manual_action_dashboard([draft])
+    dashboard = build_pending_candidate_review_manual_action_dashboard([draft], tmp_path)
     markdown = render_pending_candidate_review_manual_action_dashboard_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert dashboard.action_counts["apply_manual_application_packet"] == 1
     assert dashboard.applied_review_decision_delta == 0
@@ -855,17 +976,18 @@ def test_pending_candidate_review_manual_action_dashboard_does_not_write_review_
     assert dashboard.formal_evidence_delta == 0
     assert markdown.startswith("# Pending Candidate Review Manual Action Dashboard")
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_dry_run_guide_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_dry_run_guide_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_dry_run_guide,
@@ -875,10 +997,10 @@ def test_pending_candidate_review_manual_application_dry_run_guide_does_not_writ
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -898,10 +1020,9 @@ def test_pending_candidate_review_manual_application_dry_run_guide_does_not_writ
         "rejection_reason": "",
     }
 
-    guide = build_pending_candidate_review_manual_application_dry_run_guide([draft])
+    guide = build_pending_candidate_review_manual_application_dry_run_guide([draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_dry_run_guide_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert guide.step_count == 4
     assert guide.applied_review_decision_delta == 0
@@ -909,17 +1030,18 @@ def test_pending_candidate_review_manual_application_dry_run_guide_does_not_writ
     assert guide.formal_evidence_delta == 0
     assert markdown.startswith("# Pending Candidate Review Manual Application Dry-Run Guide")
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_preflight_report_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_preflight_report_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_preflight_report,
@@ -929,10 +1051,10 @@ def test_pending_candidate_review_manual_application_preflight_report_does_not_w
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -952,11 +1074,10 @@ def test_pending_candidate_review_manual_application_preflight_report_does_not_w
         "rejection_reason": "",
     }
 
-    report = build_pending_candidate_review_manual_application_preflight_report([draft])
+    report = build_pending_candidate_review_manual_application_preflight_report([draft], tmp_path)
     markdown = (
         render_pending_candidate_review_manual_application_preflight_report_markdown(
-            [draft]
-        )
+            [draft], tmp_path)
     )
 
     assert report.preflight_check_count == 4
@@ -970,17 +1091,18 @@ def test_pending_candidate_review_manual_application_preflight_report_does_not_w
         "# Pending Candidate Review Manual Application Preflight Report"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_handoff_summary_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_handoff_summary_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_handoff_summary,
@@ -990,10 +1112,10 @@ def test_pending_candidate_review_manual_application_handoff_summary_does_not_wr
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1014,12 +1136,10 @@ def test_pending_candidate_review_manual_application_handoff_summary_does_not_wr
     }
 
     summary = build_pending_candidate_review_manual_application_handoff_summary(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = (
         render_pending_candidate_review_manual_application_handoff_summary_markdown(
-            [draft]
-        )
+            [draft], tmp_path)
     )
 
     assert summary.handoff_item_count == 4
@@ -1033,17 +1153,18 @@ def test_pending_candidate_review_manual_application_handoff_summary_does_not_wr
         "# Pending Candidate Review Manual Application Handoff Summary"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_readiness_ledger_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_readiness_ledger_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_readiness_ledger,
@@ -1053,10 +1174,10 @@ def test_pending_candidate_review_manual_application_readiness_ledger_does_not_w
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1077,12 +1198,10 @@ def test_pending_candidate_review_manual_application_readiness_ledger_does_not_w
     }
 
     ledger = build_pending_candidate_review_manual_application_readiness_ledger(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = (
         render_pending_candidate_review_manual_application_readiness_ledger_markdown(
-            [draft]
-        )
+            [draft], tmp_path)
     )
 
     assert ledger.ledger_row_count == 4
@@ -1096,17 +1215,18 @@ def test_pending_candidate_review_manual_application_readiness_ledger_does_not_w
         "# Pending Candidate Review Manual Application Readiness Ledger"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_session_packet_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_session_packet_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_session_packet,
@@ -1116,10 +1236,10 @@ def test_pending_candidate_review_manual_application_session_packet_does_not_wri
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1140,11 +1260,9 @@ def test_pending_candidate_review_manual_application_session_packet_does_not_wri
     }
 
     packet = build_pending_candidate_review_manual_application_session_packet(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_session_packet_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert packet.ready_action_count == 1
     assert packet.applied_review_decision_delta == 0
@@ -1154,17 +1272,18 @@ def test_pending_candidate_review_manual_application_session_packet_does_not_wri
         "# Pending Candidate Review Manual Application Session Packet"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_session_outcome_preview_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_session_outcome_preview_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_session_outcome_preview,
@@ -1174,10 +1293,10 @@ def test_pending_candidate_review_manual_application_session_outcome_preview_doe
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1198,11 +1317,9 @@ def test_pending_candidate_review_manual_application_session_outcome_preview_doe
     }
 
     preview = build_pending_candidate_review_manual_application_session_outcome_preview(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_session_outcome_preview_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert preview.ready_applied_candidate_ids == [
         "candidate_duan_ten_god_relation_017_001"
@@ -1216,17 +1333,18 @@ def test_pending_candidate_review_manual_application_session_outcome_preview_doe
         "# Pending Candidate Review Manual Application Session Outcome Preview"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_post_session_verification_report_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_post_session_verification_report_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_post_session_verification_report,
@@ -1236,10 +1354,10 @@ def test_pending_candidate_review_manual_application_post_session_verification_r
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1260,11 +1378,9 @@ def test_pending_candidate_review_manual_application_post_session_verification_r
     }
 
     report = build_pending_candidate_review_manual_application_post_session_verification_report(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_post_session_verification_report_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert report.expected_ready_candidate_count == 1
     assert report.post_session_status == "blocked"
@@ -1275,17 +1391,18 @@ def test_pending_candidate_review_manual_application_post_session_verification_r
         "# Pending Candidate Review Manual Application Post-Session Verification Report"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_reconciliation_dashboard_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_reconciliation_dashboard_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_reconciliation_dashboard,
@@ -1295,10 +1412,10 @@ def test_pending_candidate_review_manual_application_reconciliation_dashboard_do
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1319,11 +1436,9 @@ def test_pending_candidate_review_manual_application_reconciliation_dashboard_do
     }
 
     dashboard = build_pending_candidate_review_manual_application_reconciliation_dashboard(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_reconciliation_dashboard_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert dashboard.action_counts["append_missing_review_decision"] == 1
     assert dashboard.applied_review_decision_delta == 0
@@ -1333,17 +1448,18 @@ def test_pending_candidate_review_manual_application_reconciliation_dashboard_do
         "# Pending Candidate Review Manual Application Reconciliation Dashboard"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_closure_packet_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_closure_packet_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_closure_packet,
@@ -1353,10 +1469,10 @@ def test_pending_candidate_review_manual_application_closure_packet_does_not_wri
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1377,11 +1493,9 @@ def test_pending_candidate_review_manual_application_closure_packet_does_not_wri
     }
 
     packet = build_pending_candidate_review_manual_application_closure_packet(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_closure_packet_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert packet.closure_action_counts["carry_forward_missing_review_decision"] == 1
     assert packet.applied_review_decision_delta == 0
@@ -1391,17 +1505,18 @@ def test_pending_candidate_review_manual_application_closure_packet_does_not_wri
         "# Pending Candidate Review Manual Application Closure Packet"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_starter_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_starter_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_starter,
@@ -1411,10 +1526,10 @@ def test_pending_candidate_review_manual_application_next_session_starter_does_n
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1435,11 +1550,9 @@ def test_pending_candidate_review_manual_application_next_session_starter_does_n
     }
 
     starter = build_pending_candidate_review_manual_application_next_session_starter(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_starter_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert starter.starter_lane_counts["missing_review_decision"] == 1
     assert starter.applied_review_decision_delta == 0
@@ -1449,17 +1562,18 @@ def test_pending_candidate_review_manual_application_next_session_starter_does_n
         "# Pending Candidate Review Manual Application Next-Session Starter"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_packet_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_packet_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_packet,
@@ -1469,10 +1583,10 @@ def test_pending_candidate_review_manual_application_next_session_packet_does_no
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1493,11 +1607,9 @@ def test_pending_candidate_review_manual_application_next_session_packet_does_no
     }
 
     packet = build_pending_candidate_review_manual_application_next_session_packet(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_packet_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert packet.correction_candidate_ids == [
         "candidate_duan_ten_god_relation_017_001"
@@ -1509,17 +1621,18 @@ def test_pending_candidate_review_manual_application_next_session_packet_does_no
         "# Pending Candidate Review Manual Application Next-Session Packet"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_audit_summary_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_audit_summary_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_audit_summary,
@@ -1529,10 +1642,10 @@ def test_pending_candidate_review_manual_application_next_session_audit_summary_
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1553,11 +1666,9 @@ def test_pending_candidate_review_manual_application_next_session_audit_summary_
     }
 
     summary = build_pending_candidate_review_manual_application_next_session_audit_summary(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_audit_summary_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert summary.correction_queue_count == 1
     assert summary.coverage_checks["starter_to_packet_order"] == "covered"
@@ -1568,17 +1679,18 @@ def test_pending_candidate_review_manual_application_next_session_audit_summary_
         "# Pending Candidate Review Manual Application Next-Session Audit Summary"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_operator_checklist_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_operator_checklist_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_operator_checklist,
@@ -1588,10 +1700,10 @@ def test_pending_candidate_review_manual_application_next_session_operator_check
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1612,11 +1724,9 @@ def test_pending_candidate_review_manual_application_next_session_operator_check
     }
 
     checklist = build_pending_candidate_review_manual_application_next_session_operator_checklist(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_operator_checklist_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert checklist.action_sequence[0] == "apply_correction_queue_first"
     assert checklist.applied_review_decision_delta == 0
@@ -1626,17 +1736,18 @@ def test_pending_candidate_review_manual_application_next_session_operator_check
         "# Pending Candidate Review Manual Application Next-Session Operator Checklist"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_execution_handoff_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_execution_handoff_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_execution_handoff,
@@ -1646,10 +1757,10 @@ def test_pending_candidate_review_manual_application_next_session_execution_hand
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1670,11 +1781,9 @@ def test_pending_candidate_review_manual_application_next_session_execution_hand
     }
 
     handoff = build_pending_candidate_review_manual_application_next_session_execution_handoff(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_execution_handoff_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert handoff.first_action == "apply_correction_queue_first"
     assert handoff.applied_review_decision_delta == 0
@@ -1684,17 +1793,18 @@ def test_pending_candidate_review_manual_application_next_session_execution_hand
         "# Pending Candidate Review Manual Application Next-Session Execution Handoff"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_completion_criteria_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_completion_criteria_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_completion_criteria,
@@ -1704,10 +1814,10 @@ def test_pending_candidate_review_manual_application_next_session_completion_cri
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1728,11 +1838,9 @@ def test_pending_candidate_review_manual_application_next_session_completion_cri
     }
 
     criteria = build_pending_candidate_review_manual_application_next_session_completion_criteria(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_completion_criteria_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert criteria.first_action == "apply_correction_queue_first"
     assert criteria.applied_review_decision_delta == 0
@@ -1742,17 +1850,18 @@ def test_pending_candidate_review_manual_application_next_session_completion_cri
         "# Pending Candidate Review Manual Application Next-Session Completion Criteria"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_retry_planner_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_retry_planner_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_retry_planner,
@@ -1762,10 +1871,10 @@ def test_pending_candidate_review_manual_application_next_session_retry_planner_
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1786,11 +1895,9 @@ def test_pending_candidate_review_manual_application_next_session_retry_planner_
     }
 
     planner = build_pending_candidate_review_manual_application_next_session_retry_planner(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_retry_planner_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert planner.first_action == "apply_correction_queue_first"
     assert planner.applied_review_decision_delta == 0
@@ -1800,17 +1907,18 @@ def test_pending_candidate_review_manual_application_next_session_retry_planner_
         "# Pending Candidate Review Manual Application Next-Session Retry Planner"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_final_readiness_summary_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_final_readiness_summary_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_final_readiness_summary,
@@ -1820,10 +1928,10 @@ def test_pending_candidate_review_manual_application_next_session_final_readines
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1844,11 +1952,9 @@ def test_pending_candidate_review_manual_application_next_session_final_readines
     }
 
     summary = build_pending_candidate_review_manual_application_next_session_final_readiness_summary(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_final_readiness_summary_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert summary.readiness_status == "ready_to_start_next_manual_session"
     assert summary.applied_review_decision_delta == 0
@@ -1858,17 +1964,18 @@ def test_pending_candidate_review_manual_application_next_session_final_readines
         "# Pending Candidate Review Manual Application Next-Session Final Readiness Summary"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_note_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_note_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_launch_note,
@@ -1878,10 +1985,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1902,11 +2009,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     note = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_note(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_note_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert note.launch_status == "ready_to_launch_manual_execution"
     assert note.applied_review_decision_delta == 0
@@ -1916,17 +2021,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Note"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_launch_audit,
@@ -1936,10 +2042,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -1960,11 +2066,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert audit.audit_status == "launch_audit_ready"
     assert audit.applied_review_decision_delta == 0
@@ -1974,17 +2078,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_launch_seal,
@@ -1994,10 +2099,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2018,11 +2123,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert seal.seal_status == "sealed_for_manual_execution"
     assert seal.applied_review_decision_delta == 0
@@ -2032,17 +2135,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook,
@@ -2052,10 +2156,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2076,11 +2180,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     runbook = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert runbook.runbook_status == "ready_for_manual_execution_runbook"
     assert runbook.applied_review_decision_delta == 0
@@ -2090,17 +2192,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Runbook"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit,
@@ -2110,10 +2213,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2134,11 +2237,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert audit.audit_status == "runbook_audit_ready"
     assert audit.applied_review_decision_delta == 0
@@ -2148,17 +2249,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Runbook Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_seal,
@@ -2168,10 +2270,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2192,11 +2294,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_runbook_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert seal.seal_status == "sealed_for_manual_execution_runbook_audit"
     assert seal.applied_review_decision_delta == 0
@@ -2206,17 +2306,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Runbook Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet,
@@ -2226,10 +2327,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2250,11 +2351,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     packet = build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert packet.launch_packet_status == "ready_for_final_manual_launch_packet"
     assert packet.applied_review_decision_delta == 0
@@ -2264,17 +2363,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Launch Packet"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit,
@@ -2284,10 +2384,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2308,11 +2408,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert audit.handoff_readiness == "ready_for_operator_handoff"
     assert audit.applied_review_decision_delta == 0
@@ -2322,17 +2420,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Launch Packet Handoff Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_seal,
@@ -2342,10 +2441,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2366,11 +2465,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_launch_packet_handoff_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert seal.seal_status == "sealed_for_operator_manual_execution_go"
     assert seal.go_no_go_decision == "go_for_operator_manual_execution"
@@ -2381,17 +2478,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Launch Packet Handoff Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_operator_go_no_go_seal_launch_receipt_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_operator_go_no_go_seal_launch_receipt_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_operator_go_no_go_seal_launch_receipt,
@@ -2401,10 +2499,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2425,11 +2523,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     receipt = build_pending_candidate_review_manual_application_next_session_manual_execution_operator_go_no_go_seal_launch_receipt(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_operator_go_no_go_seal_launch_receipt_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert receipt.receipt_status == "ready_for_operator_launch_receipt"
     assert receipt.receipt_decision == "receipt_ready_to_start_manual_execution"
@@ -2440,17 +2536,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Operator Go/No-Go Seal Launch Receipt"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit,
@@ -2460,10 +2557,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2484,11 +2581,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert audit.final_boundary_readiness == "ready_for_final_boundary_audit"
     assert audit.applied_review_decision_delta == 0
@@ -2498,17 +2593,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Receipt Final Boundary Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal,
@@ -2518,10 +2614,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2542,11 +2638,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert seal.seal_status == "sealed_for_launch_receipt_final_boundary"
     assert seal.applied_review_decision_delta == 0
@@ -2556,17 +2650,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Receipt Final Boundary Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet,
@@ -2576,10 +2671,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2600,11 +2695,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     packet = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert packet.packet_status == "ready_for_operator_start_packet"
     assert packet.start_authorization == "authorized_to_start_manual_execution"
@@ -2615,17 +2708,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Launch Receipt Final Boundary Audit Seal Operator Start Packet"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_operator_start_packet_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_operator_start_packet_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit,
@@ -2635,10 +2729,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2659,11 +2753,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert audit.audit_status == "operator_start_packet_audit_ready"
     assert audit.applied_review_decision_delta == 0
@@ -2673,17 +2765,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Operator Start Packet Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_operator_start_packet_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_operator_start_packet_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit_seal,
@@ -2693,10 +2786,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2717,11 +2810,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_launch_receipt_final_boundary_audit_seal_operator_start_packet_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert seal.seal_status == "sealed_for_operator_start_packet_audit"
     assert seal.applied_review_decision_delta == 0
@@ -2731,17 +2822,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Operator Start Packet Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt,
@@ -2751,10 +2843,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2775,11 +2867,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     receipt = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert receipt.receipt_status == "ready_for_manual_execution_start_authorization_receipt"
     assert receipt.applied_review_decision_delta == 0
@@ -2789,17 +2879,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Receipt"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit,
@@ -2809,10 +2900,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2833,11 +2924,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert audit.coverage_audit_status == "start_authorization_receipt_coverage_audit_ready"
     assert audit.applied_review_decision_delta == 0
@@ -2847,17 +2936,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Receipt Coverage Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_seal,
@@ -2867,10 +2957,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2891,11 +2981,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_receipt_coverage_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert seal.seal_status == "sealed_for_start_authorization_receipt_coverage_audit"
     assert seal.applied_review_decision_delta == 0
@@ -2905,17 +2993,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Receipt Coverage Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet,
@@ -2925,10 +3014,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -2949,11 +3038,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     packet = build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert packet.packet_status == "ready_for_manual_execution_authorization_packet"
     assert packet.applied_review_decision_delta == 0
@@ -2963,17 +3050,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Authorization Packet"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit,
@@ -2983,10 +3071,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3007,11 +3095,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert audit.audit_status == "manual_execution_authorization_packet_coverage_audit_ready"
     assert audit.applied_review_decision_delta == 0
@@ -3021,17 +3107,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Authorization Packet Coverage Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal,
@@ -3041,10 +3128,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3065,11 +3152,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert seal.seal_status == "sealed_for_manual_execution_authorization_packet_coverage_audit"
     assert seal.applied_review_decision_delta == 0
@@ -3079,17 +3164,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Authorization Packet Coverage Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_start_docket_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_start_docket_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_start_docket,
@@ -3099,10 +3185,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3123,11 +3209,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     docket = build_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_start_docket(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_authorization_packet_coverage_audit_seal_start_docket_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert docket.docket_status == "ready_for_manual_execution_start_docket"
     assert docket.applied_review_decision_delta == 0
@@ -3137,17 +3221,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Authorization Packet Coverage Audit Seal Start Docket"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit,
@@ -3157,10 +3242,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3181,11 +3266,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert audit.audit_status == "manual_execution_start_docket_coverage_audit_ready"
     assert audit.applied_review_decision_delta == 0
@@ -3195,17 +3278,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Docket Coverage Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal,
@@ -3215,10 +3299,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3239,11 +3323,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert seal.seal_status == "sealed_for_manual_execution_start_docket_coverage_audit"
     assert seal.applied_review_decision_delta == 0
@@ -3253,17 +3335,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Docket Coverage Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_final_start_packet_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_final_start_packet_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_final_start_packet,
@@ -3273,10 +3356,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3297,11 +3380,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     packet = build_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_final_start_packet(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_docket_coverage_audit_seal_final_start_packet_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert packet.packet_status == "ready_for_manual_execution_final_start_packet"
     assert packet.applied_review_decision_delta == 0
@@ -3311,17 +3392,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Start Packet"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit,
@@ -3331,10 +3413,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3355,11 +3437,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert audit.handoff_readiness == "ready_for_manual_execution_final_start_packet_handoff"
     assert audit.applied_review_decision_delta == 0
@@ -3369,17 +3449,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Start Packet Handoff Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal,
@@ -3389,10 +3470,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3413,11 +3494,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert seal.seal_status == "sealed_for_manual_execution_final_start_packet_handoff"
     assert seal.go_no_go_start_decision == "go_for_operator_manual_execution"
@@ -3428,17 +3507,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Final Start Packet Handoff Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_start_authorization_packet,
@@ -3448,10 +3528,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3472,11 +3552,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     packet = build_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_start_authorization_packet(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_final_start_packet_handoff_audit_seal_start_authorization_packet_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert packet.packet_status == "ready_for_manual_execution_start_authorization_packet"
     assert packet.start_authorization == "authorized_to_start_manual_execution"
@@ -3487,17 +3565,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Packet"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit,
@@ -3507,10 +3586,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3531,11 +3610,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert (
         audit.audit_status
@@ -3552,17 +3629,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Packet Coverage Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal,
@@ -3572,10 +3650,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3596,11 +3674,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert (
         seal.seal_status
@@ -3617,17 +3693,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Authorization Packet Coverage Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet,
@@ -3637,10 +3714,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3661,11 +3738,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     packet = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert packet.packet_status == "ready_for_manual_execution_start_clearance_packet"
     assert packet.start_authorization == "authorized_to_start_manual_execution"
@@ -3676,17 +3751,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_coverage_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_coverage_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit,
@@ -3696,10 +3772,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3720,11 +3796,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert (
         audit.audit_status
@@ -3738,17 +3812,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Coverage Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal,
@@ -3758,10 +3833,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3782,11 +3857,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert (
         seal.seal_status
@@ -3803,17 +3876,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Coverage Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_final_start_authorization_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_final_start_authorization_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization,
@@ -3823,10 +3897,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3847,11 +3921,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     authorization = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert (
         authorization.authorization_status
@@ -3867,17 +3939,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Final Start Authorization"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_final_start_authorization_coverage_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_final_start_authorization_coverage_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit,
@@ -3887,10 +3960,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3911,11 +3984,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert (
         audit.audit_status
@@ -3932,17 +4003,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Final Start Authorization Coverage Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_final_start_authorization_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_clearance_packet_final_start_authorization_coverage_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal,
@@ -3952,10 +4024,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -3976,11 +4048,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert (
         seal.seal_status
@@ -3997,17 +4067,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Final Start Authorization Coverage Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_handoff_packet_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_handoff_packet_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet,
@@ -4017,10 +4088,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -4041,11 +4112,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     packet = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert (
         packet.handoff_packet_status
@@ -4062,17 +4131,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Clearance Packet Final Start Authorization Coverage Audit Seal Start Handoff Packet"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_handoff_packet_coverage_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_handoff_packet_coverage_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit,
@@ -4082,10 +4152,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -4106,11 +4176,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert audit.audit_status == "manual_execution_start_handoff_packet_coverage_audit_ready"
     assert audit.applied_review_decision_delta == 0
@@ -4120,17 +4188,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Handoff Packet Coverage Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_handoff_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_handoff_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal,
@@ -4140,10 +4209,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -4164,11 +4233,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert (
         seal.seal_status
@@ -4181,17 +4248,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Handoff Packet Coverage Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_packet_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_packet_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet,
@@ -4201,10 +4269,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -4225,11 +4293,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     packet = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert packet.start_packet_status == "ready_for_operator_manual_execution_start_packet"
     assert packet.applied_review_decision_delta == 0
@@ -4239,17 +4305,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Packet"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_packet_coverage_audit_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_packet_coverage_audit_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit,
@@ -4259,10 +4326,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -4283,11 +4350,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     audit = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert audit.audit_status == "manual_execution_start_packet_coverage_audit_ready"
     assert audit.applied_review_decision_delta == 0
@@ -4297,17 +4362,18 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Packet Coverage Audit"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()
     } == before_formal_evidence_ids
 
 
-def test_pending_candidate_review_manual_application_next_session_manual_execution_start_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence():
+def test_pending_candidate_review_manual_application_next_session_manual_execution_start_packet_coverage_audit_seal_does_not_write_review_decisions_or_evidence(tmp_path):
+    _write_manual_application_fixture(tmp_path)
     from mingli_engine.classical_sources import load_approved_evidence_units
     from mingli_engine.source_intake import (
         build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit_seal,
@@ -4317,10 +4383,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     )
 
     before_candidate_statuses = {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     }
     before_decision_ids = {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     }
     before_formal_evidence_ids = {
         evidence.evidence_id for evidence in load_approved_evidence_units()
@@ -4341,11 +4407,9 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
     }
 
     seal = build_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit_seal(
-        [draft]
-    )
+        [draft], tmp_path)
     markdown = render_pending_candidate_review_manual_application_next_session_manual_execution_start_authorization_packet_coverage_audit_seal_start_clearance_packet_coverage_audit_seal_final_start_authorization_coverage_audit_seal_start_handoff_packet_coverage_audit_seal_start_packet_coverage_audit_seal_markdown(
-        [draft]
-    )
+        [draft], tmp_path)
 
     assert seal.seal_status == "sealed_for_manual_execution_start_packet_coverage_audit"
     assert seal.applied_review_decision_delta == 0
@@ -4355,10 +4419,10 @@ def test_pending_candidate_review_manual_application_next_session_manual_executi
         "# Pending Candidate Review Manual Application Next-Session Manual Execution Start Packet Coverage Audit Seal"
     )
     assert {
-        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts()
+        candidate.candidate_id: candidate.status for candidate in load_candidate_extracts(tmp_path)
     } == before_candidate_statuses
     assert {
-        decision.decision_id for decision in load_review_decisions()
+        decision.decision_id for decision in load_review_decisions(tmp_path)
     } == before_decision_ids
     assert {
         evidence.evidence_id for evidence in load_approved_evidence_units()

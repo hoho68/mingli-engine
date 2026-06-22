@@ -22,5 +22,53 @@
     "review_status": "reviewed",
     "review_notes": "Approved blind-image conditional signal for promotion.",
     "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_duan_ten_god_relation_004_001",
+    "candidate_ids": [
+      "candidate_duan_ten_god_relation_017_001"
+    ],
+    "target_evidence_ids": [
+      "duan_ten_god_relation_004"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved ten-god relationship taxonomy for promotion.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_mingxue_five_element_balance_004_001",
+    "candidate_ids": [
+      "candidate_mingxue_five_element_balance_017_001"
+    ],
+    "target_evidence_ids": [
+      "mingxue_five_element_balance_004"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved five-element terminology taxonomy for promotion.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_teacher_pattern_strength_004_001",
+    "candidate_ids": [
+      "candidate_mingli_pattern_strength_017_001"
+    ],
+    "target_evidence_ids": [
+      "teacher_pattern_strength_004"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved conditional pattern-strength signal for promotion.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_fortune_remedy_boundary_005_001",
+    "candidate_ids": [
+      "candidate_hongfu_remedy_boundary_017_001"
+    ],
+    "target_evidence_ids": [
+      "fortune_remedy_boundary_005"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved conditional remedy-boundary signal for promotion.",
+    "unresolved_issues": []
   }
 ]

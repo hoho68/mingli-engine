@@ -123,12 +123,12 @@
   {
     "candidate_id": "candidate_mingli_pattern_strength_017_001",
     "material_id": "material_mingli_true_formula_teacher_pdf",
-    "source_locator": "learning-reference:note_mingli_true_formula_teacher_001#lp_mingli_pattern_strength_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:mingli_true_formula_teacher.md#pattern-strength",
     "extracted_meaning": "Pattern strength material should stay conditional until source locator and chart context are reviewed.",
     "short_quote": "",
     "proposed_rule_family": "pattern_strength",
     "risk_tier": "sensitive",
-    "status": "pending_review",
+    "status": "promoted",
     "proposed_limitations": [
       "State uncertainty for timing and pattern interpretation.",
       "Include limitation language; do not guarantee outcome timing."
@@ -143,12 +143,12 @@
   {
     "candidate_id": "candidate_duan_ten_god_relation_017_001",
     "material_id": "material_duan_plain_mingxue_outline_pdf",
-    "source_locator": "learning-reference:note_duan_plain_mingxue_outline_001#lp_duan_ten_god_relation_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:duan_plain_mingxue_outline.md#ten-god-relation",
     "extracted_meaning": "Duan Plain Mingxue Outline can organize ten-god relationships and pattern-strength review as source-backed taxonomy.",
     "short_quote": "",
     "proposed_rule_family": "ten_god_relation",
     "risk_tier": "ordinary",
-    "status": "pending_review",
+    "status": "promoted",
     "proposed_limitations": [
       "Keep as structural taxonomy until locator and chart context are reviewed."
     ],
@@ -162,12 +162,12 @@
   {
     "candidate_id": "candidate_mingxue_five_element_balance_017_001",
     "material_id": "material_mingxue_golden_voice_pdf",
-    "source_locator": "learning-reference:note_mingxue_golden_voice_001#lp_mingxue_five_element_balance_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:mingxue_golden_voice.md#five-element-balance",
     "extracted_meaning": "Mingxue Golden Voice can support five-element terminology only after narrower locator review.",
     "short_quote": "",
     "proposed_rule_family": "five_element_balance",
     "risk_tier": "ordinary",
-    "status": "pending_review",
+    "status": "promoted",
     "proposed_limitations": [
       "Keep as terminology taxonomy until locator and chart context are reviewed."
     ],
@@ -181,12 +181,12 @@
   {
     "candidate_id": "candidate_hongfu_remedy_boundary_017_001",
     "material_id": "material_fortune_reading_hongfu_qitian_pdf",
-    "source_locator": "learning-reference:note_fortune_reading_hongfu_qitian_001#lp_hongfu_remedy_boundary_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:fortune_reading_hongfu_qitian.md#remedy-boundary",
     "extracted_meaning": "Hongfu Qitian remedy-boundary material should stay conditional until locator and safety context are reviewed.",
     "short_quote": "",
     "proposed_rule_family": "remedy_boundary",
     "risk_tier": "sensitive",
-    "status": "pending_review",
+    "status": "promoted",
     "proposed_limitations": [
       "State uncertainty for remedy-boundary interpretation.",
       "Include limitation language; avoid certainty about effects."

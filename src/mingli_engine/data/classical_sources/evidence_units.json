@@ -1288,5 +1288,98 @@
     "confidence": "moderate",
     "source_quality": "review_note",
     "conflict_ids": []
+  },
+  {
+    "evidence_id": "duan_ten_god_relation_004",
+    "source_id": "duan_plain_mingxue_outline",
+    "source_ref": "review-note:duan_plain_mingxue_outline.md#ten-god-relation",
+    "theme": "十神关系分类",
+    "rule_family": "ten_god_relation",
+    "risk_tier": "ordinary",
+    "summary": "Duan Plain Mingxue Outline can organize ten-god relationships and pattern-strength review as source-backed taxonomy.",
+    "applicability": [
+      "gan_zhi_available",
+      "four_pillars_complete"
+    ],
+    "limitations": [
+      "Keep as structural taxonomy until locator and chart context are reviewed.",
+      "Keep as structural taxonomy until chart context is reviewed."
+    ],
+    "school": "段氏",
+    "curation_batch_id": "batch_012_taxonomy_001",
+    "confidence": "moderate",
+    "source_quality": "review_note",
+    "conflict_ids": []
+  },
+  {
+    "evidence_id": "mingxue_five_element_balance_004",
+    "source_id": "mingxue_golden_voice",
+    "source_ref": "review-note:mingxue_golden_voice.md#five-element-balance",
+    "theme": "五行平衡术语",
+    "rule_family": "five_element_balance",
+    "risk_tier": "ordinary",
+    "summary": "Mingxue Golden Voice can support five-element terminology only after narrower locator review.",
+    "applicability": [
+      "gan_zhi_available",
+      "four_pillars_complete"
+    ],
+    "limitations": [
+      "Keep as terminology taxonomy until locator and chart context are reviewed.",
+      "Keep as terminology taxonomy until chart context is reviewed."
+    ],
+    "school": "命学",
+    "curation_batch_id": "batch_012_taxonomy_001",
+    "confidence": "moderate",
+    "source_quality": "review_note",
+    "conflict_ids": []
+  },
+  {
+    "evidence_id": "teacher_pattern_strength_004",
+    "source_id": "mingli_true_formula_teacher",
+    "source_ref": "review-note:mingli_true_formula_teacher.md#pattern-strength",
+    "theme": "格局强度条件信号",
+    "rule_family": "pattern_strength",
+    "risk_tier": "sensitive",
+    "summary": "Pattern strength material should stay conditional until source locator and chart context are reviewed.",
+    "applicability": [
+      "gan_zhi_available",
+      "four_pillars_complete",
+      "strong_root_present"
+    ],
+    "limitations": [
+      "State uncertainty for timing and pattern interpretation.",
+      "Include limitation language; do not guarantee outcome timing.",
+      "State uncertainty for timing and pattern interpretation.",
+      "Do not guarantee outcome timing."
+    ],
+    "school": "命理真诀",
+    "curation_batch_id": "batch_012_taxonomy_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
+  },
+  {
+    "evidence_id": "fortune_remedy_boundary_005",
+    "source_id": "fortune_reading_hongfu_qitian",
+    "source_ref": "review-note:fortune_reading_hongfu_qitian.md#remedy-boundary",
+    "theme": "补救边界条件信号",
+    "rule_family": "remedy_boundary",
+    "risk_tier": "sensitive",
+    "summary": "Hongfu Qitian remedy-boundary material should stay conditional until locator and safety context are reviewed.",
+    "applicability": [
+      "gan_zhi_available",
+      "four_pillars_complete"
+    ],
+    "limitations": [
+      "State uncertainty for remedy-boundary interpretation.",
+      "Include limitation language; avoid certainty about effects.",
+      "State uncertainty for remedy-boundary interpretation.",
+      "Avoid certainty about effects."
+    ],
+    "school": "鸿福",
+    "curation_batch_id": "batch_012_taxonomy_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
   }
 ]
