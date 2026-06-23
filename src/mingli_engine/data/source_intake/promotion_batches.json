@@ -82,5 +82,240 @@
     "review_status": "reviewed",
     "review_notes": "Approved use-god comparison taxonomy from Liang Xiangrun textbook series for promotion.",
     "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_markdown_batch_001_pattern_strength_001",
+    "candidate_ids": [
+      "candidate_markdown_batch_001_pattern_strength_001"
+    ],
+    "target_evidence_ids": [
+      "batch001_pattern_strength_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved pattern_strength taxonomy from batch 01 foundation and applied notes for promotion.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_markdown_batch_001_taxonomy_001",
+    "candidate_ids": [
+      "candidate_markdown_batch_001_ten_god_relation_001",
+      "candidate_markdown_batch_001_branch_interaction_001",
+      "candidate_markdown_batch_001_blind_image_method_001"
+    ],
+    "target_evidence_ids": [
+      "batch001_ten_god_relation_001",
+      "batch001_branch_interaction_001",
+      "batch001_blind_image_method_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved batch 01 taxonomy expansion: ten-god relation, branch interaction, and blind image method from Liang Xiangrun foundation and blind-school sources.",
+    "unresolved_issues": [
+      "blind_image_method may overlap with northeast_blind_peak candidates; verify before report use."
+    ]
+  },
+  {
+    "promotion_batch_id": "promotion_markdown_batch_002_taxonomy_001",
+    "candidate_ids": [
+      "candidate_markdown_batch_002_pattern_strength_001",
+      "candidate_markdown_batch_002_luck_cycle_001",
+      "candidate_markdown_batch_002_ten_god_relation_001"
+    ],
+    "target_evidence_ids": [
+      "batch002_pattern_strength_001",
+      "batch002_luck_cycle_001",
+      "batch002_ten_god_relation_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved batch 02 taxonomy expansion: pattern_strength, luck_cycle, and ten_god_relation from Liang Xiangrun textbook series.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_markdown_batch_004_taxonomy_001",
+    "candidate_ids": [
+      "candidate_markdown_batch_004_useful_god_001",
+      "candidate_markdown_batch_004_pattern_strength_001",
+      "candidate_markdown_batch_004_branch_interaction_001",
+      "candidate_markdown_batch_004_luck_cycle_001"
+    ],
+    "target_evidence_ids": [
+      "batch004_useful_god_001",
+      "batch004_pattern_strength_001",
+      "batch004_branch_interaction_001",
+      "batch004_luck_cycle_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved batch 04 taxonomy: use-god comparison, pattern strength, branch interaction (four-corner formation), and luck-cycle triggers from Liang Xiangrun advanced series.",
+    "unresolved_issues": [
+      "细批终身详解 contains life-risk language requiring conditional safety rewrite before report use.",
+      "流年法典 timing triggers need cross-reference with foundation pattern strength."
+    ]
+  },
+  {
+    "promotion_batch_id": "promotion_kskeleton_q001_foundation_tables_001",
+    "candidate_ids": [
+      "candidate_kskeleton_q001_foundation_tables_001"
+    ],
+    "target_evidence_ids": [
+      "kskeleton_q001_foundation_tables"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved KSkeleton q001 candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_kskeleton_q002_yushi_tiaohou_001",
+    "candidate_ids": [
+      "candidate_kskeleton_q002_yushi_tiaohou_001"
+    ],
+    "target_evidence_ids": [
+      "kskeleton_q002_yushi_tiaohou"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved KSkeleton q002 candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_kskeleton_q002_shen_pattern_001",
+    "candidate_ids": [
+      "candidate_kskeleton_q002_shen_pattern_001"
+    ],
+    "target_evidence_ids": [
+      "kskeleton_q002_shen_pattern"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved KSkeleton q002 candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_kskeleton_q002_yuanhai_bilateral_001",
+    "candidate_ids": [
+      "candidate_kskeleton_q002_yuanhai_bilateral_001"
+    ],
+    "target_evidence_ids": [
+      "kskeleton_q002_yuanhai_bilateral"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved KSkeleton q002 candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_kskeleton_q003_geju_selection_001",
+    "candidate_ids": [
+      "candidate_kskeleton_q003_geju_selection_001"
+    ],
+    "target_evidence_ids": [
+      "kskeleton_q003_geju_selection"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved KSkeleton q003 candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_kskeleton_q003_day_master_001",
+    "candidate_ids": [
+      "candidate_kskeleton_q003_day_master_strength_001"
+    ],
+    "target_evidence_ids": [
+      "kskeleton_q003_day_master"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved KSkeleton q003 candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_kskeleton_q003_congwang_congshi_001",
+    "candidate_ids": [
+      "candidate_kskeleton_q003_congwang_congshi_001"
+    ],
+    "target_evidence_ids": [
+      "kskeleton_q003_congwang_congshi"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved KSkeleton q003 candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_kskeleton_q006_interaction_structure_001",
+    "candidate_ids": [
+      "candidate_kskeleton_q006_interaction_structure_001"
+    ],
+    "target_evidence_ids": [
+      "kskeleton_q006_interaction_structure"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved KSkeleton q006 candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_kskeleton_q004_mechanism_layer_001",
+    "candidate_ids": [
+      "candidate_kskeleton_q004_mechanism_layer_001"
+    ],
+    "target_evidence_ids": [
+      "kskeleton_q004_mechanism_layer"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved KSkeleton q004 candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_kskeleton_q004_cross_dependency_001",
+    "candidate_ids": [
+      "candidate_kskeleton_q004_cross_dependency_001"
+    ],
+    "target_evidence_ids": [
+      "kskeleton_q004_cross_dependency"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved KSkeleton q004 candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_kskeleton_q004_q006_dependency_001",
+    "candidate_ids": [
+      "candidate_kskeleton_q004_q006_dependency_001"
+    ],
+    "target_evidence_ids": [
+      "kskeleton_q004_q006_dependency"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved KSkeleton q004 candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_batch_005_ten_god_relation_001",
+    "candidate_ids": [
+      "candidate_markdown_batch_005_ten_god_relation_001"
+    ],
+    "target_evidence_ids": [
+      "batch005_ten_god_relation_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved batch 005 ten_god_relation candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_batch_005_blind_image_method_001",
+    "candidate_ids": [
+      "candidate_markdown_batch_005_blind_image_method_001"
+    ],
+    "target_evidence_ids": [
+      "batch005_blind_image_method_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved batch 005 blind_image_method candidate for promotion to evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_batch_005_branch_interaction_001",
+    "candidate_ids": [
+      "candidate_markdown_batch_005_branch_interaction_001"
+    ],
+    "target_evidence_ids": [
+      "batch005_branch_interaction_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved batch 005 branch_interaction candidate for promotion to evidence.",
+    "unresolved_issues": []
   }
 ]

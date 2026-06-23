@@ -251,5 +251,173 @@
     "status": "planned",
     "created_at": "2026-06-23",
     "updated_at": "2026-06-23"
+  },
+  {
+    "source_quality_note": "Prepared by learning_reference_curation.",
+    "rights_note": "Store concise paraphrases only.",
+    "locator_requirement": "review_anchor",
+    "target_gap_ids": [],
+    "overlap_warnings": [],
+    "recommended_action": "extract_candidates",
+    "status": "completed",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23",
+    "task_id": "task_kskeleton_q001_foundation_tables_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "intended_source_material_id": "material_knowledge_skeleton",
+    "priority_level": "medium",
+    "priority_rationale": "KSkeleton Q001 foundation tables ready.",
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "risk_boundary": "sensitive",
+    "pre_extraction_checks": [
+      "separate component source links",
+      "review candidate skeleton against source-library entries",
+      "keep aggregate as derived metadata, not formal output"
+    ]
+  },
+  {
+    "source_quality_note": "Prepared by learning_reference_curation.",
+    "rights_note": "Store concise paraphrases only.",
+    "locator_requirement": "review_anchor",
+    "target_gap_ids": [],
+    "overlap_warnings": [],
+    "recommended_action": "extract_candidates",
+    "status": "completed",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23",
+    "task_id": "task_kskeleton_q002_yongshen_tiaohou_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "intended_source_material_id": "material_knowledge_skeleton",
+    "priority_level": "medium",
+    "priority_rationale": "KSkeleton Q002 yongshen tiaohou ready.",
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "risk_boundary": "sensitive",
+    "pre_extraction_checks": [
+      "separate component source links",
+      "review candidate skeleton against source-library entries",
+      "keep aggregate as derived metadata, not formal output"
+    ]
+  },
+  {
+    "source_quality_note": "Prepared by learning_reference_curation.",
+    "rights_note": "Store concise paraphrases only.",
+    "locator_requirement": "review_anchor",
+    "target_gap_ids": [],
+    "overlap_warnings": [],
+    "recommended_action": "extract_candidates",
+    "status": "completed",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23",
+    "task_id": "task_kskeleton_q003_geju_strength_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "intended_source_material_id": "material_knowledge_skeleton",
+    "priority_level": "medium",
+    "priority_rationale": "KSkeleton Q003 geju strength ready.",
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "risk_boundary": "sensitive",
+    "pre_extraction_checks": [
+      "separate component source links",
+      "review candidate skeleton against source-library entries",
+      "keep aggregate as derived metadata, not formal output"
+    ]
+  },
+  {
+    "source_quality_note": "Prepared by learning_reference_curation.",
+    "rights_note": "Store concise paraphrases only.",
+    "locator_requirement": "review_anchor",
+    "target_gap_ids": [],
+    "overlap_warnings": [],
+    "recommended_action": "extract_candidates",
+    "status": "completed",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23",
+    "task_id": "task_kskeleton_q006_branch_interaction_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "intended_source_material_id": "material_knowledge_skeleton",
+    "priority_level": "medium",
+    "priority_rationale": "KSkeleton Q006 branch interaction ready.",
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "risk_boundary": "sensitive",
+    "pre_extraction_checks": [
+      "separate component source links",
+      "review candidate skeleton against source-library entries",
+      "keep aggregate as derived metadata, not formal output"
+    ]
+  },
+  {
+    "source_quality_note": "Prepared by learning_reference_curation.",
+    "rights_note": "Store concise paraphrases only.",
+    "locator_requirement": "review_anchor",
+    "target_gap_ids": [],
+    "overlap_warnings": [],
+    "recommended_action": "extract_candidates",
+    "status": "completed",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23",
+    "task_id": "task_kskeleton_q004_luck_cycle_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "intended_source_material_id": "material_knowledge_skeleton",
+    "priority_level": "medium",
+    "priority_rationale": "KSkeleton Q004 luck cycle ready.",
+    "target_rule_families": [
+      "luck_cycle"
+    ],
+    "risk_boundary": "sensitive",
+    "pre_extraction_checks": [
+      "separate component source links",
+      "review candidate skeleton against source-library entries",
+      "keep aggregate as derived metadata, not formal output"
+    ]
+  },
+  {
+    "source_quality_note": "Prepared by learning_reference_curation.",
+    "rights_note": "Store concise paraphrases only.",
+    "locator_requirement": "review_anchor",
+    "target_gap_ids": [],
+    "overlap_warnings": [],
+    "recommended_action": "extract_candidates",
+    "status": "completed",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23",
+    "task_id": "task_kskeleton_q008_high_risk_boundary_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "intended_source_material_id": "material_knowledge_skeleton",
+    "priority_level": "medium",
+    "priority_rationale": "KSkeleton Q008 high-risk boundary ready.",
+    "target_rule_families": [
+      "high_risk_signal"
+    ],
+    "risk_boundary": "sensitive",
+    "pre_extraction_checks": [
+      "separate component source links",
+      "review candidate skeleton against source-library entries",
+      "keep aggregate as derived metadata, not formal output"
+    ]
   }
 ]

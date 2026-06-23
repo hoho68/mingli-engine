@@ -197,14 +197,40 @@
   {
     "alignment_id": "align_knowledge_skeleton_possible_duplicate",
     "audit_id": "audit_knowledge_skeleton",
-    "match_type": "possible_duplicate",
-    "source_library_entry_id": "",
-    "source_material_id": "",
-    "confidence": "weak",
-    "evidence": "Knowledge skeleton aggregates prior review notes and may overlap with multiple 014 entries.",
-    "registration_recommendation": "Do not register until component source links are separated.",
-    "duplicate_or_variant_notes": "Treat as a derived aggregate that could duplicate several source-library planning records.",
+    "match_type": "exact",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "source_material_id": "material_knowledge_skeleton",
+    "confidence": "strong",
+    "evidence": "Knowledge skeleton Q001-Q008 structural extraction layers traced to reviewed Markdown batches 001/002/004 with confirmed source-library entries.",
+    "registration_recommendation": "Register as knowledge skeleton structural extraction material.",
+    "duplicate_or_variant_notes": "Knowledge skeleton is a derived aggregate from reviewed component sources; not a duplicate.",
     "reviewer": "maintainer",
-    "reviewed_at": "2026-05-30"
+    "reviewed_at": "2026-06-23"
+  },
+  {
+    "alignment_id": "align_kskeleton_high_risk_layers",
+    "audit_id": "audit_kskeleton_high_risk_layers",
+    "match_type": "likely",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "source_material_id": "material_knowledge_skeleton",
+    "confidence": "moderate",
+    "evidence": "High-risk layers traced to knowledge skeleton Q004 and Q008 directories.",
+    "registration_recommendation": "",
+    "duplicate_or_variant_notes": "",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-23"
+  },
+  {
+    "alignment_id": "align_kskeleton_preparation_layers",
+    "audit_id": "audit_kskeleton_preparation_layers",
+    "match_type": "likely",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "source_material_id": "material_knowledge_skeleton",
+    "confidence": "moderate",
+    "evidence": "Preparation layers traced to knowledge skeleton Q005 and Q007 planned work.",
+    "registration_recommendation": "",
+    "duplicate_or_variant_notes": "",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-23"
   }
 ]

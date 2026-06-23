@@ -378,7 +378,7 @@
   {
     "queue_item_id": "queue_knowledge_skeleton_prepare",
     "audit_id": "audit_knowledge_skeleton",
-    "queue_type": "preparation_backlog",
+    "queue_type": "extraction_ready",
     "priority_level": "medium",
     "priority_rationale": "Derived knowledge skeleton needs component source links and candidate review before extraction planning.",
     "target_rule_families": [
@@ -396,14 +396,14 @@
     "pre_extraction_checks": [
       "separate component source links",
       "review candidate skeleton against source-library entries",
-      "keep derived aggregate outside formal evidence"
+      "keep aggregate as derived metadata, not formal output"
     ],
-    "recommended_action": "review_cleaned_text",
+    "recommended_action": "extract_candidates",
     "depends_on": [
       "component_source_links",
       "candidate_review"
     ],
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-05-31",
     "updated_at": "2026-05-31"
   }

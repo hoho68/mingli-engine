@@ -484,16 +484,40 @@ def test_seeded_learning_reference_notes_load_for_current_ready_016_tasks():
         "task_mingxue_golden_voice_extract_001",
         "task_fortune_reading_hongfu_qitian_extract_001",
         "task_markdown_batch_002_core_extract_001",
+        "task_markdown_batch_001_extract_001",
+        "task_markdown_batch_004_extract_001",
+        "task_kskeleton_q001_foundation_tables_001",
+        "task_kskeleton_q002_yongshen_tiaohou_001",
+        "task_kskeleton_q003_geju_strength_001",
+        "task_kskeleton_q006_branch_interaction_001",
+        "task_kskeleton_q004_luck_cycle_001",
+        "task_kskeleton_q008_high_risk_boundary_001",
     ]
     assert [note.note_id for note in notes] == [
-        "note_northeast_blind_peak_001",
-        "note_mingli_true_formula_teacher_001",
-        "note_duan_plain_mingxue_outline_001",
-        "note_mingxue_golden_voice_001",
-        "note_fortune_reading_hongfu_qitian_001",
-        "note_markdown_batch_002_useful_god_001",
+       "note_northeast_blind_peak_001",
+       "note_mingli_true_formula_teacher_001",
+       "note_duan_plain_mingxue_outline_001",
+       "note_mingxue_golden_voice_001",
+       "note_fortune_reading_hongfu_qitian_001",
+       "note_markdown_batch_002_useful_god_001",
+       "note_markdown_batch_001_pattern_strength_001",
+       "note_markdown_batch_004_001",
+       "note_kskeleton_q001_foundation_tables_001",
+       "note_kskeleton_q002_yongshen_tiaohou_001",
+       "note_kskeleton_q003_geju_strength_001",
+       "note_kskeleton_q006_branch_interaction_001",
+       "note_kskeleton_q004_luck_cycle_001",
+       "note_kskeleton_q008_high_risk_boundary_001",
     ]
-    assert all(note.status == "draft" for note in notes)
+    kskeleton_ids = {note.note_id for note in notes if 'kskeleton' in note.note_id}
+    for note in notes:
+        if note.note_id in kskeleton_ids:
+            assert note.status == 'candidate_intake_started', f'{note.note_id} status={note.status}'
+        elif "batch_004" in note.note_id:
+            assert note.status == 'candidate_intake_started', f'{note.note_id} status={note.status}'
+        else:
+            assert note.status == 'draft', f'{note.note_id} status={note.status}'
+    assert all(note.learning_points for note in notes)
     assert all(note.learning_points for note in notes)
     assert notes[0].source_material_id == "material_northeast_blind_peak_pdf"
     assert notes[1].source_material_id == "material_mingli_true_formula_teacher_pdf"
@@ -698,21 +722,22 @@ def test_learning_reference_note_loading_does_not_mutate_upstream_data(tmp_path)
 def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.note_counts == {"draft": 6}
+    assert summary.note_counts == {"draft": 7, "candidate_intake_started": 7}
     assert summary.risk_tier_counts == {
-        "sensitive": 8,
-        "ordinary": 8,
-        "high_risk": 4,
+        "sensitive": 40,
+        "ordinary": 11,
+        "high_risk": 3,
     }
     assert summary.note_rule_family_counts == {
-        "blind_image_method": 1,
-        "branch_interaction": 1,
-        "pattern_strength": 4,
-        "useful_god_candidate": 2,
-        "luck_cycle": 1,
-        "ten_god_relation": 2,
+        "blind_image_method": 2,
+        "branch_interaction": 4,
+        "pattern_strength": 9,
+        "useful_god_candidate": 4,
+        "luck_cycle": 4,
+        "ten_god_relation": 4,
         "five_element_balance": 1,
         "remedy_boundary": 1,
+        "high_risk_signal": 1,
     }
     assert summary.selected_task_ids == [
         "task_northeast_blind_peak_extract_001",
@@ -721,6 +746,14 @@ def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
         "task_mingxue_golden_voice_extract_001",
         "task_fortune_reading_hongfu_qitian_extract_001",
         "task_markdown_batch_002_core_extract_001",
+        "task_markdown_batch_001_extract_001",
+        "task_markdown_batch_004_extract_001",
+        "task_kskeleton_q001_foundation_tables_001",
+        "task_kskeleton_q002_yongshen_tiaohou_001",
+        "task_kskeleton_q003_geju_strength_001",
+        "task_kskeleton_q006_branch_interaction_001",
+        "task_kskeleton_q004_luck_cycle_001",
+        "task_kskeleton_q008_high_risk_boundary_001",
     ]
     assert summary.next_action_ids == [
         "note_northeast_blind_peak_001",
@@ -729,11 +762,10 @@ def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
         "note_mingxue_golden_voice_001",
         "note_fortune_reading_hongfu_qitian_001",
         "note_markdown_batch_002_useful_god_001",
+        "note_markdown_batch_001_pattern_strength_001",
         "action_blind_life_manual_risk_review_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
-        "action_markdown_batch_005_risk_review_001",
-        "action_knowledge_skeleton_preparation_001",
     ]
 
 
@@ -802,6 +834,34 @@ def test_seeded_learning_points_load_and_reference_learning_notes():
         "lp_mingxue_five_element_balance_001",
         "lp_hongfu_remedy_boundary_001",
         "lp_markdown_batch_002_useful_god_001",
+        "lp_markdown_batch_001_pattern_strength_001",
+        "lp_markdown_batch_001_ten_god_relation_001",
+        "lp_markdown_batch_001_branch_interaction_001",
+        "lp_markdown_batch_001_blind_image_method_001",
+        "lp_markdown_batch_002_pattern_strength_001",
+        "lp_markdown_batch_002_luck_cycle_001",
+        "lp_markdown_batch_002_ten_god_relation_001",
+        "lp_markdown_batch_004_useful_god_001",
+        "lp_markdown_batch_004_pattern_strength_001",
+        "lp_markdown_batch_004_branch_interaction_001",
+        "lp_markdown_batch_004_luck_cycle_001",
+        "lp_kskeleton_q001_foundation_tables_001",
+        "lp_kskeleton_q002_yushi_tiaohou_001",
+        "lp_kskeleton_q002_shen_pattern_001",
+        "lp_kskeleton_q002_yuanhai_bilateral_001",
+        "lp_kskeleton_q003_geju_selection_001",
+        "lp_kskeleton_q003_day_master_strength_001",
+        "lp_kskeleton_q003_congwang_congshi_001",
+        "lp_kskeleton_q006_interaction_structure_001",
+        "lp_kskeleton_q004_mechanism_layer_001",
+        "lp_kskeleton_q004_cross_dependency_001",
+        "lp_kskeleton_q004_q006_dependency_001",
+        "lp_kskeleton_q008_family_boundary_001",
+        "lp_kskeleton_q008_mortality_boundary_001",
+        "lp_kskeleton_q008_other_high_risk_boundary_001",
+        "lp_kskeleton_q008_health_medical_boundary_001",
+        "lp_kskeleton_q008_branch_interaction_safety_boundary_001",
+        "lp_kskeleton_q008_relationship_family_boundary_001",
     ]
     assert [point.note_id for point in points] == [
         "note_northeast_blind_peak_001",
@@ -810,6 +870,34 @@ def test_seeded_learning_points_load_and_reference_learning_notes():
         "note_mingxue_golden_voice_001",
         "note_fortune_reading_hongfu_qitian_001",
         "note_markdown_batch_002_useful_god_001",
+        "note_markdown_batch_001_pattern_strength_001",
+        "note_markdown_batch_001_pattern_strength_001",
+        "note_markdown_batch_001_pattern_strength_001",
+        "note_markdown_batch_001_pattern_strength_001",
+        "note_markdown_batch_002_useful_god_001",
+        "note_markdown_batch_002_useful_god_001",
+        "note_markdown_batch_002_useful_god_001",
+        "note_markdown_batch_004_001",
+        "note_markdown_batch_004_001",
+        "note_markdown_batch_004_001",
+        "note_markdown_batch_004_001",
+        "note_kskeleton_q001_foundation_tables_001",
+        "note_kskeleton_q002_yongshen_tiaohou_001",
+        "note_kskeleton_q002_yongshen_tiaohou_001",
+        "note_kskeleton_q002_yongshen_tiaohou_001",
+        "note_kskeleton_q003_geju_strength_001",
+        "note_kskeleton_q003_geju_strength_001",
+        "note_kskeleton_q003_geju_strength_001",
+        "note_kskeleton_q006_branch_interaction_001",
+        "note_kskeleton_q004_luck_cycle_001",
+        "note_kskeleton_q004_luck_cycle_001",
+        "note_kskeleton_q004_luck_cycle_001",
+        "note_kskeleton_q008_high_risk_boundary_001",
+        "note_kskeleton_q008_high_risk_boundary_001",
+        "note_kskeleton_q008_high_risk_boundary_001",
+        "note_kskeleton_q008_high_risk_boundary_001",
+        "note_kskeleton_q008_high_risk_boundary_001",
+        "note_kskeleton_q008_high_risk_boundary_001",
     ]
     assert points[0].candidate_readiness == "duplicate_review"
     assert points[1].candidate_readiness == "ready"
@@ -817,6 +905,8 @@ def test_seeded_learning_points_load_and_reference_learning_notes():
     assert points[3].candidate_readiness == "ready"
     assert points[4].candidate_readiness == "ready"
     assert points[5].candidate_readiness == "ready"
+    assert all(point.candidate_readiness == "ready" for point in points[6:28])
+    assert all(point.candidate_readiness == "deferred" for point in points[28:])
 
 
 def test_learning_points_reject_unknown_note_references(tmp_path):
@@ -906,6 +996,28 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "decision_mingxue_five_element_balance_001",
         "decision_hongfu_remedy_boundary_001",
         "decision_markdown_batch_002_useful_god_001",
+        "decision_markdown_batch_001_pattern_strength_001",
+        "decision_markdown_batch_001_ten_god_relation_001",
+        "decision_markdown_batch_001_branch_interaction_001",
+        "decision_markdown_batch_001_blind_image_method_001",
+        "decision_markdown_batch_002_pattern_strength_001",
+        "decision_markdown_batch_002_luck_cycle_001",
+        "decision_markdown_batch_002_ten_god_relation_001",
+        "decision_markdown_batch_004_useful_god_001",
+        "decision_markdown_batch_004_pattern_strength_001",
+        "decision_markdown_batch_004_branch_interaction_001",
+        "decision_markdown_batch_004_luck_cycle_001",
+        "decision_kskeleton_q001_foundation_tables_001",
+        "decision_kskeleton_q002_yushi_tiaohou_001",
+        "decision_kskeleton_q002_shen_pattern_001",
+        "decision_kskeleton_q002_yuanhai_bilateral_001",
+        "decision_kskeleton_q003_geju_selection_001",
+        "decision_kskeleton_q003_day_master_strength_001",
+        "decision_kskeleton_q003_congwang_congshi_001",
+        "decision_kskeleton_q006_interaction_structure_001",
+        "decision_kskeleton_q004_mechanism_layer_001",
+        "decision_kskeleton_q004_cross_dependency_001",
+        "decision_kskeleton_q004_q006_dependency_001",
     ]
     assert [decision.learning_point_id for decision in decisions] == [
         "lp_northeast_blind_image_001",
@@ -914,6 +1026,28 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "lp_mingxue_five_element_balance_001",
         "lp_hongfu_remedy_boundary_001",
         "lp_markdown_batch_002_useful_god_001",
+        "lp_markdown_batch_001_pattern_strength_001",
+        "lp_markdown_batch_001_ten_god_relation_001",
+        "lp_markdown_batch_001_branch_interaction_001",
+        "lp_markdown_batch_001_blind_image_method_001",
+        "lp_markdown_batch_002_pattern_strength_001",
+        "lp_markdown_batch_002_luck_cycle_001",
+        "lp_markdown_batch_002_ten_god_relation_001",
+        "lp_markdown_batch_004_useful_god_001",
+        "lp_markdown_batch_004_pattern_strength_001",
+        "lp_markdown_batch_004_branch_interaction_001",
+        "lp_markdown_batch_004_luck_cycle_001",
+        "lp_kskeleton_q001_foundation_tables_001",
+        "lp_kskeleton_q002_yushi_tiaohou_001",
+        "lp_kskeleton_q002_shen_pattern_001",
+        "lp_kskeleton_q002_yuanhai_bilateral_001",
+        "lp_kskeleton_q003_geju_selection_001",
+        "lp_kskeleton_q003_day_master_strength_001",
+        "lp_kskeleton_q003_congwang_congshi_001",
+        "lp_kskeleton_q006_interaction_structure_001",
+        "lp_kskeleton_q004_mechanism_layer_001",
+        "lp_kskeleton_q004_cross_dependency_001",
+        "lp_kskeleton_q004_q006_dependency_001",
     ]
     assert decisions[0].decision == "reuse_existing"
     assert decisions[1].decision == "create_candidate"
@@ -929,6 +1063,28 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
         "candidate_markdown_batch_002_useful_god_001",
+        "candidate_markdown_batch_001_pattern_strength_001",
+        "candidate_markdown_batch_001_ten_god_relation_001",
+        "candidate_markdown_batch_001_branch_interaction_001",
+        "candidate_markdown_batch_001_blind_image_method_001",
+        "candidate_markdown_batch_002_pattern_strength_001",
+        "candidate_markdown_batch_002_luck_cycle_001",
+        "candidate_markdown_batch_002_ten_god_relation_001",
+        "candidate_markdown_batch_004_useful_god_001",
+        "candidate_markdown_batch_004_pattern_strength_001",
+        "candidate_markdown_batch_004_branch_interaction_001",
+        "candidate_markdown_batch_004_luck_cycle_001",
+        "candidate_kskeleton_q001_foundation_tables_001",
+        "candidate_kskeleton_q002_yushi_tiaohou_001",
+        "candidate_kskeleton_q002_shen_pattern_001",
+        "candidate_kskeleton_q002_yuanhai_bilateral_001",
+        "candidate_kskeleton_q003_geju_selection_001",
+        "candidate_kskeleton_q003_day_master_strength_001",
+        "candidate_kskeleton_q003_congwang_congshi_001",
+        "candidate_kskeleton_q006_interaction_structure_001",
+        "candidate_kskeleton_q004_mechanism_layer_001",
+        "candidate_kskeleton_q004_cross_dependency_001",
+        "candidate_kskeleton_q004_q006_dependency_001",
     ]
 
 
@@ -1168,14 +1324,14 @@ def test_candidate_intake_decision_quality_rejects_boundary_leakage(
 def test_learning_reference_summary_includes_learning_points_and_decisions():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.learning_point_counts == {"duplicate_review": 1, "ready": 5}
+    assert summary.learning_point_counts == {"duplicate_review": 1, "ready": 27, "deferred": 6}
     assert summary.decision_counts == {
         "reuse_existing": 1,
-        "create_candidate": 5,
-        "status:applied": 6,
+        "create_candidate": 27,
+        "status:applied": 28,
     }
-    assert summary.candidate_ready_count == 5
-    assert summary.candidate_decision_count == 6
+    assert summary.candidate_ready_count == 27
+    assert summary.candidate_decision_count == 28
     assert summary.overlap_warning_count == 7
 
 
@@ -1188,9 +1344,7 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "action_markdown_batch_003_registration_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
-        "action_markdown_batch_005_risk_review_001",
         "action_source_processing_status_deferred_001",
-        "action_knowledge_skeleton_preparation_001",
     ]
     assert [action.backlog_id for action in action_notes] == [
         "backlog_blind_life_manual_risk_review_001",
@@ -1198,15 +1352,11 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "backlog_markdown_batch_003_registration_001",
         "backlog_immortal_fortune_jianghu_secret_risk_review_001",
         "backlog_life_death_book_100_pages_risk_review_001",
-        "backlog_markdown_batch_005_risk_review_001",
         "backlog_source_processing_status_deferred_001",
-        "backlog_knowledge_skeleton_preparation_001",
     ]
     assert [action.package_id for action in action_notes] == [
         "package_next_candidates_001",
         "package_next_candidates_001",
-        "package_next_candidates_003",
-        "package_next_candidates_003",
         "package_next_candidates_003",
         "package_next_candidates_003",
         "package_next_candidates_003",
@@ -1218,9 +1368,7 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "queue_markdown_source_batch_003_register",
         "queue_immortal_fortune_jianghu_secret_risk_review",
         "queue_life_death_book_100_pages_risk_review",
-        "queue_markdown_source_batch_005_risk_review",
         "queue_source_processing_status_deferred",
-        "queue_knowledge_skeleton_prepare",
     ]
     assert [action.audit_id for action in action_notes] == [
         "audit_blind_life_manual",
@@ -1228,9 +1376,7 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "audit_markdown_source_batch_003",
         "audit_immortal_fortune_jianghu_secret",
         "audit_life_death_book_100_pages",
-        "audit_markdown_source_batch_005",
         "audit_source_processing_status",
-        "audit_knowledge_skeleton",
     ]
 
 
@@ -1400,30 +1546,29 @@ def test_blocking_prerequisite_actions_cannot_become_learning_points_or_decision
 def test_learning_reference_summary_includes_prerequisite_action_counts():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.note_counts == {"draft": 6}
-    assert summary.learning_point_counts == {"duplicate_review": 1, "ready": 5}
+    assert summary.note_counts == {"draft": 7, "candidate_intake_started": 7}
+    assert summary.learning_point_counts == {"duplicate_review": 1, "ready": 27, "deferred": 6}
     assert summary.decision_counts == {
         "reuse_existing": 1,
-        "create_candidate": 5,
-        "status:applied": 6,
+        "create_candidate": 27,
+        "status:applied": 28,
     }
     assert summary.prerequisite_action_counts == {
-        "risk_review": 4,
-        "preparation": 1,
+        "risk_review": 3,
         "deferred": 2,
         "blocked": 1,
-        "status:planned": 5,
+        "status:planned": 3,
         "status:deferred": 2,
         "status:blocked": 1,
     }
     assert summary.risk_tier_counts == {
-        "sensitive": 8,
-        "ordinary": 8,
-        "high_risk": 4,
+        "sensitive": 40,
+        "ordinary": 11,
+        "high_risk": 3,
     }
     assert summary.overlap_warning_count == 7
-    assert summary.candidate_ready_count == 5
-    assert summary.candidate_decision_count == 6
+    assert summary.candidate_ready_count == 27
+    assert summary.candidate_decision_count == 28
     assert summary.formal_evidence_delta == 0
     assert summary.next_action_ids == [
         "note_northeast_blind_peak_001",
@@ -1432,9 +1577,8 @@ def test_learning_reference_summary_includes_prerequisite_action_counts():
         "note_mingxue_golden_voice_001",
         "note_fortune_reading_hongfu_qitian_001",
         "note_markdown_batch_002_useful_god_001",
+        "note_markdown_batch_001_pattern_strength_001",
         "action_blind_life_manual_risk_review_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
-        "action_markdown_batch_005_risk_review_001",
-        "action_knowledge_skeleton_preparation_001",
     ]

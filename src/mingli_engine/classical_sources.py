@@ -73,8 +73,8 @@ def _require_string_list(value: Any, field_name: str, entry_id: str) -> None:
 
 def _has_source_ref_prefix(value: str) -> bool:
     return any(
-        prefix in value
-        for prefix in ("page:", "chapter:", "heading:", "review-note:")
+        value.startswith(prefix)
+        for prefix in ("page:", "chapter:", "heading:", "review-note:", "learning-reference:")
     )
 
 

@@ -178,8 +178,8 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
         load_source_conflicts,
     )
     from mingli_engine.evidence_curation import (
-        build_coverage_report,
-        validate_curation_quality,
+    build_coverage_report,
+    validate_curation_quality,
     )
 
     sources = load_classical_sources()
@@ -188,13 +188,11 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
 
     report = build_coverage_report(sources, evidence_units, conflicts)
 
-    assert report.approved_evidence_count == 67
+    assert report.approved_evidence_count == 92
     assert report.open_conflicts == ["conflict_high_risk_scope_001"]
     assert set(report.sources_with_gaps) == {
         "blind_life_manual",
         "immortal_fortune_jianghu_secret",
-        "markdown_source_batch_001",
-        "markdown_source_batch_004",
     }
     assert validate_curation_quality(sources, evidence_units, conflicts) == []
 

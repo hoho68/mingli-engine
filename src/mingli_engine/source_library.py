@@ -463,6 +463,8 @@ def _curation_batch_plan_from_dict(
 
 def _load_candidate_extracts(source_dir: Path) -> list[CandidateExtract]:
     intake_dir = _sibling_data_dir(source_dir, "source_intake")
+    if intake_dir is None:
+        return []
     try:
         return source_intake.load_candidate_extracts(intake_dir)
     except source_intake.SourceIntakeError as error:
@@ -471,6 +473,8 @@ def _load_candidate_extracts(source_dir: Path) -> list[CandidateExtract]:
 
 def _load_review_decisions(source_dir: Path) -> list[ReviewDecision]:
     intake_dir = _sibling_data_dir(source_dir, "source_intake")
+    if intake_dir is None:
+        return []
     try:
         return source_intake.load_review_decisions(intake_dir)
     except source_intake.SourceIntakeError as error:
@@ -479,6 +483,8 @@ def _load_review_decisions(source_dir: Path) -> list[ReviewDecision]:
 
 def _load_promotion_batches(source_dir: Path) -> list[PromotionBatch]:
     intake_dir = _sibling_data_dir(source_dir, "source_intake")
+    if intake_dir is None:
+        return []
     try:
         return source_intake.load_promotion_batches(intake_dir)
     except source_intake.SourceIntakeError as error:
@@ -487,6 +493,8 @@ def _load_promotion_batches(source_dir: Path) -> list[PromotionBatch]:
 
 def _load_formal_evidence_units(source_dir: Path) -> list[EvidenceUnit]:
     classical_data_dir = _sibling_data_dir(source_dir, "classical_sources")
+    if classical_data_dir is None:
+        return []
     try:
         return classical_sources.load_evidence_units(classical_data_dir)
     except classical_sources.ClassicalEvidenceError as error:

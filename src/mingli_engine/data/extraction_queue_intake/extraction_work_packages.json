@@ -17,10 +17,10 @@
       "backlog_blind_life_manual_risk_review_001",
       "backlog_blind_school_secret_blocked_001"
     ],
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-05-31",
-    "updated_at": "2026-05-31",
-    "notes": "Initial package from the 015 next-action queue; extraction-ready items are tasks and non-ready items stay in prerequisite backlog."
+    "updated_at": "2026-06-23",
+    "notes": "Initial package from the 015 next-action queue; extraction-ready items are tasks and non-ready items stay in prerequisite backlog. Package processing completed via 017 pipeline; all learning references, candidates, and promotions applied."
   },
   {
     "package_id": "package_next_candidates_002",
@@ -32,10 +32,10 @@
       "task_duan_plain_mingxue_outline_extract_001"
     ],
     "backlog_record_ids": [],
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-01",
-    "updated_at": "2026-06-01",
-    "notes": "Second package extends the learning-reference queue with the next ordinary ready source."
+    "updated_at": "2026-06-23",
+    "notes": "Second package extends the learning-reference queue with the next ordinary ready source. Package processing completed via 017 pipeline; all learning references, candidates, and promotions applied."
   },
   {
     "package_id": "package_next_candidates_003",
@@ -47,7 +47,6 @@
       "queue_markdown_source_batch_003_register",
       "queue_immortal_fortune_jianghu_secret_risk_review",
       "queue_life_death_book_100_pages_risk_review",
-      "queue_markdown_source_batch_005_risk_review",
       "queue_markdown_source_batch_004_prepare",
       "queue_source_processing_status_deferred",
       "queue_knowledge_skeleton_prepare"
@@ -60,14 +59,12 @@
       "backlog_markdown_batch_003_registration_001",
       "backlog_immortal_fortune_jianghu_secret_risk_review_001",
       "backlog_life_death_book_100_pages_risk_review_001",
-      "backlog_markdown_batch_005_risk_review_001",
-      "backlog_source_processing_status_deferred_001",
-      "backlog_knowledge_skeleton_preparation_001"
+      "backlog_source_processing_status_deferred_001"
     ],
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-01",
-    "updated_at": "2026-06-01",
-    "notes": "Third package closes the remaining 015 queue coverage: ready sources become extraction tasks while registration, review, deferred, and preparation items stay in prerequisite backlog."
+    "updated_at": "2026-06-23",
+    "notes": "Third package closes the remaining 015 queue coverage: ready sources become extraction tasks while registration, review, deferred, and preparation items stay in prerequisite backlog. Package processing completed via 017 pipeline; all learning references, candidates, and promotions applied."
   },
   {
     "package_id": "package_markdown_batch_registration_001",
@@ -83,9 +80,29 @@
       "task_markdown_batch_004_extract_001"
     ],
     "backlog_record_ids": [],
-    "status": "active",
+    "status": "completed",
     "created_at": "2026-06-23",
     "updated_at": "2026-06-23",
-    "notes": "Phase 1 registration: batch 001 and 002 registered and extraction-ready. Batch 003 deferred due to OCR failure."
+    "notes": "All tasks processed: batch 001 (pattern_strength, ten_god_relation, branch_interaction, blind_image_method), batch 002 (useful_god_candidate, pattern_strength, luck_cycle, ten_god_relation), and batch 004 (useful_god_candidate, pattern_strength, branch_interaction, luck_cycle) promoted to evidence."
+  },
+  {
+    "package_id": "package_knowledge_skeleton_001",
+    "package_label": "Knowledge skeleton structural extraction package",
+    "source_queue_snapshot_ids": [
+      "queue_knowledge_skeleton_prepare"
+    ],
+    "selected_task_ids": [
+      "task_kskeleton_q001_foundation_tables_001",
+      "task_kskeleton_q002_yongshen_tiaohou_001",
+      "task_kskeleton_q003_geju_strength_001",
+      "task_kskeleton_q006_branch_interaction_001",
+      "task_kskeleton_q004_luck_cycle_001",
+      "task_kskeleton_q008_high_risk_boundary_001"
+    ],
+    "backlog_record_ids": [],
+    "status": "completed",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23",
+    "notes": "Ready Q-layers (Q001/Q002/Q003/Q004/Q006/Q008) processed as extraction tasks through learning-reference pipeline. All 6 KSkeleton tasks completed."
   }
 ]

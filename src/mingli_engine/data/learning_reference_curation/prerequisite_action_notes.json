@@ -88,23 +88,6 @@
     "updated_at": "2026-06-01"
   },
   {
-    "action_note_id": "action_markdown_batch_005_risk_review_001",
-    "backlog_id": "backlog_markdown_batch_005_risk_review_001",
-    "package_id": "package_next_candidates_003",
-    "queue_item_id": "queue_markdown_source_batch_005_risk_review",
-    "audit_id": "audit_markdown_source_batch_005",
-    "action_type": "risk_review",
-    "missing_prerequisites": [
-      "risk_boundary_review"
-    ],
-    "durable_reason": "High-risk applied course notes need boundary review before candidate extraction can proceed.",
-    "recommended_action": "risk_review",
-    "risk_boundary": "high_risk",
-    "status": "planned",
-    "created_at": "2026-06-01",
-    "updated_at": "2026-06-23"
-  },
-  {
     "action_note_id": "action_source_processing_status_deferred_001",
     "backlog_id": "backlog_source_processing_status_deferred_001",
     "package_id": "package_next_candidates_003",
@@ -118,24 +101,6 @@
     "recommended_action": "defer",
     "risk_boundary": "ordinary",
     "status": "deferred",
-    "created_at": "2026-06-01",
-    "updated_at": "2026-06-01"
-  },
-  {
-    "action_note_id": "action_knowledge_skeleton_preparation_001",
-    "backlog_id": "backlog_knowledge_skeleton_preparation_001",
-    "package_id": "package_next_candidates_003",
-    "queue_item_id": "queue_knowledge_skeleton_prepare",
-    "audit_id": "audit_knowledge_skeleton",
-    "action_type": "preparation",
-    "missing_prerequisites": [
-      "component_source_links",
-      "candidate_review"
-    ],
-    "durable_reason": "Knowledge skeleton is an aggregate preparation aid until component sources are reviewed.",
-    "recommended_action": "review_cleaned_text",
-    "risk_boundary": "sensitive",
-    "status": "planned",
     "created_at": "2026-06-01",
     "updated_at": "2026-06-01"
   }

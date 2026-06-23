@@ -400,7 +400,7 @@ def test_load_source_library_entries_loads_current_registered_sources():
     entries = source_library.load_source_library_entries()
     by_id = {entry.entry_id: entry for entry in entries}
 
-    assert len(entries) == 13
+    assert len(entries) == 14
     assert set(by_id) == {
         "entry_northeast_blind_peak_pdf",
         "entry_duan_plain_mingxue_outline_pdf",
@@ -415,6 +415,7 @@ def test_load_source_library_entries_loads_current_registered_sources():
         "entry_markdown_source_batch_002_core",
         "entry_markdown_source_batch_004",
         "entry_markdown_source_batch_005",
+        "entry_knowledge_skeleton",
     }
     assert by_id["entry_blind_life_manual_pdf"].material_id == (
         "material_blind_life_manual_pdf"

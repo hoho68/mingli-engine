@@ -105,13 +105,59 @@
     "batch_id": "batch_markdown_registration_001",
     "source_ids": [
       "markdown_source_batch_001",
-      "markdown_source_batch_002_core"
+      "markdown_source_batch_002_core",
+      "markdown_source_batch_005"
     ],
     "evidence_ids": [
-      "batch002_useful_god_comparison_001"
+      "batch002_useful_god_comparison_001",
+      "batch001_pattern_strength_001",
+      "batch001_ten_god_relation_001",
+      "batch001_branch_interaction_001",
+      "batch001_blind_image_method_001",
+      "batch002_pattern_strength_001",
+      "batch002_luck_cycle_001",
+      "batch002_ten_god_relation_001",
+      "batch004_useful_god_001",
+      "batch004_pattern_strength_001",
+      "batch004_branch_interaction_001",
+      "batch004_luck_cycle_001",
+      "batch005_ten_god_relation_001",
+      "batch005_blind_image_method_001",
+      "batch005_branch_interaction_001"
     ],
     "review_status": "reviewed",
-    "review_notes": "Markdown batch registration: batch 002 use-god comparison promoted to evidence.",
-    "unresolved_issues": []
+    "review_notes": "All tasks complete: batch 001 (4 families), batch 002 (4 families), and batch 004 (4 families) promoted to evidence. Phase 1 complete.",
+    "unresolved_issues": [
+      "batch003 remains OCR-failed; deferred to later OCR processing pass.",
+      "batch005 ready for extraction planning.",
+      "batch 004 blind_image_method may overlap with northeast_blind_peak candidates; verify before report use.",
+      "细批终身详解 life-risk content needs conditional safety rewrite before formal evidence promotion."
+    ]
+  },
+  {
+    "batch_id": "batch_kskeleton_taxonomy_001",
+    "source_ids": [
+      "knowledge_skeleton"
+    ],
+    "evidence_ids": [
+      "kskeleton_q001_foundation_tables",
+      "kskeleton_q002_yushi_tiaohou",
+      "kskeleton_q002_shen_pattern",
+      "kskeleton_q002_yuanhai_bilateral",
+      "kskeleton_q003_geju_selection",
+      "kskeleton_q003_day_master",
+      "kskeleton_q003_congwang_congshi",
+      "kskeleton_q006_interaction_structure",
+      "kskeleton_q004_mechanism_layer",
+      "kskeleton_q004_cross_dependency",
+      "kskeleton_q004_q006_dependency"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "KSkeleton Q001-Q008 taxonomy promoted to evidence. Covers foundation tables, yongshen tiaohou, geju strength, luck cycle boundary, branch interaction.",
+    "unresolved_issues": [
+      "Q005 source material directory does not exist.",
+      "Q007 source material directory does not exist.",
+      "Q008 high-risk boundary has source material but no candidate extract yet."
+    ]
   }
 ]

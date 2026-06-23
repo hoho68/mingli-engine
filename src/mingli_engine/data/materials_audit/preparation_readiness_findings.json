@@ -245,12 +245,10 @@
     "source_quality": "moderate",
     "risk_boundary": "high_risk",
     "missing_prerequisites": [
-      "risk_boundary_review"
+      "risk_review"
     ],
     "ready_reasons": [],
-    "blockers": [
-      "High-risk applied notes require boundary review before extraction can proceed."
-    ],
+    "blockers": [],
     "recommended_next_action": "risk_review",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-23"
@@ -277,21 +275,58 @@
   {
     "readiness_id": "ready_knowledge_skeleton",
     "audit_id": "audit_knowledge_skeleton",
-    "readiness_state": "preparation_backlog",
-    "text_preparation_status": "summary_only",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "prepared",
     "locator_confidence": "moderate",
-    "source_quality": "needs_recheck",
+    "source_quality": "moderate",
     "risk_boundary": "sensitive",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Component sources (batches 001, 002, 004) reviewed and promoted to evidence.",
+      "Q001 foundation tables, Q002 yongshen/tiaohou, Q003 geju strength, and Q006 branch interaction have first-pass extracted candidates.",
+      "Q004/Q005/Q007/Q008 layers remain as prerequisite action notes."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-05-30"
+  },
+  {
+    "readiness_id": "ready_kskeleton_high_risk_layers",
+    "audit_id": "audit_kskeleton_high_risk_layers",
+    "readiness_state": "needs_risk_review",
+    "text_preparation_status": "cleaned",
+    "locator_confidence": "moderate",
+    "source_quality": "moderate",
+    "risk_boundary": "high_risk",
     "missing_prerequisites": [
-      "component_source_links",
-      "candidate_review"
+      "risk_review"
     ],
     "ready_reasons": [],
     "blockers": [
-      "Knowledge skeleton is an aggregate preparation aid until component sources are reviewed."
+      "Q004 and Q008 layers contain high-risk boundary claims requiring safety review before extraction."
+    ],
+    "recommended_next_action": "risk_review",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-23"
+  },
+  {
+    "readiness_id": "ready_kskeleton_preparation_layers",
+    "audit_id": "audit_kskeleton_preparation_layers",
+    "readiness_state": "preparation_backlog",
+    "text_preparation_status": "summary_only",
+    "locator_confidence": "moderate",
+    "source_quality": "moderate",
+    "risk_boundary": "sensitive",
+    "missing_prerequisites": [
+      "first_pass_extraction"
+    ],
+    "ready_reasons": [],
+    "blockers": [
+      "Q005 and Q007 layers have not been extracted yet."
     ],
     "recommended_next_action": "review_cleaned_text",
     "assessed_by": "maintainer",
-    "assessed_at": "2026-05-30"
+    "assessed_at": "2026-06-23"
   }
 ]

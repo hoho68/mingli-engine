@@ -154,5 +154,17 @@
     "scope_notes": "Nine cleaned Markdown Liang Xiangrun advanced sources: use-god comparison, branch interaction, female destiny, luck-cycle, and life-risk boundary material.",
     "rights_notes": "Prepared text remains source-preparation material; store concise paraphrases only.",
     "gap_reason": ""
+  },
+  {
+    "material_id": "material_knowledge_skeleton",
+    "title": "Knowledge Skeleton (Q001-Q008)",
+    "material_type": "markdown",
+    "file_label": "资料整理/knowledge_skeleton/",
+    "tracking_status": "project_tracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "",
+    "scope_notes": "Eight Q-layer structural extraction directories from cleaned Markdown batches 001/002/004 covering foundation tables, yongshen/tiaohou, geju strength, luck cycle, branch interaction, and high-risk boundary.",
+    "rights_notes": "Derived skeleton remains preparation metadata; store concise paraphrases only.",
+    "gap_reason": ""
   }
 ]

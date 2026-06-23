@@ -349,7 +349,7 @@
     ],
     "source_quality_notes": "Sixteen cleaned Markdown course-note files covering Wuyang applied八字 curriculum; text is readable with practical取象 examples.",
     "rights_notes": "Prepared text remains source-preparation material; store concise paraphrases only.",
-    "risk_tier": "high_risk",
+    "risk_tier": "sensitive",
     "risk_notes": [
       "Contains relationship, illness, disaster, and gendered claims requiring conditional non-diagnostic language.",
       "Applied取象 notes must be cross-checked against foundation sources before promotion."
@@ -392,6 +392,45 @@
       "Female-destiny and relationship material requires sensitive non-deterministic language."
     ],
     "priority_level": "high",
+    "next_action": "extract_candidates",
+    "outcome_reason": "",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "entry_id": "entry_knowledge_skeleton",
+    "material_id": "material_knowledge_skeleton",
+    "title": "Knowledge Skeleton (Q001-Q008 structural extraction layers)",
+    "material_type": "markdown",
+    "local_reference": "资料整理/knowledge_skeleton/",
+    "tracking_status": "project_tracked",
+    "readiness_status": "ready_for_extraction",
+    "topic_tags": [
+      "foundation-tables",
+      "yongshen-tiaohou",
+      "geju-strength",
+      "luck-cycle",
+      "branch-interaction",
+      "high-risk-boundary"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "useful_god_candidate",
+      "branch_interaction",
+      "luck_cycle",
+      "high_risk_signal",
+      "ten_god_relation",
+      "blind_image_method"
+    ],
+    "source_quality_notes": "Eight Q-layer structural extraction directories from Markdown batches 001/002/004. Q001-Q003 and Q006 have first-pass extracted candidates; Q004/Q005/Q007/Q008 remain as schema or planned layers.",
+    "rights_notes": "Derived skeleton remains preparation metadata; store concise paraphrases only.",
+    "risk_tier": "sensitive",
+    "risk_notes": [
+      "Q004 and Q008 layers contain high-risk boundary material requiring separate review.",
+      "Q001-Q003 are low/medium risk structural taxonomy layers.",
+      "Q006 is sensitive branch-interaction structural layer."
+    ],
+    "priority_level": "medium",
     "next_action": "extract_candidates",
     "outcome_reason": "",
     "created_at": "2026-06-23",

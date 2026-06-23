@@ -148,17 +148,238 @@
     "source_material_id": "material_markdown_source_batch_002_core",
     "source_title": "Markdown Source Batch 002 Core (Liang Xiangrun Ziping textbook series)",
     "target_rule_families": [
-      "useful_god_candidate"
+      "useful_god_candidate",
+      "pattern_strength",
+      "luck_cycle",
+      "ten_god_relation"
     ],
     "locator_requirement": "page_or_section",
     "risk_boundary": "ordinary",
     "rights_note": "Do not copy long passages; store concise paraphrases only.",
     "source_quality_note": "Three use-god reference systems (Shen, Yu, Yuanhai) provide cross-checkable structural taxonomy from cleaned Markdown.",
     "learning_points": [
-      "lp_markdown_batch_002_useful_god_001"
+      "lp_markdown_batch_002_useful_god_001",
+      "lp_markdown_batch_002_pattern_strength_001",
+      "lp_markdown_batch_002_luck_cycle_001",
+      "lp_markdown_batch_002_ten_god_relation_001"
     ],
     "overlap_candidate_ids": [],
     "status": "draft",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "note_id": "note_markdown_batch_001_pattern_strength_001",
+    "task_id": "task_markdown_batch_001_extract_001",
+    "package_id": "package_markdown_batch_registration_001",
+    "queue_item_id": "queue_markdown_source_batch_001_register",
+    "audit_id": "audit_markdown_source_batch_001",
+    "source_library_entry_id": "entry_markdown_source_batch_001",
+    "source_material_id": "material_markdown_source_batch_001",
+    "source_title": "Markdown Source Batch 001 (Foundation and Applied Notes)",
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "branch_interaction",
+      "blind_image_method"
+    ],
+    "locator_requirement": "page_or_section",
+    "risk_boundary": "sensitive",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "source_quality_note": "Five cleaned Markdown sources provide a stable rule taxonomy for 取格局 → 日主强弱 → 十神定位 → 大运 from beginner-to-intermediate Liang Xiangrun material.",
+    "learning_points": [
+      "lp_markdown_batch_001_pattern_strength_001",
+      "lp_markdown_batch_001_ten_god_relation_001",
+      "lp_markdown_batch_001_branch_interaction_001",
+      "lp_markdown_batch_001_blind_image_method_001"
+    ],
+    "overlap_candidate_ids": [],
+    "status": "draft",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "note_id": "note_markdown_batch_004_001",
+    "task_id": "task_markdown_batch_004_extract_001",
+    "package_id": "package_markdown_batch_registration_001",
+    "queue_item_id": "queue_markdown_source_batch_004_prepare",
+    "audit_id": "audit_markdown_source_batch_004",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_material_id": "material_markdown_source_batch_004",
+    "source_title": "Markdown Source Batch 004 (Liang Xiangrun Advanced Textbook Series)",
+    "target_rule_families": [
+      "useful_god_candidate",
+      "pattern_strength",
+      "branch_interaction",
+      "luck_cycle"
+    ],
+    "locator_requirement": "page_or_section",
+    "risk_boundary": "sensitive",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "source_quality_note": "Nine cleaned Liang Xiangrun advanced sources covering use-god comparison (Shen/Yu/Yuanhai), branch interaction (four-corner formation), pattern strength, and luck-cycle domain with high term density.",
+    "learning_points": [
+      "lp_markdown_batch_004_useful_god_001",
+      "lp_markdown_batch_004_pattern_strength_001",
+      "lp_markdown_batch_004_branch_interaction_001",
+      "lp_markdown_batch_004_luck_cycle_001"
+    ],
+    "overlap_candidate_ids": [],
+    "status": "candidate_intake_started",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "note_id": "note_kskeleton_q001_foundation_tables_001",
+    "task_id": "task_kskeleton_q001_foundation_tables_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "source_material_id": "material_knowledge_skeleton",
+    "source_title": "Knowledge Skeleton Q001 Foundation Tables (five-tiger month, five-rat hour, ten-god lookup, hidden stems, growth stages)",
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "locator_requirement": "review_anchor",
+    "risk_boundary": "sensitive",
+    "rights_note": "Store concise paraphrases only; tables are structural taxonomy, not outcome predictions.",
+    "source_quality_note": "Five structural lookup tables extracted from cleaned Markdown batch 001. Tables provide foundational排盘 support for all subsequent rule families.",
+    "learning_points": [
+      "lp_kskeleton_q001_foundation_tables_001"
+    ],
+    "overlap_candidate_ids": [],
+    "status": "candidate_intake_started",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "note_id": "note_kskeleton_q002_yongshen_tiaohou_001",
+    "task_id": "task_kskeleton_q002_yongshen_tiaohou_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "source_material_id": "material_knowledge_skeleton",
+    "source_title": "Knowledge Skeleton Q002 Yongshen Tiaohou (three-system use-god comparison: Yushi, Shen, Yuanhai)",
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "locator_requirement": "review_anchor",
+    "risk_boundary": "sensitive",
+    "rights_note": "Store concise paraphrases only; use-god reasoning should stay as structural candidate, not unique answer.",
+    "source_quality_note": "Three-system yongshen comparison with 218-row Yushi source table, Shen pattern framework, and Yuanhai bilateral use-god conflict map. Cross-review synthesis complete. Different systems may produce different candidates.",
+    "learning_points": [
+      "lp_kskeleton_q002_yushi_tiaohou_001",
+      "lp_kskeleton_q002_shen_pattern_001",
+      "lp_kskeleton_q002_yuanhai_bilateral_001"
+    ],
+    "overlap_candidate_ids": [],
+    "status": "candidate_intake_started",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "note_id": "note_kskeleton_q003_geju_strength_001",
+    "task_id": "task_kskeleton_q003_geju_strength_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "source_material_id": "material_knowledge_skeleton",
+    "source_title": "Knowledge Skeleton Q003 Geju Strength (pattern selection, day-master strength, geju success/failure, congwang/congshi)",
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "locator_requirement": "review_anchor",
+    "risk_boundary": "sensitive",
+    "rights_note": "Store concise paraphrases only; structural taxonomy, not deterministic classifier.",
+    "source_quality_note": "First-pass extraction with G001-G005 candidates, internal cross-check, and Q002 crosswalk. G005 wuxing-missing table requires OCR backfill. Ready for cross-review but not for direct report rules.",
+    "learning_points": [
+      "lp_kskeleton_q003_geju_selection_001",
+      "lp_kskeleton_q003_day_master_strength_001",
+      "lp_kskeleton_q003_congwang_congshi_001"
+    ],
+    "overlap_candidate_ids": [],
+    "status": "candidate_intake_started",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "note_id": "note_kskeleton_q006_branch_interaction_001",
+    "task_id": "task_kskeleton_q006_branch_interaction_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "source_material_id": "material_knowledge_skeleton",
+    "source_title": "Knowledge Skeleton Q006 Branch Interaction (stem combinations, six clashes, three punishments, three harmonies)",
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "locator_requirement": "review_anchor",
+    "risk_boundary": "sensitive",
+    "rights_note": "Store concise paraphrases only; interaction triggers are not standalone verdicts.",
+    "source_quality_note": "Eight first-structure-trial candidates with schema. Covers stem combinations, branch combinations, six clashes, three punishments/self-punishments, three harmonies/meetings, six harms, and half combinations. Needs safety review before formal candidate creation.",
+    "learning_points": [
+      "lp_kskeleton_q006_interaction_structure_001"
+    ],
+    "overlap_candidate_ids": [],
+    "status": "candidate_intake_started",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "note_id": "note_kskeleton_q004_luck_cycle_001",
+    "task_id": "task_kskeleton_q004_luck_cycle_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "source_material_id": "material_knowledge_skeleton",
+    "source_title": "Knowledge Skeleton Q004 Luck Cycle Boundary (great luck, flow-year trigger mechanisms from Ziping Mufa, Liunian Fadian, Xipi Zhongsheng)",
+    "target_rule_families": [
+      "luck_cycle"
+    ],
+    "locator_requirement": "review_anchor",
+    "risk_boundary": "sensitive",
+    "rights_note": "Store concise paraphrases only; structural taxonomy not outcome predictions.",
+    "source_quality_note": "Q004 mechanism layer from 3 main sources with 6 source windows and 24 trial candidates. 12 candidate_only items processed as low-risk luck-cycle mechanism taxonomy; 4 needs_safety_rewrite and 8 deferred_high_risk remain for separate processing. Cross-dependencies: Q002/Q003 (16 candidates) and Q006 (8 candidates) now fully resolved.",
+    "learning_points": [
+      "lp_kskeleton_q004_mechanism_layer_001",
+      "lp_kskeleton_q004_cross_dependency_001",
+      "lp_kskeleton_q004_q006_dependency_001"
+    ],
+    "overlap_candidate_ids": [],
+    "status": "candidate_intake_started",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "note_id": "note_kskeleton_q008_high_risk_boundary_001",
+    "task_id": "task_kskeleton_q008_high_risk_boundary_001",
+    "package_id": "package_knowledge_skeleton_001",
+    "queue_item_id": "queue_knowledge_skeleton_prepare",
+    "audit_id": "audit_knowledge_skeleton",
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "source_material_id": "material_knowledge_skeleton",
+    "source_title": "Knowledge Skeleton Q008 High Risk Boundary (8 deferred, 6 categories)",
+    "target_rule_families": [
+      "high_risk_signal"
+    ],
+    "locator_requirement": "review_anchor",
+    "risk_boundary": "sensitive",
+    "rights_note": "Boundary reference only.",
+    "source_quality_note": "Eight Q004 trial candidates flagged high-risk. Categories: family_boundary, mortality, other_high_risk, health_medical, branch_interaction_safety, relationship_family.",
+    "learning_points": [
+      "lp_kskeleton_q008_family_boundary_001",
+      "lp_kskeleton_q008_mortality_boundary_001",
+      "lp_kskeleton_q008_other_high_risk_boundary_001",
+      "lp_kskeleton_q008_health_medical_boundary_001",
+      "lp_kskeleton_q008_branch_interaction_safety_boundary_001",
+      "lp_kskeleton_q008_relationship_family_boundary_001"
+    ],
+    "overlap_candidate_ids": [],
+    "status": "candidate_intake_started",
     "created_at": "2026-06-23",
     "updated_at": "2026-06-23"
   }

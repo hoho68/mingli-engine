@@ -485,12 +485,12 @@
     ],
     "source_library_entry_id": "entry_markdown_source_batch_005",
     "source_identity_confidence": "confirmed",
-    "preparation_state": "prepared_text_available",
+    "preparation_state": "ready_for_extraction_review",
     "source_boundary": "external_untracked",
     "topic_tags": [
       "prepared-batch",
       "cleaned-text",
-      "risk-review"
+      "risk-review-complete"
     ],
     "rule_families": [
       "ten_god_relation",
@@ -499,15 +499,13 @@
       "luck_cycle",
       "high_risk_signal"
     ],
-    "risk_tier": "high_risk",
+    "risk_tier": "sensitive",
     "risk_notes": [
-      "Prepared batch may include life-risk or absolute-outcome language requiring safety review."
+      "Risk review completed: bound to sensitive tier with safety rewrites for death/outcome language."
     ],
     "rights_notes": "Prepared text remains source-preparation material; do not copy long passages.",
-    "missing_prerequisites": [
-      "risk_boundary_review"
-    ],
-    "recommended_next_action": "risk_review",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
     "outcome_reason": "",
     "created_at": "2026-05-30",
     "updated_at": "2026-06-23"
@@ -554,9 +552,9 @@
     "representations": [
       "repr_knowledge_skeleton_folder"
     ],
-    "source_library_entry_id": "",
+    "source_library_entry_id": "entry_knowledge_skeleton",
     "source_identity_confidence": "confirmed",
-    "preparation_state": "candidate_skeleton_available",
+    "preparation_state": "ready_for_extraction_review",
     "source_boundary": "external_untracked",
     "topic_tags": [
       "knowledge-skeleton",
@@ -572,16 +570,93 @@
     ],
     "risk_tier": "sensitive",
     "risk_notes": [
-      "Skeleton contains review planning for high-risk boundaries, not approved evidence."
+      "Component Markdown sources (batches 001, 002, 004) are now reviewed and promoted.",
+      "Skeleton contains Q001-Q008 structural extraction layers with mixed risk levels.",
+      "Q004 and Q008 layers contain high-risk boundary material requiring separate review."
     ],
     "rights_notes": "Derived skeleton remains preparation metadata until later review promotes evidence.",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
+    "outcome_reason": "",
+    "created_at": "2026-05-30",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "audit_id": "audit_kskeleton_high_risk_layers",
+    "canonical_title": "Knowledge Skeleton High-Risk Layers (Q004/Q008)",
+    "alternate_titles": [
+      "q004_luck_cycle_boundary/",
+      "q008_high_risk_boundary/"
+    ],
+    "material_scope": "bazi",
+    "primary_material_type": "markdown",
+    "representations": [
+      "repr_kskeleton_high_risk_layers"
+    ],
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "prepared_text_available",
+    "source_boundary": "external_untracked",
+    "topic_tags": [
+      "luck-cycle",
+      "high-risk-boundary",
+      "risk-review"
+    ],
+    "rule_families": [
+      "luck_cycle",
+      "high_risk_signal"
+    ],
+    "risk_tier": "high_risk",
+    "risk_notes": [
+      "Q004 layer contains illness, disaster, death, and relationship claims.",
+      "Q008 inbox contains death, illness, disaster, and legal boundary claims."
+    ],
+    "rights_notes": "Derived skeleton remains preparation metadata; do not copy long passages.",
     "missing_prerequisites": [
-      "source_library_alignment_review",
-      "candidate_review"
+      "risk_review",
+      "boundary_conversion"
+    ],
+    "recommended_next_action": "risk_review",
+    "outcome_reason": "",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "audit_id": "audit_kskeleton_preparation_layers",
+    "canonical_title": "Knowledge Skeleton Preparation Layers (Q005/Q007)",
+    "alternate_titles": [
+      "q005 ten-god family (planned)",
+      "q007 image method (planned)"
+    ],
+    "material_scope": "bazi",
+    "primary_material_type": "markdown",
+    "representations": [
+      "repr_kskeleton_preparation_layers"
+    ],
+    "source_library_entry_id": "entry_knowledge_skeleton",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "prepared_text_available",
+    "source_boundary": "external_untracked",
+    "topic_tags": [
+      "ten-god",
+      "image-method",
+      "preparation"
+    ],
+    "rule_families": [
+      "ten_god_relation",
+      "blind_image_method"
+    ],
+    "risk_tier": "sensitive",
+    "risk_notes": [
+      "Q005 and Q007 layers have not been extracted yet; source windows need locator confirmation."
+    ],
+    "rights_notes": "Derived skeleton remains preparation metadata; do not copy long passages.",
+    "missing_prerequisites": [
+      "first_pass_extraction"
     ],
     "recommended_next_action": "review_cleaned_text",
     "outcome_reason": "",
-    "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
   }
 ]

@@ -2630,6 +2630,7 @@ class ExtractionQueueItem:
     status: str = "planned"
     created_at: str = ""
     updated_at: str = ""
+    risk_review_findings: list[dict] = field(default_factory=list)
 
 
 @dataclass(frozen=True)

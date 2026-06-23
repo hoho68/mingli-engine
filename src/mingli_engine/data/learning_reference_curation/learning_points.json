@@ -87,5 +87,484 @@
     ],
     "candidate_readiness": "ready",
     "candidate_decision_id": "decision_markdown_batch_002_useful_god_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_001_pattern_strength_001",
+    "note_id": "note_markdown_batch_001_pattern_strength_001",
+    "point_label": "Pattern strength and 取格局 taxonomy from Liang Xiangrun foundation",
+    "source_locator": "page_or_section_required",
+    "summary": "Batch 001 provides systematic beginner-to-intermediate coverage of 取格局 (pattern taking), 日主强弱 (day-master strength), 十神定位 (ten-god positioning), and 大运 (great luck) from 梅湘润 foundation, 悠然大仙 scaffold, and 天马易学 applied notes.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Foundation material covers basic patterns; advanced pattern deviations require separate extraction.",
+      "Take 取格局 as structural reference, not deterministic classifier.",
+      "Health and disaster claims from 天马易学 applied notes require conditional rewrite before formal use.",
+      "State uncertainty for pattern interpretation and school dependency.",
+      "Include limitation language; do not use as standalone verdict."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_markdown_batch_001_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_001_ten_god_relation_001",
+    "note_id": "note_markdown_batch_001_pattern_strength_001",
+    "point_label": "Ten-god relation taxonomy from Liang Xiangrun foundation",
+    "source_locator": "page_or_section_required",
+    "summary": "Batch 001 provides systematic ten-god positioning (十神定位) coverage from 梁湘润 foundation, 悠然大仙 scaffold, and 天马易学 applied notes, supporting structural ten-god relation taxonomy.",
+    "proposed_rule_family": "ten_god_relation",
+    "risk_tier": "sensitive",
+    "candidate_readiness": "ready",
+    "limitations": [
+      "Foundation material covers basic ten-god definitions; advanced relation patterns require separate extraction.",
+      "Keep as structural taxonomy until locator and chart context are reviewed.",
+      "Do not treat pillar-position notes as standalone verdicts.",
+      "State uncertainty for pattern interpretation and school dependency.",
+      "Include limitation language; do not use as standalone verdict."
+    ],
+    "candidate_decision_id": "decision_markdown_batch_001_ten_god_relation_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_001_branch_interaction_001",
+    "note_id": "note_markdown_batch_001_pattern_strength_001",
+    "point_label": "Branch interaction patterns from Liang Xiangrun foundation",
+    "source_locator": "page_or_section_required",
+    "summary": "Batch 01 foundation basics cover 刑冲合会 (punishment, clash, combination, meeting) as structural branch interaction patterns from beginner-level reference material.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "sensitive",
+    "candidate_readiness": "ready",
+    "limitations": [
+      "Foundation material covers basic interaction patterns; advanced four-corner formation deviations require separate extraction.",
+      "Include limitation notes; interaction patterns are not standalone verdicts.",
+      "Keep as structural taxonomy, not deterministic outcome predictions.",
+      "State uncertainty for pattern interpretation and school dependency."
+    ],
+    "candidate_decision_id": "decision_markdown_batch_001_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_001_blind_image_method_001",
+    "note_id": "note_markdown_batch_001_pattern_strength_001",
+    "point_label": "Blind image method from Central Plains blind-school and mnemonic sources",
+    "source_locator": "page_or_section_required",
+    "summary": "Batch 01 includes 中原盲派命理秘典 and 八字口诀寿终取象 as blind-school image sources; blind image statements should be framed as conditional traditional signals tied to chart structure.",
+    "proposed_rule_family": "blind_image_method",
+    "risk_tier": "sensitive",
+    "candidate_readiness": "ready",
+    "limitations": [
+      "State uncertainty and school dependency.",
+      "Include limitation language; do not use as standalone verdict.",
+      "May overlap with existing northeast_blind_peak blind_image_method; check for duplication."
+    ],
+    "candidate_decision_id": "decision_markdown_batch_001_blind_image_method_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_002_pattern_strength_001",
+    "note_id": "note_markdown_batch_002_useful_god_001",
+    "point_label": "Pattern strength taxonomy from Liang Xiangrun textbook series",
+    "source_locator": "page_or_section_required",
+    "summary": "Liang Xiangrun textbook series (级次, 八字讲堂) provides systematic pattern strength coverage including day-master strength assessment and pattern (格局) selection rules from intermediate-level material.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "candidate_readiness": "ready",
+    "limitations": [
+      "Pattern strength material from textbook series; state structural reference, not deterministic classifier.",
+      "Advanced pattern deviations may require separate extraction from specialized sources."
+    ],
+    "candidate_decision_id": "decision_markdown_batch_002_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_002_luck_cycle_001",
+    "note_id": "note_markdown_batch_002_useful_god_001",
+    "point_label": "Luck cycle trigger taxonomy from Liang Xiangrun textbook series",
+    "source_locator": "page_or_section_required",
+    "summary": "Liang Xiangrun textbook series includes 大运流年判例 coverage for luck-cycle trigger identification from structured case-based material.",
+    "proposed_rule_family": "luck_cycle",
+    "risk_tier": "ordinary",
+    "candidate_readiness": "ready",
+    "limitations": [
+      "Luck cycle triggers should stay as structural candidate, not guaranteed timing mechanism.",
+      "Cross-reference with foundation pattern strength before applying luck-cycle rules."
+    ],
+    "candidate_decision_id": "decision_markdown_batch_002_luck_cycle_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_002_ten_god_relation_001",
+    "note_id": "note_markdown_batch_002_useful_god_001",
+    "point_label": "Ten-god relation taxonomy from Liang Xiangrun textbook series",
+    "source_locator": "page_or_section_required",
+    "summary": "Liang Xiangrun textbook series provides comprehensive ten-god positioning (十神定位) and relation taxonomy from structured textbook material.",
+    "proposed_rule_family": "ten_god_relation",
+    "risk_tier": "ordinary",
+    "candidate_readiness": "ready",
+    "limitations": [
+      "Keep as structural taxonomy until chart context is reviewed.",
+      "Advanced ten-god relation patterns require separate extraction."
+    ],
+    "candidate_decision_id": "decision_markdown_batch_002_ten_god_relation_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_004_useful_god_001",
+    "note_id": "note_markdown_batch_004_001",
+    "point_label": "Advanced use-god comparison across Shen/Yu/Yuanhai systems",
+    "source_locator": "page_or_section_required",
+    "summary": "Batch 004 provides advanced use-god comparison across Shen pattern-based (沈氏用神例解), Yu seasonal-adjustment (余氏用神辞渊), and Yuanhai bilateral-preference (渊海喜忌随笔) systems from Liang Xiangrun advanced textbook series.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "sensitive",
+    "candidate_readiness": "ready",
+    "limitations": [
+      "State uncertainty for use-god system differences; document system dependency.",
+      "Include limitation language; different systems may produce different use-god candidates.",
+      "Cross-source confirmation needed before promoting any single use-god selection.",
+      "Advanced use-god material assumes foundation knowledge; do not use as standalone introduction."
+    ],
+    "candidate_decision_id": "decision_markdown_batch_004_useful_god_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_004_pattern_strength_001",
+    "note_id": "note_markdown_batch_004_001",
+    "point_label": "Advanced pattern strength and喜忌 rules from 渊海喜忌随笔 and 天元巫咸经",
+    "source_locator": "page_or_section_required",
+    "summary": "Batch 004 provides advanced pattern strength and 喜忌 (preference/avoidance) rules from 渊海喜忌随笔 (Yuanhai preference/avoidance system) and 天元巫咸经注释 (Tianyuan Wuwei commentary) from Liang Xiangrun advanced series.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "sensitive",
+    "candidate_readiness": "ready",
+    "limitations": [
+      "State uncertainty for pattern interpretation and喜忌 boundary.",
+      "Include limitation language; advanced pattern rules require foundation knowledge.",
+      "Do not use advanced pattern rules as standalone classifiers without chart context."
+    ],
+    "candidate_decision_id": "decision_markdown_batch_004_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_004_branch_interaction_001",
+    "note_id": "note_markdown_batch_004_001",
+    "point_label": "Four-corner formation branch interaction from 四角方阵刑冲合会透解",
+    "source_locator": "page_or_section_required",
+    "summary": "Batch 004 provides advanced branch interaction taxonomy through the four-corner formation (四角方阵) framework from 四角方阵刑冲合会透解 (excerpt and full text) by Liang Xiangrun, covering刑冲合会 across all four pillars.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "sensitive",
+    "candidate_readiness": "ready",
+    "limitations": [
+      "State uncertainty and school dependency for four-corner formation triggers.",
+      "Include limitation language; interaction patterns are not standalone verdicts.",
+      "Keep as structural taxonomy, not deterministic outcome predictions.",
+      "Four-corner formation is a Liang Xiangrun specific framework; may differ from other schools."
+    ],
+    "candidate_decision_id": "decision_markdown_batch_004_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_004_luck_cycle_001",
+    "note_id": "note_markdown_batch_004_001",
+    "point_label": "Advanced luck-cycle trigger identification from 流年法典 and 细批终身详解",
+    "source_locator": "page_or_section_required",
+    "summary": "Batch 004 provides advanced luck-cycle trigger identification from 流年法典 (flow-year codex) and 细批终身详解 (detailed lifelong analysis) by Liang Xiangrun, covering structural timing rules and year-pillar interaction triggers.",
+    "proposed_rule_family": "luck_cycle",
+    "risk_tier": "sensitive",
+    "candidate_readiness": "ready",
+    "limitations": [
+      "State uncertainty for timing interpretation and life-event predictions.",
+      "Include limitation language; luck-cycle triggers are not guaranteed timing mechanisms.",
+      "Contains death, illness, and disaster language requiring conditional rewrite.",
+      "细批终身 details require conditional safety rewrite before any evidence promotion."
+    ],
+    "candidate_decision_id": "decision_markdown_batch_004_luck_cycle_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q001_foundation_tables_001",
+    "note_id": "note_kskeleton_q001_foundation_tables_001",
+    "point_label": "Q001 foundation lookup tables (five-tiger month, five-rat hour, ten-god matrix, hidden stems, growth stages)",
+    "source_locator": "page_or_section",
+    "summary": "Five structural lookup tables extracted from cleaned Markdown: five-tiger month-escape table, five-rat hour-escape table, ten-god lookup matrix, hidden-stems table, and twelve-stage growth cycle table. These tables provide foundational stem-branch calculation support for all subsequent rule extraction.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Tables are structural calculation aids, not outcome predictions.",
+      "Growth-stage terminology uses traditional metaphors that should not be read as medical or life-span claims.",
+      "Interpretation involves uncertainty; use as structural candidate only.",
+      "Include limitation language; structural taxonomy only."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_kskeleton_q001_foundation_tables_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q002_yushi_tiaohou_001",
+    "note_id": "note_kskeleton_q002_yongshen_tiaohou_001",
+    "point_label": "Q002 Yushi tiaohou use-god table (244-row seasonal adjustment)",
+    "source_locator": "page_or_section",
+    "summary": "Yushi tiaohou table provides seasonal-adjustment use-god candidates by day-master and month-branch. 218 source rows expanded to 244 normalized rows for single-month lookup. Each entry includes use-god,忌神 restrictions, and month-branch inherent use-god markers.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Seasonal adjustment is one of three competing use-god systems.",
+      "忌神 conditions must be preserved; do not extract use-god alone.",
+      "Cross-check against Shen and Yuanhai systems before promotion.",
+      "State uncertainty and limitation; use as structural candidate only, not as standalone verdict."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_kskeleton_q002_yushi_tiaohou_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q002_shen_pattern_001",
+    "note_id": "note_kskeleton_q002_yongshen_tiaohou_001",
+    "point_label": "Q002 Shen pattern use-god framework (month-lead pattern, smooth/reverse application)",
+    "source_locator": "page_or_section",
+    "summary": "Shen pattern framework defines use-god as pattern identification: month-lead takes priority, wealth-official-seal-food use smooth application, killing-hurting-robbery-blade use reverse application. Pattern success/failure depends on primary cause, secondary cause, pattern-breaking, and rescue responses.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Pattern use-god differs from day-master tiaohou use-god.",
+      "Pattern adjustment is not the same as seasonal adjustment.",
+      "Yangren/jianlu/yuejie/robbery-wealth terminology cannot be unconditionally merged.",
+      "State uncertainty and limitation; use as structural candidate only, not as standalone verdict."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_kskeleton_q002_shen_pattern_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q002_yuanhai_bilateral_001",
+    "note_id": "note_kskeleton_q002_yongshen_tiaohou_001",
+    "point_label": "Q002 Yuanhai bilateral use-god and historical conflict map",
+    "source_locator": "page_or_section",
+    "summary": "Yuanhai bilateral use-god system shows historical evolution: early use-god equals pattern, later use-god becomes mediating character between day-master and pattern. Ming-dynasty pattern preferences and Qing-dynasty bilateral use-god coexist with conflicts. Five-element time-place preferences table routed to Q008 as high-risk boundary.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Multiple use-god systems may produce contradictory candidates.",
+      "Use-god is not a universal remedy; preference systems may conflict.",
+      "High-risk five-element time-place content routed to Q008 boundary.",
+      "Interpretation involves uncertainty; use as structural candidate only.",
+      "Include limitation language; structural taxonomy only."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_kskeleton_q002_yuanhai_bilateral_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q003_geju_selection_001",
+    "note_id": "note_kskeleton_q003_geju_strength_001",
+    "point_label": "Q003 pattern selection rules (month-lead, heavenly-transparency, three-harmony)",
+    "source_locator": "page_or_section",
+    "summary": "Pattern selection rules from three sources: month-lead priority, heavenly-stem transparency takes pattern, three-harmony/three-meeting forms pattern. Standard selection program covers transparent, hidden, and combined pattern identification.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Pattern selection is structural taxonomy, not outcome prediction.",
+      "G002 known gaps retained; do not use incomplete patterns for report rules.",
+      "Interpretation involves uncertainty; use as structural candidate only.",
+      "Include limitation language; structural taxonomy only."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_kskeleton_q003_geju_selection_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q003_day_master_strength_001",
+    "note_id": "note_kskeleton_q003_geju_strength_001",
+    "point_label": "Q003 day-master strength rules (single-form, compound-form, obtaining-season)",
+    "source_locator": "page_or_section",
+    "summary": "Day-master strength rules define single-form and compound-form strength indicators, obtaining-season criteria, and root-support boundaries. Strength assessment is prerequisite for use-god selection but should not directly produce outcome judgments.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Strength quantification is difficult; textbook notes acknowledge extremes.",
+      "Congwang/congshi extreme patterns deferred to separate candidate.",
+      "G001 boundary candidates retained as known gaps.",
+      "Interpretation involves uncertainty; use as structural candidate only.",
+      "Include limitation language; structural taxonomy only."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_kskeleton_q003_day_master_strength_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q003_congwang_congshi_001",
+    "note_id": "note_kskeleton_q003_geju_strength_001",
+    "point_label": "Q003 congwang/congshi/special-pattern candidates",
+    "source_locator": "page_or_section",
+    "summary": "Congwang (following-the-strong), congshi (following-the-trend), and special-pattern candidates from batch 002/004 sources. These extreme structures require careful boundary treatment and should not be treated as standard patterns.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Extreme patterns are exceptions, not standard classification.",
+      "Wuxing-missing-two/three table requires OCR backfill (G005 gap).",
+      "Do not directly judge outcomes from extreme pattern identification.",
+      "State uncertainty and limitation; use as structural candidate only, not as standalone verdict."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_kskeleton_q003_congwang_congshi_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q006_interaction_structure_001",
+    "note_id": "note_kskeleton_q006_branch_interaction_001",
+    "point_label": "Q006 branch interaction structure candidates (stem combinations, six clashes, three punishments, harmonies)",
+    "source_locator": "page_or_section",
+    "summary": "Eight first-structure-trial candidates covering stem combinations, branch combinations, six clashes, three punishments/self-punishments, three harmonies/meetings, six harms, half harmonies, and priority rules for concurrent interactions. Structural conditions only; no outcome judgments.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Interaction triggers are conditional, not deterministic.",
+      "Q006 candidates need safety review before formal candidate creation.",
+      "High-risk outcomes from interactions routed to Q008 boundary.",
+      "Q004 dependency: 8 luck-cycle candidates wait for Q006 structural definitions.",
+      "State uncertainty and limitation; use as structural candidate only, not as standalone verdict."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_kskeleton_q006_interaction_structure_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q004_mechanism_layer_001",
+    "note_id": "note_kskeleton_q004_luck_cycle_001",
+    "point_label": "Q004 luck-cycle mechanism layer: structural framework and observation order",
+    "source_locator": "page_or_section_required",
+    "summary": "Luck-cycle mechanism layer encompasses tiaohou, fuyi, caiguan, and xingchong as structural entry for flow-year analysis. Observation follows procedural order: year-pillar month-pillar day-pillar hour-pillar. Great luck analysis follows four-layer program: four pillars, flow-year, combined view, flow-month.",
+    "proposed_rule_family": "luck_cycle",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Luck-cycle mechanisms are structural taxonomy, not outcome predictions.",
+      "Four-layer procedure is a structural boundary, not a deterministic method.",
+      "Interpretation involves uncertainty; use as structural candidate only.",
+      "Include limitation language; structural taxonomy only."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_kskeleton_q004_mechanism_layer_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q004_cross_dependency_001",
+    "note_id": "note_kskeleton_q004_luck_cycle_001",
+    "point_label": "Q004 luck-cycle use-god and pattern-strength cross-dependency",
+    "source_locator": "page_or_section_required",
+    "summary": "Use-god preferences and pattern-strength findings from Q002/Q003 inform the luck layer across four pillars, great luck, and flow-year. Natal vs luck-pillar strength differential and mother-method vertical chain (tiaohou geju day-master strength) depend on upstream Q002/Q003 alignment. Folk use-god/tiaohou dichotomization risks oversimplification.",
+    "proposed_rule_family": "luck_cycle",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Cross-dependency requires upstream Q002/Q003 alignment before promotion.",
+      "Use-god/tiaohou dichotomization risks oversimplification.",
+      "Interpretation involves uncertainty; use as structural candidate only.",
+      "Include limitation language; structural taxonomy only."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_kskeleton_q004_cross_dependency_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q004_q006_dependency_001",
+    "note_id": "note_kskeleton_q004_luck_cycle_001",
+    "point_label": "Q004 luck-cycle branch-interaction cross-dependency with Q006",
+    "source_locator": "page_or_section_required",
+    "summary": "Four-corner punishment, clash, combination, and penetration (xing chong hui tou) structures flow-year thematic emphasis in luck-cycle analysis. Detail flow-year analysis requires xingchong hehui as prerequisites. Microcosm great luck (suoying dayun) transfers natal tiaohou, geju, and fuyi preferences via branch-interaction mechanisms.",
+    "proposed_rule_family": "luck_cycle",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Dependency requires Q006 structural definitions before full promotion.",
+      "Four-corner triggers are conditional, not deterministic outcome predictors.",
+      "Interpretation involves uncertainty; use as structural candidate only.",
+      "Include limitation language; structural taxonomy only."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_kskeleton_q004_q006_dependency_001"
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q008_family_boundary_001",
+    "note_id": "note_kskeleton_q008_high_risk_boundary_001",
+    "point_label": "Family: spouse, child, life-cycle risk",
+    "source_locator": "Q008-INBOX-001",
+    "summary": "Terms like wife, child, life-cycle carry direct outcome implications. Boundary only.",
+    "proposed_rule_family": "high_risk_signal",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Boundary reference only.",
+      "Must not enter rules.",
+      "Safety reference only.",
+      "State uncertainty as boundary reference only.",
+      "Include limitation language; boundary reference only, not standalone rule."
+    ],
+    "candidate_readiness": "deferred",
+    "candidate_decision_id": ""
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q008_mortality_boundary_001",
+    "note_id": "note_kskeleton_q008_high_risk_boundary_001",
+    "point_label": "Mortality/fortune: extreme outcome triggers",
+    "source_locator": "Q008-INBOX-002",
+    "summary": "Terms like extreme fortune, fortune/misfortune imply direct life-outcome judgments. Boundary only.",
+    "proposed_rule_family": "high_risk_signal",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Boundary reference only.",
+      "Must not enter rules.",
+      "Safety reference only.",
+      "State uncertainty as boundary reference only.",
+      "Include limitation language; boundary reference only, not standalone rule."
+    ],
+    "candidate_readiness": "deferred",
+    "candidate_decision_id": ""
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q008_other_high_risk_boundary_001",
+    "note_id": "note_kskeleton_q008_high_risk_boundary_001",
+    "point_label": "Other high-risk: wealth, litigation, disaster",
+    "source_locator": "Q008-INBOX-003/004/006",
+    "summary": "Terms like wealth, litigation, disaster, blood, promotion carry outcome implications. Boundary only.",
+    "proposed_rule_family": "high_risk_signal",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Boundary reference only.",
+      "Must not enter rules.",
+      "Safety reference only.",
+      "State uncertainty as boundary reference only.",
+      "Include limitation language; boundary reference only, not standalone rule."
+    ],
+    "candidate_readiness": "deferred",
+    "candidate_decision_id": ""
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q008_health_medical_boundary_001",
+    "note_id": "note_kskeleton_q008_high_risk_boundary_001",
+    "point_label": "Health/medical: sickness, illness",
+    "source_locator": "Q008-INBOX-005",
+    "summary": "Terms like sickness, illness carry direct health-outcome implications. Boundary only.",
+    "proposed_rule_family": "high_risk_signal",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Boundary reference only.",
+      "Must not enter rules.",
+      "Safety reference only.",
+      "State uncertainty as boundary reference only.",
+      "Include limitation language; boundary reference only, not standalone rule."
+    ],
+    "candidate_readiness": "deferred",
+    "candidate_decision_id": ""
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q008_branch_interaction_safety_boundary_001",
+    "note_id": "note_kskeleton_q008_high_risk_boundary_001",
+    "point_label": "Branch interaction safety: punishment/clash",
+    "source_locator": "Q008-INBOX-007",
+    "summary": "Punishment, clash must not map to fortune, kill, injury outcomes. Boundary only.",
+    "proposed_rule_family": "high_risk_signal",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Boundary reference only.",
+      "Must not enter rules.",
+      "Safety reference only.",
+      "State uncertainty as boundary reference only.",
+      "Include limitation language; boundary reference only, not standalone rule."
+    ],
+    "candidate_readiness": "deferred",
+    "candidate_decision_id": ""
+  },
+  {
+    "learning_point_id": "lp_kskeleton_q008_relationship_family_boundary_001",
+    "note_id": "note_kskeleton_q008_high_risk_boundary_001",
+    "point_label": "Relationship/family: peach-blossom, romance",
+    "source_locator": "Q008-INBOX-008",
+    "summary": "Terms like peach-blossom, romance, fortune carry relationship-outcome implications. Boundary only.",
+    "proposed_rule_family": "high_risk_signal",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Boundary reference only.",
+      "Must not enter rules.",
+      "Safety reference only.",
+      "State uncertainty as boundary reference only.",
+      "Include limitation language; boundary reference only, not standalone rule."
+    ],
+    "candidate_readiness": "deferred",
+    "candidate_decision_id": ""
   }
 ]

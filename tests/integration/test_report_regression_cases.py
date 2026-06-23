@@ -5071,22 +5071,24 @@ def test_learning_reference_intake_decisions_do_not_change_candidate_or_formal_e
     points = learning_reference_curation.load_learning_points()
     decisions = learning_reference_curation.load_candidate_intake_decisions()
 
-    assert {point.learning_point_id for point in points} == {
+    assert len(points) == 37
+    assert len(decisions) == 31
+    assert {
         "lp_northeast_blind_image_001",
         "lp_mingli_pattern_strength_001",
         "lp_duan_ten_god_relation_001",
         "lp_mingxue_five_element_balance_001",
         "lp_hongfu_remedy_boundary_001",
         "lp_markdown_batch_002_useful_god_001",
-    }
-    assert {decision.decision_id for decision in decisions} == {
+    }.issubset({point.learning_point_id for point in points})
+    assert {
         "decision_northeast_blind_image_001",
         "decision_mingli_pattern_strength_001",
         "decision_duan_ten_god_relation_001",
         "decision_mingxue_five_element_balance_001",
         "decision_hongfu_remedy_boundary_001",
         "decision_markdown_batch_002_useful_god_001",
-    }
+    }.issubset({decision.decision_id for decision in decisions})
     assert {
         candidate.candidate_id for candidate in source_intake.load_candidate_extracts()
     } == before_candidate_ids
@@ -5121,9 +5123,12 @@ def test_learning_reference_prerequisite_actions_do_not_change_formal_evidence_c
         "action_markdown_batch_003_registration_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
-        "action_markdown_batch_005_risk_review_001",
                 "action_source_processing_status_deferred_001",
         "action_knowledge_skeleton_preparation_001",
+        "action_kskeleton_q004_luck_cycle_001",
+        "action_kskeleton_q005_ten_god_family_001",
+        "action_kskeleton_q007_image_method_001",
+        "action_kskeleton_q008_high_risk_boundary_001",
     }
     assert summary.formal_evidence_delta == 0
     assert {

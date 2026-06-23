@@ -127,13 +127,13 @@
     "file_name": "Markdown/source_batch_001_cleaned",
     "source_type": "markdown",
     "extraction_status": "partial",
-    "review_status": "reviewed",
+    "review_status": "approved",
     "scope_notes": "Five cleaned Markdown sources: foundation/applied-notes plus blind-school boundary material.",
     "risk_notes": [
       "blind_image_method",
       "high_risk_signal"
     ],
-    "curation_gap_reason": "待按计划完成候选提取和审核，尚未产出正式证据。",
+    "curation_gap_reason": "",
     "review_reference": "docs/classical_sources/extracts/markdown_source_batch_001.md"
   },
   {
@@ -154,12 +154,38 @@
     "file_name": "Markdown/source_batch_004_cleaned",
     "source_type": "markdown",
     "extraction_status": "partial",
-    "review_status": "reviewed",
+    "review_status": "approved",
     "scope_notes": "Nine cleaned Markdown Liang Xiangrun advanced sources covering use-god, branch interaction, female destiny, and luck-cycle.",
     "risk_notes": [
       "high_risk_signal"
     ],
-    "curation_gap_reason": "待按计划完成候选提取和审核，尚未产出正式证据。",
+    "curation_gap_reason": "",
     "review_reference": "docs/classical_sources/extracts/markdown_source_batch_004.md"
+  },
+  {
+    "source_id": "knowledge_skeleton",
+    "title": "Knowledge Skeleton",
+    "file_name": "knowledge_skeleton",
+    "source_type": "markdown",
+    "extraction_status": "converted",
+    "review_status": "approved",
+    "scope_notes": "Project-curated knowledge taxonomy from multiple classical lineages covering Q001 foundation tables through Q008 high-risk boundary.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "markdown_source_batch_005",
+    "title": "Markdown Source Batch 005",
+    "file_name": "Markdown/source_batch_005_cleaned",
+    "source_type": "markdown",
+    "extraction_status": "converted",
+    "review_status": "approved",
+    "scope_notes": "Sixteen cleaned Markdown Wuyang course notes covering ten-god relation, blind image method, and branch interaction pattern recognition.",
+    "risk_notes": [
+      "sensitive"
+    ],
+    "curation_gap_reason": "",
+    "review_reference": ""
   }
 ]

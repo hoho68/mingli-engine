@@ -336,5 +336,23 @@
     "modified_hint": "",
     "contains_images": false,
     "notes": "Derived review skeleton and queue notes are preparation metadata."
+  },
+  {
+    "representation_id": "repr_kskeleton_high_risk_layers",
+    "audit_id": "audit_kskeleton_high_risk_layers",
+    "representation_type": "cleaned_markdown",
+    "local_reference": "资料整理/knowledge_skeleton/q004_luck_cycle_boundary/",
+    "tracking_status": "project_tracked",
+    "text_quality": "cleaned",
+    "locator_quality": "page_or_section"
+  },
+  {
+    "representation_id": "repr_kskeleton_preparation_layers",
+    "audit_id": "audit_kskeleton_preparation_layers",
+    "representation_type": "cleaned_markdown",
+    "local_reference": "资料整理/knowledge_skeleton/",
+    "tracking_status": "project_tracked",
+    "text_quality": "cleaned",
+    "locator_quality": "page_or_section"
   }
 ]

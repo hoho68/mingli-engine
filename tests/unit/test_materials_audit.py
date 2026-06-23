@@ -1090,8 +1090,8 @@ def test_knowledge_skeleton_enters_preparation_backlog_queue():
 
     item = queue_items_by_id["queue_knowledge_skeleton_prepare"]
     assert item.audit_id == "audit_knowledge_skeleton"
-    assert item.queue_type == "preparation_backlog"
-    assert item.recommended_action == "review_cleaned_text"
+    assert item.queue_type == "extraction_ready"
+    assert item.recommended_action == "extract_candidates"
     assert set(item.depends_on) == {"component_source_links", "candidate_review"}
 
 
@@ -1325,8 +1325,8 @@ def test_audit_progress_summary_includes_next_five_queue_items_and_backlog_count
         "queue_markdown_source_batch_003_register",
         "queue_markdown_source_batch_004_prepare",
     ]
-    assert summary.extraction_ready_count == 8
-    assert summary.preparation_backlog_count == 1
+    assert summary.extraction_ready_count == 9
+    assert summary.preparation_backlog_count == 0
     assert summary.registration_backlog_count == 0
     assert summary.risk_review_backlog_count == 4
     assert summary.deferred_queue_count == 2
