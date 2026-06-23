@@ -137,5 +137,29 @@
     "status": "draft",
     "created_at": "2026-06-01",
     "updated_at": "2026-06-01"
+  },
+  {
+    "note_id": "note_markdown_batch_002_useful_god_001",
+    "task_id": "task_markdown_batch_002_core_extract_001",
+    "package_id": "package_markdown_batch_registration_001",
+    "queue_item_id": "queue_markdown_source_batch_002_register",
+    "audit_id": "audit_markdown_source_batch_002",
+    "source_library_entry_id": "entry_markdown_source_batch_002_core",
+    "source_material_id": "material_markdown_source_batch_002_core",
+    "source_title": "Markdown Source Batch 002 Core (Liang Xiangrun Ziping textbook series)",
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "locator_requirement": "page_or_section",
+    "risk_boundary": "ordinary",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "source_quality_note": "Three use-god reference systems (Shen, Yu, Yuanhai) provide cross-checkable structural taxonomy from cleaned Markdown.",
+    "learning_points": [
+      "lp_markdown_batch_002_useful_god_001"
+    ],
+    "overlap_candidate_ids": [],
+    "status": "draft",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
   }
 ]

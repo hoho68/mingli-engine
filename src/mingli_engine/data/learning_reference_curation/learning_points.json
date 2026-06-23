@@ -71,5 +71,21 @@
     ],
     "candidate_readiness": "ready",
     "candidate_decision_id": "decision_hongfu_remedy_boundary_001"
+  },
+  {
+    "learning_point_id": "lp_markdown_batch_002_useful_god_001",
+    "note_id": "note_markdown_batch_002_useful_god_001",
+    "point_label": "Use-god comparison across Shen/Yu/Yuanhai systems",
+    "source_locator": "page_or_section_required",
+    "summary": "Liang Xiangrun textbook series presents three complementary use-god approaches: Shen structural pattern-based selection, Yu seasonal adjustment (tiaohou) emphasis, and Yuanhai bilateral preference comparison; use-god reasoning should stay as structural candidate, not unique answer.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Different use-god systems may produce different candidates; do not claim uniqueness.",
+      "Seasonal adjustment reasoning requires month-pillar data and should be stated conditionally.",
+      "Cross-source confirmation needed before promoting any single use-god selection."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_markdown_batch_002_useful_god_001"
   }
 ]

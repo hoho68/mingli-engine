@@ -5,10 +5,17 @@
     "queue_type": "extraction_ready",
     "priority_level": "high",
     "priority_rationale": "Ready blind-school source with strong locator confidence and reviewed source-library alignment.",
-    "target_rule_families": ["blind_image_method", "branch_interaction"],
+    "target_rule_families": [
+      "blind_image_method",
+      "branch_interaction"
+    ],
     "target_gap_ids": [],
     "risk_boundary": "sensitive",
-    "pre_extraction_checks": ["confirm source-library alignment", "rewrite verdict language conditionally", "store concise paraphrases only"],
+    "pre_extraction_checks": [
+      "confirm source-library alignment",
+      "rewrite verdict language conditionally",
+      "store concise paraphrases only"
+    ],
     "recommended_action": "extract_candidates",
     "depends_on": [],
     "status": "planned",
@@ -21,10 +28,18 @@
     "queue_type": "extraction_ready",
     "priority_level": "high",
     "priority_rationale": "Ready pattern and useful-god source with source-library alignment and timing boundary notes.",
-    "target_rule_families": ["pattern_strength", "useful_god_candidate", "luck_cycle"],
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate",
+      "luck_cycle"
+    ],
     "target_gap_ids": [],
     "risk_boundary": "sensitive",
-    "pre_extraction_checks": ["confirm locator anchors", "avoid guaranteed timing wording", "store concise paraphrases only"],
+    "pre_extraction_checks": [
+      "confirm locator anchors",
+      "avoid guaranteed timing wording",
+      "store concise paraphrases only"
+    ],
     "recommended_action": "extract_candidates",
     "depends_on": [],
     "status": "planned",
@@ -37,10 +52,16 @@
     "queue_type": "extraction_ready",
     "priority_level": "medium",
     "priority_rationale": "Ready ordinary-risk source can support ten-god and structure review after locator confirmation.",
-    "target_rule_families": ["ten_god_relation", "pattern_strength"],
+    "target_rule_families": [
+      "ten_god_relation",
+      "pattern_strength"
+    ],
     "target_gap_ids": [],
     "risk_boundary": "ordinary",
-    "pre_extraction_checks": ["confirm locator anchors", "store concise paraphrases only"],
+    "pre_extraction_checks": [
+      "confirm locator anchors",
+      "store concise paraphrases only"
+    ],
     "recommended_action": "extract_candidates",
     "depends_on": [],
     "status": "planned",
@@ -53,10 +74,17 @@
     "queue_type": "extraction_ready",
     "priority_level": "medium",
     "priority_rationale": "Ready terminology source can support five-element and ten-god coverage.",
-    "target_rule_families": ["five_element_balance", "ten_god_relation", "pattern_strength"],
+    "target_rule_families": [
+      "five_element_balance",
+      "ten_god_relation",
+      "pattern_strength"
+    ],
     "target_gap_ids": [],
     "risk_boundary": "ordinary",
-    "pre_extraction_checks": ["confirm locator anchors", "store concise paraphrases only"],
+    "pre_extraction_checks": [
+      "confirm locator anchors",
+      "store concise paraphrases only"
+    ],
     "recommended_action": "extract_candidates",
     "depends_on": [],
     "status": "planned",
@@ -69,10 +97,17 @@
     "queue_type": "extraction_ready",
     "priority_level": "medium",
     "priority_rationale": "Ready remedy-boundary source can support safety wording after sensitive review.",
-    "target_rule_families": ["remedy_boundary", "pattern_strength"],
+    "target_rule_families": [
+      "remedy_boundary",
+      "pattern_strength"
+    ],
     "target_gap_ids": [],
     "risk_boundary": "sensitive",
-    "pre_extraction_checks": ["confirm locator anchors", "avoid guaranteed remedy wording", "store concise paraphrases only"],
+    "pre_extraction_checks": [
+      "confirm locator anchors",
+      "avoid guaranteed remedy wording",
+      "store concise paraphrases only"
+    ],
     "recommended_action": "extract_candidates",
     "depends_on": [],
     "status": "planned",
@@ -82,50 +117,79 @@
   {
     "queue_item_id": "queue_markdown_source_batch_001_register",
     "audit_id": "audit_markdown_source_batch_001",
-    "queue_type": "registration_backlog",
-    "priority_level": "medium",
-    "priority_rationale": "Cleaned Markdown needs source-library registration before extraction review.",
-    "target_rule_families": [],
-    "target_gap_ids": ["gap_source_registration"],
-    "risk_boundary": "ordinary",
-    "pre_extraction_checks": ["review batch manifest", "create or link source-library entry"],
-    "recommended_action": "register_source",
-    "depends_on": ["source_library_registration"],
-    "status": "planned",
+    "queue_type": "extraction_ready",
+    "priority_level": "high",
+    "priority_rationale": "Registered and cleaned Markdown foundation and boundary sources ready for candidate extraction with sensitive boundary review.",
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "branch_interaction",
+      "blind_image_method"
+    ],
+    "target_gap_ids": [
+      "gap_source_registration"
+    ],
+    "risk_boundary": "sensitive",
+    "pre_extraction_checks": [
+      "confirm source-library alignment",
+      "store concise paraphrases only",
+      "rewrite boundary language conditionally"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
+    "status": "completed",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "queue_item_id": "queue_markdown_source_batch_002_register",
     "audit_id": "audit_markdown_source_batch_002",
-    "queue_type": "registration_backlog",
-    "priority_level": "low",
-    "priority_rationale": "Cleaned Markdown needs source-library registration before extraction review.",
-    "target_rule_families": [],
-    "target_gap_ids": ["gap_source_registration"],
+    "queue_type": "extraction_ready",
+    "priority_level": "high",
+    "priority_rationale": "Registered Liang Xiangrun textbook series ready for table-layer and use-god candidate extraction.",
+    "target_rule_families": [
+      "useful_god_candidate",
+      "pattern_strength",
+      "luck_cycle",
+      "ten_god_relation"
+    ],
+    "target_gap_ids": [
+      "gap_source_registration"
+    ],
     "risk_boundary": "ordinary",
-    "pre_extraction_checks": ["review batch manifest", "create or link source-library entry"],
-    "recommended_action": "register_source",
-    "depends_on": ["source_library_registration"],
-    "status": "planned",
+    "pre_extraction_checks": [
+      "confirm source-library alignment",
+      "cross-check use-god material across sources before promotion",
+      "store concise paraphrases only"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
+    "status": "completed",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "queue_item_id": "queue_markdown_source_batch_003_register",
     "audit_id": "audit_markdown_source_batch_003",
-    "queue_type": "registration_backlog",
+    "queue_type": "blocked_backlog",
     "priority_level": "low",
-    "priority_rationale": "Cleaned Markdown needs source-library registration before extraction review.",
+    "priority_rationale": "Registration deferred: all eight sources failed text conversion and require OCR before any processing.",
     "target_rule_families": [],
-    "target_gap_ids": ["gap_source_registration"],
+    "target_gap_ids": [
+      "gap_source_registration"
+    ],
     "risk_boundary": "ordinary",
-    "pre_extraction_checks": ["review batch manifest", "create or link source-library entry"],
-    "recommended_action": "register_source",
-    "depends_on": ["source_library_registration"],
-    "status": "planned",
+    "pre_extraction_checks": [
+      "review batch manifest",
+      "create or link source-library entry"
+    ],
+    "recommended_action": "defer",
+    "depends_on": [
+      "ocr_conversion"
+    ],
+    "status": "deferred",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "queue_item_id": "queue_blind_life_manual_risk_review",
@@ -133,12 +197,23 @@
     "queue_type": "risk_review_backlog",
     "priority_level": "high",
     "priority_rationale": "High-risk boundary review is required before extraction.",
-    "target_rule_families": ["blind_image_method", "high_risk_signal"],
-    "target_gap_ids": ["gap_high_risk_boundary"],
+    "target_rule_families": [
+      "blind_image_method",
+      "high_risk_signal"
+    ],
+    "target_gap_ids": [
+      "gap_high_risk_boundary"
+    ],
     "risk_boundary": "high_risk",
-    "pre_extraction_checks": ["complete risk boundary review", "reject absolute outcome wording", "store concise paraphrases only"],
+    "pre_extraction_checks": [
+      "complete risk boundary review",
+      "reject absolute outcome wording",
+      "store concise paraphrases only"
+    ],
     "recommended_action": "risk_review",
-    "depends_on": ["risk_review"],
+    "depends_on": [
+      "risk_review"
+    ],
     "status": "planned",
     "created_at": "2026-05-30",
     "updated_at": "2026-05-30"
@@ -149,12 +224,23 @@
     "queue_type": "risk_review_backlog",
     "priority_level": "low",
     "priority_rationale": "High-risk Jianghu-style boundary review is required before source preparation.",
-    "target_rule_families": ["remedy_boundary", "high_risk_signal"],
-    "target_gap_ids": ["gap_high_risk_boundary"],
+    "target_rule_families": [
+      "remedy_boundary",
+      "high_risk_signal"
+    ],
+    "target_gap_ids": [
+      "gap_high_risk_boundary"
+    ],
     "risk_boundary": "high_risk",
-    "pre_extraction_checks": ["complete risk boundary review", "reject paid-remedy pressure wording"],
+    "pre_extraction_checks": [
+      "complete risk boundary review",
+      "reject paid-remedy pressure wording"
+    ],
     "recommended_action": "risk_review",
-    "depends_on": ["risk_review", "cleaned_text"],
+    "depends_on": [
+      "risk_review",
+      "cleaned_text"
+    ],
     "status": "planned",
     "created_at": "2026-05-30",
     "updated_at": "2026-05-30"
@@ -165,12 +251,21 @@
     "queue_type": "risk_review_backlog",
     "priority_level": "high",
     "priority_rationale": "High-risk boundary review is required before life-risk material can be extracted safely.",
-    "target_rule_families": ["high_risk_signal"],
-    "target_gap_ids": ["gap_high_risk_boundary"],
+    "target_rule_families": [
+      "high_risk_signal"
+    ],
+    "target_gap_ids": [
+      "gap_high_risk_boundary"
+    ],
     "risk_boundary": "high_risk",
-    "pre_extraction_checks": ["complete risk boundary review", "reject precise lifespan claims"],
+    "pre_extraction_checks": [
+      "complete risk boundary review",
+      "reject precise lifespan claims"
+    ],
     "recommended_action": "risk_review",
-    "depends_on": ["risk_review"],
+    "depends_on": [
+      "risk_review"
+    ],
     "status": "planned",
     "created_at": "2026-05-30",
     "updated_at": "2026-05-30"
@@ -179,33 +274,57 @@
     "queue_item_id": "queue_markdown_source_batch_005_risk_review",
     "audit_id": "audit_markdown_source_batch_005",
     "queue_type": "risk_review_backlog",
-    "priority_level": "high",
-    "priority_rationale": "High-risk prepared batch needs identity and boundary review before extraction.",
-    "target_rule_families": ["high_risk_signal"],
-    "target_gap_ids": ["gap_high_risk_boundary"],
+    "priority_level": "medium",
+    "priority_rationale": "High-risk applied course notes need boundary review before candidate extraction can proceed.",
+    "target_rule_families": [
+      "ten_god_relation",
+      "blind_image_method",
+      "branch_interaction"
+    ],
+    "target_gap_ids": [
+      "gap_high_risk_boundary"
+    ],
     "risk_boundary": "high_risk",
-    "pre_extraction_checks": ["complete risk boundary review", "clarify source identity"],
+    "pre_extraction_checks": [
+      "confirm source-library alignment",
+      "convert relationship and health claims to bounded non-diagnostic indicators",
+      "cross-check applied rules against foundation sources before promotion",
+      "store concise paraphrases only"
+    ],
     "recommended_action": "risk_review",
-    "depends_on": ["risk_review", "identity_clarification"],
+    "depends_on": [
+      "risk_boundary_review"
+    ],
     "status": "planned",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "queue_item_id": "queue_markdown_source_batch_004_prepare",
     "audit_id": "audit_markdown_source_batch_004",
-    "queue_type": "preparation_backlog",
-    "priority_level": "medium",
-    "priority_rationale": "Possible edition variant needs locator review before source-library merge or extraction planning.",
-    "target_rule_families": [],
-    "target_gap_ids": ["gap_locator_review"],
+    "queue_type": "extraction_ready",
+    "priority_level": "high",
+    "priority_rationale": "Registered Liang Xiangrun advanced textbook series ready for use-god and branch-interaction candidate extraction.",
+    "target_rule_families": [
+      "useful_god_candidate",
+      "pattern_strength",
+      "branch_interaction",
+      "luck_cycle"
+    ],
+    "target_gap_ids": [
+      "gap_locator_review"
+    ],
     "risk_boundary": "sensitive",
-    "pre_extraction_checks": ["review locator anchors", "confirm edition-variant relationship"],
-    "recommended_action": "clarify_identity",
-    "depends_on": ["locator_review", "edition_variant_review"],
+    "pre_extraction_checks": [
+      "confirm source-library alignment",
+      "store concise paraphrases only",
+      "rewrite流年 and细批 boundary language conditionally"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
     "status": "planned",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "queue_item_id": "queue_blind_school_secret_blocked",
@@ -213,12 +332,23 @@
     "queue_type": "blocked_backlog",
     "priority_level": "deferred",
     "priority_rationale": "Source remains blocked until access and quotation boundaries are clarified.",
-    "target_rule_families": ["blind_image_method", "branch_interaction"],
-    "target_gap_ids": ["gap_source_access"],
+    "target_rule_families": [
+      "blind_image_method",
+      "branch_interaction"
+    ],
+    "target_gap_ids": [
+      "gap_source_access"
+    ],
     "risk_boundary": "sensitive",
-    "pre_extraction_checks": ["clarify source access", "review quotation boundary"],
+    "pre_extraction_checks": [
+      "clarify source access",
+      "review quotation boundary"
+    ],
     "recommended_action": "block",
-    "depends_on": ["source_access_clarification", "quotation_boundary_review"],
+    "depends_on": [
+      "source_access_clarification",
+      "quotation_boundary_review"
+    ],
     "status": "blocked",
     "created_at": "2026-05-30",
     "updated_at": "2026-05-30"
@@ -230,11 +360,17 @@
     "priority_level": "deferred",
     "priority_rationale": "Processing-status note is workflow metadata and is deferred from source extraction.",
     "target_rule_families": [],
-    "target_gap_ids": ["gap_non_source_note"],
+    "target_gap_ids": [
+      "gap_non_source_note"
+    ],
     "risk_boundary": "ordinary",
-    "pre_extraction_checks": ["keep as workflow metadata only"],
+    "pre_extraction_checks": [
+      "keep as workflow metadata only"
+    ],
     "recommended_action": "defer",
-    "depends_on": ["out_of_scope_non_source_note"],
+    "depends_on": [
+      "out_of_scope_non_source_note"
+    ],
     "status": "deferred",
     "created_at": "2026-05-30",
     "updated_at": "2026-05-30"

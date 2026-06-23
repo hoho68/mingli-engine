@@ -400,7 +400,7 @@ def test_load_source_library_entries_loads_current_registered_sources():
     entries = source_library.load_source_library_entries()
     by_id = {entry.entry_id: entry for entry in entries}
 
-    assert len(entries) == 9
+    assert len(entries) == 13
     assert set(by_id) == {
         "entry_northeast_blind_peak_pdf",
         "entry_duan_plain_mingxue_outline_pdf",
@@ -411,6 +411,10 @@ def test_load_source_library_entries_loads_current_registered_sources():
         "entry_fortune_reading_hongfu_qitian_pdf",
         "entry_immortal_fortune_jianghu_secret_pdf",
         "entry_life_death_book_100_pages_pdf",
+        "entry_markdown_source_batch_001",
+        "entry_markdown_source_batch_002_core",
+        "entry_markdown_source_batch_004",
+        "entry_markdown_source_batch_005",
     }
     assert by_id["entry_blind_life_manual_pdf"].material_id == (
         "material_blind_life_manual_pdf"
@@ -419,7 +423,7 @@ def test_load_source_library_entries_loads_current_registered_sources():
         "external_untracked"
     )
     assert by_id["entry_blind_life_manual_pdf"].readiness_status == (
-        "ready_for_extraction"
+        "needs_preparation"
     )
     assert "blind_image_method" in by_id["entry_blind_life_manual_pdf"].rule_families
     assert by_id["entry_life_death_book_100_pages_pdf"].risk_tier == "high_risk"
@@ -552,7 +556,7 @@ def test_load_source_priority_assessments_loads_default_assessments():
     assessments = source_library.load_source_priority_assessments()
     by_id = {assessment.assessment_id: assessment for assessment in assessments}
 
-    assert len(assessments) == 9
+    assert len(assessments) == 13
     assert "priority_blind_life_manual_001" in by_id
     assert by_id["priority_blind_life_manual_001"].entry_id == (
         "entry_blind_life_manual_pdf"
@@ -702,10 +706,10 @@ def test_list_next_source_candidates_orders_ready_sources_by_priority():
 
     assert next_sources == [
         "entry_northeast_blind_peak_pdf",
-        "entry_blind_life_manual_pdf",
         "entry_mingli_true_formula_teacher_pdf",
         "entry_life_death_book_100_pages_pdf",
-        "entry_duan_plain_mingxue_outline_pdf",
+        "entry_markdown_source_batch_002_core",
+        "entry_markdown_source_batch_001",
     ]
 
 

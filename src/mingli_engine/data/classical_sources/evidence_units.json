@@ -1381,5 +1381,29 @@
     "confidence": "weak",
     "source_quality": "review_note",
     "conflict_ids": []
+  },
+  {
+    "evidence_id": "batch002_useful_god_comparison_001",
+    "source_id": "markdown_source_batch_002_core",
+    "source_ref": "review-note:markdown_source_batch_002_core.md#useful-god-comparison",
+    "theme": "用神比较",
+    "rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "school": "梁湘润教材",
+    "summary": "Use-god selection should compare three structural approaches: pattern-based (Shen), seasonal adjustment (Yu), and bilateral preference (Yuanhai); keep as candidate with cross-source confirmation before promotion.",
+    "applicability": [
+      "five_elements_summary_available",
+      "month_pillar_available",
+      "structure_signals_available"
+    ],
+    "limitations": [
+      "Different use-god systems may produce different candidates; do not claim uniqueness.",
+      "Seasonal adjustment reasoning requires month-pillar data and should be stated conditionally.",
+      "Cross-source confirmation needed before promoting any single use-god selection as report evidence."
+    ],
+    "curation_batch_id": "batch_markdown_registration_001",
+    "confidence": "moderate",
+    "source_quality": "review_note",
+    "conflict_ids": []
   }
 ]

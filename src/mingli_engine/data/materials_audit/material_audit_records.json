@@ -2,18 +2,31 @@
   {
     "audit_id": "audit_northeast_blind_peak",
     "canonical_title": "Northeast Blind Peak",
-    "alternate_titles": ["东北盲派巅峰.pdf"],
+    "alternate_titles": [
+      "东北盲派巅峰.pdf"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "pdf",
-    "representations": ["repr_northeast_blind_peak_root_pdf"],
+    "representations": [
+      "repr_northeast_blind_peak_root_pdf"
+    ],
     "source_library_entry_id": "entry_northeast_blind_peak_pdf",
     "source_identity_confidence": "confirmed",
     "preparation_state": "ready_for_extraction_review",
     "source_boundary": "external_untracked",
-    "topic_tags": ["blind-school", "image-method", "structure"],
-    "rule_families": ["blind_image_method", "branch_interaction"],
+    "topic_tags": [
+      "blind-school",
+      "image-method",
+      "structure"
+    ],
+    "rule_families": [
+      "blind_image_method",
+      "branch_interaction"
+    ],
     "risk_tier": "sensitive",
-    "risk_notes": ["Image-method verdict language requires conditional rewrite."],
+    "risk_notes": [
+      "Image-method verdict language requires conditional rewrite."
+    ],
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "missing_prerequisites": [],
     "recommended_next_action": "extract_candidates",
@@ -24,16 +37,27 @@
   {
     "audit_id": "audit_duan_plain_mingxue_outline",
     "canonical_title": "Duan Plain Mingxue Outline",
-    "alternate_titles": ["段氏白話命學綱要（2014年，心一堂出版，段方撰，编号82132）.pdf"],
+    "alternate_titles": [
+      "段氏白話命學綱要（2014年，心一堂出版，段方撰，编号82132）.pdf"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "pdf",
-    "representations": ["repr_duan_plain_mingxue_outline_root_pdf"],
+    "representations": [
+      "repr_duan_plain_mingxue_outline_root_pdf"
+    ],
     "source_library_entry_id": "entry_duan_plain_mingxue_outline_pdf",
     "source_identity_confidence": "confirmed",
     "preparation_state": "ready_for_extraction_review",
     "source_boundary": "external_untracked",
-    "topic_tags": ["ten-god", "structure", "outline"],
-    "rule_families": ["ten_god_relation", "pattern_strength"],
+    "topic_tags": [
+      "ten-god",
+      "structure",
+      "outline"
+    ],
+    "rule_families": [
+      "ten_god_relation",
+      "pattern_strength"
+    ],
     "risk_tier": "ordinary",
     "risk_notes": [],
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
@@ -46,20 +70,36 @@
   {
     "audit_id": "audit_blind_school_secret",
     "canonical_title": "Blind School Secret",
-    "alternate_titles": ["盲派绝学.pdf"],
+    "alternate_titles": [
+      "盲派绝学.pdf"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "pdf",
-    "representations": ["repr_blind_school_secret_root_pdf"],
+    "representations": [
+      "repr_blind_school_secret_root_pdf"
+    ],
     "source_library_entry_id": "entry_blind_school_secret_pdf",
     "source_identity_confidence": "likely",
     "preparation_state": "blocked",
     "source_boundary": "external_untracked",
-    "topic_tags": ["blind-school", "combination", "image-method"],
-    "rule_families": ["blind_image_method", "branch_interaction"],
+    "topic_tags": [
+      "blind-school",
+      "combination",
+      "image-method"
+    ],
+    "rule_families": [
+      "blind_image_method",
+      "branch_interaction"
+    ],
     "risk_tier": "sensitive",
-    "risk_notes": ["Potential aphoristic verdict language requires boundary review."],
+    "risk_notes": [
+      "Potential aphoristic verdict language requires boundary review."
+    ],
     "rights_notes": "Do not copy long passages; clarify source access before use.",
-    "missing_prerequisites": ["source_access_clarification", "quotation_boundary_review"],
+    "missing_prerequisites": [
+      "source_access_clarification",
+      "quotation_boundary_review"
+    ],
     "recommended_next_action": "block",
     "outcome_reason": "Blocked until source access and quotation boundaries are clarified.",
     "created_at": "2026-05-30",
@@ -68,40 +108,70 @@
   {
     "audit_id": "audit_blind_life_manual",
     "canonical_title": "Blind Life Manual",
-    "alternate_titles": ["盲人断命秘典.pdf"],
+    "alternate_titles": [
+      "盲人断命秘典.pdf"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "pdf",
-    "representations": ["repr_blind_life_manual_root_pdf"],
+    "representations": [
+      "repr_blind_life_manual_root_pdf"
+    ],
     "source_library_entry_id": "entry_blind_life_manual_pdf",
     "source_identity_confidence": "confirmed",
-    "preparation_state": "ready_for_extraction_review",
+    "preparation_state": "prepared_text_available",
     "source_boundary": "external_untracked",
-    "topic_tags": ["blind-school", "image-method", "aphoristic-material"],
-    "rule_families": ["blind_image_method", "high_risk_signal"],
+    "topic_tags": [
+      "blind-school",
+      "image-method",
+      "aphoristic-material"
+    ],
+    "rule_families": [
+      "blind_image_method",
+      "high_risk_signal"
+    ],
     "risk_tier": "high_risk",
-    "risk_notes": ["Standalone verdict or life-risk wording must be rewritten as bounded traditional signals."],
+    "risk_notes": [
+      "Standalone verdict or life-risk wording must be rewritten as bounded traditional signals."
+    ],
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
-    "missing_prerequisites": [],
-    "recommended_next_action": "extract_candidates",
+    "missing_prerequisites": [
+      "cleaned_text"
+    ],
+    "recommended_next_action": "prepare_text",
     "outcome_reason": "",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "audit_id": "audit_mingli_true_formula_teacher",
     "canonical_title": "Mingli True Formula Teacher",
-    "alternate_titles": ["命理真诀师传.pdf"],
+    "alternate_titles": [
+      "命理真诀师传.pdf"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "pdf",
-    "representations": ["repr_mingli_true_formula_teacher_root_pdf"],
+    "representations": [
+      "repr_mingli_true_formula_teacher_root_pdf"
+    ],
     "source_library_entry_id": "entry_mingli_true_formula_teacher_pdf",
     "source_identity_confidence": "confirmed",
     "preparation_state": "ready_for_extraction_review",
     "source_boundary": "external_untracked",
-    "topic_tags": ["pattern", "strength", "useful-god", "luck-cycle"],
-    "rule_families": ["pattern_strength", "useful_god_candidate", "luck_cycle"],
+    "topic_tags": [
+      "pattern",
+      "strength",
+      "useful-god",
+      "luck-cycle"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "useful_god_candidate",
+      "luck_cycle"
+    ],
     "risk_tier": "sensitive",
-    "risk_notes": ["Timing material requires uncertainty and non-guaranteed wording."],
+    "risk_notes": [
+      "Timing material requires uncertainty and non-guaranteed wording."
+    ],
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "missing_prerequisites": [],
     "recommended_next_action": "extract_candidates",
@@ -112,16 +182,28 @@
   {
     "audit_id": "audit_mingxue_golden_voice",
     "canonical_title": "Mingxue Golden Voice",
-    "alternate_titles": ["命學金聲（2016，心一堂出版，黃雲樵作，编号150788）.pdf"],
+    "alternate_titles": [
+      "命學金聲（2016，心一堂出版，黃雲樵作，编号150788）.pdf"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "pdf",
-    "representations": ["repr_mingxue_golden_voice_root_pdf"],
+    "representations": [
+      "repr_mingxue_golden_voice_root_pdf"
+    ],
     "source_library_entry_id": "entry_mingxue_golden_voice_pdf",
     "source_identity_confidence": "confirmed",
     "preparation_state": "ready_for_extraction_review",
     "source_boundary": "external_untracked",
-    "topic_tags": ["five-element", "ten-god", "terminology"],
-    "rule_families": ["five_element_balance", "ten_god_relation", "pattern_strength"],
+    "topic_tags": [
+      "five-element",
+      "ten-god",
+      "terminology"
+    ],
+    "rule_families": [
+      "five_element_balance",
+      "ten_god_relation",
+      "pattern_strength"
+    ],
     "risk_tier": "ordinary",
     "risk_notes": [],
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
@@ -134,18 +216,31 @@
   {
     "audit_id": "audit_fortune_reading_hongfu_qitian",
     "canonical_title": "Fortune Reading Hongfu Qitian",
-    "alternate_titles": ["算命一讀通：鴻福齊天（2013年，心一堂出版，不空居士, 覺先居士合纂，编号85862）.pdf"],
+    "alternate_titles": [
+      "算命一讀通：鴻福齊天（2013年，心一堂出版，不空居士, 覺先居士合纂，编号85862）.pdf"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "pdf",
-    "representations": ["repr_fortune_reading_hongfu_qitian_root_pdf"],
+    "representations": [
+      "repr_fortune_reading_hongfu_qitian_root_pdf"
+    ],
     "source_library_entry_id": "entry_fortune_reading_hongfu_qitian_pdf",
     "source_identity_confidence": "confirmed",
     "preparation_state": "ready_for_extraction_review",
     "source_boundary": "external_untracked",
-    "topic_tags": ["practice", "remedy-boundary", "general-reading"],
-    "rule_families": ["remedy_boundary", "pattern_strength"],
+    "topic_tags": [
+      "practice",
+      "remedy-boundary",
+      "general-reading"
+    ],
+    "rule_families": [
+      "remedy_boundary",
+      "pattern_strength"
+    ],
     "risk_tier": "sensitive",
-    "risk_notes": ["Remedy language must avoid guaranteed effects or paid-pressure claims."],
+    "risk_notes": [
+      "Remedy language must avoid guaranteed effects or paid-pressure claims."
+    ],
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "missing_prerequisites": [],
     "recommended_next_action": "extract_candidates",
@@ -156,40 +251,67 @@
   {
     "audit_id": "audit_immortal_fortune_jianghu_secret",
     "canonical_title": "Immortal Fortune Jianghu Secret",
-    "alternate_titles": ["[神仙算命术江湖秘本.pdf"],
+    "alternate_titles": [
+      "[神仙算命术江湖秘本.pdf"
+    ],
     "material_scope": "mixed",
     "primary_material_type": "pdf",
-    "representations": ["repr_immortal_fortune_jianghu_secret_root_pdf"],
+    "representations": [
+      "repr_immortal_fortune_jianghu_secret_root_pdf"
+    ],
     "source_library_entry_id": "entry_immortal_fortune_jianghu_secret_pdf",
     "source_identity_confidence": "likely",
-    "preparation_state": "raw_available",
+    "preparation_state": "not_started",
     "source_boundary": "external_untracked",
-    "topic_tags": ["jianghu-style", "safety-review"],
-    "rule_families": ["remedy_boundary", "high_risk_signal"],
+    "topic_tags": [
+      "jianghu-style",
+      "safety-review"
+    ],
+    "rule_families": [
+      "remedy_boundary",
+      "high_risk_signal"
+    ],
     "risk_tier": "high_risk",
-    "risk_notes": ["Jianghu-style material may contain coercive or paid-remedy claims."],
+    "risk_notes": [
+      "Jianghu-style material may contain coercive or paid-remedy claims."
+    ],
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
-    "missing_prerequisites": ["safety_review", "cleaned_text"],
+    "missing_prerequisites": [
+      "cleaned_text",
+      "risk_review"
+    ],
     "recommended_next_action": "prepare_text",
     "outcome_reason": "",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "audit_id": "audit_life_death_book_100_pages",
     "canonical_title": "Life Death Book 100 Pages",
-    "alternate_titles": ["2800.《命理生死之书》100页.pdf"],
+    "alternate_titles": [
+      "2800.《命理生死之书》100页.pdf"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "pdf",
-    "representations": ["repr_life_death_book_100_pages_root_pdf"],
+    "representations": [
+      "repr_life_death_book_100_pages_root_pdf"
+    ],
     "source_library_entry_id": "entry_life_death_book_100_pages_pdf",
     "source_identity_confidence": "confirmed",
     "preparation_state": "ready_for_extraction_review",
     "source_boundary": "external_untracked",
-    "topic_tags": ["life-death", "high-risk", "boundary"],
-    "rule_families": ["high_risk_signal"],
+    "topic_tags": [
+      "life-death",
+      "high-risk",
+      "boundary"
+    ],
+    "rule_families": [
+      "high_risk_signal"
+    ],
     "risk_tier": "high_risk",
-    "risk_notes": ["Life-death material must never support exact timing or lifespan claims."],
+    "risk_notes": [
+      "Life-death material must never support exact timing or lifespan claims."
+    ],
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "missing_prerequisites": [],
     "recommended_next_action": "extract_candidates",
@@ -200,7 +322,10 @@
   {
     "audit_id": "audit_markdown_source_batch_001",
     "canonical_title": "Markdown Source Batch 001",
-    "alternate_titles": ["Markdown/source_batch_001", "Markdown/source_batch_001_cleaned"],
+    "alternate_titles": [
+      "Markdown/source_batch_001",
+      "Markdown/source_batch_001_cleaned"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "markdown",
     "representations": [
@@ -208,25 +333,37 @@
       "repr_markdown_source_batch_001_cleaned",
       "repr_markdown_source_batch_001_learning_note"
     ],
-    "source_library_entry_id": "",
-    "source_identity_confidence": "uncertain",
-    "preparation_state": "cleaned_text_available",
+    "source_library_entry_id": "entry_markdown_source_batch_001",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "ready_for_extraction_review",
     "source_boundary": "external_untracked",
-    "topic_tags": ["prepared-batch", "cleaned-text"],
-    "rule_families": [],
+    "topic_tags": [
+      "prepared-batch",
+      "cleaned-text"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "branch_interaction",
+      "blind_image_method",
+      "high_risk_signal"
+    ],
     "risk_tier": "ordinary",
     "risk_notes": [],
     "rights_notes": "Prepared text remains source-preparation material; do not copy long passages.",
-    "missing_prerequisites": ["source_library_alignment_review"],
-    "recommended_next_action": "register_source",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
     "outcome_reason": "",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "audit_id": "audit_markdown_source_batch_002",
     "canonical_title": "Markdown Source Batch 002",
-    "alternate_titles": ["Markdown/source_batch_002", "Markdown/source_batch_002_cleaned"],
+    "alternate_titles": [
+      "Markdown/source_batch_002",
+      "Markdown/source_batch_002_cleaned"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "markdown",
     "representations": [
@@ -234,25 +371,36 @@
       "repr_markdown_source_batch_002_cleaned",
       "repr_markdown_source_batch_002_learning_note"
     ],
-    "source_library_entry_id": "",
-    "source_identity_confidence": "uncertain",
-    "preparation_state": "cleaned_text_available",
+    "source_library_entry_id": "entry_markdown_source_batch_002_core",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "ready_for_extraction_review",
     "source_boundary": "external_untracked",
-    "topic_tags": ["prepared-batch", "cleaned-text"],
-    "rule_families": [],
+    "topic_tags": [
+      "prepared-batch",
+      "cleaned-text"
+    ],
+    "rule_families": [
+      "useful_god_candidate",
+      "pattern_strength",
+      "luck_cycle",
+      "ten_god_relation"
+    ],
     "risk_tier": "ordinary",
     "risk_notes": [],
     "rights_notes": "Prepared text remains source-preparation material; do not copy long passages.",
-    "missing_prerequisites": ["source_library_alignment_review"],
-    "recommended_next_action": "register_source",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
     "outcome_reason": "",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "audit_id": "audit_markdown_source_batch_003",
     "canonical_title": "Markdown Source Batch 003",
-    "alternate_titles": ["Markdown/source_batch_003", "Markdown/source_batch_003_cleaned"],
+    "alternate_titles": [
+      "Markdown/source_batch_003",
+      "Markdown/source_batch_003_cleaned"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "markdown",
     "representations": [
@@ -262,23 +410,32 @@
     ],
     "source_library_entry_id": "",
     "source_identity_confidence": "uncertain",
-    "preparation_state": "cleaned_text_available",
+    "preparation_state": "deferred",
     "source_boundary": "external_untracked",
-    "topic_tags": ["prepared-batch", "cleaned-text"],
+    "topic_tags": [
+      "prepared-batch",
+      "cleaned-text"
+    ],
     "rule_families": [],
     "risk_tier": "ordinary",
     "risk_notes": [],
     "rights_notes": "Prepared text remains source-preparation material; do not copy long passages.",
-    "missing_prerequisites": ["source_library_alignment_review"],
-    "recommended_next_action": "register_source",
-    "outcome_reason": "",
+    "missing_prerequisites": [
+      "ocr_conversion",
+      "source_library_registration"
+    ],
+    "recommended_next_action": "defer",
+    "outcome_reason": "All eight sources failed text conversion; OCR required before registration or extraction can proceed.",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "audit_id": "audit_markdown_source_batch_004",
     "canonical_title": "Markdown Source Batch 004",
-    "alternate_titles": ["Markdown/source_batch_004", "Markdown/source_batch_004_cleaned"],
+    "alternate_titles": [
+      "Markdown/source_batch_004",
+      "Markdown/source_batch_004_cleaned"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "markdown",
     "representations": [
@@ -286,25 +443,39 @@
       "repr_markdown_source_batch_004_cleaned",
       "repr_markdown_source_batch_004_learning_note"
     ],
-    "source_library_entry_id": "",
-    "source_identity_confidence": "uncertain",
-    "preparation_state": "cleaned_text_available",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "ready_for_extraction_review",
     "source_boundary": "external_untracked",
-    "topic_tags": ["prepared-batch", "cleaned-text"],
-    "rule_families": [],
+    "topic_tags": [
+      "prepared-batch",
+      "cleaned-text"
+    ],
+    "rule_families": [
+      "useful_god_candidate",
+      "pattern_strength",
+      "branch_interaction",
+      "luck_cycle",
+      "ten_god_relation"
+    ],
     "risk_tier": "sensitive",
-    "risk_notes": ["Prepared batch may include timing or remedy boundary material."],
+    "risk_notes": [
+      "Prepared batch may include timing or remedy boundary material."
+    ],
     "rights_notes": "Prepared text remains source-preparation material; do not copy long passages.",
-    "missing_prerequisites": ["source_library_alignment_review"],
-    "recommended_next_action": "register_source",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
     "outcome_reason": "",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "audit_id": "audit_markdown_source_batch_005",
     "canonical_title": "Markdown Source Batch 005",
-    "alternate_titles": ["Markdown/source_batch_005", "Markdown/source_batch_005_cleaned"],
+    "alternate_titles": [
+      "Markdown/source_batch_005",
+      "Markdown/source_batch_005_cleaned"
+    ],
     "material_scope": "mixed",
     "primary_material_type": "markdown",
     "representations": [
@@ -312,38 +483,61 @@
       "repr_markdown_source_batch_005_cleaned",
       "repr_markdown_source_batch_005_learning_note"
     ],
-    "source_library_entry_id": "",
-    "source_identity_confidence": "uncertain",
-    "preparation_state": "cleaned_text_available",
+    "source_library_entry_id": "entry_markdown_source_batch_005",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "prepared_text_available",
     "source_boundary": "external_untracked",
-    "topic_tags": ["prepared-batch", "cleaned-text", "risk-review"],
-    "rule_families": [],
+    "topic_tags": [
+      "prepared-batch",
+      "cleaned-text",
+      "risk-review"
+    ],
+    "rule_families": [
+      "ten_god_relation",
+      "blind_image_method",
+      "branch_interaction",
+      "luck_cycle",
+      "high_risk_signal"
+    ],
     "risk_tier": "high_risk",
-    "risk_notes": ["Prepared batch may include life-risk or absolute-outcome language requiring safety review."],
+    "risk_notes": [
+      "Prepared batch may include life-risk or absolute-outcome language requiring safety review."
+    ],
     "rights_notes": "Prepared text remains source-preparation material; do not copy long passages.",
-    "missing_prerequisites": ["source_library_alignment_review", "risk_review"],
-    "recommended_next_action": "register_source",
+    "missing_prerequisites": [
+      "risk_boundary_review"
+    ],
+    "recommended_next_action": "risk_review",
     "outcome_reason": "",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-23"
   },
   {
     "audit_id": "audit_source_processing_status",
     "canonical_title": "Source Processing Status",
-    "alternate_titles": ["资料整理/source_processing_status.md"],
+    "alternate_titles": [
+      "资料整理/source_processing_status.md"
+    ],
     "material_scope": "mixed",
     "primary_material_type": "note",
-    "representations": ["repr_source_processing_status_note"],
+    "representations": [
+      "repr_source_processing_status_note"
+    ],
     "source_library_entry_id": "",
     "source_identity_confidence": "confirmed",
     "preparation_state": "notes_available",
     "source_boundary": "external_untracked",
-    "topic_tags": ["processing-status", "maintainer-note"],
+    "topic_tags": [
+      "processing-status",
+      "maintainer-note"
+    ],
     "rule_families": [],
     "risk_tier": "ordinary",
     "risk_notes": [],
     "rights_notes": "Maintainer status note only; do not treat as formal evidence.",
-    "missing_prerequisites": ["source_library_alignment_review"],
+    "missing_prerequisites": [
+      "source_library_alignment_review"
+    ],
     "recommended_next_action": "no_action",
     "outcome_reason": "",
     "created_at": "2026-05-30",
@@ -352,15 +546,23 @@
   {
     "audit_id": "audit_knowledge_skeleton",
     "canonical_title": "Knowledge Skeleton",
-    "alternate_titles": ["资料整理/knowledge_skeleton/"],
+    "alternate_titles": [
+      "资料整理/knowledge_skeleton/"
+    ],
     "material_scope": "bazi",
     "primary_material_type": "mixed",
-    "representations": ["repr_knowledge_skeleton_folder"],
+    "representations": [
+      "repr_knowledge_skeleton_folder"
+    ],
     "source_library_entry_id": "",
     "source_identity_confidence": "confirmed",
     "preparation_state": "candidate_skeleton_available",
     "source_boundary": "external_untracked",
-    "topic_tags": ["knowledge-skeleton", "candidate-extraction-queue", "review-notes"],
+    "topic_tags": [
+      "knowledge-skeleton",
+      "candidate-extraction-queue",
+      "review-notes"
+    ],
     "rule_families": [
       "pattern_strength",
       "useful_god_candidate",
@@ -369,9 +571,14 @@
       "high_risk_signal"
     ],
     "risk_tier": "sensitive",
-    "risk_notes": ["Skeleton contains review planning for high-risk boundaries, not approved evidence."],
+    "risk_notes": [
+      "Skeleton contains review planning for high-risk boundaries, not approved evidence."
+    ],
     "rights_notes": "Derived skeleton remains preparation metadata until later review promotes evidence.",
-    "missing_prerequisites": ["source_library_alignment_review", "candidate_review"],
+    "missing_prerequisites": [
+      "source_library_alignment_review",
+      "candidate_review"
+    ],
     "recommended_next_action": "review_cleaned_text",
     "outcome_reason": "",
     "created_at": "2026-05-30",

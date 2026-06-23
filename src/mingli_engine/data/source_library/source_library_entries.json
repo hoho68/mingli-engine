@@ -7,12 +7,21 @@
     "local_reference": "northeast_blind_peak.pdf",
     "tracking_status": "external_untracked",
     "readiness_status": "ready_for_extraction",
-    "topic_tags": ["blind-school", "image-method", "structure"],
-    "rule_families": ["blind_image_method", "branch_interaction"],
+    "topic_tags": [
+      "blind-school",
+      "image-method",
+      "structure"
+    ],
+    "rule_families": [
+      "blind_image_method",
+      "branch_interaction"
+    ],
     "source_quality_notes": "Partially reviewed source with candidate image-method material.",
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "risk_tier": "sensitive",
-    "risk_notes": ["May contain image-method verdict language requiring conditional rewrite."],
+    "risk_notes": [
+      "May contain image-method verdict language requiring conditional rewrite."
+    ],
     "priority_level": "high",
     "next_action": "extract_candidates",
     "outcome_reason": "",
@@ -27,8 +36,15 @@
     "local_reference": "duan_plain_mingxue_outline.pdf",
     "tracking_status": "external_untracked",
     "readiness_status": "ready_for_extraction",
-    "topic_tags": ["ten-god", "structure", "outline"],
-    "rule_families": ["ten_god_relation", "pattern_strength"],
+    "topic_tags": [
+      "ten-god",
+      "structure",
+      "outline"
+    ],
+    "rule_families": [
+      "ten_god_relation",
+      "pattern_strength"
+    ],
     "source_quality_notes": "Partially reviewed source with structural relation material.",
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "risk_tier": "ordinary",
@@ -47,12 +63,21 @@
     "local_reference": "blind_school_secret.pdf",
     "tracking_status": "external_untracked",
     "readiness_status": "blocked",
-    "topic_tags": ["blind-school", "combination", "image-method"],
-    "rule_families": ["blind_image_method", "branch_interaction"],
+    "topic_tags": [
+      "blind-school",
+      "combination",
+      "image-method"
+    ],
+    "rule_families": [
+      "blind_image_method",
+      "branch_interaction"
+    ],
     "source_quality_notes": "Requires rights and locator clarification before further extraction.",
     "rights_notes": "Do not copy long passages; clarify source access before use.",
     "risk_tier": "sensitive",
-    "risk_notes": ["Potential aphoristic or image-method verdict language."],
+    "risk_notes": [
+      "Potential aphoristic or image-method verdict language."
+    ],
     "priority_level": "deferred",
     "next_action": "block",
     "outcome_reason": "Blocked until source access and quotation boundaries are clarified.",
@@ -66,18 +91,27 @@
     "material_type": "pdf",
     "local_reference": "blind_life_manual.pdf",
     "tracking_status": "external_untracked",
-    "readiness_status": "ready_for_extraction",
-    "topic_tags": ["blind-school", "image-method", "aphoristic-material"],
-    "rule_families": ["blind_image_method", "high_risk_signal"],
+    "readiness_status": "needs_preparation",
+    "topic_tags": [
+      "blind-school",
+      "image-method",
+      "aphoristic-material"
+    ],
+    "rule_families": [
+      "blind_image_method",
+      "high_risk_signal"
+    ],
     "source_quality_notes": "Indexed aphoristic material; usable only after conditional rewrite and locator review.",
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "risk_tier": "high_risk",
-    "risk_notes": ["May contain standalone verdict or life-risk language."],
+    "risk_notes": [
+      "May contain standalone verdict or life-risk language."
+    ],
     "priority_level": "high",
-    "next_action": "extract_candidates",
+    "next_action": "prepare_material",
     "outcome_reason": "",
     "created_at": "2026-05-28",
-    "updated_at": "2026-05-28"
+    "updated_at": "2026-06-23"
   },
   {
     "entry_id": "entry_mingli_true_formula_teacher_pdf",
@@ -87,12 +121,23 @@
     "local_reference": "mingli_true_formula_teacher.pdf",
     "tracking_status": "external_untracked",
     "readiness_status": "ready_for_extraction",
-    "topic_tags": ["pattern", "strength", "useful-god", "luck-cycle"],
-    "rule_families": ["pattern_strength", "useful_god_candidate", "luck_cycle"],
+    "topic_tags": [
+      "pattern",
+      "strength",
+      "useful-god",
+      "luck-cycle"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "useful_god_candidate",
+      "luck_cycle"
+    ],
     "source_quality_notes": "Partially reviewed source with pattern, strength, useful-god, and timing material.",
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "risk_tier": "sensitive",
-    "risk_notes": ["Timing material requires uncertainty and non-guaranteed wording."],
+    "risk_notes": [
+      "Timing material requires uncertainty and non-guaranteed wording."
+    ],
     "priority_level": "high",
     "next_action": "extract_candidates",
     "outcome_reason": "",
@@ -107,8 +152,16 @@
     "local_reference": "mingxue_golden_voice.pdf",
     "tracking_status": "external_untracked",
     "readiness_status": "ready_for_extraction",
-    "topic_tags": ["five-element", "ten-god", "terminology"],
-    "rule_families": ["five_element_balance", "ten_god_relation", "pattern_strength"],
+    "topic_tags": [
+      "five-element",
+      "ten-god",
+      "terminology"
+    ],
+    "rule_families": [
+      "five_element_balance",
+      "ten_god_relation",
+      "pattern_strength"
+    ],
     "source_quality_notes": "Partially reviewed terminology and structure source.",
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "risk_tier": "ordinary",
@@ -127,12 +180,21 @@
     "local_reference": "fortune_reading_hongfu_qitian.pdf",
     "tracking_status": "external_untracked",
     "readiness_status": "ready_for_extraction",
-    "topic_tags": ["practice", "remedy-boundary", "general-reading"],
-    "rule_families": ["remedy_boundary", "pattern_strength"],
+    "topic_tags": [
+      "practice",
+      "remedy-boundary",
+      "general-reading"
+    ],
+    "rule_families": [
+      "remedy_boundary",
+      "pattern_strength"
+    ],
     "source_quality_notes": "Partially reviewed general-practice source useful for remedy-boundary notes.",
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "risk_tier": "sensitive",
-    "risk_notes": ["Remedy language must avoid guaranteed effects or paid-pressure claims."],
+    "risk_notes": [
+      "Remedy language must avoid guaranteed effects or paid-pressure claims."
+    ],
     "priority_level": "medium",
     "next_action": "extract_candidates",
     "outcome_reason": "",
@@ -147,17 +209,25 @@
     "local_reference": "immortal_fortune_jianghu_secret.pdf",
     "tracking_status": "external_untracked",
     "readiness_status": "needs_preparation",
-    "topic_tags": ["jianghu-style", "safety-review"],
-    "rule_families": ["remedy_boundary", "high_risk_signal"],
+    "topic_tags": [
+      "jianghu-style",
+      "safety-review"
+    ],
+    "rule_families": [
+      "remedy_boundary",
+      "high_risk_signal"
+    ],
     "source_quality_notes": "Not started; requires safety review before candidate extraction.",
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "risk_tier": "high_risk",
-    "risk_notes": ["Jianghu-style material may contain coercive or paid-remedy claims."],
+    "risk_notes": [
+      "Jianghu-style material may contain coercive or paid-remedy claims."
+    ],
     "priority_level": "low",
     "next_action": "prepare_material",
     "outcome_reason": "",
     "created_at": "2026-05-28",
-    "updated_at": "2026-05-28"
+    "updated_at": "2026-06-23"
   },
   {
     "entry_id": "entry_life_death_book_100_pages_pdf",
@@ -167,16 +237,164 @@
     "local_reference": "life_death_book_100_pages.pdf",
     "tracking_status": "external_untracked",
     "readiness_status": "ready_for_extraction",
-    "topic_tags": ["life-death", "high-risk", "boundary"],
-    "rule_families": ["high_risk_signal"],
+    "topic_tags": [
+      "life-death",
+      "high-risk",
+      "boundary"
+    ],
+    "rule_families": [
+      "high_risk_signal"
+    ],
     "source_quality_notes": "Partially reviewed high-risk material usable only as bounded traditional signal input.",
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "risk_tier": "high_risk",
-    "risk_notes": ["Life-death material must never support exact timing or lifespan claims."],
+    "risk_notes": [
+      "Life-death material must never support exact timing or lifespan claims."
+    ],
     "priority_level": "high",
     "next_action": "extract_candidates",
     "outcome_reason": "",
     "created_at": "2026-05-28",
     "updated_at": "2026-05-28"
+  },
+  {
+    "entry_id": "entry_markdown_source_batch_002_core",
+    "material_id": "material_markdown_source_batch_002_core",
+    "title": "Markdown Source Batch 002 Core (梁湘润子平教材系列 + 阴阳五行预知学 + 命理讲义)",
+    "material_type": "markdown",
+    "local_reference": "Markdown/source_batch_002_cleaned",
+    "tracking_status": "project_tracked",
+    "readiness_status": "ready_for_extraction",
+    "topic_tags": [
+      "foundation",
+      "useful-god",
+      "pattern-strength",
+      "luck-cycle",
+      "ten-god"
+    ],
+    "rule_families": [
+      "useful_god_candidate",
+      "pattern_strength",
+      "luck_cycle",
+      "ten_god_relation"
+    ],
+    "source_quality_notes": "Six cleaned Markdown sources from Liang Xiangrun Ziping textbook series plus applied theory manuals; strong term density and table-layer content.",
+    "rights_notes": "Prepared text remains source-preparation material; store concise paraphrases only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "extract_candidates",
+    "outcome_reason": "",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "entry_id": "entry_markdown_source_batch_001",
+    "material_id": "material_markdown_source_batch_001",
+    "title": "Markdown Source Batch 001 (子平基础概要, 悠然大仙, 天马易学, 中原盲派, 寿终取象)",
+    "material_type": "markdown",
+    "local_reference": "Markdown/source_batch_001_cleaned",
+    "tracking_status": "project_tracked",
+    "readiness_status": "ready_for_extraction",
+    "topic_tags": [
+      "foundation",
+      "ten-god",
+      "pattern-strength",
+      "stems-branches",
+      "blind-school",
+      "image-method",
+      "high-risk-boundary"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "branch_interaction",
+      "blind_image_method",
+      "high_risk_signal"
+    ],
+    "source_quality_notes": "Five cleaned Markdown sources: three foundation/applied-notes (ordinary risk) and two blind-school/life-risk boundary sources (sensitive). Text is readable and term-rich.",
+    "rights_notes": "Prepared text remains source-preparation material; store concise paraphrases only. Life-risk material must become bounded non-diagnostic indicators.",
+    "risk_tier": "sensitive",
+    "risk_notes": [
+      "May contain image-method verdict language requiring conditional rewrite.",
+      "Life-risk aphoristic material must be converted to bounded non-diagnostic risk indicators."
+    ],
+    "priority_level": "high",
+    "next_action": "extract_candidates",
+    "outcome_reason": "",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "entry_id": "entry_markdown_source_batch_005",
+    "material_id": "material_markdown_source_batch_005",
+    "title": "Markdown Source Batch 005 (Wuyang 八字高阶课程笔记)",
+    "material_type": "markdown",
+    "local_reference": "Markdown/source_batch_005_cleaned",
+    "tracking_status": "project_tracked",
+    "readiness_status": "ready_for_extraction",
+    "topic_tags": [
+      "ten-god",
+      "blind-school",
+      "branch-interaction",
+      "luck-cycle",
+      "high-risk-boundary"
+    ],
+    "rule_families": [
+      "ten_god_relation",
+      "blind_image_method",
+      "branch_interaction",
+      "luck_cycle",
+      "high_risk_signal"
+    ],
+    "source_quality_notes": "Sixteen cleaned Markdown course-note files covering Wuyang applied八字 curriculum; text is readable with practical取象 examples.",
+    "rights_notes": "Prepared text remains source-preparation material; store concise paraphrases only.",
+    "risk_tier": "high_risk",
+    "risk_notes": [
+      "Contains relationship, illness, disaster, and gendered claims requiring conditional non-diagnostic language.",
+      "Applied取象 notes must be cross-checked against foundation sources before promotion."
+    ],
+    "priority_level": "medium",
+    "next_action": "extract_candidates",
+    "outcome_reason": "",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "entry_id": "entry_markdown_source_batch_004",
+    "material_id": "material_markdown_source_batch_004",
+    "title": "Markdown Source Batch 004 (梁湘润渊海喜忌/沈氏用神/余氏用神/四角方阵/天元巫咸/女命/流年法典/细批终身)",
+    "material_type": "markdown",
+    "local_reference": "Markdown/source_batch_004_cleaned",
+    "tracking_status": "project_tracked",
+    "readiness_status": "ready_for_extraction",
+    "topic_tags": [
+      "useful-god",
+      "pattern-strength",
+      "branch-interaction",
+      "luck-cycle",
+      "ten-god",
+      "high-risk-boundary"
+    ],
+    "rule_families": [
+      "useful_god_candidate",
+      "pattern_strength",
+      "branch_interaction",
+      "luck_cycle",
+      "ten_god_relation",
+      "high_risk_signal"
+    ],
+    "source_quality_notes": "Nine cleaned Markdown sources from Liang Xiangrun advanced textbook series; strong term density across use-god, pattern, branch interaction, and luck-cycle domains.",
+    "rights_notes": "Prepared text remains source-preparation material; store concise paraphrases only.",
+    "risk_tier": "sensitive",
+    "risk_notes": [
+      "Contains流年法典 and细批终身 material with death, illness, and disaster language requiring conditional rewrite.",
+      "Female-destiny and relationship material requires sensitive non-deterministic language."
+    ],
+    "priority_level": "high",
+    "next_action": "extract_candidates",
+    "outcome_reason": "",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
   }
 ]

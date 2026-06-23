@@ -156,5 +156,100 @@
     "status": "planned",
     "created_at": "2026-06-01",
     "updated_at": "2026-06-01"
+  },
+  {
+    "task_id": "task_markdown_batch_002_core_extract_001",
+    "package_id": "package_markdown_batch_registration_001",
+    "queue_item_id": "queue_markdown_source_batch_002_register",
+    "audit_id": "audit_markdown_source_batch_002",
+    "source_library_entry_id": "entry_markdown_source_batch_002_core",
+    "intended_source_material_id": "material_markdown_source_batch_002_core",
+    "priority_level": "high",
+    "priority_rationale": "Liang Xiangrun textbook series provides strong table-layer and use-god comparison material.",
+    "target_rule_families": [
+      "useful_god_candidate",
+      "pattern_strength",
+      "luck_cycle",
+      "ten_god_relation"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "locator_requirement": "page_or_section",
+    "source_quality_note": "Six cleaned Markdown sources with high term density; confirm page or section locator during manual extraction.",
+    "rights_note": "Store concise paraphrases only; prepared text is not approved source material.",
+    "pre_extraction_checks": [
+      "confirm source-library alignment",
+      "cross-check use-god material across sources before promotion",
+      "store concise paraphrases only"
+    ],
+    "overlap_warnings": [],
+    "recommended_action": "extract_candidates",
+    "status": "planned",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "task_id": "task_markdown_batch_001_extract_001",
+    "package_id": "package_markdown_batch_registration_001",
+    "queue_item_id": "queue_markdown_source_batch_001_register",
+    "audit_id": "audit_markdown_source_batch_001",
+    "source_library_entry_id": "entry_markdown_source_batch_001",
+    "intended_source_material_id": "material_markdown_source_batch_001",
+    "priority_level": "high",
+    "priority_rationale": "Cleaned foundation, applied-notes, and blind-school boundary sources ready for structural taxonomy and image-method extraction.",
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "branch_interaction",
+      "blind_image_method"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "sensitive",
+    "locator_requirement": "page_or_section",
+    "source_quality_note": "Five cleaned Markdown sources; confirm page or section locator during manual extraction.",
+    "rights_note": "Store concise paraphrases only; life-risk material must become bounded non-diagnostic indicators.",
+    "pre_extraction_checks": [
+      "confirm source-library alignment",
+      "store concise paraphrases only",
+      "rewrite boundary language conditionally"
+    ],
+    "overlap_warnings": [
+      "May overlap with existing blind_image_method candidates from northeast_blind_peak; check for duplication."
+    ],
+    "recommended_action": "extract_candidates",
+    "status": "planned",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
+  },
+  {
+    "task_id": "task_markdown_batch_004_extract_001",
+    "package_id": "package_markdown_batch_registration_001",
+    "queue_item_id": "queue_markdown_source_batch_004_prepare",
+    "audit_id": "audit_markdown_source_batch_004",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "intended_source_material_id": "material_markdown_source_batch_004",
+    "priority_level": "high",
+    "priority_rationale": "Liang Xiangrun advanced textbook series ready for use-god and branch-interaction extraction.",
+    "target_rule_families": [
+      "useful_god_candidate",
+      "pattern_strength",
+      "branch_interaction",
+      "luck_cycle"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "sensitive",
+    "locator_requirement": "page_or_section",
+    "source_quality_note": "Nine cleaned Markdown sources with high term density; confirm section locator during manual extraction.",
+    "rights_note": "Store concise paraphrases only; life-risk boundary material must become bounded non-diagnostic indicators.",
+    "pre_extraction_checks": [
+      "confirm source-library alignment",
+      "store concise paraphrases only",
+      "rewrite流年 and细批 boundary language conditionally"
+    ],
+    "overlap_warnings": [],
+    "recommended_action": "extract_candidates",
+    "status": "planned",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
   }
 ]

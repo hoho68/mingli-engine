@@ -5077,6 +5077,7 @@ def test_learning_reference_intake_decisions_do_not_change_candidate_or_formal_e
         "lp_duan_ten_god_relation_001",
         "lp_mingxue_five_element_balance_001",
         "lp_hongfu_remedy_boundary_001",
+        "lp_markdown_batch_002_useful_god_001",
     }
     assert {decision.decision_id for decision in decisions} == {
         "decision_northeast_blind_image_001",
@@ -5084,6 +5085,7 @@ def test_learning_reference_intake_decisions_do_not_change_candidate_or_formal_e
         "decision_duan_ten_god_relation_001",
         "decision_mingxue_five_element_balance_001",
         "decision_hongfu_remedy_boundary_001",
+        "decision_markdown_batch_002_useful_god_001",
     }
     assert {
         candidate.candidate_id for candidate in source_intake.load_candidate_extracts()
@@ -5114,16 +5116,13 @@ def test_learning_reference_prerequisite_actions_do_not_change_formal_evidence_c
     assert points
     assert decisions
     assert {action.action_note_id for action in action_notes} == {
-        "action_markdown_batch_001_registration_001",
         "action_blind_life_manual_risk_review_001",
         "action_blind_school_secret_blocked_001",
-        "action_markdown_batch_002_registration_001",
         "action_markdown_batch_003_registration_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
         "action_markdown_batch_005_risk_review_001",
-        "action_markdown_batch_004_locator_review_001",
-        "action_source_processing_status_deferred_001",
+                "action_source_processing_status_deferred_001",
         "action_knowledge_skeleton_preparation_001",
     }
     assert summary.formal_evidence_delta == 0

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 
-SOURCE_TYPES = frozenset({"pdf"})
+SOURCE_TYPES = frozenset({"pdf", "markdown"})
 EXTRACTION_STATUSES = frozenset({"not_started", "converted", "partial", "failed"})
 REVIEW_STATUSES = frozenset({"unreviewed", "reviewed", "approved", "blocked"})
 REPORT_USABLE_REVIEW_STATUS = "approved"

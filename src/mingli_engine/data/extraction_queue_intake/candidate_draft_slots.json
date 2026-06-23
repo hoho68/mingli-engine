@@ -92,5 +92,63 @@
       "State limitations for general-practice material."
     ],
     "status": "planned"
+  },
+  {
+    "draft_slot_id": "slot_markdown_batch_002_useful_god_001",
+    "task_id": "task_markdown_batch_002_core_extract_001",
+    "intended_candidate_label": "Markdown Batch 002 Core useful-god comparison candidate",
+    "target_rule_family": "useful_god_candidate",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Record exact source locator during manual extraction.",
+      "Cross-check use-god reasoning across Shen/Yu/Yuanhai sources before candidate review."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep use-god material as source-backed structural reasoning.",
+      "Do not promote timing or outcome claims without cross-source confirmation."
+    ],
+    "status": "planned"
+  },
+  {
+    "draft_slot_id": "slot_markdown_batch_001_pattern_strength_001",
+    "task_id": "task_markdown_batch_001_extract_001",
+    "intended_candidate_label": "Markdown Batch 001 structural taxonomy and image-method candidate",
+    "target_rule_family": "pattern_strength",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Record exact source locator during manual extraction.",
+      "Separate structural taxonomy from applied outcome claims before candidate review."
+    ],
+    "risk_boundary": "sensitive",
+    "safety_requirements": [
+      "State uncertainty and school dependency.",
+      "Include limitation notes; this is not a standalone verdict.",
+      "Keep terminology as source-backed taxonomy.",
+      "Convert life-risk aphorisms to bounded non-diagnostic indicators.",
+      "No absolute destiny language."
+    ],
+    "status": "planned"
+  },
+  {
+    "draft_slot_id": "slot_markdown_batch_004_branch_interaction_001",
+    "task_id": "task_markdown_batch_004_extract_001",
+    "intended_candidate_label": "Markdown Batch 004 branch interaction and four-corner formation candidate",
+    "target_rule_family": "branch_interaction",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Record exact source locator during manual extraction.",
+      "Capture structural scope and conditional trigger notes before candidate review."
+    ],
+    "risk_boundary": "sensitive",
+    "safety_requirements": [
+      "State uncertainty and school dependency for interaction triggers.",
+      "Include limitation notes; interaction patterns are not standalone verdicts.",
+      "Keep as structural taxonomy, not deterministic outcome predictions."
+    ],
+    "status": "planned"
   }
 ]

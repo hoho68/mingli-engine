@@ -14,7 +14,6 @@
       "task_mingli_true_formula_teacher_extract_001"
     ],
     "backlog_record_ids": [
-      "backlog_markdown_batch_001_registration_001",
       "backlog_blind_life_manual_risk_review_001",
       "backlog_blind_school_secret_blocked_001"
     ],
@@ -58,12 +57,10 @@
       "task_fortune_reading_hongfu_qitian_extract_001"
     ],
     "backlog_record_ids": [
-      "backlog_markdown_batch_002_registration_001",
       "backlog_markdown_batch_003_registration_001",
       "backlog_immortal_fortune_jianghu_secret_risk_review_001",
       "backlog_life_death_book_100_pages_risk_review_001",
       "backlog_markdown_batch_005_risk_review_001",
-      "backlog_markdown_batch_004_locator_review_001",
       "backlog_source_processing_status_deferred_001",
       "backlog_knowledge_skeleton_preparation_001"
     ],
@@ -71,5 +68,24 @@
     "created_at": "2026-06-01",
     "updated_at": "2026-06-01",
     "notes": "Third package closes the remaining 015 queue coverage: ready sources become extraction tasks while registration, review, deferred, and preparation items stay in prerequisite backlog."
+  },
+  {
+    "package_id": "package_markdown_batch_registration_001",
+    "package_label": "Markdown batch registration and extraction package",
+    "source_queue_snapshot_ids": [
+      "queue_markdown_source_batch_001_register",
+      "queue_markdown_source_batch_002_register",
+      "queue_markdown_source_batch_004_prepare"
+    ],
+    "selected_task_ids": [
+      "task_markdown_batch_001_extract_001",
+      "task_markdown_batch_002_core_extract_001",
+      "task_markdown_batch_004_extract_001"
+    ],
+    "backlog_record_ids": [],
+    "status": "active",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23",
+    "notes": "Phase 1 registration: batch 001 and 002 registered and extraction-ready. Batch 003 deferred due to OCR failure."
   }
 ]

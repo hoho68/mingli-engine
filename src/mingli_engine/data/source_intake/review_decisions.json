@@ -144,5 +144,21 @@
     ],
     "source_quality": "review_note",
     "confidence": "weak"
+  },
+  {
+    "decision_id": "review_candidate_markdown_batch_002_useful_god_001",
+    "candidate_id": "candidate_markdown_batch_002_useful_god_001",
+    "decision": "approved",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-23",
+    "rationale": "Use-god comparison across Shen/Yu/Yuanhai systems registered as source-backed structural taxonomy from cleaned Markdown; locator and limitations are reviewable.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Keep as structural taxonomy until chart context is reviewed.",
+      "Do not claim any single use-god system as the unique answer."
+    ],
+    "source_quality": "review_note",
+    "confidence": "moderate"
   }
 ]

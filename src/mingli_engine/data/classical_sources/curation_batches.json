@@ -100,5 +100,18 @@
       "Most non-life-death source references still use review-note anchors until readable extracts are reviewed.",
       "Later batches should split review-note seed material into page-level evidence where extraction quality permits."
     ]
+  },
+  {
+    "batch_id": "batch_markdown_registration_001",
+    "source_ids": [
+      "markdown_source_batch_001",
+      "markdown_source_batch_002_core"
+    ],
+    "evidence_ids": [
+      "batch002_useful_god_comparison_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Markdown batch registration: batch 002 use-god comparison promoted to evidence.",
+    "unresolved_issues": []
   }
 ]

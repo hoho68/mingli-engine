@@ -70,5 +70,17 @@
     "review_status": "reviewed",
     "review_notes": "Approved conditional remedy-boundary signal for promotion.",
     "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_markdown_batch_002_useful_god_001",
+    "candidate_ids": [
+      "candidate_markdown_batch_002_useful_god_001"
+    ],
+    "target_evidence_ids": [
+      "batch002_useful_god_comparison_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved use-god comparison taxonomy from Liang Xiangrun textbook series for promotion.",
+    "unresolved_issues": []
   }
 ]

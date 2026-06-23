@@ -31,8 +31,12 @@ def test_source_registry_includes_all_initial_pdfs():
     sources = load_classical_sources()
     by_id = {source.source_id: source for source in sources}
 
-    assert len(sources) == 9
-    assert set(by_id) == set(EXPECTED_INITIAL_SOURCE_FILES)
+    assert len(sources) == 12
+    assert set(by_id) == set(EXPECTED_INITIAL_SOURCE_FILES) | {
+        "markdown_source_batch_001",
+        "markdown_source_batch_002_core",
+        "markdown_source_batch_004",
+    }
     assert len(by_id) == len(sources)
     for source_id, file_name in EXPECTED_INITIAL_SOURCE_FILES.items():
         source = by_id[source_id]

@@ -63,5 +63,17 @@
     "status": "applied",
     "created_at": "2026-06-01",
     "updated_at": "2026-06-01"
+  },
+  {
+    "decision_id": "decision_markdown_batch_002_useful_god_001",
+    "learning_point_id": "lp_markdown_batch_002_useful_god_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_markdown_source_batch_002_core",
+    "candidate_id": "candidate_markdown_batch_002_useful_god_001",
+    "overlap_candidate_ids": [],
+    "rationale": "New use-god comparison candidate from Liang Xiangrun textbook series; no overlap with existing use-god candidates.",
+    "status": "applied",
+    "created_at": "2026-06-23",
+    "updated_at": "2026-06-23"
   }
 ]

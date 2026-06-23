@@ -386,7 +386,7 @@ def test_load_material_audit_records_and_representations_load_current_inventory(
         "external_untracked"
     )
     assert records_by_id["audit_markdown_source_batch_001"].preparation_state == (
-        "cleaned_text_available"
+        "ready_for_extraction_review"
     )
     assert "repr_northeast_blind_peak_root_pdf" in representations_by_id
     assert representations_by_id[
@@ -1321,13 +1321,13 @@ def test_audit_progress_summary_includes_next_five_queue_items_and_backlog_count
     assert summary.next_action_ids == [
         "queue_northeast_blind_peak_extract",
         "queue_mingli_true_formula_teacher_extract",
-        "queue_markdown_source_batch_001_register",
         "queue_blind_life_manual_risk_review",
-        "queue_blind_school_secret_blocked",
+        "queue_markdown_source_batch_003_register",
+        "queue_markdown_source_batch_004_prepare",
     ]
-    assert summary.extraction_ready_count == 5
-    assert summary.preparation_backlog_count == 2
-    assert summary.registration_backlog_count == 3
+    assert summary.extraction_ready_count == 8
+    assert summary.preparation_backlog_count == 1
+    assert summary.registration_backlog_count == 0
     assert summary.risk_review_backlog_count == 4
-    assert summary.deferred_queue_count == 1
+    assert summary.deferred_queue_count == 2
     assert summary.blocked_queue_count == 1

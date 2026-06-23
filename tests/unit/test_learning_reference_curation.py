@@ -270,24 +270,6 @@ def _valid_candidate_intake_decisions() -> list[dict[str, object]]:
 def _valid_prerequisite_action_notes() -> list[dict[str, object]]:
     return [
         {
-            "action_note_id": "action_markdown_batch_001_registration_001",
-            "backlog_id": "backlog_markdown_batch_001_registration_001",
-            "package_id": "package_next_candidates_001",
-            "queue_item_id": "queue_markdown_source_batch_001_register",
-            "audit_id": "audit_markdown_source_batch_001",
-            "action_type": "registration",
-            "missing_prerequisites": ["source_library_registration"],
-            "durable_reason": (
-                "Cleaned Markdown batch needs source-library registration before "
-                "extraction can begin."
-            ),
-            "recommended_action": "register_source",
-            "risk_boundary": "ordinary",
-            "status": "planned",
-            "created_at": "2026-05-31",
-            "updated_at": "2026-05-31",
-        },
-        {
             "action_note_id": "action_blind_life_manual_risk_review_001",
             "backlog_id": "backlog_blind_life_manual_risk_review_001",
             "package_id": "package_next_candidates_001",
@@ -501,6 +483,7 @@ def test_seeded_learning_reference_notes_load_for_current_ready_016_tasks():
         "task_duan_plain_mingxue_outline_extract_001",
         "task_mingxue_golden_voice_extract_001",
         "task_fortune_reading_hongfu_qitian_extract_001",
+        "task_markdown_batch_002_core_extract_001",
     ]
     assert [note.note_id for note in notes] == [
         "note_northeast_blind_peak_001",
@@ -508,6 +491,7 @@ def test_seeded_learning_reference_notes_load_for_current_ready_016_tasks():
         "note_duan_plain_mingxue_outline_001",
         "note_mingxue_golden_voice_001",
         "note_fortune_reading_hongfu_qitian_001",
+        "note_markdown_batch_002_useful_god_001",
     ]
     assert all(note.status == "draft" for note in notes)
     assert all(note.learning_points for note in notes)
@@ -528,6 +512,10 @@ def test_seeded_learning_reference_notes_load_for_current_ready_016_tasks():
     assert notes[4].overlap_candidate_ids == [
         "candidate_hongfu_remedy_boundary_017_001"
     ]
+    assert notes[5].source_material_id == (
+        "material_markdown_source_batch_002_core"
+    )
+    assert notes[5].overlap_candidate_ids == []
     assert learning_reference_curation.validate_learning_reference_quality() == []
 
 
@@ -710,17 +698,17 @@ def test_learning_reference_note_loading_does_not_mutate_upstream_data(tmp_path)
 def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.note_counts == {"draft": 5}
+    assert summary.note_counts == {"draft": 6}
     assert summary.risk_tier_counts == {
+        "sensitive": 8,
         "ordinary": 8,
-        "sensitive": 9,
         "high_risk": 4,
     }
     assert summary.note_rule_family_counts == {
         "blind_image_method": 1,
         "branch_interaction": 1,
         "pattern_strength": 4,
-        "useful_god_candidate": 1,
+        "useful_god_candidate": 2,
         "luck_cycle": 1,
         "ten_god_relation": 2,
         "five_element_balance": 1,
@@ -732,6 +720,7 @@ def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
         "task_duan_plain_mingxue_outline_extract_001",
         "task_mingxue_golden_voice_extract_001",
         "task_fortune_reading_hongfu_qitian_extract_001",
+        "task_markdown_batch_002_core_extract_001",
     ]
     assert summary.next_action_ids == [
         "note_northeast_blind_peak_001",
@@ -739,14 +728,11 @@ def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
         "note_duan_plain_mingxue_outline_001",
         "note_mingxue_golden_voice_001",
         "note_fortune_reading_hongfu_qitian_001",
-        "action_markdown_batch_001_registration_001",
+        "note_markdown_batch_002_useful_god_001",
         "action_blind_life_manual_risk_review_001",
-        "action_markdown_batch_002_registration_001",
-        "action_markdown_batch_003_registration_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
         "action_markdown_batch_005_risk_review_001",
-        "action_markdown_batch_004_locator_review_001",
         "action_knowledge_skeleton_preparation_001",
     ]
 
@@ -815,6 +801,7 @@ def test_seeded_learning_points_load_and_reference_learning_notes():
         "lp_duan_ten_god_relation_001",
         "lp_mingxue_five_element_balance_001",
         "lp_hongfu_remedy_boundary_001",
+        "lp_markdown_batch_002_useful_god_001",
     ]
     assert [point.note_id for point in points] == [
         "note_northeast_blind_peak_001",
@@ -822,12 +809,14 @@ def test_seeded_learning_points_load_and_reference_learning_notes():
         "note_duan_plain_mingxue_outline_001",
         "note_mingxue_golden_voice_001",
         "note_fortune_reading_hongfu_qitian_001",
+        "note_markdown_batch_002_useful_god_001",
     ]
     assert points[0].candidate_readiness == "duplicate_review"
     assert points[1].candidate_readiness == "ready"
     assert points[2].candidate_readiness == "ready"
     assert points[3].candidate_readiness == "ready"
     assert points[4].candidate_readiness == "ready"
+    assert points[5].candidate_readiness == "ready"
 
 
 def test_learning_points_reject_unknown_note_references(tmp_path):
@@ -916,6 +905,7 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "decision_duan_ten_god_relation_001",
         "decision_mingxue_five_element_balance_001",
         "decision_hongfu_remedy_boundary_001",
+        "decision_markdown_batch_002_useful_god_001",
     ]
     assert [decision.learning_point_id for decision in decisions] == [
         "lp_northeast_blind_image_001",
@@ -923,12 +913,14 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "lp_duan_ten_god_relation_001",
         "lp_mingxue_five_element_balance_001",
         "lp_hongfu_remedy_boundary_001",
+        "lp_markdown_batch_002_useful_god_001",
     ]
     assert decisions[0].decision == "reuse_existing"
     assert decisions[1].decision == "create_candidate"
     assert decisions[2].decision == "create_candidate"
     assert decisions[3].decision == "create_candidate"
     assert decisions[4].decision == "create_candidate"
+    assert decisions[5].decision == "create_candidate"
     assert all(decision.status == "applied" for decision in decisions)
     assert [decision.candidate_id for decision in decisions] == [
         "candidate_northeast_blind_image_001",
@@ -936,6 +928,7 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "candidate_duan_ten_god_relation_017_001",
         "candidate_mingxue_five_element_balance_017_001",
         "candidate_hongfu_remedy_boundary_017_001",
+        "candidate_markdown_batch_002_useful_god_001",
     ]
 
 
@@ -1175,14 +1168,14 @@ def test_candidate_intake_decision_quality_rejects_boundary_leakage(
 def test_learning_reference_summary_includes_learning_points_and_decisions():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.learning_point_counts == {"duplicate_review": 1, "ready": 4}
+    assert summary.learning_point_counts == {"duplicate_review": 1, "ready": 5}
     assert summary.decision_counts == {
         "reuse_existing": 1,
-        "create_candidate": 4,
-        "status:applied": 5,
+        "create_candidate": 5,
+        "status:applied": 6,
     }
-    assert summary.candidate_ready_count == 4
-    assert summary.candidate_decision_count == 5
+    assert summary.candidate_ready_count == 5
+    assert summary.candidate_decision_count == 6
     assert summary.overlap_warning_count == 7
 
 
@@ -1190,37 +1183,28 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
     action_notes = learning_reference_curation.load_prerequisite_action_notes()
 
     assert [action.action_note_id for action in action_notes] == [
-        "action_markdown_batch_001_registration_001",
         "action_blind_life_manual_risk_review_001",
         "action_blind_school_secret_blocked_001",
-        "action_markdown_batch_002_registration_001",
         "action_markdown_batch_003_registration_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
         "action_markdown_batch_005_risk_review_001",
-        "action_markdown_batch_004_locator_review_001",
         "action_source_processing_status_deferred_001",
         "action_knowledge_skeleton_preparation_001",
     ]
     assert [action.backlog_id for action in action_notes] == [
-        "backlog_markdown_batch_001_registration_001",
         "backlog_blind_life_manual_risk_review_001",
         "backlog_blind_school_secret_blocked_001",
-        "backlog_markdown_batch_002_registration_001",
         "backlog_markdown_batch_003_registration_001",
         "backlog_immortal_fortune_jianghu_secret_risk_review_001",
         "backlog_life_death_book_100_pages_risk_review_001",
         "backlog_markdown_batch_005_risk_review_001",
-        "backlog_markdown_batch_004_locator_review_001",
         "backlog_source_processing_status_deferred_001",
         "backlog_knowledge_skeleton_preparation_001",
     ]
     assert [action.package_id for action in action_notes] == [
         "package_next_candidates_001",
         "package_next_candidates_001",
-        "package_next_candidates_001",
-        "package_next_candidates_003",
-        "package_next_candidates_003",
         "package_next_candidates_003",
         "package_next_candidates_003",
         "package_next_candidates_003",
@@ -1229,28 +1213,22 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "package_next_candidates_003",
     ]
     assert [action.queue_item_id for action in action_notes] == [
-        "queue_markdown_source_batch_001_register",
         "queue_blind_life_manual_risk_review",
         "queue_blind_school_secret_blocked",
-        "queue_markdown_source_batch_002_register",
         "queue_markdown_source_batch_003_register",
         "queue_immortal_fortune_jianghu_secret_risk_review",
         "queue_life_death_book_100_pages_risk_review",
         "queue_markdown_source_batch_005_risk_review",
-        "queue_markdown_source_batch_004_prepare",
         "queue_source_processing_status_deferred",
         "queue_knowledge_skeleton_prepare",
     ]
     assert [action.audit_id for action in action_notes] == [
-        "audit_markdown_source_batch_001",
         "audit_blind_life_manual",
         "audit_blind_school_secret",
-        "audit_markdown_source_batch_002",
         "audit_markdown_source_batch_003",
         "audit_immortal_fortune_jianghu_secret",
         "audit_life_death_book_100_pages",
         "audit_markdown_source_batch_005",
-        "audit_markdown_source_batch_004",
         "audit_source_processing_status",
         "audit_knowledge_skeleton",
     ]
@@ -1332,7 +1310,6 @@ def test_prerequisite_action_notes_require_prerequisites_or_durable_reasons(
 @pytest.mark.parametrize(
     ("action_type", "recommended_action", "risk_boundary"),
     [
-        ("registration", "register_source", "ordinary"),
         ("risk_review", "risk_review", "high_risk"),
         ("blocked", "block", "sensitive"),
     ],
@@ -1423,32 +1400,30 @@ def test_blocking_prerequisite_actions_cannot_become_learning_points_or_decision
 def test_learning_reference_summary_includes_prerequisite_action_counts():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.note_counts == {"draft": 5}
-    assert summary.learning_point_counts == {"duplicate_review": 1, "ready": 4}
+    assert summary.note_counts == {"draft": 6}
+    assert summary.learning_point_counts == {"duplicate_review": 1, "ready": 5}
     assert summary.decision_counts == {
         "reuse_existing": 1,
-        "create_candidate": 4,
-        "status:applied": 5,
+        "create_candidate": 5,
+        "status:applied": 6,
     }
     assert summary.prerequisite_action_counts == {
-        "registration": 3,
         "risk_review": 4,
-        "locator_review": 1,
         "preparation": 1,
-        "deferred": 1,
+        "deferred": 2,
         "blocked": 1,
-        "status:planned": 9,
-        "status:deferred": 1,
+        "status:planned": 5,
+        "status:deferred": 2,
         "status:blocked": 1,
     }
     assert summary.risk_tier_counts == {
+        "sensitive": 8,
         "ordinary": 8,
-        "sensitive": 9,
         "high_risk": 4,
     }
     assert summary.overlap_warning_count == 7
-    assert summary.candidate_ready_count == 4
-    assert summary.candidate_decision_count == 5
+    assert summary.candidate_ready_count == 5
+    assert summary.candidate_decision_count == 6
     assert summary.formal_evidence_delta == 0
     assert summary.next_action_ids == [
         "note_northeast_blind_peak_001",
@@ -1456,13 +1431,10 @@ def test_learning_reference_summary_includes_prerequisite_action_counts():
         "note_duan_plain_mingxue_outline_001",
         "note_mingxue_golden_voice_001",
         "note_fortune_reading_hongfu_qitian_001",
-        "action_markdown_batch_001_registration_001",
+        "note_markdown_batch_002_useful_god_001",
         "action_blind_life_manual_risk_review_001",
-        "action_markdown_batch_002_registration_001",
-        "action_markdown_batch_003_registration_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
         "action_markdown_batch_005_risk_review_001",
-        "action_markdown_batch_004_locator_review_001",
         "action_knowledge_skeleton_preparation_001",
     ]

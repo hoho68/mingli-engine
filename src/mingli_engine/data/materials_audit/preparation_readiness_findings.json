@@ -8,7 +8,9 @@
     "source_quality": "strong",
     "risk_boundary": "sensitive",
     "missing_prerequisites": [],
-    "ready_reasons": ["014 source-library entry, target rule families, rights notes, and sensitive rewrite boundary are present."],
+    "ready_reasons": [
+      "014 source-library entry, target rule families, rights notes, and sensitive rewrite boundary are present."
+    ],
     "blockers": [],
     "recommended_next_action": "extract_candidates",
     "assessed_by": "maintainer",
@@ -23,7 +25,9 @@
     "source_quality": "strong",
     "risk_boundary": "ordinary",
     "missing_prerequisites": [],
-    "ready_reasons": ["014 source-library entry, ordinary risk boundary, and target rule families are present."],
+    "ready_reasons": [
+      "014 source-library entry, ordinary risk boundary, and target rule families are present."
+    ],
     "blockers": [],
     "recommended_next_action": "extract_candidates",
     "assessed_by": "maintainer",
@@ -37,9 +41,14 @@
     "locator_confidence": "weak",
     "source_quality": "needs_recheck",
     "risk_boundary": "sensitive",
-    "missing_prerequisites": ["source_access_clarification", "quotation_boundary_review"],
+    "missing_prerequisites": [
+      "source_access_clarification",
+      "quotation_boundary_review"
+    ],
     "ready_reasons": [],
-    "blockers": ["Blocked until source access and quotation boundaries are clarified."],
+    "blockers": [
+      "Blocked until source access and quotation boundaries are clarified."
+    ],
     "recommended_next_action": "block",
     "assessed_by": "maintainer",
     "assessed_at": "2026-05-30"
@@ -52,9 +61,13 @@
     "locator_confidence": "moderate",
     "source_quality": "moderate",
     "risk_boundary": "high_risk",
-    "missing_prerequisites": ["risk_review"],
+    "missing_prerequisites": [
+      "risk_review"
+    ],
     "ready_reasons": [],
-    "blockers": ["Needs high-risk boundary review before any candidate extraction."],
+    "blockers": [
+      "Needs high-risk boundary review before any candidate extraction."
+    ],
     "recommended_next_action": "risk_review",
     "assessed_by": "maintainer",
     "assessed_at": "2026-05-30"
@@ -68,7 +81,9 @@
     "source_quality": "strong",
     "risk_boundary": "sensitive",
     "missing_prerequisites": [],
-    "ready_reasons": ["014 source-library entry, timing uncertainty boundary, and target rule families are present."],
+    "ready_reasons": [
+      "014 source-library entry, timing uncertainty boundary, and target rule families are present."
+    ],
     "blockers": [],
     "recommended_next_action": "extract_candidates",
     "assessed_by": "maintainer",
@@ -83,7 +98,9 @@
     "source_quality": "strong",
     "risk_boundary": "ordinary",
     "missing_prerequisites": [],
-    "ready_reasons": ["014 source-library entry, ordinary risk boundary, and terminology targets are present."],
+    "ready_reasons": [
+      "014 source-library entry, ordinary risk boundary, and terminology targets are present."
+    ],
     "blockers": [],
     "recommended_next_action": "extract_candidates",
     "assessed_by": "maintainer",
@@ -98,7 +115,9 @@
     "source_quality": "moderate",
     "risk_boundary": "sensitive",
     "missing_prerequisites": [],
-    "ready_reasons": ["014 source-library entry and remedy-boundary review notes are present."],
+    "ready_reasons": [
+      "014 source-library entry and remedy-boundary review notes are present."
+    ],
     "blockers": [],
     "recommended_next_action": "extract_candidates",
     "assessed_by": "maintainer",
@@ -112,9 +131,14 @@
     "locator_confidence": "weak",
     "source_quality": "needs_recheck",
     "risk_boundary": "high_risk",
-    "missing_prerequisites": ["risk_review", "cleaned_text"],
+    "missing_prerequisites": [
+      "risk_review",
+      "cleaned_text"
+    ],
     "ready_reasons": [],
-    "blockers": ["Needs high-risk boundary review before any source preparation is promoted."],
+    "blockers": [
+      "Needs high-risk boundary review before any source preparation is promoted."
+    ],
     "recommended_next_action": "risk_review",
     "assessed_by": "maintainer",
     "assessed_at": "2026-05-30"
@@ -127,9 +151,13 @@
     "locator_confidence": "moderate",
     "source_quality": "moderate",
     "risk_boundary": "high_risk",
-    "missing_prerequisites": ["risk_review"],
+    "missing_prerequisites": [
+      "risk_review"
+    ],
     "ready_reasons": [],
-    "blockers": ["Needs high-risk boundary review before life-risk material can be extracted safely."],
+    "blockers": [
+      "Needs high-risk boundary review before life-risk material can be extracted safely."
+    ],
     "recommended_next_action": "risk_review",
     "assessed_by": "maintainer",
     "assessed_at": "2026-05-30"
@@ -137,77 +165,95 @@
   {
     "readiness_id": "ready_markdown_source_batch_001",
     "audit_id": "audit_markdown_source_batch_001",
-    "readiness_state": "needs_source_registration",
+    "readiness_state": "ready_for_extraction_review",
     "text_preparation_status": "cleaned",
     "locator_confidence": "moderate",
     "source_quality": "moderate",
-    "risk_boundary": "ordinary",
-    "missing_prerequisites": ["source_library_registration"],
-    "ready_reasons": [],
-    "blockers": ["Cleaned Markdown needs source-library registration before extraction review."],
-    "recommended_next_action": "register_source",
+    "risk_boundary": "sensitive",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Source-library entry created; cleaned text verified readable.",
+      "Text conversion successful with moderate term density."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
     "assessed_by": "maintainer",
-    "assessed_at": "2026-05-30"
+    "assessed_at": "2026-06-23"
   },
   {
     "readiness_id": "ready_markdown_source_batch_002",
     "audit_id": "audit_markdown_source_batch_002",
-    "readiness_state": "needs_source_registration",
+    "readiness_state": "ready_for_extraction_review",
     "text_preparation_status": "cleaned",
     "locator_confidence": "moderate",
     "source_quality": "moderate",
     "risk_boundary": "ordinary",
-    "missing_prerequisites": ["source_library_registration"],
-    "ready_reasons": [],
-    "blockers": ["Cleaned Markdown needs source-library registration before extraction review."],
-    "recommended_next_action": "register_source",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Source-library entry created; six cleaned sources verified readable with high term density.",
+      "Liang Xiangrun textbook series provides strong table-layer material."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
     "assessed_by": "maintainer",
-    "assessed_at": "2026-05-30"
+    "assessed_at": "2026-06-23"
   },
   {
     "readiness_id": "ready_markdown_source_batch_003",
     "audit_id": "audit_markdown_source_batch_003",
-    "readiness_state": "needs_source_registration",
-    "text_preparation_status": "cleaned",
+    "readiness_state": "deferred",
+    "text_preparation_status": "not_started",
     "locator_confidence": "moderate",
     "source_quality": "moderate",
     "risk_boundary": "ordinary",
-    "missing_prerequisites": ["source_library_registration"],
+    "missing_prerequisites": [
+      "ocr_conversion"
+    ],
     "ready_reasons": [],
-    "blockers": ["Cleaned Markdown needs source-library registration before extraction review."],
-    "recommended_next_action": "register_source",
+    "blockers": [
+      "All eight sources failed text conversion; output is page markers and watermark residue only.",
+      "OCR or alternate text-based copies required before any registration or extraction."
+    ],
+    "recommended_next_action": "defer",
     "assessed_by": "maintainer",
-    "assessed_at": "2026-05-30"
+    "assessed_at": "2026-06-23"
   },
   {
     "readiness_id": "ready_markdown_source_batch_004",
     "audit_id": "audit_markdown_source_batch_004",
-    "readiness_state": "needs_locator_review",
+    "readiness_state": "ready_for_extraction_review",
     "text_preparation_status": "cleaned",
-    "locator_confidence": "weak",
-    "source_quality": "needs_recheck",
+    "locator_confidence": "moderate",
+    "source_quality": "strong",
     "risk_boundary": "sensitive",
-    "missing_prerequisites": ["locator_review", "edition_variant_review"],
-    "ready_reasons": [],
-    "blockers": ["Possible edition variant needs locator review before extraction planning."],
-    "recommended_next_action": "clarify_identity",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Source-library entry created; nine cleaned sources verified readable with high term density.",
+      "Edition variant concern resolved; all titles are distinct works."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
     "assessed_by": "maintainer",
-    "assessed_at": "2026-05-30"
+    "assessed_at": "2026-06-23"
   },
   {
     "readiness_id": "ready_markdown_source_batch_005",
     "audit_id": "audit_markdown_source_batch_005",
     "readiness_state": "needs_risk_review",
     "text_preparation_status": "cleaned",
-    "locator_confidence": "weak",
-    "source_quality": "needs_recheck",
+    "locator_confidence": "moderate",
+    "source_quality": "moderate",
     "risk_boundary": "high_risk",
-    "missing_prerequisites": ["risk_review", "identity_clarification"],
+    "missing_prerequisites": [
+      "risk_boundary_review"
+    ],
     "ready_reasons": [],
-    "blockers": ["High-risk prepared batch needs identity and boundary review before extraction."],
+    "blockers": [
+      "High-risk applied notes require boundary review before extraction can proceed."
+    ],
     "recommended_next_action": "risk_review",
     "assessed_by": "maintainer",
-    "assessed_at": "2026-05-30"
+    "assessed_at": "2026-06-23"
   },
   {
     "readiness_id": "ready_source_processing_status",
@@ -217,9 +263,13 @@
     "locator_confidence": "moderate",
     "source_quality": "weak",
     "risk_boundary": "ordinary",
-    "missing_prerequisites": ["out_of_scope_non_source_note"],
+    "missing_prerequisites": [
+      "out_of_scope_non_source_note"
+    ],
     "ready_reasons": [],
-    "blockers": ["Processing-status note is workflow metadata rather than a source text."],
+    "blockers": [
+      "Processing-status note is workflow metadata rather than a source text."
+    ],
     "recommended_next_action": "defer",
     "assessed_by": "maintainer",
     "assessed_at": "2026-05-30"
@@ -232,9 +282,14 @@
     "locator_confidence": "moderate",
     "source_quality": "needs_recheck",
     "risk_boundary": "sensitive",
-    "missing_prerequisites": ["component_source_links", "candidate_review"],
+    "missing_prerequisites": [
+      "component_source_links",
+      "candidate_review"
+    ],
     "ready_reasons": [],
-    "blockers": ["Knowledge skeleton is an aggregate preparation aid until component sources are reviewed."],
+    "blockers": [
+      "Knowledge skeleton is an aggregate preparation aid until component sources are reviewed."
+    ],
     "recommended_next_action": "review_cleaned_text",
     "assessed_by": "maintainer",
     "assessed_at": "2026-05-30"

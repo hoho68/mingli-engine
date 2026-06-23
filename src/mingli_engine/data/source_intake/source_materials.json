@@ -106,5 +106,53 @@
     "scope_notes": "High-risk life-death material usable only as bounded traditional signal input.",
     "rights_notes": "Do not copy long passages; store concise paraphrases only.",
     "gap_reason": ""
+  },
+  {
+    "material_id": "material_markdown_source_batch_002_core",
+    "title": "Markdown Source Batch 002 Core",
+    "material_type": "markdown",
+    "file_label": "Markdown/source_batch_002_cleaned",
+    "tracking_status": "project_tracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "markdown_source_batch_002_core",
+    "scope_notes": "Liang Xiangrun textbook series plus applied theory manuals for table-layer and use-god extraction.",
+    "rights_notes": "Prepared text remains source-preparation material; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_markdown_source_batch_001",
+    "title": "Markdown Source Batch 001",
+    "material_type": "markdown",
+    "file_label": "Markdown/source_batch_001_cleaned",
+    "tracking_status": "project_tracked",
+    "preparation_status": "partially_reviewed",
+    "related_source_id": "markdown_source_batch_001",
+    "scope_notes": "Five cleaned Markdown sources: foundation/applied-notes plus blind-school and life-risk boundary material requiring conditional rewrite.",
+    "rights_notes": "Prepared text remains source-preparation material; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_markdown_source_batch_005",
+    "title": "Markdown Source Batch 005",
+    "material_type": "markdown",
+    "file_label": "Markdown/source_batch_005_cleaned",
+    "tracking_status": "project_tracked",
+    "preparation_status": "partially_reviewed",
+    "related_source_id": "",
+    "scope_notes": "Sixteen cleaned Markdown Wuyang course notes covering六亲、比劫、官杀、食伤、财星、刑冲取象 and applied examples.",
+    "rights_notes": "Prepared text remains source-preparation material; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_markdown_source_batch_004",
+    "title": "Markdown Source Batch 004",
+    "material_type": "markdown",
+    "file_label": "Markdown/source_batch_004_cleaned",
+    "tracking_status": "project_tracked",
+    "preparation_status": "partially_reviewed",
+    "related_source_id": "markdown_source_batch_004",
+    "scope_notes": "Nine cleaned Markdown Liang Xiangrun advanced sources: use-god comparison, branch interaction, female destiny, luck-cycle, and life-risk boundary material.",
+    "rights_notes": "Prepared text remains source-preparation material; store concise paraphrases only.",
+    "gap_reason": ""
   }
 ]

@@ -581,12 +581,10 @@ def test_seeded_extraction_queue_includes_duan_ready_learning_package():
         "task_fortune_reading_hongfu_qitian_extract_001",
     ]
     assert packages_by_id["package_next_candidates_003"].backlog_record_ids == [
-        "backlog_markdown_batch_002_registration_001",
         "backlog_markdown_batch_003_registration_001",
         "backlog_immortal_fortune_jianghu_secret_risk_review_001",
         "backlog_life_death_book_100_pages_risk_review_001",
         "backlog_markdown_batch_005_risk_review_001",
-        "backlog_markdown_batch_004_locator_review_001",
         "backlog_source_processing_status_deferred_001",
         "backlog_knowledge_skeleton_preparation_001",
     ]
@@ -643,12 +641,10 @@ def test_seeded_extraction_queue_includes_duan_ready_learning_package():
     )
 
     non_ready_queue_ids = {
-        "queue_markdown_source_batch_002_register",
         "queue_markdown_source_batch_003_register",
         "queue_immortal_fortune_jianghu_secret_risk_review",
         "queue_life_death_book_100_pages_risk_review",
         "queue_markdown_source_batch_005_risk_review",
-        "queue_markdown_source_batch_004_prepare",
         "queue_source_processing_status_deferred",
         "queue_knowledge_skeleton_prepare",
     }

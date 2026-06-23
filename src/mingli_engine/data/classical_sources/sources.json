@@ -7,7 +7,9 @@
     "extraction_status": "partial",
     "review_status": "approved",
     "scope_notes": "盲派象法、结构取象与应事口径的初始证据来源。",
-    "risk_notes": ["high_risk_signal"],
+    "risk_notes": [
+      "high_risk_signal"
+    ],
     "curation_gap_reason": "",
     "review_reference": "docs/classical_sources/extracts/northeast_blind_peak.md"
   },
@@ -31,7 +33,9 @@
     "extraction_status": "partial",
     "review_status": "approved",
     "scope_notes": "盲派组合、刑冲合害与象法判断的初始证据来源。",
-    "risk_notes": ["high_risk_signal"],
+    "risk_notes": [
+      "high_risk_signal"
+    ],
     "curation_gap_reason": "",
     "review_reference": "docs/classical_sources/extracts/blind_school_secret.md"
   },
@@ -43,7 +47,9 @@
     "extraction_status": "partial",
     "review_status": "reviewed",
     "scope_notes": "断语体材料，当前仅保留为来源清单，待进一步拆解为证据卡。",
-    "risk_notes": ["high_risk_signal"],
+    "risk_notes": [
+      "high_risk_signal"
+    ],
     "curation_gap_reason": "断语体和高风险口径尚未完成条件化改写，暂不支撑正式结论。",
     "review_reference": "docs/classical_sources/extracts/blind_life_manual.md"
   },
@@ -79,7 +85,9 @@
     "extraction_status": "partial",
     "review_status": "approved",
     "scope_notes": "通俗命理、调整说法与低风险行动边界的初始证据来源。",
-    "risk_notes": ["remedy_boundary"],
+    "risk_notes": [
+      "remedy_boundary"
+    ],
     "curation_gap_reason": "",
     "review_reference": "docs/classical_sources/extracts/fortune_reading_hongfu_qitian.md"
   },
@@ -91,7 +99,10 @@
     "extraction_status": "not_started",
     "review_status": "unreviewed",
     "scope_notes": "江湖术材料，需人工清理恐吓式或付费化解口径后才能引用。",
-    "risk_notes": ["high_risk_signal", "remedy_boundary"],
+    "risk_notes": [
+      "high_risk_signal",
+      "remedy_boundary"
+    ],
     "curation_gap_reason": "尚未开始抽取和安全改写，恐吓式或付费化解口径未审，暂不支撑正式结论。",
     "review_reference": "docs/classical_sources/extracts/immortal_fortune_jianghu_secret.md"
   },
@@ -103,8 +114,52 @@
     "extraction_status": "converted",
     "review_status": "approved",
     "scope_notes": "生死寿夭材料，只可作为高风险传统信号的有边界证据来源。",
-    "risk_notes": ["high_risk_signal", "lifespan_or_death_timing"],
+    "risk_notes": [
+      "high_risk_signal",
+      "lifespan_or_death_timing"
+    ],
     "curation_gap_reason": "",
     "review_reference": "docs/classical_sources/extracts/life_death_book_100_pages.md"
+  },
+  {
+    "source_id": "markdown_source_batch_001",
+    "title": "Markdown Source Batch 001",
+    "file_name": "Markdown/source_batch_001_cleaned",
+    "source_type": "markdown",
+    "extraction_status": "partial",
+    "review_status": "reviewed",
+    "scope_notes": "Five cleaned Markdown sources: foundation/applied-notes plus blind-school boundary material.",
+    "risk_notes": [
+      "blind_image_method",
+      "high_risk_signal"
+    ],
+    "curation_gap_reason": "待按计划完成候选提取和审核，尚未产出正式证据。",
+    "review_reference": "docs/classical_sources/extracts/markdown_source_batch_001.md"
+  },
+  {
+    "source_id": "markdown_source_batch_002_core",
+    "title": "Markdown Source Batch 002 Core",
+    "file_name": "Markdown/source_batch_002_cleaned",
+    "source_type": "markdown",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Six cleaned Markdown sources from Liang Xiangrun Ziping textbook series; use-god comparison material.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "docs/classical_sources/extracts/markdown_source_batch_002_core.md"
+  },
+  {
+    "source_id": "markdown_source_batch_004",
+    "title": "Markdown Source Batch 004",
+    "file_name": "Markdown/source_batch_004_cleaned",
+    "source_type": "markdown",
+    "extraction_status": "partial",
+    "review_status": "reviewed",
+    "scope_notes": "Nine cleaned Markdown Liang Xiangrun advanced sources covering use-god, branch interaction, female destiny, and luck-cycle.",
+    "risk_notes": [
+      "high_risk_signal"
+    ],
+    "curation_gap_reason": "待按计划完成候选提取和审核，尚未产出正式证据。",
+    "review_reference": "docs/classical_sources/extracts/markdown_source_batch_004.md"
   }
 ]

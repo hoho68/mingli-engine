@@ -1,21 +1,5 @@
 [
   {
-    "backlog_id": "backlog_markdown_batch_001_registration_001",
-    "package_id": "package_next_candidates_001",
-    "queue_item_id": "queue_markdown_source_batch_001_register",
-    "audit_id": "audit_markdown_source_batch_001",
-    "backlog_type": "registration",
-    "missing_prerequisites": [
-      "source_library_registration"
-    ],
-    "durable_reason": "Cleaned Markdown batch needs source-library registration before extraction can begin.",
-    "recommended_action": "register_source",
-    "risk_boundary": "ordinary",
-    "status": "planned",
-    "created_at": "2026-05-31",
-    "updated_at": "2026-05-31"
-  },
-  {
     "backlog_id": "backlog_blind_life_manual_risk_review_001",
     "package_id": "package_next_candidates_001",
     "queue_item_id": "queue_blind_life_manual_risk_review",
@@ -49,36 +33,21 @@
     "updated_at": "2026-05-31"
   },
   {
-    "backlog_id": "backlog_markdown_batch_002_registration_001",
-    "package_id": "package_next_candidates_003",
-    "queue_item_id": "queue_markdown_source_batch_002_register",
-    "audit_id": "audit_markdown_source_batch_002",
-    "backlog_type": "registration",
-    "missing_prerequisites": [
-      "source_library_registration"
-    ],
-    "durable_reason": "Cleaned Markdown batch needs source-library registration before extraction can begin.",
-    "recommended_action": "register_source",
-    "risk_boundary": "ordinary",
-    "status": "planned",
-    "created_at": "2026-06-01",
-    "updated_at": "2026-06-01"
-  },
-  {
     "backlog_id": "backlog_markdown_batch_003_registration_001",
     "package_id": "package_next_candidates_003",
     "queue_item_id": "queue_markdown_source_batch_003_register",
     "audit_id": "audit_markdown_source_batch_003",
-    "backlog_type": "registration",
+    "backlog_type": "deferred",
     "missing_prerequisites": [
+      "ocr_conversion",
       "source_library_registration"
     ],
-    "durable_reason": "Cleaned Markdown batch needs source-library registration before extraction can begin.",
-    "recommended_action": "register_source",
+    "durable_reason": "Registration deferred: all eight sources failed text conversion and require OCR before any processing.",
+    "recommended_action": "defer",
     "risk_boundary": "ordinary",
-    "status": "planned",
+    "status": "deferred",
     "created_at": "2026-06-01",
-    "updated_at": "2026-06-01"
+    "updated_at": "2026-06-23"
   },
   {
     "backlog_id": "backlog_immortal_fortune_jianghu_secret_risk_review_001",
@@ -120,32 +89,14 @@
     "audit_id": "audit_markdown_source_batch_005",
     "backlog_type": "risk_review",
     "missing_prerequisites": [
-      "risk_review",
-      "identity_clarification"
+      "risk_boundary_review"
     ],
-    "durable_reason": "High-risk prepared batch needs identity and boundary review before extraction.",
+    "durable_reason": "High-risk applied course notes need boundary review before candidate extraction can proceed.",
     "recommended_action": "risk_review",
     "risk_boundary": "high_risk",
     "status": "planned",
     "created_at": "2026-06-01",
-    "updated_at": "2026-06-01"
-  },
-  {
-    "backlog_id": "backlog_markdown_batch_004_locator_review_001",
-    "package_id": "package_next_candidates_003",
-    "queue_item_id": "queue_markdown_source_batch_004_prepare",
-    "audit_id": "audit_markdown_source_batch_004",
-    "backlog_type": "locator_review",
-    "missing_prerequisites": [
-      "locator_review",
-      "edition_variant_review"
-    ],
-    "durable_reason": "Possible edition variant needs locator review before extraction planning.",
-    "recommended_action": "clarify_identity",
-    "risk_boundary": "sensitive",
-    "status": "planned",
-    "created_at": "2026-06-01",
-    "updated_at": "2026-06-01"
+    "updated_at": "2026-06-23"
   },
   {
     "backlog_id": "backlog_source_processing_status_deferred_001",

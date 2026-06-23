@@ -5,7 +5,10 @@
     "priority_level": "high",
     "expected_value": "fills_gap",
     "target_gap_ids": [],
-    "target_rule_families": ["blind_image_method", "branch_interaction"],
+    "target_rule_families": [
+      "blind_image_method",
+      "branch_interaction"
+    ],
     "source_quality": "moderate",
     "effort_level": "medium",
     "risk_tier": "sensitive",
@@ -19,7 +22,10 @@
     "priority_level": "medium",
     "expected_value": "broadens_school_coverage",
     "target_gap_ids": [],
-    "target_rule_families": ["ten_god_relation", "pattern_strength"],
+    "target_rule_families": [
+      "ten_god_relation",
+      "pattern_strength"
+    ],
     "source_quality": "moderate",
     "effort_level": "medium",
     "risk_tier": "ordinary",
@@ -33,7 +39,9 @@
     "priority_level": "deferred",
     "expected_value": "documents_non_usefulness",
     "target_gap_ids": [],
-    "target_rule_families": ["blind_image_method"],
+    "target_rule_families": [
+      "blind_image_method"
+    ],
     "source_quality": "needs_recheck",
     "effort_level": "high",
     "risk_tier": "sensitive",
@@ -46,8 +54,13 @@
     "entry_id": "entry_blind_life_manual_pdf",
     "priority_level": "high",
     "expected_value": "improves_high_risk_boundary",
-    "target_gap_ids": ["gap_blind_life_manual"],
-    "target_rule_families": ["blind_image_method", "high_risk_signal"],
+    "target_gap_ids": [
+      "gap_blind_life_manual"
+    ],
+    "target_rule_families": [
+      "blind_image_method",
+      "high_risk_signal"
+    ],
     "source_quality": "moderate",
     "effort_level": "medium",
     "risk_tier": "high_risk",
@@ -61,7 +74,11 @@
     "priority_level": "high",
     "expected_value": "fills_gap",
     "target_gap_ids": [],
-    "target_rule_families": ["pattern_strength", "useful_god_candidate", "luck_cycle"],
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate",
+      "luck_cycle"
+    ],
     "source_quality": "moderate",
     "effort_level": "medium",
     "risk_tier": "sensitive",
@@ -75,7 +92,11 @@
     "priority_level": "medium",
     "expected_value": "confirms_existing_rule",
     "target_gap_ids": [],
-    "target_rule_families": ["five_element_balance", "ten_god_relation", "pattern_strength"],
+    "target_rule_families": [
+      "five_element_balance",
+      "ten_god_relation",
+      "pattern_strength"
+    ],
     "source_quality": "moderate",
     "effort_level": "medium",
     "risk_tier": "ordinary",
@@ -89,7 +110,10 @@
     "priority_level": "medium",
     "expected_value": "clarifies_conflict",
     "target_gap_ids": [],
-    "target_rule_families": ["remedy_boundary", "pattern_strength"],
+    "target_rule_families": [
+      "remedy_boundary",
+      "pattern_strength"
+    ],
     "source_quality": "moderate",
     "effort_level": "medium",
     "risk_tier": "sensitive",
@@ -103,7 +127,10 @@
     "priority_level": "low",
     "expected_value": "documents_non_usefulness",
     "target_gap_ids": [],
-    "target_rule_families": ["remedy_boundary", "high_risk_signal"],
+    "target_rule_families": [
+      "remedy_boundary",
+      "high_risk_signal"
+    ],
     "source_quality": "needs_recheck",
     "effort_level": "high",
     "risk_tier": "high_risk",
@@ -117,12 +144,91 @@
     "priority_level": "high",
     "expected_value": "improves_high_risk_boundary",
     "target_gap_ids": [],
-    "target_rule_families": ["high_risk_signal"],
+    "target_rule_families": [
+      "high_risk_signal"
+    ],
     "source_quality": "moderate",
     "effort_level": "high",
     "risk_tier": "high_risk",
     "rationale": "Review boundary is required because life-death material can only support bounded high-risk signal notes.",
     "assessed_by": "maintainer",
     "assessed_at": "2026-05-28"
+  },
+  {
+    "assessment_id": "priority_markdown_batch_002_core_001",
+    "entry_id": "entry_markdown_source_batch_002_core",
+    "priority_level": "high",
+    "expected_value": "fills_gap",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "useful_god_candidate",
+      "pattern_strength",
+      "luck_cycle",
+      "ten_god_relation"
+    ],
+    "source_quality": "strong",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Liang Xiangrun textbook series provides strong table-layer and use-god comparison material.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-23"
+  },
+  {
+    "assessment_id": "priority_markdown_batch_001_001",
+    "entry_id": "entry_markdown_source_batch_001",
+    "priority_level": "high",
+    "expected_value": "fills_gap",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "branch_interaction",
+      "blind_image_method",
+      "high_risk_signal"
+    ],
+    "source_quality": "moderate",
+    "effort_level": "high",
+    "risk_tier": "sensitive",
+    "rationale": "Cleaned foundation, applied-notes, and blind-school boundary sources can fill structural taxonomy and image-method gaps; boundary material requires conditional rewrite.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-23"
+  },
+  {
+    "assessment_id": "priority_markdown_batch_005_001",
+    "entry_id": "entry_markdown_source_batch_005",
+    "priority_level": "medium",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "ten_god_relation",
+      "blind_image_method",
+      "branch_interaction",
+      "luck_cycle"
+    ],
+    "source_quality": "moderate",
+    "effort_level": "high",
+    "risk_tier": "high_risk",
+    "rationale": "Applied course notes can broaden ten-god and取象 coverage but require cross-source confirmation and boundary review.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-23"
+  },
+  {
+    "assessment_id": "priority_markdown_batch_004_001",
+    "entry_id": "entry_markdown_source_batch_004",
+    "priority_level": "high",
+    "expected_value": "fills_gap",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "useful_god_candidate",
+      "pattern_strength",
+      "branch_interaction",
+      "luck_cycle"
+    ],
+    "source_quality": "strong",
+    "effort_level": "high",
+    "risk_tier": "sensitive",
+    "rationale": "Liang Xiangrun advanced series provides strongest use-god and branch-interaction material; boundary sources require conditional rewrite.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-23"
   }
 ]
