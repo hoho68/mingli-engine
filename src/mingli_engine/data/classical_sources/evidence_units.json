@@ -1658,7 +1658,7 @@
   {
     "evidence_id": "kskeleton_q001_foundation",
     "source_id": "knowledge_skeleton",
-    "source_ref": "review-note:note_kskeleton_q001_foundation_001",
+    "source_ref": "review-note:knowledge_skeleton/q001_foundation_tables/q001_foundation_tables.md",
     "theme": "q001: foundation",
     "rule_family": "ten_god_relation",
     "risk_tier": "sensitive",
@@ -1682,7 +1682,7 @@
   {
     "evidence_id": "kskeleton_q002_yushi",
     "source_id": "knowledge_skeleton",
-    "source_ref": "review-note:note_kskeleton_q002_yushi_001",
+    "source_ref": "review-note:knowledge_skeleton/q002_yongshen_tiaohou/q002_yongshen_tiaohou.md",
     "theme": "q002: yushi",
     "rule_family": "useful_god_candidate",
     "risk_tier": "sensitive",
@@ -1706,7 +1706,7 @@
   {
     "evidence_id": "kskeleton_q002_shen",
     "source_id": "knowledge_skeleton",
-    "source_ref": "review-note:note_kskeleton_q002_shen_001",
+    "source_ref": "review-note:knowledge_skeleton/q002_yongshen_tiaohou/shen_pattern_yongshen_framework.md",
     "theme": "q002: shen",
     "rule_family": "useful_god_candidate",
     "risk_tier": "sensitive",
@@ -1730,7 +1730,7 @@
   {
     "evidence_id": "kskeleton_q002_yuanhai",
     "source_id": "knowledge_skeleton",
-    "source_ref": "review-note:note_kskeleton_q002_yuanhai_001",
+    "source_ref": "review-note:knowledge_skeleton/q002_yongshen_tiaohou/shen_yuanhai_comparison_notes.md",
     "theme": "q002: yuanhai",
     "rule_family": "useful_god_candidate",
     "risk_tier": "sensitive",
@@ -1755,7 +1755,7 @@
   {
     "evidence_id": "kskeleton_q003_geju",
     "source_id": "knowledge_skeleton",
-    "source_ref": "review-note:note_kskeleton_q003_geju_001",
+    "source_ref": "review-note:knowledge_skeleton/q003_geju_strength/geju_selection_rules.csv",
     "theme": "q003: geju",
     "rule_family": "pattern_strength",
     "risk_tier": "sensitive",
@@ -1779,7 +1779,7 @@
   {
     "evidence_id": "kskeleton_q003_day",
     "source_id": "knowledge_skeleton",
-    "source_ref": "review-note:note_kskeleton_q003_day_001",
+    "source_ref": "review-note:knowledge_skeleton/q003_geju_strength/day_master_strength_rules.csv",
     "theme": "q003: day",
     "rule_family": "pattern_strength",
     "risk_tier": "sensitive",
@@ -1804,7 +1804,7 @@
   {
     "evidence_id": "kskeleton_q003_congwang",
     "source_id": "knowledge_skeleton",
-    "source_ref": "review-note:note_kskeleton_q003_congwang_001",
+    "source_ref": "review-note:knowledge_skeleton/q003_geju_strength/congwang_congshi_candidates.csv",
     "theme": "q003: congwang",
     "rule_family": "pattern_strength",
     "risk_tier": "sensitive",
@@ -1828,7 +1828,7 @@
   {
     "evidence_id": "kskeleton_q006_interaction",
     "source_id": "knowledge_skeleton",
-    "source_ref": "review-note:note_kskeleton_q006_interaction_001",
+    "source_ref": "review-note:knowledge_skeleton/q006_branch_interaction/q006_interaction_schema.md",
     "theme": "q006: interaction",
     "rule_family": "branch_interaction",
     "risk_tier": "sensitive",
@@ -1853,7 +1853,7 @@
   {
     "evidence_id": "kskeleton_q004_mechanism",
     "source_id": "knowledge_skeleton",
-    "source_ref": "review-note:note_kskeleton_q004_mechanism_001",
+    "source_ref": "review-note:knowledge_skeleton/q004_luck_cycle_boundary/q004_mechanism_schema.md",
     "theme": "q004: mechanism",
     "rule_family": "luck_cycle",
     "risk_tier": "sensitive",
@@ -1876,7 +1876,7 @@
   {
     "evidence_id": "kskeleton_q004_cross",
     "source_id": "knowledge_skeleton",
-    "source_ref": "review-note:note_kskeleton_q004_cross_001",
+    "source_ref": "review-note:knowledge_skeleton/q004_luck_cycle_boundary/q004_cross_review_backlog.md",
     "theme": "q004: cross",
     "rule_family": "luck_cycle",
     "risk_tier": "sensitive",
@@ -1899,7 +1899,7 @@
   {
     "evidence_id": "kskeleton_q004_q006",
     "source_id": "knowledge_skeleton",
-    "source_ref": "review-note:note_kskeleton_q004_q006_001",
+    "source_ref": "review-note:knowledge_skeleton/q004_luck_cycle_boundary/q004_q006_dependency_patch.md",
     "theme": "q004: q006",
     "rule_family": "luck_cycle",
     "risk_tier": "sensitive",
