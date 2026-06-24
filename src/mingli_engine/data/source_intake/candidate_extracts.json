@@ -11,7 +11,17 @@
     "proposed_limitations": [
       "Use only as conditional traditional signal material."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "northeast_blind_image_001",
+      "northeast_blind_image_002",
+      "northeast_blind_image_003",
+      "northeast_blind_image_004",
+      "northeast_blind_image_005",
+      "northeast_blind_image_006",
+      "northeast_blind_image_007",
+      "northeast_branch_interaction_001",
+      "northeast_high_risk_signal_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -52,7 +62,19 @@
       "Refuse exact death timing, exact lifespan, and professional-advice use.",
       "不得输出精确寿命、死亡时间与诊断结论，仅作为条件化高风险信号。"
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "life_death_high_risk_signal_001",
+      "life_death_high_risk_signal_002",
+      "life_death_high_risk_signal_003",
+      "life_death_high_risk_signal_004",
+      "life_death_luck_cycle_001",
+      "life_death_luck_cycle_002",
+      "life_death_pattern_strength_001",
+      "life_death_branch_interaction_001",
+      "life_death_remedy_boundary_001",
+      "life_death_remedy_boundary_002",
+      "life_death_book_boundary_signal_001"
+    ],
     "related_conflict_ids": [
       "conflict_high_risk_scope_001"
     ],
@@ -133,7 +155,19 @@
       "State uncertainty for timing and pattern interpretation.",
       "Include limitation language; do not guarantee outcome timing."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "teacher_pattern_strength_001",
+      "teacher_pattern_strength_002",
+      "teacher_pattern_strength_003",
+      "teacher_pattern_strength_004",
+      "teacher_luck_cycle_trigger_001",
+      "teacher_luck_cycle_trigger_002",
+      "teacher_useful_god_candidate_001",
+      "teacher_useful_god_candidate_002",
+      "teacher_taboo_god_candidate_001",
+      "teacher_taboo_god_candidate_002",
+      "teacher_ten_god_relation_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -152,7 +186,17 @@
     "proposed_limitations": [
       "Keep as structural taxonomy until locator and chart context are reviewed."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "duan_ten_god_relation_001",
+      "duan_ten_god_relation_002",
+      "duan_ten_god_relation_003",
+      "duan_ten_god_relation_004",
+      "duan_pattern_strength_001",
+      "duan_useful_god_candidate_001",
+      "duan_useful_god_candidate_002",
+      "duan_taboo_god_candidate_001",
+      "duan_taboo_god_candidate_002"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -171,7 +215,17 @@
     "proposed_limitations": [
       "Keep as terminology taxonomy until locator and chart context are reviewed."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "mingxue_five_element_balance_001",
+      "mingxue_five_element_balance_002",
+      "mingxue_five_element_balance_003",
+      "mingxue_five_element_balance_004",
+      "mingxue_ten_god_relation_001",
+      "mingxue_ten_god_relation_002",
+      "mingxue_useful_god_candidate_001",
+      "mingxue_taboo_god_candidate_001",
+      "mingxue_pattern_strength_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -191,7 +245,17 @@
       "State uncertainty for remedy-boundary interpretation.",
       "Include limitation language; avoid certainty about effects."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "fortune_remedy_boundary_001",
+      "fortune_remedy_boundary_002",
+      "fortune_remedy_boundary_003",
+      "fortune_remedy_boundary_004",
+      "fortune_remedy_boundary_005",
+      "fortune_luck_cycle_001",
+      "fortune_ten_god_relation_001",
+      "fortune_useful_god_candidate_001",
+      "fortune_taboo_god_candidate_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -211,7 +275,9 @@
       "Different use-god systems may produce different candidates; do not claim uniqueness.",
       "Seasonal adjustment reasoning requires month-pillar data and should be stated conditionally."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch002_useful_god_comparison_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -231,7 +297,9 @@
       "Foundation material covers basic patterns; advanced pattern deviations require separate extraction.",
       "Health and disaster claims from 天马易学 applied notes require conditional rewrite before formal use."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch001_pattern_strength_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -254,7 +322,9 @@
       "State uncertainty for pattern interpretation and school dependency.",
       "Include limitation language; do not use as standalone verdict."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch001_ten_god_relation_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -276,7 +346,9 @@
       "Keep as structural taxonomy, not deterministic outcome predictions.",
       "State uncertainty for pattern interpretation and school dependency."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch001_branch_interaction_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -297,7 +369,9 @@
       "Include limitation language; do not use as standalone verdict.",
       "May overlap with existing northeast_blind_peak blind_image_method; check for duplication."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch001_blind_image_method_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -317,7 +391,9 @@
       "Pattern strength material from textbook series; state structural reference, not deterministic classifier.",
       "Advanced pattern deviations may require separate extraction from specialized sources."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch002_pattern_strength_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -337,7 +413,9 @@
       "Luck cycle triggers should stay as structural candidate, not guaranteed timing mechanism.",
       "Cross-reference with foundation pattern strength before applying luck-cycle rules."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch002_luck_cycle_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -357,7 +435,9 @@
       "Keep as structural taxonomy until chart context is reviewed.",
       "Advanced ten-god relation patterns require separate extraction."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch002_ten_god_relation_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -379,7 +459,9 @@
       "Cross-source confirmation needed before promoting any single use-god selection.",
       "Advanced use-god material assumes foundation knowledge; do not use as standalone introduction."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch004_useful_god_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -400,7 +482,9 @@
       "Include limitation language; advanced pattern rules require foundation knowledge.",
       "Do not use advanced pattern rules as standalone classifiers without chart context."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch004_pattern_strength_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -422,7 +506,9 @@
       "Keep as structural taxonomy, not deterministic outcome predictions.",
       "Four-corner formation is a Liang Xiangrun specific framework; may differ from other schools."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch004_branch_interaction_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -444,7 +530,9 @@
       "Contains death, illness, and disaster language requiring conditional rewrite.",
       "细批终身 details require conditional safety rewrite before any evidence promotion."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "batch004_luck_cycle_001"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -466,7 +554,9 @@
       "Interpretation involves uncertainty; use as structural candidate only.",
       "Include limitation language; structural taxonomy only."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "kskeleton_q001_foundation"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -488,7 +578,9 @@
       "Cross-check against Shen and Yuanhai systems before promotion.",
       "State uncertainty and limitation; use as structural candidate only, not as standalone verdict."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "kskeleton_q002_yushi"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -510,7 +602,9 @@
       "Yangren/jianlu/yuejie/robbery-wealth terminology cannot be unconditionally merged.",
       "State uncertainty and limitation; use as structural candidate only, not as standalone verdict."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "kskeleton_q002_shen"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -533,7 +627,9 @@
       "Interpretation involves uncertainty; use as structural candidate only.",
       "Include limitation language; structural taxonomy only."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "kskeleton_q002_yuanhai"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -555,7 +651,9 @@
       "Interpretation involves uncertainty; use as structural candidate only.",
       "Include limitation language; structural taxonomy only."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "kskeleton_q003_geju"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -578,7 +676,9 @@
       "Interpretation involves uncertainty; use as structural candidate only.",
       "Include limitation language; structural taxonomy only."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "kskeleton_q003_day"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -600,7 +700,9 @@
       "Do not directly judge outcomes from extreme pattern identification.",
       "State uncertainty and limitation; use as structural candidate only, not as standalone verdict."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "kskeleton_q003_congwang"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -623,7 +725,9 @@
       "Q004 dependency: 8 luck-cycle candidates wait for Q006 structural definitions.",
       "State uncertainty and limitation; use as structural candidate only, not as standalone verdict."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "kskeleton_q006_interaction"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -644,7 +748,9 @@
       "Four-layer procedure is a procedural boundary, not a deterministic method.",
       "Interpretation involves uncertainty; use as structural candidate only."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "kskeleton_q004_mechanism"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -665,7 +771,9 @@
       "Folk use-god/tiaohou dichotomization risks oversimplification.",
       "Interpretation involves uncertainty; use as structural candidate only."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "kskeleton_q004_cross"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
@@ -686,7 +794,9 @@
       "Four-corner triggers are conditional, not deterministic outcome predictors.",
       "Interpretation involves uncertainty; use as structural candidate only."
     ],
-    "related_evidence_ids": [],
+    "related_evidence_ids": [
+      "kskeleton_q004_q006"
+    ],
     "related_conflict_ids": [],
     "related_gap_ids": [],
     "duplicate_of": "",
