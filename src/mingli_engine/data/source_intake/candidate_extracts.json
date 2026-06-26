@@ -802,5 +802,77 @@
     "duplicate_of": "",
     "created_by": "learning_reference_curation",
     "created_at": "2026-06-23"
+  },
+  {
+    "candidate_id": "candidate_markdown_batch_005_ten_god_relation_001",
+    "material_id": "material_markdown_source_batch_005",
+    "source_locator": "review-note:note_markdown_batch_005_001#lp_markdown_batch_005_ten_god_relation_001",
+    "extracted_meaning": "Training review notes present ten-god relationship imaging: when the useful god is restrained by a ten god, traditional interpretation suggests relationship dynamics with that ten god's represented domain.",
+    "short_quote": "",
+    "proposed_rule_family": "ten_god_relation",
+    "risk_tier": "sensitive",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Relationship interpretations are tendencies, not certainties.",
+      "Uncertainty: multiple ten-god interactions may produce countervailing effects.",
+      "Cross-source confirmation needed before formal evidence promotion.",
+      "Educational context only; not for individual consultation."
+    ],
+    "related_evidence_ids": [
+      "batch005_ten_god_relation_001"
+    ],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-23"
+  },
+  {
+    "candidate_id": "candidate_markdown_batch_005_blind_image_method_001",
+    "material_id": "material_markdown_source_batch_005",
+    "source_locator": "review-note:note_markdown_batch_005_001#lp_markdown_batch_005_blind_image_method_001",
+    "extracted_meaning": "Training notes present blind-style pattern recognition where specific Ba Zi configurations are traditionally associated with characteristic personality and tendency patterns within educational context.",
+    "short_quote": "",
+    "proposed_rule_family": "blind_image_method",
+    "risk_tier": "sensitive",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Blind-style interpretations are pattern-based tendencies, not deterministic readings.",
+      "Uncertainty: different schools may interpret configurations differently.",
+      "Cross-confirm with foundation sources before formal evidence promotion.",
+      "Educational reference only; not a standalone diagnostic tool."
+    ],
+    "related_evidence_ids": [
+      "batch005_blind_image_method_001"
+    ],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-23"
+  },
+  {
+    "candidate_id": "candidate_markdown_batch_005_branch_interaction_001",
+    "material_id": "material_markdown_source_batch_005",
+    "source_locator": "review-note:note_markdown_batch_005_001#lp_markdown_batch_005_branch_interaction_001",
+    "extracted_meaning": "Training notes present branch punishment, conflict, and combination principles where interaction effect depends on whether it restrains favorable or unfavorable chart elements.",
+    "short_quote": "",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "sensitive",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Branch interaction effects are context-dependent across different chart configurations.",
+      "Uncertainty: same interaction may produce different effects in different charts.",
+      "Cross-confirm with established branch interaction sources before promotion.",
+      "Educational reference; branch interactions are one factor among many."
+    ],
+    "related_evidence_ids": [
+      "batch005_branch_interaction_001"
+    ],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-23"
   }
 ]
