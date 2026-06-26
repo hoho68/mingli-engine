@@ -12203,6 +12203,31 @@ def test_render_pending_candidate_review_manual_application_next_session_manual_
     )
 
 
+def test_seeded_review_and_promotion_records_reference_existing_candidates():
+    candidates = source_intake.load_candidate_extracts()
+    candidate_ids = {candidate.candidate_id for candidate in candidates}
+
+    reviews = source_intake.load_review_decisions()
+    batches = source_intake.load_promotion_batches()
+
+    assert reviews
+    assert batches
+    assert all(review.candidate_id in candidate_ids for review in reviews)
+    assert all(
+        candidate_id in candidate_ids
+        for batch in batches
+        for candidate_id in batch.candidate_ids
+    )
+
+
+def test_seeded_intake_progress_report_loads_after_batch_registration():
+    report = source_intake.build_intake_progress_report()
+
+    assert report.candidate_counts
+    assert report.risk_tier_counts
+    assert report.rule_family_counts
+
+
 def test_validate_intake_quality_reports_blocking_failures(tmp_path):
     promoted_candidate = _candidate_payload("candidate_promoted", status="promoted")
     _write_candidate_extracts(tmp_path, [promoted_candidate])
