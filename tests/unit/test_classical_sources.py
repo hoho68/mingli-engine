@@ -330,19 +330,20 @@ def test_source_ref_quality_audit_tracks_source_window_references():
     assert "REVIEW_NOTE_TOPIC" not in report
     assert "FILE_SECTION" not in report
     assert "| REVIEW_NOTE_SOURCE_WINDOW | 57 | 62.0% |" in report
-    assert "| PAGE_LOCATOR | 39 |" in report
-    assert "| CHAPTER_LOCATOR | 16 |" in report
+    assert "| PAGE_LOCATOR | 43 |" in report
+    assert "| CHAPTER_LOCATOR | 12 |" in report
     assert "| MARKDOWN_LINE_LOCATOR | 2 |" in report
-    assert "| blocked:pdf-text-cid-or-empty | 13 |" in report
-    assert "| blocked:pdf-directory-text-only | 3 |" in report
+    assert "| blocked:rendered-review-no-topic-page-match | 4 |" in report
+    assert "| blocked:rendered-review-no-remedy-boundary-page-match | 5 |" in report
+    assert "| blocked:rendered-review-no-branch-interaction-topic-match | 1 |" in report
+    assert "| blocked:rendered-review-no-risk-boundary-page-match | 2 |" in report
     assert "## OCR/Page Review Pass" in report
     assert "| blind_school_secret_pdf | prior-page-reviewed | 1 |" in report
-    assert "| duan_plain_mingxue_outline_pdf | page-reviewed | 4 |" in report
-    assert "| duan_plain_mingxue_outline_pdf | rendered-review-blocked | 5 |" in report
-    assert "| mingxue_golden_voice_pdf | page-reviewed | 7 |" in report
-    assert "| mingxue_golden_voice_pdf | rendered-review-blocked | 2 |" in report
-    assert "| fortune_reading_hongfu_qitian_pdf | page-reviewed | 3 |" in report
-    assert "| fortune_reading_hongfu_qitian_pdf | rendered-review-blocked | 6 |" in report
+    assert "| duan_plain_mingxue_outline_pdf | page-reviewed | 5 |" in report
+    assert "| duan_plain_mingxue_outline_pdf | rendered-review-blocked | 4 |" in report
+    assert "| mingxue_golden_voice_pdf | page-reviewed | 9 |" in report
+    assert "| fortune_reading_hongfu_qitian_pdf | page-reviewed | 4 |" in report
+    assert "| fortune_reading_hongfu_qitian_pdf | rendered-review-blocked | 5 |" in report
     assert "| northeast_blind_peak_pdf | page-reviewed | 6 |" in report
     assert "| northeast_blind_peak_pdf | rendered-review-blocked | 3 |" in report
     assert "Converted 51 legacy topic-only review-note references" in report

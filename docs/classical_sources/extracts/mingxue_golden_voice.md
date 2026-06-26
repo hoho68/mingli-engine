@@ -52,8 +52,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `mingxue_ten_god_relation_001`
 - Source ref: `review-note:mingxue_golden_voice.md#source-window-ten-god-terms`
-- Source locator: `chapter:source=mingxue_golden_voice_pdf; section=ten-god-terms`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Source locator: `page:72; source=mingxue_golden_voice_pdf; heading:ten-god-terms`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神术语用于描述关系功能，不应被报告写成固定人格或现实身份。
@@ -63,8 +62,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `mingxue_ten_god_relation_002`
 - Source ref: `review-note:mingxue_golden_voice.md#source-window-ten-god-balance`
-- Source locator: `chapter:source=mingxue_golden_voice_pdf; section=ten-god-balance`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Source locator: `page:116; source=mingxue_golden_voice_pdf; heading:qa-structure-balance`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神关系要和五行强弱同看，过旺或受制才形成需要说明的结构倾向。

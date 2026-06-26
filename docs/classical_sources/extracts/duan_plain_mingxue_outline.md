@@ -32,8 +32,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `duan_ten_god_relation_002`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-position`
-- Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-position`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Source locator: `page:66; source=duan_plain_mingxue_outline_pdf; heading:ten-god-pillar-position-context`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神意义须随年、月、日、时位置变化，不宜离开柱位统一套用。
@@ -64,7 +63,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_useful_god_candidate_001`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-useful-god-balance`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=useful-god-balance`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Locator note: `blocked:rendered-review-no-topic-page-match`
 - Rule family: `useful_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 用神候选应从结构平衡和流通需要推得，不宜只按五行数量选择。
@@ -75,7 +74,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_useful_god_candidate_002`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-useful-god-condition`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=useful-god-condition`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Locator note: `blocked:rendered-review-no-topic-page-match`
 - Rule family: `useful_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 用神候选须说明成立条件和反例条件，避免把调候或扶抑混为一类。
@@ -86,7 +85,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_taboo_god_candidate_001`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-taboo-god-excess`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=taboo-god-excess`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Locator note: `blocked:rendered-review-no-topic-page-match`
 - Rule family: `taboo_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 忌神候选应从过旺、受制失衡或破坏流通处观察，不可只凭名称判断。
@@ -97,7 +96,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_taboo_god_candidate_002`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-taboo-god-context`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=taboo-god-context`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Locator note: `blocked:rendered-review-no-topic-page-match`
 - Rule family: `taboo_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 忌神判断须随结构语境变化，某五行在不同格局中可能承担不同功能。

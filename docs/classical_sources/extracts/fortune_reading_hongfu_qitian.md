@@ -23,7 +23,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `fortune_remedy_boundary_001`
 - Source ref: `review-note:fortune_reading_hongfu_qitian.md#source-window-remedy-boundary`
 - Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-boundary`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Locator note: `blocked:rendered-review-no-remedy-boundary-page-match`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 趋避调整只能描述传统说法和低风险反思方向，不得承诺效果或诱导付费。
@@ -34,7 +34,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `fortune_remedy_boundary_002`
 - Source ref: `review-note:fortune_reading_hongfu_qitian.md#source-window-remedy-low-risk-action`
 - Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-low-risk-action`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Locator note: `blocked:rendered-review-no-remedy-boundary-page-match`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 调整建议应转化为低风险反思或现实行动，不得承诺改运效果。
@@ -45,7 +45,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `fortune_remedy_boundary_003`
 - Source ref: `review-note:fortune_reading_hongfu_qitian.md#source-window-remedy-language`
 - Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-language`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Locator note: `blocked:rendered-review-no-remedy-boundary-page-match`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 趋避语言应避免制造焦虑，优先说明传统说法、限制和自主选择。
@@ -56,7 +56,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `fortune_remedy_boundary_004`
 - Source ref: `review-note:fortune_reading_hongfu_qitian.md#source-window-remedy-paid-boundary`
 - Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-paid-boundary`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Locator note: `blocked:rendered-review-no-remedy-boundary-page-match`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 涉及法器法事或付费化解的材料不得进入正式建议，只能记录为边界。
@@ -96,8 +96,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `fortune_taboo_god_candidate_001`
 - Source ref: `review-note:fortune_reading_hongfu_qitian.md#source-window-popular-taboo-god`
-- Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=popular-taboo-god`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Source locator: `page:72; source=fortune_reading_hongfu_qitian_pdf; heading:yongshen-illness-remedy`
 - Rule family: `taboo_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 忌神候选在通俗报告中只说明需要留意的结构压力，不指向现实坏事。
@@ -108,7 +107,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `fortune_remedy_boundary_005`
 - Source ref: `review-note:fortune_reading_hongfu_qitian.md#source-window-remedy-boundary-conditions`
 - Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-boundary-conditions`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Locator note: `blocked:rendered-review-no-remedy-boundary-page-match`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 补救边界条件信号只能转写为传统说法的限制条件，不可作为承诺或营销依据。

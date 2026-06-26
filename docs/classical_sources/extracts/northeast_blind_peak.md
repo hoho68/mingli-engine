@@ -73,7 +73,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_blind_image_006`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method-risk-boundary`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method-risk-boundary`
-- Locator note: `blocked:pdf-directory-text-only`
+- Locator note: `blocked:rendered-review-no-risk-boundary-page-match`
 - Rule family: `blind_image_method`
 - Risk tier: `sensitive`
 - Summary: 盲派断语材料进入报告前应改写为条件化观察，避免制造恐惧。
@@ -84,7 +84,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_branch_interaction_001`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-branch-image-interaction`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=branch-image-interaction`
-- Locator note: `blocked:pdf-directory-text-only`
+- Locator note: `blocked:rendered-review-no-branch-interaction-topic-match`
 - Rule family: `branch_interaction`
 - Risk tier: `ordinary`
 - Summary: 地支互动可作为取象线索，但需结合合冲刑害的实际成立条件。
@@ -95,7 +95,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_high_risk_signal_001`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-high-risk-image-boundary`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=high-risk-image-boundary`
-- Locator note: `blocked:pdf-directory-text-only`
+- Locator note: `blocked:rendered-review-no-risk-boundary-page-match`
 - Rule family: `high_risk_signal`
 - Risk tier: `high_risk`
 - Summary: 盲派高风险取象只能作为传统风险信号，须同时说明条件、证据和不确定性。
