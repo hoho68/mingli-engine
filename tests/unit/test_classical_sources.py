@@ -6,6 +6,7 @@ from mingli_engine.classical_sources import (
     ClassicalEvidenceError,
     load_approved_evidence_units,
     load_classical_sources,
+    load_curation_batches,
     load_evidence_units,
 )
 
@@ -89,6 +90,24 @@ def test_approved_evidence_units_link_only_to_approved_sources():
         assert unit.applicability
         if unit.risk_tier == "high_risk":
             assert unit.limitations
+
+
+def test_seeded_curation_batches_reference_existing_sources_and_evidence():
+    batches = load_curation_batches()
+    evidence_ids = {unit.evidence_id for unit in load_evidence_units()}
+    source_ids = {source.source_id for source in load_classical_sources()}
+
+    assert batches
+    assert all(
+        source_id in source_ids
+        for batch in batches
+        for source_id in batch.source_ids
+    )
+    assert all(
+        evidence_id in evidence_ids
+        for batch in batches
+        for evidence_id in batch.evidence_ids
+    )
 
 
 def test_loader_rejects_duplicate_source_ids(tmp_path):
