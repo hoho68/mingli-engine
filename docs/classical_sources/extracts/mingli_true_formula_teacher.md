@@ -10,7 +10,7 @@ PDF preparation material; no runtime parser reads this note.
 ### pattern-strength
 
 - Evidence id: `teacher_pattern_strength_001`
-- Source ref: `review-note:pattern-strength`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-pattern-strength`
 - Rule family: `pattern_strength`
 - Risk tier: `ordinary`
 - Summary: 格局和旺衰判断先看月令、日主根气与干支配合，证据不足时只列候选。
@@ -19,11 +19,103 @@ PDF preparation material; no runtime parser reads this note.
 ### luck-cycle-trigger
 
 - Evidence id: `teacher_luck_cycle_trigger_001`
-- Source ref: `review-note:luck-cycle-trigger`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-luck-cycle-trigger`
 - Rule family: `luck_cycle`
 - Risk tier: `sensitive`
 - Summary: 大运流年用于观察原局被引动的主题、条件与阶段变化。
 - Limitation: 缺少大运起运或流年资料时只能说明阶段主题候选。
+
+## Source Windows
+
+### source-window-pattern-strength
+
+- Evidence id: `teacher_pattern_strength_001`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-pattern-strength`
+- Rule family: `pattern_strength`
+- Risk tier: `ordinary`
+- Summary: 格局和旺衰判断应先看月令、日主根气与干支配合，证据不足时只列候选。
+- Limitation: 缺少节气或月令校验时不得下决定性格局结论。
+
+### source-window-luck-cycle-trigger
+
+- Evidence id: `teacher_luck_cycle_trigger_001`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-luck-cycle-trigger`
+- Rule family: `luck_cycle`
+- Risk tier: `sensitive`
+- Summary: 大运流年重在观察原局被引动的主题、条件与阶段变化，不宜保证具体结果。
+- Limitation: 缺少大运起运或流年资料时只能说明阶段主题候选。
+
+### source-window-pattern-root-qi
+
+- Evidence id: `teacher_pattern_strength_002`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-pattern-root-qi`
+- Rule family: `pattern_strength`
+- Risk tier: `ordinary`
+- Summary: 旺衰判断须看日主根气、月令得失与干支配合，不宜只看数量。
+- Limitation: 缺少根气或月令资料时只作弱支持。
+
+### source-window-pattern-candidate-downgrade
+
+- Evidence id: `teacher_pattern_strength_003`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-pattern-candidate-downgrade`
+- Rule family: `pattern_strength`
+- Risk tier: `ordinary`
+- Summary: 格局证据不完整时应列为候选或弱支持，等待更多结构证据互证。
+- Limitation: 不得在证据不足时输出决定性格局。
+
+### source-window-luck-cycle-condition
+
+- Evidence id: `teacher_luck_cycle_trigger_002`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-luck-cycle-condition`
+- Rule family: `luck_cycle`
+- Risk tier: `sensitive`
+- Summary: 岁运判断应说明被引动的原局主题和条件，不宜保证外部事件结果。
+- Limitation: 缺少起运或流年资料时仅保留阶段主题。
+
+### source-window-useful-god-root
+
+- Evidence id: `teacher_useful_god_candidate_001`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-useful-god-root`
+- Rule family: `useful_god_candidate`
+- Risk tier: `ordinary`
+- Summary: 取用须先辨结构病处和流通需要，再列可扶可抑的候选方向。
+- Limitation: 结构病处不明时不输出唯一用神。
+
+### source-window-useful-god-season
+
+- Evidence id: `teacher_useful_god_candidate_002`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-useful-god-season`
+- Rule family: `useful_god_candidate`
+- Risk tier: `ordinary`
+- Summary: 季令寒暖燥湿可影响用神候选，但须与日主强弱和格局条件并看。
+- Limitation: 调候证据不足时只作辅助线索。
+
+### source-window-taboo-god-damage
+
+- Evidence id: `teacher_taboo_god_candidate_001`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-taboo-god-damage`
+- Rule family: `taboo_god_candidate`
+- Risk tier: `ordinary`
+- Summary: 忌神候选常来自破坏平衡或阻断流通的结构点，需要列明对应证据。
+- Limitation: 证据不足时只说明压力来源。
+
+### source-window-taboo-god-trigger
+
+- Evidence id: `teacher_taboo_god_candidate_002`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-taboo-god-trigger`
+- Rule family: `taboo_god_candidate`
+- Risk tier: `sensitive`
+- Summary: 忌神被岁运引动时只可说明阶段压力主题，不能保证具体结果。
+- Limitation: 不得把阶段压力说成必然事件。
+
+### source-window-ten-god-function
+
+- Evidence id: `teacher_ten_god_relation_001`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-ten-god-function`
+- Rule family: `ten_god_relation`
+- Risk tier: `ordinary`
+- Summary: 十神功能须回到日主关系和格局语境，不能只按名称作性格定论。
+- Limitation: 缺少格局语境时降级为关系线索。
 
 ## Remaining Curation
 

@@ -43,6 +43,61 @@ PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS = {
 }
 
 
+REVIEW_NOTE_TOPIC_EVIDENCE_IDS = {
+    "blind_branch_interaction_001",
+    "blind_branch_interaction_002",
+    "blind_branch_interaction_003",
+    "blind_branch_interaction_004",
+    "blind_high_risk_signal_001",
+    "blind_remedy_boundary_001",
+    "blind_school_image_001",
+    "blind_school_image_002",
+    "duan_pattern_strength_001",
+    "duan_taboo_god_candidate_001",
+    "duan_taboo_god_candidate_002",
+    "duan_ten_god_relation_001",
+    "duan_ten_god_relation_002",
+    "duan_ten_god_relation_003",
+    "duan_useful_god_candidate_001",
+    "duan_useful_god_candidate_002",
+    "fortune_luck_cycle_001",
+    "fortune_remedy_boundary_001",
+    "fortune_remedy_boundary_002",
+    "fortune_remedy_boundary_003",
+    "fortune_remedy_boundary_004",
+    "fortune_taboo_god_candidate_001",
+    "fortune_ten_god_relation_001",
+    "fortune_useful_god_candidate_001",
+    "life_death_high_risk_signal_001",
+    "mingxue_five_element_balance_001",
+    "mingxue_five_element_balance_002",
+    "mingxue_five_element_balance_003",
+    "mingxue_pattern_strength_001",
+    "mingxue_taboo_god_candidate_001",
+    "mingxue_ten_god_relation_001",
+    "mingxue_ten_god_relation_002",
+    "mingxue_useful_god_candidate_001",
+    "northeast_blind_image_001",
+    "northeast_blind_image_002",
+    "northeast_blind_image_003",
+    "northeast_blind_image_004",
+    "northeast_blind_image_005",
+    "northeast_blind_image_006",
+    "northeast_branch_interaction_001",
+    "northeast_high_risk_signal_001",
+    "teacher_luck_cycle_trigger_001",
+    "teacher_luck_cycle_trigger_002",
+    "teacher_pattern_strength_001",
+    "teacher_pattern_strength_002",
+    "teacher_pattern_strength_003",
+    "teacher_taboo_god_candidate_001",
+    "teacher_taboo_god_candidate_002",
+    "teacher_ten_god_relation_001",
+    "teacher_useful_god_candidate_001",
+    "teacher_useful_god_candidate_002",
+}
+
+
 def _assert_markdown_line_locator(locator):
     assert locator.startswith("review-note:Markdown/source_batch_")
     assert "#L" in locator
@@ -53,6 +108,18 @@ def _assert_markdown_line_locator(locator):
 
     assert source_path.exists(), source_path
     assert 1 <= line_number <= len(source_path.read_text(encoding="utf-8").splitlines())
+
+
+def _assert_review_note_source_window_locator(locator):
+    assert locator.startswith("review-note:")
+    assert ".md#source-window-" in locator
+
+    file_name, anchor = locator.removeprefix("review-note:").split("#", 1)
+    note_path = Path("docs/classical_sources/extracts") / file_name
+    heading = f"### {anchor}"
+
+    assert note_path.exists(), note_path
+    assert heading in note_path.read_text(encoding="utf-8")
 
 
 def _write_json(path, payload):
@@ -151,6 +218,26 @@ def test_promoted_markdown_learning_evidence_uses_source_file_locators():
         _assert_markdown_line_locator(source_ref)
         assert "learning-reference:" not in source_ref
         assert "note_markdown_batch_005_001" not in source_ref
+
+
+def test_review_note_topic_evidence_uses_source_window_locators():
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+
+    assert REVIEW_NOTE_TOPIC_EVIDENCE_IDS <= set(evidence_by_id)
+    for evidence_id in REVIEW_NOTE_TOPIC_EVIDENCE_IDS:
+        source_ref = evidence_by_id[evidence_id].source_ref
+
+        _assert_review_note_source_window_locator(source_ref)
+
+
+def test_source_ref_quality_audit_tracks_source_window_references():
+    report = Path("docs/classical_sources/source_ref_quality_audit.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "REVIEW_NOTE_TOPIC" not in report
+    assert "| REVIEW_NOTE_SOURCE_WINDOW | 51 | 55.4% |" in report
+    assert "Converted 51 legacy topic-only review-note references" in report
 
 
 def test_loader_rejects_duplicate_source_ids(tmp_path):
