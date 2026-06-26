@@ -22,6 +22,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `mingxue_five_element_balance_001`
 - Source ref: `review-note:mingxue_golden_voice.md#source-window-five-element-balance`
+- Source locator: `chapter:source=mingxue_golden_voice_pdf; section=five-element-balance`
 - Rule family: `five_element_balance`
 - Risk tier: `ordinary`
 - Summary: 五行旺衰需要同时看明透、藏干、季令与组合，数量只能作为初步结构线索。
@@ -31,6 +32,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `mingxue_five_element_balance_002`
 - Source ref: `review-note:mingxue_golden_voice.md#source-window-five-element-season`
+- Source locator: `chapter:source=mingxue_golden_voice_pdf; section=five-element-season`
 - Rule family: `five_element_balance`
 - Risk tier: `ordinary`
 - Summary: 五行强弱须结合季令，不宜用出现次数替代旺衰判断。
@@ -40,6 +42,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `mingxue_five_element_balance_003`
 - Source ref: `review-note:mingxue_golden_voice.md#source-window-five-element-flow`
+- Source locator: `chapter:source=mingxue_golden_voice_pdf; section=five-element-flow`
 - Rule family: `five_element_balance`
 - Risk tier: `ordinary`
 - Summary: 五行平衡还要看相生相克和流通路径，偏枯或阻滞才形成结构压力。
@@ -49,6 +52,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `mingxue_ten_god_relation_001`
 - Source ref: `review-note:mingxue_golden_voice.md#source-window-ten-god-terms`
+- Source locator: `chapter:source=mingxue_golden_voice_pdf; section=ten-god-terms`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神术语用于描述关系功能，不应被报告写成固定人格或现实身份。
@@ -58,6 +62,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `mingxue_ten_god_relation_002`
 - Source ref: `review-note:mingxue_golden_voice.md#source-window-ten-god-balance`
+- Source locator: `chapter:source=mingxue_golden_voice_pdf; section=ten-god-balance`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神关系要和五行强弱同看，过旺或受制才形成需要说明的结构倾向。
@@ -67,6 +72,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `mingxue_useful_god_candidate_001`
 - Source ref: `review-note:mingxue_golden_voice.md#source-window-useful-god-flow`
+- Source locator: `chapter:source=mingxue_golden_voice_pdf; section=useful-god-flow`
 - Rule family: `useful_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 用神候选宜从补偏救弊和促进流通两方面观察，并保留候选强度。
@@ -76,6 +82,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `mingxue_taboo_god_candidate_001`
 - Source ref: `review-note:mingxue_golden_voice.md#source-window-taboo-god-imbalance`
+- Source locator: `chapter:source=mingxue_golden_voice_pdf; section=taboo-god-imbalance`
 - Rule family: `taboo_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 忌神候选来自偏旺、偏枯或阻滞处，报告应说明它只是结构压力。
@@ -85,10 +92,21 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `mingxue_pattern_strength_001`
 - Source ref: `review-note:mingxue_golden_voice.md#source-window-pattern-terminology`
+- Source locator: `chapter:source=mingxue_golden_voice_pdf; section=pattern-terminology`
 - Rule family: `pattern_strength`
 - Risk tier: `ordinary`
 - Summary: 格局术语应作为结构分类语言，需要与旺衰和用忌候选一并说明。
 - Limitation: 不能只凭术语名称断定层次。
+
+### source-window-five-element-balance-terms
+
+- Evidence id: `mingxue_five_element_balance_004`
+- Source ref: `review-note:mingxue_golden_voice.md#source-window-five-element-balance-terms`
+- Source locator: `chapter:source=mingxue_golden_voice_pdf; section=five-element-balance-terms`
+- Rule family: `five_element_balance`
+- Risk tier: `ordinary`
+- Summary: 五行平衡术语应作为传统结构语言，需和季令、透藏、流通条件共同使用。
+- Limitation: 不得把术语解释直接当成强弱结论。
 
 ## 017 Learning Reference
 

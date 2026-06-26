@@ -1245,7 +1245,7 @@
   {
     "evidence_id": "life_death_book_boundary_signal_001",
     "source_id": "life_death_book_100_pages",
-    "source_ref": "review-note:life_death_book_100_pages.md#risk-boundary",
+    "source_ref": "review-note:life_death_book_100_pages.md#source-window-risk-boundary",
     "theme": "生死高风险边界",
     "rule_family": "high_risk_signal",
     "risk_tier": "high_risk",
@@ -1270,7 +1270,7 @@
   {
     "evidence_id": "northeast_blind_image_007",
     "source_id": "northeast_blind_peak",
-    "source_ref": "review-note:northeast_blind_peak.md#blind-image-method",
+    "source_ref": "review-note:northeast_blind_peak.md#source-window-blind-image-method",
     "theme": "象法条件信号",
     "rule_family": "blind_image_method",
     "risk_tier": "sensitive",
@@ -1292,7 +1292,7 @@
   {
     "evidence_id": "duan_ten_god_relation_004",
     "source_id": "duan_plain_mingxue_outline",
-    "source_ref": "review-note:duan_plain_mingxue_outline.md#ten-god-relation",
+    "source_ref": "review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relation",
     "theme": "十神关系分类",
     "rule_family": "ten_god_relation",
     "risk_tier": "ordinary",
@@ -1314,7 +1314,7 @@
   {
     "evidence_id": "mingxue_five_element_balance_004",
     "source_id": "mingxue_golden_voice",
-    "source_ref": "review-note:mingxue_golden_voice.md#five-element-balance",
+    "source_ref": "review-note:mingxue_golden_voice.md#source-window-five-element-balance-terms",
     "theme": "五行平衡术语",
     "rule_family": "five_element_balance",
     "risk_tier": "ordinary",
@@ -1336,7 +1336,7 @@
   {
     "evidence_id": "teacher_pattern_strength_004",
     "source_id": "mingli_true_formula_teacher",
-    "source_ref": "review-note:mingli_true_formula_teacher.md#pattern-strength",
+    "source_ref": "review-note:mingli_true_formula_teacher.md#source-window-pattern-strength-conditions",
     "theme": "格局强度条件信号",
     "rule_family": "pattern_strength",
     "risk_tier": "sensitive",
@@ -1361,7 +1361,7 @@
   {
     "evidence_id": "fortune_remedy_boundary_005",
     "source_id": "fortune_reading_hongfu_qitian",
-    "source_ref": "review-note:fortune_reading_hongfu_qitian.md#remedy-boundary",
+    "source_ref": "review-note:fortune_reading_hongfu_qitian.md#source-window-remedy-boundary-conditions",
     "theme": "补救边界条件信号",
     "rule_family": "remedy_boundary",
     "risk_tier": "sensitive",

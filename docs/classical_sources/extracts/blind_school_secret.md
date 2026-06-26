@@ -22,6 +22,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `blind_branch_interaction_001`
 - Source ref: `review-note:blind_school_secret.md#source-window-branch-interactions`
+- Source locator: `page:98; source=blind_school_secret_pdf; heading:branch-punishment-overview`
 - Rule family: `branch_interaction`
 - Risk tier: `ordinary`
 - Summary: 刑冲合害应结合位置、引动条件与整体结构观察，不直接等同于现实事件。
@@ -31,6 +32,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `blind_branch_interaction_002`
 - Source ref: `review-note:blind_school_secret.md#source-window-branch-interaction-position`
+- Source locator: `page:98; source=blind_school_secret_pdf; heading:branch-interaction-position`
 - Rule family: `branch_interaction`
 - Risk tier: `ordinary`
 - Summary: 刑冲合害需辨明发生位置和所涉十神，不能只按地支名称推结论。
@@ -40,6 +42,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `blind_branch_interaction_003`
 - Source ref: `review-note:blind_school_secret.md#source-window-branch-interaction-trigger`
+- Source locator: `page:50; source=blind_school_secret_pdf; heading:branch-interaction-trigger`
 - Rule family: `branch_interaction`
 - Risk tier: `sensitive`
 - Summary: 原局互动在岁运引动时才更适合说明阶段主题，静态互动不等于具体事件。
@@ -49,6 +52,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `blind_branch_interaction_004`
 - Source ref: `review-note:blind_school_secret.md#source-window-branch-interaction-strength`
+- Source locator: `page:112; source=blind_school_secret_pdf; heading:branch-interaction-strength`
 - Rule family: `branch_interaction`
 - Risk tier: `ordinary`
 - Summary: 地支互动强弱须结合月令、透干和合化是否成立，不宜单列地支定性。
@@ -58,6 +62,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `blind_school_image_001`
 - Source ref: `review-note:blind_school_secret.md#source-window-blind-school-image`
+- Source locator: `page:226; source=blind_school_secret_pdf; heading:blind-school-image`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 盲派象法可补充结构解读，但必须和可见干支、十神、支象互动互相校验。
@@ -67,6 +72,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `blind_school_image_002`
 - Source ref: `review-note:blind_school_secret.md#source-window-blind-school-image-boundary`
+- Source locator: `page:431; source=blind_school_secret_pdf; heading:blind-school-image-boundary`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 象法语言进入报告时应从断语改写为可审查的条件、信号和限制。
@@ -76,6 +82,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `blind_high_risk_signal_001`
 - Source ref: `review-note:blind_school_secret.md#source-window-blind-high-risk-boundary`
+- Source locator: `page:70; source=blind_school_secret_pdf; heading:blind-high-risk-boundary`
 - Rule family: `high_risk_signal`
 - Risk tier: `high_risk`
 - Summary: 涉及灾厄或健康风险的盲派材料只能作为传统风险信号，不作现实保证。
@@ -85,6 +92,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `blind_remedy_boundary_001`
 - Source ref: `review-note:blind_school_secret.md#source-window-blind-remedy-boundary`
+- Source locator: `chapter:source=blind_school_secret_pdf; section=remedy-boundary`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 涉及趋避的材料只能作为低风险反思提示，不得承诺化解效果。

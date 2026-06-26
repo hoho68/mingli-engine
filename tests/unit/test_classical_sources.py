@@ -98,6 +98,21 @@ REVIEW_NOTE_TOPIC_EVIDENCE_IDS = {
 }
 
 
+FILE_SECTION_EVIDENCE_IDS = {
+    "duan_ten_god_relation_004",
+    "fortune_remedy_boundary_005",
+    "life_death_book_boundary_signal_001",
+    "mingxue_five_element_balance_004",
+    "northeast_blind_image_007",
+    "teacher_pattern_strength_004",
+}
+
+
+REVIEW_NOTE_SOURCE_WINDOW_EVIDENCE_IDS = (
+    REVIEW_NOTE_TOPIC_EVIDENCE_IDS | FILE_SECTION_EVIDENCE_IDS
+)
+
+
 def _assert_markdown_line_locator(locator):
     assert locator.startswith("review-note:Markdown/source_batch_")
     assert "#L" in locator
@@ -111,6 +126,10 @@ def _assert_markdown_line_locator(locator):
 
 
 def _assert_review_note_source_window_locator(locator):
+    _review_note_source_window_source_locator(locator)
+
+
+def _review_note_source_window_source_locator(locator):
     assert locator.startswith("review-note:")
     assert ".md#source-window-" in locator
 
@@ -119,7 +138,57 @@ def _assert_review_note_source_window_locator(locator):
     heading = f"### {anchor}"
 
     assert note_path.exists(), note_path
-    assert heading in note_path.read_text(encoding="utf-8")
+    note_text = note_path.read_text(encoding="utf-8")
+    assert heading in note_text
+
+    section = _extract_markdown_section(note_text, heading)
+    source_locator = _extract_bulleted_field(section, "Source locator")
+    _assert_source_locator_is_precise(source_locator)
+    return source_locator
+
+
+def _extract_markdown_section(markdown, heading):
+    heading_line = f"{heading}\n"
+    start = markdown.index(heading_line)
+    rest = markdown[start + len(heading_line) :]
+    next_heading = rest.find("\n### ")
+    next_major_heading = rest.find("\n## ")
+    ends = [idx for idx in (next_heading, next_major_heading) if idx != -1]
+    end = min(ends) if ends else len(rest)
+    return rest[:end]
+
+
+def _extract_bulleted_field(section, field_name):
+    prefix = f"- {field_name}: `"
+    for line in section.splitlines():
+        if line.startswith(prefix) and line.endswith("`"):
+            return line.removeprefix(prefix).removesuffix("`")
+    raise AssertionError(f"missing {field_name}: {section}")
+
+
+def _assert_source_locator_is_precise(locator):
+    if locator.startswith("page:"):
+        assert "source=" in locator
+        assert "heading:" in locator or "section:" in locator
+        return
+
+    if locator.startswith("chapter:"):
+        assert "source=" in locator
+        assert "section=" in locator or "heading:" in locator
+        return
+
+    if locator.startswith("Markdown/") and "#L" in locator:
+        source_path_text, line_text = locator.rsplit("#L", 1)
+        line_number = int(line_text)
+        source_path = Path(source_path_text)
+
+        assert source_path.exists(), source_path
+        assert 1 <= line_number <= len(
+            source_path.read_text(encoding="utf-8").splitlines()
+        )
+        return
+
+    raise AssertionError(locator)
 
 
 def _write_json(path, payload):
@@ -220,14 +289,28 @@ def test_promoted_markdown_learning_evidence_uses_source_file_locators():
         assert "note_markdown_batch_005_001" not in source_ref
 
 
-def test_review_note_topic_evidence_uses_source_window_locators():
+def test_review_note_evidence_uses_precise_source_window_locators():
     evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
 
-    assert REVIEW_NOTE_TOPIC_EVIDENCE_IDS <= set(evidence_by_id)
-    for evidence_id in REVIEW_NOTE_TOPIC_EVIDENCE_IDS:
+    assert REVIEW_NOTE_SOURCE_WINDOW_EVIDENCE_IDS <= set(evidence_by_id)
+    for evidence_id in REVIEW_NOTE_SOURCE_WINDOW_EVIDENCE_IDS:
         source_ref = evidence_by_id[evidence_id].source_ref
 
         _assert_review_note_source_window_locator(source_ref)
+
+
+def test_formal_evidence_has_no_legacy_file_section_locators():
+    evidence_units = load_evidence_units()
+    legacy_file_section_refs = [
+        (unit.evidence_id, unit.source_ref)
+        for unit in evidence_units
+        if unit.source_ref.startswith("review-note:")
+        and ".md#" in unit.source_ref
+        and "#source-window-" not in unit.source_ref
+        and not unit.source_ref.startswith("review-note:Markdown/")
+    ]
+
+    assert legacy_file_section_refs == []
 
 
 def test_source_ref_quality_audit_tracks_source_window_references():
@@ -236,8 +319,31 @@ def test_source_ref_quality_audit_tracks_source_window_references():
     )
 
     assert "REVIEW_NOTE_TOPIC" not in report
-    assert "| REVIEW_NOTE_SOURCE_WINDOW | 51 | 55.4% |" in report
+    assert "FILE_SECTION" not in report
+    assert "| REVIEW_NOTE_SOURCE_WINDOW | 57 | 62.0% |" in report
     assert "Converted 51 legacy topic-only review-note references" in report
+    assert "Converted 6 legacy file-section review-note references" in report
+
+    inventory = report.split("## Detailed Inventory", 1)[1].split(
+        "## Recommendations", 1
+    )[0]
+    for line in inventory.splitlines():
+        if not line.startswith("| ") or line.startswith("| Evidence ID"):
+            continue
+        if set(line.replace("|", "").strip()) == {"-"}:
+            continue
+
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        evidence_id = cells[0]
+        source_ref = cells[5].strip("`")
+        source_locator = cells[6].strip("`")
+        precision = cells[7]
+
+        if precision != "REVIEW_NOTE_SOURCE_WINDOW":
+            continue
+
+        expected_locator = _review_note_source_window_source_locator(source_ref)
+        assert source_locator == expected_locator, evidence_id
 
 
 def test_loader_rejects_duplicate_source_ids(tmp_path):

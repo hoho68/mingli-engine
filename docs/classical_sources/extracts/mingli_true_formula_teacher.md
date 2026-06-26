@@ -31,6 +31,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `teacher_pattern_strength_001`
 - Source ref: `review-note:mingli_true_formula_teacher.md#source-window-pattern-strength`
+- Source locator: `page:121; source=mingli_true_formula_teacher_pdf; heading:wangshuai-pattern-context`
 - Rule family: `pattern_strength`
 - Risk tier: `ordinary`
 - Summary: 格局和旺衰判断应先看月令、日主根气与干支配合，证据不足时只列候选。
@@ -40,6 +41,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `teacher_luck_cycle_trigger_001`
 - Source ref: `review-note:mingli_true_formula_teacher.md#source-window-luck-cycle-trigger`
+- Source locator: `page:141; source=mingli_true_formula_teacher_pdf; heading:xiaoxian-luck-cycle`
 - Rule family: `luck_cycle`
 - Risk tier: `sensitive`
 - Summary: 大运流年重在观察原局被引动的主题、条件与阶段变化，不宜保证具体结果。
@@ -49,6 +51,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `teacher_pattern_strength_002`
 - Source ref: `review-note:mingli_true_formula_teacher.md#source-window-pattern-root-qi`
+- Source locator: `page:56; source=mingli_true_formula_teacher_pdf; heading:wangshuai-root-qi`
 - Rule family: `pattern_strength`
 - Risk tier: `ordinary`
 - Summary: 旺衰判断须看日主根气、月令得失与干支配合，不宜只看数量。
@@ -58,6 +61,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `teacher_pattern_strength_003`
 - Source ref: `review-note:mingli_true_formula_teacher.md#source-window-pattern-candidate-downgrade`
+- Source locator: `page:125; source=mingli_true_formula_teacher_pdf; heading:geju-candidate`
 - Rule family: `pattern_strength`
 - Risk tier: `ordinary`
 - Summary: 格局证据不完整时应列为候选或弱支持，等待更多结构证据互证。
@@ -67,6 +71,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `teacher_luck_cycle_trigger_002`
 - Source ref: `review-note:mingli_true_formula_teacher.md#source-window-luck-cycle-condition`
+- Source locator: `page:141; source=mingli_true_formula_teacher_pdf; heading:luck-cycle-condition`
 - Rule family: `luck_cycle`
 - Risk tier: `sensitive`
 - Summary: 岁运判断应说明被引动的原局主题和条件，不宜保证外部事件结果。
@@ -76,6 +81,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `teacher_useful_god_candidate_001`
 - Source ref: `review-note:mingli_true_formula_teacher.md#source-window-useful-god-root`
+- Source locator: `page:143; source=mingli_true_formula_teacher_pdf; heading:yongshen-definition`
 - Rule family: `useful_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 取用须先辨结构病处和流通需要，再列可扶可抑的候选方向。
@@ -85,6 +91,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `teacher_useful_god_candidate_002`
 - Source ref: `review-note:mingli_true_formula_teacher.md#source-window-useful-god-season`
+- Source locator: `page:154; source=mingli_true_formula_teacher_pdf; heading:tiaohou-principle`
 - Rule family: `useful_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 季令寒暖燥湿可影响用神候选，但须与日主强弱和格局条件并看。
@@ -94,6 +101,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `teacher_taboo_god_candidate_001`
 - Source ref: `review-note:mingli_true_formula_teacher.md#source-window-taboo-god-damage`
+- Source locator: `page:250; source=mingli_true_formula_teacher_pdf; heading:jishen-boundary`
 - Rule family: `taboo_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 忌神候选常来自破坏平衡或阻断流通的结构点，需要列明对应证据。
@@ -103,6 +111,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `teacher_taboo_god_candidate_002`
 - Source ref: `review-note:mingli_true_formula_teacher.md#source-window-taboo-god-trigger`
+- Source locator: `page:250; source=mingli_true_formula_teacher_pdf; heading:jishen-trigger-boundary`
 - Rule family: `taboo_god_candidate`
 - Risk tier: `sensitive`
 - Summary: 忌神被岁运引动时只可说明阶段压力主题，不能保证具体结果。
@@ -112,10 +121,21 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `teacher_ten_god_relation_001`
 - Source ref: `review-note:mingli_true_formula_teacher.md#source-window-ten-god-function`
+- Source locator: `page:155; source=mingli_true_formula_teacher_pdf; heading:ten-god-classification`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神功能须回到日主关系和格局语境，不能只按名称作性格定论。
 - Limitation: 缺少格局语境时降级为关系线索。
+
+### source-window-pattern-strength-conditions
+
+- Evidence id: `teacher_pattern_strength_004`
+- Source ref: `review-note:mingli_true_formula_teacher.md#source-window-pattern-strength-conditions`
+- Source locator: `page:121; source=mingli_true_formula_teacher_pdf; heading:pattern-strength-conditions`
+- Rule family: `pattern_strength`
+- Risk tier: `ordinary`
+- Summary: 格局强度条件信号应和旺衰、月令及干支配合共同审查。
+- Limitation: 条件不足时只能作为候选强度信号。
 
 ## Remaining Curation
 
