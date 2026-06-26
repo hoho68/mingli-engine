@@ -140,17 +140,17 @@
       "knowledge_skeleton"
     ],
     "evidence_ids": [
-      "kskeleton_q001_foundation_tables",
-      "kskeleton_q002_yushi_tiaohou",
-      "kskeleton_q002_shen_pattern",
-      "kskeleton_q002_yuanhai_bilateral",
-      "kskeleton_q003_geju_selection",
-      "kskeleton_q003_day_master",
-      "kskeleton_q003_congwang_congshi",
-      "kskeleton_q006_interaction_structure",
-      "kskeleton_q004_mechanism_layer",
-      "kskeleton_q004_cross_dependency",
-      "kskeleton_q004_q006_dependency"
+      "kskeleton_q001_foundation",
+      "kskeleton_q002_yushi",
+      "kskeleton_q002_shen",
+      "kskeleton_q002_yuanhai",
+      "kskeleton_q003_geju",
+      "kskeleton_q003_day",
+      "kskeleton_q003_congwang",
+      "kskeleton_q006_interaction",
+      "kskeleton_q004_mechanism",
+      "kskeleton_q004_cross",
+      "kskeleton_q004_q006"
     ],
     "review_status": "reviewed",
     "review_notes": "KSkeleton Q001-Q008 taxonomy promoted to evidence. Covers foundation tables, yongshen tiaohou, geju strength, luck cycle boundary, branch interaction.",
