@@ -22,8 +22,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `northeast_blind_image_001`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method`
-- Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method`
-- Locator note: `blocked:pdf-directory-text-only`
+- Source locator: `page:2; source=northeast_blind_peak_pdf; heading:eight-method-rules`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 盲派象法重在从干支组合取象，再回到原局结构与应期条件中校验。
@@ -33,8 +32,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `northeast_blind_image_002`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method-position`
-- Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method-position`
-- Locator note: `blocked:pdf-directory-text-only`
+- Source locator: `page:16; source=northeast_blind_peak_pdf; heading:position-child-star`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 干支取象应先分清柱位，再判断象意是否与原局结构相互印证。
@@ -44,8 +42,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `northeast_blind_image_003`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method-combination`
-- Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method-combination`
-- Locator note: `blocked:pdf-directory-text-only`
+- Source locator: `page:34; source=northeast_blind_peak_pdf; heading:marriage-five-rules-combination`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 组合取象宜看相邻、透藏和动静关系，不宜把单一字象直接等同现实事件。
@@ -55,8 +52,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `northeast_blind_image_004`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method-structure`
-- Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method-structure`
-- Locator note: `blocked:pdf-directory-text-only`
+- Source locator: `page:34; source=northeast_blind_peak_pdf; heading:marriage-five-rules-structure`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 象法结论需要回到旺衰、十神和刑冲合害中互证，互证不足时降级。
@@ -66,8 +62,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `northeast_blind_image_005`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method-trigger`
-- Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method-trigger`
-- Locator note: `blocked:pdf-directory-text-only`
+- Source locator: `page:13; source=northeast_blind_peak_pdf; heading:timing-match-condition`
 - Rule family: `blind_image_method`
 - Risk tier: `sensitive`
 - Summary: 应期或阶段判断须有岁运引动条件，静态原局只能说明潜在主题。
@@ -110,8 +105,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `northeast_blind_image_007`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-blind-image-method`
-- Source locator: `chapter:source=northeast_blind_peak_pdf; section=blind-image-method`
-- Locator note: `blocked:pdf-directory-text-only`
+- Source locator: `page:2; source=northeast_blind_peak_pdf; heading:eight-method-rules`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 象法条件信号应作为可复核的结构提示，不应脱离原局条件单独成断。

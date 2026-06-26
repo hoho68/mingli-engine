@@ -22,8 +22,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `duan_ten_god_relation_001`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relationships`
-- Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-relationships`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Source locator: `page:66; source=duan_plain_mingxue_outline_pdf; heading:ten-god-section-start`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神关系应结合柱位、组合与日主关系观察功能，不宜脱离整体结构单断。
@@ -44,8 +43,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `duan_ten_god_relation_003`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-structure`
-- Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-structure`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Source locator: `page:84; source=duan_plain_mingxue_outline_pdf; heading:guan-sha-mixed-structure`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神组合须与日主强弱、五行流通和格局候选同看，才能形成报告结论。
@@ -55,8 +53,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `duan_pattern_strength_001`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-pattern-context`
-- Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=pattern-context`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Source locator: `page:92; source=duan_plain_mingxue_outline_pdf; heading:pattern-context`
 - Rule family: `pattern_strength`
 - Risk tier: `ordinary`
 - Summary: 格局候选应作为结构语境，不应越过月令、透藏和十神组合直接定格。
@@ -110,8 +107,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `duan_ten_god_relation_004`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relation`
-- Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-relation`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Source locator: `page:66; source=duan_plain_mingxue_outline_pdf; heading:ten-god-relation-start`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神关系分类应保留为结构分类线索，进入报告前仍需结合柱位和强弱条件。

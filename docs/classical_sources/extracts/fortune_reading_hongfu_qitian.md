@@ -66,8 +66,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `fortune_luck_cycle_001`
 - Source ref: `review-note:fortune_reading_hongfu_qitian.md#source-window-popular-luck-cycle`
-- Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=popular-luck-cycle`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Source locator: `page:54; source=fortune_reading_hongfu_qitian_pdf; heading:minggong-xiaoxian-liunian`
 - Rule family: `luck_cycle`
 - Risk tier: `sensitive`
 - Summary: 面向读者的岁运说明宜写成阶段主题和复盘问题，不宜写成事件承诺。
@@ -77,8 +76,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `fortune_ten_god_relation_001`
 - Source ref: `review-note:fortune_reading_hongfu_qitian.md#source-window-popular-ten-god`
-- Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=popular-ten-god`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Source locator: `page:41; source=fortune_reading_hongfu_qitian_pdf; heading:six-relations-ten-god`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 通俗报告中的十神说明应保持关系线索口径，不替代现实人格评价。
@@ -88,8 +86,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `fortune_useful_god_candidate_001`
 - Source ref: `review-note:fortune_reading_hongfu_qitian.md#source-window-popular-useful-god`
-- Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=popular-useful-god`
-- Locator note: `blocked:pdf-text-cid-or-empty`
+- Source locator: `page:69; source=fortune_reading_hongfu_qitian_pdf; heading:yongshen-section-start`
 - Rule family: `useful_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 用神候选在通俗报告中可转成平衡方向，但必须保留候选和限制。

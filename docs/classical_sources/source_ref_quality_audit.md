@@ -16,26 +16,41 @@ Audit scope: 92 evidence units
 
 | Locator Type | Count |
 |--------------|-------|
-| PAGE_LOCATOR | 19 |
-| CHAPTER_LOCATOR | 36 |
+| PAGE_LOCATOR | 39 |
+| CHAPTER_LOCATOR | 16 |
 | MARKDOWN_LINE_LOCATOR | 2 |
 
 ## Chapter Locator Blocker Detail
 
 | Blocker | Count |
 |---------|-------|
-| blocked:pdf-directory-text-only | 9 |
-| blocked:pdf-text-cid-or-empty | 27 |
+| blocked:pdf-directory-text-only | 3 |
+| blocked:pdf-text-cid-or-empty | 13 |
+
+## OCR/Page Review Pass
+
+| Source | Outcome | Count |
+|--------|---------|-------|
+| blind_school_secret_pdf | prior-page-reviewed | 1 |
+| duan_plain_mingxue_outline_pdf | page-reviewed | 4 |
+| duan_plain_mingxue_outline_pdf | rendered-review-blocked | 5 |
+| mingxue_golden_voice_pdf | page-reviewed | 7 |
+| mingxue_golden_voice_pdf | rendered-review-blocked | 2 |
+| fortune_reading_hongfu_qitian_pdf | page-reviewed | 3 |
+| fortune_reading_hongfu_qitian_pdf | rendered-review-blocked | 6 |
+| northeast_blind_peak_pdf | page-reviewed | 6 |
+| northeast_blind_peak_pdf | rendered-review-blocked | 3 |
 
 ## Improvement Notes
 
 Converted 51 legacy topic-only review-note references in the prior pass and preserved them as source-window locators.
 Converted 6 legacy file-section review-note references into verifiable source-window locators in the prior pass.
-Upgraded 1 source-window locator from chapter-level to page-level after local PDF text review.
+Upgraded 20 additional source-window locators from chapter-level to page-level after local PDF rendering and visual review.
 - All 57 review-note-backed evidence units now point to `review-note:<extract>.md#source-window-<slug>`.
 - Each source-window section has a `Source locator` field using `page:`, `chapter:`, or `Markdown/...#L...`.
 - Remaining chapter-level locators carry a `Locator note` explaining why page or Markdown-line precision is currently blocked.
-- Page-level locator coverage is used where PDF text extraction is reliable; chapter-level locators are retained for CID/low-text PDFs pending OCR.
+- Page-level locator coverage is used where PDF text extraction, table-of-contents mapping, or rendered page review is reliable.
+- Chapter-level locators are retained only where visual review did not produce a reliable topic-page match.
 - Markdown line locators are used for the Life Death Book material that already has a tracked Markdown extract.
 
 Prior improvements are preserved:
@@ -46,39 +61,39 @@ Prior improvements are preserved:
 
 ### Current Goal Progress (92 items)
 - REVIEW_NOTE_SOURCE_WINDOW: 57 items now point to source-window sections with source locators.
-- PAGE_LOCATOR: 19 source-window items now have page-level locators.
-- CHAPTER_LOCATOR: 36 source-window items remain chapter-level with explicit blocker notes.
+- PAGE_LOCATOR: 39 source-window items now have page-level locators.
+- CHAPTER_LOCATOR: 16 source-window items remain chapter-level with explicit blocker notes.
 - MARKDOWN_SOURCE_LINE: 15 items point to cleaned Markdown files and line numbers.
 - REVIEW_NOTE_KS_PATH: 11 items point to knowledge-skeleton files.
 - PAGE_EXACT: 9 items already have exact page references.
 
 ### Optional Future Precision Work
-- Run OCR/manual page review for CID PDFs: Duan, Mingxue, and Hongfu.
-- Manually review Northeast pages beyond directory/page-number extraction before replacing chapter locators.
-- Promote the audit builder into a checked utility command if future curation passes need repeatable report generation.
+- For the remaining CID-backed source windows, do a targeted OCR/manual transcription pass rather than relying on CID text extraction.
+- For the remaining Northeast source windows, use manual topic review to avoid over-mapping case-heavy pages to broad rule families.
+- Promote this audit builder into a checked utility command if future curation passes need repeatable report generation.
 
 ## Detailed Inventory
 
 | Evidence ID | Theme | Rule Family | School | Batch | Current source_ref | Source locator | Precision | Status |
 |-------------|-------|-------------|--------|-------|--------------------|----------------|-----------|--------|
-| duan_ten_god_relation_001 | 十神关系 | ten_god_relation | 段氏 | batch_012_seed_001 | `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relationships` | `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-relationships` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| mingxue_five_element_balance_001 | 五行强弱 | five_element_balance | 通论 | batch_012_seed_001 | `review-note:mingxue_golden_voice.md#source-window-five-element-balance` | `chapter:source=mingxue_golden_voice_pdf; section=five-element-balance` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| duan_ten_god_relation_001 | 十神关系 | ten_god_relation | 段氏 | batch_012_seed_001 | `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relationships` | `page:66; source=duan_plain_mingxue_outline_pdf; heading:ten-god-section-start` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| mingxue_five_element_balance_001 | 五行强弱 | five_element_balance | 通论 | batch_012_seed_001 | `review-note:mingxue_golden_voice.md#source-window-five-element-balance` | `page:104; source=mingxue_golden_voice_pdf; heading:five-element-command` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | teacher_pattern_strength_001 | 格局旺衰 | pattern_strength | 师传口径 | batch_012_seed_001 | `review-note:mingli_true_formula_teacher.md#source-window-pattern-strength` | `page:121; source=mingli_true_formula_teacher_pdf; heading:wangshuai-pattern-context` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | blind_branch_interaction_001 | 刑冲合害 | branch_interaction | 盲派 | batch_012_seed_001 | `review-note:blind_school_secret.md#source-window-branch-interactions` | `page:98; source=blind_school_secret_pdf; heading:branch-punishment-overview` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| northeast_blind_image_001 | 盲派象法 | blind_image_method | 东北盲派 | batch_012_seed_001 | `review-note:northeast_blind_peak.md#source-window-image-method` | `chapter:source=northeast_blind_peak_pdf; section=image-method` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| northeast_blind_image_001 | 盲派象法 | blind_image_method | 东北盲派 | batch_012_seed_001 | `review-note:northeast_blind_peak.md#source-window-image-method` | `page:2; source=northeast_blind_peak_pdf; heading:eight-method-rules` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | teacher_luck_cycle_trigger_001 | 大运流年 | luck_cycle | 师传口径 | batch_012_seed_001 | `review-note:mingli_true_formula_teacher.md#source-window-luck-cycle-trigger` | `page:141; source=mingli_true_formula_teacher_pdf; heading:xiaoxian-luck-cycle` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | fortune_remedy_boundary_001 | 趋避与调整 | remedy_boundary | 通俗命理 | batch_012_seed_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-remedy-boundary` | `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | life_death_high_risk_signal_001 | 生死寿夭材料 | high_risk_signal | 传统高风险材料 | batch_012_seed_001 | `review-note:life_death_book_100_pages.md#source-window-life-death-risk-signal` | `Markdown/2800.《命理生死之书》100页.md#L15` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| northeast_blind_image_002 | 盲派象法 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-position` | `chapter:source=northeast_blind_peak_pdf; section=image-method-position` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| northeast_blind_image_003 | 干支组合取象 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-combination` | `chapter:source=northeast_blind_peak_pdf; section=image-method-combination` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| northeast_blind_image_004 | 象法回归结构 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-structure` | `chapter:source=northeast_blind_peak_pdf; section=image-method-structure` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| northeast_blind_image_005 | 象法触发条件 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-trigger` | `chapter:source=northeast_blind_peak_pdf; section=image-method-trigger` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| northeast_blind_image_002 | 盲派象法 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-position` | `page:16; source=northeast_blind_peak_pdf; heading:position-child-star` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| northeast_blind_image_003 | 干支组合取象 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-combination` | `page:34; source=northeast_blind_peak_pdf; heading:marriage-five-rules-combination` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| northeast_blind_image_004 | 象法回归结构 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-structure` | `page:34; source=northeast_blind_peak_pdf; heading:marriage-five-rules-structure` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| northeast_blind_image_005 | 象法触发条件 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-trigger` | `page:13; source=northeast_blind_peak_pdf; heading:timing-match-condition` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | northeast_blind_image_006 | 象法边界 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-risk-boundary` | `chapter:source=northeast_blind_peak_pdf; section=image-method-risk-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | northeast_branch_interaction_001 | 支象互动 | branch_interaction | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-branch-image-interaction` | `chapter:source=northeast_blind_peak_pdf; section=branch-image-interaction` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | northeast_high_risk_signal_001 | 高风险取象边界 | high_risk_signal | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-high-risk-image-boundary` | `chapter:source=northeast_blind_peak_pdf; section=high-risk-image-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | duan_ten_god_relation_002 | 十神柱位 | ten_god_relation | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-position` | `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-position` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| duan_ten_god_relation_003 | 十神结构 | ten_god_relation | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-structure` | `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-structure` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| duan_pattern_strength_001 | 格局语境 | pattern_strength | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-pattern-context` | `chapter:source=duan_plain_mingxue_outline_pdf; section=pattern-context` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| duan_ten_god_relation_003 | 十神结构 | ten_god_relation | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-structure` | `page:84; source=duan_plain_mingxue_outline_pdf; heading:guan-sha-mixed-structure` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| duan_pattern_strength_001 | 格局语境 | pattern_strength | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-pattern-context` | `page:92; source=duan_plain_mingxue_outline_pdf; heading:pattern-context` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | duan_useful_god_candidate_001 | 用神候选 | useful_god_candidate | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-useful-god-balance` | `chapter:source=duan_plain_mingxue_outline_pdf; section=useful-god-balance` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | duan_useful_god_candidate_002 | 用神条件 | useful_god_candidate | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-useful-god-condition` | `chapter:source=duan_plain_mingxue_outline_pdf; section=useful-god-condition` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | duan_taboo_god_candidate_001 | 忌神候选 | taboo_god_candidate | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-taboo-god-excess` | `chapter:source=duan_plain_mingxue_outline_pdf; section=taboo-god-excess` | REVIEW_NOTE_SOURCE_WINDOW | improved |
@@ -98,19 +113,19 @@ Prior improvements are preserved:
 | teacher_taboo_god_candidate_001 | 忌神候选 | taboo_god_candidate | 师传口径 | batch_012_taxonomy_001 | `review-note:mingli_true_formula_teacher.md#source-window-taboo-god-damage` | `page:250; source=mingli_true_formula_teacher_pdf; heading:jishen-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | teacher_taboo_god_candidate_002 | 忌神引动 | taboo_god_candidate | 师传口径 | batch_012_taxonomy_001 | `review-note:mingli_true_formula_teacher.md#source-window-taboo-god-trigger` | `page:250; source=mingli_true_formula_teacher_pdf; heading:jishen-trigger-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | teacher_ten_god_relation_001 | 十神功能 | ten_god_relation | 师传口径 | batch_012_taxonomy_001 | `review-note:mingli_true_formula_teacher.md#source-window-ten-god-function` | `page:155; source=mingli_true_formula_teacher_pdf; heading:ten-god-classification` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| mingxue_five_element_balance_002 | 五行季令 | five_element_balance | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-five-element-season` | `chapter:source=mingxue_golden_voice_pdf; section=five-element-season` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| mingxue_five_element_balance_003 | 五行流通 | five_element_balance | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-five-element-flow` | `chapter:source=mingxue_golden_voice_pdf; section=five-element-flow` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| mingxue_five_element_balance_002 | 五行季令 | five_element_balance | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-five-element-season` | `page:104; source=mingxue_golden_voice_pdf; heading:five-element-season-command` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| mingxue_five_element_balance_003 | 五行流通 | five_element_balance | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-five-element-flow` | `page:114; source=mingxue_golden_voice_pdf; heading:yin-yang-forward-reverse-five-elements` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | mingxue_ten_god_relation_001 | 十神术语 | ten_god_relation | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-ten-god-terms` | `chapter:source=mingxue_golden_voice_pdf; section=ten-god-terms` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | mingxue_ten_god_relation_002 | 十神平衡 | ten_god_relation | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-ten-god-balance` | `chapter:source=mingxue_golden_voice_pdf; section=ten-god-balance` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| mingxue_useful_god_candidate_001 | 用神候选 | useful_god_candidate | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-useful-god-flow` | `chapter:source=mingxue_golden_voice_pdf; section=useful-god-flow` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| mingxue_taboo_god_candidate_001 | 忌神候选 | taboo_god_candidate | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-taboo-god-imbalance` | `chapter:source=mingxue_golden_voice_pdf; section=taboo-god-imbalance` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| mingxue_pattern_strength_001 | 格局术语 | pattern_strength | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-pattern-terminology` | `chapter:source=mingxue_golden_voice_pdf; section=pattern-terminology` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| mingxue_useful_god_candidate_001 | 用神候选 | useful_god_candidate | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-useful-god-flow` | `page:93; source=mingxue_golden_voice_pdf; heading:favorable-taboo-notes` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| mingxue_taboo_god_candidate_001 | 忌神候选 | taboo_god_candidate | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-taboo-god-imbalance` | `page:93; source=mingxue_golden_voice_pdf; heading:favorable-taboo-notes` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| mingxue_pattern_strength_001 | 格局术语 | pattern_strength | 通论 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-pattern-terminology` | `page:72; source=mingxue_golden_voice_pdf; heading:core-terminology` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | fortune_remedy_boundary_002 | 低风险调整 | remedy_boundary | 通俗命理 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-remedy-low-risk-action` | `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-low-risk-action` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | fortune_remedy_boundary_003 | 调整语言 | remedy_boundary | 通俗命理 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-remedy-language` | `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-language` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | fortune_remedy_boundary_004 | 付费边界 | remedy_boundary | 通俗命理 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-remedy-paid-boundary` | `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-paid-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| fortune_luck_cycle_001 | 阶段提示 | luck_cycle | 通俗命理 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-popular-luck-cycle` | `chapter:source=fortune_reading_hongfu_qitian_pdf; section=popular-luck-cycle` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| fortune_ten_god_relation_001 | 十神通俗解释 | ten_god_relation | 通俗命理 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-popular-ten-god` | `chapter:source=fortune_reading_hongfu_qitian_pdf; section=popular-ten-god` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| fortune_useful_god_candidate_001 | 用神通俗化 | useful_god_candidate | 通俗命理 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-popular-useful-god` | `chapter:source=fortune_reading_hongfu_qitian_pdf; section=popular-useful-god` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| fortune_luck_cycle_001 | 阶段提示 | luck_cycle | 通俗命理 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-popular-luck-cycle` | `page:54; source=fortune_reading_hongfu_qitian_pdf; heading:minggong-xiaoxian-liunian` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| fortune_ten_god_relation_001 | 十神通俗解释 | ten_god_relation | 通俗命理 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-popular-ten-god` | `page:41; source=fortune_reading_hongfu_qitian_pdf; heading:six-relations-ten-god` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| fortune_useful_god_candidate_001 | 用神通俗化 | useful_god_candidate | 通俗命理 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-popular-useful-god` | `page:69; source=fortune_reading_hongfu_qitian_pdf; heading:yongshen-section-start` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | fortune_taboo_god_candidate_001 | 忌神通俗化 | taboo_god_candidate | 通俗命理 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-popular-taboo-god` | `chapter:source=fortune_reading_hongfu_qitian_pdf; section=popular-taboo-god` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | life_death_high_risk_signal_002 | 高风险不确定性 | high_risk_signal | 传统高风险材料 | batch_012_taxonomy_001 | `page:4; heading:序言` |  | PAGE_EXACT | no change needed |
 | life_death_high_risk_signal_003 | 高风险公式边界 | high_risk_signal | 传统高风险材料 | batch_012_taxonomy_001 | `page:6; heading:古今生死秘诀` |  | PAGE_EXACT | no change needed |
@@ -122,9 +137,9 @@ Prior improvements are preserved:
 | life_death_remedy_boundary_001 | 解灾边界 | remedy_boundary | 传统高风险材料 | batch_012_taxonomy_001 | `page:2; heading:解关口秘法` |  | PAGE_EXACT | no change needed |
 | life_death_remedy_boundary_002 | 高风险行动边界 | remedy_boundary | 传统高风险材料 | batch_012_taxonomy_001 | `page:11; heading:实践应用` |  | PAGE_EXACT | no change needed |
 | life_death_book_boundary_signal_001 | 生死高风险边界 | high_risk_signal | 传统高风险材料 | batch_012_taxonomy_001 | `review-note:life_death_book_100_pages.md#source-window-risk-boundary` | `Markdown/2800.《命理生死之书》100页.md#L157` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| northeast_blind_image_007 | 象法条件信号 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-blind-image-method` | `chapter:source=northeast_blind_peak_pdf; section=blind-image-method` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| duan_ten_god_relation_004 | 十神关系分类 | ten_god_relation | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relation` | `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-relation` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| mingxue_five_element_balance_004 | 五行平衡术语 | five_element_balance | 命学 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-five-element-balance-terms` | `chapter:source=mingxue_golden_voice_pdf; section=five-element-balance-terms` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| northeast_blind_image_007 | 象法条件信号 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-blind-image-method` | `page:2; source=northeast_blind_peak_pdf; heading:eight-method-rules` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| duan_ten_god_relation_004 | 十神关系分类 | ten_god_relation | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relation` | `page:66; source=duan_plain_mingxue_outline_pdf; heading:ten-god-relation-start` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| mingxue_five_element_balance_004 | 五行平衡术语 | five_element_balance | 命学 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#source-window-five-element-balance-terms` | `page:104; source=mingxue_golden_voice_pdf; heading:five-element-balance-terms` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | teacher_pattern_strength_004 | 格局强度条件信号 | pattern_strength | 命理真诀 | batch_012_taxonomy_001 | `review-note:mingli_true_formula_teacher.md#source-window-pattern-strength-conditions` | `page:121; source=mingli_true_formula_teacher_pdf; heading:pattern-strength-conditions` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | fortune_remedy_boundary_005 | 补救边界条件信号 | remedy_boundary | 鸿福 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#source-window-remedy-boundary-conditions` | `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-boundary-conditions` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | batch002_useful_god_comparison_001 | 用神比较 | useful_god_candidate | 梁湘润教材 | batch_markdown_registration_001 | `review-note:Markdown/source_batch_002_cleaned/简体《子平教材讲义第二级次》梁湘润(1).md#L515` |  | MARKDOWN_SOURCE_LINE | improved |
@@ -156,6 +171,6 @@ Prior improvements are preserved:
 
 ## Recommendations
 
-1. OCR pass: prioritize Duan, Mingxue, Hongfu, and Northeast PDFs whose text extraction is CID or low-signal.
-2. Page upgrade pass: replace chapter-level source-window locators with page-level or Markdown-line locators after OCR/manual review.
+1. OCR pass: prioritize the 13 CID-backed chapter windows that still lack exact page matches.
+2. Northeast manual review pass: only upgrade the 3 remaining Northeast chapter windows after a topic-page match is visually confirmed.
 3. Audit automation: promote this classification logic into a dedicated command if future curation passes need repeatable report generation.
