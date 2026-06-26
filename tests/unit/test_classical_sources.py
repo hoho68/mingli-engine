@@ -144,6 +144,7 @@ def _review_note_source_window_source_locator(locator):
     section = _extract_markdown_section(note_text, heading)
     source_locator = _extract_bulleted_field(section, "Source locator")
     _assert_source_locator_is_precise(source_locator)
+    _assert_chapter_locator_has_note(section, source_locator)
     return source_locator
 
 
@@ -164,6 +165,14 @@ def _extract_bulleted_field(section, field_name):
         if line.startswith(prefix) and line.endswith("`"):
             return line.removeprefix(prefix).removesuffix("`")
     raise AssertionError(f"missing {field_name}: {section}")
+
+
+def _assert_chapter_locator_has_note(section, source_locator):
+    if not source_locator.startswith("chapter:"):
+        return
+
+    locator_note = _extract_bulleted_field(section, "Locator note")
+    assert locator_note.startswith("blocked:"), locator_note
 
 
 def _assert_source_locator_is_precise(locator):
@@ -321,6 +330,11 @@ def test_source_ref_quality_audit_tracks_source_window_references():
     assert "REVIEW_NOTE_TOPIC" not in report
     assert "FILE_SECTION" not in report
     assert "| REVIEW_NOTE_SOURCE_WINDOW | 57 | 62.0% |" in report
+    assert "| PAGE_LOCATOR | 19 |" in report
+    assert "| CHAPTER_LOCATOR | 36 |" in report
+    assert "| MARKDOWN_LINE_LOCATOR | 2 |" in report
+    assert "| blocked:pdf-text-cid-or-empty | 27 |" in report
+    assert "| blocked:pdf-directory-text-only | 9 |" in report
     assert "Converted 51 legacy topic-only review-note references" in report
     assert "Converted 6 legacy file-section review-note references" in report
 

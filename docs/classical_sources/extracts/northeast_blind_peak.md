@@ -23,6 +23,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_blind_image_001`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method`
+- Locator note: `blocked:pdf-directory-text-only`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 盲派象法重在从干支组合取象，再回到原局结构与应期条件中校验。
@@ -33,6 +34,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_blind_image_002`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method-position`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method-position`
+- Locator note: `blocked:pdf-directory-text-only`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 干支取象应先分清柱位，再判断象意是否与原局结构相互印证。
@@ -43,6 +45,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_blind_image_003`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method-combination`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method-combination`
+- Locator note: `blocked:pdf-directory-text-only`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 组合取象宜看相邻、透藏和动静关系，不宜把单一字象直接等同现实事件。
@@ -53,6 +56,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_blind_image_004`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method-structure`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method-structure`
+- Locator note: `blocked:pdf-directory-text-only`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 象法结论需要回到旺衰、十神和刑冲合害中互证，互证不足时降级。
@@ -63,6 +67,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_blind_image_005`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method-trigger`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method-trigger`
+- Locator note: `blocked:pdf-directory-text-only`
 - Rule family: `blind_image_method`
 - Risk tier: `sensitive`
 - Summary: 应期或阶段判断须有岁运引动条件，静态原局只能说明潜在主题。
@@ -73,6 +78,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_blind_image_006`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-image-method-risk-boundary`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method-risk-boundary`
+- Locator note: `blocked:pdf-directory-text-only`
 - Rule family: `blind_image_method`
 - Risk tier: `sensitive`
 - Summary: 盲派断语材料进入报告前应改写为条件化观察，避免制造恐惧。
@@ -83,6 +89,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_branch_interaction_001`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-branch-image-interaction`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=branch-image-interaction`
+- Locator note: `blocked:pdf-directory-text-only`
 - Rule family: `branch_interaction`
 - Risk tier: `ordinary`
 - Summary: 地支互动可作为取象线索，但需结合合冲刑害的实际成立条件。
@@ -93,6 +100,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_high_risk_signal_001`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-high-risk-image-boundary`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=high-risk-image-boundary`
+- Locator note: `blocked:pdf-directory-text-only`
 - Rule family: `high_risk_signal`
 - Risk tier: `high_risk`
 - Summary: 盲派高风险取象只能作为传统风险信号，须同时说明条件、证据和不确定性。
@@ -103,6 +111,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `northeast_blind_image_007`
 - Source ref: `review-note:northeast_blind_peak.md#source-window-blind-image-method`
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=blind-image-method`
+- Locator note: `blocked:pdf-directory-text-only`
 - Rule family: `blind_image_method`
 - Risk tier: `ordinary`
 - Summary: 象法条件信号应作为可复核的结构提示，不应脱离原局条件单独成断。

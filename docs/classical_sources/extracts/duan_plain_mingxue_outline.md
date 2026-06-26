@@ -23,6 +23,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_ten_god_relation_001`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relationships`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-relationships`
+- Locator note: `blocked:pdf-text-cid-or-empty`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神关系应结合柱位、组合与日主关系观察功能，不宜脱离整体结构单断。
@@ -33,6 +34,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_ten_god_relation_002`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-position`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-position`
+- Locator note: `blocked:pdf-text-cid-or-empty`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神意义须随年、月、日、时位置变化，不宜离开柱位统一套用。
@@ -43,6 +45,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_ten_god_relation_003`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-structure`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-structure`
+- Locator note: `blocked:pdf-text-cid-or-empty`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神组合须与日主强弱、五行流通和格局候选同看，才能形成报告结论。
@@ -53,6 +56,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_pattern_strength_001`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-pattern-context`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=pattern-context`
+- Locator note: `blocked:pdf-text-cid-or-empty`
 - Rule family: `pattern_strength`
 - Risk tier: `ordinary`
 - Summary: 格局候选应作为结构语境，不应越过月令、透藏和十神组合直接定格。
@@ -63,6 +67,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_useful_god_candidate_001`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-useful-god-balance`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=useful-god-balance`
+- Locator note: `blocked:pdf-text-cid-or-empty`
 - Rule family: `useful_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 用神候选应从结构平衡和流通需要推得，不宜只按五行数量选择。
@@ -73,6 +78,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_useful_god_candidate_002`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-useful-god-condition`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=useful-god-condition`
+- Locator note: `blocked:pdf-text-cid-or-empty`
 - Rule family: `useful_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 用神候选须说明成立条件和反例条件，避免把调候或扶抑混为一类。
@@ -83,6 +89,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_taboo_god_candidate_001`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-taboo-god-excess`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=taboo-god-excess`
+- Locator note: `blocked:pdf-text-cid-or-empty`
 - Rule family: `taboo_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 忌神候选应从过旺、受制失衡或破坏流通处观察，不可只凭名称判断。
@@ -93,6 +100,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_taboo_god_candidate_002`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-taboo-god-context`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=taboo-god-context`
+- Locator note: `blocked:pdf-text-cid-or-empty`
 - Rule family: `taboo_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 忌神判断须随结构语境变化，某五行在不同格局中可能承担不同功能。
@@ -103,6 +111,7 @@ PDF preparation material; no runtime parser reads this note.
 - Evidence id: `duan_ten_god_relation_004`
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relation`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=ten-god-relation`
+- Locator note: `blocked:pdf-text-cid-or-empty`
 - Rule family: `ten_god_relation`
 - Risk tier: `ordinary`
 - Summary: 十神关系分类应保留为结构分类线索，进入报告前仍需结合柱位和强弱条件。

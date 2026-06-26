@@ -92,7 +92,7 @@ PDF preparation material; no runtime parser reads this note.
 
 - Evidence id: `blind_remedy_boundary_001`
 - Source ref: `review-note:blind_school_secret.md#source-window-blind-remedy-boundary`
-- Source locator: `chapter:source=blind_school_secret_pdf; section=remedy-boundary`
+- Source locator: `page:446; source=blind_school_secret_pdf; heading:professional-consultation-remedy-boundary`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 涉及趋避的材料只能作为低风险反思提示，不得承诺化解效果。

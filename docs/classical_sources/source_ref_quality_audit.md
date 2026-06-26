@@ -3,7 +3,7 @@
 Generated: automatic analysis
 Audit scope: 92 evidence units
 
-## Overall Counts
+## Precision Summary
 
 | Precision Level | Count | Share |
 |-----------------|-------|-------|
@@ -16,34 +16,46 @@ Audit scope: 92 evidence units
 
 | Locator Type | Count |
 |--------------|-------|
-| PAGE_LOCATOR | 18 |
-| CHAPTER_LOCATOR | 37 |
+| PAGE_LOCATOR | 19 |
+| CHAPTER_LOCATOR | 36 |
 | MARKDOWN_LINE_LOCATOR | 2 |
+
+## Chapter Locator Blocker Detail
+
+| Blocker | Count |
+|---------|-------|
+| blocked:pdf-directory-text-only | 9 |
+| blocked:pdf-text-cid-or-empty | 27 |
 
 ## Improvement Notes
 
 Converted 51 legacy topic-only review-note references in the prior pass and preserved them as source-window locators.
-Converted 6 legacy file-section review-note references into verifiable source-window locators in this pass.
+Converted 6 legacy file-section review-note references into verifiable source-window locators in the prior pass.
+Upgraded 1 source-window locator from chapter-level to page-level after local PDF text review.
 - All 57 review-note-backed evidence units now point to `review-note:<extract>.md#source-window-<slug>`.
-- Each source-window section now has a `Source locator` field using `page:`, `chapter:`, or `Markdown/...#L...`.
+- Each source-window section has a `Source locator` field using `page:`, `chapter:`, or `Markdown/...#L...`.
+- Remaining chapter-level locators carry a `Locator note` explaining why page or Markdown-line precision is currently blocked.
 - Page-level locator coverage is used where PDF text extraction is reliable; chapter-level locators are retained for CID/low-text PDFs pending OCR.
 - Markdown line locators are used for the Life Death Book material that already has a tracked Markdown extract.
 
 Prior improvements are preserved:
 - 15 promoted Markdown learning material locators point to cleaned Markdown files and line numbers.
-- 11 KSkeleton evidence/candidate locators point to concrete `review-note:knowledge_skeleton/...` files.
+- 11 knowledge-skeleton locators remain explicit curated review-note paths.
 
 ## Priority Groups
 
 ### Current Goal Progress (92 items)
 - REVIEW_NOTE_SOURCE_WINDOW: 57 items now point to source-window sections with source locators.
+- PAGE_LOCATOR: 19 source-window items now have page-level locators.
+- CHAPTER_LOCATOR: 36 source-window items remain chapter-level with explicit blocker notes.
 - MARKDOWN_SOURCE_LINE: 15 items point to cleaned Markdown files and line numbers.
 - REVIEW_NOTE_KS_PATH: 11 items point to knowledge-skeleton files.
 - PAGE_EXACT: 9 items already have exact page references.
 
 ### Optional Future Precision Work
-- For chapter-level source windows, run OCR or manual PDF page review to replace chapter locators with exact page or source-line locators.
-- If recurring regeneration is needed, move this report builder into a checked utility command.
+- Run OCR/manual page review for CID PDFs: Duan, Mingxue, and Hongfu.
+- Manually review Northeast pages beyond directory/page-number extraction before replacing chapter locators.
+- Promote the audit builder into a checked utility command if future curation passes need repeatable report generation.
 
 ## Detailed Inventory
 
@@ -77,7 +89,7 @@ Prior improvements are preserved:
 | blind_school_image_001 | 盲派象法 | blind_image_method | 盲派 | batch_012_taxonomy_001 | `review-note:blind_school_secret.md#source-window-blind-school-image` | `page:226; source=blind_school_secret_pdf; heading:blind-school-image` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | blind_school_image_002 | 象法边界 | blind_image_method | 盲派 | batch_012_taxonomy_001 | `review-note:blind_school_secret.md#source-window-blind-school-image-boundary` | `page:431; source=blind_school_secret_pdf; heading:blind-school-image-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | blind_high_risk_signal_001 | 高风险边界 | high_risk_signal | 盲派 | batch_012_taxonomy_001 | `review-note:blind_school_secret.md#source-window-blind-high-risk-boundary` | `page:70; source=blind_school_secret_pdf; heading:blind-high-risk-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| blind_remedy_boundary_001 | 趋避边界 | remedy_boundary | 盲派 | batch_012_taxonomy_001 | `review-note:blind_school_secret.md#source-window-blind-remedy-boundary` | `chapter:source=blind_school_secret_pdf; section=remedy-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| blind_remedy_boundary_001 | 趋避边界 | remedy_boundary | 盲派 | batch_012_taxonomy_001 | `review-note:blind_school_secret.md#source-window-blind-remedy-boundary` | `page:446; source=blind_school_secret_pdf; heading:professional-consultation-remedy-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | teacher_pattern_strength_002 | 根气旺衰 | pattern_strength | 师传口径 | batch_012_taxonomy_001 | `review-note:mingli_true_formula_teacher.md#source-window-pattern-root-qi` | `page:56; source=mingli_true_formula_teacher_pdf; heading:wangshuai-root-qi` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | teacher_pattern_strength_003 | 格局降级 | pattern_strength | 师传口径 | batch_012_taxonomy_001 | `review-note:mingli_true_formula_teacher.md#source-window-pattern-candidate-downgrade` | `page:125; source=mingli_true_formula_teacher_pdf; heading:geju-candidate` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | teacher_luck_cycle_trigger_002 | 岁运条件 | luck_cycle | 师传口径 | batch_012_taxonomy_001 | `review-note:mingli_true_formula_teacher.md#source-window-luck-cycle-condition` | `page:141; source=mingli_true_formula_teacher_pdf; heading:luck-cycle-condition` | REVIEW_NOTE_SOURCE_WINDOW | improved |
@@ -144,6 +156,6 @@ Prior improvements are preserved:
 
 ## Recommendations
 
-1. OCR pass: prioritize Duan, Mingxue, Hongfu, and Northeast PDFs whose text extraction is CID/low-signal.
+1. OCR pass: prioritize Duan, Mingxue, Hongfu, and Northeast PDFs whose text extraction is CID or low-signal.
 2. Page upgrade pass: replace chapter-level source-window locators with page-level or Markdown-line locators after OCR/manual review.
 3. Audit automation: promote this classification logic into a dedicated command if future curation passes need repeatable report generation.
