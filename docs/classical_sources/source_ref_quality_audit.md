@@ -16,8 +16,8 @@ Audit scope: 92 evidence units
 
 | Locator Type | Count |
 |--------------|-------|
-| PAGE_LOCATOR | 43 |
-| CHAPTER_LOCATOR | 12 |
+| PAGE_LOCATOR | 44 |
+| CHAPTER_LOCATOR | 11 |
 | MARKDOWN_LINE_LOCATOR | 2 |
 
 ## Chapter Locator Blocker Detail
@@ -26,7 +26,6 @@ Audit scope: 92 evidence units
 |---------|-------|
 | blocked:rendered-review-no-topic-page-match | 4 |
 | blocked:rendered-review-no-remedy-boundary-page-match | 5 |
-| blocked:rendered-review-no-branch-interaction-topic-match | 1 |
 | blocked:rendered-review-no-risk-boundary-page-match | 2 |
 
 ## OCR/Page Review Pass
@@ -39,19 +38,29 @@ Audit scope: 92 evidence units
 | mingxue_golden_voice_pdf | page-reviewed | 9 |
 | fortune_reading_hongfu_qitian_pdf | page-reviewed | 4 |
 | fortune_reading_hongfu_qitian_pdf | rendered-review-blocked | 5 |
-| northeast_blind_peak_pdf | page-reviewed | 6 |
-| northeast_blind_peak_pdf | rendered-review-blocked | 3 |
+| northeast_blind_peak_pdf | page-reviewed | 7 |
+| northeast_blind_peak_pdf | rendered-review-blocked | 2 |
+
+## Manual Review Closure Pass
+
+| Source | Outcome | Count |
+|--------|---------|-------|
+| duan_plain_mingxue_outline_pdf | no-single-topic-page | 4 |
+| fortune_reading_hongfu_qitian_pdf | no-remedy-boundary-page | 5 |
+| northeast_blind_peak_pdf | page-reviewed | 1 |
+| northeast_blind_peak_pdf | no-risk-boundary-page | 2 |
 
 ## Improvement Notes
 
 Converted 51 legacy topic-only review-note references in the prior pass and preserved them as source-window locators.
 Converted 6 legacy file-section review-note references into verifiable source-window locators in the prior pass.
-Upgraded 24 additional source-window locators from chapter-level to page-level after local PDF rendering and visual review.
+Upgraded 25 additional source-window locators from chapter-level to page-level after local PDF rendering and visual review.
 - All 57 review-note-backed evidence units now point to `review-note:<extract>.md#source-window-<slug>`.
 - Each source-window section has a `Source locator` field using `page:`, `chapter:`, or `Markdown/...#L...`.
 - Remaining chapter-level locators carry a `Locator note` explaining why page or Markdown-line precision is currently blocked after rendered review.
 - Page-level locator coverage is used where PDF text extraction, table-of-contents mapping, or rendered page review is reliable.
 - Chapter-level locators are retained only where visual review did not produce a reliable topic-page or boundary match.
+- Remaining chapter-level locators now include manual-review notes listing the rendered page ranges and reason no page-level source match was assigned.
 - Markdown line locators are used for the Life Death Book material that already has a tracked Markdown extract.
 
 Prior improvements are preserved:
@@ -62,15 +71,15 @@ Prior improvements are preserved:
 
 ### Current Goal Progress (92 items)
 - REVIEW_NOTE_SOURCE_WINDOW: 57 items now point to source-window sections with source locators.
-- PAGE_LOCATOR: 43 source-window items now have page-level locators.
-- CHAPTER_LOCATOR: 12 source-window items remain chapter-level with explicit blocker notes.
+- PAGE_LOCATOR: 44 source-window items now have page-level locators.
+- CHAPTER_LOCATOR: 11 source-window items remain chapter-level with explicit blocker notes and manual-review notes.
 - MARKDOWN_SOURCE_LINE: 15 items point to cleaned Markdown files and line numbers.
 - REVIEW_NOTE_KS_PATH: 11 items point to knowledge-skeleton files.
 - PAGE_EXACT: 9 items already have exact page references.
 
 ### Optional Future Precision Work
 - For the remaining 9 CID-backed chapter source windows, do a targeted OCR/manual transcription pass rather than relying on CID text extraction or broad rendered section matches.
-- For the remaining 3 Northeast source windows, use manual topic review to avoid over-mapping case-heavy pages to broad rule families.
+- For the remaining 2 Northeast source windows, retain safety-boundary paraphrase handling unless a future source-specific boundary page is manually identified.
 - Promote this audit builder into a checked utility command if future curation passes need repeatable report generation.
 
 ## Detailed Inventory
@@ -90,7 +99,7 @@ Prior improvements are preserved:
 | northeast_blind_image_004 | 象法回归结构 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-structure` | `page:34; source=northeast_blind_peak_pdf; heading:marriage-five-rules-structure` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | northeast_blind_image_005 | 象法触发条件 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-trigger` | `page:13; source=northeast_blind_peak_pdf; heading:timing-match-condition` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | northeast_blind_image_006 | 象法边界 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-image-method-risk-boundary` | `chapter:source=northeast_blind_peak_pdf; section=image-method-risk-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
-| northeast_branch_interaction_001 | 支象互动 | branch_interaction | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-branch-image-interaction` | `chapter:source=northeast_blind_peak_pdf; section=branch-image-interaction` | REVIEW_NOTE_SOURCE_WINDOW | improved |
+| northeast_branch_interaction_001 | 支象互动 | branch_interaction | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-branch-image-interaction` | `page:123; source=northeast_blind_peak_pdf; heading:three-harmony-branch-interaction` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | northeast_high_risk_signal_001 | 高风险取象边界 | high_risk_signal | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-high-risk-image-boundary` | `chapter:source=northeast_blind_peak_pdf; section=high-risk-image-boundary` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | duan_ten_god_relation_002 | 十神柱位 | ten_god_relation | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-position` | `page:66; source=duan_plain_mingxue_outline_pdf; heading:ten-god-pillar-position-context` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | duan_ten_god_relation_003 | 十神结构 | ten_god_relation | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-structure` | `page:84; source=duan_plain_mingxue_outline_pdf; heading:guan-sha-mixed-structure` | REVIEW_NOTE_SOURCE_WINDOW | improved |
@@ -173,5 +182,5 @@ Prior improvements are preserved:
 ## Recommendations
 
 1. OCR pass: prioritize the 9 CID-backed chapter windows that still lack exact page matches.
-2. Northeast manual review pass: only upgrade the 3 remaining Northeast chapter windows after a topic-page match is visually confirmed.
+2. Northeast safety-boundary pass: keep the 2 remaining Northeast risk-boundary chapter windows as manual paraphrase work unless a source-specific boundary page is identified.
 3. Audit automation: promote this classification logic into a dedicated command if future curation passes need repeatable report generation.

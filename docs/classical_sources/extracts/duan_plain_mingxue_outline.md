@@ -64,6 +64,7 @@ PDF preparation material; no runtime parser reads this note.
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-useful-god-balance`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=useful-god-balance`
 - Locator note: `blocked:rendered-review-no-topic-page-match`
+- Manual review note: `manual-review:no-single-topic-page; reviewed=pdf-pages-66-115; finding=rendered pages show ten-god, pattern, five-element, and kinship sections but no stable yongshen topic page; next=manual-transcription-before-exact-quote`
 - Rule family: `useful_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 用神候选应从结构平衡和流通需要推得，不宜只按五行数量选择。
@@ -75,6 +76,7 @@ PDF preparation material; no runtime parser reads this note.
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-useful-god-condition`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=useful-god-condition`
 - Locator note: `blocked:rendered-review-no-topic-page-match`
+- Manual review note: `manual-review:no-single-topic-page; reviewed=pdf-pages-66-115; finding=rendered pages show ten-god, pattern, five-element, and kinship sections but no stable yongshen condition page; next=manual-transcription-before-exact-quote`
 - Rule family: `useful_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 用神候选须说明成立条件和反例条件，避免把调候或扶抑混为一类。
@@ -86,6 +88,7 @@ PDF preparation material; no runtime parser reads this note.
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-taboo-god-excess`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=taboo-god-excess`
 - Locator note: `blocked:rendered-review-no-topic-page-match`
+- Manual review note: `manual-review:no-single-topic-page; reviewed=pdf-pages-66-115; finding=rendered pages show broad five-element strength material but no stable jishen excess topic page; next=manual-transcription-before-exact-quote`
 - Rule family: `taboo_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 忌神候选应从过旺、受制失衡或破坏流通处观察，不可只凭名称判断。
@@ -97,6 +100,7 @@ PDF preparation material; no runtime parser reads this note.
 - Source ref: `review-note:duan_plain_mingxue_outline.md#source-window-taboo-god-context`
 - Source locator: `chapter:source=duan_plain_mingxue_outline_pdf; section=taboo-god-context`
 - Locator note: `blocked:rendered-review-no-topic-page-match`
+- Manual review note: `manual-review:no-single-topic-page; reviewed=pdf-pages-66-115; finding=rendered pages show broad pattern and five-element context but no stable jishen context topic page; next=manual-transcription-before-exact-quote`
 - Rule family: `taboo_god_candidate`
 - Risk tier: `ordinary`
 - Summary: 忌神判断须随结构语境变化，某五行在不同格局中可能承担不同功能。
