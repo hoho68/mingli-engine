@@ -265,7 +265,7 @@
   {
     "candidate_id": "candidate_markdown_batch_002_useful_god_001",
     "material_id": "material_markdown_source_batch_002_core",
-    "source_locator": "learning-reference:note_markdown_batch_002_useful_god_001#lp_markdown_batch_002_useful_god_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_002_cleaned/简体《子平教材讲义第二级次》梁湘润(1).md#L515",
     "extracted_meaning": "Use-god selection should compare three structural approaches: pattern-based (Shen), seasonal adjustment (Yu), and bilateral preference (Yuanhai); keep as candidate with cross-source confirmation before promotion.",
     "short_quote": "",
     "proposed_rule_family": "useful_god_candidate",
@@ -287,7 +287,7 @@
   {
     "candidate_id": "candidate_markdown_batch_001_pattern_strength_001",
     "material_id": "material_markdown_source_batch_001",
-    "source_locator": "learning-reference:note_markdown_batch_001_pattern_strength_001#lp_markdown_batch_001_pattern_strength_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_001_cleaned/简体《子平基础概要》梁湘润_ce.md#L1004",
     "extracted_meaning": "Batch 01 foundation material supports structural extraction of 取格局 → 日主强弱 → 十神定位 → 大运 pipeline with rule taxonomy from three complementary source types: formal textbook (梅湘润), scaffold notes (悠然大仙), and applied cases (天马易学).",
     "short_quote": "",
     "proposed_rule_family": "pattern_strength",
@@ -309,7 +309,7 @@
   {
     "candidate_id": "candidate_markdown_batch_001_ten_god_relation_001",
     "material_id": "material_markdown_source_batch_001",
-    "source_locator": "learning-reference:note_markdown_batch_001_pattern_strength_001#lp_markdown_batch_001_ten_god_relation_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_001_cleaned/简体《子平基础概要》梁湘润_ce.md#L3331",
     "extracted_meaning": "Batch 001 provides systematic ten-god positioning (十神定位) coverage from 梁湘润 foundation, 悠然大仙 scaffold, and 天马易学 applied notes, supporting structural ten-god relation taxonomy.",
     "short_quote": "",
     "proposed_rule_family": "ten_god_relation",
@@ -334,7 +334,7 @@
   {
     "candidate_id": "candidate_markdown_batch_001_branch_interaction_001",
     "material_id": "material_markdown_source_batch_001",
-    "source_locator": "learning-reference:note_markdown_batch_001_pattern_strength_001#lp_markdown_batch_001_branch_interaction_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_001_cleaned/简体《子平基础概要》梁湘润_ce.md#L221",
     "extracted_meaning": "Batch 01 foundation basics cover 刑冲合会 (punishment, clash, combination, meeting) as structural branch interaction patterns from beginner-level reference material.",
     "short_quote": "",
     "proposed_rule_family": "branch_interaction",
@@ -358,7 +358,7 @@
   {
     "candidate_id": "candidate_markdown_batch_001_blind_image_method_001",
     "material_id": "material_markdown_source_batch_001",
-    "source_locator": "learning-reference:note_markdown_batch_001_pattern_strength_001#lp_markdown_batch_001_blind_image_method_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_001_cleaned/中原盲派命理秘典.md#L9",
     "extracted_meaning": "Batch 01 includes 中原盲派命理秘典 and 八字口诀寿终取象 as blind-school image sources; blind image statements should be framed as conditional traditional signals tied to chart structure.",
     "short_quote": "",
     "proposed_rule_family": "blind_image_method",
@@ -381,7 +381,7 @@
   {
     "candidate_id": "candidate_markdown_batch_002_pattern_strength_001",
     "material_id": "material_markdown_source_batch_002_core",
-    "source_locator": "learning-reference:note_markdown_batch_002_useful_god_001#lp_markdown_batch_002_pattern_strength_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_002_cleaned/简体《子平教材讲义第二级次》梁湘润(1).md#L657",
     "extracted_meaning": "Liang Xiangrun textbook series (级次, 八字讲堂) provides systematic pattern strength coverage including day-master strength assessment and pattern (格局) selection rules from intermediate-level material.",
     "short_quote": "",
     "proposed_rule_family": "pattern_strength",
@@ -403,7 +403,7 @@
   {
     "candidate_id": "candidate_markdown_batch_002_luck_cycle_001",
     "material_id": "material_markdown_source_batch_002_core",
-    "source_locator": "learning-reference:note_markdown_batch_002_useful_god_001#lp_markdown_batch_002_luck_cycle_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_002_cleaned/简体《子平母法—大流年判例》梁湘润(1).md#L137",
     "extracted_meaning": "Liang Xiangrun textbook series includes 大运流年判例 coverage for luck-cycle trigger identification from structured case-based material.",
     "short_quote": "",
     "proposed_rule_family": "luck_cycle",
@@ -425,7 +425,7 @@
   {
     "candidate_id": "candidate_markdown_batch_002_ten_god_relation_001",
     "material_id": "material_markdown_source_batch_002_core",
-    "source_locator": "learning-reference:note_markdown_batch_002_useful_god_001#lp_markdown_batch_002_ten_god_relation_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_002_cleaned/简体 梁湘润《子平教材讲义第一级次》ce.md#L4797",
     "extracted_meaning": "Liang Xiangrun textbook series provides comprehensive ten-god positioning (十神定位) and relation taxonomy from structured textbook material.",
     "short_quote": "",
     "proposed_rule_family": "ten_god_relation",
@@ -447,7 +447,7 @@
   {
     "candidate_id": "candidate_markdown_batch_004_useful_god_001",
     "material_id": "material_markdown_source_batch_004",
-    "source_locator": "learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_useful_god_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_004_cleaned/简体《渊海喜忌随笔》梁湘润(1).md#L20",
     "extracted_meaning": "Batch 004 provides advanced use-god comparison across Shen pattern-based (沈氏用神例解), Yu seasonal-adjustment (余氏用神辞渊), and Yuanhai bilateral-preference (渊海喜忌随笔) systems from Liang Xiangrun advanced textbook series.",
     "short_quote": "",
     "proposed_rule_family": "useful_god_candidate",
@@ -471,7 +471,7 @@
   {
     "candidate_id": "candidate_markdown_batch_004_pattern_strength_001",
     "material_id": "material_markdown_source_batch_004",
-    "source_locator": "learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_pattern_strength_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_004_cleaned/简体《沈氏用神例解》梁湘润(精校)(1).md#L1522",
     "extracted_meaning": "Batch 004 provides advanced pattern strength and 喜忌 (preference/avoidance) rules from 渊海喜忌随笔 (Yuanhai preference/avoidance system) and 天元巫咸经注释 (Tianyuan Wuwei commentary) from Liang Xiangrun advanced series.",
     "short_quote": "",
     "proposed_rule_family": "pattern_strength",
@@ -494,7 +494,7 @@
   {
     "candidate_id": "candidate_markdown_batch_004_branch_interaction_001",
     "material_id": "material_markdown_source_batch_004",
-    "source_locator": "learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_branch_interaction_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_004_cleaned/简体《四角方阵刑冲合会透解》梁湘润2024(1).md#L263",
     "extracted_meaning": "Batch 004 provides advanced branch interaction taxonomy through the four-corner formation (四角方阵) framework from 四角方阵刑冲合会透解 (excerpt and full text) by Liang Xiangrun, covering刑冲合会 across all four pillars.",
     "short_quote": "",
     "proposed_rule_family": "branch_interaction",
@@ -518,7 +518,7 @@
   {
     "candidate_id": "candidate_markdown_batch_004_luck_cycle_001",
     "material_id": "material_markdown_source_batch_004",
-    "source_locator": "learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_luck_cycle_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:Markdown/source_batch_004_cleaned/简体《流年法典》梁湘润_(1).md#L28",
     "extracted_meaning": "Batch 004 provides advanced luck-cycle trigger identification from 流年法典 (flow-year codex) and 细批终身详解 (detailed lifelong analysis) by Liang Xiangrun, covering structural timing rules and year-pillar interaction triggers.",
     "short_quote": "",
     "proposed_rule_family": "luck_cycle",
@@ -542,7 +542,7 @@
   {
     "candidate_id": "candidate_kskeleton_q001_foundation_tables_001",
     "material_id": "material_knowledge_skeleton",
-    "source_locator": "learning-reference:note_kskeleton_q001_foundation_tables_001#lp_kskeleton_q001_foundation_tables_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:knowledge_skeleton/q001_foundation_tables/q001_foundation_tables.md",
     "extracted_meaning": "Five structural lookup tables extracted from cleaned Markdown: five-tiger month-escape table, five-rat hour-escape table, ten-god lookup matrix, hidden-stems table, and twelve-stage growth cycle table for foundational stem-branch calculation support.",
     "short_quote": "",
     "proposed_rule_family": "pattern_strength",
@@ -566,7 +566,7 @@
   {
     "candidate_id": "candidate_kskeleton_q002_yushi_tiaohou_001",
     "material_id": "material_knowledge_skeleton",
-    "source_locator": "learning-reference:note_kskeleton_q002_yongshen_tiaohou_001#lp_kskeleton_q002_yushi_tiaohou_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:knowledge_skeleton/q002_yongshen_tiaohou/q002_yongshen_tiaohou.md",
     "extracted_meaning": "Yushi tiaohou table provides seasonal-adjustment use-god candidates by day-master and month-branch. 218 source rows expanded to 244 normalized rows for single-month lookup with use-god, ji-shen restrictions, and month-branch markers.",
     "short_quote": "",
     "proposed_rule_family": "useful_god_candidate",
@@ -590,7 +590,7 @@
   {
     "candidate_id": "candidate_kskeleton_q002_shen_pattern_001",
     "material_id": "material_knowledge_skeleton",
-    "source_locator": "learning-reference:note_kskeleton_q002_yongshen_tiaohou_001#lp_kskeleton_q002_shen_pattern_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:knowledge_skeleton/q002_yongshen_tiaohou/shen_pattern_yongshen_framework.md",
     "extracted_meaning": "Shen pattern framework defines use-god as pattern identification: month-lead takes priority, wealth-official-seal-food use smooth application, killing-hurting-robbery-blade use reverse application with pattern-breaking and rescue responses.",
     "short_quote": "",
     "proposed_rule_family": "useful_god_candidate",
@@ -614,7 +614,7 @@
   {
     "candidate_id": "candidate_kskeleton_q002_yuanhai_bilateral_001",
     "material_id": "material_knowledge_skeleton",
-    "source_locator": "learning-reference:note_kskeleton_q002_yongshen_tiaohou_001#lp_kskeleton_q002_yuanhai_bilateral_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:knowledge_skeleton/q002_yongshen_tiaohou/shen_yuanhai_comparison_notes.md",
     "extracted_meaning": "Yuanhai bilateral use-god system shows historical evolution from early use-god equals pattern to mediating character between day-master and pattern. Ming and Qing preferences coexist with conflicts.",
     "short_quote": "",
     "proposed_rule_family": "useful_god_candidate",
@@ -639,7 +639,7 @@
   {
     "candidate_id": "candidate_kskeleton_q003_geju_selection_001",
     "material_id": "material_knowledge_skeleton",
-    "source_locator": "learning-reference:note_kskeleton_q003_geju_strength_001#lp_kskeleton_q003_geju_selection_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:knowledge_skeleton/q003_geju_strength/geju_selection_rules.csv",
     "extracted_meaning": "Pattern selection rules from three sources: month-lead priority, heavenly-stem transparency takes pattern, three-harmony/three-meeting forms pattern. Standard program covers transparent, hidden, and combined pattern identification.",
     "short_quote": "",
     "proposed_rule_family": "pattern_strength",
@@ -663,7 +663,7 @@
   {
     "candidate_id": "candidate_kskeleton_q003_day_master_strength_001",
     "material_id": "material_knowledge_skeleton",
-    "source_locator": "learning-reference:note_kskeleton_q003_geju_strength_001#lp_kskeleton_q003_day_master_strength_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:knowledge_skeleton/q003_geju_strength/day_master_strength_rules.csv",
     "extracted_meaning": "Day-master strength rules define single-form and compound-form strength indicators, obtaining-season criteria, and root-support boundaries. Strength assessment is prerequisite for use-god selection but should not directly produce outcome judgments.",
     "short_quote": "",
     "proposed_rule_family": "pattern_strength",
@@ -688,7 +688,7 @@
   {
     "candidate_id": "candidate_kskeleton_q003_congwang_congshi_001",
     "material_id": "material_knowledge_skeleton",
-    "source_locator": "learning-reference:note_kskeleton_q003_geju_strength_001#lp_kskeleton_q003_congwang_congshi_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:knowledge_skeleton/q003_geju_strength/congwang_congshi_candidates.csv",
     "extracted_meaning": "Congwang (following-the-strong), congshi (following-the-trend), and special-pattern candidates from batch 002/004 sources. Extreme structures require careful boundary treatment and should not be treated as standard patterns.",
     "short_quote": "",
     "proposed_rule_family": "pattern_strength",
@@ -712,7 +712,7 @@
   {
     "candidate_id": "candidate_kskeleton_q006_interaction_structure_001",
     "material_id": "material_knowledge_skeleton",
-    "source_locator": "learning-reference:note_kskeleton_q006_branch_interaction_001#lp_kskeleton_q006_interaction_structure_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:knowledge_skeleton/q006_branch_interaction/q006_interaction_schema.md",
     "extracted_meaning": "Eight first-structure-trial candidates covering stem combinations, branch combinations, six clashes, three punishments/self-punishments, three harmonies/meetings, six harms, half harmonies, and priority rules for concurrent interactions. No outcome judgments.",
     "short_quote": "",
     "proposed_rule_family": "branch_interaction",
@@ -737,7 +737,7 @@
   {
     "candidate_id": "candidate_kskeleton_q004_mechanism_layer_001",
     "material_id": "material_knowledge_skeleton",
-    "source_locator": "learning-reference:note_kskeleton_q004_luck_cycle_001#lp_kskeleton_q004_mechanism_layer_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:knowledge_skeleton/q004_luck_cycle_boundary/q004_mechanism_schema.md",
     "extracted_meaning": "Luck-cycle mechanism layer: tiaohou, fuyi, caiguan, xingchong entry, four-pillar order, and great luck four-layer program (four pillars, flow-year, combined view, flow-month). These frameworks define luck-layer analysis without predicting specific outcomes.",
     "short_quote": "",
     "proposed_rule_family": "luck_cycle",
@@ -760,7 +760,7 @@
   {
     "candidate_id": "candidate_kskeleton_q004_cross_dependency_001",
     "material_id": "material_knowledge_skeleton",
-    "source_locator": "learning-reference:note_kskeleton_q004_luck_cycle_001#lp_kskeleton_q004_cross_dependency_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:knowledge_skeleton/q004_luck_cycle_boundary/q004_cross_review_backlog.md",
     "extracted_meaning": "Use-god and pattern-strength from Q002/Q003 inform the luck layer across four pillars, great luck, and flow-year. Natal vs luck-pillar differential and mother-method chain depend on upstream Q002/Q003 alignment. Folk use-god/tiaohou dichotomization risks oversimplification.",
     "short_quote": "",
     "proposed_rule_family": "luck_cycle",
@@ -783,7 +783,7 @@
   {
     "candidate_id": "candidate_kskeleton_q004_q006_dependency_001",
     "material_id": "material_knowledge_skeleton",
-    "source_locator": "learning-reference:note_kskeleton_q004_luck_cycle_001#lp_kskeleton_q004_q006_dependency_001; locator_requirement=page_or_section_required",
+    "source_locator": "review-note:knowledge_skeleton/q004_luck_cycle_boundary/q004_q006_dependency_patch.md",
     "extracted_meaning": "Four-corner punishment, clash, combination, and penetration structures flow-year thematic emphasis in luck-cycle analysis. Detail flow-year analysis requires xingchong hehui as prerequisites. Microcosm great luck transfers natal preferences via branch-interaction mechanisms.",
     "short_quote": "",
     "proposed_rule_family": "luck_cycle",
@@ -806,7 +806,7 @@
   {
     "candidate_id": "candidate_markdown_batch_005_ten_god_relation_001",
     "material_id": "material_markdown_source_batch_005",
-    "source_locator": "review-note:note_markdown_batch_005_001#lp_markdown_batch_005_ten_god_relation_001",
+    "source_locator": "review-note:Markdown/source_batch_005_cleaned/高阶资料1-6节.md#L58",
     "extracted_meaning": "Training review notes present ten-god relationship imaging: when the useful god is restrained by a ten god, traditional interpretation suggests relationship dynamics with that ten god's represented domain.",
     "short_quote": "",
     "proposed_rule_family": "ten_god_relation",
@@ -830,7 +830,7 @@
   {
     "candidate_id": "candidate_markdown_batch_005_blind_image_method_001",
     "material_id": "material_markdown_source_batch_005",
-    "source_locator": "review-note:note_markdown_batch_005_001#lp_markdown_batch_005_blind_image_method_001",
+    "source_locator": "review-note:Markdown/source_batch_005_cleaned/高阶资料1-6节.md#L5",
     "extracted_meaning": "Training notes present blind-style pattern recognition where specific Ba Zi configurations are traditionally associated with characteristic personality and tendency patterns within educational context.",
     "short_quote": "",
     "proposed_rule_family": "blind_image_method",
@@ -854,7 +854,7 @@
   {
     "candidate_id": "candidate_markdown_batch_005_branch_interaction_001",
     "material_id": "material_markdown_source_batch_005",
-    "source_locator": "review-note:note_markdown_batch_005_001#lp_markdown_batch_005_branch_interaction_001",
+    "source_locator": "review-note:Markdown/source_batch_005_cleaned/11节 刑冲取象复习笔记.md#L5",
     "extracted_meaning": "Training notes present branch punishment, conflict, and combination principles where interaction effect depends on whether it restrains favorable or unfavorable chart elements.",
     "short_quote": "",
     "proposed_rule_family": "branch_interaction",

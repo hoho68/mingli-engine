@@ -265,6 +265,52 @@ def _manual_application_candidate_ids() -> list[str]:
     ]
 
 
+PROMOTED_MARKDOWN_LEARNING_CANDIDATE_IDS = {
+    "candidate_markdown_batch_001_pattern_strength_001",
+    "candidate_markdown_batch_001_ten_god_relation_001",
+    "candidate_markdown_batch_001_branch_interaction_001",
+    "candidate_markdown_batch_001_blind_image_method_001",
+    "candidate_markdown_batch_002_useful_god_001",
+    "candidate_markdown_batch_002_pattern_strength_001",
+    "candidate_markdown_batch_002_luck_cycle_001",
+    "candidate_markdown_batch_002_ten_god_relation_001",
+    "candidate_markdown_batch_004_useful_god_001",
+    "candidate_markdown_batch_004_pattern_strength_001",
+    "candidate_markdown_batch_004_branch_interaction_001",
+    "candidate_markdown_batch_004_luck_cycle_001",
+    "candidate_markdown_batch_005_ten_god_relation_001",
+    "candidate_markdown_batch_005_blind_image_method_001",
+    "candidate_markdown_batch_005_branch_interaction_001",
+}
+
+
+PROMOTED_KSKELETON_CANDIDATE_IDS = {
+    "candidate_kskeleton_q001_foundation_tables_001",
+    "candidate_kskeleton_q002_yushi_tiaohou_001",
+    "candidate_kskeleton_q002_shen_pattern_001",
+    "candidate_kskeleton_q002_yuanhai_bilateral_001",
+    "candidate_kskeleton_q003_geju_selection_001",
+    "candidate_kskeleton_q003_day_master_strength_001",
+    "candidate_kskeleton_q003_congwang_congshi_001",
+    "candidate_kskeleton_q006_interaction_structure_001",
+    "candidate_kskeleton_q004_mechanism_layer_001",
+    "candidate_kskeleton_q004_cross_dependency_001",
+    "candidate_kskeleton_q004_q006_dependency_001",
+}
+
+
+def _assert_markdown_line_locator(locator):
+    assert locator.startswith("review-note:Markdown/source_batch_")
+    assert "#L" in locator
+
+    source_path_text, line_text = locator.removeprefix("review-note:").rsplit("#L", 1)
+    line_number = int(line_text)
+    source_path = Path(source_path_text)
+
+    assert source_path.exists(), source_path
+    assert 1 <= line_number <= len(source_path.read_text(encoding="utf-8").splitlines())
+
+
 def _manual_application_candidate_payloads() -> list[dict[str, object]]:
     """Replicate the four 017 pending_review candidates as fixture seed data."""
     return [
@@ -12226,6 +12272,39 @@ def test_seeded_intake_progress_report_loads_after_batch_registration():
     assert report.candidate_counts
     assert report.risk_tier_counts
     assert report.rule_family_counts
+
+
+def test_promoted_markdown_learning_candidates_use_source_file_locators():
+    candidates_by_id = {
+        candidate.candidate_id: candidate
+        for candidate in source_intake.load_candidate_extracts()
+    }
+
+    assert PROMOTED_MARKDOWN_LEARNING_CANDIDATE_IDS <= set(candidates_by_id)
+    for candidate_id in PROMOTED_MARKDOWN_LEARNING_CANDIDATE_IDS:
+        source_locator = candidates_by_id[candidate_id].source_locator
+
+        _assert_markdown_line_locator(source_locator)
+        assert "learning-reference:" not in source_locator
+        assert "note_markdown_batch_005_001" not in source_locator
+
+
+def test_promoted_kskeleton_candidates_use_review_note_locators():
+    candidates_by_id = {
+        candidate.candidate_id: candidate
+        for candidate in source_intake.load_candidate_extracts()
+    }
+
+    assert PROMOTED_KSKELETON_CANDIDATE_IDS <= set(candidates_by_id)
+    for candidate_id in PROMOTED_KSKELETON_CANDIDATE_IDS:
+        source_locator = candidates_by_id[candidate_id].source_locator
+
+        assert source_locator.startswith("review-note:knowledge_skeleton/"), (
+            candidate_id,
+            source_locator,
+        )
+        assert "learning-reference:" not in source_locator
+        assert (Path("资料整理") / source_locator.removeprefix("review-note:")).exists()
 
 
 def test_validate_intake_quality_reports_blocking_failures(tmp_path):

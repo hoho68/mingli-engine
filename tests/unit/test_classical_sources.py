@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 
@@ -22,6 +23,36 @@ EXPECTED_INITIAL_SOURCE_FILES = {
     "immortal_fortune_jianghu_secret": "[神仙算命术江湖秘本.pdf",
     "life_death_book_100_pages": "2800.《命理生死之书》100页.pdf",
 }
+
+PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS = {
+    "batch001_pattern_strength_001",
+    "batch001_ten_god_relation_001",
+    "batch001_branch_interaction_001",
+    "batch001_blind_image_method_001",
+    "batch002_useful_god_comparison_001",
+    "batch002_pattern_strength_001",
+    "batch002_luck_cycle_001",
+    "batch002_ten_god_relation_001",
+    "batch004_useful_god_001",
+    "batch004_pattern_strength_001",
+    "batch004_branch_interaction_001",
+    "batch004_luck_cycle_001",
+    "batch005_ten_god_relation_001",
+    "batch005_blind_image_method_001",
+    "batch005_branch_interaction_001",
+}
+
+
+def _assert_markdown_line_locator(locator):
+    assert locator.startswith("review-note:Markdown/source_batch_")
+    assert "#L" in locator
+
+    source_path_text, line_text = locator.removeprefix("review-note:").rsplit("#L", 1)
+    line_number = int(line_text)
+    source_path = Path(source_path_text)
+
+    assert source_path.exists(), source_path
+    assert 1 <= line_number <= len(source_path.read_text(encoding="utf-8").splitlines())
 
 
 def _write_json(path, payload):
@@ -108,6 +139,18 @@ def test_seeded_curation_batches_reference_existing_sources_and_evidence():
         for batch in batches
         for evidence_id in batch.evidence_ids
     )
+
+
+def test_promoted_markdown_learning_evidence_uses_source_file_locators():
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+
+    assert PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS <= set(evidence_by_id)
+    for evidence_id in PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS:
+        source_ref = evidence_by_id[evidence_id].source_ref
+
+        _assert_markdown_line_locator(source_ref)
+        assert "learning-reference:" not in source_ref
+        assert "note_markdown_batch_005_001" not in source_ref
 
 
 def test_loader_rejects_duplicate_source_ids(tmp_path):

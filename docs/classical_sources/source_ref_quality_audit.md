@@ -8,30 +8,34 @@
 | 精确度等级 | 数量 | 占比 |
 |------------|------|------|
 | REVIEW_NOTE_TOPIC | 51 | 55.4% |
+| MARKDOWN_SOURCE_LINE | 15 | 16.3% |
 | REVIEW_NOTE_KS_PATH | 11 | 12.0% |
-| LEARNING_REF_NOTE | 10 | 10.9% |
 | PAGE_EXACT | 9 | 9.8% |
-| FILE_SECTION | 8 | 8.7% |
-| REVIEW_NOTE_ID | 3 | 3.3% |
+| FILE_SECTION | 6 | 6.5% |
 
 ## 改进说明
 
-本次审计对 11 条 KSkeleton evidence 的 source_ref 进行了改进：
+本轮审计对 15 条已 promoted 的 Markdown 学习材料 evidence/candidate source locator 进行了改进：
+- 将 batch001/002/004/005 的 `learning-reference:` 与 batch005 note+lp 锚点替换为 `review-note:Markdown/source_batch_xxx_cleaned/...#L行号`
+- 对应 15 条 Markdown candidate source_locator 同步更新，避免 013 候选层与 012 formal evidence 层不一致
+- 已验证 30 个 Markdown 引用（15 evidence + 15 candidate）对应的文件存在且行号有效
+
+此前审计对 11 条 KSkeleton evidence 的 source_ref 进行了改进：
 - 将 `review-note:note_kskeleton_xxx` 格式改进为 `review-note:knowledge_skeleton/q00x_xxx/xxx.md`
 - 精确引用到知识骨架目录中的具体文件
+- 本轮同步将对应 11 条 KSkeleton promoted candidate source_locator 也改为相同的 `review-note:knowledge_skeleton/...` 文件路径
 - 验证规则要求以 `review-note:` 为前缀，改进后完全兼容
 
 ## 按优先级分组
 
-### 无需改进 (26 条)
+### 无需改进 (41 条)
 - PAGE_EXACT: 9 条，已有精确页码引用
-- FILE_SECTION: 8 条，已有文件+章节锚点
+- MARKDOWN_SOURCE_LINE: 15 条，已定位到 cleaned Markdown 文件和行号
 - REVIEW_NOTE_KS_PATH: 11 条，已改进为知识骨架文件引用
+- FILE_SECTION: 6 条，已有文件+章节锚点
 
-### 需要人工改进 (66 条)
+### 需要人工改进 (51 条)
 - REVIEW_NOTE_TOPIC: 51 条，仅以主题词引用，需要人工审查笔记精确化
-- LEARNING_REF_NOTE: 10 条，引用了 learning-reference note，但缺少实际页码
-- REVIEW_NOTE_ID: 3 条（batch005），已包含 note+lp 锚点但不是精确页码
 
 ## 逐条详细清单
 
@@ -103,18 +107,18 @@
 | mingxue_five_element_balance_004 | 五行平衡术语 | five_element_balance | 命学 | batch_012_taxonomy_001 | `review-note:mingxue_golden_voice.md#five-element-balance` | FILE_SECTION | 无需改进 |
 | teacher_pattern_strength_004 | 格局强度条件信号 | pattern_strength | 命理真诀 | batch_012_taxonomy_001 | `review-note:mingli_true_formula_teacher.md#pattern-strength` | FILE_SECTION | 无需改进 |
 | fortune_remedy_boundary_005 | 补救边界条件信号 | remedy_boundary | 鸿福 | batch_012_taxonomy_001 | `review-note:fortune_reading_hongfu_qitian.md#remedy-boundary` | FILE_SECTION | 无需改进 |
-| batch002_useful_god_comparison_001 | 用神比较 | useful_god_candidate | 梁湘润教材 | batch_markdown_registration_001 | `review-note:markdown_source_batch_002_core.md#useful-god-comparison` | FILE_SECTION | 无需改进 |
-| batch001_pattern_strength_001 | 取格局与日主强弱 | pattern_strength | 梁湘润体系 | batch_markdown_registration_001 | `review-note:markdown_source_batch_001.md#pattern-strength` | FILE_SECTION | 无需改进 |
-| batch001_ten_god_relation_001 | Ten-god relation positioning system | ten_god_relation | Liang Xiangrun lineage | batch_markdown_registration_001 | `learning-reference:note_markdown_batch_001_pattern_strength_001#lp_markdown_batch_001_ten_god_relation_001; locator_requirement=page_or_section_required` | LEARNING_REF_NOTE | 人工改进（低优先） |
-| batch001_branch_interaction_001 | Branch interaction patterns (刑冲合会) | branch_interaction | Mainstream Ziping | batch_markdown_registration_001 | `learning-reference:note_markdown_batch_001_pattern_strength_001#lp_markdown_batch_001_branch_interaction_001; locator_requirement=page_or_section_required` | LEARNING_REF_NOTE | 人工改进（低优先） |
-| batch001_blind_image_method_001 | Blind-school image method conditional signals | blind_image_method | Blind school (Central Plains) | batch_markdown_registration_001 | `learning-reference:note_markdown_batch_001_pattern_strength_001#lp_markdown_batch_001_blind_image_method_001; locator_requirement=page_or_section_required` | LEARNING_REF_NOTE | 人工改进（低优先） |
-| batch002_pattern_strength_001 | Pattern strength taxonomy from Liang Xiangrun textbook series | pattern_strength | Liang Xiangrun lineage | batch_markdown_registration_001 | `learning-reference:note_markdown_batch_002_useful_god_001#lp_markdown_batch_002_pattern_strength_001; locator_requirement=page_or_section_required` | LEARNING_REF_NOTE | 人工改进（低优先） |
-| batch002_luck_cycle_001 | Luck cycle trigger identification from Liang Xiangrun case material | luck_cycle | Liang Xiangrun lineage | batch_markdown_registration_001 | `learning-reference:note_markdown_batch_002_useful_god_001#lp_markdown_batch_002_luck_cycle_001; locator_requirement=page_or_section_required` | LEARNING_REF_NOTE | 人工改进（低优先） |
-| batch002_ten_god_relation_001 | Ten-god relation taxonomy from Liang Xiangrun textbook series | ten_god_relation | Liang Xiangrun lineage | batch_markdown_registration_001 | `learning-reference:note_markdown_batch_002_useful_god_001#lp_markdown_batch_002_ten_god_relation_001; locator_requirement=page_or_section_required` | LEARNING_REF_NOTE | 人工改进（低优先） |
-| batch004_useful_god_001 | Advanced use-god comparison across Shen/Yu/Yuanhai systems | useful_god_candidate | Liang Xiangrun lineage | batch_markdown_registration_001 | `learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_useful_god_001; locator_requirement=page_or_section_required` | LEARNING_REF_NOTE | 人工改进（低优先） |
-| batch004_pattern_strength_001 | Advanced pattern strength and preference/avoidance rules | pattern_strength | Liang Xiangrun lineage | batch_markdown_registration_001 | `learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_pattern_strength_001; locator_requirement=page_or_section_required` | LEARNING_REF_NOTE | 人工改进（低优先） |
-| batch004_branch_interaction_001 | Four-corner formation branch interaction framework | branch_interaction | Liang Xiangrun lineage (four-corner formation) | batch_markdown_registration_001 | `learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_branch_interaction_001; locator_requirement=page_or_section_required` | LEARNING_REF_NOTE | 人工改进（低优先） |
-| batch004_luck_cycle_001 | Advanced luck-cycle trigger identification | luck_cycle | Liang Xiangrun lineage | batch_markdown_registration_001 | `learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_luck_cycle_001; locator_requirement=page_or_section_required` | LEARNING_REF_NOTE | 人工改进（低优先） |
+| batch002_useful_god_comparison_001 | 用神比较 | useful_god_candidate | 梁湘润教材 | batch_markdown_registration_001 | `review-note:Markdown/source_batch_002_cleaned/简体《子平教材讲义第二级次》梁湘润(1).md#L515` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch001_pattern_strength_001 | 取格局与日主强弱 | pattern_strength | 梁湘润体系 | batch_markdown_registration_001 | `review-note:Markdown/source_batch_001_cleaned/简体《子平基础概要》梁湘润_ce.md#L1004` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch001_ten_god_relation_001 | Ten-god relation positioning system | ten_god_relation | Liang Xiangrun lineage | batch_markdown_registration_001 | `review-note:Markdown/source_batch_001_cleaned/简体《子平基础概要》梁湘润_ce.md#L3331` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch001_branch_interaction_001 | Branch interaction patterns (刑冲合会) | branch_interaction | Mainstream Ziping | batch_markdown_registration_001 | `review-note:Markdown/source_batch_001_cleaned/简体《子平基础概要》梁湘润_ce.md#L221` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch001_blind_image_method_001 | Blind-school image method conditional signals | blind_image_method | Blind school (Central Plains) | batch_markdown_registration_001 | `review-note:Markdown/source_batch_001_cleaned/中原盲派命理秘典.md#L9` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch002_pattern_strength_001 | Pattern strength taxonomy from Liang Xiangrun textbook series | pattern_strength | Liang Xiangrun lineage | batch_markdown_registration_001 | `review-note:Markdown/source_batch_002_cleaned/简体《子平教材讲义第二级次》梁湘润(1).md#L657` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch002_luck_cycle_001 | Luck cycle trigger identification from Liang Xiangrun case material | luck_cycle | Liang Xiangrun lineage | batch_markdown_registration_001 | `review-note:Markdown/source_batch_002_cleaned/简体《子平母法—大流年判例》梁湘润(1).md#L137` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch002_ten_god_relation_001 | Ten-god relation taxonomy from Liang Xiangrun textbook series | ten_god_relation | Liang Xiangrun lineage | batch_markdown_registration_001 | `review-note:Markdown/source_batch_002_cleaned/简体 梁湘润《子平教材讲义第一级次》ce.md#L4797` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch004_useful_god_001 | Advanced use-god comparison across Shen/Yu/Yuanhai systems | useful_god_candidate | Liang Xiangrun lineage | batch_markdown_registration_001 | `review-note:Markdown/source_batch_004_cleaned/简体《渊海喜忌随笔》梁湘润(1).md#L20` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch004_pattern_strength_001 | Advanced pattern strength and preference/avoidance rules | pattern_strength | Liang Xiangrun lineage | batch_markdown_registration_001 | `review-note:Markdown/source_batch_004_cleaned/简体《沈氏用神例解》梁湘润(精校)(1).md#L1522` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch004_branch_interaction_001 | Four-corner formation branch interaction framework | branch_interaction | Liang Xiangrun lineage (four-corner formation) | batch_markdown_registration_001 | `review-note:Markdown/source_batch_004_cleaned/简体《四角方阵刑冲合会透解》梁湘润2024(1).md#L263` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch004_luck_cycle_001 | Advanced luck-cycle trigger identification | luck_cycle | Liang Xiangrun lineage | batch_markdown_registration_001 | `review-note:Markdown/source_batch_004_cleaned/简体《流年法典》梁湘润_(1).md#L28` | MARKDOWN_SOURCE_LINE | 已改进 |
 | kskeleton_q001_foundation | q001: foundation | ten_god_relation | Multiple lineages | batch_kskeleton_taxonomy_001 | `review-note:knowledge_skeleton/q001_foundation_tables/q001_foundation_tables.md` | REVIEW_NOTE_KS_PATH | 已改进 |
 | kskeleton_q002_yushi | q002: yushi | useful_god_candidate | Multiple lineages | batch_kskeleton_taxonomy_001 | `review-note:knowledge_skeleton/q002_yongshen_tiaohou/q002_yongshen_tiaohou.md` | REVIEW_NOTE_KS_PATH | 已改进 |
 | kskeleton_q002_shen | q002: shen | useful_god_candidate | Multiple lineages | batch_kskeleton_taxonomy_001 | `review-note:knowledge_skeleton/q002_yongshen_tiaohou/shen_pattern_yongshen_framework.md` | REVIEW_NOTE_KS_PATH | 已改进 |
@@ -126,17 +130,15 @@
 | kskeleton_q004_mechanism | q004: mechanism | luck_cycle | Multiple lineages | batch_kskeleton_taxonomy_001 | `review-note:knowledge_skeleton/q004_luck_cycle_boundary/q004_mechanism_schema.md` | REVIEW_NOTE_KS_PATH | 已改进 |
 | kskeleton_q004_cross | q004: cross | luck_cycle | Multiple lineages | batch_kskeleton_taxonomy_001 | `review-note:knowledge_skeleton/q004_luck_cycle_boundary/q004_cross_review_backlog.md` | REVIEW_NOTE_KS_PATH | 已改进 |
 | kskeleton_q004_q006 | q004: q006 | luck_cycle | Multiple lineages | batch_kskeleton_taxonomy_001 | `review-note:knowledge_skeleton/q004_luck_cycle_boundary/q004_q006_dependency_patch.md` | REVIEW_NOTE_KS_PATH | 已改进 |
-| batch005_ten_god_relation_001 | ten god relation: batch 005 training notes | ten_god_relation | Wuyang course notes | batch_markdown_registration_001 | `review-note:note_markdown_batch_005_001#lp_markdown_batch_005_ten_god_relation_001` | REVIEW_NOTE_ID | 人工改进（低优先） |
-| batch005_blind_image_method_001 | blind image method: batch 005 training notes | blind_image_method | Wuyang course notes | batch_markdown_registration_001 | `review-note:note_markdown_batch_005_001#lp_markdown_batch_005_blind_image_method_001` | REVIEW_NOTE_ID | 人工改进（低优先） |
-| batch005_branch_interaction_001 | branch interaction: batch 005 training notes | branch_interaction | Wuyang course notes | batch_markdown_registration_001 | `review-note:note_markdown_batch_005_001#lp_markdown_batch_005_branch_interaction_001` | REVIEW_NOTE_ID | 人工改进（低优先） |
+| batch005_ten_god_relation_001 | ten god relation: batch 005 training notes | ten_god_relation | Wuyang course notes | batch_markdown_registration_001 | `review-note:Markdown/source_batch_005_cleaned/高阶资料1-6节.md#L58` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch005_blind_image_method_001 | blind image method: batch 005 training notes | blind_image_method | Wuyang course notes | batch_markdown_registration_001 | `review-note:Markdown/source_batch_005_cleaned/高阶资料1-6节.md#L5` | MARKDOWN_SOURCE_LINE | 已改进 |
+| batch005_branch_interaction_001 | branch interaction: batch 005 training notes | branch_interaction | Wuyang course notes | batch_markdown_registration_001 | `review-note:Markdown/source_batch_005_cleaned/11节 刑冲取象复习笔记.md#L5` | MARKDOWN_SOURCE_LINE | 已改进 |
 
 ## 改进建议
 
 ### 后续改进路径
 
-1. **LEARNING_REF_NOTE (10 条)**: 对应的 knowledge_skeleton CSV 文件中有 `source_file` 和 `source_lines`
-   列，可以用这些行号把 source_ref 精确到 `review-note:路径.md#L行号` 格式。
-2. **REVIEW_NOTE_ID (3 条)**: batch005 的 markdown 源文件在 `Markdown/source_batch_005_cleaned/` 下，
-   人工可以定位到具体文件后更新。
-3. **REVIEW_NOTE_TOPIC (51 条)**: 最耗时的改进，涉及 batch_012_seed 和 batch_012_taxonomy 的 64 条 evidence，
+1. **REVIEW_NOTE_TOPIC (51 条)**: 最耗时的改进，涉及 batch_012_seed 和 batch_012_taxonomy 中的旧主题型 review-note，
    需要人工审查原始笔记材料。建议在后续 curation pass 中分批处理。
+2. **MARKDOWN_SOURCE_LINE (15 条)**: batch001/002/004/005 的已 promoted Markdown 学习材料已完成文件行号定位；
+   后续如要继续提高精度，可把单行锚点扩展为更稳定的章节锚点或 source-window 索引。

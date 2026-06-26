@@ -1385,7 +1385,7 @@
   {
     "evidence_id": "batch002_useful_god_comparison_001",
     "source_id": "markdown_source_batch_002_core",
-    "source_ref": "review-note:markdown_source_batch_002_core.md#useful-god-comparison",
+    "source_ref": "review-note:Markdown/source_batch_002_cleaned/简体《子平教材讲义第二级次》梁湘润(1).md#L515",
     "theme": "用神比较",
     "rule_family": "useful_god_candidate",
     "risk_tier": "ordinary",
@@ -1409,7 +1409,7 @@
   {
     "evidence_id": "batch001_pattern_strength_001",
     "source_id": "markdown_source_batch_001",
-    "source_ref": "review-note:markdown_source_batch_001.md#pattern-strength",
+    "source_ref": "review-note:Markdown/source_batch_001_cleaned/简体《子平基础概要》梁湘润_ce.md#L1004",
     "theme": "取格局与日主强弱",
     "rule_family": "pattern_strength",
     "risk_tier": "sensitive",
@@ -1432,7 +1432,7 @@
   {
     "evidence_id": "batch001_ten_god_relation_001",
     "source_id": "markdown_source_batch_001",
-    "source_ref": "learning-reference:note_markdown_batch_001_pattern_strength_001#lp_markdown_batch_001_ten_god_relation_001; locator_requirement=page_or_section_required",
+    "source_ref": "review-note:Markdown/source_batch_001_cleaned/简体《子平基础概要》梁湘润_ce.md#L3331",
     "theme": "Ten-god relation positioning system",
     "rule_family": "ten_god_relation",
     "risk_tier": "sensitive",
@@ -1454,7 +1454,7 @@
   {
     "evidence_id": "batch001_branch_interaction_001",
     "source_id": "markdown_source_batch_001",
-    "source_ref": "learning-reference:note_markdown_batch_001_pattern_strength_001#lp_markdown_batch_001_branch_interaction_001; locator_requirement=page_or_section_required",
+    "source_ref": "review-note:Markdown/source_batch_001_cleaned/简体《子平基础概要》梁湘润_ce.md#L221",
     "theme": "Branch interaction patterns (刑冲合会)",
     "rule_family": "branch_interaction",
     "risk_tier": "sensitive",
@@ -1476,7 +1476,7 @@
   {
     "evidence_id": "batch001_blind_image_method_001",
     "source_id": "markdown_source_batch_001",
-    "source_ref": "learning-reference:note_markdown_batch_001_pattern_strength_001#lp_markdown_batch_001_blind_image_method_001; locator_requirement=page_or_section_required",
+    "source_ref": "review-note:Markdown/source_batch_001_cleaned/中原盲派命理秘典.md#L9",
     "theme": "Blind-school image method conditional signals",
     "rule_family": "blind_image_method",
     "risk_tier": "sensitive",
@@ -1499,7 +1499,7 @@
   {
     "evidence_id": "batch002_pattern_strength_001",
     "source_id": "markdown_source_batch_002_core",
-    "source_ref": "learning-reference:note_markdown_batch_002_useful_god_001#lp_markdown_batch_002_pattern_strength_001; locator_requirement=page_or_section_required",
+    "source_ref": "review-note:Markdown/source_batch_002_cleaned/简体《子平教材讲义第二级次》梁湘润(1).md#L657",
     "theme": "Pattern strength taxonomy from Liang Xiangrun textbook series",
     "rule_family": "pattern_strength",
     "risk_tier": "ordinary",
@@ -1522,7 +1522,7 @@
   {
     "evidence_id": "batch002_luck_cycle_001",
     "source_id": "markdown_source_batch_002_core",
-    "source_ref": "learning-reference:note_markdown_batch_002_useful_god_001#lp_markdown_batch_002_luck_cycle_001; locator_requirement=page_or_section_required",
+    "source_ref": "review-note:Markdown/source_batch_002_cleaned/简体《子平母法—大流年判例》梁湘润(1).md#L137",
     "theme": "Luck cycle trigger identification from Liang Xiangrun case material",
     "rule_family": "luck_cycle",
     "risk_tier": "ordinary",
@@ -1544,7 +1544,7 @@
   {
     "evidence_id": "batch002_ten_god_relation_001",
     "source_id": "markdown_source_batch_002_core",
-    "source_ref": "learning-reference:note_markdown_batch_002_useful_god_001#lp_markdown_batch_002_ten_god_relation_001; locator_requirement=page_or_section_required",
+    "source_ref": "review-note:Markdown/source_batch_002_cleaned/简体 梁湘润《子平教材讲义第一级次》ce.md#L4797",
     "theme": "Ten-god relation taxonomy from Liang Xiangrun textbook series",
     "rule_family": "ten_god_relation",
     "risk_tier": "ordinary",
@@ -1566,7 +1566,7 @@
   {
     "evidence_id": "batch004_useful_god_001",
     "source_id": "markdown_source_batch_004",
-    "source_ref": "learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_useful_god_001; locator_requirement=page_or_section_required",
+    "source_ref": "review-note:Markdown/source_batch_004_cleaned/简体《渊海喜忌随笔》梁湘润(1).md#L20",
     "theme": "Advanced use-god comparison across Shen/Yu/Yuanhai systems",
     "rule_family": "useful_god_candidate",
     "risk_tier": "sensitive",
@@ -1589,7 +1589,7 @@
   {
     "evidence_id": "batch004_pattern_strength_001",
     "source_id": "markdown_source_batch_004",
-    "source_ref": "learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_pattern_strength_001; locator_requirement=page_or_section_required",
+    "source_ref": "review-note:Markdown/source_batch_004_cleaned/简体《沈氏用神例解》梁湘润(精校)(1).md#L1522",
     "theme": "Advanced pattern strength and preference/avoidance rules",
     "rule_family": "pattern_strength",
     "risk_tier": "sensitive",
@@ -1612,7 +1612,7 @@
   {
     "evidence_id": "batch004_branch_interaction_001",
     "source_id": "markdown_source_batch_004",
-    "source_ref": "learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_branch_interaction_001; locator_requirement=page_or_section_required",
+    "source_ref": "review-note:Markdown/source_batch_004_cleaned/简体《四角方阵刑冲合会透解》梁湘润2024(1).md#L263",
     "theme": "Four-corner formation branch interaction framework",
     "rule_family": "branch_interaction",
     "risk_tier": "sensitive",
@@ -1635,7 +1635,7 @@
   {
     "evidence_id": "batch004_luck_cycle_001",
     "source_id": "markdown_source_batch_004",
-    "source_ref": "learning-reference:note_markdown_batch_004_001#lp_markdown_batch_004_luck_cycle_001; locator_requirement=page_or_section_required",
+    "source_ref": "review-note:Markdown/source_batch_004_cleaned/简体《流年法典》梁湘润_(1).md#L28",
     "theme": "Advanced luck-cycle trigger identification",
     "rule_family": "luck_cycle",
     "risk_tier": "sensitive",
@@ -1922,7 +1922,7 @@
   {
     "evidence_id": "batch005_ten_god_relation_001",
     "source_id": "markdown_source_batch_005",
-    "source_ref": "review-note:note_markdown_batch_005_001#lp_markdown_batch_005_ten_god_relation_001",
+    "source_ref": "review-note:Markdown/source_batch_005_cleaned/高阶资料1-6节.md#L58",
     "theme": "ten god relation: batch 005 training notes",
     "rule_family": "ten_god_relation",
     "risk_tier": "sensitive",
@@ -1946,7 +1946,7 @@
   {
     "evidence_id": "batch005_blind_image_method_001",
     "source_id": "markdown_source_batch_005",
-    "source_ref": "review-note:note_markdown_batch_005_001#lp_markdown_batch_005_blind_image_method_001",
+    "source_ref": "review-note:Markdown/source_batch_005_cleaned/高阶资料1-6节.md#L5",
     "theme": "blind image method: batch 005 training notes",
     "rule_family": "blind_image_method",
     "risk_tier": "sensitive",
@@ -1970,7 +1970,7 @@
   {
     "evidence_id": "batch005_branch_interaction_001",
     "source_id": "markdown_source_batch_005",
-    "source_ref": "review-note:note_markdown_batch_005_001#lp_markdown_batch_005_branch_interaction_001",
+    "source_ref": "review-note:Markdown/source_batch_005_cleaned/11节 刑冲取象复习笔记.md#L5",
     "theme": "branch interaction: batch 005 training notes",
     "rule_family": "branch_interaction",
     "risk_tier": "sensitive",
