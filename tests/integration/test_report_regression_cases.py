@@ -5071,8 +5071,8 @@ def test_learning_reference_intake_decisions_do_not_change_candidate_or_formal_e
     points = learning_reference_curation.load_learning_points()
     decisions = learning_reference_curation.load_candidate_intake_decisions()
 
-    assert len(points) == 37
-    assert len(decisions) == 31
+    assert len(points) == 34
+    assert len(decisions) == 28
     assert {
         "lp_northeast_blind_image_001",
         "lp_mingli_pattern_strength_001",
@@ -5123,14 +5123,25 @@ def test_learning_reference_prerequisite_actions_do_not_change_formal_evidence_c
         "action_markdown_batch_003_registration_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
-                "action_source_processing_status_deferred_001",
-        "action_knowledge_skeleton_preparation_001",
-        "action_kskeleton_q004_luck_cycle_001",
-        "action_kskeleton_q005_ten_god_family_001",
-        "action_kskeleton_q007_image_method_001",
-        "action_kskeleton_q008_high_risk_boundary_001",
+        "action_source_processing_status_deferred_001",
     }
     assert summary.formal_evidence_delta == 0
+    assert summary.note_counts == {"draft": 7, "candidate_intake_started": 7}
+    assert summary.learning_point_counts == {
+        "duplicate_review": 1,
+        "ready": 27,
+        "deferred": 6,
+    }
+    assert summary.candidate_decision_count == 28
+    assert summary.candidate_ready_count == 27
+    assert summary.prerequisite_action_counts == {
+        "risk_review": 3,
+        "blocked": 1,
+        "deferred": 2,
+        "status:planned": 3,
+        "status:blocked": 1,
+        "status:deferred": 2,
+    }
     assert {
         candidate.candidate_id for candidate in source_intake.load_candidate_extracts()
     } == before_candidate_ids
