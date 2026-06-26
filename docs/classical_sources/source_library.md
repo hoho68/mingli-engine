@@ -74,30 +74,30 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.source_library impor
 
 ## Current Registered Snapshot
 
-Computed with `build_source_library_progress_report()` after US2
-implementation:
+Computed with `build_source_library_progress_report()` after batch005 candidate
+repair:
 
-- Registered source entries: 9.
-- Readiness: `ready_for_extraction=7`, `blocked=1`,
-  `needs_preparation=1`.
-- Priority: `high=4`, `medium=3`, `deferred=1`, `low=1`.
-- Risk tiers: `sensitive=4`, `ordinary=2`, `high_risk=3`.
+- Registered source entries: 14.
+- Readiness: `ready_for_extraction=11`, `blocked=1`,
+  `needs_preparation=2`.
+- Priority: `high=7`, `medium=5`, `deferred=1`, `low=1`.
+- Risk tiers: `sensitive=8`, `ordinary=3`, `high_risk=3`.
 - High-risk entries:
   `entry_blind_life_manual_pdf`,
   `entry_immortal_fortune_jianghu_secret_pdf`, and
   `entry_life_death_book_100_pages_pdf`.
 - Rule-family coverage:
-  `pattern_strength=4`, `blind_image_method=3`,
-  `high_risk_signal=3`, `branch_interaction=2`,
-  `ten_god_relation=2`, `remedy_boundary=2`,
-  `useful_god_candidate=1`, `luck_cycle=1`, and
+  `pattern_strength=8`, `blind_image_method=6`,
+  `high_risk_signal=7`, `branch_interaction=6`,
+  `ten_god_relation=7`, `remedy_boundary=2`,
+  `useful_god_candidate=4`, `luck_cycle=5`, and
   `five_element_balance=1`.
 - Next source candidates:
   `entry_northeast_blind_peak_pdf`,
-  `entry_blind_life_manual_pdf`,
   `entry_mingli_true_formula_teacher_pdf`,
   `entry_life_death_book_100_pages_pdf`, and
-  `entry_duan_plain_mingxue_outline_pdf`.
+  `entry_markdown_source_batch_002_core`,
+  `entry_markdown_source_batch_001`.
 
 ## Priority Assessments
 
@@ -130,40 +130,54 @@ Computed with `build_source_library_progress_report()`,
 candidate application:
 
 - Value status counts:
-  `in_progress=6`, `blocked=1`, `not_started=1`, and `value_produced=1`.
+  `value_produced=11`, `blocked=1`, `in_progress=1`, and `not_started=1`.
 - `entry_life_death_book_100_pages_pdf`: `candidate_count=1`,
   `approved_candidate_count=1`, `conflict_count=1`, `gap_count=0`,
-  `promoted_evidence_count=0`, `value_status=value_produced`.
+  `promoted_evidence_count=1`, `value_status=value_produced`.
 - `entry_blind_life_manual_pdf`: `candidate_count=1`,
   `approved_candidate_count=0`, `conflict_count=0`, `gap_count=1`,
   `promoted_evidence_count=0`, `value_status=in_progress`.
 - `entry_northeast_blind_peak_pdf`: `candidate_count=2`,
-  `approved_candidate_count=0`, `rejected_or_blocked_count=1`,
-  `value_status=in_progress`, because one duplicate/rejected candidate is
-  visible while another candidate still awaits review.
+  `approved_candidate_count=1`, `rejected_or_blocked_count=1`,
+  `promoted_evidence_count=1`, `value_status=value_produced`.
 - `entry_mingli_true_formula_teacher_pdf`: `candidate_count=1`,
-  `approved_candidate_count=0`, `value_status=in_progress`, because the 017
-  pattern-strength candidate is pending review.
+  `approved_candidate_count=1`, `promoted_evidence_count=1`,
+  `value_status=value_produced`.
 - `entry_duan_plain_mingxue_outline_pdf`: `candidate_count=1`,
-  `approved_candidate_count=0`, `value_status=in_progress`, because the 017
-  ten-god relation candidate is pending review.
+  `approved_candidate_count=1`, `promoted_evidence_count=1`,
+  `value_status=value_produced`.
 - `entry_mingxue_golden_voice_pdf`: `candidate_count=2`,
-  `rejected_or_blocked_count=1`, `value_status=in_progress`, because the
-  rejected broad-scope candidate is preserved while the narrower 017
-  five-element candidate is pending review.
+  `approved_candidate_count=1`, `rejected_or_blocked_count=1`,
+  `promoted_evidence_count=1`, `value_status=value_produced`.
 - `entry_fortune_reading_hongfu_qitian_pdf`: `candidate_count=1`,
-  `approved_candidate_count=0`, `value_status=in_progress`, because the 017
-  remedy-boundary candidate is pending review.
+  `approved_candidate_count=1`, `promoted_evidence_count=1`,
+  `value_status=value_produced`.
 - `entry_blind_school_secret_pdf`: `candidate_count=1`,
   `rejected_or_blocked_count=1`, `value_status=blocked`.
 - `entry_immortal_fortune_jianghu_secret_pdf`: `candidate_count=0`,
   `value_status=not_started`.
+- `entry_markdown_source_batch_001`: `candidate_count=4`,
+  `approved_candidate_count=4`, `promoted_evidence_count=4`,
+  `value_status=value_produced`.
+- `entry_markdown_source_batch_002_core`: `candidate_count=4`,
+  `approved_candidate_count=4`, `promoted_evidence_count=4`,
+  `value_status=value_produced`.
+- `entry_markdown_source_batch_004`: `candidate_count=4`,
+  `approved_candidate_count=4`, `promoted_evidence_count=4`,
+  `value_status=value_produced`.
+- `entry_markdown_source_batch_005`: `candidate_count=3`,
+  `approved_candidate_count=3`, `promoted_evidence_count=3`,
+  `value_status=value_produced`.
+- `entry_knowledge_skeleton`: `candidate_count=11`,
+  `approved_candidate_count=11`, `promoted_evidence_count=0`,
+  `value_status=value_produced`.
 - `batch_plan_high_risk_boundaries_001`: `candidate_count=2`,
   `approved_candidate_count=1`, `conflict_count=1`, `gap_count=1`,
-  `promoted_evidence_count=0`, `value_status=value_produced`.
+  `promoted_evidence_count=1`, `value_status=value_produced`.
 - `batch_plan_blind_image_method_001`: `candidate_count=3`,
-  `approved_candidate_count=0`, `rejected_or_blocked_count=1`,
-  `gap_count=1`, `promoted_evidence_count=0`, `value_status=in_progress`.
+  `approved_candidate_count=1`, `rejected_or_blocked_count=1`,
+  `gap_count=1`, `promoted_evidence_count=1`,
+  `value_status=value_produced`.
 
 `promoted_evidence_count` only counts reviewed/approved 013 promotion targets
 that also exist as formal 012 evidence units. Approved but unpromoted

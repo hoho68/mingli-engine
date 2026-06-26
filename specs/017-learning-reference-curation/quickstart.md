@@ -35,23 +35,23 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.learning_reference_c
 Expected result after implementation:
 
 - The progress summary prints:
-  `note_counts={'draft': 5}`,
-  `learning_point_counts={'duplicate_review': 1, 'ready': 4}`,
-  `decision_counts={'reuse_existing': 1, 'create_candidate': 4, 'status:applied': 5}`,
-  `prerequisite_action_counts={'registration': 3, 'risk_review': 4, 'locator_review': 1, 'preparation': 1, 'deferred': 1, 'blocked': 1, 'status:planned': 9, 'status:deferred': 1, 'status:blocked': 1}`,
-  `risk_tier_counts={'ordinary': 8, 'sensitive': 9, 'high_risk': 4}`,
+  `note_counts={'draft': 7, 'candidate_intake_started': 7}`,
+  `learning_point_counts={'duplicate_review': 1, 'ready': 27, 'deferred': 6}`,
+  `decision_counts={'reuse_existing': 1, 'create_candidate': 27, 'status:applied': 28}`,
+  `prerequisite_action_counts={'risk_review': 3, 'blocked': 1, 'deferred': 2, 'status:planned': 3, 'status:blocked': 1, 'status:deferred': 2}`,
+  `risk_tier_counts={'sensitive': 40, 'ordinary': 11, 'high_risk': 3}`,
   `overlap_warning_count=7`,
-  `candidate_ready_count=4`,
-  `candidate_decision_count=5`,
-  `formal_evidence_delta=0`, and next action ids for five draft notes plus
-  nine planned prerequisite actions.
+  `candidate_ready_count=27`,
+  `candidate_decision_count=28`,
+  `formal_evidence_delta=0`, and next action ids for seven draft notes plus
+  three planned risk-review prerequisite actions.
 - The quality check prints `[]`.
 - Blocked and deferred prerequisite actions remain outside `next_action_ids`
   until their status changes.
-- Candidate-intake decisions are applied: Northeast reuses
-  `candidate_northeast_blind_image_001`; Mingli, Duan, Mingxue, and Hongfu
-  create pending-review 013 candidates. None are review decisions, promoted
-  evidence, or formal report evidence.
+- Candidate-intake decisions are applied: one decision reuses an existing
+  candidate, and 27 create-candidate decisions have been applied through 013
+  intake. The 017 metadata itself still has `formal_evidence_delta=0`; formal
+  report evidence comes only from reviewed evidence units.
 
 Run focused learning reference curation tests:
 

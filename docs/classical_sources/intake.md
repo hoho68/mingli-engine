@@ -42,16 +42,17 @@ Related maintainer references:
 
 ## Current Computed Snapshot
 
-Computed with `build_intake_progress_report()` after 017 candidate application:
+Computed with `build_intake_progress_report()` after batch005 candidate repair:
 
-- Source material preparation: `partially_reviewed=7`, `indexed=1`,
-  `not_started=1`.
-- Candidate status: `pending_review=5`, `returned=1`, `approved=1`,
-  `rejected=2`, `blocked=1`.
-- Risk tiers: `sensitive=5`, `high_risk=2`, `ordinary=3`.
-- Rule families: `blind_image_method=4`, `high_risk_signal=1`,
-  `pattern_strength=2`, `ten_god_relation=1`, `five_element_balance=1`,
-  `remedy_boundary=1`.
+- Source material preparation: `partially_reviewed=10`, `indexed=1`,
+  `not_started=1`, `reviewed=2`.
+- Candidate status: `promoted=32`, `returned=1`, `rejected=2`,
+  `blocked=1`.
+- Risk tiers: `sensitive=27`, `high_risk=2`, `ordinary=7`.
+- Rule families: `blind_image_method=6`, `high_risk_signal=1`,
+  `pattern_strength=9`, `ten_god_relation=4`, `five_element_balance=1`,
+  `remedy_boundary=1`, `useful_god_candidate=5`, `branch_interaction=4`,
+  `luck_cycle=5`.
 - Promotion readiness: `approved_not_promoted=0`.
 - Audit links: `duplicate_candidates=1`, `conflict_link_count=1`,
   `gap_link_count=1`.
@@ -59,17 +60,19 @@ Computed with `build_intake_progress_report()` after 017 candidate application:
 
 ## Next Review Queues
 
-- Pending review: `candidate_northeast_blind_image_001`,
-  `candidate_mingli_pattern_strength_017_001`,
-  `candidate_duan_ten_god_relation_017_001`,
-  `candidate_mingxue_five_element_balance_017_001`, and
-  `candidate_hongfu_remedy_boundary_017_001`.
+- Pending review: none.
 - Returned for revision: `candidate_blind_life_manual_gap_001`.
-- Approved and already batched: `candidate_life_death_boundary_001`.
+- Approved-not-promoted: none.
+- Promoted: 32 candidates, including the original 017 applied candidates,
+  markdown source batches 001/002/004/005, and knowledge skeleton candidates.
 - Rejected or blocked audit records:
   `candidate_mingxue_golden_voice_scope_001`,
   `candidate_blind_school_secret_blocked_001`, and
   `candidate_northeast_blind_image_duplicate_001`.
+
+The pending-review workflow sections below remain as maintainer scaffolding for
+future candidate sessions. The current seeded data has no active
+`pending_review` candidates.
 
 ## Pending Candidate Review Worklist
 

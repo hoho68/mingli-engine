@@ -64,11 +64,11 @@ deferred, and blocked-source work visible
 without turning the underlying 015 queue items into learning points or candidate
 intake decisions.
 
-Phase 6 applies the selected
-`decision_mingli_pattern_strength_001` create-candidate decision into 013 as
-`candidate_mingli_pattern_strength_017_001`. The new candidate is
-`pending_review`; no review decision, promotion batch, or formal evidence unit
-is created.
+Later 017/013 sessions applied the selected create-candidate decisions into
+normal 013 candidate records and then reviewed/promoted eligible candidates
+through the ordinary intake and promotion path. The 017 learning-reference
+metadata itself still reports `formal_evidence_delta=0`; formal report evidence
+comes only from reviewed 012 evidence units.
 
 ## Learning Note Boundary
 
@@ -101,7 +101,7 @@ points, and the named candidate id remains planned metadata until an explicit
 candidate-application step is requested. `reuse_existing` and
 `avoid_duplicate` decisions must name existing overlap candidate ids.
 
-Candidate-intake decision records now:
+Candidate-intake decision records include these first-wave examples:
 
 - `decision_northeast_blind_image_001`: applied as `reuse_existing`, pointing
   to `candidate_northeast_blind_image_001` while preserving
@@ -119,8 +119,10 @@ Candidate-intake decision records now:
 - `decision_hongfu_remedy_boundary_001`: applied as `create_candidate`,
   creating `candidate_hongfu_remedy_boundary_017_001`.
 
-All created candidates are `pending_review`; none are approved, promoted, or
-formal report evidence.
+The full seeded 017 decision set now contains `reuse_existing=1`,
+`create_candidate=27`, and `status:applied=28`. Applied decisions are no
+longer themselves evidence; any report-usable value comes only after the
+ordinary 013 review/promotion path creates matching formal evidence units.
 
 ## Prerequisite Action Boundary
 
@@ -129,30 +131,22 @@ records, the owning 016 package, the originating 015 queue item, and the
 originating 015 audit record. Action notes preserve the backlog record's
 missing prerequisites, recommended action, risk boundary, and status.
 
-Current US3 action notes:
+Current prerequisite action notes:
 
-- `action_markdown_batch_001_registration_001`: registration action for
-  `backlog_markdown_batch_001_registration_001`, requiring
-  `source_library_registration` before extraction.
-- `action_blind_life_manual_risk_review_001`: risk-review action for
-  `backlog_blind_life_manual_risk_review_001`, keeping high-risk aphoristic
-  material outside candidate extraction until boundary review is complete.
+- `action_blind_life_manual_risk_review_001`: planned risk-review action for
+  `backlog_blind_life_manual_risk_review_001`.
 - `action_blind_school_secret_blocked_001`: blocked action for
   `backlog_blind_school_secret_blocked_001`, requiring source-access and
   quotation-boundary clarification before any extraction work.
-- `action_markdown_batch_002_registration_001` and
-  `action_markdown_batch_003_registration_001`: registration actions requiring
-  source-library registration before extraction.
-- `action_immortal_fortune_jianghu_secret_risk_review_001`,
-  `action_life_death_book_100_pages_risk_review_001`, and
-  `action_markdown_batch_005_risk_review_001`: risk-review actions keeping
-  high-risk materials outside extraction until boundary review is complete.
-- `action_markdown_batch_004_locator_review_001`: locator-review action for a
-  possible edition variant.
+- `action_markdown_batch_003_registration_001`: deferred registration action
+  for `backlog_markdown_batch_003_registration_001`.
+- `action_immortal_fortune_jianghu_secret_risk_review_001`: planned
+  risk-review action for
+  `backlog_immortal_fortune_jianghu_secret_risk_review_001`.
+- `action_life_death_book_100_pages_risk_review_001`: planned risk-review
+  action for `backlog_life_death_book_100_pages_risk_review_001`.
 - `action_source_processing_status_deferred_001`: deferred action for workflow
   metadata that is not source text.
-- `action_knowledge_skeleton_preparation_001`: preparation action for an
-  aggregate skeleton that needs component source review.
 
 Risk-review, deferred, and blocked action notes cannot become learning points,
 candidate extracts, review decisions, promotion batches, approved evidence
@@ -161,59 +155,43 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 
 ## Current Incremental Snapshot
 
-- Learning reference notes: `draft=5`.
-- Learning points: `duplicate_review=1`, `ready=4`.
-- Candidate decisions: `reuse_existing=1`, `create_candidate=4`,
-  `status:applied=5`.
-- Prerequisite actions: `registration=3`, `risk_review=4`,
-  `locator_review=1`, `preparation=1`, `deferred=1`, `blocked=1`,
-  `status:planned=9`, `status:deferred=1`, `status:blocked=1`.
-- Candidate-ready count: `4`.
-- Risk tier counts: `ordinary=8`, `sensitive=9`, `high_risk=4` across notes,
+- Learning reference notes: `draft=7`, `candidate_intake_started=7`.
+- Learning points: `duplicate_review=1`, `ready=27`, `deferred=6`.
+- Candidate decisions: `reuse_existing=1`, `create_candidate=27`,
+  `status:applied=28`.
+- Prerequisite actions: `risk_review=3`, `blocked=1`, `deferred=2`,
+  `status:planned=3`, `status:deferred=2`, `status:blocked=1`.
+- Candidate-ready count: `27`.
+- Candidate decision count: `28`.
+- Risk tier counts: `ordinary=11`, `sensitive=40`, `high_risk=3` across notes,
   learning points, and prerequisite actions.
-- Target rule family counts: `blind_image_method=1`,
-  `branch_interaction=1`, `pattern_strength=4`,
-  `useful_god_candidate=1`, `luck_cycle=1`, `ten_god_relation=2`,
-  `five_element_balance=1`, and `remedy_boundary=1`.
+- Target rule family counts: `blind_image_method=2`,
+  `branch_interaction=4`, `pattern_strength=9`,
+  `useful_god_candidate=4`, `luck_cycle=4`, `ten_god_relation=4`,
+  `five_element_balance=1`, `remedy_boundary=1`, and
+  `high_risk_signal=1`.
 - Overlap warnings: `7`.
 - Formal evidence delta: `0`.
-- Applied 013 candidates:
-  `candidate_mingli_pattern_strength_017_001`,
-  `candidate_duan_ten_god_relation_017_001`,
-  `candidate_mingxue_five_element_balance_017_001`, and
-  `candidate_hongfu_remedy_boundary_017_001`; all are `pending_review`.
+- Next action ids: seven draft notes plus planned risk-review actions for
+  Blind Life Manual, Immortal Fortune Jianghu Secret, and Life Death Book.
 
 ## Phase C Source Disposition Snapshot
 
-The current 015 audit covers 16 material groups. All 16 now have an explicit
-015 queue or backlog state:
+The current 016/017 package consumes 14 selected extraction tasks as learning
+reference notes and preserves 6 prerequisite backlog records as action notes.
 
-- 5 `extraction_ready` queue items.
-- 3 `registration_backlog` queue items.
-- 4 `risk_review_backlog` queue items.
-- 2 `preparation_backlog` queue items.
-- 2 `blocked_backlog` queue items.
+- 14 ready items are 016 extraction tasks and 017 learning reference notes:
+  five root-PDF learning notes, three Markdown batch learning notes, and six
+  knowledge-skeleton learning notes.
+- Those notes contain 34 learning points and 28 candidate-intake decisions.
+  One decision reuses an existing candidate, 27 are create-candidate decisions,
+  and 28 decisions have `status=applied`.
+- 6 non-ready items remain prerequisite action notes: Blind Life Manual,
+  Blind School Secret, Markdown Batch 003, Immortal Fortune Jianghu Secret,
+  Life Death Book 100 Pages, and Source Processing Status.
 
-The current 016/017 package intentionally consumes the first bounded work
-surface from that queue:
-
-- 5 ready items are 016 extraction tasks and 017 learning reference notes:
-  `Northeast Blind Peak`, `Mingli True Formula Teacher`, and
-  `Duan Plain Mingxue Outline`, `Mingxue Golden Voice`, and
-  `Fortune Reading Hongfu Qitian`.
-- Those five notes have 5 learning points and 5 candidate-intake decisions; one
-  decision reuses an existing pending candidate and four decisions are applied
-  as pending 013 candidates.
-- 11 non-ready items are 016 prerequisite backlog records or 017 prerequisite
-  action notes: `Markdown Source Batch 001`, `Markdown Source Batch 002`,
-  `Markdown Source Batch 003`, `Blind Life Manual`,
-  `Immortal Fortune Jianghu Secret`, `Life Death Book 100 Pages`,
-  `Markdown Source Batch 005`, `Markdown Source Batch 004`,
-  `Blind School Secret`, `Source Processing Status`, and
-  `Knowledge Skeleton`.
-
-No audited material is left without a 016/017 disposition: ready materials are
-learning-reference inputs, and non-ready materials are prerequisite work.
+Ready materials are learning-reference inputs, and non-ready materials remain
+prerequisite work until a future workflow resolves their blockers.
 
 Quick validation command:
 
