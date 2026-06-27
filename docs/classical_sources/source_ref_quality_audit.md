@@ -50,6 +50,15 @@ Audit scope: 92 evidence units
 | northeast_blind_peak_pdf | page-reviewed | 1 |
 | northeast_blind_peak_pdf | no-risk-boundary-page | 2 |
 
+## Learning Closure Pass
+
+| Source | Outcome | Count |
+|--------|---------|-------|
+| duan_plain_mingxue_outline_pdf | learning-paraphrase-ready | 4 |
+| fortune_reading_hongfu_qitian_pdf | policy-boundary-retained | 5 |
+| northeast_blind_peak_pdf | safety-boundary-retained | 2 |
+| Total | retained-chapter-learning-closed | 11 |
+
 ## Improvement Notes
 
 Converted 51 legacy topic-only review-note references in the prior pass and preserved them as source-window locators.
@@ -61,6 +70,7 @@ Upgraded 25 additional source-window locators from chapter-level to page-level a
 - Page-level locator coverage is used where PDF text extraction, table-of-contents mapping, or rendered page review is reliable.
 - Chapter-level locators are retained only where visual review did not produce a reliable topic-page or boundary match.
 - Remaining chapter-level locators now include manual-review notes listing the rendered page ranges and reason no page-level source match was assigned.
+- Remaining chapter-level locators now include learning-closure notes that distinguish learning paraphrase, policy-boundary retention, and safety-boundary retention.
 - Markdown line locators are used for the Life Death Book material that already has a tracked Markdown extract.
 
 Prior improvements are preserved:
@@ -72,14 +82,14 @@ Prior improvements are preserved:
 ### Current Goal Progress (92 items)
 - REVIEW_NOTE_SOURCE_WINDOW: 57 items now point to source-window sections with source locators.
 - PAGE_LOCATOR: 44 source-window items now have page-level locators.
-- CHAPTER_LOCATOR: 11 source-window items remain chapter-level with explicit blocker notes and manual-review notes.
+- CHAPTER_LOCATOR: 11 source-window items remain chapter-level with explicit blocker notes, manual-review notes, and learning-closure notes.
 - MARKDOWN_SOURCE_LINE: 15 items point to cleaned Markdown files and line numbers.
 - REVIEW_NOTE_KS_PATH: 11 items point to knowledge-skeleton files.
 - PAGE_EXACT: 9 items already have exact page references.
 
 ### Optional Future Precision Work
-- For the remaining 9 CID-backed chapter source windows, do a targeted OCR/manual transcription pass rather than relying on CID text extraction or broad rendered section matches.
-- For the remaining 2 Northeast source windows, retain safety-boundary paraphrase handling unless a future source-specific boundary page is manually identified.
+- For the remaining 9 CID-backed chapter source windows, learning closure is complete; targeted OCR/manual transcription is only needed before exact quotation or future promotion.
+- For the remaining 2 Northeast source windows, safety-boundary learning closure is complete; keep them as paraphrase-only unless a source-specific boundary page is identified.
 - Promote this audit builder into a checked utility command if future curation passes need repeatable report generation.
 
 ## Detailed Inventory
@@ -181,6 +191,6 @@ Prior improvements are preserved:
 
 ## Recommendations
 
-1. OCR pass: prioritize the 9 CID-backed chapter windows that still lack exact page matches.
-2. Northeast safety-boundary pass: keep the 2 remaining Northeast risk-boundary chapter windows as manual paraphrase work unless a source-specific boundary page is identified.
+1. Targeted transcription: only transcribe the 9 CID-backed retained chapter windows if a future promotion requires exact quotation or page-level proof.
+2. Northeast safety-boundary handling: keep the 2 remaining Northeast risk-boundary windows as safety-paraphrase learning notes unless a source-specific boundary page is identified.
 3. Audit automation: promote this classification logic into a dedicated command if future curation passes need repeatable report generation.

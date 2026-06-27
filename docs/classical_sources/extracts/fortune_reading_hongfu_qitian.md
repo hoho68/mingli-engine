@@ -25,6 +25,7 @@ PDF preparation material; no runtime parser reads this note.
 - Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-boundary`
 - Locator note: `blocked:rendered-review-no-remedy-boundary-page-match`
 - Manual review note: `manual-review:no-remedy-boundary-page; reviewed=pdf-pages-15-24_69-90; finding=toc and yongshen/bingyao/conghua pages support traditional remedy concepts but not safety-boundary policy; next=policy-boundary-retained`
+- Learning closure note: `learning-closure:policy-boundary-retained; closure=retain-chapter-locator; focus=safety-boundary; use=policy-paraphrase-only; next=no-candidate-promotion-without-human-transcription`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 趋避调整只能描述传统说法和低风险反思方向，不得承诺效果或诱导付费。
@@ -37,6 +38,7 @@ PDF preparation material; no runtime parser reads this note.
 - Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-low-risk-action`
 - Locator note: `blocked:rendered-review-no-remedy-boundary-page-match`
 - Manual review note: `manual-review:no-remedy-boundary-page; reviewed=pdf-pages-15-24_69-90; finding=toc and yongshen/bingyao/conghua pages do not provide low-risk-action guidance; next=policy-boundary-retained`
+- Learning closure note: `learning-closure:policy-boundary-retained; closure=retain-chapter-locator; focus=low-risk-action; use=policy-paraphrase-only; next=no-candidate-promotion-without-human-transcription`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 调整建议应转化为低风险反思或现实行动，不得承诺改运效果。
@@ -49,6 +51,7 @@ PDF preparation material; no runtime parser reads this note.
 - Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-language`
 - Locator note: `blocked:rendered-review-no-remedy-boundary-page-match`
 - Manual review note: `manual-review:no-remedy-boundary-page; reviewed=pdf-pages-15-24_69-90; finding=rendered pages use traditional judgment language and do not provide anxiety-safe wording guidance; next=policy-boundary-retained`
+- Learning closure note: `learning-closure:policy-boundary-retained; closure=retain-chapter-locator; focus=anxiety-safe-language; use=policy-paraphrase-only; next=no-candidate-promotion-without-human-transcription`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 趋避语言应避免制造焦虑，优先说明传统说法、限制和自主选择。
@@ -61,6 +64,7 @@ PDF preparation material; no runtime parser reads this note.
 - Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-paid-boundary`
 - Locator note: `blocked:rendered-review-no-remedy-boundary-page-match`
 - Manual review note: `manual-review:no-remedy-boundary-page; reviewed=pdf-pages-15-24_69-90; finding=rendered pages do not provide paid-remedy or sales-boundary language; next=policy-boundary-retained`
+- Learning closure note: `learning-closure:policy-boundary-retained; closure=retain-chapter-locator; focus=paid-remedy-boundary; use=policy-paraphrase-only; next=no-candidate-promotion-without-human-transcription`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 涉及法器法事或付费化解的材料不得进入正式建议，只能记录为边界。
@@ -113,6 +117,7 @@ PDF preparation material; no runtime parser reads this note.
 - Source locator: `chapter:source=fortune_reading_hongfu_qitian_pdf; section=remedy-boundary-conditions`
 - Locator note: `blocked:rendered-review-no-remedy-boundary-page-match`
 - Manual review note: `manual-review:no-remedy-boundary-page; reviewed=pdf-pages-15-24_69-90; finding=yongshen/bingyao pages support traditional condition language but not curation boundary conditions; next=policy-boundary-retained`
+- Learning closure note: `learning-closure:policy-boundary-retained; closure=retain-chapter-locator; focus=boundary-conditions; use=policy-paraphrase-only; next=no-candidate-promotion-without-human-transcription`
 - Rule family: `remedy_boundary`
 - Risk tier: `sensitive`
 - Summary: 补救边界条件信号只能转写为传统说法的限制条件，不可作为承诺或营销依据。

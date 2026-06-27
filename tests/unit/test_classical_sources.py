@@ -175,6 +175,8 @@ def _assert_chapter_locator_has_note(section, source_locator):
     assert locator_note.startswith("blocked:"), locator_note
     manual_review_note = _extract_bulleted_field(section, "Manual review note")
     assert manual_review_note.startswith("manual-review:"), manual_review_note
+    learning_closure_note = _extract_bulleted_field(section, "Learning closure note")
+    assert learning_closure_note.startswith("learning-closure:"), learning_closure_note
 
 
 def _assert_source_locator_is_precise(locator):
@@ -355,6 +357,14 @@ def test_source_ref_quality_audit_tracks_source_window_references():
     )
     assert "| northeast_blind_peak_pdf | page-reviewed | 1 |" in report
     assert "| northeast_blind_peak_pdf | no-risk-boundary-page | 2 |" in report
+    assert "## Learning Closure Pass" in report
+    assert "| duan_plain_mingxue_outline_pdf | learning-paraphrase-ready | 4 |" in report
+    assert (
+        "| fortune_reading_hongfu_qitian_pdf | policy-boundary-retained | 5 |"
+        in report
+    )
+    assert "| northeast_blind_peak_pdf | safety-boundary-retained | 2 |" in report
+    assert "| Total | retained-chapter-learning-closed | 11 |" in report
     assert "Converted 51 legacy topic-only review-note references" in report
     assert "Converted 6 legacy file-section review-note references" in report
 

@@ -75,6 +75,7 @@ PDF preparation material; no runtime parser reads this note.
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=image-method-risk-boundary`
 - Locator note: `blocked:rendered-review-no-risk-boundary-page-match`
 - Manual review note: `manual-review:no-risk-boundary-page; reviewed=pdf-pages-1-159; finding=rendered pages contain case rules and direct judgment language but no explicit curation safety-boundary page; next=manual-safety-paraphrase-only`
+- Learning closure note: `learning-closure:safety-boundary-retained; closure=retain-chapter-locator; focus=image-method-risk-boundary; use=safety-paraphrase-only; next=no-page-promotion-without-source-specific-boundary`
 - Rule family: `blind_image_method`
 - Risk tier: `sensitive`
 - Summary: 盲派断语材料进入报告前应改写为条件化观察，避免制造恐惧。
@@ -97,6 +98,7 @@ PDF preparation material; no runtime parser reads this note.
 - Source locator: `chapter:source=northeast_blind_peak_pdf; section=high-risk-image-boundary`
 - Locator note: `blocked:rendered-review-no-risk-boundary-page-match`
 - Manual review note: `manual-review:no-risk-boundary-page; reviewed=pdf-pages-1-159; finding=rendered pages contain high-risk aphoristic judgment language but no explicit curation safety-boundary page; next=manual-safety-paraphrase-only`
+- Learning closure note: `learning-closure:safety-boundary-retained; closure=retain-chapter-locator; focus=high-risk-image-boundary; use=safety-paraphrase-only; next=no-page-promotion-without-source-specific-boundary`
 - Rule family: `high_risk_signal`
 - Risk tier: `high_risk`
 - Summary: 盲派高风险取象只能作为传统风险信号，须同时说明条件、证据和不确定性。
