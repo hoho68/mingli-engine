@@ -26,6 +26,7 @@ from mingli_engine.models import (
     MATERIAL_AUDIT_TEXT_QUALITIES,
     MATERIAL_REPRESENTATION_TYPES,
     MATERIAL_TRACKING_STATUSES,
+    MaterialQueueRefreshSummary,
     MaterialAuditRecord,
     MaterialRepresentation,
     PreparationReadinessFinding,
@@ -862,6 +863,130 @@ def _select_next_queue_item_ids(
                 return [queue_item.queue_item_id for queue_item in selected[:limit]]
 
     return [queue_item.queue_item_id for queue_item in selected[:limit]]
+
+
+def _load_covered_queue_item_ids(source_dir: Path) -> list[str]:
+    extraction_dir = _sibling_data_dir(source_dir, "extraction_queue_intake")
+    if extraction_dir is None:
+        return []
+    package_path = extraction_dir / "extraction_work_packages.json"
+    if not package_path.exists():
+        return []
+
+    packages = _read_json_list(package_path)
+    covered_queue_item_ids: list[str] = []
+    for package in packages:
+        snapshot_ids = package.get("source_queue_snapshot_ids", [])
+        if not isinstance(snapshot_ids, list):
+            raise MaterialsAuditError(
+                "extraction_work_packages.json source_queue_snapshot_ids "
+                "must be arrays"
+            )
+        for queue_item_id in snapshot_ids:
+            if not isinstance(queue_item_id, str) or not queue_item_id.strip():
+                raise MaterialsAuditError(
+                    "extraction_work_packages.json has invalid "
+                    "source_queue_snapshot_ids"
+                )
+            covered_queue_item_ids.append(queue_item_id)
+    return covered_queue_item_ids
+
+
+def build_materials_audit_queue_refresh_summary(
+    data_dir: Path | str | None = None,
+    *,
+    covered_queue_item_ids: list[str] | None = None,
+) -> MaterialQueueRefreshSummary:
+    source_dir = _data_dir(data_dir)
+    queue_items = load_extraction_queue_items(source_dir)
+    progress = build_materials_audit_progress_summary(source_dir)
+    covered_ids = (
+        covered_queue_item_ids
+        if covered_queue_item_ids is not None
+        else _load_covered_queue_item_ids(source_dir)
+    )
+    covered_id_set = set(covered_ids)
+    queue_item_ids = [item.queue_item_id for item in queue_items]
+    uncovered_items = [
+        item for item in queue_items if item.queue_item_id not in covered_id_set
+    ]
+    uncovered_queue_item_ids = [item.queue_item_id for item in uncovered_items]
+    refreshed_next_action_ids = _select_next_queue_item_ids(uncovered_items)
+    all_queue_items_covered = not uncovered_queue_item_ids and bool(queue_items)
+
+    return MaterialQueueRefreshSummary(
+        refresh_id="015-materials-audit-next-action-queue-refresh",
+        refresh_status=(
+            "covered_queue_exhausted"
+            if all_queue_items_covered
+            else "uncovered_queue_items_available"
+        ),
+        queue_item_count=len(queue_items),
+        covered_queue_item_count=sum(
+            1 for queue_item_id in queue_item_ids if queue_item_id in covered_id_set
+        ),
+        covered_queue_item_ids=[
+            queue_item_id for queue_item_id in queue_item_ids if queue_item_id in covered_id_set
+        ],
+        uncovered_queue_item_ids=uncovered_queue_item_ids,
+        legacy_next_action_ids=progress.next_action_ids,
+        refreshed_next_action_ids=refreshed_next_action_ids,
+        downstream_mutation_authorized=False,
+        next_material_entry="015-external-material-inventory-refresh",
+        boundary_checks={
+            "015_queue_loaded": "passed" if queue_items else "failed",
+            "016_coverage_loaded": "passed" if covered_ids else "failed",
+            "covered_items_excluded": (
+                "passed"
+                if not set(refreshed_next_action_ids) & covered_id_set
+                else "failed"
+            ),
+            "013_012_not_mutated": "passed",
+        },
+        guardrails=[
+            "Queue refresh is read-only 015 planning metadata.",
+            "Covered 016 queue ids stay excluded from refreshed next actions.",
+            "No 013 candidate, review, promotion, or 012 evidence mutation is authorized.",
+            "Root PDFs, Markdown folders, raw sources, and preparation folders are not mutated.",
+        ],
+    )
+
+
+def render_materials_audit_queue_refresh_markdown(
+    refresh: MaterialQueueRefreshSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if refresh.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Queue Refresh",
+        "",
+        f"- Refresh id: `{refresh.refresh_id}`",
+        f"- `queue-refresh-status={refresh.refresh_status}`",
+        f"- `015-queue-items={refresh.queue_item_count}`",
+        f"- `016-covered-queue-items={refresh.covered_queue_item_count}`",
+        f"- `uncovered-queue-items={len(refresh.uncovered_queue_item_ids)}`",
+        f"- `refreshed-next-action-ids={len(refresh.refreshed_next_action_ids)}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={refresh.next_material_entry}`",
+        "",
+        "Boundary checks:",
+    ]
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in refresh.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in refresh.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
 
 
 def build_materials_audit_progress_summary(

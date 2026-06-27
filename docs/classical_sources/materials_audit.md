@@ -179,6 +179,26 @@ Expected computed summary:
   `queue_duan_plain_mingxue_outline_extract`.
 - `validate_materials_audit_quality()` returns `[]`.
 
+## 015 Queue Refresh
+
+The 2026-06-27 coverage-aware queue refresh compares the 015 next-action queue
+with completed 016 work-package snapshots. The original 015 summary still
+reports the historical five-item recommendation, but the refreshed queue
+excludes queue ids already covered by 016/017.
+
+- `queue-refresh-status=covered_queue_exhausted`
+- `015-queue-items=16`
+- `016-covered-queue-items=16`
+- `uncovered-queue-items=0`
+- `refreshed-next-action-ids=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-external-material-inventory-refresh`
+
+This refresh is read-only planning metadata. It does not mark queue items
+completed, mutate 016 packages, create 013 candidate/review/promotion records,
+or alter 012 formal evidence. The next local new-material path is an external
+preparation inventory refresh before any new 015 records are added or adjusted.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

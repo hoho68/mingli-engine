@@ -2661,6 +2661,22 @@ class AuditProgressSummary:
 
 
 @dataclass(frozen=True)
+class MaterialQueueRefreshSummary:
+    refresh_id: str
+    refresh_status: str
+    queue_item_count: int
+    covered_queue_item_count: int
+    uncovered_queue_item_ids: list[str]
+    legacy_next_action_ids: list[str]
+    refreshed_next_action_ids: list[str]
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    covered_queue_item_ids: list[str] = field(default_factory=list)
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class ExtractionWorkPackage:
     package_id: str
     package_label: str

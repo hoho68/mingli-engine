@@ -7,7 +7,7 @@ learning pass. It is a maintainer entrypoint for continuing work after the
 source-window locator review, learning-closure pass, 017 sync, draft
 learning-note closure, candidate/formal evidence boundary audit, and
 authorization audit packet, plus the Markdown Batch 005 risk-review routing
-pass and risk-review prerequisite sweep.
+pass, risk-review prerequisite sweep, and 015 queue refresh.
 
 ## Completed Checkpoints
 
@@ -30,6 +30,9 @@ pass and risk-review prerequisite sweep.
   explicit user authorization:
   `authorization-status=ready_for_explicit_downstream_authorization`,
   `downstream-mutation-authorized=false`.
+- 015 coverage-aware queue refresh excludes all queue ids already covered by
+  016/017: `queue-refresh-status=covered_queue_exhausted`,
+  `refreshed-next-action-ids=0`.
 
 Primary detailed references:
 
@@ -42,6 +45,7 @@ Primary detailed references:
 - [2026-06-27-risk-review-prerequisite-sweep.md](../superpowers/plans/2026-06-27-risk-review-prerequisite-sweep.md)
 - [2026-06-27-draft-learning-note-closure.md](../superpowers/plans/2026-06-27-draft-learning-note-closure.md)
 - [2026-06-27-learning-reference-authorization-audit.md](../superpowers/plans/2026-06-27-learning-reference-authorization-audit.md)
+- [2026-06-27-015-queue-refresh.md](../superpowers/plans/2026-06-27-015-queue-refresh.md)
 
 ## Current Frozen Snapshot
 
@@ -74,6 +78,16 @@ Authorization Audit Packet:
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
 
+015 Queue Refresh:
+
+- `queue-refresh-status=covered_queue_exhausted`
+- `015-queue-items=16`
+- `016-covered-queue-items=16`
+- `uncovered-queue-items=0`
+- `refreshed-next-action-ids=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-external-material-inventory-refresh`
+
 013 and 012 boundary state:
 
 - `013-candidate-extracts=36`
@@ -96,7 +110,7 @@ Authorization Audit Packet:
 - Current 015 queue coverage is complete: all 16 queue ids are present in 016
   package snapshots, the 4 formerly planned risk-review prerequisite actions
   are completed, and 017 now has no active `next_action_ids`.
-- `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`.
+- `next-material-entry=015-external-material-inventory-refresh`.
 
 ## Remaining Optional Precision Work
 
@@ -113,11 +127,11 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`.
-Choose one path explicitly: enter 013 candidate/review work under the existing
-guardrails, or refresh the 015 next-action queue for brand-new material reading.
-The authorization packet itself keeps `downstream-mutation-authorized=false`
-until the user asks for one of those paths.
+`next-material-entry=015-external-material-inventory-refresh`. It should scan
+the external preparation inventory, compare it with tracked 015 audit records,
+and create or adjust only 015 metadata for genuinely new in-scope material.
+The queue refresh keeps `downstream-mutation-authorized=false`; 013/012 work
+still requires a separate explicit request.
 
 ## Guardrails
 

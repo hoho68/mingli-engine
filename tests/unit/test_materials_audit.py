@@ -1358,3 +1358,49 @@ def test_seeded_risk_review_sweep_marks_high_risk_queue_items_completed():
         "queue_markdown_source_batch_004_prepare",
         "queue_duan_plain_mingxue_outline_extract",
     ]
+
+
+def test_materials_audit_queue_refresh_excludes_covered_016_queue_items():
+    summary = materials_audit.build_materials_audit_progress_summary()
+    refresh = materials_audit.build_materials_audit_queue_refresh_summary()
+
+    assert refresh.refresh_id == "015-materials-audit-next-action-queue-refresh"
+    assert refresh.refresh_status == "covered_queue_exhausted"
+    assert refresh.queue_item_count == 16
+    assert refresh.covered_queue_item_count == 16
+    assert refresh.uncovered_queue_item_ids == []
+    assert refresh.legacy_next_action_ids == summary.next_action_ids
+    assert refresh.refreshed_next_action_ids == []
+    assert refresh.downstream_mutation_authorized is False
+    assert refresh.next_material_entry == "015-external-material-inventory-refresh"
+    assert refresh.boundary_checks == {
+        "015_queue_loaded": "passed",
+        "016_coverage_loaded": "passed",
+        "covered_items_excluded": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+
+def test_materials_audit_queue_refresh_markdown_and_docs_are_in_sync():
+    refresh = materials_audit.build_materials_audit_queue_refresh_summary()
+    markdown = materials_audit.render_materials_audit_queue_refresh_markdown(refresh)
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Queue Refresh",
+        "`queue-refresh-status=covered_queue_exhausted`",
+        "`015-queue-items=16`",
+        "`016-covered-queue-items=16`",
+        "`uncovered-queue-items=0`",
+        "`refreshed-next-action-ids=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-external-material-inventory-refresh`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
