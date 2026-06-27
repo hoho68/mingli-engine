@@ -2829,6 +2829,25 @@ class LearningReferenceProgressSummary:
 
 
 @dataclass(frozen=True)
+class LearningReferenceAuthorizationAudit:
+    audit_id: str
+    authorization_status: str
+    downstream_mutation_authorized: bool
+    note_counts: dict[str, int]
+    decision_counts: dict[str, int]
+    candidate_status_counts: dict[str, int]
+    review_decision_counts: dict[str, int]
+    promotion_review_status_counts: dict[str, int]
+    formal_evidence_unit_count: int
+    formal_evidence_delta: int
+    leakage_counts: dict[str, int]
+    clearance_checks: dict[str, str]
+    next_action_ids: list[str] = field(default_factory=list)
+    next_downstream_entry: str = ""
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class EvidenceTrace:
     trace_id: str
     conclusion_id: str

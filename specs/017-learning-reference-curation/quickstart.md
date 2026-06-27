@@ -83,6 +83,28 @@ review, not a candidate or evidence promotion step.
 
 Blocked and deferred prerequisite records remain outside `next_action_ids`.
 
+## Authorization Audit Packet
+
+Run the local authorization audit before entering optional downstream 013 or
+012 work:
+
+```powershell
+$env:PYTHONPATH='src'; uv run python -c "from mingli_engine.learning_reference_curation import build_learning_reference_authorization_audit, render_learning_reference_authorization_audit_markdown; print(render_learning_reference_authorization_audit_markdown(build_learning_reference_authorization_audit()))"
+```
+
+Expected markers:
+
+- `authorization-status=ready_for_explicit_downstream_authorization`
+- `downstream-mutation-authorized=false`
+- `017-notes-closed=14`
+- `017-next-action-ids=0`
+- `012-boundary-leakage=0`
+- `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
+
+This packet is read-only. It confirms that downstream work may be selected only
+after an explicit user request; it does not create candidates, review decisions,
+promotion batches, or formal evidence.
+
 Run focused learning reference curation tests:
 
 ```powershell

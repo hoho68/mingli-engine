@@ -244,6 +244,30 @@ Maintained boundary: 017 records describe learning/provenance decisions; 013
 records carry candidate, review, and promotion pipeline state; 012 evidence
 units are the only formal report evidence surface.
 
+## Authorization Audit Packet
+
+The 2026-06-27 authorization audit packet is a read-only local clearance check
+for choosing the next explicit downstream action. It does not authorize any
+candidate, review, promotion, or formal-evidence mutation by itself.
+
+- `authorization-status=ready_for_explicit_downstream_authorization`
+- `downstream-mutation-authorized=false`
+- `017-notes-closed=14`
+- `017-next-action-ids=0`
+- `017-applied-decisions=28`
+- `013-candidate-extracts=36`
+- `013-review-decisions=36`
+- `013-promotion-batches=25`
+- `012-formal-evidence-units=92`
+- `formal_evidence_delta=0`
+- `012-boundary-leakage=0`
+- `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
+
+Clearance checks are all passed: 017 notes are closed, 017 has no active
+`next_action_ids`, all 017 decisions are applied, 013 candidate/review/promotion
+counts are aligned, 012 formal evidence has no boundary leakage, and any
+downstream mutation still requires an explicit user request.
+
 ## Phase C Source Disposition Snapshot
 
 The current 016/017 state consumes 14 selected extraction tasks as learning

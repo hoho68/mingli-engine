@@ -1820,6 +1820,83 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         assert marker in overview
 
 
+def test_learning_reference_authorization_audit_confirms_local_boundary_clearance():
+    audit = learning_reference_curation.build_learning_reference_authorization_audit()
+
+    assert audit.audit_id == "017-candidate-formal-evidence-authorization-audit"
+    assert (
+        audit.authorization_status
+        == "ready_for_explicit_downstream_authorization"
+    )
+    assert audit.downstream_mutation_authorized is False
+    assert audit.note_counts == {"candidate_intake_started": 14}
+    assert audit.next_action_ids == []
+    assert audit.decision_counts == {
+        "reuse_existing": 1,
+        "create_candidate": 27,
+        "status:applied": 28,
+    }
+    assert audit.candidate_status_counts == {
+        "promoted": 32,
+        "rejected": 2,
+        "returned": 1,
+        "blocked": 1,
+    }
+    assert audit.review_decision_counts == {
+        "approved": 32,
+        "rejected": 2,
+        "returned": 1,
+        "blocked": 1,
+    }
+    assert audit.promotion_review_status_counts == {"reviewed": 25}
+    assert audit.formal_evidence_unit_count == 92
+    assert audit.formal_evidence_delta == 0
+    assert audit.leakage_counts == {
+        "learning_reference_source_refs_in_012": 0,
+        "candidate_id_source_refs_in_012": 0,
+        "learning_closure_source_refs_in_012": 0,
+    }
+    assert audit.clearance_checks == {
+        "017_notes_closed": "passed",
+        "017_no_active_next_actions": "passed",
+        "017_decisions_applied": "passed",
+        "013_candidate_review_promotion_counts_aligned": "passed",
+        "012_formal_evidence_boundary_clean": "passed",
+        "downstream_mutation_requires_explicit_request": "passed",
+    }
+
+
+def test_learning_reference_authorization_audit_markdown_and_docs_are_in_sync():
+    audit = learning_reference_curation.build_learning_reference_authorization_audit()
+    markdown = (
+        learning_reference_curation
+        .render_learning_reference_authorization_audit_markdown(audit)
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "Authorization Audit Packet",
+        "`authorization-status=ready_for_explicit_downstream_authorization`",
+        "`downstream-mutation-authorized=false`",
+        "`017-notes-closed=14`",
+        "`017-next-action-ids=0`",
+        "`012-boundary-leakage=0`",
+        "`next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+
 def test_new_material_learning_handoff_tracks_final_state():
     closure_counts = _source_window_learning_closure_counts()
     summary = learning_reference_curation.build_learning_reference_progress_summary()
@@ -1854,12 +1931,17 @@ def test_new_material_learning_handoff_tracks_final_state():
         f"`safety-boundary-retained={closure_counts['safety-boundary-retained']}`",
         f"`017-applied-decisions={summary.decision_counts['status:applied']}`",
         f"`017-create-candidate-decisions={summary.decision_counts['create_candidate']}`",
+        "`authorization-status=ready_for_explicit_downstream_authorization`",
+        "`downstream-mutation-authorized=false`",
+        "`017-notes-closed=14`",
+        "`017-next-action-ids=0`",
+        "`012-boundary-leakage=0`",
+        "`next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`",
         f"`013-candidate-extracts={len(candidates)}`",
         f"`013-review-decisions={len(reviews)}`",
         f"`013-promotion-batches={len(promotion_batches)}`",
         f"`012-formal-evidence-units={len(evidence_units)}`",
         f"`formal_evidence_delta={summary.formal_evidence_delta}`",
-        "`next-local-boundary-start=017-candidate-formal-evidence-authorization-audit`",
         "`next-new-material-start=015-materials-audit-next-action-queue`",
         "Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`",
         "Do not create candidates, review decisions, promotion batches, or formal evidence unless explicitly requested",

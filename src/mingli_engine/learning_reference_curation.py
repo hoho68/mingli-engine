@@ -7,6 +7,7 @@ import re
 from typing import Any
 
 from mingli_engine import (
+    classical_sources,
     extraction_queue_intake,
     materials_audit,
     source_intake,
@@ -24,6 +25,7 @@ from mingli_engine.models import (
     PREREQUISITE_ACTION_TYPES,
     RULE_FAMILIES,
     CandidateIntakeDecision,
+    LearningReferenceAuthorizationAudit,
     LearningPoint,
     LearningReferenceNote,
     LearningReferenceProgressSummary,
@@ -330,6 +332,18 @@ def _resolve_source_intake_dir(
     if sibling is not None:
         return sibling
     return source_intake._DATA_DIR
+
+
+def _resolve_classical_sources_dir(
+    source_dir: Path,
+    classical_sources_data_dir: Path | str | None = None,
+) -> Path:
+    if classical_sources_data_dir is not None:
+        return Path(classical_sources_data_dir)
+    sibling = _sibling_data_dir(source_dir, "classical_sources")
+    if sibling is not None:
+        return sibling
+    return classical_sources._DATA_DIR
 
 
 def _task_overlap_candidate_ids(task: Any) -> set[str]:
@@ -1165,6 +1179,165 @@ def build_learning_reference_progress_summary(
         note_rule_family_counts=dict(note_rule_family_counts),
         selected_task_ids=[note.task_id for note in notes],
     )
+
+
+def build_learning_reference_authorization_audit(
+    data_dir: Path | str | None = None,
+    *,
+    source_intake_data_dir: Path | str | None = None,
+    classical_sources_data_dir: Path | str | None = None,
+) -> LearningReferenceAuthorizationAudit:
+    source_dir = _data_dir(data_dir)
+    summary = build_learning_reference_progress_summary(source_dir)
+    decisions = load_candidate_intake_decisions(source_dir)
+
+    intake_dir = _resolve_source_intake_dir(source_dir, source_intake_data_dir)
+    classical_dir = _resolve_classical_sources_dir(source_dir, classical_sources_data_dir)
+    candidates = source_intake.load_candidate_extracts(intake_dir)
+    reviews = source_intake.load_review_decisions(intake_dir)
+    promotion_batches = source_intake.load_promotion_batches(intake_dir)
+    evidence_units = classical_sources.load_evidence_units(classical_dir)
+
+    candidate_status_counts = Counter(candidate.status for candidate in candidates)
+    review_decision_counts = Counter(review.decision for review in reviews)
+    promotion_review_status_counts = Counter(
+        batch.review_status for batch in promotion_batches
+    )
+    leakage_counts = {
+        "learning_reference_source_refs_in_012": sum(
+            1
+            for unit in evidence_units
+            if unit.source_ref.startswith("learning-reference:")
+        ),
+        "candidate_id_source_refs_in_012": sum(
+            1 for unit in evidence_units if "candidate_" in unit.source_ref
+        ),
+        "learning_closure_source_refs_in_012": sum(
+            1
+            for unit in evidence_units
+            if "learning-closure:" in unit.source_ref
+        ),
+    }
+
+    all_notes_started = summary.note_counts == {
+        "candidate_intake_started": len(summary.selected_task_ids)
+    }
+    all_decisions_applied = (
+        summary.decision_counts.get("status:applied", 0) == len(decisions)
+        and not any(
+            summary.decision_counts.get(f"status:{status}", 0)
+            for status in ("planned", "deferred", "blocked")
+        )
+    )
+    downstream_counts_aligned = (
+        len(candidates) == len(reviews)
+        and set(promotion_review_status_counts) == {"reviewed"}
+    )
+    formal_boundary_clean = (
+        summary.formal_evidence_delta == 0
+        and not any(leakage_counts.values())
+    )
+    clearance_checks = {
+        "017_notes_closed": "passed" if all_notes_started else "failed",
+        "017_no_active_next_actions": (
+            "passed" if not summary.next_action_ids else "failed"
+        ),
+        "017_decisions_applied": "passed" if all_decisions_applied else "failed",
+        "013_candidate_review_promotion_counts_aligned": (
+            "passed" if downstream_counts_aligned else "failed"
+        ),
+        "012_formal_evidence_boundary_clean": (
+            "passed" if formal_boundary_clean else "failed"
+        ),
+        "downstream_mutation_requires_explicit_request": "passed",
+    }
+    authorization_status = (
+        "ready_for_explicit_downstream_authorization"
+        if all(value == "passed" for value in clearance_checks.values())
+        else "blocked_until_boundary_clearance"
+    )
+
+    return LearningReferenceAuthorizationAudit(
+        audit_id="017-candidate-formal-evidence-authorization-audit",
+        authorization_status=authorization_status,
+        downstream_mutation_authorized=False,
+        note_counts=summary.note_counts,
+        decision_counts=summary.decision_counts,
+        candidate_status_counts=dict(candidate_status_counts),
+        review_decision_counts=dict(review_decision_counts),
+        promotion_review_status_counts=dict(promotion_review_status_counts),
+        formal_evidence_unit_count=len(evidence_units),
+        formal_evidence_delta=summary.formal_evidence_delta,
+        leakage_counts=leakage_counts,
+        clearance_checks=clearance_checks,
+        next_action_ids=summary.next_action_ids,
+        next_downstream_entry=(
+            "013-explicit-candidate-review-or-015-queue-refresh"
+        ),
+        guardrails=[
+            "Authorization audit is read-only 017 boundary metadata.",
+            "No 013 candidate, review, or promotion mutation is authorized here.",
+            "No 012 formal evidence mutation is authorized here.",
+        ],
+    )
+
+
+def render_learning_reference_authorization_audit_markdown(
+    audit: LearningReferenceAuthorizationAudit,
+) -> str:
+    boundary_leakage = sum(audit.leakage_counts.values())
+    downstream_mutation_authorized = (
+        "true" if audit.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## Authorization Audit Packet",
+        "",
+        f"- Audit id: `{audit.audit_id}`",
+        f"- `authorization-status={audit.authorization_status}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        (
+            "- `017-notes-closed="
+            f"{audit.note_counts.get('candidate_intake_started', 0)}`"
+        ),
+        f"- `017-next-action-ids={len(audit.next_action_ids)}`",
+        (
+            "- `017-applied-decisions="
+            f"{audit.decision_counts.get('status:applied', 0)}`"
+        ),
+        (
+            "- `013-candidate-extracts="
+            f"{sum(audit.candidate_status_counts.values())}`"
+        ),
+        (
+            "- `013-review-decisions="
+            f"{sum(audit.review_decision_counts.values())}`"
+        ),
+        (
+            "- `013-promotion-batches="
+            f"{sum(audit.promotion_review_status_counts.values())}`"
+        ),
+        f"- `012-formal-evidence-units={audit.formal_evidence_unit_count}`",
+        f"- `formal_evidence_delta={audit.formal_evidence_delta}`",
+        f"- `012-boundary-leakage={boundary_leakage}`",
+        f"- `next-downstream-entry={audit.next_downstream_entry}`",
+        "",
+        "Clearance checks:",
+    ]
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in audit.clearance_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in audit.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
 
 
 def _normalize_boundary_text(value: str) -> str:

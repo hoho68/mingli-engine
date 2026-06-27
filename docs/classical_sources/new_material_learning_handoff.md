@@ -5,8 +5,9 @@ Updated: 2026-06-27
 This handoff summarizes the completed local-only new-material reading and
 learning pass. It is a maintainer entrypoint for continuing work after the
 source-window locator review, learning-closure pass, 017 sync, draft
-learning-note closure, and candidate/formal evidence boundary audit, plus the
-Markdown Batch 005 risk-review routing pass and risk-review prerequisite sweep.
+learning-note closure, candidate/formal evidence boundary audit, and
+authorization audit packet, plus the Markdown Batch 005 risk-review routing
+pass and risk-review prerequisite sweep.
 
 ## Completed Checkpoints
 
@@ -25,6 +26,10 @@ Markdown Batch 005 risk-review routing pass and risk-review prerequisite sweep.
   `planned-risk-review-actions=0`, `completed-risk-review-actions=4`.
 - Candidate/formal evidence boundary audit confirmed the learning closure did
   not create downstream evidence changes: `formal_evidence_delta=0`.
+- Authorization audit packet confirms downstream work is selectable only after
+  explicit user authorization:
+  `authorization-status=ready_for_explicit_downstream_authorization`,
+  `downstream-mutation-authorized=false`.
 
 Primary detailed references:
 
@@ -36,6 +41,7 @@ Primary detailed references:
 - [2026-06-27-markdown-batch-005-risk-review-routing.md](../superpowers/plans/2026-06-27-markdown-batch-005-risk-review-routing.md)
 - [2026-06-27-risk-review-prerequisite-sweep.md](../superpowers/plans/2026-06-27-risk-review-prerequisite-sweep.md)
 - [2026-06-27-draft-learning-note-closure.md](../superpowers/plans/2026-06-27-draft-learning-note-closure.md)
+- [2026-06-27-learning-reference-authorization-audit.md](../superpowers/plans/2026-06-27-learning-reference-authorization-audit.md)
 
 ## Current Frozen Snapshot
 
@@ -59,6 +65,15 @@ Source-window and locator state:
 - `017-applied-decisions=28`
 - `017-create-candidate-decisions=27`
 
+Authorization Audit Packet:
+
+- `authorization-status=ready_for_explicit_downstream_authorization`
+- `downstream-mutation-authorized=false`
+- `017-notes-closed=14`
+- `017-next-action-ids=0`
+- `012-boundary-leakage=0`
+- `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
+
 013 and 012 boundary state:
 
 - `013-candidate-extracts=36`
@@ -81,7 +96,7 @@ Source-window and locator state:
 - Current 015 queue coverage is complete: all 16 queue ids are present in 016
   package snapshots, the 4 formerly planned risk-review prerequisite actions
   are completed, and 017 now has no active `next_action_ids`.
-- `next-local-boundary-start=017-candidate-formal-evidence-authorization-audit`.
+- `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`.
 
 ## Remaining Optional Precision Work
 
@@ -98,12 +113,11 @@ Source-window and locator state:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-local-boundary-start=017-candidate-formal-evidence-authorization-audit`.
-It should verify that the closed 017 learning notes, applied decisions, 013
-candidate/review/promotion state, and 012 formal evidence remain aligned before
-any optional downstream evidence work. If the intent is to read brand-new
-materials instead, use `next-new-material-start=015-materials-audit-next-action-queue`
-to refresh the local queue first.
+`next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`.
+Choose one path explicitly: enter 013 candidate/review work under the existing
+guardrails, or refresh the 015 next-action queue for brand-new material reading.
+The authorization packet itself keeps `downstream-mutation-authorized=false`
+until the user asks for one of those paths.
 
 ## Guardrails
 
