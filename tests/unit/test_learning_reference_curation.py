@@ -297,14 +297,15 @@ def _valid_prerequisite_action_notes() -> list[dict[str, object]]:
             "action_type": "risk_review",
             "missing_prerequisites": ["risk_review"],
             "durable_reason": (
-                "High-risk aphoristic material needs boundary review before "
-                "candidate extraction."
+                "Boundary screening completed: aphoristic high-risk material "
+                "stays prerequisite-only and no routine extraction task is "
+                "created."
             ),
             "recommended_action": "risk_review",
             "risk_boundary": "high_risk",
-            "status": "planned",
+            "status": "completed",
             "created_at": "2026-05-31",
-            "updated_at": "2026-05-31",
+            "updated_at": "2026-06-27",
         },
         {
             "action_note_id": "action_blind_school_secret_blocked_001",
@@ -782,10 +783,6 @@ def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
         "note_fortune_reading_hongfu_qitian_001",
         "note_markdown_batch_002_useful_god_001",
         "note_markdown_batch_001_pattern_strength_001",
-        "action_blind_life_manual_risk_review_001",
-        "action_immortal_fortune_jianghu_secret_risk_review_001",
-        "action_life_death_book_100_pages_risk_review_001",
-        "action_markdown_batch_005_risk_review_001",
     ]
 
 
@@ -1420,13 +1417,59 @@ def test_learning_reference_routes_markdown_batch_005_risk_review_as_prerequisit
     assert action.missing_prerequisites == ["risk_boundary_review"]
     assert action.recommended_action == "risk_review"
     assert action.risk_boundary == "high_risk"
-    assert action.status == "planned"
+    assert action.status == "completed"
 
-    assert action.action_note_id in summary.next_action_ids
+    assert action.action_note_id not in summary.next_action_ids
     assert summary.prerequisite_action_counts["risk_review"] == 4
-    assert summary.prerequisite_action_counts["status:planned"] == 4
+    assert summary.prerequisite_action_counts["status:completed"] == 4
     assert summary.risk_tier_counts["high_risk"] == 4
     assert summary.formal_evidence_delta == 0
+
+
+def test_learning_reference_risk_review_sweep_closes_actions_without_evidence_changes():
+    action_notes = learning_reference_curation.load_prerequisite_action_notes()
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    promotion_batches = source_intake.load_promotion_batches()
+    evidence_units = classical_sources.load_evidence_units()
+
+    actions_by_id = {action.action_note_id: action for action in action_notes}
+    completed_action_ids = {
+        "action_blind_life_manual_risk_review_001",
+        "action_immortal_fortune_jianghu_secret_risk_review_001",
+        "action_life_death_book_100_pages_risk_review_001",
+        "action_markdown_batch_005_risk_review_001",
+    }
+
+    assert {
+        action_id
+        for action_id in completed_action_ids
+        if actions_by_id[action_id].status == "completed"
+    } == completed_action_ids
+    assert completed_action_ids.isdisjoint(summary.next_action_ids)
+    assert summary.next_action_ids == [
+        "note_northeast_blind_peak_001",
+        "note_mingli_true_formula_teacher_001",
+        "note_duan_plain_mingxue_outline_001",
+        "note_mingxue_golden_voice_001",
+        "note_fortune_reading_hongfu_qitian_001",
+        "note_markdown_batch_002_useful_god_001",
+        "note_markdown_batch_001_pattern_strength_001",
+    ]
+    assert summary.prerequisite_action_counts == {
+        "risk_review": 4,
+        "deferred": 2,
+        "blocked": 1,
+        "status:completed": 4,
+        "status:deferred": 2,
+        "status:blocked": 1,
+    }
+    assert summary.formal_evidence_delta == 0
+    assert len(candidates) == 36
+    assert len(reviews) == 36
+    assert len(promotion_batches) == 25
+    assert len(evidence_units) == 92
 
 
 @pytest.mark.parametrize(
@@ -1606,7 +1649,7 @@ def test_learning_reference_summary_includes_prerequisite_action_counts():
         "risk_review": 4,
         "deferred": 2,
         "blocked": 1,
-        "status:planned": 4,
+        "status:completed": 4,
         "status:deferred": 2,
         "status:blocked": 1,
     }
@@ -1627,10 +1670,6 @@ def test_learning_reference_summary_includes_prerequisite_action_counts():
         "note_fortune_reading_hongfu_qitian_001",
         "note_markdown_batch_002_useful_god_001",
         "note_markdown_batch_001_pattern_strength_001",
-        "action_blind_life_manual_risk_review_001",
-        "action_immortal_fortune_jianghu_secret_risk_review_001",
-        "action_life_death_book_100_pages_risk_review_001",
-        "action_markdown_batch_005_risk_review_001",
     ]
 
 
@@ -1653,10 +1692,6 @@ def test_learning_reference_docs_track_source_window_learning_closure_sync():
         "note_fortune_reading_hongfu_qitian_001",
         "note_markdown_batch_002_useful_god_001",
         "note_markdown_batch_001_pattern_strength_001",
-        "action_blind_life_manual_risk_review_001",
-        "action_immortal_fortune_jianghu_secret_risk_review_001",
-        "action_life_death_book_100_pages_risk_review_001",
-        "action_markdown_batch_005_risk_review_001",
     ]
     assert "action_blind_school_secret_blocked_001" not in summary.next_action_ids
     assert "action_markdown_batch_003_registration_001" not in summary.next_action_ids
@@ -1676,8 +1711,9 @@ def test_learning_reference_docs_track_source_window_learning_closure_sync():
         assert "`learning-paraphrase-ready=4`" in document
         assert "`policy-boundary-retained=5`" in document
         assert "`safety-boundary-retained=2`" in document
-        assert "`next_action_ids=11`" in document
-        assert "`planned-risk-review-actions=4`" in document
+        assert "`next_action_ids=7`" in document
+        assert "`planned-risk-review-actions=0`" in document
+        assert "`completed-risk-review-actions=4`" in document
         assert "`formal_evidence_delta=0`" in document
         assert "No new candidate-intake decisions" in document
         assert "no 013 candidate extracts" in document

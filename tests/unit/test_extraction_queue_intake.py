@@ -653,7 +653,7 @@ def test_seeded_extraction_queue_includes_duan_ready_learning_package():
     assert extraction_queue_intake.validate_extraction_package_quality() == []
 
 
-def test_seeded_extraction_queue_routes_markdown_batch_005_as_next_risk_review_backlog():
+def test_seeded_extraction_queue_tracks_markdown_batch_005_completed_risk_review_backlog():
     packages = extraction_queue_intake.load_extraction_work_packages()
     tasks = extraction_queue_intake.load_extraction_tasks()
     backlog_records = extraction_queue_intake.load_prerequisite_backlog_records()
@@ -670,7 +670,7 @@ def test_seeded_extraction_queue_routes_markdown_batch_005_as_next_risk_review_b
     assert package.backlog_record_ids == [
         "backlog_markdown_batch_005_risk_review_001"
     ]
-    assert package.status == "planned"
+    assert package.status == "completed"
 
     record = backlog_by_id["backlog_markdown_batch_005_risk_review_001"]
     assert record.package_id == package.package_id
@@ -680,9 +680,9 @@ def test_seeded_extraction_queue_routes_markdown_batch_005_as_next_risk_review_b
     assert record.missing_prerequisites == ["risk_boundary_review"]
     assert record.recommended_action == "risk_review"
     assert record.risk_boundary == "high_risk"
-    assert record.status == "planned"
+    assert record.status == "completed"
 
-    assert record.backlog_id in summary.next_manual_action_ids
+    assert record.backlog_id not in summary.next_manual_action_ids
     assert (
         "queue_markdown_source_batch_005_risk_review"
         in summary.selected_source_queue_ids
@@ -691,6 +691,39 @@ def test_seeded_extraction_queue_routes_markdown_batch_005_as_next_risk_review_b
         task.queue_item_id == "queue_markdown_source_batch_005_risk_review"
         for task in tasks
     )
+
+
+def test_seeded_risk_review_sweep_closes_backlog_records_without_tasks():
+    packages = extraction_queue_intake.load_extraction_work_packages()
+    tasks = extraction_queue_intake.load_extraction_tasks()
+    backlog_records = extraction_queue_intake.load_prerequisite_backlog_records()
+    summary = extraction_queue_intake.build_package_progress_summary()
+
+    packages_by_id = {package.package_id: package for package in packages}
+    backlog_by_id = {record.backlog_id: record for record in backlog_records}
+    completed_backlog_ids = {
+        "backlog_blind_life_manual_risk_review_001",
+        "backlog_immortal_fortune_jianghu_secret_risk_review_001",
+        "backlog_life_death_book_100_pages_risk_review_001",
+        "backlog_markdown_batch_005_risk_review_001",
+    }
+    completed_queue_ids = {
+        "queue_blind_life_manual_risk_review",
+        "queue_immortal_fortune_jianghu_secret_risk_review",
+        "queue_life_death_book_100_pages_risk_review",
+        "queue_markdown_source_batch_005_risk_review",
+    }
+
+    assert packages_by_id["package_next_candidates_004"].status == "completed"
+    assert {
+        backlog_id
+        for backlog_id in completed_backlog_ids
+        if backlog_by_id[backlog_id].status == "completed"
+    } == completed_backlog_ids
+    assert completed_backlog_ids.isdisjoint(summary.next_manual_action_ids)
+    assert summary.backlog_counts["risk_review"] == 4
+    assert summary.backlog_counts["status:completed"] == 4
+    assert not any(task.queue_item_id in completed_queue_ids for task in tasks)
 
 
 @pytest.mark.parametrize(

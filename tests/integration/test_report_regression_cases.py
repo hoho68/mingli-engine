@@ -5139,7 +5139,7 @@ def test_learning_reference_prerequisite_actions_do_not_change_formal_evidence_c
         "risk_review": 4,
         "blocked": 1,
         "deferred": 2,
-        "status:planned": 4,
+        "status:completed": 4,
         "status:blocked": 1,
         "status:deferred": 2,
     }

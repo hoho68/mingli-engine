@@ -1321,9 +1321,9 @@ def test_audit_progress_summary_includes_next_five_queue_items_and_backlog_count
     assert summary.next_action_ids == [
         "queue_northeast_blind_peak_extract",
         "queue_mingli_true_formula_teacher_extract",
-        "queue_blind_life_manual_risk_review",
         "queue_markdown_source_batch_003_register",
         "queue_markdown_source_batch_004_prepare",
+        "queue_duan_plain_mingxue_outline_extract",
     ]
     assert summary.extraction_ready_count == 9
     assert summary.preparation_backlog_count == 0
@@ -1331,3 +1331,30 @@ def test_audit_progress_summary_includes_next_five_queue_items_and_backlog_count
     assert summary.risk_review_backlog_count == 4
     assert summary.deferred_queue_count == 2
     assert summary.blocked_queue_count == 1
+
+
+def test_seeded_risk_review_sweep_marks_high_risk_queue_items_completed():
+    queue_items = materials_audit.load_extraction_queue_items()
+    summary = materials_audit.build_materials_audit_progress_summary()
+
+    queue_items_by_id = {item.queue_item_id: item for item in queue_items}
+    completed_risk_review_queue_ids = {
+        "queue_blind_life_manual_risk_review",
+        "queue_immortal_fortune_jianghu_secret_risk_review",
+        "queue_life_death_book_100_pages_risk_review",
+        "queue_markdown_source_batch_005_risk_review",
+    }
+
+    assert {
+        queue_id
+        for queue_id in completed_risk_review_queue_ids
+        if queue_items_by_id[queue_id].status == "completed"
+    } == completed_risk_review_queue_ids
+    assert completed_risk_review_queue_ids.isdisjoint(summary.next_action_ids)
+    assert summary.next_action_ids == [
+        "queue_northeast_blind_peak_extract",
+        "queue_mingli_true_formula_teacher_extract",
+        "queue_markdown_source_batch_003_register",
+        "queue_markdown_source_batch_004_prepare",
+        "queue_duan_plain_mingxue_outline_extract",
+    ]

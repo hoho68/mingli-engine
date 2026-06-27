@@ -125,25 +125,20 @@ mutating raw source files.
 
 Current queue snapshot:
 
-- 5 `extraction_ready` items: ready ordinary or sensitive sources with
+- 9 `extraction_ready` items: ready ordinary or sensitive sources with
   source-library alignment, target rule families, readiness rationale, and
   pre-extraction checks.
-- 3 `registration_backlog` items: cleaned Markdown batches that need
-  source-library registration before extraction review.
-- 4 `risk_review_backlog` items: high-risk material that must complete
-  boundary review before any candidate extraction.
-- 2 `preparation_backlog` items: a possible edition variant needing locator and
-  identity clarification, plus the knowledge skeleton aggregate that needs
-  component source links and candidate review before extraction planning.
-- 2 `blocked_backlog` items: one blocked source and one deferred workflow note.
+- 4 `risk_review_backlog` items: high-risk material whose prerequisite
+  boundary-screening actions are now completed.
+- 3 `blocked_backlog` items: one OCR-deferred Markdown batch, one blocked
+  source, and one deferred workflow note.
 
 The next five recommended actions are selected as a deliberately limited work
 surface:
 
 1. two highest-priority extraction-ready items;
-2. one registration backlog item;
-3. one risk-review backlog item;
-4. one blocked/deferred backlog item.
+2. one blocked/deferred backlog item;
+3. the next ready extraction items by queue priority.
 
 Queue rules:
 
@@ -169,20 +164,19 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.materials_audit impo
 
 Expected computed summary:
 
-- 16 audited material groups and 26 material representations.
-- Queue counts: `extraction_ready=5`, `registration_backlog=3`,
-  `risk_review_backlog=4`, `preparation_backlog=1`, and
-  `blocked_backlog=2`.
-- Backlog counters: `registration_backlog_count=3`,
-  `risk_review_backlog_count=4`, `preparation_backlog_count=2`,
-  `blocked_backlog_count=2`, `deferred_queue_count=1`, and
+- 18 audited material groups and 28 material representations.
+- Queue counts: `extraction_ready=9`, `risk_review_backlog=4`, and
+  `blocked_backlog=3`.
+- Backlog counters: `registration_backlog_count=0`,
+  `risk_review_backlog_count=4`, `preparation_backlog_count=0`,
+  `blocked_backlog_count=3`, `deferred_queue_count=2`, and
   `blocked_queue_count=1`.
 - Next recommended queue item ids:
   `queue_northeast_blind_peak_extract`,
   `queue_mingli_true_formula_teacher_extract`,
-  `queue_markdown_source_batch_001_register`,
-  `queue_blind_life_manual_risk_review`, and
-  `queue_blind_school_secret_blocked`.
+  `queue_markdown_source_batch_003_register`,
+  `queue_markdown_source_batch_004_prepare`, and
+  `queue_duan_plain_mingxue_outline_extract`.
 - `validate_materials_audit_quality()` returns `[]`.
 
 ## Raw-File Boundary

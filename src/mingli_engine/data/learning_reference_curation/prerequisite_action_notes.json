@@ -9,12 +9,12 @@
     "missing_prerequisites": [
       "risk_review"
     ],
-    "durable_reason": "High-risk aphoristic material needs boundary review before candidate extraction.",
+    "durable_reason": "Boundary screening completed: aphoristic high-risk material stays prerequisite-only and no routine extraction task is created.",
     "recommended_action": "risk_review",
     "risk_boundary": "high_risk",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-05-31",
-    "updated_at": "2026-05-31"
+    "updated_at": "2026-06-27"
   },
   {
     "action_note_id": "action_blind_school_secret_blocked_001",
@@ -63,12 +63,12 @@
       "risk_review",
       "cleaned_text"
     ],
-    "durable_reason": "High-risk Jianghu-style source needs boundary review and prepared text before extraction.",
+    "durable_reason": "Boundary screening completed: raw Jianghu-style material still needs cleaned text before bounded learning use.",
     "recommended_action": "risk_review",
     "risk_boundary": "high_risk",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-01",
-    "updated_at": "2026-06-01"
+    "updated_at": "2026-06-27"
   },
   {
     "action_note_id": "action_life_death_book_100_pages_risk_review_001",
@@ -80,12 +80,12 @@
     "missing_prerequisites": [
       "risk_review"
     ],
-    "durable_reason": "Life-risk source needs boundary review before extraction can begin.",
+    "durable_reason": "Boundary screening completed: life-risk material stays prerequisite-only without a non-claim handling rule.",
     "recommended_action": "risk_review",
     "risk_boundary": "high_risk",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-01",
-    "updated_at": "2026-06-01"
+    "updated_at": "2026-06-27"
   },
   {
     "action_note_id": "action_source_processing_status_deferred_001",
@@ -114,10 +114,10 @@
     "missing_prerequisites": [
       "risk_boundary_review"
     ],
-    "durable_reason": "High-risk applied course notes need boundary review and non-diagnostic rewriting before candidate extraction.",
+    "durable_reason": "Boundary screening completed: relationship and health-course notes require non-diagnostic redrafting before bounded learning use.",
     "recommended_action": "risk_review",
     "risk_boundary": "high_risk",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-27",
     "updated_at": "2026-06-27"
   }

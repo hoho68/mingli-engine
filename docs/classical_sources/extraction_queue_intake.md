@@ -50,8 +50,8 @@ Current packages:
   `package_knowledge_skeleton_001` preserve the completed Markdown batch and
   knowledge-skeleton learning passes.
 - `package_next_candidates_004` snapshots
-  `queue_markdown_source_batch_005_risk_review` as planned prerequisite-only
-  risk-review work. It has no selected extraction tasks.
+  `queue_markdown_source_batch_005_risk_review` as completed
+  prerequisite-only risk-review work. It has no selected extraction tasks.
 
 ## Extraction Task Boundary
 
@@ -135,8 +135,8 @@ actions, and risk boundaries.
 Current US3 backlog records:
 
 - `backlog_blind_life_manual_risk_review_001` keeps
-  `queue_blind_life_manual_risk_review` out of routine extraction until
-  high-risk boundary review is complete.
+  `queue_blind_life_manual_risk_review` out of routine extraction after
+  completed boundary screening.
 - `backlog_blind_school_secret_blocked_001` keeps
   `queue_blind_school_secret_blocked` blocked until source access and quotation
   boundaries are clarified.
@@ -145,7 +145,7 @@ Current US3 backlog records:
 - `backlog_immortal_fortune_jianghu_secret_risk_review_001`,
   `backlog_life_death_book_100_pages_risk_review_001`, and
   `backlog_markdown_batch_005_risk_review_001` keep high-risk materials out of
-  routine extraction until boundary review is complete.
+  routine extraction after completed boundary screening.
 - `backlog_source_processing_status_deferred_001` records workflow metadata as
   deferred from source extraction.
 
@@ -194,9 +194,9 @@ incremental packages add Duan Plain Mingxue Outline, Mingxue Golden Voice,
 Fortune Reading Hongfu Qitian, three Markdown batch tasks, and six knowledge
 skeleton tasks as ready learning inputs. US2 now has eight draft slots for
 future manual candidate creation. US3 and the current queue continuation track
-seven prerequisite backlog records, overlap warning visibility, and package
-progress counts while keeping all 016 records outside candidate and formal
-evidence counts.
+seven prerequisite backlog records, including four completed risk-review
+records, overlap warning visibility, and package progress counts while keeping
+all 016 records outside candidate and formal evidence counts.
 
 017 learning reference curation consumes the selected ready 016 extraction tasks
 as study-note inputs and mirrors the non-ready 016 backlog records as

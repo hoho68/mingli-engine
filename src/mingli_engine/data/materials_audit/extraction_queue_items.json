@@ -214,9 +214,9 @@
     "depends_on": [
       "risk_review"
     ],
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-27"
   },
   {
     "queue_item_id": "queue_immortal_fortune_jianghu_secret_risk_review",
@@ -241,9 +241,9 @@
       "risk_review",
       "cleaned_text"
     ],
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-27"
   },
   {
     "queue_item_id": "queue_life_death_book_100_pages_risk_review",
@@ -266,9 +266,9 @@
     "depends_on": [
       "risk_review"
     ],
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-05-30",
-    "updated_at": "2026-05-30"
+    "updated_at": "2026-06-27"
   },
   {
     "queue_item_id": "queue_markdown_source_batch_005_risk_review",
@@ -295,9 +295,9 @@
     "depends_on": [
       "risk_boundary_review"
     ],
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-05-30",
-    "updated_at": "2026-06-23"
+    "updated_at": "2026-06-27"
   },
   {
     "queue_item_id": "queue_markdown_source_batch_004_prepare",

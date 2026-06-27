@@ -133,21 +133,21 @@ missing prerequisites, recommended action, risk boundary, and status.
 
 Current prerequisite action notes:
 
-- `action_blind_life_manual_risk_review_001`: planned risk-review action for
+- `action_blind_life_manual_risk_review_001`: completed risk-review action for
   `backlog_blind_life_manual_risk_review_001`.
 - `action_blind_school_secret_blocked_001`: blocked action for
   `backlog_blind_school_secret_blocked_001`, requiring source-access and
   quotation-boundary clarification before any extraction work.
 - `action_markdown_batch_003_registration_001`: deferred registration action
   for `backlog_markdown_batch_003_registration_001`.
-- `action_immortal_fortune_jianghu_secret_risk_review_001`: planned
+- `action_immortal_fortune_jianghu_secret_risk_review_001`: completed
   risk-review action for
   `backlog_immortal_fortune_jianghu_secret_risk_review_001`.
-- `action_life_death_book_100_pages_risk_review_001`: planned risk-review
+- `action_life_death_book_100_pages_risk_review_001`: completed risk-review
   action for `backlog_life_death_book_100_pages_risk_review_001`.
 - `action_source_processing_status_deferred_001`: deferred action for workflow
   metadata that is not source text.
-- `action_markdown_batch_005_risk_review_001`: planned risk-review action for
+- `action_markdown_batch_005_risk_review_001`: completed risk-review action for
   `backlog_markdown_batch_005_risk_review_001`.
 
 Risk-review, deferred, and blocked action notes cannot become learning points,
@@ -162,7 +162,7 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 - Candidate decisions: `reuse_existing=1`, `create_candidate=27`,
   `status:applied=28`.
 - Prerequisite actions: `risk_review=4`, `blocked=1`, `deferred=2`,
-  `status:planned=4`, `status:deferred=2`, `status:blocked=1`.
+  `status:completed=4`, `status:deferred=2`, `status:blocked=1`.
 - Candidate-ready count: `27`.
 - Candidate decision count: `28`.
 - Risk tier counts: `ordinary=11`, `sensitive=40`, `high_risk=4` across notes,
@@ -174,9 +174,8 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
   `high_risk_signal=1`.
 - Overlap warnings: `7`.
 - Formal evidence delta: `0`.
-- Next action ids: seven draft notes plus planned risk-review actions for
-  Blind Life Manual, Immortal Fortune Jianghu Secret, Life Death Book, and
-  Markdown Batch 005.
+- Next action ids: seven draft notes. The four risk-review prerequisite
+  actions are completed and remain outside the active action list.
 
 ## Source-Window Learning Closure Sync
 
@@ -195,15 +194,17 @@ The 2026-06-27 source-window learning-closure pass is now reflected in the
   paraphrase material and must not be promoted without human transcription.
 - `safety-boundary-retained=2`: Northeast risk-boundary windows stay as safety
   paraphrase material unless a source-specific boundary page is identified.
-- `next_action_ids=11`: the seven draft note ids remain maintainer review
-  handles, and the four planned risk-review prerequisite actions remain the
-  only active prerequisite handles in the progress summary.
-- `planned-risk-review-actions=4`: Blind Life Manual, Immortal Fortune Jianghu
-  Secret, Life Death Book, and Markdown Batch 005 remain planned risk-review
-  prerequisite work.
+- `next_action_ids=7`: the seven draft note ids remain maintainer review
+  handles; completed prerequisite actions stay outside the active list.
+- `planned-risk-review-actions=0`: no risk-review prerequisite action remains
+  planned after the sweep.
+- `completed-risk-review-actions=4`: Blind Life Manual, Immortal Fortune
+  Jianghu Secret, Life Death Book, and Markdown Batch 005 have completed
+  prerequisite boundary screening.
 - `formal_evidence_delta=0`: No new candidate-intake decisions, no 013 candidate extracts, no review decisions, no promotion batches, and no formal evidence are created by this sync.
 
-Blocked or deferred prerequisite records remain outside `next_action_ids`.
+Completed, blocked, or deferred prerequisite records remain outside
+`next_action_ids`.
 The retained source-window closures only clarify learning/reference use and
 future optional transcription boundaries.
 

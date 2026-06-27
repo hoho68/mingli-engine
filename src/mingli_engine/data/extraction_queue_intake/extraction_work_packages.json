@@ -115,9 +115,9 @@
     "backlog_record_ids": [
       "backlog_markdown_batch_005_risk_review_001"
     ],
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-27",
     "updated_at": "2026-06-27",
-    "notes": "Fourth next-candidate package continues the 015 queue from the handoff. Markdown Batch 005 remains prerequisite-only high-risk boundary-screening work; no extraction task, candidate, promotion batch, or downstream pipeline artifact is created."
+    "notes": "Fourth next-candidate package completed the Batch 005 high-risk boundary-screening sweep as prerequisite-only tracking; no extraction task, candidate, promotion batch, or downstream pipeline artifact is created."
   }
 ]
