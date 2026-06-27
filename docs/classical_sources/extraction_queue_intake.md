@@ -41,11 +41,17 @@ Current packages:
   `queue_duan_plain_mingxue_outline_extract` and selects
   `task_duan_plain_mingxue_outline_extract_001` as the next ordinary-risk
   learning-reference extraction task.
-- `package_next_candidates_003` snapshots the remaining 015 queue items. It
-  selects `queue_mingxue_golden_voice_extract` and
+- `package_next_candidates_003` snapshots the next multi-item 015 queue slice.
+  It selects `queue_mingxue_golden_voice_extract` and
   `queue_fortune_reading_hongfu_qitian_extract` as extraction tasks while
-  keeping registration, locator-review, risk-review, deferred, and preparation
-  work in prerequisite backlog records.
+  keeping registration, risk-review, and deferred work in prerequisite backlog
+  records.
+- `package_markdown_batch_registration_001` and
+  `package_knowledge_skeleton_001` preserve the completed Markdown batch and
+  knowledge-skeleton learning passes.
+- `package_next_candidates_004` snapshots
+  `queue_markdown_source_batch_005_risk_review` as planned prerequisite-only
+  risk-review work. It has no selected extraction tasks.
 
 ## Extraction Task Boundary
 
@@ -128,28 +134,20 @@ actions, and risk boundaries.
 
 Current US3 backlog records:
 
-- `backlog_markdown_batch_001_registration_001` keeps
-  `queue_markdown_source_batch_001_register` visible until source-library
-  registration is complete.
 - `backlog_blind_life_manual_risk_review_001` keeps
   `queue_blind_life_manual_risk_review` out of routine extraction until
   high-risk boundary review is complete.
 - `backlog_blind_school_secret_blocked_001` keeps
   `queue_blind_school_secret_blocked` blocked until source access and quotation
   boundaries are clarified.
-- `backlog_markdown_batch_002_registration_001` and
-  `backlog_markdown_batch_003_registration_001` keep additional cleaned
-  Markdown batches visible until source-library registration is complete.
+- `backlog_markdown_batch_003_registration_001` keeps the failed-conversion
+  Markdown batch visible until OCR and source-library registration can happen.
 - `backlog_immortal_fortune_jianghu_secret_risk_review_001`,
   `backlog_life_death_book_100_pages_risk_review_001`, and
   `backlog_markdown_batch_005_risk_review_001` keep high-risk materials out of
   routine extraction until boundary review is complete.
-- `backlog_markdown_batch_004_locator_review_001` keeps a possible edition
-  variant out of routine extraction until locator review is complete.
 - `backlog_source_processing_status_deferred_001` records workflow metadata as
   deferred from source extraction.
-- `backlog_knowledge_skeleton_preparation_001` keeps the aggregate skeleton in
-  preparation until component sources are reviewed.
 
 Registration, preparation, locator-review, and risk-review backlog records must
 name missing prerequisites. Deferred and blocked records must provide durable
@@ -191,13 +189,14 @@ approve evidence, promote evidence, or change formal report evidence counts.
 
 ## Initial Setup Status
 
-US1 seeds the initial package and two extraction tasks. The current incremental
-packages add Duan Plain Mingxue Outline, Mingxue Golden Voice, and Fortune
-Reading Hongfu Qitian as ready tasks. US2 now has five draft slots for future
-manual candidate creation. US3 and the remaining-queue extension add eleven
-prerequisite backlog records, overlap warning visibility, and package progress
-counts while keeping all 016 records outside candidate and formal evidence
-counts.
+US1 seeds the initial package and two extraction tasks. The completed
+incremental packages add Duan Plain Mingxue Outline, Mingxue Golden Voice,
+Fortune Reading Hongfu Qitian, three Markdown batch tasks, and six knowledge
+skeleton tasks as ready learning inputs. US2 now has eight draft slots for
+future manual candidate creation. US3 and the current queue continuation track
+seven prerequisite backlog records, overlap warning visibility, and package
+progress counts while keeping all 016 records outside candidate and formal
+evidence counts.
 
 017 learning reference curation consumes the selected ready 016 extraction tasks
 as study-note inputs and mirrors the non-ready 016 backlog records as

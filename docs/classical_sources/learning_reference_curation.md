@@ -147,6 +147,8 @@ Current prerequisite action notes:
   action for `backlog_life_death_book_100_pages_risk_review_001`.
 - `action_source_processing_status_deferred_001`: deferred action for workflow
   metadata that is not source text.
+- `action_markdown_batch_005_risk_review_001`: planned risk-review action for
+  `backlog_markdown_batch_005_risk_review_001`.
 
 Risk-review, deferred, and blocked action notes cannot become learning points,
 candidate extracts, review decisions, promotion batches, approved evidence
@@ -159,11 +161,11 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 - Learning points: `duplicate_review=1`, `ready=27`, `deferred=6`.
 - Candidate decisions: `reuse_existing=1`, `create_candidate=27`,
   `status:applied=28`.
-- Prerequisite actions: `risk_review=3`, `blocked=1`, `deferred=2`,
-  `status:planned=3`, `status:deferred=2`, `status:blocked=1`.
+- Prerequisite actions: `risk_review=4`, `blocked=1`, `deferred=2`,
+  `status:planned=4`, `status:deferred=2`, `status:blocked=1`.
 - Candidate-ready count: `27`.
 - Candidate decision count: `28`.
-- Risk tier counts: `ordinary=11`, `sensitive=40`, `high_risk=3` across notes,
+- Risk tier counts: `ordinary=11`, `sensitive=40`, `high_risk=4` across notes,
   learning points, and prerequisite actions.
 - Target rule family counts: `blind_image_method=2`,
   `branch_interaction=4`, `pattern_strength=9`,
@@ -173,7 +175,8 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 - Overlap warnings: `7`.
 - Formal evidence delta: `0`.
 - Next action ids: seven draft notes plus planned risk-review actions for
-  Blind Life Manual, Immortal Fortune Jianghu Secret, and Life Death Book.
+  Blind Life Manual, Immortal Fortune Jianghu Secret, Life Death Book, and
+  Markdown Batch 005.
 
 ## Source-Window Learning Closure Sync
 
@@ -192,11 +195,12 @@ The 2026-06-27 source-window learning-closure pass is now reflected in the
   paraphrase material and must not be promoted without human transcription.
 - `safety-boundary-retained=2`: Northeast risk-boundary windows stay as safety
   paraphrase material unless a source-specific boundary page is identified.
-- `next_action_ids=10`: the seven draft note ids remain maintainer review
-  handles, and the three planned risk-review prerequisite actions remain the
+- `next_action_ids=11`: the seven draft note ids remain maintainer review
+  handles, and the four planned risk-review prerequisite actions remain the
   only active prerequisite handles in the progress summary.
-- `planned-risk-review-actions=3`: Blind Life Manual, Immortal Fortune Jianghu
-  Secret, and Life Death Book remain planned risk-review prerequisite work.
+- `planned-risk-review-actions=4`: Blind Life Manual, Immortal Fortune Jianghu
+  Secret, Life Death Book, and Markdown Batch 005 remain planned risk-review
+  prerequisite work.
 - `formal_evidence_delta=0`: No new candidate-intake decisions, no 013 candidate extracts, no review decisions, no promotion batches, and no formal evidence are created by this sync.
 
 Blocked or deferred prerequisite records remain outside `next_action_ids`.
@@ -237,8 +241,8 @@ units are the only formal report evidence surface.
 
 ## Phase C Source Disposition Snapshot
 
-The current 016/017 package consumes 14 selected extraction tasks as learning
-reference notes and preserves 6 prerequisite backlog records as action notes.
+The current 016/017 state consumes 14 selected extraction tasks as learning
+reference notes and preserves 7 prerequisite backlog records as action notes.
 
 - 14 ready items are 016 extraction tasks and 017 learning reference notes:
   five root-PDF learning notes, three Markdown batch learning notes, and six
@@ -246,9 +250,9 @@ reference notes and preserves 6 prerequisite backlog records as action notes.
 - Those notes contain 34 learning points and 28 candidate-intake decisions.
   One decision reuses an existing candidate, 27 are create-candidate decisions,
   and 28 decisions have `status=applied`.
-- 6 non-ready items remain prerequisite action notes: Blind Life Manual,
+- 7 non-ready items remain prerequisite action notes: Blind Life Manual,
   Blind School Secret, Markdown Batch 003, Immortal Fortune Jianghu Secret,
-  Life Death Book 100 Pages, and Source Processing Status.
+  Life Death Book 100 Pages, Source Processing Status, and Markdown Batch 005.
 
 Ready materials are learning-reference inputs, and non-ready materials remain
 prerequisite work until a future workflow resolves their blockers.

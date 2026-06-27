@@ -5,7 +5,8 @@ Updated: 2026-06-27
 This handoff summarizes the completed local-only new-material reading and
 learning pass. It is a maintainer entrypoint for continuing work after the
 source-window locator review, learning-closure pass, 017 sync, and
-candidate/formal evidence boundary audit.
+candidate/formal evidence boundary audit, plus the Markdown Batch 005
+risk-review routing pass.
 
 ## Completed Checkpoints
 
@@ -17,7 +18,9 @@ candidate/formal evidence boundary audit.
 - Learning closure added explicit closure notes to every retained chapter
   source window: `retained-chapter-learning-closed=11`.
 - 017 learning-reference sync recorded that selected ready learning inputs
-  remain stable: `selected-ready-learning-notes=14`, `next_action_ids=10`.
+  remain stable: `selected-ready-learning-notes=14`, `next_action_ids=11`.
+- Markdown Batch 005 is now routed as prerequisite-only risk-review work:
+  `planned-risk-review-actions=4`.
 - Candidate/formal evidence boundary audit confirmed the learning closure did
   not create downstream evidence changes: `formal_evidence_delta=0`.
 
@@ -28,6 +31,7 @@ Primary detailed references:
 - [2026-06-27-learning-closure-notes.md](../superpowers/plans/2026-06-27-learning-closure-notes.md)
 - [2026-06-27-017-learning-closure-sync.md](../superpowers/plans/2026-06-27-017-learning-closure-sync.md)
 - [2026-06-27-candidate-formal-boundary-audit.md](../superpowers/plans/2026-06-27-candidate-formal-boundary-audit.md)
+- [2026-06-27-markdown-batch-005-risk-review-routing.md](../superpowers/plans/2026-06-27-markdown-batch-005-risk-review-routing.md)
 
 ## Current Frozen Snapshot
 
@@ -44,7 +48,8 @@ Source-window and locator state:
 017 learning-reference state:
 
 - `selected-ready-learning-notes=14`
-- `next_action_ids=10`
+- `next_action_ids=11`
+- `planned-risk-review-actions=4`
 - `017-applied-decisions=28`
 - `017-create-candidate-decisions=27`
 
@@ -67,6 +72,9 @@ Source-window and locator state:
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
 - `next-new-material-start=015-materials-audit-next-action-queue`.
+- Current 015 queue coverage is complete: all 16 queue ids are present in 016
+  package snapshots. The next local work should start from
+  `next-prerequisite-start=017-planned-risk-review-actions`.
 
 ## Remaining Optional Precision Work
 
@@ -83,14 +91,15 @@ Source-window and locator state:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-new-material-start=015-materials-audit-next-action-queue`, selects the
-next ready or prerequisite material group, and carries it through the same
-bounded path:
+`next-prerequisite-start=017-planned-risk-review-actions`, sweeps the planned
+risk-review prerequisite group, and carries any resolved material through the
+same bounded path:
 
-1. 015 materials-audit queue review.
-2. 016 extraction queue intake package update.
-3. 017 learning-reference note or prerequisite action update.
-4. Candidate/formal evidence boundary audit before any promotion work.
+1. 017 prerequisite action review for the planned high-risk group.
+2. 015 materials-audit queue refresh only if a prerequisite is resolved.
+3. 016 extraction queue intake package update for any newly ready material.
+4. 017 learning-reference note or prerequisite action update.
+5. Candidate/formal evidence boundary audit before any promotion work.
 
 ## Guardrails
 

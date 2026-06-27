@@ -5124,6 +5124,7 @@ def test_learning_reference_prerequisite_actions_do_not_change_formal_evidence_c
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
         "action_source_processing_status_deferred_001",
+        "action_markdown_batch_005_risk_review_001",
     }
     assert summary.formal_evidence_delta == 0
     assert summary.note_counts == {"draft": 7, "candidate_intake_started": 7}
@@ -5135,10 +5136,10 @@ def test_learning_reference_prerequisite_actions_do_not_change_formal_evidence_c
     assert summary.candidate_decision_count == 28
     assert summary.candidate_ready_count == 27
     assert summary.prerequisite_action_counts == {
-        "risk_review": 3,
+        "risk_review": 4,
         "blocked": 1,
         "deferred": 2,
-        "status:planned": 3,
+        "status:planned": 4,
         "status:blocked": 1,
         "status:deferred": 2,
     }

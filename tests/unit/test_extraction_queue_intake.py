@@ -653,6 +653,46 @@ def test_seeded_extraction_queue_includes_duan_ready_learning_package():
     assert extraction_queue_intake.validate_extraction_package_quality() == []
 
 
+def test_seeded_extraction_queue_routes_markdown_batch_005_as_next_risk_review_backlog():
+    packages = extraction_queue_intake.load_extraction_work_packages()
+    tasks = extraction_queue_intake.load_extraction_tasks()
+    backlog_records = extraction_queue_intake.load_prerequisite_backlog_records()
+    summary = extraction_queue_intake.build_package_progress_summary()
+
+    packages_by_id = {package.package_id: package for package in packages}
+    backlog_by_id = {record.backlog_id: record for record in backlog_records}
+
+    package = packages_by_id["package_next_candidates_004"]
+    assert package.source_queue_snapshot_ids == [
+        "queue_markdown_source_batch_005_risk_review"
+    ]
+    assert package.selected_task_ids == []
+    assert package.backlog_record_ids == [
+        "backlog_markdown_batch_005_risk_review_001"
+    ]
+    assert package.status == "planned"
+
+    record = backlog_by_id["backlog_markdown_batch_005_risk_review_001"]
+    assert record.package_id == package.package_id
+    assert record.queue_item_id == "queue_markdown_source_batch_005_risk_review"
+    assert record.audit_id == "audit_markdown_source_batch_005"
+    assert record.backlog_type == "risk_review"
+    assert record.missing_prerequisites == ["risk_boundary_review"]
+    assert record.recommended_action == "risk_review"
+    assert record.risk_boundary == "high_risk"
+    assert record.status == "planned"
+
+    assert record.backlog_id in summary.next_manual_action_ids
+    assert (
+        "queue_markdown_source_batch_005_risk_review"
+        in summary.selected_source_queue_ids
+    )
+    assert not any(
+        task.queue_item_id == "queue_markdown_source_batch_005_risk_review"
+        for task in tasks
+    )
+
+
 @pytest.mark.parametrize(
     ("packages", "tasks", "expected"),
     [

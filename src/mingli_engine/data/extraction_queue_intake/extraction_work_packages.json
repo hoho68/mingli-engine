@@ -104,5 +104,20 @@
     "created_at": "2026-06-23",
     "updated_at": "2026-06-23",
     "notes": "Ready Q-layers (Q001/Q002/Q003/Q004/Q006/Q008) processed as extraction tasks through learning-reference pipeline. All 6 KSkeleton tasks completed."
+  },
+  {
+    "package_id": "package_next_candidates_004",
+    "package_label": "Next candidate extraction package 004",
+    "source_queue_snapshot_ids": [
+      "queue_markdown_source_batch_005_risk_review"
+    ],
+    "selected_task_ids": [],
+    "backlog_record_ids": [
+      "backlog_markdown_batch_005_risk_review_001"
+    ],
+    "status": "planned",
+    "created_at": "2026-06-27",
+    "updated_at": "2026-06-27",
+    "notes": "Fourth next-candidate package continues the 015 queue from the handoff. Markdown Batch 005 remains prerequisite-only high-risk boundary-screening work; no extraction task, candidate, promotion batch, or downstream pipeline artifact is created."
   }
 ]

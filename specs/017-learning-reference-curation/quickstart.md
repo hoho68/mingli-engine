@@ -38,13 +38,13 @@ Expected result after implementation:
   `note_counts={'draft': 7, 'candidate_intake_started': 7}`,
   `learning_point_counts={'duplicate_review': 1, 'ready': 27, 'deferred': 6}`,
   `decision_counts={'reuse_existing': 1, 'create_candidate': 27, 'status:applied': 28}`,
-  `prerequisite_action_counts={'risk_review': 3, 'blocked': 1, 'deferred': 2, 'status:planned': 3, 'status:blocked': 1, 'status:deferred': 2}`,
-  `risk_tier_counts={'sensitive': 40, 'ordinary': 11, 'high_risk': 3}`,
+  `prerequisite_action_counts={'risk_review': 4, 'blocked': 1, 'deferred': 2, 'status:planned': 4, 'status:blocked': 1, 'status:deferred': 2}`,
+  `risk_tier_counts={'sensitive': 40, 'ordinary': 11, 'high_risk': 4}`,
   `overlap_warning_count=7`,
   `candidate_ready_count=27`,
   `candidate_decision_count=28`,
   `formal_evidence_delta=0`, and next action ids for seven draft notes plus
-  three planned risk-review prerequisite actions.
+  four planned risk-review prerequisite actions.
 - The quality check prints `[]`.
 - Blocked and deferred prerequisite actions remain outside `next_action_ids`
   until their status changes.
@@ -70,11 +70,12 @@ review, not a candidate or evidence promotion step.
   paraphrase material and must not be promoted without human transcription.
 - `safety-boundary-retained=2`: Northeast risk-boundary windows stay as safety
   paraphrase material unless a source-specific boundary page is identified.
-- `next_action_ids=10`: retained chapter closures do not remove the seven
-  draft-note maintainer handles from `next_action_ids`; the three planned
+- `next_action_ids=11`: retained chapter closures do not remove the seven
+  draft-note maintainer handles from `next_action_ids`; the four planned
   risk-review prerequisite actions remain the only active prerequisite handles.
-- `planned-risk-review-actions=3`: Blind Life Manual, Immortal Fortune Jianghu
-  Secret, and Life Death Book remain planned risk-review prerequisite work.
+- `planned-risk-review-actions=4`: Blind Life Manual, Immortal Fortune Jianghu
+  Secret, Life Death Book, and Markdown Batch 005 remain planned risk-review
+  prerequisite work.
 - `formal_evidence_delta=0`: No new candidate-intake decisions, no 013 candidate extracts, no review decisions, no promotion batches, and no formal evidence are created by this sync.
 
 Blocked and deferred prerequisite records remain outside `next_action_ids`.

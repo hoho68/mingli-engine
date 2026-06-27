@@ -103,5 +103,22 @@
     "status": "deferred",
     "created_at": "2026-06-01",
     "updated_at": "2026-06-01"
+  },
+  {
+    "action_note_id": "action_markdown_batch_005_risk_review_001",
+    "backlog_id": "backlog_markdown_batch_005_risk_review_001",
+    "package_id": "package_next_candidates_004",
+    "queue_item_id": "queue_markdown_source_batch_005_risk_review",
+    "audit_id": "audit_markdown_source_batch_005",
+    "action_type": "risk_review",
+    "missing_prerequisites": [
+      "risk_boundary_review"
+    ],
+    "durable_reason": "High-risk applied course notes need boundary review and non-diagnostic rewriting before candidate extraction.",
+    "recommended_action": "risk_review",
+    "risk_boundary": "high_risk",
+    "status": "planned",
+    "created_at": "2026-06-27",
+    "updated_at": "2026-06-27"
   }
 ]

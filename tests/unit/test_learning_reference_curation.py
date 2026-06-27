@@ -745,7 +745,7 @@ def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
     assert summary.risk_tier_counts == {
         "sensitive": 40,
         "ordinary": 11,
-        "high_risk": 3,
+        "high_risk": 4,
     }
     assert summary.note_rule_family_counts == {
         "blind_image_method": 2,
@@ -785,6 +785,7 @@ def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
         "action_blind_life_manual_risk_review_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
+        "action_markdown_batch_005_risk_review_001",
     ]
 
 
@@ -1364,6 +1365,7 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
         "action_source_processing_status_deferred_001",
+        "action_markdown_batch_005_risk_review_001",
     ]
     assert [action.backlog_id for action in action_notes] == [
         "backlog_blind_life_manual_risk_review_001",
@@ -1372,6 +1374,7 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "backlog_immortal_fortune_jianghu_secret_risk_review_001",
         "backlog_life_death_book_100_pages_risk_review_001",
         "backlog_source_processing_status_deferred_001",
+        "backlog_markdown_batch_005_risk_review_001",
     ]
     assert [action.package_id for action in action_notes] == [
         "package_next_candidates_001",
@@ -1380,6 +1383,7 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "package_next_candidates_003",
         "package_next_candidates_003",
         "package_next_candidates_003",
+        "package_next_candidates_004",
     ]
     assert [action.queue_item_id for action in action_notes] == [
         "queue_blind_life_manual_risk_review",
@@ -1388,6 +1392,7 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "queue_immortal_fortune_jianghu_secret_risk_review",
         "queue_life_death_book_100_pages_risk_review",
         "queue_source_processing_status_deferred",
+        "queue_markdown_source_batch_005_risk_review",
     ]
     assert [action.audit_id for action in action_notes] == [
         "audit_blind_life_manual",
@@ -1396,7 +1401,32 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "audit_immortal_fortune_jianghu_secret",
         "audit_life_death_book_100_pages",
         "audit_source_processing_status",
+        "audit_markdown_source_batch_005",
     ]
+
+
+def test_learning_reference_routes_markdown_batch_005_risk_review_as_prerequisite_action():
+    action_notes = learning_reference_curation.load_prerequisite_action_notes()
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+
+    actions_by_id = {action.action_note_id: action for action in action_notes}
+    action = actions_by_id["action_markdown_batch_005_risk_review_001"]
+
+    assert action.backlog_id == "backlog_markdown_batch_005_risk_review_001"
+    assert action.package_id == "package_next_candidates_004"
+    assert action.queue_item_id == "queue_markdown_source_batch_005_risk_review"
+    assert action.audit_id == "audit_markdown_source_batch_005"
+    assert action.action_type == "risk_review"
+    assert action.missing_prerequisites == ["risk_boundary_review"]
+    assert action.recommended_action == "risk_review"
+    assert action.risk_boundary == "high_risk"
+    assert action.status == "planned"
+
+    assert action.action_note_id in summary.next_action_ids
+    assert summary.prerequisite_action_counts["risk_review"] == 4
+    assert summary.prerequisite_action_counts["status:planned"] == 4
+    assert summary.risk_tier_counts["high_risk"] == 4
+    assert summary.formal_evidence_delta == 0
 
 
 @pytest.mark.parametrize(
@@ -1573,17 +1603,17 @@ def test_learning_reference_summary_includes_prerequisite_action_counts():
         "status:applied": 28,
     }
     assert summary.prerequisite_action_counts == {
-        "risk_review": 3,
+        "risk_review": 4,
         "deferred": 2,
         "blocked": 1,
-        "status:planned": 3,
+        "status:planned": 4,
         "status:deferred": 2,
         "status:blocked": 1,
     }
     assert summary.risk_tier_counts == {
         "sensitive": 40,
         "ordinary": 11,
-        "high_risk": 3,
+        "high_risk": 4,
     }
     assert summary.overlap_warning_count == 7
     assert summary.candidate_ready_count == 27
@@ -1600,6 +1630,7 @@ def test_learning_reference_summary_includes_prerequisite_action_counts():
         "action_blind_life_manual_risk_review_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
+        "action_markdown_batch_005_risk_review_001",
     ]
 
 
@@ -1625,6 +1656,7 @@ def test_learning_reference_docs_track_source_window_learning_closure_sync():
         "action_blind_life_manual_risk_review_001",
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
+        "action_markdown_batch_005_risk_review_001",
     ]
     assert "action_blind_school_secret_blocked_001" not in summary.next_action_ids
     assert "action_markdown_batch_003_registration_001" not in summary.next_action_ids
@@ -1644,8 +1676,8 @@ def test_learning_reference_docs_track_source_window_learning_closure_sync():
         assert "`learning-paraphrase-ready=4`" in document
         assert "`policy-boundary-retained=5`" in document
         assert "`safety-boundary-retained=2`" in document
-        assert "`next_action_ids=10`" in document
-        assert "`planned-risk-review-actions=3`" in document
+        assert "`next_action_ids=11`" in document
+        assert "`planned-risk-review-actions=4`" in document
         assert "`formal_evidence_delta=0`" in document
         assert "No new candidate-intake decisions" in document
         assert "no 013 candidate extracts" in document
