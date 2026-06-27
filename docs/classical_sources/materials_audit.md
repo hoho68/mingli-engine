@@ -208,13 +208,14 @@ excludes queue ids already covered by 016/017.
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-liang-bazi-core-source-selection`
+- `next-material-entry=015-liang-bazi-core-individual-review`
 
 This refresh is read-only planning metadata. It does not mark queue items
 completed, mutate 016 packages, create 013 candidate/review/promotion records,
 or alter 012 formal evidence. The raw text corpus triage item is locally
-completed, so the next local new-material path is source selection for the
-bounded Liang Xiangrun Bazi core group.
+completed, and the bounded Liang Xiangrun Bazi core group now has a
+source-selection packet, so the next local new-material path is individual
+cleaned-text review for the selected Liang sources.
 
 ## 015 External Material Inventory Refresh
 
@@ -280,6 +281,40 @@ Exclusive triage groups:
 The immediate next bounded source-selection surface is
 `raw_text_triage_liang_bazi_core`; high-risk ritual-remedy, blind-school, and
 life-death groups stay behind risk review.
+
+## 015 Liang Bazi Core Source Selection
+
+The 2026-06-28 Liang Bazi core source selection uses only inventory labels,
+existing source batch status summaries, source-library metadata, learning
+reference ids, and candidate ids. It does not open source PDFs, create new
+source-library records, create 013 candidate/review/promotion records, or alter
+012 formal evidence.
+
+- `source-selection-status=source_selection_completed`
+- `source-selection-items=12`
+- `existing-batch-covered=8`
+- `selected-for-individual-review=2`
+- `variant-review-required=1`
+- `sensitive-boundary-deferred=1`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-liang-bazi-core-individual-review`
+
+Selected individual review items:
+
+- `liang_tianyuan_wuxian_commentary`
+- `liang_yushi_yongshen_ciyuan`
+
+Deferred or review-gated items:
+
+- `liang_four_corner_digest`: possible digest or edition variant requiring
+  identity review before reuse.
+- `liang_female_destiny_detail`: sensitive gendered relationship material
+  requiring boundary review before learning use.
+
+The 8 existing-batch-covered items remain represented by Markdown source
+batches 001, 002, and 004. The next bounded work surface is individual
+cleaned-text review for the two selected items, still outside 013/012 unless a
+separate candidate-intake step is explicitly authorized.
 
 ## Raw-File Boundary
 

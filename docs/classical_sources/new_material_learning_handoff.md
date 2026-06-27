@@ -147,7 +147,17 @@ Authorization Audit Packet:
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
   prerequisite actions are completed, and 017 now has no active
   `next_action_ids`.
-- `next-material-entry=015-liang-bazi-core-source-selection`.
+- `next-material-entry=015-liang-bazi-core-individual-review`.
+- 015 Liang Bazi Core Source Selection is completed:
+  `source-selection-status=source_selection_completed`,
+  `source-selection-items=12`, `existing-batch-covered=8`,
+  `selected-for-individual-review=2`, `variant-review-required=1`,
+  `sensitive-boundary-deferred=1`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-liang-bazi-core-individual-review`.
+- Selected individual review ids:
+  `liang_tianyuan_wuxian_commentary` and
+  `liang_yushi_yongshen_ciyuan`.
 
 ## Remaining Optional Precision Work
 
@@ -164,9 +174,9 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-liang-bazi-core-source-selection`. It should select a
-small source set from `raw_text_triage_liang_bazi_core`, create or adjust only
-015/014 planning metadata needed for source-library registration, and keep
+`next-material-entry=015-liang-bazi-core-individual-review`. It should review
+the two selected Liang cleaned-text surfaces as bounded learning/reference
+planning inputs, create or adjust only 015/017 planning metadata, and keep
 013/012 mutations blocked unless separately authorized.
 
 ## Guardrails

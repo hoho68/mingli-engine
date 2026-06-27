@@ -368,6 +368,43 @@ def test_materials_audit_dataclasses_construct_with_defaults():
     assert triage_group.representative_paths == []
     assert triage_summary.guardrails == []
 
+    selection_item = models.RawTextSourceSelectionItem(
+        selection_id="liang_test_source",
+        triage_group_id=triage_group.group_id,
+        source_root=triage_group.source_root,
+        relative_path="梁湘润简体/test.pdf",
+        title_label="Liang test source",
+        selection_status="ready_for_individual_review",
+        risk_boundary="ordinary",
+        recommended_next_action="review_cleaned_text",
+        source_library_entry_id="entry_markdown_source_batch_004",
+        source_material_id="material_markdown_source_batch_004",
+        target_rule_families=["pattern_strength"],
+    )
+    selection_summary = models.RawTextSourceSelectionSummary(
+        selection_id="015-liang-bazi-core-source-selection",
+        selection_status="source_selection_completed",
+        triage_group_id=triage_group.group_id,
+        source_root=triage_group.source_root,
+        source_selection_item_count=1,
+        selected_for_individual_review_count=1,
+        existing_batch_covered_count=0,
+        variant_review_required_count=0,
+        sensitive_boundary_deferred_count=0,
+        status_counts={"ready_for_individual_review": 1},
+        risk_boundary_counts={"ordinary": 1},
+        target_rule_family_counts={"pattern_strength": 1},
+        selected_item_ids=[selection_item.selection_id],
+        deferred_item_ids=[],
+        downstream_mutation_authorized=False,
+        next_material_entry="015-next-individual-review",
+        boundary_checks={"013_012_not_mutated": "passed"},
+    )
+
+    assert selection_item.guardrails == []
+    assert selection_item.existing_learning_reference_ids == []
+    assert selection_summary.guardrails == []
+
 
 def test_read_json_list_reports_missing_invalid_and_non_array_payloads(tmp_path):
     with pytest.raises(materials_audit.MaterialsAuditError, match="missing data file"):
@@ -415,6 +452,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_material_triage_groups",
         "build_raw_text_material_triage_summary",
         "render_raw_text_material_triage_markdown",
+        "load_raw_text_source_selection_items",
+        "build_raw_text_source_selection_summary",
+        "render_raw_text_source_selection_markdown",
     ):
         assert callable(getattr(materials_audit, function_name))
 
@@ -1441,7 +1481,7 @@ def test_materials_audit_queue_refresh_excludes_covered_016_queue_items():
     assert refresh.legacy_next_action_ids == summary.next_action_ids
     assert refresh.refreshed_next_action_ids == []
     assert refresh.downstream_mutation_authorized is False
-    assert refresh.next_material_entry == "015-liang-bazi-core-source-selection"
+    assert refresh.next_material_entry == "015-liang-bazi-core-individual-review"
     assert refresh.boundary_checks == {
         "015_queue_loaded": "passed",
         "016_coverage_loaded": "passed",
@@ -1470,7 +1510,7 @@ def test_materials_audit_queue_refresh_markdown_and_docs_are_in_sync():
         "`uncovered-queue-items=0`",
         "`refreshed-next-action-ids=0`",
         "`downstream-mutation-authorized=false`",
-        "`next-material-entry=015-liang-bazi-core-source-selection`",
+        "`next-material-entry=015-liang-bazi-core-individual-review`",
     ):
         assert marker in markdown
         assert marker in materials_doc
@@ -1643,6 +1683,112 @@ def test_raw_text_material_triage_markdown_and_docs_are_in_sync():
         "`deferred-groups=6`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-liang-bazi-core-source-selection`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_source_selection_items_load_liang_core_packet():
+    items = materials_audit.load_raw_text_source_selection_items()
+    items_by_id = {item.selection_id: item for item in items}
+
+    assert len(items) == 12
+    assert {
+        item.triage_group_id for item in items
+    } == {"raw_text_triage_liang_bazi_core"}
+    assert all(item.source_root == materials_audit.RAW_TEXT_TRIAGE_SOURCE_ROOT for item in items)
+    assert all(item.relative_path.startswith("梁湘润简体/") for item in items)
+    assert all(item.source_library_entry_id for item in items)
+    assert all(item.source_material_id for item in items)
+    assert items_by_id["liang_tianyuan_wuxian_commentary"].selection_status == (
+        "ready_for_individual_review"
+    )
+    assert items_by_id["liang_yushi_yongshen_ciyuan"].selection_status == (
+        "ready_for_individual_review"
+    )
+    assert items_by_id["liang_four_corner_digest"].selection_status == (
+        "variant_review_required"
+    )
+    assert items_by_id["liang_female_destiny_detail"].selection_status == (
+        "sensitive_boundary_deferred"
+    )
+    assert (
+        "lp_markdown_batch_004_pattern_strength_001"
+        in items_by_id[
+            "liang_tianyuan_wuxian_commentary"
+        ].existing_learning_reference_ids
+    )
+
+
+def test_raw_text_source_selection_summary_counts_review_surface():
+    summary = materials_audit.build_raw_text_source_selection_summary()
+
+    assert summary.selection_id == "015-liang-bazi-core-source-selection"
+    assert summary.selection_status == "source_selection_completed"
+    assert summary.triage_group_id == "raw_text_triage_liang_bazi_core"
+    assert summary.source_selection_item_count == 12
+    assert summary.selected_for_individual_review_count == 2
+    assert summary.existing_batch_covered_count == 8
+    assert summary.variant_review_required_count == 1
+    assert summary.sensitive_boundary_deferred_count == 1
+    assert summary.status_counts == {
+        "existing_batch_covered": 8,
+        "ready_for_individual_review": 2,
+        "variant_review_required": 1,
+        "sensitive_boundary_deferred": 1,
+    }
+    assert summary.risk_boundary_counts == {
+        "ordinary": 10,
+        "sensitive": 2,
+    }
+    assert summary.target_rule_family_counts == {
+        "branch_interaction": 3,
+        "luck_cycle": 2,
+        "pattern_strength": 6,
+        "ten_god_relation": 1,
+        "useful_god_candidate": 6,
+    }
+    assert summary.selected_item_ids == [
+        "liang_tianyuan_wuxian_commentary",
+        "liang_yushi_yongshen_ciyuan",
+    ]
+    assert summary.deferred_item_ids == [
+        "liang_four_corner_digest",
+        "liang_female_destiny_detail",
+    ]
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == "015-liang-bazi-core-individual-review"
+    assert summary.boundary_checks == {
+        "selection_items_loaded": "passed",
+        "triage_group_loaded": "passed",
+        "triage_group_file_count_matched": "passed",
+        "existing_source_batches_preserved": "passed",
+        "raw_materials_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+
+def test_raw_text_source_selection_markdown_and_docs_are_in_sync():
+    summary = materials_audit.build_raw_text_source_selection_summary()
+    markdown = materials_audit.render_raw_text_source_selection_markdown(summary)
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Liang Bazi Core Source Selection",
+        "`source-selection-status=source_selection_completed`",
+        "`source-selection-items=12`",
+        "`existing-batch-covered=8`",
+        "`selected-for-individual-review=2`",
+        "`variant-review-required=1`",
+        "`sensitive-boundary-deferred=1`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-liang-bazi-core-individual-review`",
     ):
         assert marker in markdown
         assert marker in materials_doc

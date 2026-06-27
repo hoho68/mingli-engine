@@ -2736,6 +2736,50 @@ class RawTextMaterialTriageSummary:
 
 
 @dataclass(frozen=True)
+class RawTextSourceSelectionItem:
+    selection_id: str
+    triage_group_id: str
+    source_root: str
+    relative_path: str
+    title_label: str
+    selection_status: str
+    risk_boundary: str
+    recommended_next_action: str
+    source_library_entry_id: str
+    source_material_id: str
+    target_rule_families: list[str] = field(default_factory=list)
+    existing_learning_reference_ids: list[str] = field(default_factory=list)
+    existing_candidate_ids: list[str] = field(default_factory=list)
+    source_batch_status: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextSourceSelectionSummary:
+    selection_id: str
+    selection_status: str
+    triage_group_id: str
+    source_root: str
+    source_selection_item_count: int
+    selected_for_individual_review_count: int
+    existing_batch_covered_count: int
+    variant_review_required_count: int
+    sensitive_boundary_deferred_count: int
+    status_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    target_rule_family_counts: dict[str, int]
+    selected_item_ids: list[str]
+    deferred_item_ids: list[str]
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class ExtractionWorkPackage:
     package_id: str
     package_label: str

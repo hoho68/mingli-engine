@@ -1,0 +1,353 @@
+[
+  {
+    "selection_id": "liang_zipping_foundation_overview",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体《子平基础概要》梁湘润_ce.pdf",
+    "title_label": "Liang Ziping Foundation Overview",
+    "selection_status": "existing_batch_covered",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "no_action",
+    "source_library_entry_id": "entry_markdown_source_batch_001",
+    "source_material_id": "material_markdown_source_batch_001",
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "branch_interaction"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_001_pattern_strength_001",
+      "lp_markdown_batch_001_ten_god_relation_001",
+      "lp_markdown_batch_001_branch_interaction_001"
+    ],
+    "existing_candidate_ids": [
+      "candidate_markdown_batch_001_pattern_strength_001",
+      "candidate_markdown_batch_001_ten_god_relation_001",
+      "candidate_markdown_batch_001_branch_interaction_001"
+    ],
+    "source_batch_status": "source_batch_001 converted_cleaned_ready_for_extraction",
+    "rationale": "Already represented by Markdown source batch 001 and existing learning/candidate planning.",
+    "guardrails": [
+      "Reuse existing batch metadata instead of creating duplicate source registration."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "liang_zipping_textbook_level1",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体 梁湘润《子平教材讲义第一级次》ce.pdf",
+    "title_label": "Liang Ziping Textbook Lecture Level One",
+    "selection_status": "existing_batch_covered",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "no_action",
+    "source_library_entry_id": "entry_markdown_source_batch_002_core",
+    "source_material_id": "material_markdown_source_batch_002_core",
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_002_ten_god_relation_001"
+    ],
+    "existing_candidate_ids": [
+      "candidate_markdown_batch_002_ten_god_relation_001"
+    ],
+    "source_batch_status": "source_batch_002 converted_cleaned_ready_for_extraction",
+    "rationale": "Already grouped in Markdown source batch 002 core; keep as covered source context.",
+    "guardrails": [
+      "Use existing batch 002 review path before any individual extraction."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "liang_zipping_textbook_level2",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体《子平教材讲义第二级次》梁湘润(1).pdf",
+    "title_label": "Liang Ziping Textbook Lecture Level Two",
+    "selection_status": "existing_batch_covered",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "no_action",
+    "source_library_entry_id": "entry_markdown_source_batch_002_core",
+    "source_material_id": "material_markdown_source_batch_002_core",
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_002_pattern_strength_001",
+      "lp_markdown_batch_002_useful_god_001"
+    ],
+    "existing_candidate_ids": [
+      "candidate_markdown_batch_002_pattern_strength_001",
+      "candidate_markdown_batch_002_useful_god_001"
+    ],
+    "source_batch_status": "source_batch_002 converted_cleaned_ready_for_extraction",
+    "rationale": "Already represented by batch 002 pattern-strength and useful-god learning points.",
+    "guardrails": [
+      "Avoid duplicate source selection unless a future locator gap requires it."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "liang_zipping_mother_luck_cycle",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体《子平母法—大流年判例》梁湘润(1).pdf",
+    "title_label": "Liang Ziping Mother Method Luck-Cycle Cases",
+    "selection_status": "existing_batch_covered",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "no_action",
+    "source_library_entry_id": "entry_markdown_source_batch_002_core",
+    "source_material_id": "material_markdown_source_batch_002_core",
+    "target_rule_families": [
+      "luck_cycle"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_002_luck_cycle_001"
+    ],
+    "existing_candidate_ids": [
+      "candidate_markdown_batch_002_luck_cycle_001"
+    ],
+    "source_batch_status": "source_batch_002 converted_cleaned_ready_for_extraction",
+    "rationale": "Already covered by batch 002 luck-cycle planning and does not need a new selection slot.",
+    "guardrails": [
+      "Keep timing language conditional and non-predictive in any future use."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "liang_shen_useful_god_examples",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体《沈氏用神例解》梁湘润(精校)(1).pdf",
+    "title_label": "Liang Shen Useful-God Examples",
+    "selection_status": "existing_batch_covered",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "no_action",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_material_id": "material_markdown_source_batch_004",
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_004_pattern_strength_001",
+      "lp_markdown_batch_004_useful_god_001"
+    ],
+    "existing_candidate_ids": [
+      "candidate_markdown_batch_004_pattern_strength_001",
+      "candidate_markdown_batch_004_useful_god_001"
+    ],
+    "source_batch_status": "source_batch_004 converted_cleaned_ready_for_extraction",
+    "rationale": "Already covered by batch 004 advanced pattern and useful-god planning.",
+    "guardrails": [
+      "Do not treat one useful-god system as universally decisive."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "liang_yuanhai_preference_notes",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体《渊海喜忌随笔》梁湘润(1).pdf",
+    "title_label": "Liang Yuanhai Preference Notes",
+    "selection_status": "existing_batch_covered",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "no_action",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_material_id": "material_markdown_source_batch_004",
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_004_pattern_strength_001",
+      "lp_markdown_batch_004_useful_god_001"
+    ],
+    "existing_candidate_ids": [
+      "candidate_markdown_batch_004_pattern_strength_001",
+      "candidate_markdown_batch_004_useful_god_001"
+    ],
+    "source_batch_status": "source_batch_004 converted_cleaned_ready_for_extraction",
+    "rationale": "Already anchors batch 004 learning points for preference and useful-god comparison.",
+    "guardrails": [
+      "Keep system-dependent interpretation explicit in future learning notes."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "liang_flow_year_codex",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体《流年法典》梁湘润_(1).pdf",
+    "title_label": "Liang Flow-Year Codex",
+    "selection_status": "existing_batch_covered",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "no_action",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_material_id": "material_markdown_source_batch_004",
+    "target_rule_families": [
+      "luck_cycle"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_004_luck_cycle_001"
+    ],
+    "existing_candidate_ids": [
+      "candidate_markdown_batch_004_luck_cycle_001"
+    ],
+    "source_batch_status": "source_batch_004 converted_cleaned_needs_high_risk_review",
+    "rationale": "Already covered by batch 004 luck-cycle planning; no new source registration needed.",
+    "guardrails": [
+      "Use only conditional structural timing language after risk review."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "liang_four_corner_full",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体《四角方阵刑冲合会透解》梁湘润2024(1).pdf",
+    "title_label": "Liang Four-Corner Formation Full Text",
+    "selection_status": "existing_batch_covered",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "no_action",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_material_id": "material_markdown_source_batch_004",
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_004_branch_interaction_001"
+    ],
+    "existing_candidate_ids": [
+      "candidate_markdown_batch_004_branch_interaction_001"
+    ],
+    "source_batch_status": "source_batch_004 converted_cleaned_sensitive_review",
+    "rationale": "Already covered by batch 004 branch-interaction candidate planning.",
+    "guardrails": [
+      "Treat four-corner formation as school-specific structural taxonomy."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "liang_tianyuan_wuxian_commentary",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体 梁湘润《天元巫咸经》注释.pdf",
+    "title_label": "Liang Tianyuan Wuxian Commentary",
+    "selection_status": "ready_for_individual_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "review_cleaned_text",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_material_id": "material_markdown_source_batch_004",
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_004_pattern_strength_001"
+    ],
+    "existing_candidate_ids": [
+      "candidate_markdown_batch_004_pattern_strength_001"
+    ],
+    "source_batch_status": "source_batch_004 converted_cleaned_sensitive_review",
+    "rationale": "Mentioned in batch 004 pattern planning but not yet isolated as an individual review surface.",
+    "guardrails": [
+      "Review cleaned text boundaries before drafting a new learning note."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "liang_yushi_yongshen_ciyuan",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体《余氏用神辞渊》梁湘润(1).pdf",
+    "title_label": "Liang Yu Useful-God Ciyuan",
+    "selection_status": "ready_for_individual_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "review_cleaned_text",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_material_id": "material_markdown_source_batch_004",
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_004_useful_god_001"
+    ],
+    "existing_candidate_ids": [
+      "candidate_markdown_batch_004_useful_god_001"
+    ],
+    "source_batch_status": "source_batch_004 converted_cleaned_ready_for_extraction",
+    "rationale": "Mentioned in batch 004 useful-god comparison and ready for individual review.",
+    "guardrails": [
+      "Keep useful-god differences framed as system-dependent candidates."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "liang_four_corner_digest",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体 梁师《四角方阵刑冲合会透解》撮要-ce.pdf",
+    "title_label": "Liang Four-Corner Formation Digest",
+    "selection_status": "variant_review_required",
+    "risk_boundary": "sensitive",
+    "recommended_next_action": "clarify_identity",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_material_id": "material_markdown_source_batch_004",
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_004_branch_interaction_001"
+    ],
+    "existing_candidate_ids": [
+      "candidate_markdown_batch_004_branch_interaction_001"
+    ],
+    "source_batch_status": "source_batch_004 converted_cleaned_sensitive_review",
+    "rationale": "Likely digest or edition variant of the full four-corner source; identity review should precede use.",
+    "guardrails": [
+      "Do not create a duplicate learning point until variant status is resolved."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "liang_female_destiny_detail",
+    "triage_group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "relative_path": "梁湘润简体/简体《女命详解附女命通会》-梁湘润(1).pdf",
+    "title_label": "Liang Female Destiny Detail",
+    "selection_status": "sensitive_boundary_deferred",
+    "risk_boundary": "sensitive",
+    "recommended_next_action": "risk_review",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_material_id": "material_markdown_source_batch_004",
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "existing_learning_reference_ids": [
+      "lp_markdown_batch_004_useful_god_001"
+    ],
+    "existing_candidate_ids": [],
+    "source_batch_status": "source_batch_004 converted_cleaned_sensitive_review",
+    "rationale": "Gendered relationship material needs sensitive-language review before any learning use.",
+    "guardrails": [
+      "Avoid deterministic gender or relationship claims.",
+      "Keep outside individual review until boundary wording is prepared."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  }
+]

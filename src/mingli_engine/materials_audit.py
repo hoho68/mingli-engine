@@ -34,6 +34,8 @@ from mingli_engine.models import (
     PreparationReadinessFinding,
     RawTextMaterialTriageGroup,
     RawTextMaterialTriageSummary,
+    RawTextSourceSelectionItem,
+    RawTextSourceSelectionSummary,
     RISK_TIERS,
     RULE_FAMILIES,
     SOURCE_LIBRARY_PRIORITY_LEVELS,
@@ -104,6 +106,11 @@ EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS = ("queue_raw_text_materials_folder_triage
 EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY = "015-raw-text-materials-folder-risk-triage"
 RAW_TEXT_TRIAGE_SOURCE_ROOT = "资料原文/文本类/"
 RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY = "015-liang-bazi-core-source-selection"
+RAW_TEXT_SOURCE_SELECTION_ID = "015-liang-bazi-core-source-selection"
+RAW_TEXT_SOURCE_SELECTION_TRIAGE_GROUP_ID = "raw_text_triage_liang_bazi_core"
+RAW_TEXT_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY = (
+    "015-liang-bazi-core-individual-review"
+)
 RAW_TEXT_TRIAGE_STATUSES = frozenset(
     {
         "source_selection_ready",
@@ -116,6 +123,14 @@ RAW_TEXT_TRIAGE_STATUSES = frozenset(
 )
 RAW_TEXT_TRIAGE_DEFERRED_STATUSES = frozenset(
     {"deferred_domain_review", "deferred_non_text", "deferred_unclassified"}
+)
+RAW_TEXT_SOURCE_SELECTION_STATUSES = frozenset(
+    {
+        "existing_batch_covered",
+        "ready_for_individual_review",
+        "variant_review_required",
+        "sensitive_boundary_deferred",
+    }
 )
 
 
@@ -948,6 +963,109 @@ def load_raw_text_material_triage_groups(
     return groups
 
 
+def _raw_text_source_selection_item_from_dict(
+    data: dict[str, Any],
+    source_entries_by_id: dict[str, source_library.SourceLibraryEntry],
+) -> RawTextSourceSelectionItem:
+    try:
+        item = RawTextSourceSelectionItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid raw text source selection item: {error}"
+        ) from error
+
+    owner_id = item.selection_id or "?"
+    for field_name in (
+        "selection_id",
+        "triage_group_id",
+        "source_root",
+        "relative_path",
+        "title_label",
+        "selection_status",
+        "risk_boundary",
+        "recommended_next_action",
+        "source_library_entry_id",
+        "source_material_id",
+        "source_batch_status",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+
+    if item.triage_group_id != RAW_TEXT_SOURCE_SELECTION_TRIAGE_GROUP_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid triage_group_id")
+    if item.source_root != RAW_TEXT_TRIAGE_SOURCE_ROOT:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_root")
+    if not item.relative_path.startswith("梁湘润简体/"):
+        raise MaterialsAuditError(f"{owner_id} has invalid relative_path")
+    _validate_enum(
+        item.selection_status,
+        RAW_TEXT_SOURCE_SELECTION_STATUSES,
+        "selection_status",
+        owner_id,
+    )
+    _validate_enum(item.risk_boundary, RISK_TIERS, "risk_boundary", owner_id)
+    _validate_enum(
+        item.recommended_next_action,
+        MATERIAL_AUDIT_ACTIONS,
+        "recommended_next_action",
+        owner_id,
+    )
+    if item.source_library_entry_id not in source_entries_by_id:
+        raise MaterialsAuditError(
+            f"{owner_id} references unknown source-library entry: "
+            f"{item.source_library_entry_id}"
+        )
+    source_entry = source_entries_by_id[item.source_library_entry_id]
+    if source_entry.material_id != item.source_material_id:
+        raise MaterialsAuditError(f"{owner_id} has mismatched source_material_id")
+
+    for field_name in (
+        "target_rule_families",
+        "existing_learning_reference_ids",
+        "existing_candidate_ids",
+        "guardrails",
+    ):
+        _require_string_list(getattr(item, field_name), field_name, owner_id)
+    for rule_family in item.target_rule_families:
+        if rule_family not in RULE_FAMILIES:
+            raise MaterialsAuditError(
+                f"{owner_id} has unsupported rule_family: {rule_family}"
+            )
+
+    if item.selection_status == "ready_for_individual_review":
+        if item.recommended_next_action != "review_cleaned_text":
+            raise MaterialsAuditError(
+                f"{owner_id} ready selection must review cleaned text"
+            )
+    if item.selection_status == "variant_review_required":
+        if item.recommended_next_action != "clarify_identity":
+            raise MaterialsAuditError(
+                f"{owner_id} variant selection must clarify identity"
+            )
+    if item.selection_status == "sensitive_boundary_deferred":
+        if item.recommended_next_action not in {"risk_review", "defer"}:
+            raise MaterialsAuditError(
+                f"{owner_id} sensitive selection must stay behind boundary review"
+            )
+
+    return item
+
+
+def load_raw_text_source_selection_items(
+    data_dir: Path | str | None = None,
+) -> list[RawTextSourceSelectionItem]:
+    source_dir = _data_dir(data_dir)
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    items = [
+        _raw_text_source_selection_item_from_dict(item, source_entries_by_id)
+        for item in _read_optional_json_list(
+            source_dir / "raw_text_source_selection_items.json"
+        )
+    ]
+    _ensure_unique([item.selection_id for item in items], "selection_id")
+    return items
+
+
 def _count_values(values: list[str]) -> dict[str, int]:
     return dict(Counter(values))
 
@@ -1369,6 +1487,145 @@ def render_raw_text_material_triage_markdown(
     return "\n".join(lines) + "\n"
 
 
+def _count_rule_families(items: list[RawTextSourceSelectionItem]) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    for item in items:
+        counts.update(item.target_rule_families)
+    return dict(sorted(counts.items()))
+
+
+def build_raw_text_source_selection_summary(
+    data_dir: Path | str | None = None,
+) -> RawTextSourceSelectionSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_raw_text_source_selection_items(source_dir)
+    groups_by_id = {
+        group.group_id: group for group in load_raw_text_material_triage_groups(source_dir)
+    }
+    triage_group = groups_by_id.get(RAW_TEXT_SOURCE_SELECTION_TRIAGE_GROUP_ID)
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    existing_source_batches_preserved = bool(items) and all(
+        item.source_library_entry_id in source_entries_by_id
+        and source_entries_by_id[item.source_library_entry_id].material_id
+        == item.source_material_id
+        for item in items
+    )
+    boundary_checks = {
+        "selection_items_loaded": "passed" if items else "failed",
+        "triage_group_loaded": "passed" if triage_group else "failed",
+        "triage_group_file_count_matched": (
+            "passed"
+            if triage_group and len(items) == triage_group.file_count
+            else "failed"
+        ),
+        "existing_source_batches_preserved": (
+            "passed" if existing_source_batches_preserved else "failed"
+        ),
+        "raw_materials_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+    selected_item_ids = [
+        item.selection_id
+        for item in items
+        if item.selection_status == "ready_for_individual_review"
+    ]
+    deferred_item_ids = [
+        item.selection_id
+        for item in items
+        if item.selection_status
+        in {"variant_review_required", "sensitive_boundary_deferred"}
+    ]
+    status_counts = _count_values([item.selection_status for item in items])
+
+    return RawTextSourceSelectionSummary(
+        selection_id=RAW_TEXT_SOURCE_SELECTION_ID,
+        selection_status=(
+            "source_selection_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "source_selection_needs_attention"
+        ),
+        triage_group_id=RAW_TEXT_SOURCE_SELECTION_TRIAGE_GROUP_ID,
+        source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
+        source_selection_item_count=len(items),
+        selected_for_individual_review_count=len(selected_item_ids),
+        existing_batch_covered_count=status_counts.get("existing_batch_covered", 0),
+        variant_review_required_count=status_counts.get(
+            "variant_review_required", 0
+        ),
+        sensitive_boundary_deferred_count=status_counts.get(
+            "sensitive_boundary_deferred", 0
+        ),
+        status_counts=status_counts,
+        risk_boundary_counts=_count_values([item.risk_boundary for item in items]),
+        target_rule_family_counts=_count_rule_families(items),
+        selected_item_ids=selected_item_ids,
+        deferred_item_ids=deferred_item_ids,
+        downstream_mutation_authorized=False,
+        next_material_entry=RAW_TEXT_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Source selection uses inventory labels and existing project metadata only.",
+            "Existing Markdown source batches 001, 002, and 004 stay authoritative.",
+            "Ready items require individual cleaned-text review before learning-note work.",
+            "Variant and sensitive items stay out of 013/012 until separately reviewed.",
+        ],
+    )
+
+
+def render_raw_text_source_selection_markdown(
+    summary: RawTextSourceSelectionSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Liang Bazi Core Source Selection",
+        "",
+        f"- Selection id: `{summary.selection_id}`",
+        f"- `source-selection-status={summary.selection_status}`",
+        f"- `source-selection-items={summary.source_selection_item_count}`",
+        f"- `existing-batch-covered={summary.existing_batch_covered_count}`",
+        (
+            "- `selected-for-individual-review="
+            f"{summary.selected_for_individual_review_count}`"
+        ),
+        f"- `variant-review-required={summary.variant_review_required_count}`",
+        (
+            "- `sensitive-boundary-deferred="
+            f"{summary.sensitive_boundary_deferred_count}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Status counts:",
+    ]
+    lines.extend(
+        f"- `{status}`: `{count}`"
+        for status, count in summary.status_counts.items()
+    )
+    lines.extend(["", "Selected individual review items:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.selected_item_ids)
+    lines.extend(["", "Deferred or review-gated items:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.deferred_item_ids)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_materials_audit_queue_refresh_summary(
     data_dir: Path | str | None = None,
     *,
@@ -1399,6 +1656,7 @@ def build_materials_audit_queue_refresh_summary(
     uncovered_queue_item_ids = [item.queue_item_id for item in uncovered_items]
     refreshed_next_action_ids = _select_next_queue_item_ids(uncovered_items)
     all_queue_items_covered = not uncovered_queue_item_ids and bool(queue_items)
+    source_selection_ready = bool(load_raw_text_source_selection_items(source_dir))
 
     return MaterialQueueRefreshSummary(
         refresh_id="015-materials-audit-next-action-queue-refresh",
@@ -1424,7 +1682,11 @@ def build_materials_audit_queue_refresh_summary(
         refreshed_next_action_ids=refreshed_next_action_ids,
         downstream_mutation_authorized=False,
         next_material_entry=(
-            RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY
+            RAW_TEXT_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY
+            if all_queue_items_covered
+            and locally_completed_queue_item_ids
+            and source_selection_ready
+            else RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY
             if all_queue_items_covered and locally_completed_queue_item_ids
             else (
                 EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY
@@ -1589,6 +1851,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         readiness = load_preparation_readiness_findings(source_dir)
         queue_items = load_extraction_queue_items(source_dir)
         raw_text_triage_groups = load_raw_text_material_triage_groups(source_dir)
+        raw_text_source_selection_items = load_raw_text_source_selection_items(
+            source_dir
+        )
     except MaterialsAuditError as error:
         return [str(error)]
 
@@ -1600,6 +1865,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         readiness,
         queue_items,
         raw_text_triage_groups,
+        raw_text_source_selection_items,
     ):
         if not value:
             continue
@@ -1627,6 +1893,7 @@ def _iter_quality_text_fields(
     readiness: list[PreparationReadinessFinding],
     queue_items: list[ExtractionQueueItem],
     raw_text_triage_groups: list[RawTextMaterialTriageGroup],
+    raw_text_source_selection_items: list[RawTextSourceSelectionItem],
 ) -> list[tuple[str, str, str]]:
     fields: list[tuple[str, str, str]] = []
     for record in records:
@@ -1686,4 +1953,16 @@ def _iter_quality_text_fields(
             )
         )
         fields.extend((group.group_id, "guardrails", item) for item in group.guardrails)
+    for item in raw_text_source_selection_items:
+        fields.extend(
+            (
+                (item.selection_id, "title_label", item.title_label),
+                (item.selection_id, "rationale", item.rationale),
+                (item.selection_id, "source_batch_status", item.source_batch_status),
+            )
+        )
+        fields.extend(
+            (item.selection_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
     return fields
