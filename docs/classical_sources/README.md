@@ -7,6 +7,13 @@ Runtime report generation does not parse PDFs or Markdown extracts directly.
 Only curated JSON files under `src/mingli_engine/data/classical_sources/` are
 loaded by the engine.
 
+## Current Handoff
+
+For the current new-material reading and learning closure state, start with
+[new_material_learning_handoff.md](new_material_learning_handoff.md). It links
+the completed source-window learning closure, 017 learning-reference sync, and
+candidate/formal evidence boundary audit into one continuation entrypoint.
+
 ## Preparation Materials
 
 Root-level PDF files and the root `Markdown/` directory are user-provided

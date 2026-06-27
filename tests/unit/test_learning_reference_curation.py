@@ -1752,3 +1752,49 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         "`learning-closure-source-refs-in-012=0`",
     ):
         assert marker in overview
+
+
+def test_new_material_learning_handoff_tracks_final_state():
+    closure_counts = _source_window_learning_closure_counts()
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    promotion_batches = source_intake.load_promotion_batches()
+    evidence_units = classical_sources.load_evidence_units()
+
+    handoff_path = Path("docs/classical_sources/new_material_learning_handoff.md")
+    assert handoff_path.exists()
+    handoff = handoff_path.read_text(encoding="utf-8")
+    readme = Path("docs/classical_sources/README.md").read_text(encoding="utf-8")
+
+    assert "[new_material_learning_handoff.md](new_material_learning_handoff.md)" in readme
+    for marker in (
+        "New Material Learning Handoff",
+        "Completed Checkpoints",
+        "Current Frozen Snapshot",
+        "Continuation Entry Points",
+        "Remaining Optional Precision Work",
+        "Next Long Goal",
+        "Guardrails",
+        "`source-window-review-note-items=57`",
+        "`page-locators=44`",
+        "`chapter-locators=11`",
+        f"`selected-ready-learning-notes={len(summary.selected_task_ids)}`",
+        f"`next_action_ids={len(summary.next_action_ids)}`",
+        f"`retained-chapter-learning-closed={sum(closure_counts.values())}`",
+        f"`learning-paraphrase-ready={closure_counts['learning-paraphrase-ready']}`",
+        f"`policy-boundary-retained={closure_counts['policy-boundary-retained']}`",
+        f"`safety-boundary-retained={closure_counts['safety-boundary-retained']}`",
+        f"`017-applied-decisions={summary.decision_counts['status:applied']}`",
+        f"`017-create-candidate-decisions={summary.decision_counts['create_candidate']}`",
+        f"`013-candidate-extracts={len(candidates)}`",
+        f"`013-review-decisions={len(reviews)}`",
+        f"`013-promotion-batches={len(promotion_batches)}`",
+        f"`012-formal-evidence-units={len(evidence_units)}`",
+        f"`formal_evidence_delta={summary.formal_evidence_delta}`",
+        "`next-new-material-start=015-materials-audit-next-action-queue`",
+        "Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`",
+        "Do not create candidates, review decisions, promotion batches, or formal evidence unless explicitly requested",
+        "Do not push remote work from this handoff",
+    ):
+        assert marker in handoff
