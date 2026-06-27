@@ -1,4 +1,6 @@
 import json
+from collections import Counter
+import re
 import shutil
 import time
 from pathlib import Path
@@ -16,10 +18,25 @@ CONTEXT_DATA_DIRS = (
     "source_library",
     "source_intake",
 )
+SOURCE_WINDOW_CLOSURE_EXTRACTS = (
+    Path("docs/classical_sources/extracts/duan_plain_mingxue_outline.md"),
+    Path("docs/classical_sources/extracts/fortune_reading_hongfu_qitian.md"),
+    Path("docs/classical_sources/extracts/northeast_blind_peak.md"),
+)
 
 
 def _write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+
+def _source_window_learning_closure_counts() -> dict[str, int]:
+    closure_counts: Counter[str] = Counter()
+    for extract_path in SOURCE_WINDOW_CLOSURE_EXTRACTS:
+        extract = extract_path.read_text(encoding="utf-8")
+        closure_counts.update(
+            re.findall(r"Learning closure note: `learning-closure:([^;`]+)", extract)
+        )
+    return dict(closure_counts)
 
 
 def _write_learning_reference_fixture(
@@ -1582,3 +1599,52 @@ def test_learning_reference_summary_includes_prerequisite_action_counts():
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
     ]
+
+
+def test_learning_reference_docs_track_source_window_learning_closure_sync():
+    closure_counts = _source_window_learning_closure_counts()
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+
+    assert closure_counts == {
+        "learning-paraphrase-ready": 4,
+        "policy-boundary-retained": 5,
+        "safety-boundary-retained": 2,
+    }
+    assert len(summary.selected_task_ids) == 14
+    assert summary.formal_evidence_delta == 0
+    assert summary.next_action_ids == [
+        "note_northeast_blind_peak_001",
+        "note_mingli_true_formula_teacher_001",
+        "note_duan_plain_mingxue_outline_001",
+        "note_mingxue_golden_voice_001",
+        "note_fortune_reading_hongfu_qitian_001",
+        "note_markdown_batch_002_useful_god_001",
+        "note_markdown_batch_001_pattern_strength_001",
+        "action_blind_life_manual_risk_review_001",
+        "action_immortal_fortune_jianghu_secret_risk_review_001",
+        "action_life_death_book_100_pages_risk_review_001",
+    ]
+    assert "action_blind_school_secret_blocked_001" not in summary.next_action_ids
+    assert "action_markdown_batch_003_registration_001" not in summary.next_action_ids
+    assert "action_source_processing_status_deferred_001" not in summary.next_action_ids
+
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for document in (overview, quickstart):
+        assert "Source-Window Learning Closure Sync" in document
+        assert "`selected-ready-learning-notes=14`" in document
+        assert "`retained-chapter-learning-closed=11`" in document
+        assert "`learning-paraphrase-ready=4`" in document
+        assert "`policy-boundary-retained=5`" in document
+        assert "`safety-boundary-retained=2`" in document
+        assert "`next_action_ids=10`" in document
+        assert "`planned-risk-review-actions=3`" in document
+        assert "`formal_evidence_delta=0`" in document
+        assert "No new candidate-intake decisions" in document
+        assert "no 013 candidate extracts" in document
+        assert "no promotion batches" in document

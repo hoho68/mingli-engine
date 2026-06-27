@@ -175,6 +175,34 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 - Next action ids: seven draft notes plus planned risk-review actions for
   Blind Life Manual, Immortal Fortune Jianghu Secret, and Life Death Book.
 
+## Source-Window Learning Closure Sync
+
+The 2026-06-27 source-window learning-closure pass is now reflected in the
+017 maintainer snapshot without changing 017 data schemas or promotion state.
+
+- `selected-ready-learning-notes=14`: the 14 ready items remain selected 016
+  extraction tasks and 017 learning reference notes. Here "ready" means ready
+  as learning-reference input, not automatically ready for formal evidence.
+- `retained-chapter-learning-closed=11`: retained chapter-level source windows
+  now have explicit learning-closure notes in the extract Markdown.
+- `learning-paraphrase-ready=4`: Duan retained chapter windows can be used as
+  short paraphrase learning notes; targeted transcription is only needed before
+  exact quotation, page-level proof, or future promotion.
+- `policy-boundary-retained=5`: Hongfu remedy-boundary windows stay as policy
+  paraphrase material and must not be promoted without human transcription.
+- `safety-boundary-retained=2`: Northeast risk-boundary windows stay as safety
+  paraphrase material unless a source-specific boundary page is identified.
+- `next_action_ids=10`: the seven draft note ids remain maintainer review
+  handles, and the three planned risk-review prerequisite actions remain the
+  only active prerequisite handles in the progress summary.
+- `planned-risk-review-actions=3`: Blind Life Manual, Immortal Fortune Jianghu
+  Secret, and Life Death Book remain planned risk-review prerequisite work.
+- `formal_evidence_delta=0`: No new candidate-intake decisions, no 013 candidate extracts, no review decisions, no promotion batches, and no formal evidence are created by this sync.
+
+Blocked or deferred prerequisite records remain outside `next_action_ids`.
+The retained source-window closures only clarify learning/reference use and
+future optional transcription boundaries.
+
 ## Phase C Source Disposition Snapshot
 
 The current 016/017 package consumes 14 selected extraction tasks as learning

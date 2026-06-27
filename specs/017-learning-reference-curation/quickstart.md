@@ -53,6 +53,32 @@ Expected result after implementation:
   intake. The 017 metadata itself still has `formal_evidence_delta=0`; formal
   report evidence comes only from reviewed evidence units.
 
+## Source-Window Learning Closure Sync
+
+The source-window learning-closure pass is an operational sync for maintainer
+review, not a candidate or evidence promotion step.
+
+- `selected-ready-learning-notes=14`: the 14 ready items remain selected 016
+  extraction tasks and 017 learning reference notes. This means
+  learning-reference input readiness, not automatic formal-evidence readiness.
+- `retained-chapter-learning-closed=11`: retained chapter-level source windows
+  now have explicit learning-closure notes in the extract Markdown.
+- `learning-paraphrase-ready=4`: Duan retained chapter windows can be used as
+  short paraphrase learning notes. Future transcription is optional unless
+  exact quotation, page-level proof, or promotion is needed.
+- `policy-boundary-retained=5`: Hongfu remedy-boundary windows stay as policy
+  paraphrase material and must not be promoted without human transcription.
+- `safety-boundary-retained=2`: Northeast risk-boundary windows stay as safety
+  paraphrase material unless a source-specific boundary page is identified.
+- `next_action_ids=10`: retained chapter closures do not remove the seven
+  draft-note maintainer handles from `next_action_ids`; the three planned
+  risk-review prerequisite actions remain the only active prerequisite handles.
+- `planned-risk-review-actions=3`: Blind Life Manual, Immortal Fortune Jianghu
+  Secret, and Life Death Book remain planned risk-review prerequisite work.
+- `formal_evidence_delta=0`: No new candidate-intake decisions, no 013 candidate extracts, no review decisions, no promotion batches, and no formal evidence are created by this sync.
+
+Blocked and deferred prerequisite records remain outside `next_action_ids`.
+
 Run focused learning reference curation tests:
 
 ```powershell
