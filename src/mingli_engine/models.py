@@ -2673,6 +2673,7 @@ class MaterialQueueRefreshSummary:
     next_material_entry: str
     boundary_checks: dict[str, str]
     covered_queue_item_ids: list[str] = field(default_factory=list)
+    locally_completed_queue_item_ids: list[str] = field(default_factory=list)
     guardrails: list[str] = field(default_factory=list)
 
 
@@ -2687,6 +2688,47 @@ class ExternalMaterialInventoryRefreshSummary:
     excluded_work_artifact_ids: list[str]
     newly_registered_representation_ids: list[str]
     new_queue_item_ids: list[str]
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class RawTextMaterialTriageGroup:
+    group_id: str
+    source_root: str
+    group_label: str
+    triage_status: str
+    risk_boundary: str
+    file_count: int
+    priority_text_candidate_count: int
+    extension_counts: dict[str, int]
+    recommended_next_action: str
+    target_rule_families: list[str] = field(default_factory=list)
+    filename_markers: list[str] = field(default_factory=list)
+    representative_paths: list[str] = field(default_factory=list)
+    next_material_entry: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextMaterialTriageSummary:
+    triage_id: str
+    triage_status: str
+    source_root: str
+    total_file_count: int
+    priority_text_candidate_count: int
+    triage_group_count: int
+    triage_status_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    extension_counts: dict[str, int]
+    next_group_ids: list[str]
+    risk_review_group_ids: list[str]
+    deferred_group_ids: list[str]
     downstream_mutation_authorized: bool
     next_material_entry: str
     boundary_checks: dict[str, str]

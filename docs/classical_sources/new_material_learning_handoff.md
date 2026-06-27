@@ -8,7 +8,7 @@ source-window locator review, learning-closure pass, 017 sync, draft
 learning-note closure, candidate/formal evidence boundary audit, and
 authorization audit packet, plus the Markdown Batch 005 risk-review routing
 pass, risk-review prerequisite sweep, 015 queue refresh, and external material
-inventory refresh.
+inventory refresh, and raw text materials folder risk triage.
 
 ## Completed Checkpoints
 
@@ -39,6 +39,10 @@ inventory refresh.
   Markdown extract and the raw text corpus triage backlog:
   `external-inventory-status=scoped_metadata_registered`,
   `new-015-representations=2`, `new-015-queue-items=1`.
+- 015 raw text materials folder risk triage split `资料原文/文本类/` into 11
+  exclusive inventory-level groups: `raw-text-total-files=1139`,
+  `raw-text-priority-candidates=832`, `risk-review-groups=3`,
+  `deferred-groups=6`.
 
 Primary detailed references:
 
@@ -53,6 +57,7 @@ Primary detailed references:
 - [2026-06-27-learning-reference-authorization-audit.md](../superpowers/plans/2026-06-27-learning-reference-authorization-audit.md)
 - [2026-06-27-015-queue-refresh.md](../superpowers/plans/2026-06-27-015-queue-refresh.md)
 - [2026-06-27-external-material-inventory-refresh.md](../superpowers/plans/2026-06-27-external-material-inventory-refresh.md)
+- [2026-06-28-raw-text-materials-folder-risk-triage.md](../superpowers/plans/2026-06-28-raw-text-materials-folder-risk-triage.md)
 
 ## Current Frozen Snapshot
 
@@ -87,13 +92,14 @@ Authorization Audit Packet:
 
 015 Queue Refresh:
 
-- `queue-refresh-status=uncovered_queue_items_available`
+- `queue-refresh-status=covered_or_completed_queue_exhausted`
 - `015-queue-items=17`
 - `016-covered-queue-items=16`
-- `uncovered-queue-items=1`
-- `refreshed-next-action-ids=1`
+- `015-local-completed-queue-items=1`
+- `uncovered-queue-items=0`
+- `refreshed-next-action-ids=0`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-raw-text-materials-folder-risk-triage`
+- `next-material-entry=015-liang-bazi-core-source-selection`
 
 015 External Material Inventory Refresh:
 
@@ -105,6 +111,17 @@ Authorization Audit Packet:
 - `excluded-work-artifacts=3`
 - `downstream-mutation-authorized=false`
 - `next-material-entry=015-raw-text-materials-folder-risk-triage`
+
+015 Raw Text Materials Folder Risk Triage:
+
+- `raw-text-triage-status=triage_completed`
+- `raw-text-total-files=1139`
+- `raw-text-priority-candidates=832`
+- `raw-text-triage-groups=11`
+- `risk-review-groups=3`
+- `deferred-groups=6`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-liang-bazi-core-source-selection`
 
 013 and 012 boundary state:
 
@@ -125,12 +142,12 @@ Authorization Audit Packet:
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
 - `next-new-material-start=015-materials-audit-next-action-queue`.
-- Current 015 queue coverage has one newly uncovered local item:
-  `queue_raw_text_materials_folder_triage`. The original 16 queue ids are
-  present in 016 package snapshots, the 4 formerly planned risk-review
+- Current 015 queue coverage has no uncovered action after excluding 16
+  016-covered ids and the locally completed
+  `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
   prerequisite actions are completed, and 017 now has no active
   `next_action_ids`.
-- `next-material-entry=015-raw-text-materials-folder-risk-triage`.
+- `next-material-entry=015-liang-bazi-core-source-selection`.
 
 ## Remaining Optional Precision Work
 
@@ -147,10 +164,10 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-raw-text-materials-folder-risk-triage`. It should
-triage `资料原文/文本类/` at inventory level, split it into bounded source groups
-or deferral buckets, keep ritual-remedy/life-risk material behind safety
-review, and avoid 013/012 mutations unless separately authorized.
+`next-material-entry=015-liang-bazi-core-source-selection`. It should select a
+small source set from `raw_text_triage_liang_bazi_core`, create or adjust only
+015/014 planning metadata needed for source-library registration, and keep
+013/012 mutations blocked unless separately authorized.
 
 ## Guardrails
 

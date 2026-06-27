@@ -336,6 +336,38 @@ def test_materials_audit_dataclasses_construct_with_defaults():
 
     assert external_refresh.guardrails == []
 
+    triage_group = models.RawTextMaterialTriageGroup(
+        group_id="raw_text_triage_test",
+        source_root="资料原文/文本类/",
+        group_label="Test Group",
+        triage_status="source_selection_ready",
+        risk_boundary="ordinary",
+        file_count=1,
+        priority_text_candidate_count=1,
+        extension_counts={".pdf": 1},
+        recommended_next_action="register_source",
+    )
+    triage_summary = models.RawTextMaterialTriageSummary(
+        triage_id="015-raw-text-materials-folder-risk-triage",
+        triage_status="triage_completed",
+        source_root=triage_group.source_root,
+        total_file_count=1,
+        priority_text_candidate_count=1,
+        triage_group_count=1,
+        triage_status_counts={"source_selection_ready": 1},
+        risk_boundary_counts={"ordinary": 1},
+        extension_counts={".pdf": 1},
+        next_group_ids=[triage_group.group_id],
+        risk_review_group_ids=[],
+        deferred_group_ids=[],
+        downstream_mutation_authorized=False,
+        next_material_entry="015-next-source-selection",
+        boundary_checks={"013_012_not_mutated": "passed"},
+    )
+
+    assert triage_group.representative_paths == []
+    assert triage_summary.guardrails == []
+
 
 def test_read_json_list_reports_missing_invalid_and_non_array_payloads(tmp_path):
     with pytest.raises(materials_audit.MaterialsAuditError, match="missing data file"):
@@ -380,6 +412,9 @@ def test_public_materials_audit_functions_exist():
         "validate_materials_audit_quality",
         "build_external_material_inventory_refresh_summary",
         "render_external_material_inventory_refresh_markdown",
+        "load_raw_text_material_triage_groups",
+        "build_raw_text_material_triage_summary",
+        "render_raw_text_material_triage_markdown",
     ):
         assert callable(getattr(materials_audit, function_name))
 
@@ -1352,9 +1387,9 @@ def test_audit_progress_summary_includes_next_five_queue_items_and_backlog_count
     assert summary.next_action_ids == [
         "queue_northeast_blind_peak_extract",
         "queue_mingli_true_formula_teacher_extract",
-        "queue_raw_text_materials_folder_triage",
         "queue_markdown_source_batch_003_register",
         "queue_markdown_source_batch_004_prepare",
+        "queue_duan_plain_mingxue_outline_extract",
     ]
     assert summary.extraction_ready_count == 9
     assert summary.preparation_backlog_count == 0
@@ -1385,9 +1420,9 @@ def test_seeded_risk_review_sweep_marks_high_risk_queue_items_completed():
     assert summary.next_action_ids == [
         "queue_northeast_blind_peak_extract",
         "queue_mingli_true_formula_teacher_extract",
-        "queue_raw_text_materials_folder_triage",
         "queue_markdown_source_batch_003_register",
         "queue_markdown_source_batch_004_prepare",
+        "queue_duan_plain_mingxue_outline_extract",
     ]
 
 
@@ -1396,22 +1431,22 @@ def test_materials_audit_queue_refresh_excludes_covered_016_queue_items():
     refresh = materials_audit.build_materials_audit_queue_refresh_summary()
 
     assert refresh.refresh_id == "015-materials-audit-next-action-queue-refresh"
-    assert refresh.refresh_status == "uncovered_queue_items_available"
+    assert refresh.refresh_status == "covered_or_completed_queue_exhausted"
     assert refresh.queue_item_count == 17
     assert refresh.covered_queue_item_count == 16
-    assert refresh.uncovered_queue_item_ids == [
+    assert refresh.locally_completed_queue_item_ids == [
         "queue_raw_text_materials_folder_triage",
     ]
+    assert refresh.uncovered_queue_item_ids == []
     assert refresh.legacy_next_action_ids == summary.next_action_ids
-    assert refresh.refreshed_next_action_ids == [
-        "queue_raw_text_materials_folder_triage",
-    ]
+    assert refresh.refreshed_next_action_ids == []
     assert refresh.downstream_mutation_authorized is False
-    assert refresh.next_material_entry == "015-raw-text-materials-folder-risk-triage"
+    assert refresh.next_material_entry == "015-liang-bazi-core-source-selection"
     assert refresh.boundary_checks == {
         "015_queue_loaded": "passed",
         "016_coverage_loaded": "passed",
         "covered_items_excluded": "passed",
+        "completed_items_excluded": "passed",
         "013_012_not_mutated": "passed",
     }
 
@@ -1428,13 +1463,14 @@ def test_materials_audit_queue_refresh_markdown_and_docs_are_in_sync():
 
     for marker in (
         "015 Queue Refresh",
-        "`queue-refresh-status=uncovered_queue_items_available`",
+        "`queue-refresh-status=covered_or_completed_queue_exhausted`",
         "`015-queue-items=17`",
         "`016-covered-queue-items=16`",
-        "`uncovered-queue-items=1`",
-        "`refreshed-next-action-ids=1`",
+        "`015-local-completed-queue-items=1`",
+        "`uncovered-queue-items=0`",
+        "`refreshed-next-action-ids=0`",
         "`downstream-mutation-authorized=false`",
-        "`next-material-entry=015-raw-text-materials-folder-risk-triage`",
+        "`next-material-entry=015-liang-bazi-core-source-selection`",
     ):
         assert marker in markdown
         assert marker in materials_doc
@@ -1501,6 +1537,112 @@ def test_external_material_inventory_refresh_markdown_and_docs_are_in_sync():
         "`excluded-work-artifacts=3`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-raw-text-materials-folder-risk-triage`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_material_triage_groups_load_current_inventory_split():
+    groups = materials_audit.load_raw_text_material_triage_groups()
+    groups_by_id = {group.group_id: group for group in groups}
+
+    assert len(groups) == 11
+    assert sum(group.file_count for group in groups) == 1139
+    assert sum(group.priority_text_candidate_count for group in groups) == 832
+    assert groups_by_id["raw_text_triage_ritual_remedy_high_risk"].file_count == 428
+    assert groups_by_id["raw_text_triage_media_course_deferred"].file_count == 246
+    assert groups_by_id["raw_text_triage_bazi_general"].file_count == 184
+    assert groups_by_id["raw_text_triage_unclassified_deferred"].file_count == 150
+    assert groups_by_id["raw_text_triage_image_assets_deferred"].file_count == 52
+    assert groups_by_id["raw_text_triage_fengshui_geo"].file_count == 34
+    assert groups_by_id["raw_text_triage_qimen_dunjia"].file_count == 13
+    assert groups_by_id["raw_text_triage_liang_bazi_core"].file_count == 12
+    assert groups_by_id["raw_text_triage_ziwei_astrology"].file_count == 9
+    assert groups_by_id["raw_text_triage_blind_school_sensitive"].file_count == 8
+    assert groups_by_id["raw_text_triage_life_death_high_risk"].file_count == 3
+    assert groups_by_id["raw_text_triage_liang_bazi_core"].triage_status == (
+        "source_selection_ready"
+    )
+    assert groups_by_id["raw_text_triage_media_course_deferred"].triage_status == (
+        "deferred_non_text"
+    )
+    assert groups_by_id["raw_text_triage_life_death_high_risk"].risk_boundary == (
+        "high_risk"
+    )
+
+
+def test_raw_text_material_triage_summary_verifies_inventory_csv_counts():
+    summary = materials_audit.build_raw_text_material_triage_summary()
+
+    assert summary.triage_id == "015-raw-text-materials-folder-risk-triage"
+    assert summary.triage_status == "triage_completed"
+    assert summary.source_root == "资料原文/文本类/"
+    assert summary.total_file_count == 1139
+    assert summary.priority_text_candidate_count == 832
+    assert summary.triage_group_count == 11
+    assert summary.triage_status_counts == {
+        "risk_review_required": 3,
+        "deferred_non_text": 2,
+        "source_selection_backlog": 1,
+        "source_selection_ready": 1,
+        "deferred_domain_review": 3,
+        "deferred_unclassified": 1,
+    }
+    assert summary.risk_boundary_counts == {
+        "high_risk": 2,
+        "sensitive": 7,
+        "ordinary": 2,
+    }
+    assert summary.extension_counts[".pdf"] == 767
+    assert summary.extension_counts[".mp4"] == 218
+    assert summary.extension_counts[".flv"] == 28
+    assert summary.next_group_ids == ["raw_text_triage_liang_bazi_core"]
+    assert summary.risk_review_group_ids == [
+        "raw_text_triage_ritual_remedy_high_risk",
+        "raw_text_triage_blind_school_sensitive",
+        "raw_text_triage_life_death_high_risk",
+    ]
+    assert summary.deferred_group_ids == [
+        "raw_text_triage_media_course_deferred",
+        "raw_text_triage_image_assets_deferred",
+        "raw_text_triage_fengshui_geo",
+        "raw_text_triage_qimen_dunjia",
+        "raw_text_triage_ziwei_astrology",
+        "raw_text_triage_unclassified_deferred",
+    ]
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == "015-liang-bazi-core-source-selection"
+    assert summary.boundary_checks == {
+        "inventory_csv_loaded": "passed",
+        "triage_groups_cover_inventory": "passed",
+        "priority_candidates_accounted": "passed",
+        "non_text_media_deferred": "passed",
+        "raw_materials_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+
+def test_raw_text_material_triage_markdown_and_docs_are_in_sync():
+    summary = materials_audit.build_raw_text_material_triage_summary()
+    markdown = materials_audit.render_raw_text_material_triage_markdown(summary)
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Raw Text Materials Folder Risk Triage",
+        "`raw-text-triage-status=triage_completed`",
+        "`raw-text-total-files=1139`",
+        "`raw-text-priority-candidates=832`",
+        "`raw-text-triage-groups=11`",
+        "`risk-review-groups=3`",
+        "`deferred-groups=6`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-liang-bazi-core-source-selection`",
     ):
         assert marker in markdown
         assert marker in materials_doc

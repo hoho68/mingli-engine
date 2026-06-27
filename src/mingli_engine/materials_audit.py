@@ -1,6 +1,7 @@
 """Deterministic existing-materials audit loading and validation."""
 
 from collections import Counter
+import csv
 import json
 from pathlib import Path
 from typing import Any
@@ -31,6 +32,8 @@ from mingli_engine.models import (
     MaterialAuditRecord,
     MaterialRepresentation,
     PreparationReadinessFinding,
+    RawTextMaterialTriageGroup,
+    RawTextMaterialTriageSummary,
     RISK_TIERS,
     RULE_FAMILIES,
     SOURCE_LIBRARY_PRIORITY_LEVELS,
@@ -99,6 +102,21 @@ EXTERNAL_INVENTORY_NEW_REPRESENTATION_IDS = (
 )
 EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS = ("queue_raw_text_materials_folder_triage",)
 EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY = "015-raw-text-materials-folder-risk-triage"
+RAW_TEXT_TRIAGE_SOURCE_ROOT = "资料原文/文本类/"
+RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY = "015-liang-bazi-core-source-selection"
+RAW_TEXT_TRIAGE_STATUSES = frozenset(
+    {
+        "source_selection_ready",
+        "source_selection_backlog",
+        "risk_review_required",
+        "deferred_domain_review",
+        "deferred_non_text",
+        "deferred_unclassified",
+    }
+)
+RAW_TEXT_TRIAGE_DEFERRED_STATUSES = frozenset(
+    {"deferred_domain_review", "deferred_non_text", "deferred_unclassified"}
+)
 
 
 def _data_dir(data_dir: Path | str | None) -> Path:
@@ -826,6 +844,110 @@ def load_extraction_queue_items(
     return items
 
 
+def _require_non_negative_int(value: Any, field_name: str, owner_id: str) -> None:
+    if not isinstance(value, int) or value < 0:
+        raise MaterialsAuditError(f"{owner_id} has invalid {field_name}")
+
+
+def _require_count_mapping(value: Any, field_name: str, owner_id: str) -> None:
+    if not isinstance(value, dict) or not value:
+        raise MaterialsAuditError(f"{owner_id} has invalid {field_name}")
+    for key, count in value.items():
+        if not isinstance(key, str) or not key.strip():
+            raise MaterialsAuditError(f"{owner_id} has invalid {field_name}")
+        _require_non_negative_int(count, field_name, owner_id)
+
+
+def _raw_text_material_triage_group_from_dict(
+    data: dict[str, Any],
+) -> RawTextMaterialTriageGroup:
+    try:
+        group = RawTextMaterialTriageGroup(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid raw text material triage group: {error}"
+        ) from error
+
+    owner_id = group.group_id or "?"
+    for field_name in (
+        "group_id",
+        "source_root",
+        "group_label",
+        "triage_status",
+        "risk_boundary",
+        "recommended_next_action",
+        "rationale",
+    ):
+        _require_text(getattr(group, field_name), field_name, owner_id)
+
+    if group.source_root != RAW_TEXT_TRIAGE_SOURCE_ROOT:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_root")
+    _validate_enum(
+        group.triage_status,
+        RAW_TEXT_TRIAGE_STATUSES,
+        "triage_status",
+        owner_id,
+    )
+    _validate_enum(group.risk_boundary, RISK_TIERS, "risk_boundary", owner_id)
+    _validate_enum(
+        group.recommended_next_action,
+        MATERIAL_AUDIT_ACTIONS,
+        "recommended_next_action",
+        owner_id,
+    )
+    _require_non_negative_int(group.file_count, "file_count", owner_id)
+    _require_non_negative_int(
+        group.priority_text_candidate_count,
+        "priority_text_candidate_count",
+        owner_id,
+    )
+    _require_count_mapping(group.extension_counts, "extension_counts", owner_id)
+    if sum(group.extension_counts.values()) != group.file_count:
+        raise MaterialsAuditError(f"{owner_id} extension_counts do not sum to files")
+    if group.priority_text_candidate_count > group.file_count:
+        raise MaterialsAuditError(
+            f"{owner_id} priority_text_candidate_count exceeds file_count"
+        )
+    for field_name in (
+        "target_rule_families",
+        "filename_markers",
+        "representative_paths",
+        "guardrails",
+    ):
+        _require_string_list(getattr(group, field_name), field_name, owner_id)
+    for rule_family in group.target_rule_families:
+        if rule_family not in RULE_FAMILIES:
+            raise MaterialsAuditError(
+                f"{owner_id} has unsupported rule_family: {rule_family}"
+            )
+    if group.triage_status == "source_selection_ready" and not group.next_material_entry:
+        raise MaterialsAuditError(
+            f"{owner_id} source_selection_ready requires next_material_entry"
+        )
+    if group.triage_status == "risk_review_required":
+        risk_text = " ".join([group.rationale, *group.guardrails]).lower()
+        if "risk" not in risk_text and "boundary" not in risk_text:
+            raise MaterialsAuditError(
+                f"{owner_id} risk_review_required requires risk boundary rationale"
+            )
+
+    return group
+
+
+def load_raw_text_material_triage_groups(
+    data_dir: Path | str | None = None,
+) -> list[RawTextMaterialTriageGroup]:
+    source_dir = _data_dir(data_dir)
+    groups = [
+        _raw_text_material_triage_group_from_dict(item)
+        for item in _read_optional_json_list(
+            source_dir / "raw_text_material_triage_groups.json"
+        )
+    ]
+    _ensure_unique([group.group_id for group in groups], "group_id")
+    return groups
+
+
 def _count_values(values: list[str]) -> dict[str, int]:
     return dict(Counter(values))
 
@@ -1092,6 +1214,161 @@ def render_external_material_inventory_refresh_markdown(
     return "\n".join(lines) + "\n"
 
 
+def _inventory_csv_dir(workspace_root: Path | str | None = None) -> Path:
+    root = Path(workspace_root) if workspace_root is not None else _workspace_root()
+    return root / "资料整理" / "_inventory"
+
+
+def _read_csv_rows(path: Path) -> list[dict[str, str]]:
+    try:
+        with path.open(encoding="utf-8-sig", newline="") as handle:
+            return list(csv.DictReader(handle))
+    except FileNotFoundError as error:
+        raise MaterialsAuditError(f"missing inventory CSV: {path.name}") from error
+
+
+def _sum_extension_counts(
+    groups: list[RawTextMaterialTriageGroup],
+) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    for group in groups:
+        counts.update(group.extension_counts)
+    return dict(counts)
+
+
+def build_raw_text_material_triage_summary(
+    data_dir: Path | str | None = None,
+    *,
+    inventory_dir: Path | str | None = None,
+) -> RawTextMaterialTriageSummary:
+    groups = load_raw_text_material_triage_groups(data_dir)
+    csv_dir = Path(inventory_dir) if inventory_dir is not None else _inventory_csv_dir()
+    inventory_rows = _read_csv_rows(csv_dir / "inventory_all.csv")
+    priority_rows = _read_csv_rows(csv_dir / "priority_text_candidates.csv")
+
+    total_file_count = sum(group.file_count for group in groups)
+    priority_text_candidate_count = sum(
+        group.priority_text_candidate_count for group in groups
+    )
+    extension_counts = _sum_extension_counts(groups)
+    inventory_extension_counts = dict(
+        Counter((row.get("Extension") or "").lower() for row in inventory_rows)
+    )
+    non_text_group_extension_counts = Counter()
+    for group in groups:
+        if group.triage_status == "deferred_non_text":
+            non_text_group_extension_counts.update(group.extension_counts)
+    non_text_media_deferred = all(
+        non_text_group_extension_counts.get(extension, 0)
+        == inventory_extension_counts.get(extension, 0)
+        for extension in (".mp4", ".flv", ".jpg", ".png")
+    )
+    boundary_checks = {
+        "inventory_csv_loaded": (
+            "passed" if inventory_rows and priority_rows else "failed"
+        ),
+        "triage_groups_cover_inventory": (
+            "passed" if total_file_count == len(inventory_rows) else "failed"
+        ),
+        "priority_candidates_accounted": (
+            "passed"
+            if priority_text_candidate_count == len(priority_rows)
+            else "failed"
+        ),
+        "non_text_media_deferred": "passed" if non_text_media_deferred else "failed",
+        "raw_materials_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+    return RawTextMaterialTriageSummary(
+        triage_id="015-raw-text-materials-folder-risk-triage",
+        triage_status=(
+            "triage_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "triage_needs_attention"
+        ),
+        source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
+        total_file_count=total_file_count,
+        priority_text_candidate_count=priority_text_candidate_count,
+        triage_group_count=len(groups),
+        triage_status_counts=_count_values([group.triage_status for group in groups]),
+        risk_boundary_counts=_count_values([group.risk_boundary for group in groups]),
+        extension_counts=extension_counts,
+        next_group_ids=[
+            group.group_id
+            for group in groups
+            if group.triage_status == "source_selection_ready"
+        ],
+        risk_review_group_ids=[
+            group.group_id
+            for group in groups
+            if group.triage_status == "risk_review_required"
+        ],
+        deferred_group_ids=[
+            group.group_id
+            for group in groups
+            if group.triage_status in RAW_TEXT_TRIAGE_DEFERRED_STATUSES
+        ],
+        downstream_mutation_authorized=False,
+        next_material_entry=RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Raw text triage uses path labels and existing inventory CSV metadata only.",
+            "Non-text media and images stay deferred until a separate review workflow exists.",
+            "Ritual-remedy, life-death, and sensitive blind-school groups require risk review.",
+            "No 013 candidate, review, promotion, or 012 evidence mutation is authorized.",
+        ],
+    )
+
+
+def render_raw_text_material_triage_markdown(
+    summary: RawTextMaterialTriageSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Raw Text Materials Folder Risk Triage",
+        "",
+        f"- Triage id: `{summary.triage_id}`",
+        f"- `raw-text-triage-status={summary.triage_status}`",
+        f"- `raw-text-total-files={summary.total_file_count}`",
+        f"- `raw-text-priority-candidates={summary.priority_text_candidate_count}`",
+        f"- `raw-text-triage-groups={summary.triage_group_count}`",
+        f"- `risk-review-groups={len(summary.risk_review_group_ids)}`",
+        f"- `deferred-groups={len(summary.deferred_group_ids)}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Triage status counts:",
+    ]
+    lines.extend(
+        f"- `{status}`: `{count}`"
+        for status, count in summary.triage_status_counts.items()
+    )
+    lines.extend(["", "Risk boundary counts:"])
+    lines.extend(
+        f"- `{risk_boundary}`: `{count}`"
+        for risk_boundary, count in summary.risk_boundary_counts.items()
+    )
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_materials_audit_queue_refresh_summary(
     data_dir: Path | str | None = None,
     *,
@@ -1106,9 +1383,18 @@ def build_materials_audit_queue_refresh_summary(
         else _load_covered_queue_item_ids(source_dir)
     )
     covered_id_set = set(covered_ids)
+    locally_completed_queue_item_ids = [
+        item.queue_item_id
+        for item in queue_items
+        if item.status == "completed" and item.queue_item_id not in covered_id_set
+    ]
+    locally_completed_id_set = set(locally_completed_queue_item_ids)
     queue_item_ids = [item.queue_item_id for item in queue_items]
     uncovered_items = [
-        item for item in queue_items if item.queue_item_id not in covered_id_set
+        item
+        for item in queue_items
+        if item.queue_item_id not in covered_id_set
+        and item.queue_item_id not in locally_completed_id_set
     ]
     uncovered_queue_item_ids = [item.queue_item_id for item in uncovered_items]
     refreshed_next_action_ids = _select_next_queue_item_ids(uncovered_items)
@@ -1117,7 +1403,9 @@ def build_materials_audit_queue_refresh_summary(
     return MaterialQueueRefreshSummary(
         refresh_id="015-materials-audit-next-action-queue-refresh",
         refresh_status=(
-            "covered_queue_exhausted"
+            "covered_or_completed_queue_exhausted"
+            if all_queue_items_covered and locally_completed_queue_item_ids
+            else "covered_queue_exhausted"
             if all_queue_items_covered
             else "uncovered_queue_items_available"
         ),
@@ -1126,20 +1414,27 @@ def build_materials_audit_queue_refresh_summary(
             1 for queue_item_id in queue_item_ids if queue_item_id in covered_id_set
         ),
         covered_queue_item_ids=[
-            queue_item_id for queue_item_id in queue_item_ids if queue_item_id in covered_id_set
+            queue_item_id
+            for queue_item_id in queue_item_ids
+            if queue_item_id in covered_id_set
         ],
+        locally_completed_queue_item_ids=locally_completed_queue_item_ids,
         uncovered_queue_item_ids=uncovered_queue_item_ids,
         legacy_next_action_ids=progress.next_action_ids,
         refreshed_next_action_ids=refreshed_next_action_ids,
         downstream_mutation_authorized=False,
         next_material_entry=(
-            EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY
-            if refreshed_next_action_ids
-            == list(EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS)
+            RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY
+            if all_queue_items_covered and locally_completed_queue_item_ids
             else (
-                "015-uncovered-material-queue-review"
+                EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY
                 if refreshed_next_action_ids
-                else "015-external-material-inventory-refresh"
+                == list(EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS)
+                else (
+                    "015-uncovered-material-queue-review"
+                    if refreshed_next_action_ids
+                    else "015-external-material-inventory-refresh"
+                )
             )
         ),
         boundary_checks={
@@ -1148,6 +1443,11 @@ def build_materials_audit_queue_refresh_summary(
             "covered_items_excluded": (
                 "passed"
                 if not set(refreshed_next_action_ids) & covered_id_set
+                else "failed"
+            ),
+            "completed_items_excluded": (
+                "passed"
+                if not set(refreshed_next_action_ids) & locally_completed_id_set
                 else "failed"
             ),
             "013_012_not_mutated": "passed",
@@ -1174,6 +1474,10 @@ def render_materials_audit_queue_refresh_markdown(
         f"- `queue-refresh-status={refresh.refresh_status}`",
         f"- `015-queue-items={refresh.queue_item_count}`",
         f"- `016-covered-queue-items={refresh.covered_queue_item_count}`",
+        (
+            "- `015-local-completed-queue-items="
+            f"{len(refresh.locally_completed_queue_item_ids)}`"
+        ),
         f"- `uncovered-queue-items={len(refresh.uncovered_queue_item_ids)}`",
         f"- `refreshed-next-action-ids={len(refresh.refreshed_next_action_ids)}`",
         (
@@ -1284,6 +1588,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         alignments = load_source_alignment_findings(source_dir)
         readiness = load_preparation_readiness_findings(source_dir)
         queue_items = load_extraction_queue_items(source_dir)
+        raw_text_triage_groups = load_raw_text_material_triage_groups(source_dir)
     except MaterialsAuditError as error:
         return [str(error)]
 
@@ -1294,6 +1599,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         alignments,
         readiness,
         queue_items,
+        raw_text_triage_groups,
     ):
         if not value:
             continue
@@ -1320,6 +1626,7 @@ def _iter_quality_text_fields(
     alignments: list[SourceAlignmentFinding],
     readiness: list[PreparationReadinessFinding],
     queue_items: list[ExtractionQueueItem],
+    raw_text_triage_groups: list[RawTextMaterialTriageGroup],
 ) -> list[tuple[str, str, str]]:
     fields: list[tuple[str, str, str]] = []
     for record in records:
@@ -1371,4 +1678,12 @@ def _iter_quality_text_fields(
             (item.queue_item_id, "pre_extraction_checks", check)
             for check in item.pre_extraction_checks
         )
+    for group in raw_text_triage_groups:
+        fields.extend(
+            (
+                (group.group_id, "group_label", group.group_label),
+                (group.group_id, "rationale", group.rationale),
+            )
+        )
+        fields.extend((group.group_id, "guardrails", item) for item in group.guardrails)
     return fields

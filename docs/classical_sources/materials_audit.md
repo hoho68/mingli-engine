@@ -143,8 +143,8 @@ Current queue snapshot:
   source-library alignment, target rule families, readiness rationale, and
   pre-extraction checks.
 - 5 `risk_review_backlog` items: four high-risk materials whose prerequisite
-  boundary-screening actions are completed, plus the newly registered raw text
-  corpus triage backlog.
+  boundary-screening actions are completed, plus the raw text corpus triage
+  item now completed by the 2026-06-28 folder-level triage.
 - 3 `blocked_backlog` items: one OCR-deferred Markdown batch, one blocked
   source, and one deferred workflow note.
 
@@ -189,9 +189,9 @@ Expected computed summary:
 - Next recommended queue item ids:
   `queue_northeast_blind_peak_extract`,
   `queue_mingli_true_formula_teacher_extract`,
-  `queue_raw_text_materials_folder_triage`,
   `queue_markdown_source_batch_003_register`,
-  and `queue_markdown_source_batch_004_prepare`.
+  `queue_markdown_source_batch_004_prepare`,
+  and `queue_duan_plain_mingxue_outline_extract`.
 - `validate_materials_audit_quality()` returns `[]`.
 
 ## 015 Queue Refresh
@@ -201,18 +201,20 @@ with completed 016 work-package snapshots. The current 015 summary now includes
 the newly registered raw text corpus triage backlog, and the refreshed queue
 excludes queue ids already covered by 016/017.
 
-- `queue-refresh-status=uncovered_queue_items_available`
+- `queue-refresh-status=covered_or_completed_queue_exhausted`
 - `015-queue-items=17`
 - `016-covered-queue-items=16`
-- `uncovered-queue-items=1`
-- `refreshed-next-action-ids=1`
+- `015-local-completed-queue-items=1`
+- `uncovered-queue-items=0`
+- `refreshed-next-action-ids=0`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-raw-text-materials-folder-risk-triage`
+- `next-material-entry=015-liang-bazi-core-source-selection`
 
 This refresh is read-only planning metadata. It does not mark queue items
 completed, mutate 016 packages, create 013 candidate/review/promotion records,
-or alter 012 formal evidence. The next local new-material path is risk-aware
-triage of the newly registered raw text corpus folder.
+or alter 012 formal evidence. The raw text corpus triage item is locally
+completed, so the next local new-material path is source selection for the
+bounded Liang Xiangrun Bazi core group.
 
 ## 015 External Material Inventory Refresh
 
@@ -243,6 +245,41 @@ Excluded workflow artifacts:
 - `资料整理/_inventory/`
 - `资料整理/new_thread_prompt_2026-05-29.md`
 - `资料整理/thread_handoff_2026-05-29.md`
+
+## 015 Raw Text Materials Folder Risk Triage
+
+The 2026-06-28 raw text triage uses only path labels and the existing CSV
+inventory under `资料整理/_inventory/`. It does not open source files, read PDF or
+document contents, transcribe media, OCR images, mutate external materials,
+create 013 candidate/review/promotion records, or alter 012 formal evidence.
+
+- `raw-text-triage-status=triage_completed`
+- `raw-text-total-files=1139`
+- `raw-text-priority-candidates=832`
+- `raw-text-triage-groups=11`
+- `risk-review-groups=3`
+- `deferred-groups=6`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-liang-bazi-core-source-selection`
+
+Exclusive triage groups:
+
+- `raw_text_triage_ritual_remedy_high_risk`: 428 files, risk review required.
+- `raw_text_triage_media_course_deferred`: 246 files, non-text media deferred.
+- `raw_text_triage_bazi_general`: 184 files, source-selection backlog.
+- `raw_text_triage_unclassified_deferred`: 150 files, manual title review
+  required.
+- `raw_text_triage_image_assets_deferred`: 52 files, image review deferred.
+- `raw_text_triage_fengshui_geo`: 34 files, separate domain review.
+- `raw_text_triage_qimen_dunjia`: 13 files, separate domain review.
+- `raw_text_triage_liang_bazi_core`: 12 files, source selection ready.
+- `raw_text_triage_ziwei_astrology`: 9 files, separate domain review.
+- `raw_text_triage_blind_school_sensitive`: 8 files, risk review required.
+- `raw_text_triage_life_death_high_risk`: 3 files, high-risk review required.
+
+The immediate next bounded source-selection surface is
+`raw_text_triage_liang_bazi_core`; high-risk ritual-remedy, blind-school, and
+life-death groups stay behind risk review.
 
 ## Raw-File Boundary
 
