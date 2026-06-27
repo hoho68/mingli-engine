@@ -5127,7 +5127,7 @@ def test_learning_reference_prerequisite_actions_do_not_change_formal_evidence_c
         "action_markdown_batch_005_risk_review_001",
     }
     assert summary.formal_evidence_delta == 0
-    assert summary.note_counts == {"draft": 7, "candidate_intake_started": 7}
+    assert summary.note_counts == {"candidate_intake_started": 14}
     assert summary.learning_point_counts == {
         "duplicate_review": 1,
         "ready": 27,

@@ -23,9 +23,9 @@
       "candidate_northeast_blind_image_001",
       "candidate_northeast_blind_image_duplicate_001"
     ],
-    "status": "draft",
+    "status": "candidate_intake_started",
     "created_at": "2026-05-31",
-    "updated_at": "2026-05-31"
+    "updated_at": "2026-06-27"
   },
   {
     "note_id": "note_mingli_true_formula_teacher_001",
@@ -51,9 +51,9 @@
     "overlap_candidate_ids": [
       "candidate_mingli_pattern_strength_017_001"
     ],
-    "status": "draft",
+    "status": "candidate_intake_started",
     "created_at": "2026-05-31",
-    "updated_at": "2026-05-31"
+    "updated_at": "2026-06-27"
   },
   {
     "note_id": "note_duan_plain_mingxue_outline_001",
@@ -78,9 +78,9 @@
     "overlap_candidate_ids": [
       "candidate_duan_ten_god_relation_017_001"
     ],
-    "status": "draft",
+    "status": "candidate_intake_started",
     "created_at": "2026-06-01",
-    "updated_at": "2026-06-01"
+    "updated_at": "2026-06-27"
   },
   {
     "note_id": "note_mingxue_golden_voice_001",
@@ -107,9 +107,9 @@
       "candidate_mingxue_golden_voice_scope_001",
       "candidate_mingxue_five_element_balance_017_001"
     ],
-    "status": "draft",
+    "status": "candidate_intake_started",
     "created_at": "2026-06-01",
-    "updated_at": "2026-06-01"
+    "updated_at": "2026-06-27"
   },
   {
     "note_id": "note_fortune_reading_hongfu_qitian_001",
@@ -134,9 +134,9 @@
     "overlap_candidate_ids": [
       "candidate_hongfu_remedy_boundary_017_001"
     ],
-    "status": "draft",
+    "status": "candidate_intake_started",
     "created_at": "2026-06-01",
-    "updated_at": "2026-06-01"
+    "updated_at": "2026-06-27"
   },
   {
     "note_id": "note_markdown_batch_002_useful_god_001",
@@ -164,9 +164,9 @@
       "lp_markdown_batch_002_ten_god_relation_001"
     ],
     "overlap_candidate_ids": [],
-    "status": "draft",
+    "status": "candidate_intake_started",
     "created_at": "2026-06-23",
-    "updated_at": "2026-06-23"
+    "updated_at": "2026-06-27"
   },
   {
     "note_id": "note_markdown_batch_001_pattern_strength_001",
@@ -194,9 +194,9 @@
       "lp_markdown_batch_001_blind_image_method_001"
     ],
     "overlap_candidate_ids": [],
-    "status": "draft",
+    "status": "candidate_intake_started",
     "created_at": "2026-06-23",
-    "updated_at": "2026-06-23"
+    "updated_at": "2026-06-27"
   },
   {
     "note_id": "note_markdown_batch_004_001",

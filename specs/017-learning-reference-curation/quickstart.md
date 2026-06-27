@@ -35,7 +35,7 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.learning_reference_c
 Expected result after implementation:
 
 - The progress summary prints:
-  `note_counts={'draft': 7, 'candidate_intake_started': 7}`,
+  `note_counts={'candidate_intake_started': 14}`,
   `learning_point_counts={'duplicate_review': 1, 'ready': 27, 'deferred': 6}`,
   `decision_counts={'reuse_existing': 1, 'create_candidate': 27, 'status:applied': 28}`,
   `prerequisite_action_counts={'risk_review': 4, 'blocked': 1, 'deferred': 2, 'status:completed': 4, 'status:blocked': 1, 'status:deferred': 2}`,
@@ -43,7 +43,7 @@ Expected result after implementation:
   `overlap_warning_count=7`,
   `candidate_ready_count=27`,
   `candidate_decision_count=28`,
-  `formal_evidence_delta=0`, and next action ids for seven draft notes.
+  `formal_evidence_delta=0`, and `next_action_ids=[]`.
 - The quality check prints `[]`.
 - Completed, blocked, and deferred prerequisite actions remain outside
   `next_action_ids`.
@@ -69,9 +69,11 @@ review, not a candidate or evidence promotion step.
   paraphrase material and must not be promoted without human transcription.
 - `safety-boundary-retained=2`: Northeast risk-boundary windows stay as safety
   paraphrase material unless a source-specific boundary page is identified.
-- `next_action_ids=7`: retained chapter closures do not remove the seven
-  draft-note maintainer handles from `next_action_ids`; completed prerequisite
-  actions stay outside the active list.
+- `closed-draft-learning-notes=7`: the remaining draft-note maintainer handles
+  are closed as `candidate_intake_started` after their learning points and
+  candidate-intake decisions were already applied.
+- `next_action_ids=0`: no learning note, candidate-intake decision, or
+  prerequisite action currently needs active local handling.
 - `planned-risk-review-actions=0`: no risk-review prerequisite action remains
   planned after the sweep.
 - `completed-risk-review-actions=4`: Blind Life Manual, Immortal Fortune

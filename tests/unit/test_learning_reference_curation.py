@@ -529,14 +529,10 @@ def test_seeded_learning_reference_notes_load_for_current_ready_016_tasks():
        "note_kskeleton_q004_luck_cycle_001",
        "note_kskeleton_q008_high_risk_boundary_001",
     ]
-    kskeleton_ids = {note.note_id for note in notes if 'kskeleton' in note.note_id}
-    for note in notes:
-        if note.note_id in kskeleton_ids:
-            assert note.status == 'candidate_intake_started', f'{note.note_id} status={note.status}'
-        elif "batch_004" in note.note_id:
-            assert note.status == 'candidate_intake_started', f'{note.note_id} status={note.status}'
-        else:
-            assert note.status == 'draft', f'{note.note_id} status={note.status}'
+    assert all(
+        note.status == "candidate_intake_started"
+        for note in notes
+    )
     assert all(note.learning_points for note in notes)
     assert all(note.learning_points for note in notes)
     assert notes[0].source_material_id == "material_northeast_blind_peak_pdf"
@@ -742,7 +738,7 @@ def test_learning_reference_note_loading_does_not_mutate_upstream_data(tmp_path)
 def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.note_counts == {"draft": 7, "candidate_intake_started": 7}
+    assert summary.note_counts == {"candidate_intake_started": 14}
     assert summary.risk_tier_counts == {
         "sensitive": 40,
         "ordinary": 11,
@@ -775,15 +771,7 @@ def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
         "task_kskeleton_q004_luck_cycle_001",
         "task_kskeleton_q008_high_risk_boundary_001",
     ]
-    assert summary.next_action_ids == [
-        "note_northeast_blind_peak_001",
-        "note_mingli_true_formula_teacher_001",
-        "note_duan_plain_mingxue_outline_001",
-        "note_mingxue_golden_voice_001",
-        "note_fortune_reading_hongfu_qitian_001",
-        "note_markdown_batch_002_useful_god_001",
-        "note_markdown_batch_001_pattern_strength_001",
-    ]
+    assert summary.next_action_ids == []
 
 
 @pytest.mark.parametrize(
@@ -1448,15 +1436,7 @@ def test_learning_reference_risk_review_sweep_closes_actions_without_evidence_ch
         if actions_by_id[action_id].status == "completed"
     } == completed_action_ids
     assert completed_action_ids.isdisjoint(summary.next_action_ids)
-    assert summary.next_action_ids == [
-        "note_northeast_blind_peak_001",
-        "note_mingli_true_formula_teacher_001",
-        "note_duan_plain_mingxue_outline_001",
-        "note_mingxue_golden_voice_001",
-        "note_fortune_reading_hongfu_qitian_001",
-        "note_markdown_batch_002_useful_god_001",
-        "note_markdown_batch_001_pattern_strength_001",
-    ]
+    assert summary.next_action_ids == []
     assert summary.prerequisite_action_counts == {
         "risk_review": 4,
         "deferred": 2,
@@ -1465,6 +1445,39 @@ def test_learning_reference_risk_review_sweep_closes_actions_without_evidence_ch
         "status:deferred": 2,
         "status:blocked": 1,
     }
+    assert summary.formal_evidence_delta == 0
+    assert len(candidates) == 36
+    assert len(reviews) == 36
+    assert len(promotion_batches) == 25
+    assert len(evidence_units) == 92
+
+
+def test_learning_reference_closes_remaining_draft_notes_without_evidence_changes():
+    notes = learning_reference_curation.load_learning_reference_notes()
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    promotion_batches = source_intake.load_promotion_batches()
+    evidence_units = classical_sources.load_evidence_units()
+
+    closed_note_ids = {
+        "note_northeast_blind_peak_001",
+        "note_mingli_true_formula_teacher_001",
+        "note_duan_plain_mingxue_outline_001",
+        "note_mingxue_golden_voice_001",
+        "note_fortune_reading_hongfu_qitian_001",
+        "note_markdown_batch_002_useful_god_001",
+        "note_markdown_batch_001_pattern_strength_001",
+    }
+    notes_by_id = {note.note_id: note for note in notes}
+
+    assert {
+        note_id
+        for note_id in closed_note_ids
+        if notes_by_id[note_id].status == "candidate_intake_started"
+    } == closed_note_ids
+    assert summary.note_counts == {"candidate_intake_started": 14}
+    assert summary.next_action_ids == []
     assert summary.formal_evidence_delta == 0
     assert len(candidates) == 36
     assert len(reviews) == 36
@@ -1638,7 +1651,7 @@ def test_blocking_prerequisite_actions_cannot_become_learning_points_or_decision
 def test_learning_reference_summary_includes_prerequisite_action_counts():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.note_counts == {"draft": 7, "candidate_intake_started": 7}
+    assert summary.note_counts == {"candidate_intake_started": 14}
     assert summary.learning_point_counts == {"duplicate_review": 1, "ready": 27, "deferred": 6}
     assert summary.decision_counts == {
         "reuse_existing": 1,
@@ -1662,15 +1675,7 @@ def test_learning_reference_summary_includes_prerequisite_action_counts():
     assert summary.candidate_ready_count == 27
     assert summary.candidate_decision_count == 28
     assert summary.formal_evidence_delta == 0
-    assert summary.next_action_ids == [
-        "note_northeast_blind_peak_001",
-        "note_mingli_true_formula_teacher_001",
-        "note_duan_plain_mingxue_outline_001",
-        "note_mingxue_golden_voice_001",
-        "note_fortune_reading_hongfu_qitian_001",
-        "note_markdown_batch_002_useful_god_001",
-        "note_markdown_batch_001_pattern_strength_001",
-    ]
+    assert summary.next_action_ids == []
 
 
 def test_learning_reference_docs_track_source_window_learning_closure_sync():
@@ -1684,15 +1689,7 @@ def test_learning_reference_docs_track_source_window_learning_closure_sync():
     }
     assert len(summary.selected_task_ids) == 14
     assert summary.formal_evidence_delta == 0
-    assert summary.next_action_ids == [
-        "note_northeast_blind_peak_001",
-        "note_mingli_true_formula_teacher_001",
-        "note_duan_plain_mingxue_outline_001",
-        "note_mingxue_golden_voice_001",
-        "note_fortune_reading_hongfu_qitian_001",
-        "note_markdown_batch_002_useful_god_001",
-        "note_markdown_batch_001_pattern_strength_001",
-    ]
+    assert summary.next_action_ids == []
     assert "action_blind_school_secret_blocked_001" not in summary.next_action_ids
     assert "action_markdown_batch_003_registration_001" not in summary.next_action_ids
     assert "action_source_processing_status_deferred_001" not in summary.next_action_ids
@@ -1711,7 +1708,8 @@ def test_learning_reference_docs_track_source_window_learning_closure_sync():
         assert "`learning-paraphrase-ready=4`" in document
         assert "`policy-boundary-retained=5`" in document
         assert "`safety-boundary-retained=2`" in document
-        assert "`next_action_ids=7`" in document
+        assert "`closed-draft-learning-notes=7`" in document
+        assert "`next_action_ids=0`" in document
         assert "`planned-risk-review-actions=0`" in document
         assert "`completed-risk-review-actions=4`" in document
         assert "`formal_evidence_delta=0`" in document
@@ -1848,6 +1846,7 @@ def test_new_material_learning_handoff_tracks_final_state():
         "`page-locators=44`",
         "`chapter-locators=11`",
         f"`selected-ready-learning-notes={len(summary.selected_task_ids)}`",
+        "`closed-draft-learning-notes=7`",
         f"`next_action_ids={len(summary.next_action_ids)}`",
         f"`retained-chapter-learning-closed={sum(closure_counts.values())}`",
         f"`learning-paraphrase-ready={closure_counts['learning-paraphrase-ready']}`",
@@ -1860,6 +1859,7 @@ def test_new_material_learning_handoff_tracks_final_state():
         f"`013-promotion-batches={len(promotion_batches)}`",
         f"`012-formal-evidence-units={len(evidence_units)}`",
         f"`formal_evidence_delta={summary.formal_evidence_delta}`",
+        "`next-local-boundary-start=017-candidate-formal-evidence-authorization-audit`",
         "`next-new-material-start=015-materials-audit-next-action-queue`",
         "Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`",
         "Do not create candidates, review decisions, promotion batches, or formal evidence unless explicitly requested",

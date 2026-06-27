@@ -157,7 +157,7 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 
 ## Current Incremental Snapshot
 
-- Learning reference notes: `draft=7`, `candidate_intake_started=7`.
+- Learning reference notes: `candidate_intake_started=14`.
 - Learning points: `duplicate_review=1`, `ready=27`, `deferred=6`.
 - Candidate decisions: `reuse_existing=1`, `create_candidate=27`,
   `status:applied=28`.
@@ -174,8 +174,9 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
   `high_risk_signal=1`.
 - Overlap warnings: `7`.
 - Formal evidence delta: `0`.
-- Next action ids: seven draft notes. The four risk-review prerequisite
-  actions are completed and remain outside the active action list.
+- Next action ids: none. The seven former draft notes are closed as
+  `candidate_intake_started`, and the four risk-review prerequisite actions are
+  completed outside the active action list.
 
 ## Source-Window Learning Closure Sync
 
@@ -194,8 +195,11 @@ The 2026-06-27 source-window learning-closure pass is now reflected in the
   paraphrase material and must not be promoted without human transcription.
 - `safety-boundary-retained=2`: Northeast risk-boundary windows stay as safety
   paraphrase material unless a source-specific boundary page is identified.
-- `next_action_ids=7`: the seven draft note ids remain maintainer review
-  handles; completed prerequisite actions stay outside the active list.
+- `closed-draft-learning-notes=7`: the remaining draft learning-note handles
+  are closed as `candidate_intake_started` after their learning points and
+  candidate-intake decisions were already applied.
+- `next_action_ids=0`: no 017 learning note, candidate-intake decision, or
+  prerequisite action currently needs active local handling.
 - `planned-risk-review-actions=0`: no risk-review prerequisite action remains
   planned after the sweep.
 - `completed-risk-review-actions=4`: Blind Life Manual, Immortal Fortune
