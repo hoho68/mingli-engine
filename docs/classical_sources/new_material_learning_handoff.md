@@ -9,7 +9,8 @@ learning-note closure, candidate/formal evidence boundary audit, and
 authorization audit packet, plus the Markdown Batch 005 risk-review routing
 pass, risk-review prerequisite sweep, 015 queue refresh, and external material
 inventory refresh, raw text materials folder risk triage, Liang Bazi core
-source selection, and Liang Bazi core individual review.
+source selection, Liang Bazi core individual review, and Bazi general source
+cluster selection.
 
 ## Completed Checkpoints
 
@@ -50,6 +51,11 @@ source selection, and Liang Bazi core individual review.
   `liang_yushi_yongshen_ciyuan`: the two notes were recorded as bounded 017
   duplicate reviews, both reuse existing Markdown Batch 004 candidates, and no
   013 or 012 mutation was authorized.
+- 015 Bazi General Source Cluster Selection is completed for
+  `raw_text_triage_bazi_general`: `cluster-selection-items=7`,
+  `clustered-files=184`, `clustered-priority-candidates=183`,
+  `selected-clusters=2`, `deferred-clusters=3`, and no 013 or 012 mutation was
+  authorized.
 
 Primary detailed references:
 
@@ -67,6 +73,7 @@ Primary detailed references:
 - [2026-06-28-raw-text-materials-folder-risk-triage.md](../superpowers/plans/2026-06-28-raw-text-materials-folder-risk-triage.md)
 - [2026-06-28-liang-bazi-core-source-selection.md](../superpowers/plans/2026-06-28-liang-bazi-core-source-selection.md)
 - [2026-06-28-liang-bazi-core-individual-review.md](../superpowers/plans/2026-06-28-liang-bazi-core-individual-review.md)
+- [2026-06-28-bazi-general-source-cluster-selection.md](../superpowers/plans/2026-06-28-bazi-general-source-cluster-selection.md)
 
 ## Current Frozen Snapshot
 
@@ -132,6 +139,17 @@ Authorization Audit Packet:
 - `downstream-mutation-authorized=false`
 - `next-material-entry=015-liang-bazi-core-source-selection`
 
+015 Bazi General Source Cluster Selection:
+
+- `cluster-selection-status=cluster_selection_completed`
+- `cluster-selection-items=7`
+- `clustered-files=184`
+- `clustered-priority-candidates=183`
+- `selected-clusters=2`
+- `deferred-clusters=3`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-bazi-general-cluster-source-selection`
+
 013 and 012 boundary state:
 
 - `013-candidate-extracts=36`
@@ -170,8 +188,17 @@ Authorization Audit Packet:
   `individual-review-status=completed`, `017-notes-added=2`,
   `017-learning-points-added=2`, `017-reuse-decisions-added=2`,
   `017-duplicate-reviews-added=2`, `downstream-mutation-authorized=false`.
+- 015 Bazi General Source Cluster Selection is completed:
+  `cluster-selection-status=cluster_selection_completed`,
+  `cluster-selection-items=7`, `clustered-files=184`,
+  `clustered-priority-candidates=183`, `selected-clusters=2`,
+  `deferred-clusters=3`, `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-bazi-general-cluster-source-selection`.
+- Selected cluster ids:
+  `bazi_general_foundation_textbook_cluster` and
+  `bazi_general_classical_reference_cluster`.
 - Recommended next material entry for the next long goal:
-  `next-material-entry=015-bazi-general-source-cluster-selection`.
+  `next-material-entry=015-bazi-general-cluster-source-selection`.
 
 ## Remaining Optional Precision Work
 
@@ -188,10 +215,10 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-bazi-general-source-cluster-selection`. It should
-cluster the `raw_text_triage_bazi_general` and adjacent safe raw-text groups
-into source-selection records, select the next high-value reading surfaces,
-and keep 013/012 mutations blocked unless separately authorized.
+`next-material-entry=015-bazi-general-cluster-source-selection`. It should
+select concrete source-level records inside the foundation textbook and
+classical reference clusters, resolve source identity before registration, and
+keep 013/012 mutations blocked unless separately authorized.
 
 ## Guardrails
 

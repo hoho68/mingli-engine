@@ -316,6 +316,41 @@ batches 001, 002, and 004. The next bounded work surface is individual
 cleaned-text review for the two selected items, still outside 013/012 unless a
 separate candidate-intake step is explicitly authorized.
 
+## 015 Bazi General Source Cluster Selection
+
+The 2026-06-28 Bazi general source cluster selection uses only inventory CSV
+counts, filename labels, representative paths, and the existing
+`raw_text_triage_bazi_general` group. It does not open raw source files, create
+source-library records, create 013 candidate/review/promotion records, or alter
+012 formal evidence.
+
+- `cluster-selection-status=cluster_selection_completed`
+- `cluster-selection-items=7`
+- `clustered-files=184`
+- `clustered-priority-candidates=183`
+- `selected-clusters=2`
+- `deferred-clusters=3`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-bazi-general-cluster-source-selection`
+
+Selected clusters:
+
+- `bazi_general_foundation_textbook_cluster`
+- `bazi_general_classical_reference_cluster`
+
+Deferred or review-gated clusters:
+
+- `bazi_general_modern_method_series_cluster`: fragmented modern method series
+  needing identity review.
+- `bazi_general_sensitive_topic_cluster`: sensitive relationship, psychology,
+  advice, or mixed-topic labels requiring boundary review.
+- `bazi_general_misc_identity_review_cluster`: miscellaneous weak-title labels
+  requiring manual title review.
+
+The next bounded work surface is source-level selection inside the two selected
+clusters. Registration, extraction, 013 candidate intake, and 012 evidence remain
+blocked unless explicitly authorized.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

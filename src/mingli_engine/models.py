@@ -2780,6 +2780,50 @@ class RawTextSourceSelectionSummary:
 
 
 @dataclass(frozen=True)
+class RawTextSourceClusterSelectionItem:
+    cluster_id: str
+    triage_group_id: str
+    source_root: str
+    cluster_label: str
+    cluster_status: str
+    risk_boundary: str
+    file_count: int
+    priority_text_candidate_count: int
+    extension_counts: dict[str, int]
+    recommended_next_action: str
+    target_rule_families: list[str] = field(default_factory=list)
+    filename_markers: list[str] = field(default_factory=list)
+    representative_paths: list[str] = field(default_factory=list)
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextSourceClusterSelectionSummary:
+    selection_id: str
+    selection_status: str
+    triage_group_id: str
+    source_root: str
+    cluster_count: int
+    clustered_file_count: int
+    clustered_priority_text_candidate_count: int
+    selected_cluster_count: int
+    deferred_cluster_count: int
+    cluster_status_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    extension_counts: dict[str, int]
+    target_rule_family_counts: dict[str, int]
+    selected_cluster_ids: list[str]
+    deferred_cluster_ids: list[str]
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class ExtractionWorkPackage:
     package_id: str
     package_label: str

@@ -1,0 +1,261 @@
+[
+  {
+    "cluster_id": "bazi_general_foundation_textbook_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "cluster_label": "Bazi General Foundation And Textbook Cluster",
+    "cluster_status": "selected_for_source_selection",
+    "risk_boundary": "ordinary",
+    "file_count": 18,
+    "priority_text_candidate_count": 18,
+    "extension_counts": {
+      ".pdf": 15,
+      ".txt": 3
+    },
+    "recommended_next_action": "clarify_identity",
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "useful_god_candidate"
+    ],
+    "filename_markers": [
+      "基础",
+      "教材",
+      "入门",
+      "讲义"
+    ],
+    "representative_paths": [
+      "八字命理讲义教材（299页）.pdf",
+      "北宸学派《命理入门》韩雨墨 258页.pdf",
+      "天马易学八字命理学笔记 pdf/天马易学八字命理学笔记.pdf"
+    ],
+    "rationale": "Foundation and textbook labels make this the safest next general Bazi source-selection surface after the Liang packet.",
+    "guardrails": [
+      "Use path labels only until a source-level identity review is done.",
+      "Prefer one compact textbook before broader formula or case collections."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "cluster_label": "Bazi General Classical Reference Cluster",
+    "cluster_status": "selected_for_source_selection",
+    "risk_boundary": "ordinary",
+    "file_count": 26,
+    "priority_text_candidate_count": 26,
+    "extension_counts": {
+      ".pdf": 26
+    },
+    "recommended_next_action": "clarify_identity",
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "filename_markers": [
+      "滴天髓",
+      "穷通宝鉴",
+      "子平",
+      "三命"
+    ],
+    "representative_paths": [
+      "滴天髓.pdf",
+      "穷通宝鉴+评注.pdf",
+      "子平命理正宗电子版上.pdf"
+    ],
+    "rationale": "Classical title markers can broaden cross-school comparison while staying in ordinary Bazi source selection.",
+    "guardrails": [
+      "Resolve edition and commentator identity before source registration.",
+      "Treat classical titles as comparison surfaces, not automatic rule authority."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "cluster_id": "bazi_general_case_collection_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "cluster_label": "Bazi General Case Collection Cluster",
+    "cluster_status": "backlog_cluster",
+    "risk_boundary": "ordinary",
+    "file_count": 24,
+    "priority_text_candidate_count": 24,
+    "extension_counts": {
+      ".pdf": 24
+    },
+    "recommended_next_action": "defer",
+    "target_rule_families": [
+      "branch_interaction",
+      "luck_cycle",
+      "pattern_strength",
+      "ten_god_relation"
+    ],
+    "filename_markers": [
+      "案例",
+      "命造",
+      "百诀",
+      "18本"
+    ],
+    "representative_paths": [
+      "八字18本/命造春秋  188P.pdf",
+      "八字18本/八字百诀 上册  214P.pdf",
+      "八字18本/抽筋剥丝讲八字  274P.pdf"
+    ],
+    "rationale": "Case collections are useful after foundation and classical anchors but should not be first in the general backlog.",
+    "guardrails": [
+      "Do not infer operational conclusions from case titles.",
+      "Select a narrower case source only after the first two clusters are resolved."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "cluster_id": "bazi_general_modern_method_series_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "cluster_label": "Bazi General Modern Method Series Cluster",
+    "cluster_status": "identity_review_required",
+    "risk_boundary": "ordinary",
+    "file_count": 39,
+    "priority_text_candidate_count": 39,
+    "extension_counts": {
+      ".pdf": 7,
+      ".doc": 27,
+      ".txt": 2,
+      ".docx": 3
+    },
+    "recommended_next_action": "clarify_identity",
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "filename_markers": [
+      "新派",
+      "系列",
+      "精髓",
+      "真神"
+    ],
+    "representative_paths": [
+      "佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf",
+      "佚名 - 新派命理精髓详解34份/新派命理精髓详解之二十六.doc",
+      "八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf"
+    ],
+    "rationale": "Modern series labels are numerous and fragmented; identity review should precede any source-level selection.",
+    "guardrails": [
+      "Keep marketing-series files outside immediate reading selection.",
+      "Resolve authorship, sequence, and duplicate status before registration."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "cluster_id": "bazi_general_practical_formula_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "cluster_label": "Bazi General Practical Formula Cluster",
+    "cluster_status": "backlog_cluster",
+    "risk_boundary": "ordinary",
+    "file_count": 31,
+    "priority_text_candidate_count": 31,
+    "extension_counts": {
+      ".pdf": 31
+    },
+    "recommended_next_action": "defer",
+    "target_rule_families": [
+      "pattern_strength",
+      "branch_interaction",
+      "luck_cycle"
+    ],
+    "filename_markers": [
+      "秘诀",
+      "秘法",
+      "口诀",
+      "要诀"
+    ],
+    "representative_paths": [
+      "命理秘诀(1).pdf",
+      "八字实战秘法公开.pdf",
+      "四柱预测要诀.pdf"
+    ],
+    "rationale": "Formula-style labels may be valuable but need later source identity and boundary review before learning use.",
+    "guardrails": [
+      "Avoid treating formula labels as verified content.",
+      "Keep conditional language until source-specific review exists."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "cluster_id": "bazi_general_sensitive_topic_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "cluster_label": "Bazi General Sensitive Topic Cluster",
+    "cluster_status": "sensitive_boundary_deferred",
+    "risk_boundary": "sensitive",
+    "file_count": 10,
+    "priority_text_candidate_count": 9,
+    "extension_counts": {
+      ".pdf": 9,
+      ".ppt": 1
+    },
+    "recommended_next_action": "risk_review",
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "filename_markers": [
+      "心理",
+      "情色",
+      "漫画",
+      "人生建议"
+    ],
+    "representative_paths": [
+      "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf",
+      "情色命理汇总.pdf",
+      "八字命理漫画.ppt"
+    ],
+    "rationale": "Sensitive topic labels need boundary review before any reading or learning use.",
+    "guardrails": [
+      "Do not use relationship, psychology, or advice labels for deterministic claims.",
+      "Keep this cluster outside source selection until boundary wording is prepared."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "cluster_id": "bazi_general_misc_identity_review_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "cluster_label": "Bazi General Miscellaneous Identity Review Cluster",
+    "cluster_status": "identity_review_required",
+    "risk_boundary": "ordinary",
+    "file_count": 36,
+    "priority_text_candidate_count": 36,
+    "extension_counts": {
+      ".pdf": 36
+    },
+    "recommended_next_action": "clarify_identity",
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "filename_markers": [
+      "杂项",
+      "手抄",
+      "星命",
+      "算命"
+    ],
+    "representative_paths": [
+      "1_命理望斗经(1).pdf",
+      "下海算命记.pdf",
+      "霍敏卿-星命说证正续合编上册.pdf"
+    ],
+    "rationale": "Mixed labels remain useful inventory metadata but need identity review before source-level selection.",
+    "guardrails": [
+      "Do not infer domain fit from weak title labels.",
+      "Keep mixed classical and miscellaneous files behind title review."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  }
+]
