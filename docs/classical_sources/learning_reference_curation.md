@@ -203,6 +203,38 @@ Blocked or deferred prerequisite records remain outside `next_action_ids`.
 The retained source-window closures only clarify learning/reference use and
 future optional transcription boundaries.
 
+## Candidate/Formal Evidence Boundary Audit
+
+The 2026-06-27 candidate/formal evidence boundary audit confirms that the
+source-window learning-closure sync did not mutate the downstream candidate,
+review, promotion, or formal evidence surfaces.
+
+- `017-applied-decisions=28`: 017 candidate-intake decisions remain provenance
+  and planning metadata after application.
+- `017-create-candidate-decisions=27`: applied create-candidate decisions map
+  to existing 013 candidate extracts; the reuse decision continues to point to
+  `candidate_northeast_blind_image_001`.
+- `013-candidate-extracts=36`: current 013 candidate status counts remain
+  `promoted=32`, `rejected=2`, `returned=1`, and `blocked=1`.
+- `013-review-decisions=36`: current review decisions remain `approved=32`,
+  `rejected=2`, `returned=1`, and `blocked=1`.
+- `013-promotion-batches=25`: all current promotion batches remain
+  `reviewed`; no new batch is created by learning closure.
+- `012-formal-evidence-units=92`: formal evidence coverage remains in the
+  approved classical evidence corpus only.
+- `formal_evidence_delta=0`: the learning-closure and 017 sync passes do not
+  add or remove formal evidence.
+- `learning-reference-source-refs-in-012=0`: 012 evidence does not cite
+  `learning-reference:` locators.
+- `candidate-id-source-refs-in-012=0`: 012 evidence source refs do not cite
+  candidate ids.
+- `learning-closure-source-refs-in-012=0`: 012 evidence source refs do not cite
+  `learning-closure:` notes.
+
+Maintained boundary: 017 records describe learning/provenance decisions; 013
+records carry candidate, review, and promotion pipeline state; 012 evidence
+units are the only formal report evidence surface.
+
 ## Phase C Source Disposition Snapshot
 
 The current 016/017 package consumes 14 selected extraction tasks as learning

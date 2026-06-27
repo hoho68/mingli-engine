@@ -7,8 +7,10 @@ from pathlib import Path
 
 import pytest
 
+from mingli_engine import classical_sources
 from mingli_engine import learning_reference_curation
 from mingli_engine import models
+from mingli_engine import source_intake
 
 
 PROJECT_DATA_DIR = Path(__file__).resolve().parents[2] / "src" / "mingli_engine" / "data"
@@ -1648,3 +1650,105 @@ def test_learning_reference_docs_track_source_window_learning_closure_sync():
         assert "No new candidate-intake decisions" in document
         assert "no 013 candidate extracts" in document
         assert "no promotion batches" in document
+
+
+def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+    decisions = learning_reference_curation.load_candidate_intake_decisions()
+    candidates = {
+        candidate.candidate_id: candidate
+        for candidate in source_intake.load_candidate_extracts()
+    }
+    reviews = source_intake.load_review_decisions()
+    promotion_batches = source_intake.load_promotion_batches()
+    evidence_units = classical_sources.load_evidence_units()
+
+    create_candidate_ids = [
+        decision.candidate_id
+        for decision in decisions
+        if decision.decision == "create_candidate"
+    ]
+    reuse_candidate_ids = [
+        decision.candidate_id
+        for decision in decisions
+        if decision.decision == "reuse_existing"
+    ]
+
+    assert summary.decision_counts == {
+        "reuse_existing": 1,
+        "create_candidate": 27,
+        "status:applied": 28,
+    }
+    assert summary.formal_evidence_delta == 0
+    assert len(create_candidate_ids) == 27
+    assert reuse_candidate_ids == ["candidate_northeast_blind_image_001"]
+    assert set(create_candidate_ids + reuse_candidate_ids) <= set(candidates)
+
+    assert len(candidates) == 36
+    assert Counter(candidate.status for candidate in candidates.values()) == {
+        "promoted": 32,
+        "rejected": 2,
+        "returned": 1,
+        "blocked": 1,
+    }
+    assert Counter(candidates[candidate_id].status for candidate_id in create_candidate_ids) == {
+        "promoted": 27
+    }
+    assert all(
+        candidates[candidate_id].source_locator.startswith("review-note:")
+        for candidate_id in create_candidate_ids
+    )
+    assert all(
+        "learning-reference:" not in candidates[candidate_id].source_locator
+        for candidate_id in create_candidate_ids
+    )
+
+    assert len(reviews) == 36
+    assert Counter(review.decision for review in reviews) == {
+        "approved": 32,
+        "rejected": 2,
+        "returned": 1,
+        "blocked": 1,
+    }
+    assert Counter(
+        review.decision
+        for review in reviews
+        if review.candidate_id in create_candidate_ids
+    ) == {"approved": 27}
+
+    assert len(promotion_batches) == 25
+    assert Counter(batch.review_status for batch in promotion_batches) == {
+        "reviewed": 25
+    }
+
+    assert len(evidence_units) == 92
+    assert Counter(unit.curation_batch_id for unit in evidence_units) == {
+        "batch_012_seed_001": 8,
+        "batch_012_taxonomy_001": 58,
+        "batch_markdown_registration_001": 15,
+        "batch_kskeleton_taxonomy_001": 11,
+    }
+    assert not any(
+        unit.source_ref.startswith("learning-reference:")
+        or "candidate_" in unit.source_ref
+        or "learning-closure:" in unit.source_ref
+        for unit in evidence_units
+    )
+
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    for marker in (
+        "Candidate/Formal Evidence Boundary Audit",
+        "`017-applied-decisions=28`",
+        "`017-create-candidate-decisions=27`",
+        "`013-candidate-extracts=36`",
+        "`013-review-decisions=36`",
+        "`013-promotion-batches=25`",
+        "`012-formal-evidence-units=92`",
+        "`formal_evidence_delta=0`",
+        "`learning-reference-source-refs-in-012=0`",
+        "`candidate-id-source-refs-in-012=0`",
+        "`learning-closure-source-refs-in-012=0`",
+    ):
+        assert marker in overview
