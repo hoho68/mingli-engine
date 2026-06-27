@@ -382,5 +382,57 @@
     "status": "candidate_intake_started",
     "created_at": "2026-06-23",
     "updated_at": "2026-06-23"
+  },
+  {
+    "note_id": "note_liang_tianyuan_wuxian_individual_review_001",
+    "task_id": "task_markdown_batch_004_extract_001",
+    "package_id": "package_markdown_batch_registration_001",
+    "queue_item_id": "queue_markdown_source_batch_004_prepare",
+    "audit_id": "audit_markdown_source_batch_004",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_material_id": "material_markdown_source_batch_004",
+    "source_title": "Liang Tianyuan Wuxian Commentary Individual Review",
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "locator_requirement": "page_or_section",
+    "risk_boundary": "sensitive",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "source_quality_note": "Cleaned Markdown gives an individual window for day-master preference and seasonal use-god separation; it should reuse batch 004 pattern planning.",
+    "learning_points": [
+      "lp_liang_tianyuan_wuxian_day_master_use_god_001"
+    ],
+    "overlap_candidate_ids": [
+      "candidate_markdown_batch_004_pattern_strength_001"
+    ],
+    "status": "candidate_intake_started",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "note_id": "note_liang_yushi_yongshen_individual_review_001",
+    "task_id": "task_markdown_batch_004_extract_001",
+    "package_id": "package_markdown_batch_registration_001",
+    "queue_item_id": "queue_markdown_source_batch_004_prepare",
+    "audit_id": "audit_markdown_source_batch_004",
+    "source_library_entry_id": "entry_markdown_source_batch_004",
+    "source_material_id": "material_markdown_source_batch_004",
+    "source_title": "Liang Yushi Yongshen Ciyuan Individual Review",
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "locator_requirement": "page_or_section",
+    "risk_boundary": "sensitive",
+    "rights_note": "Do not copy long passages; store concise paraphrases only.",
+    "source_quality_note": "Cleaned Markdown gives an individual window for month-branch use-god taxonomy and interference hierarchy; reuse batch 004 useful-god planning.",
+    "learning_points": [
+      "lp_liang_yushi_month_branch_use_god_taxonomy_001"
+    ],
+    "overlap_candidate_ids": [
+      "candidate_markdown_batch_004_useful_god_001"
+    ],
+    "status": "candidate_intake_started",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
   }
 ]

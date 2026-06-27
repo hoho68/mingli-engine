@@ -157,22 +157,22 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 
 ## Current Incremental Snapshot
 
-- Learning reference notes: `candidate_intake_started=14`.
-- Learning points: `duplicate_review=1`, `ready=27`, `deferred=6`.
-- Candidate decisions: `reuse_existing=1`, `create_candidate=27`,
-  `status:applied=28`.
+- Learning reference notes: `candidate_intake_started=16`.
+- Learning points: `duplicate_review=3`, `ready=27`, `deferred=6`.
+- Candidate decisions: `reuse_existing=3`, `create_candidate=27`,
+  `status:applied=30`.
 - Prerequisite actions: `risk_review=4`, `blocked=1`, `deferred=2`,
   `status:completed=4`, `status:deferred=2`, `status:blocked=1`.
 - Candidate-ready count: `27`.
-- Candidate decision count: `28`.
-- Risk tier counts: `ordinary=11`, `sensitive=40`, `high_risk=4` across notes,
+- Candidate decision count: `30`.
+- Risk tier counts: `ordinary=11`, `sensitive=44`, `high_risk=4` across notes,
   learning points, and prerequisite actions.
 - Target rule family counts: `blind_image_method=2`,
-  `branch_interaction=4`, `pattern_strength=9`,
-  `useful_god_candidate=4`, `luck_cycle=4`, `ten_god_relation=4`,
+  `branch_interaction=4`, `pattern_strength=10`,
+  `useful_god_candidate=5`, `luck_cycle=4`, `ten_god_relation=4`,
   `five_element_balance=1`, `remedy_boundary=1`, and
   `high_risk_signal=1`.
-- Overlap warnings: `7`.
+- Overlap warnings: `9`.
 - Formal evidence delta: `0`.
 - Next action ids: none. The seven former draft notes are closed as
   `candidate_intake_started`, and the four risk-review prerequisite actions are
@@ -183,7 +183,7 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 The 2026-06-27 source-window learning-closure pass is now reflected in the
 017 maintainer snapshot without changing 017 data schemas or promotion state.
 
-- `selected-ready-learning-notes=14`: the 14 ready items remain selected 016
+- `selected-ready-learning-notes=16`: the 16 ready items remain selected 016
   extraction tasks and 017 learning reference notes. Here "ready" means ready
   as learning-reference input, not automatically ready for formal evidence.
 - `retained-chapter-learning-closed=11`: retained chapter-level source windows
@@ -212,17 +212,36 @@ Completed, blocked, or deferred prerequisite records remain outside
 The retained source-window closures only clarify learning/reference use and
 future optional transcription boundaries.
 
+## Liang Bazi Core Individual Review
+
+The 2026-06-28 individual-review pass completed the two selected Liang cleaned
+Markdown surfaces from the source-selection packet:
+
+- `liang_tianyuan_wuxian_commentary`: recorded as
+  `note_liang_tianyuan_wuxian_individual_review_001`, with a duplicate-review
+  learning point for day-master and seasonal use-god separation. It reuses
+  `candidate_markdown_batch_004_pattern_strength_001`.
+- `liang_yushi_yongshen_ciyuan`: recorded as
+  `note_liang_yushi_yongshen_individual_review_001`, with a duplicate-review
+  learning point for month-branch use-god taxonomy and interference hierarchy.
+  It reuses `candidate_markdown_batch_004_useful_god_001`.
+
+Both records are bounded 017 learning/reference metadata. They do not create
+013 candidates, 013 reviews, 013 promotion batches, or 012 formal evidence.
+
 ## Candidate/Formal Evidence Boundary Audit
 
 The 2026-06-27 candidate/formal evidence boundary audit confirms that the
 source-window learning-closure sync did not mutate the downstream candidate,
 review, promotion, or formal evidence surfaces.
 
-- `017-applied-decisions=28`: 017 candidate-intake decisions remain provenance
+- `017-applied-decisions=30`: 017 candidate-intake decisions remain provenance
   and planning metadata after application.
 - `017-create-candidate-decisions=27`: applied create-candidate decisions map
-  to existing 013 candidate extracts; the reuse decision continues to point to
-  `candidate_northeast_blind_image_001`.
+  to existing 013 candidate extracts; the reuse decisions continue to point to
+  `candidate_northeast_blind_image_001`,
+  `candidate_markdown_batch_004_pattern_strength_001`, and
+  `candidate_markdown_batch_004_useful_god_001`.
 - `013-candidate-extracts=36`: current 013 candidate status counts remain
   `promoted=32`, `rejected=2`, `returned=1`, and `blocked=1`.
 - `013-review-decisions=36`: current review decisions remain `approved=32`,
@@ -252,9 +271,9 @@ candidate, review, promotion, or formal-evidence mutation by itself.
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=14`
+- `017-notes-closed=16`
 - `017-next-action-ids=0`
-- `017-applied-decisions=28`
+- `017-applied-decisions=30`
 - `013-candidate-extracts=36`
 - `013-review-decisions=36`
 - `013-promotion-batches=25`

@@ -566,5 +566,39 @@
     ],
     "candidate_readiness": "deferred",
     "candidate_decision_id": ""
+  },
+  {
+    "learning_point_id": "lp_liang_tianyuan_wuxian_day_master_use_god_001",
+    "note_id": "note_liang_tianyuan_wuxian_individual_review_001",
+    "point_label": "Tianyuan Wuxian day-master and seasonal use-god separation",
+    "source_locator": "review-note:Markdown/source_batch_004_cleaned/简体 梁湘润《天元巫咸经》注释.md#L34",
+    "summary": "Individual review identifies a dispersed distinction between day-master preference and seasonal use-god thinking, with extra detail for weaker-covered stems. This refines the existing batch 004 pattern-strength candidate instead of creating a new candidate.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Keep as structural taxonomy, not a standalone classifier.",
+      "Source uses outcome and health metaphors; paraphrase with uncertainty.",
+      "Reuse existing batch 004 pattern candidate until separate downstream authorization.",
+      "Limitation: no 013 or 012 mutation is authorized by this individual review."
+    ],
+    "candidate_readiness": "duplicate_review",
+    "candidate_decision_id": "decision_liang_tianyuan_wuxian_reuse_batch004_pattern_001"
+  },
+  {
+    "learning_point_id": "lp_liang_yushi_month_branch_use_god_taxonomy_001",
+    "note_id": "note_liang_yushi_yongshen_individual_review_001",
+    "point_label": "Yushi month-branch use-god taxonomy and interference hierarchy",
+    "source_locator": "review-note:Markdown/source_batch_004_cleaned/简体《余氏用神辞渊》梁湘润(1).md#L57",
+    "summary": "Individual review identifies month-branch inherent versus absent use-god classes, helper-god dependency, and a hierarchy of use-god interference. This refines the existing batch 004 useful-god candidate instead of creating a new candidate.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Keep system dependency explicit with uncertainty; different use-god systems may disagree.",
+      "Treat interference categories as candidate taxonomy, not final selection.",
+      "Reuse existing batch 004 useful-god candidate until separate downstream authorization.",
+      "Limitation: no 013 or 012 mutation is authorized by this individual review."
+    ],
+    "candidate_readiness": "duplicate_review",
+    "candidate_decision_id": "decision_liang_yushi_yongshen_reuse_batch004_useful_god_001"
   }
 ]

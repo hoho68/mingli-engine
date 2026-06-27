@@ -339,5 +339,33 @@
     "status": "applied",
     "created_at": "2026-06-23",
     "updated_at": "2026-06-23"
+  },
+  {
+    "decision_id": "decision_liang_tianyuan_wuxian_reuse_batch004_pattern_001",
+    "learning_point_id": "lp_liang_tianyuan_wuxian_day_master_use_god_001",
+    "decision": "reuse_existing",
+    "source_material_id": "material_markdown_source_batch_004",
+    "candidate_id": "candidate_markdown_batch_004_pattern_strength_001",
+    "overlap_candidate_ids": [
+      "candidate_markdown_batch_004_pattern_strength_001"
+    ],
+    "rationale": "Individual Tianyuan Wuxian review refines the existing batch 004 pattern_strength candidate; reuse avoids duplicate 013 candidate creation.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_liang_yushi_yongshen_reuse_batch004_useful_god_001",
+    "learning_point_id": "lp_liang_yushi_month_branch_use_god_taxonomy_001",
+    "decision": "reuse_existing",
+    "source_material_id": "material_markdown_source_batch_004",
+    "candidate_id": "candidate_markdown_batch_004_useful_god_001",
+    "overlap_candidate_ids": [
+      "candidate_markdown_batch_004_useful_god_001"
+    ],
+    "rationale": "Individual Yushi Yongshen review refines the existing batch 004 useful_god_candidate; reuse avoids duplicate 013 candidate creation.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
   }
 ]

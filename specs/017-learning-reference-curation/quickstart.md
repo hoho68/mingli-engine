@@ -35,20 +35,20 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.learning_reference_c
 Expected result after implementation:
 
 - The progress summary prints:
-  `note_counts={'candidate_intake_started': 14}`,
-  `learning_point_counts={'duplicate_review': 1, 'ready': 27, 'deferred': 6}`,
-  `decision_counts={'reuse_existing': 1, 'create_candidate': 27, 'status:applied': 28}`,
+  `note_counts={'candidate_intake_started': 16}`,
+  `learning_point_counts={'duplicate_review': 3, 'ready': 27, 'deferred': 6}`,
+  `decision_counts={'reuse_existing': 3, 'create_candidate': 27, 'status:applied': 30}`,
   `prerequisite_action_counts={'risk_review': 4, 'blocked': 1, 'deferred': 2, 'status:completed': 4, 'status:blocked': 1, 'status:deferred': 2}`,
-  `risk_tier_counts={'sensitive': 40, 'ordinary': 11, 'high_risk': 4}`,
-  `overlap_warning_count=7`,
+  `risk_tier_counts={'sensitive': 44, 'ordinary': 11, 'high_risk': 4}`,
+  `overlap_warning_count=9`,
   `candidate_ready_count=27`,
-  `candidate_decision_count=28`,
+  `candidate_decision_count=30`,
   `formal_evidence_delta=0`, and `next_action_ids=[]`.
 - The quality check prints `[]`.
 - Completed, blocked, and deferred prerequisite actions remain outside
   `next_action_ids`.
-- Candidate-intake decisions are applied: one decision reuses an existing
-  candidate, and 27 create-candidate decisions have been applied through 013
+- Candidate-intake decisions are applied: three decisions reuse existing
+  candidates, and 27 create-candidate decisions have been applied through 013
   intake. The 017 metadata itself still has `formal_evidence_delta=0`; formal
   report evidence comes only from reviewed evidence units.
 
@@ -57,7 +57,7 @@ Expected result after implementation:
 The source-window learning-closure pass is an operational sync for maintainer
 review, not a candidate or evidence promotion step.
 
-- `selected-ready-learning-notes=14`: the 14 ready items remain selected 016
+- `selected-ready-learning-notes=16`: the 16 ready items remain selected 016
   extraction tasks and 017 learning reference notes. This means
   learning-reference input readiness, not automatic formal-evidence readiness.
 - `retained-chapter-learning-closed=11`: retained chapter-level source windows
@@ -96,7 +96,7 @@ Expected markers:
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=14`
+- `017-notes-closed=16`
 - `017-next-action-ids=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
