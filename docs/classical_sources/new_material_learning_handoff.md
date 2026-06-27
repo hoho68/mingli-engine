@@ -7,7 +7,8 @@ learning pass. It is a maintainer entrypoint for continuing work after the
 source-window locator review, learning-closure pass, 017 sync, draft
 learning-note closure, candidate/formal evidence boundary audit, and
 authorization audit packet, plus the Markdown Batch 005 risk-review routing
-pass, risk-review prerequisite sweep, and 015 queue refresh.
+pass, risk-review prerequisite sweep, 015 queue refresh, and external material
+inventory refresh.
 
 ## Completed Checkpoints
 
@@ -30,9 +31,14 @@ pass, risk-review prerequisite sweep, and 015 queue refresh.
   explicit user authorization:
   `authorization-status=ready_for_explicit_downstream_authorization`,
   `downstream-mutation-authorized=false`.
-- 015 coverage-aware queue refresh excludes all queue ids already covered by
-  016/017: `queue-refresh-status=covered_queue_exhausted`,
-  `refreshed-next-action-ids=0`.
+- 015 coverage-aware queue refresh excludes the 16 queue ids already covered by
+  016/017 and exposes the newly registered raw text corpus triage item:
+  `queue-refresh-status=uncovered_queue_items_available`,
+  `refreshed-next-action-ids=1`.
+- 015 external material inventory refresh registered the Life Death Book
+  Markdown extract and the raw text corpus triage backlog:
+  `external-inventory-status=scoped_metadata_registered`,
+  `new-015-representations=2`, `new-015-queue-items=1`.
 
 Primary detailed references:
 
@@ -46,6 +52,7 @@ Primary detailed references:
 - [2026-06-27-draft-learning-note-closure.md](../superpowers/plans/2026-06-27-draft-learning-note-closure.md)
 - [2026-06-27-learning-reference-authorization-audit.md](../superpowers/plans/2026-06-27-learning-reference-authorization-audit.md)
 - [2026-06-27-015-queue-refresh.md](../superpowers/plans/2026-06-27-015-queue-refresh.md)
+- [2026-06-27-external-material-inventory-refresh.md](../superpowers/plans/2026-06-27-external-material-inventory-refresh.md)
 
 ## Current Frozen Snapshot
 
@@ -80,13 +87,24 @@ Authorization Audit Packet:
 
 015 Queue Refresh:
 
-- `queue-refresh-status=covered_queue_exhausted`
-- `015-queue-items=16`
+- `queue-refresh-status=uncovered_queue_items_available`
+- `015-queue-items=17`
 - `016-covered-queue-items=16`
-- `uncovered-queue-items=0`
-- `refreshed-next-action-ids=0`
+- `uncovered-queue-items=1`
+- `refreshed-next-action-ids=1`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-external-material-inventory-refresh`
+- `next-material-entry=015-raw-text-materials-folder-risk-triage`
+
+015 External Material Inventory Refresh:
+
+- `external-inventory-status=scoped_metadata_registered`
+- `external-entries=31`
+- `new-015-representations=2`
+- `new-015-queue-items=1`
+- `untracked-material-entries=0`
+- `excluded-work-artifacts=3`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-materials-folder-risk-triage`
 
 013 and 012 boundary state:
 
@@ -107,10 +125,12 @@ Authorization Audit Packet:
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
 - `next-new-material-start=015-materials-audit-next-action-queue`.
-- Current 015 queue coverage is complete: all 16 queue ids are present in 016
-  package snapshots, the 4 formerly planned risk-review prerequisite actions
-  are completed, and 017 now has no active `next_action_ids`.
-- `next-material-entry=015-external-material-inventory-refresh`.
+- Current 015 queue coverage has one newly uncovered local item:
+  `queue_raw_text_materials_folder_triage`. The original 16 queue ids are
+  present in 016 package snapshots, the 4 formerly planned risk-review
+  prerequisite actions are completed, and 017 now has no active
+  `next_action_ids`.
+- `next-material-entry=015-raw-text-materials-folder-risk-triage`.
 
 ## Remaining Optional Precision Work
 
@@ -127,11 +147,10 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-external-material-inventory-refresh`. It should scan
-the external preparation inventory, compare it with tracked 015 audit records,
-and create or adjust only 015 metadata for genuinely new in-scope material.
-The queue refresh keeps `downstream-mutation-authorized=false`; 013/012 work
-still requires a separate explicit request.
+`next-material-entry=015-raw-text-materials-folder-risk-triage`. It should
+triage `资料原文/文本类/` at inventory level, split it into bounded source groups
+or deferral buckets, keep ritual-remedy/life-risk material behind safety
+review, and avoid 013/012 mutations unless separately authorized.
 
 ## Guardrails
 

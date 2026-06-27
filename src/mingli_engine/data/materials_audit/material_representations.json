@@ -117,6 +117,19 @@
     "notes": "High-risk source can only support bounded traditional-signal review."
   },
   {
+    "representation_id": "repr_life_death_book_100_pages_markdown_extract",
+    "audit_id": "audit_life_death_book_100_pages",
+    "representation_type": "raw_markdown",
+    "local_reference": "Markdown/2800.《命理生死之书》100页.md",
+    "tracking_status": "external_untracked",
+    "text_quality": "usable",
+    "locator_quality": "line_window",
+    "size_hint": "Markdown extract present",
+    "modified_hint": "",
+    "contains_images": false,
+    "notes": "Existing Markdown extract supports review locators only, not runtime evidence."
+  },
+  {
     "representation_id": "repr_markdown_source_batch_001_raw",
     "audit_id": "audit_markdown_source_batch_001",
     "representation_type": "raw_markdown",
@@ -354,5 +367,18 @@
     "tracking_status": "project_tracked",
     "text_quality": "cleaned",
     "locator_quality": "page_or_section"
+  },
+  {
+    "representation_id": "repr_raw_text_materials_folder",
+    "audit_id": "audit_raw_text_materials_folder",
+    "representation_type": "raw_folder",
+    "local_reference": "资料原文/文本类/",
+    "tracking_status": "external_untracked",
+    "text_quality": "unknown",
+    "locator_quality": "folder_only",
+    "size_hint": "raw folder present",
+    "modified_hint": "",
+    "contains_images": true,
+    "notes": "Untriaged external corpus requires risk-aware source selection."
   }
 ]

@@ -328,5 +328,26 @@
     "recommended_next_action": "review_cleaned_text",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-23"
+  },
+  {
+    "readiness_id": "ready_raw_text_materials_folder_triage",
+    "audit_id": "audit_raw_text_materials_folder",
+    "readiness_state": "needs_risk_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "none",
+    "source_quality": "needs_recheck",
+    "risk_boundary": "high_risk",
+    "missing_prerequisites": [
+      "coarse_inventory_triage",
+      "source_scope_selection",
+      "risk_boundary_review"
+    ],
+    "ready_reasons": [],
+    "blockers": [
+      "External raw text corpus includes mixed high-risk material and must be triaged before extraction."
+    ],
+    "recommended_next_action": "risk_review",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-27"
   }
 ]

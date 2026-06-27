@@ -2677,6 +2677,23 @@ class MaterialQueueRefreshSummary:
 
 
 @dataclass(frozen=True)
+class ExternalMaterialInventoryRefreshSummary:
+    refresh_id: str
+    refresh_status: str
+    external_entry_counts: dict[str, int]
+    scanned_entry_count: int
+    tracked_external_entry_ids: list[str]
+    untracked_material_entry_ids: list[str]
+    excluded_work_artifact_ids: list[str]
+    newly_registered_representation_ids: list[str]
+    new_queue_item_ids: list[str]
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class ExtractionWorkPackage:
     package_id: str
     package_label: str

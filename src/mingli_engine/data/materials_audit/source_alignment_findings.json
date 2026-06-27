@@ -232,5 +232,18 @@
     "duplicate_or_variant_notes": "",
     "reviewer": "maintainer",
     "reviewed_at": "2026-06-23"
+  },
+  {
+    "alignment_id": "align_raw_text_materials_folder_untriaged",
+    "audit_id": "audit_raw_text_materials_folder",
+    "match_type": "uncertain",
+    "source_library_entry_id": "",
+    "source_material_id": "",
+    "confidence": "weak",
+    "evidence": "Raw text folder is a broad mixed corpus; no bounded source-library identity is selected yet.",
+    "registration_recommendation": "Triage folder contents before creating source-library entries.",
+    "duplicate_or_variant_notes": "",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-27"
   }
 ]

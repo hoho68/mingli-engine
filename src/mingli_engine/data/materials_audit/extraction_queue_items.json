@@ -406,5 +406,38 @@
     "status": "completed",
     "created_at": "2026-05-31",
     "updated_at": "2026-05-31"
+  },
+  {
+    "queue_item_id": "queue_raw_text_materials_folder_triage",
+    "audit_id": "audit_raw_text_materials_folder",
+    "queue_type": "risk_review_backlog",
+    "priority_level": "high",
+    "priority_rationale": "Large mixed raw corpus needs risk-boundary triage before any source registration or extraction.",
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "branch_interaction",
+      "luck_cycle",
+      "remedy_boundary",
+      "high_risk_signal"
+    ],
+    "target_gap_ids": [
+      "gap_raw_text_corpus_triage"
+    ],
+    "risk_boundary": "high_risk",
+    "pre_extraction_checks": [
+      "triage folder inventory before opening source files",
+      "select bounded ordinary and high-risk source groups separately",
+      "keep ritual-remedy and life-risk material behind safety review"
+    ],
+    "recommended_action": "risk_review",
+    "depends_on": [
+      "coarse_inventory_triage",
+      "source_scope_selection",
+      "risk_boundary_review"
+    ],
+    "status": "planned",
+    "created_at": "2026-06-27",
+    "updated_at": "2026-06-27"
   }
 ]

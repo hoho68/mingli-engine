@@ -319,6 +319,23 @@ def test_materials_audit_dataclasses_construct_with_defaults():
     assert queue_item.status == "planned"
     assert summary.next_action_ids == []
 
+    external_refresh = models.ExternalMaterialInventoryRefreshSummary(
+        refresh_id="015-external-material-inventory-refresh",
+        refresh_status="scoped_metadata_registered",
+        external_entry_counts={"root_pdf": 1},
+        scanned_entry_count=1,
+        tracked_external_entry_ids=["material-one.pdf"],
+        untracked_material_entry_ids=[],
+        excluded_work_artifact_ids=[],
+        newly_registered_representation_ids=["repr_001"],
+        new_queue_item_ids=[],
+        downstream_mutation_authorized=False,
+        next_material_entry="015-next-step",
+        boundary_checks={"013_012_not_mutated": "passed"},
+    )
+
+    assert external_refresh.guardrails == []
+
 
 def test_read_json_list_reports_missing_invalid_and_non_array_payloads(tmp_path):
     with pytest.raises(materials_audit.MaterialsAuditError, match="missing data file"):
@@ -361,6 +378,8 @@ def test_public_materials_audit_functions_exist():
         "load_extraction_queue_items",
         "build_materials_audit_progress_summary",
         "validate_materials_audit_quality",
+        "build_external_material_inventory_refresh_summary",
+        "render_external_material_inventory_refresh_markdown",
     ):
         assert callable(getattr(materials_audit, function_name))
 
@@ -389,9 +408,21 @@ def test_load_material_audit_records_and_representations_load_current_inventory(
         "ready_for_extraction_review"
     )
     assert "repr_northeast_blind_peak_root_pdf" in representations_by_id
+    assert "repr_life_death_book_100_pages_markdown_extract" in representations_by_id
+    assert "audit_raw_text_materials_folder" in records_by_id
     assert representations_by_id[
         "repr_northeast_blind_peak_root_pdf"
     ].tracking_status == "external_untracked"
+    assert representations_by_id[
+        "repr_life_death_book_100_pages_markdown_extract"
+    ].local_reference == "Markdown/2800.《命理生死之书》100页.md"
+    assert records_by_id["audit_life_death_book_100_pages"].representations == [
+        "repr_life_death_book_100_pages_root_pdf",
+        "repr_life_death_book_100_pages_markdown_extract",
+    ]
+    assert records_by_id["audit_raw_text_materials_folder"].recommended_next_action == (
+        "risk_review"
+    )
     assert representations_by_id[
         "repr_markdown_source_batch_001_cleaned"
     ].representation_type == "cleaned_markdown"
@@ -1321,14 +1352,14 @@ def test_audit_progress_summary_includes_next_five_queue_items_and_backlog_count
     assert summary.next_action_ids == [
         "queue_northeast_blind_peak_extract",
         "queue_mingli_true_formula_teacher_extract",
+        "queue_raw_text_materials_folder_triage",
         "queue_markdown_source_batch_003_register",
         "queue_markdown_source_batch_004_prepare",
-        "queue_duan_plain_mingxue_outline_extract",
     ]
     assert summary.extraction_ready_count == 9
     assert summary.preparation_backlog_count == 0
     assert summary.registration_backlog_count == 0
-    assert summary.risk_review_backlog_count == 4
+    assert summary.risk_review_backlog_count == 5
     assert summary.deferred_queue_count == 2
     assert summary.blocked_queue_count == 1
 
@@ -1354,9 +1385,9 @@ def test_seeded_risk_review_sweep_marks_high_risk_queue_items_completed():
     assert summary.next_action_ids == [
         "queue_northeast_blind_peak_extract",
         "queue_mingli_true_formula_teacher_extract",
+        "queue_raw_text_materials_folder_triage",
         "queue_markdown_source_batch_003_register",
         "queue_markdown_source_batch_004_prepare",
-        "queue_duan_plain_mingxue_outline_extract",
     ]
 
 
@@ -1365,14 +1396,18 @@ def test_materials_audit_queue_refresh_excludes_covered_016_queue_items():
     refresh = materials_audit.build_materials_audit_queue_refresh_summary()
 
     assert refresh.refresh_id == "015-materials-audit-next-action-queue-refresh"
-    assert refresh.refresh_status == "covered_queue_exhausted"
-    assert refresh.queue_item_count == 16
+    assert refresh.refresh_status == "uncovered_queue_items_available"
+    assert refresh.queue_item_count == 17
     assert refresh.covered_queue_item_count == 16
-    assert refresh.uncovered_queue_item_ids == []
+    assert refresh.uncovered_queue_item_ids == [
+        "queue_raw_text_materials_folder_triage",
+    ]
     assert refresh.legacy_next_action_ids == summary.next_action_ids
-    assert refresh.refreshed_next_action_ids == []
+    assert refresh.refreshed_next_action_ids == [
+        "queue_raw_text_materials_folder_triage",
+    ]
     assert refresh.downstream_mutation_authorized is False
-    assert refresh.next_material_entry == "015-external-material-inventory-refresh"
+    assert refresh.next_material_entry == "015-raw-text-materials-folder-risk-triage"
     assert refresh.boundary_checks == {
         "015_queue_loaded": "passed",
         "016_coverage_loaded": "passed",
@@ -1393,13 +1428,79 @@ def test_materials_audit_queue_refresh_markdown_and_docs_are_in_sync():
 
     for marker in (
         "015 Queue Refresh",
-        "`queue-refresh-status=covered_queue_exhausted`",
-        "`015-queue-items=16`",
+        "`queue-refresh-status=uncovered_queue_items_available`",
+        "`015-queue-items=17`",
         "`016-covered-queue-items=16`",
-        "`uncovered-queue-items=0`",
-        "`refreshed-next-action-ids=0`",
+        "`uncovered-queue-items=1`",
+        "`refreshed-next-action-ids=1`",
         "`downstream-mutation-authorized=false`",
-        "`next-material-entry=015-external-material-inventory-refresh`",
+        "`next-material-entry=015-raw-text-materials-folder-risk-triage`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_external_material_inventory_refresh_summarizes_scoped_metadata():
+    refresh = materials_audit.build_external_material_inventory_refresh_summary()
+
+    assert refresh.refresh_id == "015-external-material-inventory-refresh"
+    assert refresh.refresh_status == "scoped_metadata_registered"
+    assert refresh.external_entry_counts == {
+        "root_pdf": 9,
+        "markdown_root": 11,
+        "raw_source_root": 1,
+        "preparation_root": 10,
+    }
+    assert refresh.scanned_entry_count == 31
+    assert "Markdown/2800.《命理生死之书》100页.md" in (
+        refresh.tracked_external_entry_ids
+    )
+    assert "资料原文/文本类/" in refresh.tracked_external_entry_ids
+    assert refresh.untracked_material_entry_ids == []
+    assert refresh.excluded_work_artifact_ids == [
+        "资料整理/_inventory/",
+        "资料整理/new_thread_prompt_2026-05-29.md",
+        "资料整理/thread_handoff_2026-05-29.md",
+    ]
+    assert refresh.newly_registered_representation_ids == [
+        "repr_life_death_book_100_pages_markdown_extract",
+        "repr_raw_text_materials_folder",
+    ]
+    assert refresh.new_queue_item_ids == ["queue_raw_text_materials_folder_triage"]
+    assert refresh.downstream_mutation_authorized is False
+    assert refresh.next_material_entry == "015-raw-text-materials-folder-risk-triage"
+    assert refresh.boundary_checks == {
+        "external_roots_scanned_read_only": "passed",
+        "015_metadata_registered": "passed",
+        "workflow_artifacts_excluded": "passed",
+        "raw_materials_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+
+def test_external_material_inventory_refresh_markdown_and_docs_are_in_sync():
+    refresh = materials_audit.build_external_material_inventory_refresh_summary()
+    markdown = materials_audit.render_external_material_inventory_refresh_markdown(
+        refresh
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 External Material Inventory Refresh",
+        "`external-inventory-status=scoped_metadata_registered`",
+        "`external-entries=31`",
+        "`new-015-representations=2`",
+        "`new-015-queue-items=1`",
+        "`untracked-material-entries=0`",
+        "`excluded-work-artifacts=3`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-raw-text-materials-folder-risk-triage`",
     ):
         assert marker in markdown
         assert marker in materials_doc

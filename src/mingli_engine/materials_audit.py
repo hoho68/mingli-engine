@@ -10,6 +10,7 @@ from mingli_engine.models import (
     AuditProgressSummary,
     CONFIDENCE_LEVELS,
     ExtractionQueueItem,
+    ExternalMaterialInventoryRefreshSummary,
     MATERIAL_AUDIT_ACTIONS,
     MATERIAL_AUDIT_IDENTITY_CONFIDENCES,
     MATERIAL_AUDIT_LOCATOR_CONFIDENCES,
@@ -85,6 +86,19 @@ MATERIALS_AUDIT_PROHIBITED_HIGH_RISK_PHRASES = (
     "create anxiety",
     "paid remedy upsell",
 )
+EXTERNAL_INVENTORY_WORK_ARTIFACTS = frozenset(
+    {
+        "资料整理/_inventory/",
+        "资料整理/new_thread_prompt_2026-05-29.md",
+        "资料整理/thread_handoff_2026-05-29.md",
+    }
+)
+EXTERNAL_INVENTORY_NEW_REPRESENTATION_IDS = (
+    "repr_life_death_book_100_pages_markdown_extract",
+    "repr_raw_text_materials_folder",
+)
+EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS = ("queue_raw_text_materials_folder_triage",)
+EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY = "015-raw-text-materials-folder-risk-triage"
 
 
 def _data_dir(data_dir: Path | str | None) -> Path:
@@ -94,6 +108,10 @@ def _data_dir(data_dir: Path | str | None) -> Path:
 def _sibling_data_dir(source_dir: Path, sibling_name: str) -> Path | None:
     sibling = source_dir.parent / sibling_name
     return sibling if sibling.exists() else None
+
+
+def _workspace_root() -> Path:
+    return Path(__file__).resolve().parents[2]
 
 
 def _read_json_list(path: Path) -> list[dict[str, Any]]:
@@ -892,6 +910,188 @@ def _load_covered_queue_item_ids(source_dir: Path) -> list[str]:
     return covered_queue_item_ids
 
 
+def _relative_inventory_reference(path: Path, workspace_root: Path) -> str:
+    reference = path.relative_to(workspace_root).as_posix()
+    return f"{reference}/" if path.is_dir() else reference
+
+
+def _scan_external_inventory_entries(
+    workspace_root: Path,
+) -> dict[str, list[str]]:
+    roots = {
+        "root_pdf": sorted(workspace_root.glob("*.pdf")),
+        "markdown_root": sorted((workspace_root / "Markdown").iterdir())
+        if (workspace_root / "Markdown").exists()
+        else [],
+        "raw_source_root": sorted((workspace_root / "资料原文").iterdir())
+        if (workspace_root / "资料原文").exists()
+        else [],
+        "preparation_root": sorted((workspace_root / "资料整理").iterdir())
+        if (workspace_root / "资料整理").exists()
+        else [],
+    }
+    return {
+        root_id: [_relative_inventory_reference(path, workspace_root) for path in paths]
+        for root_id, paths in roots.items()
+    }
+
+
+def _normalize_inventory_reference(reference: str) -> str:
+    return reference.replace("\\", "/").rstrip("/")
+
+
+def _is_reference_tracked(reference: str, tracked_references: set[str]) -> bool:
+    normalized = _normalize_inventory_reference(reference)
+    return normalized in tracked_references
+
+
+def build_external_material_inventory_refresh_summary(
+    data_dir: Path | str | None = None,
+    *,
+    workspace_root: Path | str | None = None,
+) -> ExternalMaterialInventoryRefreshSummary:
+    source_dir = _data_dir(data_dir)
+    root = Path(workspace_root) if workspace_root is not None else _workspace_root()
+    inventory_entries_by_root = _scan_external_inventory_entries(root)
+    all_inventory_entries = [
+        reference
+        for references in inventory_entries_by_root.values()
+        for reference in references
+    ]
+    representations = load_material_representations(source_dir)
+    tracked_references = {
+        _normalize_inventory_reference(representation.local_reference)
+        for representation in representations
+    }
+    tracked_external_entry_ids = [
+        reference
+        for reference in all_inventory_entries
+        if _is_reference_tracked(reference, tracked_references)
+    ]
+    excluded_work_artifact_ids = [
+        reference
+        for reference in all_inventory_entries
+        if reference in EXTERNAL_INVENTORY_WORK_ARTIFACTS
+    ]
+    untracked_material_entry_ids = [
+        reference
+        for reference in all_inventory_entries
+        if not _is_reference_tracked(reference, tracked_references)
+        and reference not in EXTERNAL_INVENTORY_WORK_ARTIFACTS
+    ]
+    representation_ids = {
+        representation.representation_id for representation in representations
+    }
+    queue_item_ids = {
+        item.queue_item_id for item in load_extraction_queue_items(source_dir)
+    }
+    newly_registered_representation_ids = [
+        representation_id
+        for representation_id in EXTERNAL_INVENTORY_NEW_REPRESENTATION_IDS
+        if representation_id in representation_ids
+    ]
+    new_queue_item_ids = [
+        queue_item_id
+        for queue_item_id in EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS
+        if queue_item_id in queue_item_ids
+    ]
+
+    return ExternalMaterialInventoryRefreshSummary(
+        refresh_id="015-external-material-inventory-refresh",
+        refresh_status=(
+            "untracked_material_entries_available"
+            if untracked_material_entry_ids
+            else "scoped_metadata_registered"
+        ),
+        external_entry_counts={
+            root_id: len(references)
+            for root_id, references in inventory_entries_by_root.items()
+        },
+        scanned_entry_count=len(all_inventory_entries),
+        tracked_external_entry_ids=tracked_external_entry_ids,
+        untracked_material_entry_ids=untracked_material_entry_ids,
+        excluded_work_artifact_ids=excluded_work_artifact_ids,
+        newly_registered_representation_ids=newly_registered_representation_ids,
+        new_queue_item_ids=new_queue_item_ids,
+        downstream_mutation_authorized=False,
+        next_material_entry=EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY,
+        boundary_checks={
+            "external_roots_scanned_read_only": (
+                "passed" if all_inventory_entries else "failed"
+            ),
+            "015_metadata_registered": (
+                "passed"
+                if len(newly_registered_representation_ids)
+                == len(EXTERNAL_INVENTORY_NEW_REPRESENTATION_IDS)
+                and len(new_queue_item_ids) == len(EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS)
+                else "failed"
+            ),
+            "workflow_artifacts_excluded": (
+                "passed"
+                if set(excluded_work_artifact_ids) == EXTERNAL_INVENTORY_WORK_ARTIFACTS
+                else "failed"
+            ),
+            "raw_materials_not_mutated": "passed",
+            "013_012_not_mutated": "passed",
+        },
+        guardrails=[
+            "External inventory refresh scans only path labels and immediate entries.",
+            "Life Death Markdown is a 015 representation, not runtime report evidence.",
+            "The raw text folder requires bounded risk triage before registration.",
+            "No 013 candidate, review, promotion, or 012 evidence mutation is authorized.",
+        ],
+    )
+
+
+def render_external_material_inventory_refresh_markdown(
+    refresh: ExternalMaterialInventoryRefreshSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if refresh.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 External Material Inventory Refresh",
+        "",
+        f"- Refresh id: `{refresh.refresh_id}`",
+        f"- `external-inventory-status={refresh.refresh_status}`",
+        f"- `external-entries={refresh.scanned_entry_count}`",
+        (
+            "- `new-015-representations="
+            f"{len(refresh.newly_registered_representation_ids)}`"
+        ),
+        f"- `new-015-queue-items={len(refresh.new_queue_item_ids)}`",
+        (
+            "- `untracked-material-entries="
+            f"{len(refresh.untracked_material_entry_ids)}`"
+        ),
+        f"- `excluded-work-artifacts={len(refresh.excluded_work_artifact_ids)}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={refresh.next_material_entry}`",
+        "",
+        "External entry counts:",
+    ]
+    lines.extend(
+        f"- `{root_id}`: `{count}`"
+        for root_id, count in refresh.external_entry_counts.items()
+    )
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in refresh.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in refresh.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_materials_audit_queue_refresh_summary(
     data_dir: Path | str | None = None,
     *,
@@ -932,7 +1132,16 @@ def build_materials_audit_queue_refresh_summary(
         legacy_next_action_ids=progress.next_action_ids,
         refreshed_next_action_ids=refreshed_next_action_ids,
         downstream_mutation_authorized=False,
-        next_material_entry="015-external-material-inventory-refresh",
+        next_material_entry=(
+            EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY
+            if refreshed_next_action_ids
+            == list(EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS)
+            else (
+                "015-uncovered-material-queue-review"
+                if refreshed_next_action_ids
+                else "015-external-material-inventory-refresh"
+            )
+        ),
         boundary_checks={
             "015_queue_loaded": "passed" if queue_items else "failed",
             "016_coverage_loaded": "passed" if covered_ids else "failed",

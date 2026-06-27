@@ -29,15 +29,24 @@ Related maintainer references:
 Current audited material groups:
 
 - 9 root PDF groups already registered in the 014 source library.
+- 1 Life Death Book Markdown extract at
+  `Markdown/2800.《命理生死之书》100页.md`, linked as a representation of the
+  existing Life Death Book audit record.
 - 5 prepared Markdown source batches, each represented by a raw folder, a
   cleaned folder, and a learning note.
+- 1 raw external text corpus folder at `资料原文/文本类/`, registered as a
+  risk-review triage backlog before source-library registration or extraction.
 - 1 processing-status note at `资料整理/source_processing_status.md`.
 - 1 knowledge-skeleton group at `资料整理/knowledge_skeleton/`.
 
 Current representation coverage:
 
 - Root PDFs remain `external_untracked` root-file references.
+- The Life Death Book Markdown extract remains `external_untracked`
+  preparation material and is not runtime evidence.
 - Markdown batch folders remain `external_untracked` preparation references.
+- The raw text corpus folder remains `external_untracked` and must be triaged
+  before any source registration, extraction, or evidence work.
 - Learning notes, processing-status notes, and knowledge-skeleton files are
   tracked as audit representations only, not as report evidence.
 
@@ -60,6 +69,8 @@ Current alignment snapshot:
 - The processing-status note is out of scope for source-library registration.
 - The knowledge-skeleton group is a possible duplicate/aggregate of several
   source-library planning records and must not be silently merged.
+- The raw text corpus folder is an uncertain broad mixed corpus and must be
+  triaged into bounded source groups before source-library registration.
 
 Alignment rules:
 
@@ -98,6 +109,9 @@ Current readiness snapshot:
   a source text.
 - The knowledge skeleton is `preparation_backlog`; it is a derived aggregate and
   must not become report-usable evidence without component source review.
+- The raw text corpus folder is `needs_risk_review`; it is a large mixed
+  external corpus that requires coarse inventory triage and source scope
+  selection before any extraction.
 
 Readiness rules:
 
@@ -128,8 +142,9 @@ Current queue snapshot:
 - 9 `extraction_ready` items: ready ordinary or sensitive sources with
   source-library alignment, target rule families, readiness rationale, and
   pre-extraction checks.
-- 4 `risk_review_backlog` items: high-risk material whose prerequisite
-  boundary-screening actions are now completed.
+- 5 `risk_review_backlog` items: four high-risk materials whose prerequisite
+  boundary-screening actions are completed, plus the newly registered raw text
+  corpus triage backlog.
 - 3 `blocked_backlog` items: one OCR-deferred Markdown batch, one blocked
   source, and one deferred workflow note.
 
@@ -164,40 +179,70 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.materials_audit impo
 
 Expected computed summary:
 
-- 18 audited material groups and 28 material representations.
-- Queue counts: `extraction_ready=9`, `risk_review_backlog=4`, and
+- 19 audited material groups and 30 material representations.
+- Queue counts: `extraction_ready=9`, `risk_review_backlog=5`, and
   `blocked_backlog=3`.
 - Backlog counters: `registration_backlog_count=0`,
-  `risk_review_backlog_count=4`, `preparation_backlog_count=0`,
+  `risk_review_backlog_count=5`, `preparation_backlog_count=0`,
   `blocked_backlog_count=3`, `deferred_queue_count=2`, and
   `blocked_queue_count=1`.
 - Next recommended queue item ids:
   `queue_northeast_blind_peak_extract`,
   `queue_mingli_true_formula_teacher_extract`,
+  `queue_raw_text_materials_folder_triage`,
   `queue_markdown_source_batch_003_register`,
-  `queue_markdown_source_batch_004_prepare`, and
-  `queue_duan_plain_mingxue_outline_extract`.
+  and `queue_markdown_source_batch_004_prepare`.
 - `validate_materials_audit_quality()` returns `[]`.
 
 ## 015 Queue Refresh
 
 The 2026-06-27 coverage-aware queue refresh compares the 015 next-action queue
-with completed 016 work-package snapshots. The original 015 summary still
-reports the historical five-item recommendation, but the refreshed queue
+with completed 016 work-package snapshots. The current 015 summary now includes
+the newly registered raw text corpus triage backlog, and the refreshed queue
 excludes queue ids already covered by 016/017.
 
-- `queue-refresh-status=covered_queue_exhausted`
-- `015-queue-items=16`
+- `queue-refresh-status=uncovered_queue_items_available`
+- `015-queue-items=17`
 - `016-covered-queue-items=16`
-- `uncovered-queue-items=0`
-- `refreshed-next-action-ids=0`
+- `uncovered-queue-items=1`
+- `refreshed-next-action-ids=1`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-external-material-inventory-refresh`
+- `next-material-entry=015-raw-text-materials-folder-risk-triage`
 
 This refresh is read-only planning metadata. It does not mark queue items
 completed, mutate 016 packages, create 013 candidate/review/promotion records,
-or alter 012 formal evidence. The next local new-material path is an external
-preparation inventory refresh before any new 015 records are added or adjusted.
+or alter 012 formal evidence. The next local new-material path is risk-aware
+triage of the newly registered raw text corpus folder.
+
+## 015 External Material Inventory Refresh
+
+The 2026-06-27 external inventory refresh scanned root PDFs, `Markdown/`,
+`资料原文/`, and `资料整理/` as path labels and immediate entries only. It did not
+open, parse, move, convert, or rewrite external material files.
+
+- `external-inventory-status=scoped_metadata_registered`
+- `external-entries=31`
+- `new-015-representations=2`
+- `new-015-queue-items=1`
+- `untracked-material-entries=0`
+- `excluded-work-artifacts=3`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-materials-folder-risk-triage`
+
+Registered 015 metadata:
+
+- `repr_life_death_book_100_pages_markdown_extract` links the existing Life
+  Death Book Markdown extract to `audit_life_death_book_100_pages`.
+- `audit_raw_text_materials_folder`, `repr_raw_text_materials_folder`,
+  `ready_raw_text_materials_folder_triage`, and
+  `queue_raw_text_materials_folder_triage` capture `资料原文/文本类/` as a
+  high-risk triage backlog.
+
+Excluded workflow artifacts:
+
+- `资料整理/_inventory/`
+- `资料整理/new_thread_prompt_2026-05-29.md`
+- `资料整理/thread_handoff_2026-05-29.md`
 
 ## Raw-File Boundary
 
