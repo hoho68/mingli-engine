@@ -238,10 +238,10 @@ Authorization Audit Packet:
 
 013 and 012 boundary state:
 
-- `013-candidate-extracts=39`
-- `013-review-decisions=39`
-- `013-promotion-batches=27`
-- `012-formal-evidence-units=96`
+- `013-candidate-extracts=42`
+- `013-review-decisions=42`
+- `013-promotion-batches=28`
+- `012-formal-evidence-units=99`
 - `formal_evidence_delta=0`
 
 ## Continuation Entry Points

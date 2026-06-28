@@ -277,6 +277,54 @@
     "confidence": "moderate"
   },
   {
+    "decision_id": "review_markdown_batch_002_branch_route_001",
+    "candidate_id": "candidate_markdown_batch_002_branch_route_001",
+    "decision": "approved",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Branch interaction route constraints from Batch 002 lecture material are line-located and bounded as structural interaction-route evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Use only when a route, column relation, or branch interaction condition is explicit.",
+      "Do not turn interaction-route evidence into deterministic outcome claims."
+    ],
+    "source_quality": "direct_extract",
+    "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_markdown_batch_002_useful_god_types_001",
+    "candidate_id": "candidate_markdown_batch_002_useful_god_types_001",
+    "decision": "approved",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Useful-god category taxonomy from Batch 002 lecture material is line-located and can be promoted as ordinary structural taxonomy with chart-context limitations.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Use as taxonomy, not a unique useful-god decision.",
+      "Seasonal and pass-through categories remain auxiliary unless chart structure supports them."
+    ],
+    "source_quality": "direct_extract",
+    "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_markdown_batch_002_day_master_strength_basis_001",
+    "candidate_id": "candidate_markdown_batch_002_day_master_strength_basis_001",
+    "decision": "approved",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Day-master strength basis from Liang Batch 002 material is line-located and suitable as an ordinary pattern-strength review entry point.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Treat strength as an entry basis, not a chart-quality verdict.",
+      "Require root, support, season, and chart-context review before application."
+    ],
+    "source_quality": "direct_extract",
+    "confidence": "moderate"
+  },
+  {
     "decision_id": "review_candidate_markdown_batch_004_useful_god_001",
     "candidate_id": "candidate_markdown_batch_004_useful_god_001",
     "decision": "approved",

@@ -130,6 +130,22 @@
     "unresolved_issues": []
   },
   {
+    "promotion_batch_id": "promotion_markdown_batch_002_extension_001",
+    "candidate_ids": [
+      "candidate_markdown_batch_002_branch_route_001",
+      "candidate_markdown_batch_002_useful_god_types_001",
+      "candidate_markdown_batch_002_day_master_strength_basis_001"
+    ],
+    "target_evidence_ids": [
+      "batch002_branch_interaction_route_001",
+      "batch002_useful_god_types_001",
+      "batch002_day_master_strength_basis_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved Markdown Batch 002 extension candidates for line-located formal evidence.",
+    "unresolved_issues": []
+  },
+  {
     "promotion_batch_id": "promotion_markdown_batch_004_taxonomy_001",
     "candidate_ids": [
       "candidate_markdown_batch_004_useful_god_001",

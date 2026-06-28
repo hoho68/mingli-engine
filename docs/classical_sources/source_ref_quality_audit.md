@@ -1,16 +1,16 @@
 # Evidence Source Reference Quality Audit Report
 
 Generated: automatic analysis
-Audit scope: 96 evidence units
+Audit scope: 99 evidence units
 
 ## Precision Summary
 
 | Precision Level | Count | Share |
 |-----------------|-------|-------|
-| REVIEW_NOTE_SOURCE_WINDOW | 58 | 60.4% |
-| MARKDOWN_SOURCE_LINE | 15 | 15.6% |
-| REVIEW_NOTE_KS_PATH | 11 | 11.5% |
-| PAGE_EXACT | 12 | 12.5% |
+| REVIEW_NOTE_SOURCE_WINDOW | 58 | 58.6% |
+| MARKDOWN_SOURCE_LINE | 18 | 18.2% |
+| REVIEW_NOTE_KS_PATH | 11 | 11.1% |
+| PAGE_EXACT | 12 | 12.1% |
 
 ## Source-Window Locator Detail
 
@@ -76,16 +76,16 @@ Upgraded 25 additional source-window locators from chapter-level to page-level a
 - Markdown line locators are used for the Life Death Book material that already has a tracked Markdown extract.
 
 Prior improvements are preserved:
-- 15 promoted Markdown learning material locators point to cleaned Markdown files and line numbers.
+- 18 promoted Markdown learning material locators point to cleaned Markdown files and line numbers.
 - 11 knowledge-skeleton locators remain explicit curated review-note paths.
 
 ## Priority Groups
 
-### Current Goal Progress (96 items)
+### Current Goal Progress (99 items)
 - REVIEW_NOTE_SOURCE_WINDOW: 58 items now point to source-window sections with source locators.
 - PAGE_LOCATOR: 44 source-window items now have page-level locators.
 - CHAPTER_LOCATOR: 12 source-window items remain chapter-level with explicit blocker notes, manual-review notes, and learning-closure notes.
-- MARKDOWN_SOURCE_LINE: 15 items point to cleaned Markdown files and line numbers.
+- MARKDOWN_SOURCE_LINE: 18 items point to cleaned Markdown files and line numbers.
 - REVIEW_NOTE_KS_PATH: 11 items point to knowledge-skeleton files.
 - PAGE_EXACT: 12 items already have exact page references.
 
@@ -177,6 +177,9 @@ Prior improvements are preserved:
 | batch004_pattern_strength_001 | Advanced pattern strength and preference/avoidance rules | pattern_strength | Liang Xiangrun lineage | batch_markdown_registration_001 | `review-note:Markdown/source_batch_004_cleaned/简体《沈氏用神例解》梁湘润(精校)(1).md#L1522` |  | MARKDOWN_SOURCE_LINE | improved |
 | batch004_branch_interaction_001 | Four-corner formation branch interaction framework | branch_interaction | Liang Xiangrun lineage (four-corner formation) | batch_markdown_registration_001 | `review-note:Markdown/source_batch_004_cleaned/简体《四角方阵刑冲合会透解》梁湘润2024(1).md#L263` |  | MARKDOWN_SOURCE_LINE | improved |
 | batch004_luck_cycle_001 | Advanced luck-cycle trigger identification | luck_cycle | Liang Xiangrun lineage | batch_markdown_registration_001 | `review-note:Markdown/source_batch_004_cleaned/简体《流年法典》梁湘润_(1).md#L28` |  | MARKDOWN_SOURCE_LINE | improved |
+| batch002_branch_interaction_route_001 | Branch interaction route constraints | branch_interaction | General lecture textbook | batch_markdown_batch_002_extension_001 | `review-note:Markdown/source_batch_002_cleaned/八字命理讲义教材（299页）.md#L760` |  | MARKDOWN_SOURCE_LINE | added |
+| batch002_useful_god_types_001 | Useful-god category taxonomy | useful_god_candidate | General lecture textbook | batch_markdown_batch_002_extension_001 | `review-note:Markdown/source_batch_002_cleaned/八字命理讲义教材（299页）.md#L1156` |  | MARKDOWN_SOURCE_LINE | added |
+| batch002_day_master_strength_basis_001 | Day-master strength basis | pattern_strength | Liang Xiangrun lineage | batch_markdown_batch_002_extension_001 | `review-note:Markdown/source_batch_002_cleaned/简体《子平教材讲义第二级次》梁湘润(1).md#L714` |  | MARKDOWN_SOURCE_LINE | added |
 | kskeleton_q001_foundation | q001: foundation | ten_god_relation | Multiple lineages | batch_kskeleton_taxonomy_001 | `review-note:knowledge_skeleton/q001_foundation_tables/q001_foundation_tables.md` |  | REVIEW_NOTE_KS_PATH | improved |
 | kskeleton_q002_yushi | q002: yushi | useful_god_candidate | Multiple lineages | batch_kskeleton_taxonomy_001 | `review-note:knowledge_skeleton/q002_yongshen_tiaohou/q002_yongshen_tiaohou.md` |  | REVIEW_NOTE_KS_PATH | improved |
 | kskeleton_q002_shen | q002: shen | useful_god_candidate | Multiple lineages | batch_kskeleton_taxonomy_001 | `review-note:knowledge_skeleton/q002_yongshen_tiaohou/shen_pattern_yongshen_framework.md` |  | REVIEW_NOTE_KS_PATH | improved |

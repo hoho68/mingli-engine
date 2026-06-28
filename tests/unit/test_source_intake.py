@@ -274,6 +274,9 @@ PROMOTED_MARKDOWN_LEARNING_CANDIDATE_IDS = {
     "candidate_markdown_batch_002_pattern_strength_001",
     "candidate_markdown_batch_002_luck_cycle_001",
     "candidate_markdown_batch_002_ten_god_relation_001",
+    "candidate_markdown_batch_002_branch_route_001",
+    "candidate_markdown_batch_002_useful_god_types_001",
+    "candidate_markdown_batch_002_day_master_strength_basis_001",
     "candidate_markdown_batch_004_useful_god_001",
     "candidate_markdown_batch_004_pattern_strength_001",
     "candidate_markdown_batch_004_branch_interaction_001",
@@ -12408,6 +12411,63 @@ def test_promoted_markdown_learning_candidates_use_source_file_locators():
         _assert_markdown_line_locator(source_locator)
         assert "learning-reference:" not in source_locator
         assert "note_markdown_batch_005_001" not in source_locator
+
+
+def test_markdown_batch_002_extension_candidates_are_promoted():
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    batches = source_intake.load_promotion_batches()
+
+    candidates_by_id = {candidate.candidate_id: candidate for candidate in candidates}
+    reviews_by_id = {review.decision_id: review for review in reviews}
+    batches_by_id = {batch.promotion_batch_id: batch for batch in batches}
+
+    expected_candidates = {
+        "candidate_markdown_batch_002_branch_route_001": (
+            "branch_interaction",
+            "batch002_branch_interaction_route_001",
+        ),
+        "candidate_markdown_batch_002_useful_god_types_001": (
+            "useful_god_candidate",
+            "batch002_useful_god_types_001",
+        ),
+        "candidate_markdown_batch_002_day_master_strength_basis_001": (
+            "pattern_strength",
+            "batch002_day_master_strength_basis_001",
+        ),
+    }
+    for candidate_id, (rule_family, evidence_id) in expected_candidates.items():
+        candidate = candidates_by_id[candidate_id]
+
+        assert candidate.material_id == "material_markdown_source_batch_002_core"
+        assert candidate.proposed_rule_family == rule_family
+        assert candidate.risk_tier == "ordinary"
+        assert candidate.status == "promoted"
+        assert candidate.related_evidence_ids == [evidence_id]
+        assert candidate.related_conflict_ids == []
+        assert candidate.related_gap_ids == []
+        _assert_markdown_line_locator(candidate.source_locator)
+        assert len(candidate.extracted_meaning) <= 280
+        assert len(candidate.short_quote) <= 80
+
+        review = reviews_by_id[f"review_{candidate_id.removeprefix('candidate_')}"]
+        assert review.candidate_id == candidate_id
+        assert review.decision == "approved"
+        assert review.required_changes == []
+        assert review.rejection_reason == ""
+        assert review.source_quality == "direct_extract"
+        assert review.confidence == "moderate"
+        assert review.approval_limitations
+
+    batch = batches_by_id["promotion_markdown_batch_002_extension_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.candidate_ids == list(expected_candidates)
+    assert batch.target_evidence_ids == [
+        "batch002_branch_interaction_route_001",
+        "batch002_useful_god_types_001",
+        "batch002_day_master_strength_basis_001",
+    ]
+    assert batch.unresolved_issues == []
 
 
 def test_promoted_kskeleton_candidates_use_review_note_locators():

@@ -1564,6 +1564,75 @@
     "conflict_ids": []
   },
   {
+    "evidence_id": "batch002_branch_interaction_route_001",
+    "source_id": "markdown_source_batch_002_core",
+    "source_ref": "review-note:Markdown/source_batch_002_cleaned/八字命理讲义教材（299页）.md#L760",
+    "theme": "branch interaction: constrained stem-branch routes",
+    "rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "summary": "The lecture frames four-pillar stem and branch effects as route-bound: stem-branch effects depend on column relation, and branch interactions normally require punishment, clash, combination, or harm.",
+    "applicability": [
+      "Markdown Batch 002 cleaned lecture line locator",
+      "branch interaction route review",
+      "stem-branch relation taxonomy"
+    ],
+    "limitations": [
+      "Use as structural route evidence only; do not infer outcomes from an interaction name alone.",
+      "Cross-column effects require explicit route, column, or interaction evidence."
+    ],
+    "school": "general lecture textbook",
+    "curation_batch_id": "batch_markdown_batch_002_extension_001",
+    "confidence": "moderate",
+    "source_quality": "direct_extract",
+    "conflict_ids": []
+  },
+  {
+    "evidence_id": "batch002_useful_god_types_001",
+    "source_id": "markdown_source_batch_002_core",
+    "source_ref": "review-note:Markdown/source_batch_002_cleaned/八字命理讲义教材（299页）.md#L1156",
+    "theme": "useful god candidate: useful-god category taxonomy",
+    "rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "summary": "The lecture separates useful-god work into support-suppression, seasonal adjustment, and pass-through categories, with seasonal and pass-through roles treated as auxiliary to the main support-suppression evaluation.",
+    "applicability": [
+      "Markdown Batch 002 cleaned lecture line locator",
+      "useful-god category taxonomy",
+      "support-suppression and auxiliary-use review"
+    ],
+    "limitations": [
+      "Use as category taxonomy; chart structure determines which category can apply.",
+      "Do not present a useful-god category as unique without supporting chart evidence."
+    ],
+    "school": "general lecture textbook",
+    "curation_batch_id": "batch_markdown_batch_002_extension_001",
+    "confidence": "moderate",
+    "source_quality": "direct_extract",
+    "conflict_ids": []
+  },
+  {
+    "evidence_id": "batch002_day_master_strength_basis_001",
+    "source_id": "markdown_source_batch_002_core",
+    "source_ref": "review-note:Markdown/source_batch_002_cleaned/简体《子平教材讲义第二级次》梁湘润(1).md#L714",
+    "theme": "pattern strength: day-master strength as review basis",
+    "rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "summary": "Liang's intermediate textbook treats day-master strength as the entry basis for interpretation while asking reviewers to examine the support layers behind strength and weakness.",
+    "applicability": [
+      "Markdown Batch 002 Liang textbook line locator",
+      "day-master strength review",
+      "pattern-strength basis"
+    ],
+    "limitations": [
+      "Use as a strength-review starting point, not a deterministic chart-quality verdict.",
+      "Strength labels require root, support, season, and chart-context review."
+    ],
+    "school": "Liang Xiangrun lineage",
+    "curation_batch_id": "batch_markdown_batch_002_extension_001",
+    "confidence": "moderate",
+    "source_quality": "direct_extract",
+    "conflict_ids": []
+  },
+  {
     "evidence_id": "batch004_useful_god_001",
     "source_id": "markdown_source_batch_004",
     "source_ref": "review-note:Markdown/source_batch_004_cleaned/简体《渊海喜忌随笔》梁湘润(1).md#L20",

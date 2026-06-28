@@ -451,6 +451,72 @@
     "created_at": "2026-06-23"
   },
   {
+    "candidate_id": "candidate_markdown_batch_002_branch_route_001",
+    "material_id": "material_markdown_source_batch_002_core",
+    "source_locator": "review-note:Markdown/source_batch_002_cleaned/八字命理讲义教材（299页）.md#L760",
+    "extracted_meaning": "Batch 002 lecture material frames stem-branch and branch-branch effects as constrained interaction routes; use branch interaction only when the route, column relation, or punishment/clash/combination/harm condition is explicit.",
+    "short_quote": "干支间实质生克路线原则",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Keep as structural interaction-route evidence, not outcome prediction.",
+      "Do not infer direct cross-column force without an explicit route or interaction condition."
+    ],
+    "related_evidence_ids": [
+      "batch002_branch_interaction_route_001"
+    ],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "maintainer",
+    "created_at": "2026-06-28"
+  },
+  {
+    "candidate_id": "candidate_markdown_batch_002_useful_god_types_001",
+    "material_id": "material_markdown_source_batch_002_core",
+    "source_locator": "review-note:Markdown/source_batch_002_cleaned/八字命理讲义教材（299页）.md#L1156",
+    "extracted_meaning": "Batch 002 lecture material separates useful-god work into support-suppression, seasonal adjustment, and pass-through categories; treat seasonal and pass-through use gods as auxiliary to the main structural evaluation.",
+    "short_quote": "扶抑用神、调候用神、通关用神",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Keep as useful-god category taxonomy; chart context decides applicability.",
+      "Do not promote any single useful-god category as the unique answer without supporting structure."
+    ],
+    "related_evidence_ids": [
+      "batch002_useful_god_types_001"
+    ],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "maintainer",
+    "created_at": "2026-06-28"
+  },
+  {
+    "candidate_id": "candidate_markdown_batch_002_day_master_strength_basis_001",
+    "material_id": "material_markdown_source_batch_002_core",
+    "source_locator": "review-note:Markdown/source_batch_002_cleaned/简体《子平教材讲义第二级次》梁湘润(1).md#L714",
+    "extracted_meaning": "Batch 002 Liang material treats day-master strength as an interpretation entry point while requiring explicit support layers behind strength and weakness rather than a single fixed formula.",
+    "short_quote": "以「日干」强弱作为基准",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Keep as pattern-strength basis evidence; do not decide chart quality from strength labels alone.",
+      "Strength or weakness requires root, support, season, and chart-context review."
+    ],
+    "related_evidence_ids": [
+      "batch002_day_master_strength_basis_001"
+    ],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "maintainer",
+    "created_at": "2026-06-28"
+  },
+  {
     "candidate_id": "candidate_markdown_batch_004_useful_god_001",
     "material_id": "material_markdown_source_batch_004",
     "source_locator": "review-note:Markdown/source_batch_004_cleaned/简体《渊海喜忌随笔》梁湘润(1).md#L20",

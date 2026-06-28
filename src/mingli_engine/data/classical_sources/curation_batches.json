@@ -135,6 +135,20 @@
     ]
   },
   {
+    "batch_id": "batch_markdown_batch_002_extension_001",
+    "source_ids": [
+      "markdown_source_batch_002_core"
+    ],
+    "evidence_ids": [
+      "batch002_branch_interaction_route_001",
+      "batch002_useful_god_types_001",
+      "batch002_day_master_strength_basis_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Reviewed three ordinary-risk Markdown Batch 002 line-located extension evidence units.",
+    "unresolved_issues": []
+  },
+  {
     "batch_id": "batch_kskeleton_taxonomy_001",
     "source_ids": [
       "knowledge_skeleton"

@@ -1613,10 +1613,10 @@ def test_learning_reference_risk_review_sweep_closes_actions_without_evidence_ch
         "status:blocked": 1,
     }
     assert summary.formal_evidence_delta == 0
-    assert len(candidates) == 39
-    assert len(reviews) == 39
-    assert len(promotion_batches) == 27
-    assert len(evidence_units) == 96
+    assert len(candidates) == 42
+    assert len(reviews) == 42
+    assert len(promotion_batches) == 28
+    assert len(evidence_units) == 99
 
 
 def test_learning_reference_closes_remaining_draft_notes_without_evidence_changes():
@@ -1646,10 +1646,10 @@ def test_learning_reference_closes_remaining_draft_notes_without_evidence_change
     assert summary.note_counts == {"candidate_intake_started": 19}
     assert summary.next_action_ids == []
     assert summary.formal_evidence_delta == 0
-    assert len(candidates) == 39
-    assert len(reviews) == 39
-    assert len(promotion_batches) == 27
-    assert len(evidence_units) == 96
+    assert len(candidates) == 42
+    assert len(reviews) == 42
+    assert len(promotion_batches) == 28
+    assert len(evidence_units) == 99
 
 
 @pytest.mark.parametrize(
@@ -1921,9 +1921,9 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
     ]
     assert set(create_candidate_ids + reuse_candidate_ids) <= set(candidates)
 
-    assert len(candidates) == 39
+    assert len(candidates) == 42
     assert Counter(candidate.status for candidate in candidates.values()) == {
-        "promoted": 36,
+        "promoted": 39,
         "rejected": 2,
         "blocked": 1,
     }
@@ -1939,9 +1939,9 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         for candidate_id in create_candidate_ids
     )
 
-    assert len(reviews) == 39
+    assert len(reviews) == 42
     assert Counter(review.decision for review in reviews) == {
-        "approved": 36,
+        "approved": 39,
         "rejected": 2,
         "blocked": 1,
     }
@@ -1951,12 +1951,12 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         if review.candidate_id in create_candidate_ids
     ) == {"approved": 30}
 
-    assert len(promotion_batches) == 27
+    assert len(promotion_batches) == 28
     assert Counter(batch.review_status for batch in promotion_batches) == {
-        "reviewed": 27
+        "reviewed": 28
     }
 
-    assert len(evidence_units) == 96
+    assert len(evidence_units) == 99
     assert Counter(unit.curation_batch_id for unit in evidence_units) == {
         "batch_012_seed_001": 8,
         "batch_012_taxonomy_001": 58,
@@ -1964,6 +1964,7 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         "batch_kskeleton_taxonomy_001": 11,
         "batch_bazi_general_source_preparation_001": 3,
         "batch_blind_life_manual_high_risk_boundary_001": 1,
+        "batch_markdown_batch_002_extension_001": 3,
     }
     assert not any(
         unit.source_ref.startswith("learning-reference:")
@@ -1979,10 +1980,10 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         "Candidate/Formal Evidence Boundary Audit",
         "`017-applied-decisions=33`",
         "`017-create-candidate-decisions=30`",
-        "`013-candidate-extracts=39`",
-        "`013-review-decisions=39`",
-        "`013-promotion-batches=27`",
-        "`012-formal-evidence-units=96`",
+        "`013-candidate-extracts=42`",
+        "`013-review-decisions=42`",
+        "`013-promotion-batches=28`",
+        "`012-formal-evidence-units=99`",
         "`formal_evidence_delta=0`",
         "`learning-reference-source-refs-in-012=0`",
         "`candidate-id-source-refs-in-012=0`",
@@ -2008,17 +2009,17 @@ def test_learning_reference_authorization_audit_confirms_local_boundary_clearanc
         "status:applied": 33,
     }
     assert audit.candidate_status_counts == {
-        "promoted": 36,
+        "promoted": 39,
         "rejected": 2,
         "blocked": 1,
     }
     assert audit.review_decision_counts == {
-        "approved": 36,
+        "approved": 39,
         "rejected": 2,
         "blocked": 1,
     }
-    assert audit.promotion_review_status_counts == {"reviewed": 27}
-    assert audit.formal_evidence_unit_count == 96
+    assert audit.promotion_review_status_counts == {"reviewed": 28}
+    assert audit.formal_evidence_unit_count == 99
     assert audit.formal_evidence_delta == 0
     assert audit.leakage_counts == {
         "learning_reference_source_refs_in_012": 0,

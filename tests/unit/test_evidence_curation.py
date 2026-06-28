@@ -191,7 +191,13 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
     evidence_by_id = {unit.evidence_id: unit for unit in evidence_units}
     blind_life_boundary = evidence_by_id["blind_life_manual_high_risk_boundary_001"]
 
-    assert report.approved_evidence_count == 96
+    expected_extension_ids = {
+        "batch002_branch_interaction_route_001",
+        "batch002_useful_god_types_001",
+        "batch002_day_master_strength_basis_001",
+    }
+
+    assert report.approved_evidence_count == 99
     assert report.open_conflicts == ["conflict_high_risk_scope_001"]
     assert set(report.sources_with_gaps) == {
         "blind_life_manual",
@@ -214,6 +220,12 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
         for limitation in blind_life_boundary.limitations
         for marker in ("拒绝", "不得", "exact death")
     )
+    assert expected_extension_ids <= set(evidence_by_id)
+    for evidence_id in expected_extension_ids:
+        unit = evidence_by_id[evidence_id]
+        assert unit.source_id == "markdown_source_batch_002_core"
+        assert unit.curation_batch_id == "batch_markdown_batch_002_extension_001"
+        assert unit.source_ref.startswith("review-note:Markdown/source_batch_002_cleaned/")
     assert validate_curation_quality(sources, evidence_units, conflicts) == []
 
 

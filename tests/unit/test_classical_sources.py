@@ -41,6 +41,9 @@ PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS = {
     "batch002_pattern_strength_001",
     "batch002_luck_cycle_001",
     "batch002_ten_god_relation_001",
+    "batch002_branch_interaction_route_001",
+    "batch002_useful_god_types_001",
+    "batch002_day_master_strength_basis_001",
     "batch004_useful_god_001",
     "batch004_pattern_strength_001",
     "batch004_branch_interaction_001",
@@ -349,6 +352,36 @@ def test_bazi_general_source_preparation_reading_evidence_is_formalized():
     assert batch.unresolved_issues == []
 
 
+def test_markdown_batch_002_extension_evidence_is_formalized():
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+    batches_by_id = {batch.batch_id: batch for batch in load_curation_batches()}
+
+    expected_evidence = {
+        "batch002_branch_interaction_route_001": "branch_interaction",
+        "batch002_useful_god_types_001": "useful_god_candidate",
+        "batch002_day_master_strength_basis_001": "pattern_strength",
+    }
+    for evidence_id, rule_family in expected_evidence.items():
+        unit = evidence_by_id[evidence_id]
+
+        assert unit.source_id == "markdown_source_batch_002_core"
+        _assert_markdown_line_locator(unit.source_ref)
+        assert unit.rule_family == rule_family
+        assert unit.risk_tier == "ordinary"
+        assert unit.curation_batch_id == "batch_markdown_batch_002_extension_001"
+        assert unit.confidence == "moderate"
+        assert unit.source_quality == "direct_extract"
+        assert unit.applicability
+        assert unit.limitations
+        assert len(unit.summary) <= 280
+
+    batch = batches_by_id["batch_markdown_batch_002_extension_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.source_ids == ["markdown_source_batch_002_core"]
+    assert batch.evidence_ids == list(expected_evidence)
+    assert batch.unresolved_issues == []
+
+
 def test_promoted_markdown_learning_evidence_uses_source_file_locators():
     evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
 
@@ -392,7 +425,8 @@ def test_source_ref_quality_audit_tracks_source_window_references():
 
     assert "REVIEW_NOTE_TOPIC" not in report
     assert "FILE_SECTION" not in report
-    assert "| REVIEW_NOTE_SOURCE_WINDOW | 58 | 60.4% |" in report
+    assert "| REVIEW_NOTE_SOURCE_WINDOW | 58 | 58.6% |" in report
+    assert "| MARKDOWN_SOURCE_LINE | 18 | 18.2% |" in report
     assert "| PAGE_LOCATOR | 44 |" in report
     assert "| CHAPTER_LOCATOR | 12 |" in report
     assert "| MARKDOWN_LINE_LOCATOR | 2 |" in report

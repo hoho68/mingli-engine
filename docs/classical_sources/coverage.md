@@ -11,7 +11,7 @@ from the current JSON corpus instead of maintained by hand.
 
 Snapshot date: 2026-06-28
 
-- Approved evidence units: 96
+- Approved evidence units: 99
 - Registered sources: 17
 - Sources with explicit gaps:
   - `blind_life_manual`: 仅条件化高风险边界已提升；单条断语仍需页码或标题级定位复核后才能支撑正式结论。
@@ -31,7 +31,7 @@ Snapshot date: 2026-06-28
 - `knowledge_skeleton`: 11
 - `life_death_book_100_pages`: 11
 - `markdown_source_batch_001`: 4
-- `markdown_source_batch_002_core`: 4
+- `markdown_source_batch_002_core`: 7
 - `markdown_source_batch_004`: 4
 - `markdown_source_batch_005`: 3
 - `mingli_true_formula_teacher`: 11
@@ -44,19 +44,19 @@ Snapshot date: 2026-06-28
 ## Evidence Counts By Rule Family
 
 - `blind_image_method`: 11
-- `branch_interaction`: 11
+- `branch_interaction`: 12
 - `five_element_balance`: 4
 - `high_risk_signal`: 8
 - `luck_cycle`: 10
-- `pattern_strength`: 14
+- `pattern_strength`: 15
 - `remedy_boundary`: 8
 - `taboo_god_candidate`: 6
 - `ten_god_relation`: 12
-- `useful_god_candidate`: 12
+- `useful_god_candidate`: 13
 
 ## Evidence Counts By Risk Tier
 
-- `ordinary`: 45
+- `ordinary`: 48
 - `sensitive`: 39
 - `high_risk`: 12
 
