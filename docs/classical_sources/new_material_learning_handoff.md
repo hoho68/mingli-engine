@@ -13,13 +13,13 @@ source selection, Liang Bazi core individual review, and Bazi general source
 cluster selection, cluster source selection, source identity review,
 registration prep, source-library registration, and Bazi general
 source-preparation reading, variant choice/deferred review, selected variant
-registration prep, raw text next-cycle source selection, and raw text
-next-cycle identity review.
-The latest local checkpoint resolved the next-cycle identity boundary for the
-ordinary modern-method and miscellaneous clusters. Both clusters still require
-source-level selection before registration prep; case/formula clusters remain
-deferred, the sensitive-topic cluster remains risk-gated, and no source-library,
-013, or 012 data was mutated. Raw files remain unchanged.
+registration prep, raw text next-cycle source selection, raw text next-cycle
+identity review, and raw text next-cycle cluster-source selection.
+The latest local checkpoint selected two bounded source-level records from the
+ordinary modern-method and miscellaneous clusters, then registered their
+source-library, 013, and 012 weak-locator metadata under explicit user
+authorization. Case/formula clusters remain deferred, the sensitive-topic
+cluster remains risk-gated, and raw files remain unchanged.
 
 ## Completed Checkpoints
 
@@ -32,7 +32,7 @@ deferred, the sensitive-topic cluster remains risk-gated, and no source-library,
   source window: `retained-chapter-learning-closed=11`.
 - 017 learning-reference sync recorded that selected ready learning inputs
   remain stable after Liang individual review:
-  `selected-ready-learning-notes=21`.
+  `selected-ready-learning-notes=23`.
 - Draft learning-note closure closed the remaining seven 017 learning-note
   handles: `closed-draft-learning-notes=7`, `next_action_ids=0`.
 - The risk-review prerequisite sweep is closed:
@@ -44,7 +44,7 @@ deferred, the sensitive-topic cluster remains risk-gated, and no source-library,
   explicit user authorization:
   `authorization-status=ready_for_explicit_downstream_authorization`,
   `downstream-mutation-authorized=false`.
-- 015 coverage-aware queue refresh excludes the 21 queue ids already covered by
+- 015 coverage-aware queue refresh excludes the 23 queue ids already covered by
   016/017 and the locally completed raw text corpus triage item:
   `queue-refresh-status=covered_or_completed_queue_exhausted`,
   `refreshed-next-action-ids=0`.
@@ -125,6 +125,14 @@ deferred, the sensitive-topic cluster remains risk-gated, and no source-library,
   `source-library-mutation-authorized=false`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-raw-text-next-cycle-cluster-source-selection`.
+- 015 Raw Text Next Cycle Cluster Source Selection is completed:
+  `next-cycle-cluster-source-selection-status=next_cycle_cluster_source_selection_completed`,
+  `next-cycle-cluster-source-selection-items=2`,
+  `selected-for-registration=2`, `registered-source-entries=2`,
+  `candidate-extracts=2`, `formal-evidence-units=2`,
+  `source-library-mutation-authorized=true`,
+  `downstream-mutation-authorized=true`, and
+  `next-material-entry=015-raw-text-next-cycle-followup-selection`.
 
 Primary detailed references:
 
@@ -151,6 +159,7 @@ Primary detailed references:
 - [2026-06-28-bazi-general-selected-variant-registration-prep.md](../superpowers/plans/2026-06-28-bazi-general-selected-variant-registration-prep.md)
 - [2026-06-28-raw-text-next-cycle-source-selection.md](../superpowers/plans/2026-06-28-raw-text-next-cycle-source-selection.md)
 - [2026-06-28-raw-text-next-cycle-identity-review.md](../superpowers/plans/2026-06-28-raw-text-next-cycle-identity-review.md)
+- [2026-06-28-raw-text-next-cycle-cluster-source-selection.md](../superpowers/plans/2026-06-28-raw-text-next-cycle-cluster-source-selection.md)
 - [2026-06-28-blind-life-manual-013-012-promotion.md](../superpowers/plans/2026-06-28-blind-life-manual-013-012-promotion.md)
 
 ## Current Frozen Snapshot
@@ -167,19 +176,19 @@ Source-window and locator state:
 
 017 learning-reference state:
 
-- `selected-ready-learning-notes=21`
+- `selected-ready-learning-notes=23`
 - `closed-draft-learning-notes=7`
 - `next_action_ids=0`
 - `planned-risk-review-actions=0`
 - `completed-risk-review-actions=4`
-- `017-applied-decisions=35`
-- `017-create-candidate-decisions=32`
+- `017-applied-decisions=37`
+- `017-create-candidate-decisions=34`
 
 Authorization Audit Packet:
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=21`
+- `017-notes-closed=23`
 - `017-next-action-ids=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
@@ -187,8 +196,8 @@ Authorization Audit Packet:
 015 Queue Refresh:
 
 - `queue-refresh-status=covered_or_completed_queue_exhausted`
-- `015-queue-items=22`
-- `016-covered-queue-items=21`
+- `015-queue-items=24`
+- `016-covered-queue-items=23`
 - `015-local-completed-queue-items=1`
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
@@ -302,12 +311,29 @@ Cluster-source selection required review ids:
 - `next_cycle_identity_bazi_modern_method_series`
 - `next_cycle_identity_bazi_misc_review`
 
+015 Raw Text Next Cycle Cluster Source Selection:
+
+- `next-cycle-cluster-source-selection-status=next_cycle_cluster_source_selection_completed`
+- `next-cycle-cluster-source-selection-items=2`
+- `selected-for-registration=2`
+- `registered-source-entries=2`
+- `candidate-extracts=2`
+- `formal-evidence-units=2`
+- `source-library-mutation-authorized=true`
+- `downstream-mutation-authorized=true`
+- `next-material-entry=015-raw-text-next-cycle-followup-selection`
+
+Selected next-cycle source records:
+
+- `next_cycle_cluster_source_true_spirit_positioning`
+- `next_cycle_cluster_source_mingli_wangdoujing`
+
 013 and 012 boundary state:
 
-- `013-candidate-extracts=44`
-- `013-review-decisions=44`
-- `013-promotion-batches=29`
-- `012-formal-evidence-units=101`
+- `013-candidate-extracts=46`
+- `013-review-decisions=46`
+- `013-promotion-batches=30`
+- `012-formal-evidence-units=103`
 - `formal_evidence_delta=0`
 
 ## Continuation Entry Points
@@ -320,8 +346,8 @@ Cluster-source selection required review ids:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-raw-text-next-cycle-cluster-source-selection`.
-- Current 015 queue coverage has no uncovered action after excluding 21
+- `next-new-material-start=015-raw-text-next-cycle-followup-selection`.
+- Current 015 queue coverage has no uncovered action after excluding 23
   016-covered ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
   prerequisite actions are completed, and 017 now has no active
@@ -495,12 +521,11 @@ Cluster-source selection required review ids:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-raw-text-next-cycle-cluster-source-selection`. It
-should choose bounded source-level records inside
-`bazi_general_modern_method_series_cluster` and
-`bazi_general_misc_identity_review_cluster`, keep case/formula/sensitive
-clusters deferred or risk-gated, and require explicit authorization before any
-source-library, 013, or 012 mutation.
+`next-material-entry=015-raw-text-next-cycle-followup-selection`. It should
+select the next bounded ordinary follow-up source(s) only after checking whether
+modern-method and miscellaneous coverage has enough weak-locator breadth, keep
+case/formula/sensitive clusters deferred or risk-gated, and require explicit
+authorization before any additional source-library, 013, or 012 mutation.
 
 ## Guardrails
 

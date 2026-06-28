@@ -12409,6 +12409,72 @@ def test_bazi_general_selected_variant_intake_records_are_promoted():
     assert batch.unresolved_issues == []
 
 
+def test_bazi_general_next_cycle_cluster_source_intake_records_are_promoted():
+    materials = source_intake.load_source_materials()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    batches = source_intake.load_promotion_batches()
+
+    materials_by_id = {material.material_id: material for material in materials}
+    candidates_by_id = {candidate.candidate_id: candidate for candidate in candidates}
+    reviews_by_id = {review.decision_id: review for review in reviews}
+    batches_by_id = {batch.promotion_batch_id: batch for batch in batches}
+
+    expected_materials = {
+        "material_bazi_general_true_spirit_positioning_pdf": (
+            "source_bazi_general_true_spirit_positioning_pdf",
+            "reviewed",
+        ),
+        "material_bazi_general_mingli_wangdoujing_pdf": (
+            "source_bazi_general_mingli_wangdoujing_pdf",
+            "reviewed",
+        ),
+    }
+    for material_id, (source_id, preparation_status) in expected_materials.items():
+        material = materials_by_id[material_id]
+        assert material.related_source_id == source_id
+        assert material.preparation_status == preparation_status
+
+    expected_candidates = {
+        "candidate_bazi_general_true_spirit_useful_god_001": (
+            "material_bazi_general_true_spirit_positioning_pdf",
+            "useful_god_candidate",
+            "bazi_general_true_spirit_useful_god_001",
+        ),
+        "candidate_bazi_general_wangdoujing_branch_interaction_001": (
+            "material_bazi_general_mingli_wangdoujing_pdf",
+            "branch_interaction",
+            "bazi_general_wangdoujing_branch_interaction_001",
+        ),
+    }
+    for candidate_id, (material_id, rule_family, evidence_id) in expected_candidates.items():
+        candidate = candidates_by_id[candidate_id]
+        assert candidate.material_id == material_id
+        assert candidate.source_locator.startswith("page:")
+        assert candidate.proposed_rule_family == rule_family
+        assert candidate.risk_tier == "ordinary"
+        assert candidate.status == "promoted"
+        assert candidate.related_evidence_ids == [evidence_id]
+        assert len(candidate.extracted_meaning) <= 280
+        assert len(candidate.short_quote) <= 80
+
+        review = reviews_by_id[f"review_{candidate_id.removeprefix('candidate_')}"]
+        assert review.candidate_id == candidate_id
+        assert review.decision == "approved"
+        assert review.source_quality == "review_note"
+        assert review.confidence == "weak"
+        assert review.approval_limitations
+
+    batch = batches_by_id["promotion_bazi_general_next_cycle_cluster_source_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.candidate_ids == list(expected_candidates)
+    assert batch.target_evidence_ids == [
+        "bazi_general_true_spirit_useful_god_001",
+        "bazi_general_wangdoujing_branch_interaction_001",
+    ]
+    assert batch.unresolved_issues == []
+
+
 def test_blind_life_manual_high_risk_boundary_candidate_is_promoted():
     materials = source_intake.load_source_materials()
     candidates = source_intake.load_candidate_extracts()

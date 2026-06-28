@@ -197,6 +197,9 @@ Prior improvements are preserved:
 | batch005_blind_image_method_001 | blind image method: batch 005 training notes | blind_image_method | Wuyang course notes | batch_markdown_registration_001 | `review-note:Markdown/source_batch_005_cleaned/高阶资料1-6节.md#L5` |  | MARKDOWN_SOURCE_LINE | improved |
 | batch005_branch_interaction_001 | branch interaction: batch 005 training notes | branch_interaction | Wuyang course notes | batch_markdown_registration_001 | `review-note:Markdown/source_batch_005_cleaned/11节 刑冲取象复习笔记.md#L5` |  | MARKDOWN_SOURCE_LINE | improved |
 
+| bazi_general_true_spirit_useful_god_001 | True-spirit positioning source entry | useful_god_candidate | Bazi modern method reference | batch_bazi_general_next_cycle_cluster_source_001 | `page:八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf#p1` |  | PAGE_EXACT | weak next-cycle cluster-source anchor added |
+| bazi_general_wangdoujing_branch_interaction_001 | Wangdoujing source entry | branch_interaction | Bazi miscellaneous reference | batch_bazi_general_next_cycle_cluster_source_001 | `page:1_命理望斗经(1).pdf#p1` |  | PAGE_EXACT | weak next-cycle cluster-source anchor added |
+
 ## Recommendations
 
 1. Targeted transcription: only transcribe retained chapter windows if a future promotion requires exact quotation or page-level proof.

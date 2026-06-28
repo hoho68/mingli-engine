@@ -400,7 +400,7 @@ def test_load_source_library_entries_loads_current_registered_sources():
     entries = source_library.load_source_library_entries()
     by_id = {entry.entry_id: entry for entry in entries}
 
-    assert len(entries) == 19
+    assert len(entries) == 21
     assert set(by_id) == {
         "entry_northeast_blind_peak_pdf",
         "entry_duan_plain_mingxue_outline_pdf",
@@ -416,6 +416,8 @@ def test_load_source_library_entries_loads_current_registered_sources():
         "entry_bazi_general_ziping_orthodox_pair_pdf",
         "entry_bazi_general_ditiansui_selected_pdf",
         "entry_bazi_general_qiongtong_selected_pdf",
+        "entry_bazi_general_true_spirit_positioning_pdf",
+        "entry_bazi_general_mingli_wangdoujing_pdf",
         "entry_markdown_source_batch_001",
         "entry_markdown_source_batch_002_core",
         "entry_markdown_source_batch_004",
@@ -464,6 +466,30 @@ def test_load_source_library_entries_loads_current_registered_sources():
         "review_completed"
     )
     assert by_id["entry_bazi_general_qiongtong_selected_pdf"].next_action == (
+        "no_action"
+    )
+    assert by_id["entry_bazi_general_true_spirit_positioning_pdf"].material_id == (
+        "material_bazi_general_true_spirit_positioning_pdf"
+    )
+    assert by_id["entry_bazi_general_true_spirit_positioning_pdf"].local_reference == (
+        "八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf"
+    )
+    assert by_id["entry_bazi_general_true_spirit_positioning_pdf"].readiness_status == (
+        "review_completed"
+    )
+    assert by_id["entry_bazi_general_true_spirit_positioning_pdf"].next_action == (
+        "no_action"
+    )
+    assert by_id["entry_bazi_general_mingli_wangdoujing_pdf"].material_id == (
+        "material_bazi_general_mingli_wangdoujing_pdf"
+    )
+    assert by_id["entry_bazi_general_mingli_wangdoujing_pdf"].local_reference == (
+        "1_命理望斗经(1).pdf"
+    )
+    assert by_id["entry_bazi_general_mingli_wangdoujing_pdf"].readiness_status == (
+        "review_completed"
+    )
+    assert by_id["entry_bazi_general_mingli_wangdoujing_pdf"].next_action == (
         "no_action"
     )
 
@@ -647,7 +673,7 @@ def test_load_source_priority_assessments_loads_default_assessments():
     assessments = source_library.load_source_priority_assessments()
     by_id = {assessment.assessment_id: assessment for assessment in assessments}
 
-    assert len(assessments) == 17
+    assert len(assessments) == 19
     assert "priority_blind_life_manual_001" in by_id
     assert "priority_bazi_general_lecture_textbook_001" in by_id
     assert "priority_bazi_general_ziping_orthodox_pair_001" in by_id
@@ -657,6 +683,18 @@ def test_load_source_priority_assessments_loads_default_assessments():
     assert by_id["priority_bazi_general_qiongtong_selected_001"].entry_id == (
         "entry_bazi_general_qiongtong_selected_pdf"
     )
+    assert by_id["priority_bazi_general_true_spirit_positioning_001"].entry_id == (
+        "entry_bazi_general_true_spirit_positioning_pdf"
+    )
+    assert by_id["priority_bazi_general_true_spirit_positioning_001"].expected_value == (
+        "broadens_school_coverage"
+    )
+    assert by_id["priority_bazi_general_mingli_wangdoujing_001"].entry_id == (
+        "entry_bazi_general_mingli_wangdoujing_pdf"
+    )
+    assert by_id["priority_bazi_general_mingli_wangdoujing_001"].target_rule_families == [
+        "branch_interaction"
+    ]
     assert by_id["priority_blind_life_manual_001"].entry_id == (
         "entry_blind_life_manual_pdf"
     )

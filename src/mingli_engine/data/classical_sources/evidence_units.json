@@ -2197,5 +2197,51 @@
     "confidence": "weak",
     "source_quality": "review_note",
     "conflict_ids": []
+  },
+  {
+    "evidence_id": "bazi_general_true_spirit_useful_god_001",
+    "source_id": "source_bazi_general_true_spirit_positioning_pdf",
+    "source_ref": "page:八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf#p1",
+    "theme": "useful god candidate: true-spirit positioning source entry",
+    "rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "summary": "True-spirit positioning PDF is registered as a modern useful-god comparison source; use as a weak preparation seed until page review is completed.",
+    "applicability": [
+      "True-spirit positioning next-cycle source locator",
+      "useful_god_candidate comparison seed"
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Treat true-spirit positioning as school-specific comparison context."
+    ],
+    "school": "Bazi modern method reference",
+    "curation_batch_id": "batch_bazi_general_next_cycle_cluster_source_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
+  },
+  {
+    "evidence_id": "bazi_general_wangdoujing_branch_interaction_001",
+    "source_id": "source_bazi_general_mingli_wangdoujing_pdf",
+    "source_ref": "page:1_命理望斗经(1).pdf#p1",
+    "theme": "branch interaction: Wangdoujing source entry",
+    "rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "summary": "Mingli Wangdoujing is registered as a weak branch-interaction comparison source; use as a preparation seed until page review is completed.",
+    "applicability": [
+      "Mingli Wangdoujing next-cycle source locator",
+      "branch_interaction comparison seed"
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as branch-interaction comparison context."
+    ],
+    "school": "Bazi miscellaneous reference",
+    "curation_batch_id": "batch_bazi_general_next_cycle_cluster_source_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
   }
 ]

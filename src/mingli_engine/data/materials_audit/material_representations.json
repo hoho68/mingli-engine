@@ -445,5 +445,31 @@
     "modified_hint": "",
     "contains_images": true,
     "notes": "Selected canonical variant; current pass tracks weak locator metadata only."
+  },
+  {
+    "representation_id": "repr_bazi_general_true_spirit_positioning_pdf",
+    "audit_id": "audit_bazi_general_true_spirit_positioning_pdf",
+    "representation_type": "root_pdf",
+    "local_reference": "八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf",
+    "tracking_status": "external_untracked",
+    "text_quality": "summary_only",
+    "locator_quality": "page_or_section",
+    "size_hint": "source PDF present",
+    "modified_hint": "",
+    "contains_images": true,
+    "notes": "Next-cycle source-level selection; current pass tracks weak locator metadata only."
+  },
+  {
+    "representation_id": "repr_bazi_general_mingli_wangdoujing_pdf",
+    "audit_id": "audit_bazi_general_mingli_wangdoujing_pdf",
+    "representation_type": "root_pdf",
+    "local_reference": "1_命理望斗经(1).pdf",
+    "tracking_status": "external_untracked",
+    "text_quality": "summary_only",
+    "locator_quality": "page_or_section",
+    "size_hint": "source PDF present",
+    "modified_hint": "",
+    "contains_images": true,
+    "notes": "Next-cycle source-level selection; current pass tracks weak locator metadata only."
   }
 ]

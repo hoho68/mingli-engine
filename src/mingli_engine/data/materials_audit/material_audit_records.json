@@ -867,5 +867,69 @@
     "outcome_reason": "Selected canonical variant registered and advanced through weak locator-based preparation metadata.",
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28"
+  },
+  {
+    "audit_id": "audit_bazi_general_true_spirit_positioning_pdf",
+    "canonical_title": "True Spirit Positioning Bazi Modern Method",
+    "alternate_titles": [
+      "真神在哪里？定位八字真神"
+    ],
+    "material_scope": "bazi",
+    "primary_material_type": "pdf",
+    "representations": [
+      "repr_bazi_general_true_spirit_positioning_pdf"
+    ],
+    "source_library_entry_id": "entry_bazi_general_true_spirit_positioning_pdf",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "ready_for_extraction_review",
+    "source_boundary": "external_untracked",
+    "topic_tags": [
+      "modern-method",
+      "true-spirit",
+      "useful-god"
+    ],
+    "rule_families": [
+      "useful_god_candidate"
+    ],
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "rights_notes": "External PDF; use locator notes only and store concise paraphrases.",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
+    "outcome_reason": "Next-cycle cluster source selected and advanced through weak locator-based preparation metadata.",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "audit_id": "audit_bazi_general_mingli_wangdoujing_pdf",
+    "canonical_title": "Mingli Wangdoujing",
+    "alternate_titles": [
+      "命理望斗经"
+    ],
+    "material_scope": "bazi",
+    "primary_material_type": "pdf",
+    "representations": [
+      "repr_bazi_general_mingli_wangdoujing_pdf"
+    ],
+    "source_library_entry_id": "entry_bazi_general_mingli_wangdoujing_pdf",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "ready_for_extraction_review",
+    "source_boundary": "external_untracked",
+    "topic_tags": [
+      "misc-reference",
+      "wangdoujing",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "rights_notes": "External PDF; use locator notes only and store concise paraphrases.",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
+    "outcome_reason": "Next-cycle cluster source selected and advanced through weak locator-based preparation metadata.",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
   }
 ]

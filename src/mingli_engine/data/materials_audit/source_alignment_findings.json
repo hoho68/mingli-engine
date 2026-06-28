@@ -310,5 +310,31 @@
     "duplicate_or_variant_notes": "Canonical variant selected from the Qiongtong variant set.",
     "reviewer": "maintainer",
     "reviewed_at": "2026-06-28"
+  },
+  {
+    "alignment_id": "align_bazi_general_true_spirit_positioning_pdf",
+    "audit_id": "audit_bazi_general_true_spirit_positioning_pdf",
+    "match_type": "exact",
+    "source_library_entry_id": "entry_bazi_general_true_spirit_positioning_pdf",
+    "source_material_id": "material_bazi_general_true_spirit_positioning_pdf",
+    "confidence": "strong",
+    "evidence": "Next-cycle cluster-source selection, source-library entry, and 013 source material describe the same true-spirit PDF.",
+    "registration_recommendation": "none",
+    "duplicate_or_variant_notes": "Selected as the bounded source from the modern-method cluster.",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28"
+  },
+  {
+    "alignment_id": "align_bazi_general_mingli_wangdoujing_pdf",
+    "audit_id": "audit_bazi_general_mingli_wangdoujing_pdf",
+    "match_type": "exact",
+    "source_library_entry_id": "entry_bazi_general_mingli_wangdoujing_pdf",
+    "source_material_id": "material_bazi_general_mingli_wangdoujing_pdf",
+    "confidence": "strong",
+    "evidence": "Next-cycle cluster-source selection, source-library entry, and 013 source material describe the same Wangdoujing PDF.",
+    "registration_recommendation": "none",
+    "duplicate_or_variant_notes": "Selected as the bounded source from the miscellaneous identity-review cluster.",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28"
   }
 ]

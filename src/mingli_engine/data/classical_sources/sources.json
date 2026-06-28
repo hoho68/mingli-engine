@@ -247,5 +247,29 @@
     "risk_notes": [],
     "curation_gap_reason": "",
     "review_reference": "015-bazi-general-selected-variant-registration-prep"
+  },
+  {
+    "source_id": "source_bazi_general_true_spirit_positioning_pdf",
+    "title": "True Spirit Positioning Bazi Modern Method",
+    "file_name": "八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Next-cycle cluster-source selection for Bazi general corpus; weak locator metadata only.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "015-raw-text-next-cycle-cluster-source-selection"
+  },
+  {
+    "source_id": "source_bazi_general_mingli_wangdoujing_pdf",
+    "title": "Mingli Wangdoujing",
+    "file_name": "1_命理望斗经(1).pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Next-cycle cluster-source selection for Bazi general corpus; weak locator metadata only.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "015-raw-text-next-cycle-cluster-source-selection"
   }
 ]

@@ -37,6 +37,13 @@ EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES = {
     "source_bazi_general_qiongtong_selected_pdf": "穷通宝鉴/窮通寶鑒.pdf",
 }
 
+EXPECTED_BAZI_GENERAL_NEXT_CYCLE_SOURCE_FILES = {
+    "source_bazi_general_true_spirit_positioning_pdf": (
+        "八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf"
+    ),
+    "source_bazi_general_mingli_wangdoujing_pdf": "1_命理望斗经(1).pdf",
+}
+
 PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS = {
     "batch001_pattern_strength_001",
     "batch001_ten_god_relation_001",
@@ -230,11 +237,13 @@ def test_source_registry_includes_all_initial_pdfs():
     sources = load_classical_sources()
     by_id = {source.source_id: source for source in sources}
 
-    assert len(sources) == 19
+    assert len(sources) == 21
     assert set(by_id) == set(EXPECTED_INITIAL_SOURCE_FILES) | set(
         EXPECTED_BAZI_GENERAL_SOURCE_FILES
     ) | set(
         EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES
+    ) | set(
+        EXPECTED_BAZI_GENERAL_NEXT_CYCLE_SOURCE_FILES
     ) | {
         "markdown_source_batch_001",
         "markdown_source_batch_002_core",
@@ -268,6 +277,13 @@ def test_source_registry_includes_all_initial_pdfs():
         assert source.review_status == "approved"
         assert source.scope_notes
     for source_id, file_name in EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
+        assert source.scope_notes
+    for source_id, file_name in EXPECTED_BAZI_GENERAL_NEXT_CYCLE_SOURCE_FILES.items():
         source = by_id[source_id]
         assert source.file_name == file_name
         assert source.source_type == "pdf"
@@ -400,6 +416,47 @@ def test_bazi_general_selected_variant_evidence_is_formalized():
     batch = batches_by_id["batch_bazi_general_selected_variant_001"]
     assert batch.review_status == "reviewed"
     assert batch.source_ids == list(EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES)
+    assert batch.evidence_ids == list(expected_evidence)
+    assert batch.unresolved_issues == []
+
+
+def test_bazi_general_next_cycle_cluster_source_evidence_is_formalized():
+    sources_by_id = {source.source_id: source for source in load_classical_sources()}
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+    batches_by_id = {batch.batch_id: batch for batch in load_curation_batches()}
+
+    expected_evidence = {
+        "bazi_general_true_spirit_useful_god_001": (
+            "source_bazi_general_true_spirit_positioning_pdf",
+            "useful_god_candidate",
+        ),
+        "bazi_general_wangdoujing_branch_interaction_001": (
+            "source_bazi_general_mingli_wangdoujing_pdf",
+            "branch_interaction",
+        ),
+    }
+    for evidence_id, (source_id, rule_family) in expected_evidence.items():
+        source = sources_by_id[source_id]
+        unit = evidence_by_id[evidence_id]
+
+        assert source.review_status == "approved"
+        assert unit.source_id == source_id
+        assert unit.source_ref.startswith("page:")
+        assert unit.rule_family == rule_family
+        assert unit.risk_tier == "ordinary"
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
+        assert (
+            unit.curation_batch_id
+            == "batch_bazi_general_next_cycle_cluster_source_001"
+        )
+        assert len(unit.summary) <= 280
+        assert unit.applicability
+        assert unit.limitations
+
+    batch = batches_by_id["batch_bazi_general_next_cycle_cluster_source_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.source_ids == list(EXPECTED_BAZI_GENERAL_NEXT_CYCLE_SOURCE_FILES)
     assert batch.evidence_ids == list(expected_evidence)
     assert batch.unresolved_issues == []
 

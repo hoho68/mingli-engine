@@ -721,5 +721,39 @@
     ],
     "source_quality": "review_note",
     "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_true_spirit_useful_god_001",
+    "candidate_id": "candidate_bazi_general_true_spirit_useful_god_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Next-cycle cluster-source candidate accepted as weak useful_god_candidate metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Treat true-spirit positioning as school-specific comparison context."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_wangdoujing_branch_interaction_001",
+    "candidate_id": "candidate_bazi_general_wangdoujing_branch_interaction_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Next-cycle cluster-source candidate accepted as weak branch_interaction metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as branch-interaction comparison context."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
   }
 ]

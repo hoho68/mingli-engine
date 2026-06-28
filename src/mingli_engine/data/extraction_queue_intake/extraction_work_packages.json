@@ -155,5 +155,22 @@
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28",
     "notes": "Completed selected-variant registration-prep package for Ditiansui and Qiongtong with weak locator-based 013 and 012 advancement."
+  },
+  {
+    "package_id": "package_bazi_general_next_cycle_cluster_source_001",
+    "package_label": "Bazi general next-cycle cluster-source package 001",
+    "source_queue_snapshot_ids": [
+      "queue_bazi_general_true_spirit_useful_god_extract",
+      "queue_bazi_general_wangdoujing_branch_interaction_extract"
+    ],
+    "selected_task_ids": [
+      "task_bazi_general_true_spirit_useful_god_001",
+      "task_bazi_general_wangdoujing_branch_interaction_001"
+    ],
+    "backlog_record_ids": [],
+    "status": "completed",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28",
+    "notes": "Completed next-cycle cluster-source selection package for two bounded sources with weak locator-based 013 and 012 advancement."
   }
 ]

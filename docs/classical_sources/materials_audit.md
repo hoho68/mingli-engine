@@ -202,8 +202,8 @@ the newly registered raw text corpus triage backlog, and the refreshed queue
 excludes queue ids already covered by 016/017.
 
 - `queue-refresh-status=covered_or_completed_queue_exhausted`
-- `015-queue-items=22`
-- `016-covered-queue-items=21`
+- `015-queue-items=24`
+- `016-covered-queue-items=23`
 - `015-local-completed-queue-items=1`
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
@@ -821,6 +821,65 @@ Guardrails:
 - Case, formula, and sensitive clusters remain outside this identity review.
 - Raw files, source-library records, candidates, reviews, promotions, and formal
   evidence are not mutated.
+
+## 015 Raw Text Next Cycle Cluster Source Selection
+
+The 2026-06-28 next-cycle cluster-source selection chooses two bounded
+source-level records from the ordinary modern-method and miscellaneous
+clusters, then records the authorized source-library, 013, and 012 weak-locator
+metadata chain. It does not move, convert, or rewrite external raw materials.
+
+- Selection id: `015-raw-text-next-cycle-cluster-source-selection`
+- `next-cycle-cluster-source-selection-status=next_cycle_cluster_source_selection_completed`
+- `next-cycle-cluster-source-selection-items=2`
+- `selected-for-registration=2`
+- `registered-source-entries=2`
+- `candidate-extracts=2`
+- `formal-evidence-units=2`
+- `source-library-mutation-authorized=true`
+- `downstream-mutation-authorized=true`
+- `next-material-entry=015-raw-text-next-cycle-followup-selection`
+
+Selected source records:
+
+- `next_cycle_cluster_source_true_spirit_positioning`
+- `next_cycle_cluster_source_mingli_wangdoujing`
+
+Source-library entry ids:
+
+- `entry_bazi_general_true_spirit_positioning_pdf`
+- `entry_bazi_general_mingli_wangdoujing_pdf`
+
+Promoted candidate ids:
+
+- `candidate_bazi_general_true_spirit_useful_god_001`
+- `candidate_bazi_general_wangdoujing_branch_interaction_001`
+
+Formal evidence ids:
+
+- `bazi_general_true_spirit_useful_god_001`
+- `bazi_general_wangdoujing_branch_interaction_001`
+
+Boundary checks:
+
+- `cluster_source_selection_items_loaded`: `passed`
+- `identity_review_references_valid`: `passed`
+- `source_paths_are_relative`: `passed`
+- `selected_clusters_only`: `passed`
+- `source_library_entries_registered`: `passed`
+- `013_candidates_promoted`: `passed`
+- `012_evidence_promoted`: `passed`
+- `deferred_clusters_remain_out_of_scope`: `passed`
+- `risk_review_clusters_remain_out_of_scope`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+
+- Only two authorized source-level records are registered in this next-cycle
+  slice.
+- All locators remain weak page-level placeholders until later transcription.
+- Case, formula, and sensitive clusters remain outside this selection.
+- Raw external materials are not moved, converted, or rewritten.
 
 ## Raw-File Boundary
 

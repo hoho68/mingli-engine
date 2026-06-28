@@ -444,5 +444,43 @@
     "recommended_next_action": "extract_candidates",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_true_spirit_positioning_pdf",
+    "audit_id": "audit_bazi_general_true_spirit_positioning_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "summary_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Single PDF source was selected from the next-cycle modern-method cluster.",
+      "Weak page anchor is available for source-preparation metadata.",
+      "User authorized source-library, 013, and 012 advancement for this stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_mingli_wangdoujing_pdf",
+    "audit_id": "audit_bazi_general_mingli_wangdoujing_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "summary_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Single PDF source was selected from the next-cycle miscellaneous cluster.",
+      "Weak page anchor is available for source-preparation metadata.",
+      "User authorized source-library, 013, and 012 advancement for this stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
   }
 ]

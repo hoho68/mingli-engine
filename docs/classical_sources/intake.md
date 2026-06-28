@@ -700,6 +700,24 @@ closed, the starter omits it and only carries the four follow-up candidates
 into the next session. Applied review-decision, candidate-status, and
 formal-evidence deltas remain zero.
 
+## Bazi General Next-Cycle Cluster-Source Intake
+
+The 2026-06-28 `015-raw-text-next-cycle-cluster-source-selection` stage added
+two authorized weak-locator 013 candidates:
+
+- `candidate_bazi_general_true_spirit_useful_god_001` from
+  `material_bazi_general_true_spirit_positioning_pdf`, approved by
+  `review_bazi_general_true_spirit_useful_god_001` and promoted to
+  `bazi_general_true_spirit_useful_god_001`.
+- `candidate_bazi_general_wangdoujing_branch_interaction_001` from
+  `material_bazi_general_mingli_wangdoujing_pdf`, approved by
+  `review_bazi_general_wangdoujing_branch_interaction_001` and promoted to
+  `bazi_general_wangdoujing_branch_interaction_001`.
+
+Both records use `source_quality=review_note`, `confidence=weak`, and empty
+short quotes. They are metadata links only; raw PDFs remain external and
+unchanged.
+
 ## Review Manual Application Next-Session Packet
 
 `build_pending_candidate_review_manual_application_next_session_packet()` and

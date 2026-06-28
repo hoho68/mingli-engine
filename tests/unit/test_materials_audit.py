@@ -703,6 +703,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_next_cycle_identity_review_items",
         "build_raw_text_next_cycle_identity_review_summary",
         "render_raw_text_next_cycle_identity_review_markdown",
+        "load_raw_text_next_cycle_cluster_source_selection_items",
+        "build_raw_text_next_cycle_cluster_source_selection_summary",
+        "render_raw_text_next_cycle_cluster_source_selection_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -1684,7 +1687,7 @@ def test_audit_progress_summary_includes_next_five_queue_items_and_backlog_count
         "queue_markdown_source_batch_004_prepare",
         "queue_duan_plain_mingxue_outline_extract",
     ]
-    assert summary.extraction_ready_count == 14
+    assert summary.extraction_ready_count == 16
     assert summary.preparation_backlog_count == 0
     assert summary.registration_backlog_count == 0
     assert summary.risk_review_backlog_count == 5
@@ -1725,8 +1728,8 @@ def test_materials_audit_queue_refresh_excludes_covered_016_queue_items():
 
     assert refresh.refresh_id == "015-materials-audit-next-action-queue-refresh"
     assert refresh.refresh_status == "covered_or_completed_queue_exhausted"
-    assert refresh.queue_item_count == 22
-    assert refresh.covered_queue_item_count == 21
+    assert refresh.queue_item_count == 24
+    assert refresh.covered_queue_item_count == 23
     assert refresh.locally_completed_queue_item_ids == [
         "queue_raw_text_materials_folder_triage",
     ]
@@ -1758,8 +1761,8 @@ def test_materials_audit_queue_refresh_markdown_and_docs_are_in_sync():
     for marker in (
         "015 Queue Refresh",
         "`queue-refresh-status=covered_or_completed_queue_exhausted`",
-        "`015-queue-items=22`",
-        "`016-covered-queue-items=21`",
+        "`015-queue-items=24`",
+        "`016-covered-queue-items=23`",
         "`015-local-completed-queue-items=1`",
         "`uncovered-queue-items=0`",
         "`refreshed-next-action-ids=0`",
@@ -2394,6 +2397,102 @@ def test_raw_text_next_cycle_identity_review_markdown_and_docs_are_in_sync():
         "`source-library-mutation-authorized=false`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-raw-text-next-cycle-cluster-source-selection`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_next_cycle_cluster_source_selection_items_load_authorized_sources():
+    items = materials_audit.load_raw_text_next_cycle_cluster_source_selection_items()
+    items_by_id = {item.selection_id: item for item in items}
+
+    assert len(items) == 2
+    assert {item.source_selection_id for item in items} == {
+        "next_cycle_bazi_modern_method_series",
+        "next_cycle_bazi_misc_identity_review",
+    }
+    assert {item.cluster_id for item in items} == {
+        "bazi_general_modern_method_series_cluster",
+        "bazi_general_misc_identity_review_cluster",
+    }
+    assert all(item.selection_status == "selected_for_registration" for item in items)
+    assert items_by_id[
+        "next_cycle_cluster_source_true_spirit_positioning"
+    ].relative_paths == [
+        "八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf"
+    ]
+    assert items_by_id[
+        "next_cycle_cluster_source_mingli_wangdoujing"
+    ].relative_paths == ["1_命理望斗经(1).pdf"]
+
+
+def test_raw_text_next_cycle_cluster_source_selection_summary_counts_authorized_chain():
+    summary = materials_audit.build_raw_text_next_cycle_cluster_source_selection_summary()
+
+    assert summary.selection_id == "015-raw-text-next-cycle-cluster-source-selection"
+    assert summary.selection_status == "next_cycle_cluster_source_selection_completed"
+    assert summary.source_selection_item_count == 2
+    assert summary.selected_for_registration_count == 2
+    assert summary.registered_source_entry_count == 2
+    assert summary.candidate_extract_count == 2
+    assert summary.formal_evidence_count == 2
+    assert summary.selected_item_ids == [
+        "next_cycle_cluster_source_true_spirit_positioning",
+        "next_cycle_cluster_source_mingli_wangdoujing",
+    ]
+    assert summary.registered_entry_ids == [
+        "entry_bazi_general_true_spirit_positioning_pdf",
+        "entry_bazi_general_mingli_wangdoujing_pdf",
+    ]
+    assert summary.candidate_ids == [
+        "candidate_bazi_general_true_spirit_useful_god_001",
+        "candidate_bazi_general_wangdoujing_branch_interaction_001",
+    ]
+    assert summary.evidence_ids == [
+        "bazi_general_true_spirit_useful_god_001",
+        "bazi_general_wangdoujing_branch_interaction_001",
+    ]
+    assert summary.source_library_mutation_authorized is True
+    assert summary.downstream_mutation_authorized is True
+    assert summary.next_material_entry == "015-raw-text-next-cycle-followup-selection"
+    assert summary.boundary_checks == {
+        "cluster_source_selection_items_loaded": "passed",
+        "identity_review_references_valid": "passed",
+        "source_paths_are_relative": "passed",
+        "selected_clusters_only": "passed",
+        "source_library_entries_registered": "passed",
+        "013_candidates_promoted": "passed",
+        "012_evidence_promoted": "passed",
+        "deferred_clusters_remain_out_of_scope": "passed",
+        "risk_review_clusters_remain_out_of_scope": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_raw_text_next_cycle_cluster_source_selection_markdown_and_docs_are_in_sync():
+    summary = materials_audit.build_raw_text_next_cycle_cluster_source_selection_summary()
+    markdown = materials_audit.render_raw_text_next_cycle_cluster_source_selection_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Raw Text Next Cycle Cluster Source Selection",
+        "`next-cycle-cluster-source-selection-status=next_cycle_cluster_source_selection_completed`",
+        "`next-cycle-cluster-source-selection-items=2`",
+        "`selected-for-registration=2`",
+        "`registered-source-entries=2`",
+        "`candidate-extracts=2`",
+        "`formal-evidence-units=2`",
+        "`source-library-mutation-authorized=true`",
+        "`downstream-mutation-authorized=true`",
+        "`next-material-entry=015-raw-text-next-cycle-followup-selection`",
     ):
         assert marker in markdown
         assert marker in materials_doc

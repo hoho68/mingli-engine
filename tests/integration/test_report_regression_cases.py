@@ -5071,8 +5071,8 @@ def test_learning_reference_intake_decisions_do_not_change_candidate_or_formal_e
     points = learning_reference_curation.load_learning_points()
     decisions = learning_reference_curation.load_candidate_intake_decisions()
 
-    assert len(points) == 41
-    assert len(decisions) == 35
+    assert len(points) == 43
+    assert len(decisions) == 37
     assert {
         "lp_northeast_blind_image_001",
         "lp_mingli_pattern_strength_001",
@@ -5087,6 +5087,8 @@ def test_learning_reference_intake_decisions_do_not_change_candidate_or_formal_e
         "lp_bazi_general_ziping_useful_god_001",
         "lp_bazi_general_ditiansui_pattern_strength_001",
         "lp_bazi_general_qiongtong_useful_god_001",
+        "lp_bazi_general_true_spirit_useful_god_001",
+        "lp_bazi_general_wangdoujing_branch_interaction_001",
     }.issubset({point.learning_point_id for point in points})
     assert {
         "decision_northeast_blind_image_001",
@@ -5102,6 +5104,8 @@ def test_learning_reference_intake_decisions_do_not_change_candidate_or_formal_e
         "decision_bazi_general_ziping_useful_god_001",
         "decision_bazi_general_ditiansui_pattern_strength_001",
         "decision_bazi_general_qiongtong_useful_god_001",
+        "decision_bazi_general_true_spirit_useful_god_001",
+        "decision_bazi_general_wangdoujing_branch_interaction_001",
     }.issubset({decision.decision_id for decision in decisions})
     assert {
         candidate.candidate_id for candidate in source_intake.load_candidate_extracts()
@@ -5141,14 +5145,14 @@ def test_learning_reference_prerequisite_actions_do_not_change_formal_evidence_c
         "action_markdown_batch_005_risk_review_001",
     }
     assert summary.formal_evidence_delta == 0
-    assert summary.note_counts == {"candidate_intake_started": 21}
+    assert summary.note_counts == {"candidate_intake_started": 23}
     assert summary.learning_point_counts == {
         "duplicate_review": 3,
-        "ready": 32,
+        "ready": 34,
         "deferred": 6,
     }
-    assert summary.candidate_decision_count == 35
-    assert summary.candidate_ready_count == 32
+    assert summary.candidate_decision_count == 37
+    assert summary.candidate_ready_count == 34
     assert summary.prerequisite_action_counts == {
         "risk_review": 4,
         "blocked": 1,

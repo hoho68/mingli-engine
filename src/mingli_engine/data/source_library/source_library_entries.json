@@ -576,5 +576,57 @@
     "outcome_reason": "Canonical variant selected and downstream metadata prepared under user authorization.",
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_true_spirit_positioning_pdf",
+    "material_id": "material_bazi_general_true_spirit_positioning_pdf",
+    "title": "True Spirit Positioning Bazi Modern Method",
+    "material_type": "pdf",
+    "local_reference": "八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "modern-method",
+      "true-spirit",
+      "useful-god"
+    ],
+    "rule_families": [
+      "useful_god_candidate"
+    ],
+    "source_quality_notes": "Registered from next-cycle cluster-source selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_mingli_wangdoujing_pdf",
+    "material_id": "material_bazi_general_mingli_wangdoujing_pdf",
+    "title": "Mingli Wangdoujing",
+    "material_type": "pdf",
+    "local_reference": "1_命理望斗经(1).pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "misc-reference",
+      "wangdoujing",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registered from next-cycle cluster-source selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
   }
 ]

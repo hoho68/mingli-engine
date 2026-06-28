@@ -212,8 +212,8 @@ approve evidence, promote evidence, or change formal report evidence counts.
 US1 seeded the initial package and two extraction tasks. The completed
 incremental packages add Duan Plain Mingxue Outline, Mingxue Golden Voice,
 Fortune Reading Hongfu Qitian, three Markdown batch tasks, six knowledge
-skeleton tasks, three Bazi general preparation-reading tasks, and two selected
-Bazi general variant tasks. All 19 extraction tasks are now completed and
+skeleton tasks, three Bazi general preparation-reading tasks, two selected
+Bazi general variant tasks, and two next-cycle cluster-source tasks. All 21 extraction tasks are now completed and
 `next_manual_action_ids=0`. US2 keeps thirteen draft slots as historical
 planning metadata. US3 and the current queue continuation track seven
 prerequisite backlog records, including four completed risk-review records,
@@ -226,6 +226,13 @@ action notes. The 016 package remains planning metadata; 017 notes, learning
 points, candidate-intake decisions, and action notes do not mutate raw
 materials. The authorized downstream passes that now exist in 013/012 remain
 tracked by their normal source-intake and formal-evidence records.
+
+The latest completed package,
+`package_bazi_general_next_cycle_cluster_source_001`, covers
+`queue_bazi_general_true_spirit_useful_god_extract` and
+`queue_bazi_general_wangdoujing_branch_interaction_extract`. Both tasks are
+ordinary-risk, weak-locator metadata tasks; raw PDFs remain external and
+unchanged.
 
 Quick validation command:
 
