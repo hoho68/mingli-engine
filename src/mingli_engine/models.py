@@ -2983,6 +2983,29 @@ class RawTextSourceRegistrationPrepSummary:
 
 
 @dataclass(frozen=True)
+class RawTextSourceRegistrationSummary:
+    registration_id: str
+    registration_status: str
+    triage_group_id: str
+    source_root: str
+    registered_entry_count: int
+    registered_source_file_count: int
+    skipped_existing_batch_overlap_count: int
+    blocked_variant_choice_count: int
+    deferred_large_source_count: int
+    registered_entry_ids: list[str]
+    registered_material_ids: list[str]
+    skipped_existing_batch_overlap_ids: list[str]
+    blocked_variant_choice_ids: list[str]
+    deferred_item_ids: list[str]
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class ExtractionWorkPackage:
     package_id: str
     package_label: str

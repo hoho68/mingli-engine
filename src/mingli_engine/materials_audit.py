@@ -38,6 +38,7 @@ from mingli_engine.models import (
     RawTextMaterialTriageSummary,
     RawTextSourceRegistrationPrepItem,
     RawTextSourceRegistrationPrepSummary,
+    RawTextSourceRegistrationSummary,
     RawTextSourceIdentityReviewItem,
     RawTextSourceIdentityReviewSummary,
     RawTextSourceClusterSelectionItem,
@@ -146,6 +147,13 @@ RAW_TEXT_SOURCE_REGISTRATION_PREP_TRIAGE_GROUP_ID = "raw_text_triage_bazi_genera
 RAW_TEXT_SOURCE_REGISTRATION_PREP_NEXT_MATERIAL_ENTRY = (
     "015-bazi-general-source-registration"
 )
+RAW_TEXT_SOURCE_REGISTRATION_ID = "015-bazi-general-source-registration"
+RAW_TEXT_SOURCE_REGISTRATION_NEXT_MATERIAL_ENTRY = (
+    "015-bazi-general-source-preparation-reading"
+)
+RAW_TEXT_SOURCE_REGISTRATION_OVERLAP_ENTRY_ID_MARKERS = ("youran", "tianma")
+RAW_TEXT_SOURCE_REGISTRATION_VARIANT_ENTRY_ID_MARKERS = ("ditiansui", "qiongtong")
+RAW_TEXT_SOURCE_REGISTRATION_DEFERRED_ENTRY_ID_MARKERS = ("huntian",)
 RAW_TEXT_TRIAGE_STATUSES = frozenset(
     {
         "source_selection_ready",
@@ -1667,14 +1675,21 @@ def _raw_text_source_registration_prep_item_from_dict(
             raise MaterialsAuditError(
                 f"{owner_id} has unsupported rule_family: {rule_family}"
             )
-    if item.proposed_entry_id in source_entries_by_id:
+    existing_entry = source_entries_by_id.get(item.proposed_entry_id)
+    if existing_entry is not None and not _source_entry_matches_registration_prep(
+        item,
+        existing_entry,
+    ):
         raise MaterialsAuditError(
-            f"{owner_id} proposed_entry_id already exists in source library"
+            f"{owner_id} proposed_entry_id exists with mismatched metadata"
         )
     existing_material_ids = {
         source_entry.material_id for source_entry in source_entries_by_id.values()
     }
-    if item.proposed_material_id in existing_material_ids:
+    if item.proposed_material_id in existing_material_ids and (
+        existing_entry is None
+        or existing_entry.material_id != item.proposed_material_id
+    ):
         raise MaterialsAuditError(
             f"{owner_id} proposed_material_id already exists in source library"
         )
@@ -1688,6 +1703,45 @@ def _raw_text_source_registration_prep_item_from_dict(
         )
 
     return item
+
+
+def _registration_prep_local_reference(
+    item: RawTextSourceRegistrationPrepItem,
+) -> str:
+    return "; ".join(item.proposed_local_references)
+
+
+def _source_entry_matches_registration_prep(
+    item: RawTextSourceRegistrationPrepItem,
+    entry: source_library.SourceLibraryEntry,
+) -> bool:
+    return (
+        entry.material_id == item.proposed_material_id
+        and entry.title == item.proposed_title
+        and entry.material_type == item.proposed_material_type
+        and entry.local_reference == _registration_prep_local_reference(item)
+        and entry.tracking_status == item.proposed_tracking_status
+        and entry.readiness_status == item.proposed_readiness_status
+        and entry.topic_tags == item.topic_tags
+        and entry.rule_families == item.rule_families
+        and entry.source_quality_notes == item.source_quality_notes
+        and entry.rights_notes == item.rights_notes
+        and entry.risk_tier == item.risk_tier
+        and entry.risk_notes == item.risk_notes
+        and entry.priority_level == item.proposed_priority_level
+        and entry.next_action == item.proposed_next_action
+    )
+
+
+def _registration_prep_entry_registered_or_available(
+    item: RawTextSourceRegistrationPrepItem,
+    source_entries_by_id: dict[str, source_library.SourceLibraryEntry],
+    existing_material_ids: set[str],
+) -> bool:
+    existing_entry = source_entries_by_id.get(item.proposed_entry_id)
+    if existing_entry is not None:
+        return _source_entry_matches_registration_prep(item, existing_entry)
+    return item.proposed_material_id not in existing_material_ids
 
 
 def load_raw_text_source_registration_prep_items(
@@ -2182,6 +2236,17 @@ def _count_registration_prep_rule_families(
     for item in items:
         counts.update(item.rule_families)
     return dict(sorted(counts.items()))
+
+
+def _source_entries_absent_for_markers(
+    source_entries_by_id: dict[str, source_library.SourceLibraryEntry],
+    markers: tuple[str, ...],
+) -> bool:
+    return not any(
+        entry_id.startswith("entry_bazi_general_") and marker in entry_id
+        for entry_id in source_entries_by_id
+        for marker in markers
+    )
 
 
 def build_raw_text_source_selection_summary(
@@ -2712,9 +2777,12 @@ def build_raw_text_source_registration_prep_summary(
         == "registration_prep_ready"
         for item in items
     )
-    proposed_entries_not_in_source_library = bool(items) and all(
-        item.proposed_entry_id not in source_entries_by_id
-        and item.proposed_material_id not in existing_material_ids
+    proposed_entries_registered_or_available = bool(items) and all(
+        _registration_prep_entry_registered_or_available(
+            item,
+            source_entries_by_id,
+            existing_material_ids,
+        )
         for item in items
     )
     source_paths_are_relative = bool(items) and all(
@@ -2745,14 +2813,13 @@ def build_raw_text_source_registration_prep_summary(
         "identity_review_references_valid": (
             "passed" if identity_review_references_valid else "failed"
         ),
-        "proposed_entries_not_in_source_library": (
-            "passed" if proposed_entries_not_in_source_library else "failed"
+        "proposed_entries_registered_or_available": (
+            "passed" if proposed_entries_registered_or_available else "failed"
         ),
         "source_paths_are_relative": (
             "passed" if source_paths_are_relative else "failed"
         ),
         "raw_materials_not_mutated": "passed",
-        "source_library_not_mutated": "passed",
         "013_012_not_mutated": "passed",
     }
 
@@ -2839,6 +2906,177 @@ def render_raw_text_source_registration_prep_markdown(
     lines.extend(f"- `{entry_id}`" for entry_id in summary.proposed_entry_ids)
     lines.extend(["", "Registration-prep records:"])
     lines.extend(f"- `{item_id}`" for item_id in summary.registration_prep_item_ids)
+    lines.extend(["", "Skipped existing-batch overlap ids:"])
+    lines.extend(
+        f"- `{item_id}`" for item_id in summary.skipped_existing_batch_overlap_ids
+    )
+    lines.extend(["", "Blocked variant-choice ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.blocked_variant_choice_ids)
+    lines.extend(["", "Deferred ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.deferred_item_ids)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def build_raw_text_source_registration_summary(
+    data_dir: Path | str | None = None,
+) -> RawTextSourceRegistrationSummary:
+    source_dir = _data_dir(data_dir)
+    prep_items = load_raw_text_source_registration_prep_items(source_dir)
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    identity_review_items = load_raw_text_source_identity_review_items(source_dir)
+    registered_items = [
+        item for item in prep_items if item.proposed_entry_id in source_entries_by_id
+    ]
+    skipped_existing_batch_overlap_ids = [
+        item.review_id
+        for item in identity_review_items
+        if item.identity_status == "existing_batch_overlap"
+    ]
+    blocked_variant_choice_ids = [
+        item.review_id
+        for item in identity_review_items
+        if item.identity_status == "variant_choice_required"
+    ]
+    deferred_item_ids = [
+        item.review_id
+        for item in identity_review_items
+        if item.identity_status == "deferred_large_source"
+    ]
+    prepared_entries_registered = bool(prep_items) and len(registered_items) == len(
+        prep_items
+    )
+    registered_entries_match_prep_metadata = bool(prep_items) and all(
+        _source_entry_matches_registration_prep(
+            item,
+            source_entries_by_id[item.proposed_entry_id],
+        )
+        for item in registered_items
+    )
+    skipped_existing_batch_overlap_not_duplicated = bool(
+        skipped_existing_batch_overlap_ids
+    ) and _source_entries_absent_for_markers(
+        source_entries_by_id,
+        RAW_TEXT_SOURCE_REGISTRATION_OVERLAP_ENTRY_ID_MARKERS,
+    )
+    variant_choice_ids_not_registered = bool(
+        blocked_variant_choice_ids
+    ) and _source_entries_absent_for_markers(
+        source_entries_by_id,
+        RAW_TEXT_SOURCE_REGISTRATION_VARIANT_ENTRY_ID_MARKERS,
+    )
+    deferred_large_source_not_registered = bool(
+        deferred_item_ids
+    ) and _source_entries_absent_for_markers(
+        source_entries_by_id,
+        RAW_TEXT_SOURCE_REGISTRATION_DEFERRED_ENTRY_ID_MARKERS,
+    )
+    boundary_checks = {
+        "registration_prep_items_loaded": "passed" if prep_items else "failed",
+        "source_library_entries_loaded": (
+            "passed" if source_entries_by_id else "failed"
+        ),
+        "prepared_entries_registered": (
+            "passed" if prepared_entries_registered else "failed"
+        ),
+        "registered_entries_match_prep_metadata": (
+            "passed" if registered_entries_match_prep_metadata else "failed"
+        ),
+        "skipped_existing_batch_overlap_not_duplicated": (
+            "passed" if skipped_existing_batch_overlap_not_duplicated else "failed"
+        ),
+        "variant_choice_ids_not_registered": (
+            "passed" if variant_choice_ids_not_registered else "failed"
+        ),
+        "deferred_large_source_not_registered": (
+            "passed" if deferred_large_source_not_registered else "failed"
+        ),
+        "raw_materials_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+    return RawTextSourceRegistrationSummary(
+        registration_id=RAW_TEXT_SOURCE_REGISTRATION_ID,
+        registration_status=(
+            "source_registration_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "source_registration_needs_attention"
+        ),
+        triage_group_id=RAW_TEXT_SOURCE_REGISTRATION_PREP_TRIAGE_GROUP_ID,
+        source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
+        registered_entry_count=len(registered_items),
+        registered_source_file_count=sum(
+            len(item.proposed_local_references) for item in registered_items
+        ),
+        skipped_existing_batch_overlap_count=len(skipped_existing_batch_overlap_ids),
+        blocked_variant_choice_count=len(blocked_variant_choice_ids),
+        deferred_large_source_count=len(deferred_item_ids),
+        registered_entry_ids=[item.proposed_entry_id for item in registered_items],
+        registered_material_ids=[item.proposed_material_id for item in registered_items],
+        skipped_existing_batch_overlap_ids=skipped_existing_batch_overlap_ids,
+        blocked_variant_choice_ids=blocked_variant_choice_ids,
+        deferred_item_ids=deferred_item_ids,
+        source_library_mutation_authorized=True,
+        downstream_mutation_authorized=False,
+        next_material_entry=RAW_TEXT_SOURCE_REGISTRATION_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Only source-library metadata registration is authorized in this stage.",
+            "Existing Markdown Batch 001 overlaps stay represented by their existing source-library entry.",
+            "Variant sets and the deferred large source remain outside registration.",
+            "Reading, extraction, 013 candidate intake, and 012 evidence changes remain blocked.",
+        ],
+    )
+
+
+def render_raw_text_source_registration_markdown(
+    summary: RawTextSourceRegistrationSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Bazi General Source Registration",
+        "",
+        f"- Registration id: `{summary.registration_id}`",
+        f"- `source-registration-status={summary.registration_status}`",
+        f"- `registered-source-entries={summary.registered_entry_count}`",
+        f"- `registered-source-files={summary.registered_source_file_count}`",
+        (
+            "- `skipped-existing-batch-overlap="
+            f"{summary.skipped_existing_batch_overlap_count}`"
+        ),
+        f"- `blocked-variant-choice={summary.blocked_variant_choice_count}`",
+        f"- `deferred-large-source={summary.deferred_large_source_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Registered source-library entry ids:",
+    ]
+    lines.extend(f"- `{entry_id}`" for entry_id in summary.registered_entry_ids)
+    lines.extend(["", "Registered material ids:"])
+    lines.extend(f"- `{material_id}`" for material_id in summary.registered_material_ids)
     lines.extend(["", "Skipped existing-batch overlap ids:"])
     lines.extend(
         f"- `{item_id}`" for item_id in summary.skipped_existing_batch_overlap_ids

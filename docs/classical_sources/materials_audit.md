@@ -479,10 +479,72 @@ Deferred ids:
 
 - `bazi_general_identity_huntian_baolan_ziping`
 
-The next bounded work surface is source registration for the three proposed
-entry ids. It may apply these prepared metadata packets to the source library,
-but reading, extraction, 013 candidate intake, and 012 evidence remain blocked
-unless separately authorized.
+## 015 Bazi General Source Registration
+
+The 2026-06-28 Bazi general source-registration checkpoint registered the
+three prepared source-library metadata packets. It did not register Batch 001
+overlaps, variant-choice records, or the deferred large source, and it did not
+open raw source files or create downstream 013/012 evidence changes.
+
+- Registration id: `015-bazi-general-source-registration`
+- `source-registration-status=source_registration_completed`
+- `registered-source-entries=3`
+- `registered-source-files=4`
+- `skipped-existing-batch-overlap=2`
+- `blocked-variant-choice=2`
+- `deferred-large-source=1`
+- `source-library-mutation-authorized=true`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-bazi-general-source-preparation-reading`
+
+Registered source-library entry ids:
+
+- `entry_bazi_general_lecture_textbook_pdf`
+- `entry_bazi_general_beichen_intro_pdf`
+- `entry_bazi_general_ziping_orthodox_pair_pdf`
+
+Registered material ids:
+
+- `material_bazi_general_lecture_textbook_pdf`
+- `material_bazi_general_beichen_intro_pdf`
+- `material_bazi_general_ziping_orthodox_pair_pdf`
+
+Skipped existing-batch overlap ids:
+
+- `bazi_general_identity_youran_notes`
+- `bazi_general_identity_tianma_notes`
+
+Blocked variant-choice ids:
+
+- `bazi_general_identity_ditiansui_variant_set`
+- `bazi_general_identity_qiongtong_variant_set`
+
+Deferred ids:
+
+- `bazi_general_identity_huntian_baolan_ziping`
+
+Boundary checks:
+
+- `registration_prep_items_loaded`: `passed`
+- `source_library_entries_loaded`: `passed`
+- `prepared_entries_registered`: `passed`
+- `registered_entries_match_prep_metadata`: `passed`
+- `skipped_existing_batch_overlap_not_duplicated`: `passed`
+- `variant_choice_ids_not_registered`: `passed`
+- `deferred_large_source_not_registered`: `passed`
+- `raw_materials_not_mutated`: `passed`
+- `013_012_not_mutated`: `passed`
+
+Guardrails:
+
+- Only source-library metadata registration is authorized in this stage.
+- Existing Markdown Batch 001 overlaps stay represented by their existing source-library entry.
+- Variant sets and the deferred large source remain outside registration.
+- Reading, extraction, 013 candidate intake, and 012 evidence changes remain blocked.
+
+The next bounded work surface is source preparation and reading for the three
+newly registered entries. It may prepare readable learning material, but 013
+candidate intake and 012 evidence remain blocked unless separately authorized.
 
 ## Raw-File Boundary
 

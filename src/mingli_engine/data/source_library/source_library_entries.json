@@ -258,6 +258,92 @@
     "updated_at": "2026-05-28"
   },
   {
+    "entry_id": "entry_bazi_general_lecture_textbook_pdf",
+    "material_id": "material_bazi_general_lecture_textbook_pdf",
+    "title": "Bazi General Lecture Textbook",
+    "material_type": "pdf",
+    "local_reference": "八字命理讲义教材（299页）.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "needs_preparation",
+    "topic_tags": [
+      "foundation",
+      "textbook",
+      "pattern-strength",
+      "ten-god",
+      "useful-god"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "useful_god_candidate"
+    ],
+    "source_quality_notes": "Registration metadata prepared from inventory and identity-review labels only.",
+    "rights_notes": "Do not copy long passages; prepare text before extraction.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "prepare_material",
+    "outcome_reason": "",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_beichen_intro_pdf",
+    "material_id": "material_bazi_general_beichen_intro_pdf",
+    "title": "Beichen Mingli Intro Han Yumo",
+    "material_type": "pdf",
+    "local_reference": "北宸学派《命理入门》韩雨墨 258页.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "needs_preparation",
+    "topic_tags": [
+      "foundation",
+      "school-intro",
+      "pattern-strength",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registration metadata prepared from school and intro title labels only.",
+    "rights_notes": "Do not copy long passages; prepare text before extraction.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "medium",
+    "next_action": "prepare_material",
+    "outcome_reason": "",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_ziping_orthodox_pair_pdf",
+    "material_id": "material_bazi_general_ziping_orthodox_pair_pdf",
+    "title": "Ziping Mingli Zhengzong Upper Lower Volumes",
+    "material_type": "pdf",
+    "local_reference": "子平命理正宗电子版上.pdf; 子平命理正宗电子版下.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "needs_preparation",
+    "topic_tags": [
+      "classical-reference",
+      "ziping",
+      "pattern-strength",
+      "useful-god"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "source_quality_notes": "Registration metadata treats upper and lower PDFs as one paired source identity.",
+    "rights_notes": "Do not copy long passages; prepare text before extraction.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "prepare_material",
+    "outcome_reason": "",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
     "entry_id": "entry_markdown_source_batch_002_core",
     "material_id": "material_markdown_source_batch_002_core",
     "title": "Markdown Source Batch 002 Core (梁湘润子平教材系列 + 阴阳五行预知学 + 命理讲义)",

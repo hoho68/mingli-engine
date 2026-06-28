@@ -10,8 +10,10 @@ authorization audit packet, plus the Markdown Batch 005 risk-review routing
 pass, risk-review prerequisite sweep, 015 queue refresh, and external material
 inventory refresh, raw text materials folder risk triage, Liang Bazi core
 source selection, Liang Bazi core individual review, and Bazi general source
-cluster selection, cluster source selection, and source identity review.
-The latest local checkpoint also completes Bazi general registration prep.
+cluster selection, cluster source selection, source identity review,
+registration prep, and source-library registration.
+The latest local checkpoint registers the three Bazi general source-library
+metadata packets while keeping reading, 013, and 012 work blocked.
 
 ## Completed Checkpoints
 
@@ -73,6 +75,13 @@ The latest local checkpoint also completes Bazi general registration prep.
   `skipped-existing-batch-overlap=2`, `blocked-variant-choice=2`,
   `deferred-large-source=1`, and no raw-file, source-library, 013, or 012
   mutation was authorized.
+- 015 Bazi General Source Registration is completed:
+  `source-registration-status=source_registration_completed`,
+  `registered-source-entries=3`, `registered-source-files=4`,
+  `skipped-existing-batch-overlap=2`, `blocked-variant-choice=2`,
+  `deferred-large-source=1`, `source-library-mutation-authorized=true`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-bazi-general-source-preparation-reading`.
 
 Primary detailed references:
 
@@ -94,6 +103,7 @@ Primary detailed references:
 - [2026-06-28-bazi-general-cluster-source-selection.md](../superpowers/plans/2026-06-28-bazi-general-cluster-source-selection.md)
 - [2026-06-28-bazi-general-source-identity-review.md](../superpowers/plans/2026-06-28-bazi-general-source-identity-review.md)
 - [2026-06-28-bazi-general-registration-prep.md](../superpowers/plans/2026-06-28-bazi-general-registration-prep.md)
+- [2026-06-28-bazi-general-source-registration.md](../superpowers/plans/2026-06-28-bazi-general-source-registration.md)
 
 ## Current Frozen Snapshot
 
@@ -312,7 +322,22 @@ Authorization Audit Packet:
   `bazi_general_identity_qiongtong_variant_set`, and
   `bazi_general_identity_huntian_baolan_ziping`.
 - Recommended next material entry for the next long goal:
-  `next-material-entry=015-bazi-general-source-registration`.
+  `next-material-entry=015-bazi-general-source-preparation-reading`.
+- 015 Bazi General Source Registration is completed:
+  `source-registration-status=source_registration_completed`,
+  `registered-source-entries=3`, `registered-source-files=4`,
+  `skipped-existing-batch-overlap=2`, `blocked-variant-choice=2`,
+  `deferred-large-source=1`, `source-library-mutation-authorized=true`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-bazi-general-source-preparation-reading`.
+- Registered source-library entry ids:
+  `entry_bazi_general_lecture_textbook_pdf`,
+  `entry_bazi_general_beichen_intro_pdf`, and
+  `entry_bazi_general_ziping_orthodox_pair_pdf`.
+- Registered material ids:
+  `material_bazi_general_lecture_textbook_pdf`,
+  `material_bazi_general_beichen_intro_pdf`, and
+  `material_bazi_general_ziping_orthodox_pair_pdf`.
 
 ## Remaining Optional Precision Work
 
@@ -329,11 +354,11 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-bazi-general-source-registration`. It may apply the
-three prepared source-library metadata packets, should avoid duplicate
-registration for Batch 001 overlaps, keep variant sets behind a variant-choice
-step, and keep reading, extraction, 013 candidate intake, and 012 evidence
-blocked unless separately authorized.
+`next-material-entry=015-bazi-general-source-preparation-reading`. It may
+prepare readable learning material for the three newly registered Bazi general
+sources, should continue to avoid duplicate Batch 001 overlaps and variant-set
+work, and must keep 013 candidate intake and 012 evidence blocked unless
+separately authorized.
 
 ## Guardrails
 

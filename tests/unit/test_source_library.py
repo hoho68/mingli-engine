@@ -400,7 +400,7 @@ def test_load_source_library_entries_loads_current_registered_sources():
     entries = source_library.load_source_library_entries()
     by_id = {entry.entry_id: entry for entry in entries}
 
-    assert len(entries) == 14
+    assert len(entries) == 17
     assert set(by_id) == {
         "entry_northeast_blind_peak_pdf",
         "entry_duan_plain_mingxue_outline_pdf",
@@ -411,6 +411,9 @@ def test_load_source_library_entries_loads_current_registered_sources():
         "entry_fortune_reading_hongfu_qitian_pdf",
         "entry_immortal_fortune_jianghu_secret_pdf",
         "entry_life_death_book_100_pages_pdf",
+        "entry_bazi_general_lecture_textbook_pdf",
+        "entry_bazi_general_beichen_intro_pdf",
+        "entry_bazi_general_ziping_orthodox_pair_pdf",
         "entry_markdown_source_batch_001",
         "entry_markdown_source_batch_002_core",
         "entry_markdown_source_batch_004",
@@ -428,6 +431,60 @@ def test_load_source_library_entries_loads_current_registered_sources():
     )
     assert "blind_image_method" in by_id["entry_blind_life_manual_pdf"].rule_families
     assert by_id["entry_life_death_book_100_pages_pdf"].risk_tier == "high_risk"
+    assert by_id["entry_bazi_general_lecture_textbook_pdf"].material_id == (
+        "material_bazi_general_lecture_textbook_pdf"
+    )
+    assert by_id["entry_bazi_general_lecture_textbook_pdf"].readiness_status == (
+        "needs_preparation"
+    )
+    assert by_id["entry_bazi_general_ziping_orthodox_pair_pdf"].local_reference == (
+        "子平命理正宗电子版上.pdf; 子平命理正宗电子版下.pdf"
+    )
+
+
+def test_bazi_general_registered_entries_match_registration_prep_metadata():
+    from mingli_engine import materials_audit
+
+    prep_items = materials_audit.load_raw_text_source_registration_prep_items()
+    entries_by_id = {
+        entry.entry_id: entry for entry in source_library.load_source_library_entries()
+    }
+
+    for item in prep_items:
+        entry = entries_by_id[item.proposed_entry_id]
+        assert entry.material_id == item.proposed_material_id
+        assert entry.title == item.proposed_title
+        assert entry.material_type == item.proposed_material_type
+        assert entry.local_reference == "; ".join(item.proposed_local_references)
+        assert entry.tracking_status == item.proposed_tracking_status
+        assert entry.readiness_status == item.proposed_readiness_status
+        assert entry.topic_tags == item.topic_tags
+        assert entry.rule_families == item.rule_families
+        assert entry.source_quality_notes == item.source_quality_notes
+        assert entry.rights_notes == item.rights_notes
+        assert entry.risk_tier == item.risk_tier
+        assert entry.risk_notes == item.risk_notes
+        assert entry.priority_level == item.proposed_priority_level
+        assert entry.next_action == item.proposed_next_action
+
+
+def test_bazi_general_registration_does_not_duplicate_gated_identity_records():
+    entries = source_library.load_source_library_entries()
+    entry_ids = [entry.entry_id for entry in entries]
+
+    assert entry_ids.count("entry_markdown_source_batch_001") == 1
+    for gated_fragment in (
+        "youran",
+        "tianma",
+        "ditiansui",
+        "qiongtong",
+        "huntian",
+    ):
+        assert not any(
+            entry_id.startswith("entry_bazi_general_")
+            and gated_fragment in entry_id
+            for entry_id in entry_ids
+        )
 
 
 def test_load_source_library_entries_rejects_duplicate_and_invalid_enums(tmp_path):
@@ -557,8 +614,10 @@ def test_load_source_priority_assessments_loads_default_assessments():
     assessments = source_library.load_source_priority_assessments()
     by_id = {assessment.assessment_id: assessment for assessment in assessments}
 
-    assert len(assessments) == 13
+    assert len(assessments) == 15
     assert "priority_blind_life_manual_001" in by_id
+    assert "priority_bazi_general_lecture_textbook_001" in by_id
+    assert "priority_bazi_general_ziping_orthodox_pair_001" in by_id
     assert by_id["priority_blind_life_manual_001"].entry_id == (
         "entry_blind_life_manual_pdf"
     )

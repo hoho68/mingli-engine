@@ -155,6 +155,41 @@
     "assessed_at": "2026-05-28"
   },
   {
+    "assessment_id": "priority_bazi_general_lecture_textbook_001",
+    "entry_id": "entry_bazi_general_lecture_textbook_pdf",
+    "priority_level": "high",
+    "expected_value": "fills_gap",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "useful_god_candidate"
+    ],
+    "source_quality": "moderate",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Foundation textbook metadata can fill structure, ten-god, and useful-god preparation gaps.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_ziping_orthodox_pair_001",
+    "entry_id": "entry_bazi_general_ziping_orthodox_pair_pdf",
+    "priority_level": "high",
+    "expected_value": "fills_gap",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "source_quality": "moderate",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Paired Ziping source metadata can fill classical pattern and useful-god preparation gaps.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
     "assessment_id": "priority_markdown_batch_002_core_001",
     "entry_id": "entry_markdown_source_batch_002_core",
     "priority_level": "high",
