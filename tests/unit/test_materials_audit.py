@@ -443,6 +443,51 @@ def test_materials_audit_dataclasses_construct_with_defaults():
     assert cluster_item.guardrails == []
     assert cluster_summary.guardrails == []
 
+    cluster_source_item = models.RawTextClusterSourceSelectionItem(
+        selection_id="bazi_general_test_source",
+        cluster_id="bazi_general_foundation_textbook_cluster",
+        triage_group_id="raw_text_triage_bazi_general",
+        source_root=triage_group.source_root,
+        title_label="Bazi General Test Source",
+        selection_status="selected_for_identity_review",
+        risk_boundary="ordinary",
+        recommended_next_action="clarify_identity",
+        relative_paths=["test.pdf"],
+        file_count=1,
+        priority_text_candidate_count=1,
+        extension_counts={".pdf": 1},
+        target_rule_families=["pattern_strength"],
+        priority_score=80,
+        size_mb_total=1.0,
+    )
+    cluster_source_summary = models.RawTextClusterSourceSelectionSummary(
+        selection_id="015-bazi-general-cluster-source-selection",
+        selection_status="cluster_source_selection_completed",
+        triage_group_id="raw_text_triage_bazi_general",
+        source_root=triage_group.source_root,
+        selected_cluster_ids=[cluster_source_item.cluster_id],
+        source_selection_item_count=1,
+        source_file_count=1,
+        priority_text_candidate_count=1,
+        selected_for_identity_review_count=1,
+        variant_identity_review_count=0,
+        deferred_after_cluster_selection_count=0,
+        status_counts={"selected_for_identity_review": 1},
+        risk_boundary_counts={"ordinary": 1},
+        extension_counts={".pdf": 1},
+        target_rule_family_counts={"pattern_strength": 1},
+        selected_item_ids=[cluster_source_item.selection_id],
+        variant_review_item_ids=[],
+        deferred_item_ids=[],
+        downstream_mutation_authorized=False,
+        next_material_entry="015-next-source-identity-review",
+        boundary_checks={"013_012_not_mutated": "passed"},
+    )
+
+    assert cluster_source_item.guardrails == []
+    assert cluster_source_item.identity_review_note == ""
+    assert cluster_source_summary.guardrails == []
+
 
 def test_read_json_list_reports_missing_invalid_and_non_array_payloads(tmp_path):
     with pytest.raises(materials_audit.MaterialsAuditError, match="missing data file"):
@@ -1945,6 +1990,123 @@ def test_raw_text_source_cluster_selection_markdown_and_docs_are_in_sync():
         "`deferred-clusters=3`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-bazi-general-cluster-source-selection`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_cluster_source_selection_items_load_bazi_general_sources():
+    items = materials_audit.load_raw_text_cluster_source_selection_items()
+    items_by_id = {item.selection_id: item for item in items}
+
+    assert len(items) == 8
+    assert {item.triage_group_id for item in items} == {"raw_text_triage_bazi_general"}
+    assert {item.cluster_id for item in items} == {
+        "bazi_general_foundation_textbook_cluster",
+        "bazi_general_classical_reference_cluster",
+    }
+    assert all(
+        item.source_root == materials_audit.RAW_TEXT_TRIAGE_SOURCE_ROOT
+        for item in items
+    )
+    assert sum(item.file_count for item in items) == 13
+    assert sum(item.priority_text_candidate_count for item in items) == 13
+    assert all(path and not path.startswith("/") for item in items for path in item.relative_paths)
+    assert all(
+        materials_audit.RAW_TEXT_TRIAGE_SOURCE_ROOT not in path
+        for item in items
+        for path in item.relative_paths
+    )
+    assert items_by_id[
+        "bazi_general_foundation_youran_notes"
+    ].selection_status == "selected_for_identity_review"
+    assert items_by_id[
+        "bazi_general_classical_ditiansui_variant_set"
+    ].selection_status == "variant_identity_review"
+    assert items_by_id[
+        "bazi_general_classical_huntian_baolan_ziping"
+    ].selection_status == "deferred_after_cluster_selection"
+
+
+def test_raw_text_cluster_source_selection_summary_counts_bazi_general_sources():
+    summary = materials_audit.build_raw_text_cluster_source_selection_summary()
+
+    assert summary.selection_id == "015-bazi-general-cluster-source-selection"
+    assert summary.selection_status == "cluster_source_selection_completed"
+    assert summary.triage_group_id == "raw_text_triage_bazi_general"
+    assert summary.selected_cluster_ids == [
+        "bazi_general_foundation_textbook_cluster",
+        "bazi_general_classical_reference_cluster",
+    ]
+    assert summary.source_selection_item_count == 8
+    assert summary.source_file_count == 13
+    assert summary.priority_text_candidate_count == 13
+    assert summary.selected_for_identity_review_count == 5
+    assert summary.variant_identity_review_count == 2
+    assert summary.deferred_after_cluster_selection_count == 1
+    assert summary.status_counts == {
+        "selected_for_identity_review": 5,
+        "variant_identity_review": 2,
+        "deferred_after_cluster_selection": 1,
+    }
+    assert summary.risk_boundary_counts == {"ordinary": 8}
+    assert summary.extension_counts == {".pdf": 13}
+    assert summary.target_rule_family_counts == {
+        "branch_interaction": 1,
+        "pattern_strength": 7,
+        "ten_god_relation": 2,
+        "useful_god_candidate": 5,
+    }
+    assert summary.selected_item_ids == [
+        "bazi_general_foundation_youran_notes",
+        "bazi_general_foundation_tianma_notes",
+        "bazi_general_foundation_lecture_textbook",
+        "bazi_general_foundation_beichen_intro",
+        "bazi_general_classical_ziping_orthodox_pair",
+    ]
+    assert summary.variant_review_item_ids == [
+        "bazi_general_classical_ditiansui_variant_set",
+        "bazi_general_classical_qiongtong_variant_set",
+    ]
+    assert summary.deferred_item_ids == [
+        "bazi_general_classical_huntian_baolan_ziping",
+    ]
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == "015-bazi-general-source-identity-review"
+    assert summary.boundary_checks == {
+        "source_selection_items_loaded": "passed",
+        "selected_clusters_loaded": "passed",
+        "selected_cluster_references_valid": "passed",
+        "source_paths_are_relative": "passed",
+        "raw_materials_not_mutated": "passed",
+        "source_library_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+
+def test_raw_text_cluster_source_selection_markdown_and_docs_are_in_sync():
+    summary = materials_audit.build_raw_text_cluster_source_selection_summary()
+    markdown = materials_audit.render_raw_text_cluster_source_selection_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Bazi General Cluster Source Selection",
+        "`cluster-source-selection-status=cluster_source_selection_completed`",
+        "`cluster-source-selection-items=8`",
+        "`cluster-source-files=13`",
+        "`selected-for-identity-review=5`",
+        "`variant-identity-review=2`",
+        "`deferred-after-cluster-selection=1`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-bazi-general-source-identity-review`",
     ):
         assert marker in markdown
         assert marker in materials_doc

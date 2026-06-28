@@ -56,6 +56,12 @@ cluster selection.
   `clustered-files=184`, `clustered-priority-candidates=183`,
   `selected-clusters=2`, `deferred-clusters=3`, and no 013 or 012 mutation was
   authorized.
+- 015 Bazi General Cluster Source Selection is completed for the selected
+  foundation/textbook and classical-reference clusters:
+  `cluster-source-selection-items=8`, `cluster-source-files=13`,
+  `selected-for-identity-review=5`, `variant-identity-review=2`,
+  `deferred-after-cluster-selection=1`, and no source-library, 013, or 012
+  mutation was authorized.
 
 Primary detailed references:
 
@@ -74,6 +80,7 @@ Primary detailed references:
 - [2026-06-28-liang-bazi-core-source-selection.md](../superpowers/plans/2026-06-28-liang-bazi-core-source-selection.md)
 - [2026-06-28-liang-bazi-core-individual-review.md](../superpowers/plans/2026-06-28-liang-bazi-core-individual-review.md)
 - [2026-06-28-bazi-general-source-cluster-selection.md](../superpowers/plans/2026-06-28-bazi-general-source-cluster-selection.md)
+- [2026-06-28-bazi-general-cluster-source-selection.md](../superpowers/plans/2026-06-28-bazi-general-cluster-source-selection.md)
 
 ## Current Frozen Snapshot
 
@@ -150,6 +157,18 @@ Authorization Audit Packet:
 - `downstream-mutation-authorized=false`
 - `next-material-entry=015-bazi-general-cluster-source-selection`
 
+015 Bazi General Cluster Source Selection:
+
+- `cluster-source-selection-status=cluster_source_selection_completed`
+- `cluster-source-selection-items=8`
+- `cluster-source-files=13`
+- `cluster-source-priority-candidates=13`
+- `selected-for-identity-review=5`
+- `variant-identity-review=2`
+- `deferred-after-cluster-selection=1`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-bazi-general-source-identity-review`
+
 013 and 012 boundary state:
 
 - `013-candidate-extracts=36`
@@ -197,8 +216,26 @@ Authorization Audit Packet:
 - Selected cluster ids:
   `bazi_general_foundation_textbook_cluster` and
   `bazi_general_classical_reference_cluster`.
+- 015 Bazi General Cluster Source Selection is completed:
+  `cluster-source-selection-status=cluster_source_selection_completed`,
+  `cluster-source-selection-items=8`, `cluster-source-files=13`,
+  `selected-for-identity-review=5`, `variant-identity-review=2`,
+  `deferred-after-cluster-selection=1`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-bazi-general-source-identity-review`.
+- Selected source ids:
+  `bazi_general_foundation_youran_notes`,
+  `bazi_general_foundation_tianma_notes`,
+  `bazi_general_foundation_lecture_textbook`,
+  `bazi_general_foundation_beichen_intro`, and
+  `bazi_general_classical_ziping_orthodox_pair`.
+- Variant identity review ids:
+  `bazi_general_classical_ditiansui_variant_set` and
+  `bazi_general_classical_qiongtong_variant_set`.
+- Deferred source id:
+  `bazi_general_classical_huntian_baolan_ziping`.
 - Recommended next material entry for the next long goal:
-  `next-material-entry=015-bazi-general-cluster-source-selection`.
+  `next-material-entry=015-bazi-general-source-identity-review`.
 
 ## Remaining Optional Precision Work
 
@@ -215,10 +252,10 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-bazi-general-cluster-source-selection`. It should
-select concrete source-level records inside the foundation textbook and
-classical reference clusters, resolve source identity before registration, and
-keep 013/012 mutations blocked unless separately authorized.
+`next-material-entry=015-bazi-general-source-identity-review`. It should resolve
+duplicate, edition, author, source-library overlap, and registration-prep status
+for the selected and variant source records before any reading, extraction, 013
+candidate intake, or 012 evidence work.
 
 ## Guardrails
 

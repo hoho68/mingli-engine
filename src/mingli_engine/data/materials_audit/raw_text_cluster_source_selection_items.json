@@ -1,0 +1,262 @@
+[
+  {
+    "selection_id": "bazi_general_foundation_youran_notes",
+    "cluster_id": "bazi_general_foundation_textbook_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi General Foundation Youran Notes",
+    "selection_status": "selected_for_identity_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "clarify_identity",
+    "relative_paths": [
+      "4.悠然大仙八字笔记（基础入门）157页/悠然大仙八字笔记.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "extension_counts": {
+      ".pdf": 1
+    },
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation"
+    ],
+    "priority_score": 95,
+    "size_mb_total": 3.53,
+    "identity_review_note": "Resolve whether this duplicates or supplements Markdown source batch 001 before registration.",
+    "rationale": "Compact foundation note label is a good first identity-review target inside the selected foundation cluster.",
+    "guardrails": [
+      "Use filename and inventory metadata only until identity review is complete.",
+      "Do not treat this as new evidence while batch overlap remains unresolved."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "bazi_general_foundation_tianma_notes",
+    "cluster_id": "bazi_general_foundation_textbook_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi General Foundation Tianma Notes",
+    "selection_status": "selected_for_identity_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "clarify_identity",
+    "relative_paths": [
+      "天马易学八字命理学笔记 pdf/天马易学八字命理学笔记.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "extension_counts": {
+      ".pdf": 1
+    },
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "priority_score": 95,
+    "size_mb_total": 6.0,
+    "identity_review_note": "Check overlap with Markdown source batch 001 and keep sensitive applied claims behind review.",
+    "rationale": "Compact applied-note label can extend the foundation cluster after duplicate status is known.",
+    "guardrails": [
+      "Keep health, disaster, and outcome language conditional if later reviewed.",
+      "Do not create 013 candidates from this selection record."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "bazi_general_foundation_lecture_textbook",
+    "cluster_id": "bazi_general_foundation_textbook_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi General Foundation Lecture Textbook",
+    "selection_status": "selected_for_identity_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "clarify_identity",
+    "relative_paths": [
+      "八字命理讲义教材（299页）.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "extension_counts": {
+      ".pdf": 1
+    },
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "useful_god_candidate"
+    ],
+    "priority_score": 80,
+    "size_mb_total": 1.04,
+    "identity_review_note": "Identify title, author, and edition before deciding whether registration is needed.",
+    "rationale": "Small textbook-labeled file is a practical next source identity review candidate.",
+    "guardrails": [
+      "Use only path-level metadata in this stage.",
+      "Registration or reading requires a later explicit source-identity step."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "bazi_general_foundation_beichen_intro",
+    "cluster_id": "bazi_general_foundation_textbook_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi General Foundation Beichen Intro",
+    "selection_status": "selected_for_identity_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "clarify_identity",
+    "relative_paths": [
+      "北宸学派《命理入门》韩雨墨 258页.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "extension_counts": {
+      ".pdf": 1
+    },
+    "target_rule_families": [
+      "pattern_strength",
+      "branch_interaction"
+    ],
+    "priority_score": 80,
+    "size_mb_total": 70.3,
+    "identity_review_note": "Resolve school, author, and edition labels before any registration or learning note.",
+    "rationale": "Introductory school-labeled file broadens the foundation cluster while remaining ordinary-risk.",
+    "guardrails": [
+      "Do not infer school authority from title labels alone.",
+      "Keep this as identity-review work, not evidence work."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "bazi_general_classical_ziping_orthodox_pair",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi General Classical Ziping Orthodox Pair",
+    "selection_status": "selected_for_identity_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "clarify_identity",
+    "relative_paths": [
+      "子平命理正宗电子版上.pdf",
+      "子平命理正宗电子版下.pdf"
+    ],
+    "file_count": 2,
+    "priority_text_candidate_count": 2,
+    "extension_counts": {
+      ".pdf": 2
+    },
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "priority_score": 80,
+    "size_mb_total": 30.9,
+    "identity_review_note": "Treat the upper and lower volumes as one candidate source identity until edition details are known.",
+    "rationale": "Two-volume Ziping-labelled source is a high-value classical identity-review target.",
+    "guardrails": [
+      "Keep paired volumes together during identity review.",
+      "Do not promote title markers as rule authority before source review."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "bazi_general_classical_ditiansui_variant_set",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi General Classical Ditiansui Variant Set",
+    "selection_status": "variant_identity_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "clarify_identity",
+    "relative_paths": [
+      "滴天髓.pdf",
+      "滴天髓-刘伯温注.pdf",
+      "滴天髓白话浅释  164P.pdf"
+    ],
+    "file_count": 3,
+    "priority_text_candidate_count": 3,
+    "extension_counts": {
+      ".pdf": 3
+    },
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "priority_score": 50,
+    "size_mb_total": 186.15,
+    "identity_review_note": "Resolve edition, commentary, and duplicate status across Ditiansui variants before selecting a reading copy.",
+    "rationale": "Multiple Ditiansui title variants are useful but require identity review before source selection.",
+    "guardrails": [
+      "Do not merge variant titles without edition review.",
+      "Choose a single reading copy only in the next identity-review step."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "bazi_general_classical_qiongtong_variant_set",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi General Classical Qiongtong Variant Set",
+    "selection_status": "variant_identity_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "clarify_identity",
+    "relative_paths": [
+      "穷通宝鉴+评注.pdf",
+      "穷通宝鉴/窮通寶鑒.pdf",
+      "春秋古籍/穷通宝鉴/窮通寶鑒.pdf"
+    ],
+    "file_count": 3,
+    "priority_text_candidate_count": 3,
+    "extension_counts": {
+      ".pdf": 3
+    },
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "priority_score": 50,
+    "size_mb_total": 157.85,
+    "identity_review_note": "Resolve simplified, traditional, folder-duplicate, and commentary status before reading selection.",
+    "rationale": "Qiongtong title variants are central enough to review, but duplicate identity is not yet settled.",
+    "guardrails": [
+      "Do not count folder duplicates as independent sources.",
+      "Keep source identity review separate from learning extraction."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "bazi_general_classical_huntian_baolan_ziping",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi General Classical Huntian Baolan Ziping",
+    "selection_status": "deferred_after_cluster_selection",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "defer",
+    "relative_paths": [
+      "浑天宝览20（子平口诀）.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "extension_counts": {
+      ".pdf": 1
+    },
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "priority_score": 85,
+    "size_mb_total": 373.34,
+    "identity_review_note": "Large file is deferred until compact foundation and core classical records are resolved.",
+    "rationale": "High title score but large size makes it better as a later review target.",
+    "guardrails": [
+      "Do not open or parse this large source in the current selection stage.",
+      "Revisit only after the compact selected records have identity decisions."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  }
+]

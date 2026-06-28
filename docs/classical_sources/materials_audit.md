@@ -347,9 +347,54 @@ Deferred or review-gated clusters:
 - `bazi_general_misc_identity_review_cluster`: miscellaneous weak-title labels
   requiring manual title review.
 
-The next bounded work surface is source-level selection inside the two selected
-clusters. Registration, extraction, 013 candidate intake, and 012 evidence remain
-blocked unless explicitly authorized.
+The source-level selection inside the two selected clusters is now recorded in
+the next section. Registration, extraction, 013 candidate intake, and 012
+evidence remain blocked unless explicitly authorized.
+
+## 015 Bazi General Cluster Source Selection
+
+The 2026-06-28 Bazi general cluster source selection uses only inventory CSV
+metadata, source-root-relative path labels, and the previously selected
+foundation/textbook and classical-reference clusters. It does not open raw
+source files, create source-library records, create 013 candidate/review/
+promotion records, or alter 012 formal evidence.
+
+- `cluster-source-selection-status=cluster_source_selection_completed`
+- `cluster-source-selection-items=8`
+- `cluster-source-files=13`
+- `cluster-source-priority-candidates=13`
+- `selected-for-identity-review=5`
+- `variant-identity-review=2`
+- `deferred-after-cluster-selection=1`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-bazi-general-source-identity-review`
+
+Selected clusters:
+
+- `bazi_general_foundation_textbook_cluster`
+- `bazi_general_classical_reference_cluster`
+
+Selected source records:
+
+- `bazi_general_foundation_youran_notes`
+- `bazi_general_foundation_tianma_notes`
+- `bazi_general_foundation_lecture_textbook`
+- `bazi_general_foundation_beichen_intro`
+- `bazi_general_classical_ziping_orthodox_pair`
+
+Variant identity review records:
+
+- `bazi_general_classical_ditiansui_variant_set`
+- `bazi_general_classical_qiongtong_variant_set`
+
+Deferred records:
+
+- `bazi_general_classical_huntian_baolan_ziping`
+
+The next bounded work surface is source identity review for the selected and
+variant-review source records. It should resolve duplicate, edition, author, and
+registration-prep status before any reading, extraction, 013 candidate intake,
+or 012 evidence work.
 
 ## Raw-File Boundary
 
