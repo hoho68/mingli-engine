@@ -612,20 +612,20 @@ The next bounded work surface is
 ## 015 Bazi General Variant Choice And Deferred Review
 
 The 2026-06-28 variant/deferred review closed the remaining three Bazi general
-identity-review records from this source batch. It keeps Ditiansui and
-Qiongtong behind a later variant-choice pass, keeps Huntian Baolan deferred as
-a large source, and does not authorize source-library, 013, or 012 mutation.
+identity-review records from this source batch. It selects canonical local
+references for Ditiansui and Qiongtong, keeps Huntian Baolan deferred as a
+large source, and does not authorize source-library, 013, or 012 mutation.
 
 - Review id: `015-bazi-general-variant-choice-and-deferred-review`
 - `variant-deferred-review-status=variant_deferred_review_completed`
 - `variant-deferred-review-items=3`
 - `variant-review-items=2`
 - `deferred-review-items=1`
-- `selected-canonical-variants=0`
+- `selected-canonical-variants=2`
 - `source-library-registration-authorized=0`
 - `source-library-mutation-authorized=false`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-bazi-general-next-source-batch-preparation`
+- `next-material-entry=015-bazi-general-selected-variant-registration-prep`
 
 Variant-choice review ids:
 
@@ -638,7 +638,8 @@ Deferred review ids:
 
 Selected canonical variant ids:
 
-- None selected in this stage.
+- `bazi_general_variant_review_ditiansui_variant_set`: `滴天髓.pdf`
+- `bazi_general_variant_review_qiongtong_variant_set`: `穷通宝鉴/窮通寶鑒.pdf`
 
 Boundary checks:
 
@@ -648,24 +649,24 @@ Boundary checks:
 - `variant_records_match_identity_status`: `passed`
 - `deferred_records_match_identity_status`: `passed`
 - `source_paths_are_relative`: `passed`
-- `no_canonical_variants_selected`: `passed`
+- `canonical_variant_choices_recorded`: `passed`
 - `source_library_not_mutated`: `passed`
 - `013_012_not_mutated`: `passed`
 - `raw_materials_not_mutated`: `passed`
 
 Guardrails:
 
-- Variant-choice records remain blocked until a later edition-choice pass
-  selects one reading copy.
+- Variant-choice records have selected local references only; registration
+  still requires the next explicit prep step.
 - The Huntian Baolan large source remains deferred and is not opened,
   converted, or registered.
 - No source-library, 013 candidate, review, promotion, or 012 evidence mutation
   is authorized by this review.
-- The next stage should choose a smaller source batch rather than forcing these
-  unresolved records forward.
+- The next stage should prepare only the selected Ditiansui and Qiongtong
+  variants for possible source registration.
 
 The next bounded work surface is
-`015-bazi-general-next-source-batch-preparation`.
+`015-bazi-general-selected-variant-registration-prep`.
 
 ## Raw-File Boundary
 

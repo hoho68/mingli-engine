@@ -171,7 +171,7 @@ BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_ID = (
     "015-bazi-general-variant-choice-and-deferred-review"
 )
 BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_NEXT_MATERIAL_ENTRY = (
-    "015-bazi-general-next-source-batch-preparation"
+    "015-bazi-general-selected-variant-registration-prep"
 )
 BAZI_GENERAL_SOURCE_PREPARATION_READING_ENTRY_IDS = (
     "entry_bazi_general_lecture_textbook_pdf",
@@ -268,13 +268,21 @@ BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_KINDS = frozenset(
     {"variant_choice", "deferred_large_source"}
 )
 BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_STATUSES = frozenset(
-    {"blocked_pending_variant_choice", "deferred_large_source_reviewed"}
+    {
+        "blocked_pending_variant_choice",
+        "canonical_variant_selected",
+        "deferred_large_source_reviewed",
+    }
 )
 BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_DECISIONS = frozenset(
-    {"keep_variant_choice_blocked", "keep_large_source_deferred"}
+    {
+        "keep_variant_choice_blocked",
+        "select_canonical_variant",
+        "keep_large_source_deferred",
+    }
 )
 BAZI_GENERAL_VARIANT_DEFERRED_CANONICAL_CHOICE_STATUSES = frozenset(
-    {"not_selected", "not_applicable"}
+    {"not_selected", "selected_for_registration_prep", "not_applicable"}
 )
 
 
@@ -1693,6 +1701,10 @@ def _bazi_general_variant_deferred_review_item_from_dict(
         raise MaterialsAuditError(
             f"{owner_id} cannot select source-library entry in this review"
         )
+    if item.selected_local_reference and item.selected_local_reference not in item.local_references:
+        raise MaterialsAuditError(
+            f"{owner_id} selected_local_reference must be one local reference"
+        )
     if item.source_library_mutation_authorized:
         raise MaterialsAuditError(
             f"{owner_id} cannot authorize source-library mutation"
@@ -1709,17 +1721,21 @@ def _bazi_general_variant_deferred_review_item_from_dict(
             raise MaterialsAuditError(
                 f"{owner_id} variant review must reference variant selection"
             )
-        if item.review_status != "blocked_pending_variant_choice":
+        blocked_shape = (
+            item.review_status == "blocked_pending_variant_choice"
+            and item.decision == "keep_variant_choice_blocked"
+            and item.canonical_choice_status == "not_selected"
+            and not item.selected_local_reference
+        )
+        selected_shape = (
+            item.review_status == "canonical_variant_selected"
+            and item.decision == "select_canonical_variant"
+            and item.canonical_choice_status == "selected_for_registration_prep"
+            and bool(item.selected_local_reference)
+        )
+        if not (blocked_shape or selected_shape):
             raise MaterialsAuditError(
-                f"{owner_id} variant review must stay blocked"
-            )
-        if item.decision != "keep_variant_choice_blocked":
-            raise MaterialsAuditError(
-                f"{owner_id} variant review has invalid decision"
-            )
-        if item.canonical_choice_status != "not_selected":
-            raise MaterialsAuditError(
-                f"{owner_id} variant review cannot select canonical source"
+                f"{owner_id} variant review has inconsistent choice status"
             )
     if item.review_kind == "deferred_large_source":
         if identity_review_item.identity_status != "deferred_large_source":
@@ -1741,6 +1757,10 @@ def _bazi_general_variant_deferred_review_item_from_dict(
         if item.canonical_choice_status != "not_applicable":
             raise MaterialsAuditError(
                 f"{owner_id} deferred review cannot carry canonical choice"
+            )
+        if item.selected_local_reference:
+            raise MaterialsAuditError(
+                f"{owner_id} deferred review cannot select local reference"
             )
 
     return item
@@ -3678,8 +3698,9 @@ def build_bazi_general_variant_deferred_review_summary(
     selected_canonical_variant_ids = [
         item.item_id
         for item in items
-        if item.canonical_choice_status not in {"not_selected", "not_applicable"}
-        or item.selected_source_library_entry_id
+        if item.review_kind == "variant_choice"
+        and item.canonical_choice_status == "selected_for_registration_prep"
+        and item.selected_local_reference
     ]
     source_library_registration_authorized_count = sum(
         1 for item in items if item.source_library_mutation_authorized
@@ -3737,8 +3758,10 @@ def build_bazi_general_variant_deferred_review_summary(
         "source_paths_are_relative": (
             "passed" if source_paths_are_relative else "failed"
         ),
-        "no_canonical_variants_selected": (
-            "passed" if not selected_canonical_variant_ids else "failed"
+        "canonical_variant_choices_recorded": (
+            "passed"
+            if len(selected_canonical_variant_ids) == len(variant_review_item_ids)
+            else "failed"
         ),
         "source_library_not_mutated": (
             "passed" if source_library_not_mutated else "failed"
@@ -3773,10 +3796,10 @@ def build_bazi_general_variant_deferred_review_summary(
         next_material_entry=BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_NEXT_MATERIAL_ENTRY,
         boundary_checks=boundary_checks,
         guardrails=[
-            "Variant-choice records remain blocked until a later edition-choice pass selects one reading copy.",
+            "Variant-choice records have selected local references only; registration still requires the next explicit prep step.",
             "The Huntian Baolan large source remains deferred and is not opened, converted, or registered.",
             "No source-library, 013 candidate, review, promotion, or 012 evidence mutation is authorized by this review.",
-            "The next stage should choose a smaller source batch rather than forcing these unresolved records forward.",
+            "The next stage should prepare only the selected Ditiansui and Qiongtong variants for possible source registration.",
         ],
     )
 

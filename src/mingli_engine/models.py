@@ -3019,6 +3019,7 @@ class BaziGeneralVariantDeferredReviewItem:
     canonical_choice_status: str
     local_references: list[str]
     candidate_rule_families: list[str]
+    selected_local_reference: str = ""
     selected_source_library_entry_id: str = ""
     source_library_mutation_authorized: bool = False
     downstream_mutation_authorized: bool = False

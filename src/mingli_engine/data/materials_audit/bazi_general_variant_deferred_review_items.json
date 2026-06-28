@@ -7,9 +7,9 @@
     "triage_group_id": "raw_text_triage_bazi_general",
     "source_root": "资料原文/文本类/",
     "review_kind": "variant_choice",
-    "review_status": "blocked_pending_variant_choice",
-    "decision": "keep_variant_choice_blocked",
-    "canonical_choice_status": "not_selected",
+    "review_status": "canonical_variant_selected",
+    "decision": "select_canonical_variant",
+    "canonical_choice_status": "selected_for_registration_prep",
     "local_references": [
       "滴天髓.pdf",
       "滴天髓-刘伯温注.pdf",
@@ -19,15 +19,16 @@
       "pattern_strength",
       "useful_god_candidate"
     ],
+    "selected_local_reference": "滴天髓.pdf",
     "selected_source_library_entry_id": "",
     "source_library_mutation_authorized": false,
     "downstream_mutation_authorized": false,
-    "review_note": "Ditiansui has three title/commentary variants and no stable canonical reading copy selected in this stage.",
-    "rationale": "Keep the variant set blocked until a later edition-choice pass can compare title labels and commentary intent without merging source identities.",
+    "review_note": "Ditiansui has three title/commentary variants; select the base title file as the canonical local reference for the next registration-prep step.",
+    "rationale": "Use the shortest base-title copy for identity continuity and keep Liu Bowen/commentary and plain-language variants as non-canonical comparison surfaces.",
     "guardrails": [
-      "Do not register any Ditiansui source-library entry from the grouped variant record.",
-      "Do not read, extract, or create 013 candidates until one reading copy is selected.",
-      "Treat commentary labels as identity evidence only, not as formal rule authority."
+      "Do not register any Ditiansui source-library entry from this variant-choice record.",
+      "Do not read, extract, or create 013 candidates until a later registration-prep step is explicit.",
+      "Treat commentary labels as comparison evidence only, not as formal rule authority."
     ],
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28"
@@ -40,9 +41,9 @@
     "triage_group_id": "raw_text_triage_bazi_general",
     "source_root": "资料原文/文本类/",
     "review_kind": "variant_choice",
-    "review_status": "blocked_pending_variant_choice",
-    "decision": "keep_variant_choice_blocked",
-    "canonical_choice_status": "not_selected",
+    "review_status": "canonical_variant_selected",
+    "decision": "select_canonical_variant",
+    "canonical_choice_status": "selected_for_registration_prep",
     "local_references": [
       "穷通宝鉴+评注.pdf",
       "穷通宝鉴/窮通寶鑒.pdf",
@@ -51,14 +52,15 @@
     "candidate_rule_families": [
       "useful_god_candidate"
     ],
+    "selected_local_reference": "穷通宝鉴/窮通寶鑒.pdf",
     "selected_source_library_entry_id": "",
     "source_library_mutation_authorized": false,
     "downstream_mutation_authorized": false,
-    "review_note": "Qiongtong has commentary and folder-duplicate labels that require duplicate and edition choice before registration.",
-    "rationale": "Keep the set blocked because the two traditional-title paths may be folder duplicates while the annotated file may represent a different commentary surface.",
+    "review_note": "Qiongtong has commentary and folder-duplicate labels; select the shorter standard-title path as the canonical local reference for next registration prep.",
+    "rationale": "Use the direct Qiongtong traditional-title path as the canonical copy, leave the annotated file as commentary surface, and treat the nested 春秋古籍 path as a duplicate candidate.",
     "guardrails": [
       "Do not count folder duplicates as independent source identities.",
-      "Do not register the annotated file as canonical before variant comparison.",
+      "Do not register the annotated file as canonical from this variant-choice record.",
       "Keep useful-god learning extraction outside this grouped record."
     ],
     "created_at": "2026-06-28",
@@ -81,6 +83,7 @@
     "candidate_rule_families": [
       "pattern_strength"
     ],
+    "selected_local_reference": "",
     "selected_source_library_entry_id": "",
     "source_library_mutation_authorized": false,
     "downstream_mutation_authorized": false,

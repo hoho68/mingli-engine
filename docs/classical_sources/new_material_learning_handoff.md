@@ -96,11 +96,11 @@ unresolved records. Raw PDF files remain unchanged.
 - 015 Bazi General Variant Choice And Deferred Review is completed:
   `variant-deferred-review-status=variant_deferred_review_completed`,
   `variant-deferred-review-items=3`, `variant-review-items=2`,
-  `deferred-review-items=1`, `selected-canonical-variants=0`,
+  `deferred-review-items=1`, `selected-canonical-variants=2`,
   `source-library-registration-authorized=0`,
   `source-library-mutation-authorized=false`,
   `downstream-mutation-authorized=false`, and
-  `next-material-entry=015-bazi-general-next-source-batch-preparation`.
+  `next-material-entry=015-bazi-general-selected-variant-registration-prep`.
 
 Primary detailed references:
 
@@ -377,6 +377,8 @@ Authorization Audit Packet:
   `bazi_general_variant_review_ditiansui_variant_set`,
   `bazi_general_variant_review_qiongtong_variant_set`, and
   `bazi_general_deferred_review_huntian_baolan_ziping`.
+- Selected canonical variant local references:
+  `滴天髓.pdf` and `穷通宝鉴/窮通寶鑒.pdf`.
 
 ## Remaining Optional Precision Work
 
@@ -393,11 +395,10 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-bazi-general-next-source-batch-preparation`. It should
-select the next smaller Bazi general source batch from the remaining
-source-selection/backlog surface, prepare source-library metadata where safe,
-and keep Ditiansui, Qiongtong, and Huntian Baolan out of reading until a
-separate edition-choice or large-source pass is explicitly selected.
+`next-material-entry=015-bazi-general-selected-variant-registration-prep`. It
+should prepare source-library metadata for the selected Ditiansui and Qiongtong
+local references where safe, keep Huntian Baolan deferred to a large-source
+pass, and avoid 013/012 mutation unless explicitly authorized.
 
 ## Guardrails
 
