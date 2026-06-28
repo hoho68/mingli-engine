@@ -232,7 +232,13 @@ open, parse, move, convert, or rewrite external material files.
 - `untracked-material-entries=0`
 - `excluded-work-artifacts=3`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-raw-text-materials-folder-risk-triage`
+- `next-material-entry=015-raw-text-next-cycle-source-selection`
+- `post_queue_refresh_surface_confirmed`: `passed`
+
+The post-selected-variant queue refresh confirms that the existing local 015
+queue surface is covered or locally completed. The next material entry is
+therefore a next-cycle raw-text source selection pass, not a return to the
+already completed raw-text folder triage.
 
 Registered 015 metadata:
 

@@ -209,23 +209,23 @@ approve evidence, promote evidence, or change formal report evidence counts.
 
 ## Initial Setup Status
 
-US1 seeds the initial package and two extraction tasks. The completed
+US1 seeded the initial package and two extraction tasks. The completed
 incremental packages add Duan Plain Mingxue Outline, Mingxue Golden Voice,
 Fortune Reading Hongfu Qitian, three Markdown batch tasks, six knowledge
 skeleton tasks, three Bazi general preparation-reading tasks, and two selected
-Bazi general variant tasks as ready or completed learning inputs. US2 now has
-thirteen draft slots for
-future manual candidate creation. US3 and the current queue continuation track
-seven prerequisite backlog records, including four completed risk-review
-records, overlap warning visibility, and package progress counts while keeping
-all 016 records outside candidate and formal evidence counts.
+Bazi general variant tasks. All 19 extraction tasks are now completed and
+`next_manual_action_ids=0`. US2 keeps thirteen draft slots as historical
+planning metadata. US3 and the current queue continuation track seven
+prerequisite backlog records, including four completed risk-review records,
+overlap warning visibility, and package progress counts while keeping all 016
+records outside candidate and formal evidence counts.
 
-017 learning reference curation consumes the selected ready 016 extraction tasks
-as study-note inputs and mirrors the non-ready 016 backlog records as
-prerequisite action notes. The 016 package remains planning metadata; 017 notes, learning
-points, candidate-intake decisions, and action notes do not mutate these task
-records. A separately confirmed 017 candidate-application step can create a
-normal 013 pending-review candidate from an applied decision.
+017 learning reference curation consumed the selected 016 extraction tasks as
+study-note inputs and mirrors the non-ready 016 backlog records as prerequisite
+action notes. The 016 package remains planning metadata; 017 notes, learning
+points, candidate-intake decisions, and action notes do not mutate raw
+materials. The authorized downstream passes that now exist in 013/012 remain
+tracked by their normal source-intake and formal-evidence records.
 
 Quick validation command:
 

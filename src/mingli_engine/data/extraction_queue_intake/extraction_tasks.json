@@ -27,7 +27,7 @@
       "013 candidate overlap: candidate_northeast_blind_image_duplicate_001 rejected for material_northeast_blind_peak_pdf blind_image_method."
     ],
     "recommended_action": "extract_candidates",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-05-31",
     "updated_at": "2026-05-31"
   },
@@ -59,7 +59,7 @@
       "013 candidate overlap: candidate_mingli_pattern_strength_017_001 pending_review for material_mingli_true_formula_teacher_pdf pattern_strength."
     ],
     "recommended_action": "extract_candidates",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-05-31",
     "updated_at": "2026-05-31"
   },
@@ -89,7 +89,7 @@
       "013 candidate overlap: candidate_duan_ten_god_relation_017_001 pending_review for material_duan_plain_mingxue_outline_pdf ten_god_relation."
     ],
     "recommended_action": "extract_candidates",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-01",
     "updated_at": "2026-06-01"
   },
@@ -121,7 +121,7 @@
       "013 candidate overlap: candidate_mingxue_five_element_balance_017_001 pending_review for material_mingxue_golden_voice_pdf five_element_balance."
     ],
     "recommended_action": "extract_candidates",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-01",
     "updated_at": "2026-06-01"
   },
@@ -153,7 +153,7 @@
       "013 candidate overlap: candidate_hongfu_remedy_boundary_017_001 pending_review for material_fortune_reading_hongfu_qitian_pdf remedy_boundary."
     ],
     "recommended_action": "extract_candidates",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-01",
     "updated_at": "2026-06-01"
   },
@@ -184,7 +184,7 @@
     ],
     "overlap_warnings": [],
     "recommended_action": "extract_candidates",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-23",
     "updated_at": "2026-06-23"
   },
@@ -217,7 +217,7 @@
       "May overlap with existing blind_image_method candidates from northeast_blind_peak; check for duplication."
     ],
     "recommended_action": "extract_candidates",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-23",
     "updated_at": "2026-06-23"
   },
@@ -248,7 +248,7 @@
     ],
     "overlap_warnings": [],
     "recommended_action": "extract_candidates",
-    "status": "planned",
+    "status": "completed",
     "created_at": "2026-06-23",
     "updated_at": "2026-06-23"
   },

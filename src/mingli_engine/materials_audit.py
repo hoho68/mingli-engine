@@ -123,6 +123,9 @@ EXTERNAL_INVENTORY_NEW_REPRESENTATION_IDS = (
 )
 EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS = ("queue_raw_text_materials_folder_triage",)
 EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY = "015-raw-text-materials-folder-risk-triage"
+EXTERNAL_INVENTORY_POST_QUEUE_NEXT_MATERIAL_ENTRY = (
+    "015-raw-text-next-cycle-source-selection"
+)
 RAW_TEXT_TRIAGE_SOURCE_ROOT = "资料原文/文本类/"
 RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY = "015-liang-bazi-core-source-selection"
 RAW_TEXT_SOURCE_SELECTION_ID = "015-liang-bazi-core-source-selection"
@@ -2206,6 +2209,11 @@ def build_external_material_inventory_refresh_summary(
         for queue_item_id in EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS
         if queue_item_id in queue_item_ids
     ]
+    queue_refresh = build_materials_audit_queue_refresh_summary(source_dir)
+    post_queue_refresh_surface_confirmed = (
+        queue_refresh.next_material_entry == "015-external-material-inventory-refresh"
+        and queue_refresh.refresh_status == "covered_or_completed_queue_exhausted"
+    )
 
     return ExternalMaterialInventoryRefreshSummary(
         refresh_id="015-external-material-inventory-refresh",
@@ -2225,7 +2233,11 @@ def build_external_material_inventory_refresh_summary(
         newly_registered_representation_ids=newly_registered_representation_ids,
         new_queue_item_ids=new_queue_item_ids,
         downstream_mutation_authorized=False,
-        next_material_entry=EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY,
+        next_material_entry=(
+            EXTERNAL_INVENTORY_POST_QUEUE_NEXT_MATERIAL_ENTRY
+            if post_queue_refresh_surface_confirmed and not untracked_material_entry_ids
+            else EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY
+        ),
         boundary_checks={
             "external_roots_scanned_read_only": (
                 "passed" if all_inventory_entries else "failed"
@@ -2241,6 +2253,9 @@ def build_external_material_inventory_refresh_summary(
                 "passed"
                 if set(excluded_work_artifact_ids) == EXTERNAL_INVENTORY_WORK_ARTIFACTS
                 else "failed"
+            ),
+            "post_queue_refresh_surface_confirmed": (
+                "passed" if post_queue_refresh_surface_confirmed else "failed"
             ),
             "raw_materials_not_mutated": "passed",
             "013_012_not_mutated": "passed",

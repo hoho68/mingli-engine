@@ -762,6 +762,14 @@ def test_bazi_general_selected_variant_preparation_has_completed_package():
         assert slot.risk_boundary == "ordinary"
 
 
+def test_post_external_inventory_refresh_closes_applied_manual_actions():
+    summary = extraction_queue_intake.build_package_progress_summary()
+
+    assert summary.task_counts == {"completed": 19}
+    assert summary.extraction_task_count == 19
+    assert summary.next_manual_action_ids == []
+
+
 def test_seeded_extraction_queue_tracks_markdown_batch_005_completed_risk_review_backlog():
     packages = extraction_queue_intake.load_extraction_work_packages()
     tasks = extraction_queue_intake.load_extraction_tasks()

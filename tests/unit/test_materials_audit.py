@@ -1794,11 +1794,12 @@ def test_external_material_inventory_refresh_summarizes_scoped_metadata():
     ]
     assert refresh.new_queue_item_ids == ["queue_raw_text_materials_folder_triage"]
     assert refresh.downstream_mutation_authorized is False
-    assert refresh.next_material_entry == "015-raw-text-materials-folder-risk-triage"
+    assert refresh.next_material_entry == "015-raw-text-next-cycle-source-selection"
     assert refresh.boundary_checks == {
         "external_roots_scanned_read_only": "passed",
         "015_metadata_registered": "passed",
         "workflow_artifacts_excluded": "passed",
+        "post_queue_refresh_surface_confirmed": "passed",
         "raw_materials_not_mutated": "passed",
         "013_012_not_mutated": "passed",
     }
@@ -1825,7 +1826,8 @@ def test_external_material_inventory_refresh_markdown_and_docs_are_in_sync():
         "`untracked-material-entries=0`",
         "`excluded-work-artifacts=3`",
         "`downstream-mutation-authorized=false`",
-        "`next-material-entry=015-raw-text-materials-folder-risk-triage`",
+        "`next-material-entry=015-raw-text-next-cycle-source-selection`",
+        "`post_queue_refresh_surface_confirmed`: `passed`",
     ):
         assert marker in markdown
         assert marker in materials_doc

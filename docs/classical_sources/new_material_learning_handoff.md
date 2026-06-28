@@ -190,7 +190,8 @@ Authorization Audit Packet:
 - `untracked-material-entries=0`
 - `excluded-work-artifacts=3`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-raw-text-materials-folder-risk-triage`
+- `next-material-entry=015-raw-text-next-cycle-source-selection`
+- `post_queue_refresh_surface_confirmed`: `passed`
 
 015 Raw Text Materials Folder Risk Triage:
 
@@ -267,7 +268,7 @@ Authorization Audit Packet:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-external-material-inventory-refresh`.
+- `next-new-material-start=015-raw-text-next-cycle-source-selection`.
 - Current 015 queue coverage has no uncovered action after excluding 21
   016-covered ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -422,8 +423,8 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-external-material-inventory-refresh`. It should refresh
-the external inventory/new-material surface before selecting any next source,
+`next-material-entry=015-raw-text-next-cycle-source-selection`. It should select
+the next bounded raw-text source surface from already inventoried materials,
 keep Huntian Baolan deferred to a separate large-source pass, and require
 explicit authorization before any 013/012 mutation.
 
