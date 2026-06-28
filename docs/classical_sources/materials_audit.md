@@ -391,10 +391,50 @@ Deferred records:
 
 - `bazi_general_classical_huntian_baolan_ziping`
 
-The next bounded work surface is source identity review for the selected and
-variant-review source records. It should resolve duplicate, edition, author, and
-registration-prep status before any reading, extraction, 013 candidate intake,
-or 012 evidence work.
+The source identity review for these records is now recorded in the next
+section. Registration, reading, extraction, 013 candidate intake, and 012
+evidence remain blocked unless explicitly authorized.
+
+## 015 Bazi General Source Identity Review
+
+The 2026-06-28 Bazi general source identity review uses only path labels,
+existing source-level selection metadata, and source-library overlap metadata.
+It does not open raw source files, create source-library records, create 013
+candidate/review/promotion records, or alter 012 formal evidence.
+
+- `source-identity-review-status=source_identity_review_completed`
+- `source-identity-review-items=8`
+- `existing-batch-overlap=2`
+- `registration-prep-ready=3`
+- `variant-choice-required=2`
+- `deferred-large-source=1`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-bazi-general-registration-prep`
+
+Existing-batch overlap records:
+
+- `bazi_general_identity_youran_notes`: reuse `entry_markdown_source_batch_001`.
+- `bazi_general_identity_tianma_notes`: reuse `entry_markdown_source_batch_001`.
+
+Registration-prep-ready records:
+
+- `bazi_general_identity_lecture_textbook`
+- `bazi_general_identity_beichen_intro`
+- `bazi_general_identity_ziping_orthodox_pair`
+
+Variant-choice records:
+
+- `bazi_general_identity_ditiansui_variant_set`
+- `bazi_general_identity_qiongtong_variant_set`
+
+Deferred records:
+
+- `bazi_general_identity_huntian_baolan_ziping`
+
+The next bounded work surface is registration prep for the three
+registration-prep-ready records. Existing Batch 001 overlaps should not be
+registered again, variant sets need a later choice step, and the large deferred
+source should remain out of the immediate reading path.
 
 ## Raw-File Boundary
 

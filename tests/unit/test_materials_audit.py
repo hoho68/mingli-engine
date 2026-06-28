@@ -488,6 +488,48 @@ def test_materials_audit_dataclasses_construct_with_defaults():
     assert cluster_source_item.identity_review_note == ""
     assert cluster_source_summary.guardrails == []
 
+    identity_review_item = models.RawTextSourceIdentityReviewItem(
+        review_id="bazi_general_identity_test_source",
+        source_selection_id=cluster_source_item.selection_id,
+        cluster_id=cluster_source_item.cluster_id,
+        triage_group_id="raw_text_triage_bazi_general",
+        source_root=triage_group.source_root,
+        canonical_title_label="Bazi General Test Source",
+        identity_status="registration_prep_ready",
+        source_library_overlap_status="no_registered_overlap_found",
+        registration_readiness="ready_for_registration_prep",
+        recommended_next_action="register_source",
+        next_review_target="registration_prep",
+        target_rule_families=["pattern_strength"],
+    )
+    identity_review_summary = models.RawTextSourceIdentityReviewSummary(
+        review_id="015-bazi-general-source-identity-review",
+        review_status="source_identity_review_completed",
+        triage_group_id="raw_text_triage_bazi_general",
+        source_root=triage_group.source_root,
+        identity_review_item_count=1,
+        existing_batch_overlap_count=0,
+        registration_prep_ready_count=1,
+        variant_choice_required_count=0,
+        deferred_large_source_count=0,
+        identity_status_counts={"registration_prep_ready": 1},
+        source_library_overlap_counts={"no_registered_overlap_found": 1},
+        registration_readiness_counts={"ready_for_registration_prep": 1},
+        risk_boundary_counts={"ordinary": 1},
+        target_rule_family_counts={"pattern_strength": 1},
+        existing_batch_overlap_ids=[],
+        registration_prep_item_ids=[identity_review_item.review_id],
+        variant_choice_item_ids=[],
+        deferred_item_ids=[],
+        downstream_mutation_authorized=False,
+        next_material_entry="015-next-registration-prep",
+        boundary_checks={"013_012_not_mutated": "passed"},
+    )
+
+    assert identity_review_item.matched_source_library_entry_ids == []
+    assert identity_review_item.guardrails == []
+    assert identity_review_summary.guardrails == []
+
 
 def test_read_json_list_reports_missing_invalid_and_non_array_payloads(tmp_path):
     with pytest.raises(materials_audit.MaterialsAuditError, match="missing data file"):
@@ -2107,6 +2149,130 @@ def test_raw_text_cluster_source_selection_markdown_and_docs_are_in_sync():
         "`deferred-after-cluster-selection=1`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-bazi-general-source-identity-review`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_source_identity_review_items_load_bazi_general_sources():
+    items = materials_audit.load_raw_text_source_identity_review_items()
+    items_by_id = {item.review_id: item for item in items}
+
+    assert len(items) == 8
+    assert {item.triage_group_id for item in items} == {"raw_text_triage_bazi_general"}
+    assert {item.cluster_id for item in items} == {
+        "bazi_general_foundation_textbook_cluster",
+        "bazi_general_classical_reference_cluster",
+    }
+    assert all(
+        item.source_root == materials_audit.RAW_TEXT_TRIAGE_SOURCE_ROOT
+        for item in items
+    )
+    assert items_by_id[
+        "bazi_general_identity_youran_notes"
+    ].matched_source_library_entry_ids == ["entry_markdown_source_batch_001"]
+    assert items_by_id[
+        "bazi_general_identity_tianma_notes"
+    ].source_library_overlap_status == "existing_markdown_batch_overlap"
+    assert items_by_id[
+        "bazi_general_identity_lecture_textbook"
+    ].identity_status == "registration_prep_ready"
+    assert items_by_id[
+        "bazi_general_identity_ditiansui_variant_set"
+    ].identity_status == "variant_choice_required"
+    assert items_by_id[
+        "bazi_general_identity_huntian_baolan_ziping"
+    ].identity_status == "deferred_large_source"
+
+
+def test_raw_text_source_identity_review_summary_counts_bazi_general_sources():
+    summary = materials_audit.build_raw_text_source_identity_review_summary()
+
+    assert summary.review_id == "015-bazi-general-source-identity-review"
+    assert summary.review_status == "source_identity_review_completed"
+    assert summary.triage_group_id == "raw_text_triage_bazi_general"
+    assert summary.identity_review_item_count == 8
+    assert summary.existing_batch_overlap_count == 2
+    assert summary.registration_prep_ready_count == 3
+    assert summary.variant_choice_required_count == 2
+    assert summary.deferred_large_source_count == 1
+    assert summary.identity_status_counts == {
+        "existing_batch_overlap": 2,
+        "registration_prep_ready": 3,
+        "variant_choice_required": 2,
+        "deferred_large_source": 1,
+    }
+    assert summary.source_library_overlap_counts == {
+        "existing_markdown_batch_overlap": 2,
+        "no_registered_overlap_found": 3,
+        "variant_set_requires_choice": 2,
+        "deferred_large_source": 1,
+    }
+    assert summary.registration_readiness_counts == {
+        "no_registration_needed_existing_batch": 2,
+        "ready_for_registration_prep": 3,
+        "needs_variant_choice": 2,
+        "deferred": 1,
+    }
+    assert summary.risk_boundary_counts == {"ordinary": 8}
+    assert summary.target_rule_family_counts == {
+        "branch_interaction": 1,
+        "pattern_strength": 7,
+        "ten_god_relation": 2,
+        "useful_god_candidate": 5,
+    }
+    assert summary.existing_batch_overlap_ids == [
+        "bazi_general_identity_youran_notes",
+        "bazi_general_identity_tianma_notes",
+    ]
+    assert summary.registration_prep_item_ids == [
+        "bazi_general_identity_lecture_textbook",
+        "bazi_general_identity_beichen_intro",
+        "bazi_general_identity_ziping_orthodox_pair",
+    ]
+    assert summary.variant_choice_item_ids == [
+        "bazi_general_identity_ditiansui_variant_set",
+        "bazi_general_identity_qiongtong_variant_set",
+    ]
+    assert summary.deferred_item_ids == [
+        "bazi_general_identity_huntian_baolan_ziping",
+    ]
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == "015-bazi-general-registration-prep"
+    assert summary.boundary_checks == {
+        "identity_review_items_loaded": "passed",
+        "source_selection_items_loaded": "passed",
+        "source_selection_references_valid": "passed",
+        "source_library_overlap_references_valid": "passed",
+        "raw_materials_not_mutated": "passed",
+        "source_library_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+
+def test_raw_text_source_identity_review_markdown_and_docs_are_in_sync():
+    summary = materials_audit.build_raw_text_source_identity_review_summary()
+    markdown = materials_audit.render_raw_text_source_identity_review_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Bazi General Source Identity Review",
+        "`source-identity-review-status=source_identity_review_completed`",
+        "`source-identity-review-items=8`",
+        "`existing-batch-overlap=2`",
+        "`registration-prep-ready=3`",
+        "`variant-choice-required=2`",
+        "`deferred-large-source=1`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-bazi-general-registration-prep`",
     ):
         assert marker in markdown
         assert marker in materials_doc

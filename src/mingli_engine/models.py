@@ -2874,6 +2874,55 @@ class RawTextClusterSourceSelectionSummary:
 
 
 @dataclass(frozen=True)
+class RawTextSourceIdentityReviewItem:
+    review_id: str
+    source_selection_id: str
+    cluster_id: str
+    triage_group_id: str
+    source_root: str
+    canonical_title_label: str
+    identity_status: str
+    source_library_overlap_status: str
+    registration_readiness: str
+    recommended_next_action: str
+    next_review_target: str
+    risk_boundary: str = "ordinary"
+    matched_source_library_entry_ids: list[str] = field(default_factory=list)
+    target_rule_families: list[str] = field(default_factory=list)
+    identity_review_note: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextSourceIdentityReviewSummary:
+    review_id: str
+    review_status: str
+    triage_group_id: str
+    source_root: str
+    identity_review_item_count: int
+    existing_batch_overlap_count: int
+    registration_prep_ready_count: int
+    variant_choice_required_count: int
+    deferred_large_source_count: int
+    identity_status_counts: dict[str, int]
+    source_library_overlap_counts: dict[str, int]
+    registration_readiness_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    target_rule_family_counts: dict[str, int]
+    existing_batch_overlap_ids: list[str]
+    registration_prep_item_ids: list[str]
+    variant_choice_item_ids: list[str]
+    deferred_item_ids: list[str]
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class ExtractionWorkPackage:
     package_id: str
     package_label: str

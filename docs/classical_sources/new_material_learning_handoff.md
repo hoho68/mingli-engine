@@ -10,7 +10,7 @@ authorization audit packet, plus the Markdown Batch 005 risk-review routing
 pass, risk-review prerequisite sweep, 015 queue refresh, and external material
 inventory refresh, raw text materials folder risk triage, Liang Bazi core
 source selection, Liang Bazi core individual review, and Bazi general source
-cluster selection.
+cluster selection, cluster source selection, and source identity review.
 
 ## Completed Checkpoints
 
@@ -62,6 +62,11 @@ cluster selection.
   `selected-for-identity-review=5`, `variant-identity-review=2`,
   `deferred-after-cluster-selection=1`, and no source-library, 013, or 012
   mutation was authorized.
+- 015 Bazi General Source Identity Review is completed:
+  `source-identity-review-items=8`, `existing-batch-overlap=2`,
+  `registration-prep-ready=3`, `variant-choice-required=2`,
+  `deferred-large-source=1`, and no raw-file, source-library, 013, or 012
+  mutation was authorized.
 
 Primary detailed references:
 
@@ -81,6 +86,7 @@ Primary detailed references:
 - [2026-06-28-liang-bazi-core-individual-review.md](../superpowers/plans/2026-06-28-liang-bazi-core-individual-review.md)
 - [2026-06-28-bazi-general-source-cluster-selection.md](../superpowers/plans/2026-06-28-bazi-general-source-cluster-selection.md)
 - [2026-06-28-bazi-general-cluster-source-selection.md](../superpowers/plans/2026-06-28-bazi-general-cluster-source-selection.md)
+- [2026-06-28-bazi-general-source-identity-review.md](../superpowers/plans/2026-06-28-bazi-general-source-identity-review.md)
 
 ## Current Frozen Snapshot
 
@@ -169,6 +175,17 @@ Authorization Audit Packet:
 - `downstream-mutation-authorized=false`
 - `next-material-entry=015-bazi-general-source-identity-review`
 
+015 Bazi General Source Identity Review:
+
+- `source-identity-review-status=source_identity_review_completed`
+- `source-identity-review-items=8`
+- `existing-batch-overlap=2`
+- `registration-prep-ready=3`
+- `variant-choice-required=2`
+- `deferred-large-source=1`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-bazi-general-registration-prep`
+
 013 and 012 boundary state:
 
 - `013-candidate-extracts=36`
@@ -234,8 +251,27 @@ Authorization Audit Packet:
   `bazi_general_classical_qiongtong_variant_set`.
 - Deferred source id:
   `bazi_general_classical_huntian_baolan_ziping`.
+- 015 Bazi General Source Identity Review is completed:
+  `source-identity-review-status=source_identity_review_completed`,
+  `source-identity-review-items=8`, `existing-batch-overlap=2`,
+  `registration-prep-ready=3`, `variant-choice-required=2`,
+  `deferred-large-source=1`, `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-bazi-general-registration-prep`.
+- Existing-batch overlap ids:
+  `bazi_general_identity_youran_notes` and
+  `bazi_general_identity_tianma_notes`; both reuse
+  `entry_markdown_source_batch_001`.
+- Registration-prep-ready ids:
+  `bazi_general_identity_lecture_textbook`,
+  `bazi_general_identity_beichen_intro`, and
+  `bazi_general_identity_ziping_orthodox_pair`.
+- Variant-choice ids:
+  `bazi_general_identity_ditiansui_variant_set` and
+  `bazi_general_identity_qiongtong_variant_set`.
+- Deferred identity id:
+  `bazi_general_identity_huntian_baolan_ziping`.
 - Recommended next material entry for the next long goal:
-  `next-material-entry=015-bazi-general-source-identity-review`.
+  `next-material-entry=015-bazi-general-registration-prep`.
 
 ## Remaining Optional Precision Work
 
@@ -252,10 +288,11 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-bazi-general-source-identity-review`. It should resolve
-duplicate, edition, author, source-library overlap, and registration-prep status
-for the selected and variant source records before any reading, extraction, 013
-candidate intake, or 012 evidence work.
+`next-material-entry=015-bazi-general-registration-prep`. It should prepare
+source-library registration metadata for the three registration-prep-ready
+records, avoid duplicate registration for the two existing Batch 001 overlaps,
+keep variant sets behind a variant-choice step, and keep 013/012 mutations
+blocked unless separately authorized.
 
 ## Guardrails
 
