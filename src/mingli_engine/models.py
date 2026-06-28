@@ -3006,6 +3006,51 @@ class RawTextSourceRegistrationSummary:
 
 
 @dataclass(frozen=True)
+class BaziGeneralVariantDeferredReviewItem:
+    item_id: str
+    identity_review_id: str
+    source_selection_id: str
+    cluster_id: str
+    triage_group_id: str
+    source_root: str
+    review_kind: str
+    review_status: str
+    decision: str
+    canonical_choice_status: str
+    local_references: list[str]
+    candidate_rule_families: list[str]
+    selected_source_library_entry_id: str = ""
+    source_library_mutation_authorized: bool = False
+    downstream_mutation_authorized: bool = False
+    review_note: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class BaziGeneralVariantDeferredReviewSummary:
+    review_id: str
+    review_status: str
+    triage_group_id: str
+    source_root: str
+    review_item_count: int
+    variant_review_item_count: int
+    deferred_review_item_count: int
+    selected_canonical_variant_count: int
+    source_library_registration_authorized_count: int
+    variant_review_item_ids: list[str]
+    deferred_review_item_ids: list[str]
+    selected_canonical_variant_ids: list[str]
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class BaziGeneralSourcePreparationReadingSummary:
     reading_id: str
     reading_status: str

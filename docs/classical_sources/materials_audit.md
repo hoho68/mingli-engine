@@ -609,6 +609,64 @@ Guardrails:
 The next bounded work surface is
 `015-bazi-general-variant-choice-and-deferred-review`.
 
+## 015 Bazi General Variant Choice And Deferred Review
+
+The 2026-06-28 variant/deferred review closed the remaining three Bazi general
+identity-review records from this source batch. It keeps Ditiansui and
+Qiongtong behind a later variant-choice pass, keeps Huntian Baolan deferred as
+a large source, and does not authorize source-library, 013, or 012 mutation.
+
+- Review id: `015-bazi-general-variant-choice-and-deferred-review`
+- `variant-deferred-review-status=variant_deferred_review_completed`
+- `variant-deferred-review-items=3`
+- `variant-review-items=2`
+- `deferred-review-items=1`
+- `selected-canonical-variants=0`
+- `source-library-registration-authorized=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-bazi-general-next-source-batch-preparation`
+
+Variant-choice review ids:
+
+- `bazi_general_variant_review_ditiansui_variant_set`
+- `bazi_general_variant_review_qiongtong_variant_set`
+
+Deferred review ids:
+
+- `bazi_general_deferred_review_huntian_baolan_ziping`
+
+Selected canonical variant ids:
+
+- None selected in this stage.
+
+Boundary checks:
+
+- `variant_deferred_items_loaded`: `passed`
+- `identity_review_references_valid`: `passed`
+- `source_selection_references_valid`: `passed`
+- `variant_records_match_identity_status`: `passed`
+- `deferred_records_match_identity_status`: `passed`
+- `source_paths_are_relative`: `passed`
+- `no_canonical_variants_selected`: `passed`
+- `source_library_not_mutated`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+
+- Variant-choice records remain blocked until a later edition-choice pass
+  selects one reading copy.
+- The Huntian Baolan large source remains deferred and is not opened,
+  converted, or registered.
+- No source-library, 013 candidate, review, promotion, or 012 evidence mutation
+  is authorized by this review.
+- The next stage should choose a smaller source batch rather than forcing these
+  unresolved records forward.
+
+The next bounded work surface is
+`015-bazi-general-next-source-batch-preparation`.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

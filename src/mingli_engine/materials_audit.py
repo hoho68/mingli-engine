@@ -13,6 +13,8 @@ from mingli_engine import extraction_queue_intake
 from mingli_engine import learning_reference_curation
 from mingli_engine.models import (
     AuditProgressSummary,
+    BaziGeneralVariantDeferredReviewItem,
+    BaziGeneralVariantDeferredReviewSummary,
     BaziGeneralSourcePreparationReadingSummary,
     CONFIDENCE_LEVELS,
     ExtractionQueueItem,
@@ -165,6 +167,12 @@ BAZI_GENERAL_SOURCE_PREPARATION_READING_ID = (
 BAZI_GENERAL_SOURCE_PREPARATION_READING_NEXT_MATERIAL_ENTRY = (
     "015-bazi-general-variant-choice-and-deferred-review"
 )
+BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_ID = (
+    "015-bazi-general-variant-choice-and-deferred-review"
+)
+BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_NEXT_MATERIAL_ENTRY = (
+    "015-bazi-general-next-source-batch-preparation"
+)
 BAZI_GENERAL_SOURCE_PREPARATION_READING_ENTRY_IDS = (
     "entry_bazi_general_lecture_textbook_pdf",
     "entry_bazi_general_beichen_intro_pdf",
@@ -255,6 +263,18 @@ RAW_TEXT_SOURCE_REGISTRATION_PREP_STATUSES = frozenset(
 )
 RAW_TEXT_SOURCE_REGISTRATION_PREP_OVERLAP_POLICIES = frozenset(
     {"new_entry_allowed_after_user_approval"}
+)
+BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_KINDS = frozenset(
+    {"variant_choice", "deferred_large_source"}
+)
+BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_STATUSES = frozenset(
+    {"blocked_pending_variant_choice", "deferred_large_source_reviewed"}
+)
+BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_DECISIONS = frozenset(
+    {"keep_variant_choice_blocked", "keep_large_source_deferred"}
+)
+BAZI_GENERAL_VARIANT_DEFERRED_CANONICAL_CHOICE_STATUSES = frozenset(
+    {"not_selected", "not_applicable"}
 )
 
 
@@ -1578,6 +1598,178 @@ def load_raw_text_source_identity_review_items(
         [item.source_selection_id for item in items],
         "source_selection_id",
     )
+    return items
+
+
+def _bazi_general_variant_deferred_review_item_from_dict(
+    data: dict[str, Any],
+    identity_review_items_by_id: dict[str, RawTextSourceIdentityReviewItem],
+    source_selection_items_by_id: dict[str, RawTextClusterSourceSelectionItem],
+) -> BaziGeneralVariantDeferredReviewItem:
+    try:
+        item = BaziGeneralVariantDeferredReviewItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid bazi general variant deferred review item: {error}"
+        ) from error
+
+    owner_id = item.item_id or "?"
+    for field_name in (
+        "item_id",
+        "identity_review_id",
+        "source_selection_id",
+        "cluster_id",
+        "triage_group_id",
+        "source_root",
+        "review_kind",
+        "review_status",
+        "decision",
+        "canonical_choice_status",
+        "review_note",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+
+    identity_review_item = identity_review_items_by_id.get(item.identity_review_id)
+    if identity_review_item is None:
+        raise MaterialsAuditError(f"{owner_id} references unknown identity_review_id")
+    source_selection_item = source_selection_items_by_id.get(item.source_selection_id)
+    if source_selection_item is None:
+        raise MaterialsAuditError(f"{owner_id} references unknown source_selection_id")
+    if item.source_selection_id != identity_review_item.source_selection_id:
+        raise MaterialsAuditError(
+            f"{owner_id} source_selection_id does not match identity review"
+        )
+    if item.cluster_id != identity_review_item.cluster_id:
+        raise MaterialsAuditError(f"{owner_id} cluster_id does not match identity")
+    if item.cluster_id != source_selection_item.cluster_id:
+        raise MaterialsAuditError(f"{owner_id} cluster_id does not match selection")
+    if item.triage_group_id != RAW_TEXT_SOURCE_IDENTITY_REVIEW_TRIAGE_GROUP_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid triage_group_id")
+    if item.source_root != RAW_TEXT_TRIAGE_SOURCE_ROOT:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_root")
+
+    _validate_enum(
+        item.review_kind,
+        BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_KINDS,
+        "review_kind",
+        owner_id,
+    )
+    _validate_enum(
+        item.review_status,
+        BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_STATUSES,
+        "review_status",
+        owner_id,
+    )
+    _validate_enum(
+        item.decision,
+        BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_DECISIONS,
+        "decision",
+        owner_id,
+    )
+    _validate_enum(
+        item.canonical_choice_status,
+        BAZI_GENERAL_VARIANT_DEFERRED_CANONICAL_CHOICE_STATUSES,
+        "canonical_choice_status",
+        owner_id,
+    )
+    for field_name in ("local_references", "candidate_rule_families", "guardrails"):
+        _require_string_list(getattr(item, field_name), field_name, owner_id)
+    if not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires guardrails")
+    if item.local_references != source_selection_item.relative_paths:
+        raise MaterialsAuditError(
+            f"{owner_id} local_references must match source selection paths"
+        )
+    for local_reference in item.local_references:
+        if not _is_source_relative_path(local_reference):
+            raise MaterialsAuditError(f"{owner_id} has non-relative source path")
+    for rule_family in item.candidate_rule_families:
+        if rule_family not in RULE_FAMILIES:
+            raise MaterialsAuditError(
+                f"{owner_id} has unsupported rule_family: {rule_family}"
+            )
+    if item.selected_source_library_entry_id:
+        raise MaterialsAuditError(
+            f"{owner_id} cannot select source-library entry in this review"
+        )
+    if item.source_library_mutation_authorized:
+        raise MaterialsAuditError(
+            f"{owner_id} cannot authorize source-library mutation"
+        )
+    if item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} cannot authorize downstream mutation")
+
+    if item.review_kind == "variant_choice":
+        if identity_review_item.identity_status != "variant_choice_required":
+            raise MaterialsAuditError(
+                f"{owner_id} variant review must reference variant identity"
+            )
+        if source_selection_item.selection_status != "variant_identity_review":
+            raise MaterialsAuditError(
+                f"{owner_id} variant review must reference variant selection"
+            )
+        if item.review_status != "blocked_pending_variant_choice":
+            raise MaterialsAuditError(
+                f"{owner_id} variant review must stay blocked"
+            )
+        if item.decision != "keep_variant_choice_blocked":
+            raise MaterialsAuditError(
+                f"{owner_id} variant review has invalid decision"
+            )
+        if item.canonical_choice_status != "not_selected":
+            raise MaterialsAuditError(
+                f"{owner_id} variant review cannot select canonical source"
+            )
+    if item.review_kind == "deferred_large_source":
+        if identity_review_item.identity_status != "deferred_large_source":
+            raise MaterialsAuditError(
+                f"{owner_id} deferred review must reference deferred identity"
+            )
+        if source_selection_item.selection_status != "deferred_after_cluster_selection":
+            raise MaterialsAuditError(
+                f"{owner_id} deferred review must reference deferred selection"
+            )
+        if item.review_status != "deferred_large_source_reviewed":
+            raise MaterialsAuditError(
+                f"{owner_id} deferred review has invalid review_status"
+            )
+        if item.decision != "keep_large_source_deferred":
+            raise MaterialsAuditError(
+                f"{owner_id} deferred review has invalid decision"
+            )
+        if item.canonical_choice_status != "not_applicable":
+            raise MaterialsAuditError(
+                f"{owner_id} deferred review cannot carry canonical choice"
+            )
+
+    return item
+
+
+def load_bazi_general_variant_deferred_review_items(
+    data_dir: Path | str | None = None,
+) -> list[BaziGeneralVariantDeferredReviewItem]:
+    source_dir = _data_dir(data_dir)
+    identity_review_items_by_id = {
+        item.review_id: item for item in load_raw_text_source_identity_review_items(source_dir)
+    }
+    source_selection_items_by_id = {
+        item.selection_id: item
+        for item in load_raw_text_cluster_source_selection_items(source_dir)
+    }
+    items = [
+        _bazi_general_variant_deferred_review_item_from_dict(
+            item,
+            identity_review_items_by_id,
+            source_selection_items_by_id,
+        )
+        for item in _read_optional_json_list(
+            source_dir / "bazi_general_variant_deferred_review_items.json"
+        )
+    ]
+    _ensure_unique([item.item_id for item in items], "item_id")
+    _ensure_unique([item.identity_review_id for item in items], "identity_review_id")
+    _ensure_unique([item.source_selection_id for item in items], "source_selection_id")
     return items
 
 
@@ -3465,6 +3657,192 @@ def render_bazi_general_source_preparation_reading_markdown(
     return "\n".join(lines) + "\n"
 
 
+def build_bazi_general_variant_deferred_review_summary(
+    data_dir: Path | str | None = None,
+) -> BaziGeneralVariantDeferredReviewSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_bazi_general_variant_deferred_review_items(source_dir)
+    identity_review_items_by_id = {
+        item.review_id: item for item in load_raw_text_source_identity_review_items(source_dir)
+    }
+    source_selection_items_by_id = {
+        item.selection_id: item
+        for item in load_raw_text_cluster_source_selection_items(source_dir)
+    }
+    variant_review_item_ids = [
+        item.item_id for item in items if item.review_kind == "variant_choice"
+    ]
+    deferred_review_item_ids = [
+        item.item_id for item in items if item.review_kind == "deferred_large_source"
+    ]
+    selected_canonical_variant_ids = [
+        item.item_id
+        for item in items
+        if item.canonical_choice_status not in {"not_selected", "not_applicable"}
+        or item.selected_source_library_entry_id
+    ]
+    source_library_registration_authorized_count = sum(
+        1 for item in items if item.source_library_mutation_authorized
+    )
+    source_paths_are_relative = bool(items) and all(
+        _is_source_relative_path(path)
+        for item in items
+        for path in item.local_references
+    )
+    variant_records_match_identity_status = bool(variant_review_item_ids) and all(
+        identity_review_items_by_id[item.identity_review_id].identity_status
+        == "variant_choice_required"
+        and source_selection_items_by_id[item.source_selection_id].selection_status
+        == "variant_identity_review"
+        for item in items
+        if item.review_kind == "variant_choice"
+    )
+    deferred_records_match_identity_status = bool(deferred_review_item_ids) and all(
+        identity_review_items_by_id[item.identity_review_id].identity_status
+        == "deferred_large_source"
+        and source_selection_items_by_id[item.source_selection_id].selection_status
+        == "deferred_after_cluster_selection"
+        for item in items
+        if item.review_kind == "deferred_large_source"
+    )
+    source_library_not_mutated = bool(items) and all(
+        not item.source_library_mutation_authorized
+        and not item.selected_source_library_entry_id
+        for item in items
+    )
+    downstream_not_mutated = bool(items) and all(
+        not item.downstream_mutation_authorized for item in items
+    )
+    boundary_checks = {
+        "variant_deferred_items_loaded": "passed" if items else "failed",
+        "identity_review_references_valid": (
+            "passed"
+            if all(item.identity_review_id in identity_review_items_by_id for item in items)
+            else "failed"
+        ),
+        "source_selection_references_valid": (
+            "passed"
+            if all(
+                item.source_selection_id in source_selection_items_by_id
+                for item in items
+            )
+            else "failed"
+        ),
+        "variant_records_match_identity_status": (
+            "passed" if variant_records_match_identity_status else "failed"
+        ),
+        "deferred_records_match_identity_status": (
+            "passed" if deferred_records_match_identity_status else "failed"
+        ),
+        "source_paths_are_relative": (
+            "passed" if source_paths_are_relative else "failed"
+        ),
+        "no_canonical_variants_selected": (
+            "passed" if not selected_canonical_variant_ids else "failed"
+        ),
+        "source_library_not_mutated": (
+            "passed" if source_library_not_mutated else "failed"
+        ),
+        "013_012_not_mutated": "passed" if downstream_not_mutated else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+    return BaziGeneralVariantDeferredReviewSummary(
+        review_id=BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_ID,
+        review_status=(
+            "variant_deferred_review_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "variant_deferred_review_needs_attention"
+        ),
+        triage_group_id=RAW_TEXT_SOURCE_IDENTITY_REVIEW_TRIAGE_GROUP_ID,
+        source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
+        review_item_count=len(items),
+        variant_review_item_count=len(variant_review_item_ids),
+        deferred_review_item_count=len(deferred_review_item_ids),
+        selected_canonical_variant_count=len(selected_canonical_variant_ids),
+        source_library_registration_authorized_count=(
+            source_library_registration_authorized_count
+        ),
+        variant_review_item_ids=variant_review_item_ids,
+        deferred_review_item_ids=deferred_review_item_ids,
+        selected_canonical_variant_ids=selected_canonical_variant_ids,
+        source_library_mutation_authorized=(
+            source_library_registration_authorized_count > 0
+        ),
+        downstream_mutation_authorized=not downstream_not_mutated,
+        next_material_entry=BAZI_GENERAL_VARIANT_DEFERRED_REVIEW_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Variant-choice records remain blocked until a later edition-choice pass selects one reading copy.",
+            "The Huntian Baolan large source remains deferred and is not opened, converted, or registered.",
+            "No source-library, 013 candidate, review, promotion, or 012 evidence mutation is authorized by this review.",
+            "The next stage should choose a smaller source batch rather than forcing these unresolved records forward.",
+        ],
+    )
+
+
+def render_bazi_general_variant_deferred_review_markdown(
+    summary: BaziGeneralVariantDeferredReviewSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Bazi General Variant Choice And Deferred Review",
+        "",
+        f"- Review id: `{summary.review_id}`",
+        f"- `variant-deferred-review-status={summary.review_status}`",
+        f"- `variant-deferred-review-items={summary.review_item_count}`",
+        f"- `variant-review-items={summary.variant_review_item_count}`",
+        f"- `deferred-review-items={summary.deferred_review_item_count}`",
+        (
+            "- `selected-canonical-variants="
+            f"{summary.selected_canonical_variant_count}`"
+        ),
+        (
+            "- `source-library-registration-authorized="
+            f"{summary.source_library_registration_authorized_count}`"
+        ),
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Variant-choice review ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.variant_review_item_ids)
+    lines.extend(["", "Deferred review ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.deferred_review_item_ids)
+    lines.extend(["", "Selected canonical variant ids:"])
+    if summary.selected_canonical_variant_ids:
+        lines.extend(
+            f"- `{item_id}`" for item_id in summary.selected_canonical_variant_ids
+        )
+    else:
+        lines.append("- None selected in this stage.")
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def render_raw_text_source_selection_markdown(
     summary: RawTextSourceSelectionSummary,
 ) -> str:
@@ -3758,6 +4136,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_source_registration_prep_items = (
             load_raw_text_source_registration_prep_items(source_dir)
         )
+        bazi_general_variant_deferred_review_items = (
+            load_bazi_general_variant_deferred_review_items(source_dir)
+        )
     except MaterialsAuditError as error:
         return [str(error)]
 
@@ -3774,6 +4155,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
+        bazi_general_variant_deferred_review_items,
     ):
         if not value:
             continue
@@ -3806,6 +4188,9 @@ def _iter_quality_text_fields(
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
     raw_text_source_registration_prep_items: list[RawTextSourceRegistrationPrepItem],
+    bazi_general_variant_deferred_review_items: list[
+        BaziGeneralVariantDeferredReviewItem
+    ],
 ) -> list[tuple[str, str, str]]:
     fields: list[tuple[str, str, str]] = []
     for record in records:
@@ -3952,6 +4337,21 @@ def _iter_quality_text_fields(
         fields.extend((item.prep_id, "risk_notes", note) for note in item.risk_notes)
         fields.extend(
             (item.prep_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in bazi_general_variant_deferred_review_items:
+        fields.extend(
+            (
+                (item.item_id, "review_note", item.review_note),
+                (item.item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.item_id, "local_references", path)
+            for path in item.local_references
+        )
+        fields.extend(
+            (item.item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     return fields

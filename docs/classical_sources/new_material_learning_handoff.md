@@ -15,7 +15,9 @@ registration prep, source-library registration, and Bazi general
 source-preparation reading.
 The latest local checkpoint completed preparation reading for the three Bazi
 general source-library entries, including authorized 013 intake and 012
-evidence linkage, while keeping raw PDF files unchanged.
+evidence linkage, then closed the remaining Ditiansui, Qiongtong, and Huntian
+Baolan variant/deferred review surface without registering or reading those
+unresolved records. Raw PDF files remain unchanged.
 
 ## Completed Checkpoints
 
@@ -91,6 +93,14 @@ evidence linkage, while keeping raw PDF files unchanged.
   `source-preparation-reading-files=4`, `candidate-extracts=3`,
   `formal-evidence-units=3`, `downstream-mutation-authorized=true`, and
   `next-material-entry=015-bazi-general-variant-choice-and-deferred-review`.
+- 015 Bazi General Variant Choice And Deferred Review is completed:
+  `variant-deferred-review-status=variant_deferred_review_completed`,
+  `variant-deferred-review-items=3`, `variant-review-items=2`,
+  `deferred-review-items=1`, `selected-canonical-variants=0`,
+  `source-library-registration-authorized=0`,
+  `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-bazi-general-next-source-batch-preparation`.
 
 Primary detailed references:
 
@@ -362,6 +372,10 @@ Authorization Audit Packet:
   `bazi_general_lecture_pattern_strength_001`,
   `bazi_general_beichen_branch_interaction_001`, and
   `bazi_general_ziping_useful_god_001`.
+- Variant/deferred review ids now closed without downstream mutation:
+  `bazi_general_variant_review_ditiansui_variant_set`,
+  `bazi_general_variant_review_qiongtong_variant_set`, and
+  `bazi_general_deferred_review_huntian_baolan_ziping`.
 
 ## Remaining Optional Precision Work
 
@@ -378,10 +392,11 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-bazi-general-variant-choice-and-deferred-review`. It
-should resolve the Ditiansui and Qiongtong variant-choice sets, keep Huntian
-Baolan deferred unless source clarity improves, and then prepare the next Bazi
-general source batch without duplicating Batch 001 overlaps.
+`next-material-entry=015-bazi-general-next-source-batch-preparation`. It should
+select the next smaller Bazi general source batch from the remaining
+source-selection/backlog surface, prepare source-library metadata where safe,
+and keep Ditiansui, Qiongtong, and Huntian Baolan out of reading until a
+separate edition-choice or large-source pass is explicitly selected.
 
 ## Guardrails
 

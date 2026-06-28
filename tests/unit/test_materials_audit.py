@@ -608,6 +608,45 @@ def test_materials_audit_dataclasses_construct_with_defaults():
 
     assert registration_summary.guardrails == []
 
+    variant_review_item = models.BaziGeneralVariantDeferredReviewItem(
+        item_id="bazi_general_variant_deferred_review_test_source",
+        identity_review_id=identity_review_item.review_id,
+        source_selection_id=identity_review_item.source_selection_id,
+        cluster_id=identity_review_item.cluster_id,
+        triage_group_id="raw_text_triage_bazi_general",
+        source_root=triage_group.source_root,
+        review_kind="variant_choice",
+        review_status="blocked_pending_variant_choice",
+        decision="keep_variant_choice_blocked",
+        canonical_choice_status="not_selected",
+        local_references=["test-a.pdf", "test-b.pdf"],
+        candidate_rule_families=["pattern_strength"],
+    )
+    variant_review_summary = models.BaziGeneralVariantDeferredReviewSummary(
+        review_id="015-bazi-general-variant-choice-and-deferred-review",
+        review_status="variant_deferred_review_completed",
+        triage_group_id="raw_text_triage_bazi_general",
+        source_root=triage_group.source_root,
+        review_item_count=1,
+        variant_review_item_count=1,
+        deferred_review_item_count=0,
+        selected_canonical_variant_count=0,
+        source_library_registration_authorized_count=0,
+        variant_review_item_ids=[variant_review_item.item_id],
+        deferred_review_item_ids=[],
+        selected_canonical_variant_ids=[],
+        source_library_mutation_authorized=False,
+        downstream_mutation_authorized=False,
+        next_material_entry="015-bazi-general-next-source-batch-preparation",
+        boundary_checks={"raw_materials_not_mutated": "passed"},
+    )
+
+    assert variant_review_item.selected_source_library_entry_id == ""
+    assert variant_review_item.source_library_mutation_authorized is False
+    assert variant_review_item.downstream_mutation_authorized is False
+    assert variant_review_item.guardrails == []
+    assert variant_review_summary.guardrails == []
+
 
 def test_read_json_list_reports_missing_invalid_and_non_array_payloads(tmp_path):
     with pytest.raises(materials_audit.MaterialsAuditError, match="missing data file"):
@@ -660,6 +699,9 @@ def test_public_materials_audit_functions_exist():
         "render_raw_text_source_selection_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
+        "load_bazi_general_variant_deferred_review_items",
+        "build_bazi_general_variant_deferred_review_summary",
+        "render_bazi_general_variant_deferred_review_markdown",
     ):
         assert callable(getattr(materials_audit, function_name))
 
@@ -2606,6 +2648,137 @@ def test_bazi_general_source_preparation_reading_markdown_and_docs_are_in_sync()
         "`formal-evidence-units=3`",
         "`downstream-mutation-authorized=true`",
         "`next-material-entry=015-bazi-general-variant-choice-and-deferred-review`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_bazi_general_variant_deferred_review_items_load_residual_surface():
+    items = materials_audit.load_bazi_general_variant_deferred_review_items()
+    items_by_id = {item.item_id: item for item in items}
+
+    assert len(items) == 3
+    assert set(items_by_id) == {
+        "bazi_general_variant_review_ditiansui_variant_set",
+        "bazi_general_variant_review_qiongtong_variant_set",
+        "bazi_general_deferred_review_huntian_baolan_ziping",
+    }
+    assert {item.triage_group_id for item in items} == {
+        "raw_text_triage_bazi_general"
+    }
+    assert all(
+        item.source_root == materials_audit.RAW_TEXT_TRIAGE_SOURCE_ROOT
+        for item in items
+    )
+    assert all(
+        path and not path.startswith("/")
+        for item in items
+        for path in item.local_references
+    )
+    assert items_by_id[
+        "bazi_general_variant_review_ditiansui_variant_set"
+    ].identity_review_id == "bazi_general_identity_ditiansui_variant_set"
+    assert items_by_id[
+        "bazi_general_variant_review_ditiansui_variant_set"
+    ].review_kind == "variant_choice"
+    assert items_by_id[
+        "bazi_general_variant_review_ditiansui_variant_set"
+    ].decision == "keep_variant_choice_blocked"
+    assert items_by_id[
+        "bazi_general_variant_review_ditiansui_variant_set"
+    ].canonical_choice_status == "not_selected"
+    assert items_by_id[
+        "bazi_general_variant_review_ditiansui_variant_set"
+    ].local_references == [
+        "滴天髓.pdf",
+        "滴天髓-刘伯温注.pdf",
+        "滴天髓白话浅释  164P.pdf",
+    ]
+    assert items_by_id[
+        "bazi_general_variant_review_qiongtong_variant_set"
+    ].identity_review_id == "bazi_general_identity_qiongtong_variant_set"
+    assert items_by_id[
+        "bazi_general_variant_review_qiongtong_variant_set"
+    ].review_kind == "variant_choice"
+    assert items_by_id[
+        "bazi_general_variant_review_qiongtong_variant_set"
+    ].decision == "keep_variant_choice_blocked"
+    assert items_by_id[
+        "bazi_general_deferred_review_huntian_baolan_ziping"
+    ].identity_review_id == "bazi_general_identity_huntian_baolan_ziping"
+    assert items_by_id[
+        "bazi_general_deferred_review_huntian_baolan_ziping"
+    ].review_kind == "deferred_large_source"
+    assert items_by_id[
+        "bazi_general_deferred_review_huntian_baolan_ziping"
+    ].decision == "keep_large_source_deferred"
+    assert all(item.selected_source_library_entry_id == "" for item in items)
+    assert all(item.source_library_mutation_authorized is False for item in items)
+    assert all(item.downstream_mutation_authorized is False for item in items)
+
+
+def test_bazi_general_variant_deferred_review_summary_closes_residual_surface():
+    summary = materials_audit.build_bazi_general_variant_deferred_review_summary()
+
+    assert summary.review_id == "015-bazi-general-variant-choice-and-deferred-review"
+    assert summary.review_status == "variant_deferred_review_completed"
+    assert summary.triage_group_id == "raw_text_triage_bazi_general"
+    assert summary.review_item_count == 3
+    assert summary.variant_review_item_count == 2
+    assert summary.deferred_review_item_count == 1
+    assert summary.selected_canonical_variant_count == 0
+    assert summary.source_library_registration_authorized_count == 0
+    assert summary.variant_review_item_ids == [
+        "bazi_general_variant_review_ditiansui_variant_set",
+        "bazi_general_variant_review_qiongtong_variant_set",
+    ]
+    assert summary.deferred_review_item_ids == [
+        "bazi_general_deferred_review_huntian_baolan_ziping",
+    ]
+    assert summary.selected_canonical_variant_ids == []
+    assert summary.source_library_mutation_authorized is False
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "015-bazi-general-next-source-batch-preparation"
+    )
+    assert summary.boundary_checks == {
+        "variant_deferred_items_loaded": "passed",
+        "identity_review_references_valid": "passed",
+        "source_selection_references_valid": "passed",
+        "variant_records_match_identity_status": "passed",
+        "deferred_records_match_identity_status": "passed",
+        "source_paths_are_relative": "passed",
+        "no_canonical_variants_selected": "passed",
+        "source_library_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_bazi_general_variant_deferred_review_markdown_and_docs_are_in_sync():
+    summary = materials_audit.build_bazi_general_variant_deferred_review_summary()
+    markdown = materials_audit.render_bazi_general_variant_deferred_review_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Bazi General Variant Choice And Deferred Review",
+        "`variant-deferred-review-status=variant_deferred_review_completed`",
+        "`variant-deferred-review-items=3`",
+        "`variant-review-items=2`",
+        "`deferred-review-items=1`",
+        "`selected-canonical-variants=0`",
+        "`source-library-registration-authorized=0`",
+        "`source-library-mutation-authorized=false`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-bazi-general-next-source-batch-preparation`",
     ):
         assert marker in markdown
         assert marker in materials_doc
