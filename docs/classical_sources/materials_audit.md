@@ -939,6 +939,50 @@ Guardrails:
 - Case, formula, and sensitive clusters remain deferred or risk-gated.
 - Raw external materials are not moved, converted, or rewritten.
 
+## 015 Raw Text Next Cycle Gated Cluster Review Prep
+
+This prep layer reviews the next-cycle gated clusters at cluster level only. It
+opens the ordinary case and formula clusters for later bounded source selection,
+keeps the sensitive-topic cluster behind risk review, and performs no
+source-library, 013, or 012 mutation.
+
+- Prep id: `015-raw-text-next-cycle-gated-cluster-review-prep`
+- `gated-cluster-review-prep-status=gated_cluster_review_prep_completed`
+- `gated-cluster-review-prep-items=3`
+- `selected-for-source-selection=2`
+- `risk-review-required=1`
+- `deferred-after-prep=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-next-cycle-gated-ordinary-source-selection`
+
+Prepared ordinary gated items:
+
+- `gated_prep_case_collection_boundary_001`
+- `gated_prep_practical_formula_boundary_001`
+
+Risk-review items:
+
+- `gated_prep_sensitive_topic_boundary_001`
+
+Boundary checks:
+
+- `gated_prep_items_loaded`: `passed`
+- `source_selection_references_valid`: `passed`
+- `case_formula_clusters_prepared_only`: `passed`
+- `sensitive_cluster_stays_risk_review`: `passed`
+- `no_source_library_mutation`: `passed`
+- `no_013_012_mutation`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+
+- Gated prep is cluster-level planning metadata only.
+- Case and formula clusters may proceed only to bounded source selection.
+- Sensitive-topic material remains behind risk review.
+- No source-library, 013, or 012 mutation is performed in this prep step.
+- Raw external materials are not moved, converted, or rewritten.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

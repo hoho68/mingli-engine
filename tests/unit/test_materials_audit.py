@@ -252,6 +252,7 @@ def test_materials_audit_constants_cover_contract_values():
             "prepare_text",
             "review_cleaned_text",
             "risk_review",
+            "select_bounded_source",
             "extract_candidates",
             "defer",
             "block",
@@ -709,6 +710,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_next_cycle_followup_selection_items",
         "build_raw_text_next_cycle_followup_selection_summary",
         "render_raw_text_next_cycle_followup_selection_markdown",
+        "load_raw_text_next_cycle_gated_cluster_review_prep_items",
+        "build_raw_text_next_cycle_gated_cluster_review_prep_summary",
+        "render_raw_text_next_cycle_gated_cluster_review_prep_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -2594,6 +2598,110 @@ def test_raw_text_next_cycle_followup_selection_markdown_and_docs_are_in_sync():
         "`source-library-mutation-authorized=true`",
         "`downstream-mutation-authorized=true`",
         "`next-material-entry=015-raw-text-next-cycle-gated-cluster-review-prep`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_next_cycle_gated_cluster_review_prep_items_load_boundary_packet():
+    items = materials_audit.load_raw_text_next_cycle_gated_cluster_review_prep_items()
+    items_by_id = {item.prep_id: item for item in items}
+
+    assert len(items) == 3
+    assert {item.source_selection_id for item in items} == {
+        "next_cycle_bazi_case_collection_deferred",
+        "next_cycle_bazi_practical_formula_deferred",
+        "next_cycle_bazi_sensitive_topic_risk_review",
+    }
+    assert {item.cluster_id for item in items} == {
+        "bazi_general_case_collection_cluster",
+        "bazi_general_practical_formula_cluster",
+        "bazi_general_sensitive_topic_cluster",
+    }
+    assert items_by_id[
+        "gated_prep_case_collection_boundary_001"
+    ].prep_status == "prepared_for_bounded_source_selection"
+    assert items_by_id[
+        "gated_prep_practical_formula_boundary_001"
+    ].recommended_next_action == "select_bounded_source"
+    assert items_by_id[
+        "gated_prep_sensitive_topic_boundary_001"
+    ].prep_status == "risk_review_required"
+    assert items_by_id[
+        "gated_prep_sensitive_topic_boundary_001"
+    ].risk_boundary == "sensitive"
+    assert all(not item.source_library_mutation_authorized for item in items)
+    assert all(not item.downstream_mutation_authorized for item in items)
+
+
+def test_raw_text_next_cycle_gated_cluster_review_prep_summary_counts_boundaries():
+    summary = materials_audit.build_raw_text_next_cycle_gated_cluster_review_prep_summary()
+
+    assert summary.prep_id == "015-raw-text-next-cycle-gated-cluster-review-prep"
+    assert summary.prep_status == "gated_cluster_review_prep_completed"
+    assert summary.prep_item_count == 3
+    assert summary.selected_for_source_selection_count == 2
+    assert summary.risk_review_required_count == 1
+    assert summary.deferred_after_prep_count == 0
+    assert summary.source_library_mutation_authorized is False
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "015-raw-text-next-cycle-gated-ordinary-source-selection"
+    )
+    assert summary.prepared_source_selection_ids == [
+        "gated_prep_case_collection_boundary_001",
+        "gated_prep_practical_formula_boundary_001",
+    ]
+    assert summary.risk_review_item_ids == [
+        "gated_prep_sensitive_topic_boundary_001"
+    ]
+    assert summary.status_counts == {
+        "prepared_for_bounded_source_selection": 2,
+        "risk_review_required": 1,
+    }
+    assert summary.risk_boundary_counts == {
+        "ordinary": 2,
+        "sensitive": 1,
+    }
+    assert summary.target_rule_family_counts == {
+        "branch_interaction": 2,
+        "luck_cycle": 2,
+        "pattern_strength": 2,
+        "ten_god_relation": 2,
+    }
+    assert summary.boundary_checks == {
+        "gated_prep_items_loaded": "passed",
+        "source_selection_references_valid": "passed",
+        "case_formula_clusters_prepared_only": "passed",
+        "sensitive_cluster_stays_risk_review": "passed",
+        "no_source_library_mutation": "passed",
+        "no_013_012_mutation": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_raw_text_next_cycle_gated_cluster_review_prep_markdown_and_docs_sync():
+    summary = materials_audit.build_raw_text_next_cycle_gated_cluster_review_prep_summary()
+    markdown = materials_audit.render_raw_text_next_cycle_gated_cluster_review_prep_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Raw Text Next Cycle Gated Cluster Review Prep",
+        "`gated-cluster-review-prep-status=gated_cluster_review_prep_completed`",
+        "`gated-cluster-review-prep-items=3`",
+        "`selected-for-source-selection=2`",
+        "`risk-review-required=1`",
+        "`source-library-mutation-authorized=false`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-raw-text-next-cycle-gated-ordinary-source-selection`",
     ):
         assert marker in markdown
         assert marker in materials_doc

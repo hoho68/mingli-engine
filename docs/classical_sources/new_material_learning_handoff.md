@@ -14,13 +14,13 @@ cluster selection, cluster source selection, source identity review,
 registration prep, source-library registration, and Bazi general
 source-preparation reading, variant choice/deferred review, selected variant
 registration prep, raw text next-cycle source selection, raw text next-cycle
-identity review, raw text next-cycle cluster-source selection, and raw text
-next-cycle followup selection.
-The latest local checkpoint selected two more bounded source-level records from the
-ordinary modern-method and miscellaneous clusters, then registered their
-source-library, 013, and 012 weak-locator metadata under explicit user
-authorization. Case/formula clusters remain deferred, the sensitive-topic
-cluster remains risk-gated, and raw files remain unchanged.
+identity review, raw text next-cycle cluster-source selection, raw text
+next-cycle followup selection, and raw text next-cycle gated-cluster review
+prep.
+The latest local checkpoint prepared the deferred case/formula clusters for
+later bounded ordinary source selection while keeping the sensitive-topic
+cluster risk-gated. It did not create source-library, 013, or 012 records, and
+raw files remain unchanged.
 
 ## Completed Checkpoints
 
@@ -142,6 +142,14 @@ cluster remains risk-gated, and raw files remain unchanged.
   `source-library-mutation-authorized=true`,
   `downstream-mutation-authorized=true`, and
   `next-material-entry=015-raw-text-next-cycle-gated-cluster-review-prep`.
+- 015 Raw Text Next Cycle Gated Cluster Review Prep is completed:
+  `gated-cluster-review-prep-status=gated_cluster_review_prep_completed`,
+  `gated-cluster-review-prep-items=3`,
+  `selected-for-source-selection=2`, `risk-review-required=1`,
+  `deferred-after-prep=0`,
+  `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-raw-text-next-cycle-gated-ordinary-source-selection`.
 
 Primary detailed references:
 
@@ -170,6 +178,7 @@ Primary detailed references:
 - [2026-06-28-raw-text-next-cycle-identity-review.md](../superpowers/plans/2026-06-28-raw-text-next-cycle-identity-review.md)
 - [2026-06-28-raw-text-next-cycle-cluster-source-selection.md](../superpowers/plans/2026-06-28-raw-text-next-cycle-cluster-source-selection.md)
 - [2026-06-28-raw-text-next-cycle-followup-selection.md](../superpowers/plans/2026-06-28-raw-text-next-cycle-followup-selection.md)
+- [2026-06-28-raw-text-next-cycle-gated-cluster-review-prep.md](../superpowers/plans/2026-06-28-raw-text-next-cycle-gated-cluster-review-prep.md)
 - [2026-06-28-blind-life-manual-013-012-promotion.md](../superpowers/plans/2026-06-28-blind-life-manual-013-012-promotion.md)
 
 ## Current Frozen Snapshot
@@ -338,6 +347,26 @@ Selected next-cycle source records:
 - `next_cycle_cluster_source_true_spirit_positioning`
 - `next_cycle_cluster_source_mingli_wangdoujing`
 
+015 Raw Text Next Cycle Gated Cluster Review Prep:
+
+- `gated-cluster-review-prep-status=gated_cluster_review_prep_completed`
+- `gated-cluster-review-prep-items=3`
+- `selected-for-source-selection=2`
+- `risk-review-required=1`
+- `deferred-after-prep=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-next-cycle-gated-ordinary-source-selection`
+
+Prepared ordinary gated items:
+
+- `gated_prep_case_collection_boundary_001`
+- `gated_prep_practical_formula_boundary_001`
+
+Risk-review items:
+
+- `gated_prep_sensitive_topic_boundary_001`
+
 013 and 012 boundary state:
 
 - `013-candidate-extracts=48`
@@ -356,7 +385,7 @@ Selected next-cycle source records:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-raw-text-next-cycle-gated-cluster-review-prep`.
+- `next-new-material-start=015-raw-text-next-cycle-gated-ordinary-source-selection`.
 - Current 015 queue coverage has no uncovered action after excluding 25
   016-covered ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -531,11 +560,11 @@ Selected next-cycle source records:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-raw-text-next-cycle-gated-cluster-review-prep`. It
-should prepare the gated review of case/formula/sensitive clusters without
-mutating raw materials, keep high-risk or sensitive sources behind explicit
-boundary checks, and require explicit authorization before any additional
-source-library, 013, or 012 mutation.
+`next-material-entry=015-raw-text-next-cycle-gated-ordinary-source-selection`.
+It should select one or more bounded ordinary source-level records from the
+prepared case/formula clusters, keep the sensitive cluster behind risk review,
+and require explicit authorization before any additional source-library, 013, or
+012 mutation.
 
 ## Guardrails
 

@@ -161,6 +161,7 @@ MATERIAL_AUDIT_ACTIONS = frozenset(
         "prepare_text",
         "review_cleaned_text",
         "risk_review",
+        "select_bounded_source",
         "extract_candidates",
         "defer",
         "block",
@@ -3031,6 +3032,52 @@ class RawTextNextCycleFollowupSelectionSummary:
     source_library_mutation_authorized: bool
     downstream_mutation_authorized: bool
     next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class RawTextNextCycleGatedClusterReviewPrepItem:
+    prep_id: str
+    source_selection_id: str
+    cluster_id: str
+    triage_group_id: str
+    source_root: str
+    prep_label: str
+    prep_status: str
+    risk_boundary: str
+    recommended_next_action: str
+    file_count: int
+    priority_text_candidate_count: int
+    target_rule_families: list[str] = field(default_factory=list)
+    source_library_mutation_authorized: bool = False
+    downstream_mutation_authorized: bool = False
+    boundary_note: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextNextCycleGatedClusterReviewPrepSummary:
+    prep_id: str
+    prep_status: str
+    triage_group_id: str
+    source_root: str
+    prep_item_count: int
+    selected_for_source_selection_count: int
+    risk_review_required_count: int
+    deferred_after_prep_count: int
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    prepared_source_selection_ids: list[str]
+    risk_review_item_ids: list[str]
+    deferred_item_ids: list[str]
+    status_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    target_rule_family_counts: dict[str, int]
     boundary_checks: dict[str, str]
     guardrails: list[str] = field(default_factory=list)
 
