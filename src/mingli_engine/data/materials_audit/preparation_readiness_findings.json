@@ -349,5 +349,62 @@
     "recommended_next_action": "risk_review",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-27"
+  },
+  {
+    "readiness_id": "ready_bazi_general_lecture_textbook_pdf",
+    "audit_id": "audit_bazi_general_lecture_textbook_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "prepared",
+    "locator_confidence": "strong",
+    "source_quality": "strong",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Source-library entry is registered and lifecycle advanced after reading.",
+      "Page-level locator and concise paraphrase are available.",
+      "User authorized 013 candidate intake and 012 evidence advancement for this stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_beichen_intro_pdf",
+    "audit_id": "audit_bazi_general_beichen_intro_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "summary_only",
+    "locator_confidence": "moderate",
+    "source_quality": "moderate",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Source-library entry is registered and lifecycle advanced after reading.",
+      "Page-level locator and concise paraphrase are available.",
+      "User authorized 013 candidate intake and 012 evidence advancement for this stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_ziping_orthodox_pair_pdf",
+    "audit_id": "audit_bazi_general_ziping_orthodox_pair_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "summary_only",
+    "locator_confidence": "moderate",
+    "source_quality": "moderate",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Source-library entry is registered and lifecycle advanced after reading.",
+      "Page-level locator and concise paraphrase are available.",
+      "User authorized 013 candidate intake and 012 evidence advancement for this stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
   }
 ]

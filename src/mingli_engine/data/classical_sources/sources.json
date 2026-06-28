@@ -187,5 +187,41 @@
     ],
     "curation_gap_reason": "",
     "review_reference": ""
+  },
+  {
+    "source_id": "source_bazi_general_lecture_textbook_pdf",
+    "title": "Bazi General Lecture Textbook",
+    "file_name": "八字命理讲义教材（299页）.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Preparation-reading source for Bazi general corpus; only concise derived metadata is tracked.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "015-bazi-general-source-preparation-reading"
+  },
+  {
+    "source_id": "source_bazi_general_beichen_intro_pdf",
+    "title": "Beichen Mingli Intro Han Yumo",
+    "file_name": "北宸学派《命理入门》韩雨墨 258页.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Preparation-reading source for Bazi general corpus; only concise derived metadata is tracked.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "015-bazi-general-source-preparation-reading"
+  },
+  {
+    "source_id": "source_bazi_general_ziping_orthodox_pair_pdf",
+    "title": "Ziping Mingli Zhengzong Upper Lower Volumes",
+    "file_name": "子平命理正宗电子版上.pdf; 子平命理正宗电子版下.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Preparation-reading source for Bazi general corpus; only concise derived metadata is tracked.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "015-bazi-general-source-preparation-reading"
   }
 ]

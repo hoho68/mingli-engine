@@ -514,6 +514,9 @@ def test_seeded_learning_reference_notes_load_for_current_ready_016_tasks():
         "task_kskeleton_q008_high_risk_boundary_001",
         "task_markdown_batch_004_extract_001",
         "task_markdown_batch_004_extract_001",
+        "task_bazi_general_lecture_pattern_strength_001",
+        "task_bazi_general_beichen_branch_interaction_001",
+        "task_bazi_general_ziping_useful_god_001",
     ]
     assert [note.note_id for note in notes] == [
        "note_northeast_blind_peak_001",
@@ -532,6 +535,9 @@ def test_seeded_learning_reference_notes_load_for_current_ready_016_tasks():
        "note_kskeleton_q008_high_risk_boundary_001",
        "note_liang_tianyuan_wuxian_individual_review_001",
        "note_liang_yushi_yongshen_individual_review_001",
+       "note_bazi_general_lecture_pattern_strength_001",
+       "note_bazi_general_beichen_branch_interaction_001",
+       "note_bazi_general_ziping_useful_god_001",
     ]
     assert all(
         note.status == "candidate_intake_started"
@@ -561,6 +567,56 @@ def test_seeded_learning_reference_notes_load_for_current_ready_016_tasks():
     )
     assert notes[5].overlap_candidate_ids == []
     assert learning_reference_curation.validate_learning_reference_quality() == []
+
+
+def test_bazi_general_source_preparation_reading_learning_notes_are_applied():
+    notes = learning_reference_curation.load_learning_reference_notes()
+    points = learning_reference_curation.load_learning_points()
+    decisions = learning_reference_curation.load_candidate_intake_decisions()
+
+    notes_by_id = {note.note_id: note for note in notes}
+    points_by_id = {point.learning_point_id: point for point in points}
+    decisions_by_id = {decision.decision_id: decision for decision in decisions}
+
+    expected = {
+        "note_bazi_general_lecture_pattern_strength_001": (
+            "lp_bazi_general_lecture_pattern_strength_001",
+            "decision_bazi_general_lecture_pattern_strength_001",
+            "candidate_bazi_general_lecture_pattern_strength_001",
+            "pattern_strength",
+        ),
+        "note_bazi_general_beichen_branch_interaction_001": (
+            "lp_bazi_general_beichen_branch_interaction_001",
+            "decision_bazi_general_beichen_branch_interaction_001",
+            "candidate_bazi_general_beichen_branch_interaction_001",
+            "branch_interaction",
+        ),
+        "note_bazi_general_ziping_useful_god_001": (
+            "lp_bazi_general_ziping_useful_god_001",
+            "decision_bazi_general_ziping_useful_god_001",
+            "candidate_bazi_general_ziping_useful_god_001",
+            "useful_god_candidate",
+        ),
+    }
+
+    for note_id, (point_id, decision_id, candidate_id, rule_family) in expected.items():
+        note = notes_by_id[note_id]
+        point = points_by_id[point_id]
+        decision = decisions_by_id[decision_id]
+
+        assert note.status == "candidate_intake_started"
+        assert note.learning_points == [point_id]
+        assert note.risk_boundary == "ordinary"
+        assert note.overlap_candidate_ids == []
+        assert point.note_id == note_id
+        assert point.proposed_rule_family == rule_family
+        assert point.risk_tier == "ordinary"
+        assert point.candidate_readiness == "ready"
+        assert point.candidate_decision_id == decision_id
+        assert decision.learning_point_id == point_id
+        assert decision.decision == "create_candidate"
+        assert decision.status == "applied"
+        assert decision.candidate_id == candidate_id
 
 
 def test_learning_reference_notes_reject_duplicate_note_ids(tmp_path):
@@ -742,17 +798,17 @@ def test_learning_reference_note_loading_does_not_mutate_upstream_data(tmp_path)
 def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.note_counts == {"candidate_intake_started": 16}
+    assert summary.note_counts == {"candidate_intake_started": 19}
     assert summary.risk_tier_counts == {
         "sensitive": 44,
-        "ordinary": 11,
+        "ordinary": 17,
         "high_risk": 4,
     }
     assert summary.note_rule_family_counts == {
         "blind_image_method": 2,
-        "branch_interaction": 4,
-        "pattern_strength": 10,
-        "useful_god_candidate": 5,
+        "branch_interaction": 5,
+        "pattern_strength": 11,
+        "useful_god_candidate": 6,
         "luck_cycle": 4,
         "ten_god_relation": 4,
         "five_element_balance": 1,
@@ -776,6 +832,9 @@ def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
         "task_kskeleton_q008_high_risk_boundary_001",
         "task_markdown_batch_004_extract_001",
         "task_markdown_batch_004_extract_001",
+        "task_bazi_general_lecture_pattern_strength_001",
+        "task_bazi_general_beichen_branch_interaction_001",
+        "task_bazi_general_ziping_useful_god_001",
     ]
     assert summary.next_action_ids == []
 
@@ -875,6 +934,9 @@ def test_seeded_learning_points_load_and_reference_learning_notes():
         "lp_kskeleton_q008_relationship_family_boundary_001",
         "lp_liang_tianyuan_wuxian_day_master_use_god_001",
         "lp_liang_yushi_month_branch_use_god_taxonomy_001",
+        "lp_bazi_general_lecture_pattern_strength_001",
+        "lp_bazi_general_beichen_branch_interaction_001",
+        "lp_bazi_general_ziping_useful_god_001",
     ]
     assert [point.note_id for point in points] == [
         "note_northeast_blind_peak_001",
@@ -913,6 +975,9 @@ def test_seeded_learning_points_load_and_reference_learning_notes():
         "note_kskeleton_q008_high_risk_boundary_001",
         "note_liang_tianyuan_wuxian_individual_review_001",
         "note_liang_yushi_yongshen_individual_review_001",
+        "note_bazi_general_lecture_pattern_strength_001",
+        "note_bazi_general_beichen_branch_interaction_001",
+        "note_bazi_general_ziping_useful_god_001",
     ]
     assert points[0].candidate_readiness == "duplicate_review"
     assert points[1].candidate_readiness == "ready"
@@ -924,8 +989,9 @@ def test_seeded_learning_points_load_and_reference_learning_notes():
     assert all(point.candidate_readiness == "deferred" for point in points[28:34])
     assert all(
         point.candidate_readiness == "duplicate_review"
-        for point in points[34:]
+        for point in points[34:36]
     )
+    assert all(point.candidate_readiness == "ready" for point in points[36:])
 
 
 def test_learning_points_reject_unknown_note_references(tmp_path):
@@ -1039,6 +1105,9 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "decision_kskeleton_q004_q006_dependency_001",
         "decision_liang_tianyuan_wuxian_reuse_batch004_pattern_001",
         "decision_liang_yushi_yongshen_reuse_batch004_useful_god_001",
+        "decision_bazi_general_lecture_pattern_strength_001",
+        "decision_bazi_general_beichen_branch_interaction_001",
+        "decision_bazi_general_ziping_useful_god_001",
     ]
     assert [decision.learning_point_id for decision in decisions] == [
         "lp_northeast_blind_image_001",
@@ -1071,6 +1140,9 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "lp_kskeleton_q004_q006_dependency_001",
         "lp_liang_tianyuan_wuxian_day_master_use_god_001",
         "lp_liang_yushi_month_branch_use_god_taxonomy_001",
+        "lp_bazi_general_lecture_pattern_strength_001",
+        "lp_bazi_general_beichen_branch_interaction_001",
+        "lp_bazi_general_ziping_useful_god_001",
     ]
     assert decisions[0].decision == "reuse_existing"
     assert decisions[1].decision == "create_candidate"
@@ -1110,6 +1182,9 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "candidate_kskeleton_q004_q006_dependency_001",
         "candidate_markdown_batch_004_pattern_strength_001",
         "candidate_markdown_batch_004_useful_god_001",
+        "candidate_bazi_general_lecture_pattern_strength_001",
+        "candidate_bazi_general_beichen_branch_interaction_001",
+        "candidate_bazi_general_ziping_useful_god_001",
     ]
 
 
@@ -1349,14 +1424,14 @@ def test_candidate_intake_decision_quality_rejects_boundary_leakage(
 def test_learning_reference_summary_includes_learning_points_and_decisions():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.learning_point_counts == {"duplicate_review": 3, "ready": 27, "deferred": 6}
+    assert summary.learning_point_counts == {"duplicate_review": 3, "ready": 30, "deferred": 6}
     assert summary.decision_counts == {
         "reuse_existing": 3,
-        "create_candidate": 27,
-        "status:applied": 30,
+        "create_candidate": 30,
+        "status:applied": 33,
     }
-    assert summary.candidate_ready_count == 27
-    assert summary.candidate_decision_count == 30
+    assert summary.candidate_ready_count == 30
+    assert summary.candidate_decision_count == 33
     assert summary.overlap_warning_count == 9
 
 
@@ -1538,10 +1613,10 @@ def test_learning_reference_risk_review_sweep_closes_actions_without_evidence_ch
         "status:blocked": 1,
     }
     assert summary.formal_evidence_delta == 0
-    assert len(candidates) == 36
-    assert len(reviews) == 36
-    assert len(promotion_batches) == 25
-    assert len(evidence_units) == 92
+    assert len(candidates) == 39
+    assert len(reviews) == 39
+    assert len(promotion_batches) == 26
+    assert len(evidence_units) == 95
 
 
 def test_learning_reference_closes_remaining_draft_notes_without_evidence_changes():
@@ -1568,13 +1643,13 @@ def test_learning_reference_closes_remaining_draft_notes_without_evidence_change
         for note_id in closed_note_ids
         if notes_by_id[note_id].status == "candidate_intake_started"
     } == closed_note_ids
-    assert summary.note_counts == {"candidate_intake_started": 16}
+    assert summary.note_counts == {"candidate_intake_started": 19}
     assert summary.next_action_ids == []
     assert summary.formal_evidence_delta == 0
-    assert len(candidates) == 36
-    assert len(reviews) == 36
-    assert len(promotion_batches) == 25
-    assert len(evidence_units) == 92
+    assert len(candidates) == 39
+    assert len(reviews) == 39
+    assert len(promotion_batches) == 26
+    assert len(evidence_units) == 95
 
 
 @pytest.mark.parametrize(
@@ -1743,12 +1818,12 @@ def test_blocking_prerequisite_actions_cannot_become_learning_points_or_decision
 def test_learning_reference_summary_includes_prerequisite_action_counts():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.note_counts == {"candidate_intake_started": 16}
-    assert summary.learning_point_counts == {"duplicate_review": 3, "ready": 27, "deferred": 6}
+    assert summary.note_counts == {"candidate_intake_started": 19}
+    assert summary.learning_point_counts == {"duplicate_review": 3, "ready": 30, "deferred": 6}
     assert summary.decision_counts == {
         "reuse_existing": 3,
-        "create_candidate": 27,
-        "status:applied": 30,
+        "create_candidate": 30,
+        "status:applied": 33,
     }
     assert summary.prerequisite_action_counts == {
         "risk_review": 4,
@@ -1760,12 +1835,12 @@ def test_learning_reference_summary_includes_prerequisite_action_counts():
     }
     assert summary.risk_tier_counts == {
         "sensitive": 44,
-        "ordinary": 11,
+        "ordinary": 17,
         "high_risk": 4,
     }
     assert summary.overlap_warning_count == 9
-    assert summary.candidate_ready_count == 27
-    assert summary.candidate_decision_count == 30
+    assert summary.candidate_ready_count == 30
+    assert summary.candidate_decision_count == 33
     assert summary.formal_evidence_delta == 0
     assert summary.next_action_ids == []
 
@@ -1779,7 +1854,7 @@ def test_learning_reference_docs_track_source_window_learning_closure_sync():
         "policy-boundary-retained": 5,
         "safety-boundary-retained": 2,
     }
-    assert len(summary.selected_task_ids) == 16
+    assert len(summary.selected_task_ids) == 19
     assert summary.formal_evidence_delta == 0
     assert summary.next_action_ids == []
     assert "action_blind_school_secret_blocked_001" not in summary.next_action_ids
@@ -1795,7 +1870,7 @@ def test_learning_reference_docs_track_source_window_learning_closure_sync():
 
     for document in (overview, quickstart):
         assert "Source-Window Learning Closure Sync" in document
-        assert "`selected-ready-learning-notes=16`" in document
+        assert "`selected-ready-learning-notes=19`" in document
         assert "`retained-chapter-learning-closed=11`" in document
         assert "`learning-paraphrase-ready=4`" in document
         assert "`policy-boundary-retained=5`" in document
@@ -1834,11 +1909,11 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
 
     assert summary.decision_counts == {
         "reuse_existing": 3,
-        "create_candidate": 27,
-        "status:applied": 30,
+        "create_candidate": 30,
+        "status:applied": 33,
     }
     assert summary.formal_evidence_delta == 0
-    assert len(create_candidate_ids) == 27
+    assert len(create_candidate_ids) == 30
     assert reuse_candidate_ids == [
         "candidate_northeast_blind_image_001",
         "candidate_markdown_batch_004_pattern_strength_001",
@@ -1846,18 +1921,18 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
     ]
     assert set(create_candidate_ids + reuse_candidate_ids) <= set(candidates)
 
-    assert len(candidates) == 36
+    assert len(candidates) == 39
     assert Counter(candidate.status for candidate in candidates.values()) == {
-        "promoted": 32,
+        "promoted": 35,
         "rejected": 2,
         "returned": 1,
         "blocked": 1,
     }
     assert Counter(candidates[candidate_id].status for candidate_id in create_candidate_ids) == {
-        "promoted": 27
+        "promoted": 30
     }
     assert all(
-        candidates[candidate_id].source_locator.startswith("review-note:")
+        candidates[candidate_id].source_locator.startswith(("review-note:", "page:"))
         for candidate_id in create_candidate_ids
     )
     assert all(
@@ -1865,9 +1940,9 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         for candidate_id in create_candidate_ids
     )
 
-    assert len(reviews) == 36
+    assert len(reviews) == 39
     assert Counter(review.decision for review in reviews) == {
-        "approved": 32,
+        "approved": 35,
         "rejected": 2,
         "returned": 1,
         "blocked": 1,
@@ -1876,19 +1951,20 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         review.decision
         for review in reviews
         if review.candidate_id in create_candidate_ids
-    ) == {"approved": 27}
+    ) == {"approved": 30}
 
-    assert len(promotion_batches) == 25
+    assert len(promotion_batches) == 26
     assert Counter(batch.review_status for batch in promotion_batches) == {
-        "reviewed": 25
+        "reviewed": 26
     }
 
-    assert len(evidence_units) == 92
+    assert len(evidence_units) == 95
     assert Counter(unit.curation_batch_id for unit in evidence_units) == {
         "batch_012_seed_001": 8,
         "batch_012_taxonomy_001": 58,
         "batch_markdown_registration_001": 15,
         "batch_kskeleton_taxonomy_001": 11,
+        "batch_bazi_general_source_preparation_001": 3,
     }
     assert not any(
         unit.source_ref.startswith("learning-reference:")
@@ -1902,12 +1978,12 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
     )
     for marker in (
         "Candidate/Formal Evidence Boundary Audit",
-        "`017-applied-decisions=30`",
-        "`017-create-candidate-decisions=27`",
-        "`013-candidate-extracts=36`",
-        "`013-review-decisions=36`",
-        "`013-promotion-batches=25`",
-        "`012-formal-evidence-units=92`",
+        "`017-applied-decisions=33`",
+        "`017-create-candidate-decisions=30`",
+        "`013-candidate-extracts=39`",
+        "`013-review-decisions=39`",
+        "`013-promotion-batches=26`",
+        "`012-formal-evidence-units=95`",
         "`formal_evidence_delta=0`",
         "`learning-reference-source-refs-in-012=0`",
         "`candidate-id-source-refs-in-012=0`",
@@ -1925,27 +2001,27 @@ def test_learning_reference_authorization_audit_confirms_local_boundary_clearanc
         == "ready_for_explicit_downstream_authorization"
     )
     assert audit.downstream_mutation_authorized is False
-    assert audit.note_counts == {"candidate_intake_started": 16}
+    assert audit.note_counts == {"candidate_intake_started": 19}
     assert audit.next_action_ids == []
     assert audit.decision_counts == {
         "reuse_existing": 3,
-        "create_candidate": 27,
-        "status:applied": 30,
+        "create_candidate": 30,
+        "status:applied": 33,
     }
     assert audit.candidate_status_counts == {
-        "promoted": 32,
+        "promoted": 35,
         "rejected": 2,
         "returned": 1,
         "blocked": 1,
     }
     assert audit.review_decision_counts == {
-        "approved": 32,
+        "approved": 35,
         "rejected": 2,
         "returned": 1,
         "blocked": 1,
     }
-    assert audit.promotion_review_status_counts == {"reviewed": 25}
-    assert audit.formal_evidence_unit_count == 92
+    assert audit.promotion_review_status_counts == {"reviewed": 26}
+    assert audit.formal_evidence_unit_count == 95
     assert audit.formal_evidence_delta == 0
     assert audit.leakage_counts == {
         "learning_reference_source_refs_in_012": 0,
@@ -1982,7 +2058,7 @@ def test_learning_reference_authorization_audit_markdown_and_docs_are_in_sync():
         "Authorization Audit Packet",
         "`authorization-status=ready_for_explicit_downstream_authorization`",
         "`downstream-mutation-authorized=false`",
-        "`017-notes-closed=16`",
+        "`017-notes-closed=19`",
         "`017-next-action-ids=0`",
         "`012-boundary-leakage=0`",
         "`next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`",
@@ -2029,7 +2105,7 @@ def test_new_material_learning_handoff_tracks_final_state():
         f"`017-create-candidate-decisions={summary.decision_counts['create_candidate']}`",
         "`authorization-status=ready_for_explicit_downstream_authorization`",
         "`downstream-mutation-authorized=false`",
-        "`017-notes-closed=16`",
+            "`017-notes-closed=19`",
         "`017-next-action-ids=0`",
         "`012-boundary-leakage=0`",
         "`next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`",

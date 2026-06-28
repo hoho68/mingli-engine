@@ -600,5 +600,50 @@
     ],
     "candidate_readiness": "duplicate_review",
     "candidate_decision_id": "decision_liang_yushi_yongshen_reuse_batch004_useful_god_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_lecture_pattern_strength_001",
+    "note_id": "note_bazi_general_lecture_pattern_strength_001",
+    "point_label": "Day-master strength and balancing candidate order",
+    "source_locator": "page:八字命理讲义教材（299页）.pdf#p77",
+    "summary": "The lecture frames strong day-master assessment through excessive peer/support force or seasonal rooting, then treats control and draining elements as conditional balancing candidates.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Use only as conditional structure support; chart context and school assumptions can change the selected balancing element.",
+      "Do not turn strength labels into deterministic outcomes."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_lecture_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_beichen_branch_interaction_001",
+    "note_id": "note_bazi_general_beichen_branch_interaction_001",
+    "point_label": "Earthly-branch combination and punishment table",
+    "source_locator": "page:北宸学派《命理入门》韩雨墨 258页.pdf#p30",
+    "summary": "Beichen presents earthly-branch combination, meeting, punishment, and clash categories as a compact branch-interaction taxonomy for later chart-context review.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Use as branch-interaction taxonomy only; the table does not decide outcomes by itself.",
+      "Rendered-page source should be rechecked before adding narrower sub-rules."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_beichen_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_ziping_useful_god_001",
+    "note_id": "note_bazi_general_ziping_useful_god_001",
+    "point_label": "Classical five-element balancing language",
+    "source_locator": "page:子平命理正宗电子版上.pdf#p9",
+    "summary": "The Ziping manuscript uses seasonal five-element prosperity and deficiency language to frame balancing tendencies; treat it as a useful-god candidate needing later narrow transcription.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Image-page reading is suitable for taxonomy seeding, not final classical wording.",
+      "Different useful-god systems may classify the same balancing relation differently."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_ziping_useful_god_001"
   }
 ]

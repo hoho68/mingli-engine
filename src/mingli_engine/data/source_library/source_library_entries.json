@@ -264,7 +264,7 @@
     "material_type": "pdf",
     "local_reference": "八字命理讲义教材（299页）.pdf",
     "tracking_status": "external_untracked",
-    "readiness_status": "needs_preparation",
+    "readiness_status": "review_completed",
     "topic_tags": [
       "foundation",
       "textbook",
@@ -277,12 +277,12 @@
       "ten_god_relation",
       "useful_god_candidate"
     ],
-    "source_quality_notes": "Registration metadata prepared from inventory and identity-review labels only.",
+    "source_quality_notes": "Preparation-reading completed on 2026-06-28 with concise derived notes, 013 candidate intake, and linked 012 evidence metadata; raw PDFs remain unchanged.",
     "rights_notes": "Do not copy long passages; prepare text before extraction.",
     "risk_tier": "ordinary",
     "risk_notes": [],
     "priority_level": "high",
-    "next_action": "prepare_material",
+    "next_action": "no_action",
     "outcome_reason": "",
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28"
@@ -294,7 +294,7 @@
     "material_type": "pdf",
     "local_reference": "北宸学派《命理入门》韩雨墨 258页.pdf",
     "tracking_status": "external_untracked",
-    "readiness_status": "needs_preparation",
+    "readiness_status": "review_completed",
     "topic_tags": [
       "foundation",
       "school-intro",
@@ -305,12 +305,12 @@
       "pattern_strength",
       "branch_interaction"
     ],
-    "source_quality_notes": "Registration metadata prepared from school and intro title labels only.",
+    "source_quality_notes": "Preparation-reading completed on 2026-06-28 with concise derived notes, 013 candidate intake, and linked 012 evidence metadata; raw PDFs remain unchanged.",
     "rights_notes": "Do not copy long passages; prepare text before extraction.",
     "risk_tier": "ordinary",
     "risk_notes": [],
     "priority_level": "medium",
-    "next_action": "prepare_material",
+    "next_action": "no_action",
     "outcome_reason": "",
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28"
@@ -322,7 +322,7 @@
     "material_type": "pdf",
     "local_reference": "子平命理正宗电子版上.pdf; 子平命理正宗电子版下.pdf",
     "tracking_status": "external_untracked",
-    "readiness_status": "needs_preparation",
+    "readiness_status": "review_completed",
     "topic_tags": [
       "classical-reference",
       "ziping",
@@ -333,12 +333,12 @@
       "pattern_strength",
       "useful_god_candidate"
     ],
-    "source_quality_notes": "Registration metadata treats upper and lower PDFs as one paired source identity.",
+    "source_quality_notes": "Preparation-reading completed on 2026-06-28 with concise derived notes, 013 candidate intake, and linked 012 evidence metadata; raw PDFs remain unchanged.",
     "rights_notes": "Do not copy long passages; prepare text before extraction.",
     "risk_tier": "ordinary",
     "risk_notes": [],
     "priority_level": "high",
-    "next_action": "prepare_material",
+    "next_action": "no_action",
     "outcome_reason": "",
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28"

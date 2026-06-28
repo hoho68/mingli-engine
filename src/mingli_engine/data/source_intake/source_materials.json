@@ -166,5 +166,41 @@
     "scope_notes": "Eight Q-layer structural extraction directories from cleaned Markdown batches 001/002/004 covering foundation tables, yongshen/tiaohou, geju strength, luck cycle, branch interaction, and high-risk boundary.",
     "rights_notes": "Derived skeleton remains preparation metadata; store concise paraphrases only.",
     "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_lecture_textbook_pdf",
+    "title": "Bazi General Lecture Textbook",
+    "material_type": "pdf",
+    "file_label": "八字命理讲义教材（299页）.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_lecture_textbook_pdf",
+    "scope_notes": "Preparation-reading completed with a bounded page-level learning point and candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_beichen_intro_pdf",
+    "title": "Beichen Mingli Intro Han Yumo",
+    "material_type": "pdf",
+    "file_label": "北宸学派《命理入门》韩雨墨 258页.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_beichen_intro_pdf",
+    "scope_notes": "Preparation-reading completed with a bounded page-level learning point and candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_ziping_orthodox_pair_pdf",
+    "title": "Ziping Mingli Zhengzong Upper Lower Volumes",
+    "material_type": "pdf",
+    "file_label": "子平命理正宗电子版上.pdf; 子平命理正宗电子版下.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_ziping_orthodox_pair_pdf",
+    "scope_notes": "Preparation-reading completed with a bounded page-level learning point and candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
   }
 ]

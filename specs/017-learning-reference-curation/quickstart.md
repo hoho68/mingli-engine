@@ -57,7 +57,7 @@ Expected result after implementation:
 The source-window learning-closure pass is an operational sync for maintainer
 review, not a candidate or evidence promotion step.
 
-- `selected-ready-learning-notes=16`: the 16 ready items remain selected 016
+- `selected-ready-learning-notes=19`: the 19 ready items remain selected 016
   extraction tasks and 017 learning reference notes. This means
   learning-reference input readiness, not automatic formal-evidence readiness.
 - `retained-chapter-learning-closed=11`: retained chapter-level source windows
@@ -79,7 +79,7 @@ review, not a candidate or evidence promotion step.
 - `completed-risk-review-actions=4`: Blind Life Manual, Immortal Fortune
   Jianghu Secret, Life Death Book, and Markdown Batch 005 have completed
   prerequisite boundary screening.
-- `formal_evidence_delta=0`: No new candidate-intake decisions, no 013 candidate extracts, no review decisions, no promotion batches, and no formal evidence are created by this sync.
+- `formal_evidence_delta=0`: No new candidate-intake decisions, no 013 candidate extracts, no review decisions, no promotion batches, and no formal evidence are created by this source-window sync; later authorized downstream records are counted in 013/012 snapshots.
 
 Blocked and deferred prerequisite records remain outside `next_action_ids`.
 
@@ -96,7 +96,7 @@ Expected markers:
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=16`
+- `017-notes-closed=19`
 - `017-next-action-ids=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`

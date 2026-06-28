@@ -11,9 +11,11 @@ pass, risk-review prerequisite sweep, 015 queue refresh, and external material
 inventory refresh, raw text materials folder risk triage, Liang Bazi core
 source selection, Liang Bazi core individual review, and Bazi general source
 cluster selection, cluster source selection, source identity review,
-registration prep, and source-library registration.
-The latest local checkpoint registers the three Bazi general source-library
-metadata packets while keeping reading, 013, and 012 work blocked.
+registration prep, source-library registration, and Bazi general
+source-preparation reading.
+The latest local checkpoint completed preparation reading for the three Bazi
+general source-library entries, including authorized 013 intake and 012
+evidence linkage, while keeping raw PDF files unchanged.
 
 ## Completed Checkpoints
 
@@ -26,21 +28,22 @@ metadata packets while keeping reading, 013, and 012 work blocked.
   source window: `retained-chapter-learning-closed=11`.
 - 017 learning-reference sync recorded that selected ready learning inputs
   remain stable after Liang individual review:
-  `selected-ready-learning-notes=16`.
+  `selected-ready-learning-notes=19`.
 - Draft learning-note closure closed the remaining seven 017 learning-note
   handles: `closed-draft-learning-notes=7`, `next_action_ids=0`.
 - The risk-review prerequisite sweep is closed:
   `planned-risk-review-actions=0`, `completed-risk-review-actions=4`.
-- Candidate/formal evidence boundary audit confirmed the learning closure did
-  not create downstream evidence changes: `formal_evidence_delta=0`.
+- Candidate/formal evidence boundary audit confirms 017 remains provenance
+  metadata while authorized downstream Bazi general records are represented in
+  013 and 012: `formal_evidence_delta=0`.
 - Authorization audit packet confirms downstream work is selectable only after
   explicit user authorization:
   `authorization-status=ready_for_explicit_downstream_authorization`,
   `downstream-mutation-authorized=false`.
-- 015 coverage-aware queue refresh excludes the 16 queue ids already covered by
-  016/017 and exposes the newly registered raw text corpus triage item:
-  `queue-refresh-status=uncovered_queue_items_available`,
-  `refreshed-next-action-ids=1`.
+- 015 coverage-aware queue refresh excludes the 19 queue ids already covered by
+  016/017 and the locally completed raw text corpus triage item:
+  `queue-refresh-status=covered_or_completed_queue_exhausted`,
+  `refreshed-next-action-ids=0`.
 - 015 external material inventory refresh registered the Life Death Book
   Markdown extract and the raw text corpus triage backlog:
   `external-inventory-status=scoped_metadata_registered`,
@@ -82,6 +85,12 @@ metadata packets while keeping reading, 013, and 012 work blocked.
   `deferred-large-source=1`, `source-library-mutation-authorized=true`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-bazi-general-source-preparation-reading`.
+- 015 Bazi General Source Preparation Reading is completed:
+  `source-preparation-reading-status=preparation_reading_completed`,
+  `source-preparation-reading-entries=3`,
+  `source-preparation-reading-files=4`, `candidate-extracts=3`,
+  `formal-evidence-units=3`, `downstream-mutation-authorized=true`, and
+  `next-material-entry=015-bazi-general-variant-choice-and-deferred-review`.
 
 Primary detailed references:
 
@@ -104,6 +113,7 @@ Primary detailed references:
 - [2026-06-28-bazi-general-source-identity-review.md](../superpowers/plans/2026-06-28-bazi-general-source-identity-review.md)
 - [2026-06-28-bazi-general-registration-prep.md](../superpowers/plans/2026-06-28-bazi-general-registration-prep.md)
 - [2026-06-28-bazi-general-source-registration.md](../superpowers/plans/2026-06-28-bazi-general-source-registration.md)
+- [2026-06-28-bazi-general-source-preparation-reading.md](../superpowers/plans/2026-06-28-bazi-general-source-preparation-reading.md)
 
 ## Current Frozen Snapshot
 
@@ -119,19 +129,19 @@ Source-window and locator state:
 
 017 learning-reference state:
 
-- `selected-ready-learning-notes=16`
+- `selected-ready-learning-notes=19`
 - `closed-draft-learning-notes=7`
 - `next_action_ids=0`
 - `planned-risk-review-actions=0`
 - `completed-risk-review-actions=4`
-- `017-applied-decisions=30`
-- `017-create-candidate-decisions=27`
+- `017-applied-decisions=33`
+- `017-create-candidate-decisions=30`
 
 Authorization Audit Packet:
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=16`
+- `017-notes-closed=19`
 - `017-next-action-ids=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
@@ -139,13 +149,13 @@ Authorization Audit Packet:
 015 Queue Refresh:
 
 - `queue-refresh-status=covered_or_completed_queue_exhausted`
-- `015-queue-items=17`
-- `016-covered-queue-items=16`
+- `015-queue-items=20`
+- `016-covered-queue-items=19`
 - `015-local-completed-queue-items=1`
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-liang-bazi-core-source-selection`
+- `next-material-entry=015-liang-bazi-core-individual-review`
 
 015 External Material Inventory Refresh:
 
@@ -217,10 +227,10 @@ Authorization Audit Packet:
 
 013 and 012 boundary state:
 
-- `013-candidate-extracts=36`
-- `013-review-decisions=36`
-- `013-promotion-batches=25`
-- `012-formal-evidence-units=92`
+- `013-candidate-extracts=39`
+- `013-review-decisions=39`
+- `013-promotion-batches=26`
+- `012-formal-evidence-units=95`
 - `formal_evidence_delta=0`
 
 ## Continuation Entry Points
@@ -322,7 +332,7 @@ Authorization Audit Packet:
   `bazi_general_identity_qiongtong_variant_set`, and
   `bazi_general_identity_huntian_baolan_ziping`.
 - Recommended next material entry for the next long goal:
-  `next-material-entry=015-bazi-general-source-preparation-reading`.
+  `next-material-entry=015-bazi-general-variant-choice-and-deferred-review`.
 - 015 Bazi General Source Registration is completed:
   `source-registration-status=source_registration_completed`,
   `registered-source-entries=3`, `registered-source-files=4`,
@@ -338,6 +348,20 @@ Authorization Audit Packet:
   `material_bazi_general_lecture_textbook_pdf`,
   `material_bazi_general_beichen_intro_pdf`, and
   `material_bazi_general_ziping_orthodox_pair_pdf`.
+- 015 Bazi General Source Preparation Reading is completed:
+  `source-preparation-reading-status=preparation_reading_completed`,
+  `source-preparation-reading-entries=3`,
+  `source-preparation-reading-files=4`, `candidate-extracts=3`,
+  `formal-evidence-units=3`, `downstream-mutation-authorized=true`, and
+  `next-material-entry=015-bazi-general-variant-choice-and-deferred-review`.
+- Promoted Bazi general candidate ids:
+  `candidate_bazi_general_lecture_pattern_strength_001`,
+  `candidate_bazi_general_beichen_branch_interaction_001`, and
+  `candidate_bazi_general_ziping_useful_god_001`.
+- Bazi general evidence ids:
+  `bazi_general_lecture_pattern_strength_001`,
+  `bazi_general_beichen_branch_interaction_001`, and
+  `bazi_general_ziping_useful_god_001`.
 
 ## Remaining Optional Precision Work
 
@@ -354,11 +378,10 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-bazi-general-source-preparation-reading`. It may
-prepare readable learning material for the three newly registered Bazi general
-sources, should continue to avoid duplicate Batch 001 overlaps and variant-set
-work, and must keep 013 candidate intake and 012 evidence blocked unless
-separately authorized.
+`next-material-entry=015-bazi-general-variant-choice-and-deferred-review`. It
+should resolve the Ditiansui and Qiongtong variant-choice sets, keep Huntian
+Baolan deferred unless source clarity improves, and then prepare the next Bazi
+general source batch without duplicating Batch 001 overlaps.
 
 ## Guardrails
 

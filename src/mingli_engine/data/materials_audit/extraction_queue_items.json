@@ -439,5 +439,71 @@
     "status": "completed",
     "created_at": "2026-06-27",
     "updated_at": "2026-06-28"
+  },
+  {
+    "queue_item_id": "queue_bazi_general_lecture_textbook_extract",
+    "audit_id": "audit_bazi_general_lecture_textbook_pdf",
+    "queue_type": "extraction_ready",
+    "priority_level": "high",
+    "priority_rationale": "Text-based foundation PDF yielded a clear page-level pattern-strength locator.",
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "pre_extraction_checks": [
+      "confirm page-level source locator",
+      "store concise paraphrase only",
+      "avoid Batch 001 overlap duplication"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
+    "status": "completed",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "queue_item_id": "queue_bazi_general_beichen_intro_extract",
+    "audit_id": "audit_bazi_general_beichen_intro_pdf",
+    "queue_type": "extraction_ready",
+    "priority_level": "medium",
+    "priority_rationale": "Rendered page review yielded a clear branch-combination, meeting, punishment, and clash table.",
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "pre_extraction_checks": [
+      "confirm page-level source locator",
+      "store concise paraphrase only",
+      "avoid Batch 001 overlap duplication"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
+    "status": "completed",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "queue_item_id": "queue_bazi_general_ziping_orthodox_pair_extract",
+    "audit_id": "audit_bazi_general_ziping_orthodox_pair_pdf",
+    "queue_type": "extraction_ready",
+    "priority_level": "high",
+    "priority_rationale": "Visual page review yielded a classical five-element balancing page in the upper volume.",
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "pre_extraction_checks": [
+      "confirm page-level source locator",
+      "store concise paraphrase only",
+      "avoid Batch 001 overlap duplication"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
+    "status": "completed",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
   }
 ]

@@ -590,5 +590,53 @@
     ],
     "source_quality": "review_note",
     "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_bazi_general_lecture_pattern_strength_001",
+    "candidate_id": "candidate_bazi_general_lecture_pattern_strength_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Preparation-reading candidate accepted for pattern_strength metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Use only as conditional structure support; chart context and school assumptions can change the selected balancing element.",
+      "Do not turn strength labels into deterministic outcomes."
+    ],
+    "source_quality": "direct_extract",
+    "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_bazi_general_beichen_branch_interaction_001",
+    "candidate_id": "candidate_bazi_general_beichen_branch_interaction_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Preparation-reading candidate accepted for branch_interaction metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Use as branch-interaction taxonomy only; the table does not decide outcomes by itself.",
+      "Rendered-page source should be rechecked before adding narrower sub-rules."
+    ],
+    "source_quality": "review_note",
+    "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_bazi_general_ziping_useful_god_001",
+    "candidate_id": "candidate_bazi_general_ziping_useful_god_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Preparation-reading candidate accepted for useful_god_candidate metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Image-page reading is suitable for taxonomy seeding, not final classical wording.",
+      "Different useful-god systems may classify the same balancing relation differently."
+    ],
+    "source_quality": "review_note",
+    "confidence": "moderate"
   }
 ]

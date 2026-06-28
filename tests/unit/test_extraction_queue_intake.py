@@ -653,6 +653,59 @@ def test_seeded_extraction_queue_includes_duan_ready_learning_package():
     assert extraction_queue_intake.validate_extraction_package_quality() == []
 
 
+def test_bazi_general_source_preparation_reading_has_completed_extraction_package():
+    packages = extraction_queue_intake.load_extraction_work_packages()
+    tasks = extraction_queue_intake.load_extraction_tasks()
+    slots = extraction_queue_intake.load_candidate_draft_slots()
+
+    packages_by_id = {package.package_id: package for package in packages}
+    tasks_by_id = {task.task_id: task for task in tasks}
+    slots_by_id = {slot.draft_slot_id: slot for slot in slots}
+
+    package = packages_by_id["package_bazi_general_source_preparation_reading_001"]
+    expected_tasks = [
+        "task_bazi_general_lecture_pattern_strength_001",
+        "task_bazi_general_beichen_branch_interaction_001",
+        "task_bazi_general_ziping_useful_god_001",
+    ]
+    assert package.status == "completed"
+    assert package.source_queue_snapshot_ids == [
+        "queue_bazi_general_lecture_textbook_extract",
+        "queue_bazi_general_beichen_intro_extract",
+        "queue_bazi_general_ziping_orthodox_pair_extract",
+    ]
+    assert package.selected_task_ids == expected_tasks
+    assert package.backlog_record_ids == []
+
+    for task_id in expected_tasks:
+        task = tasks_by_id[task_id]
+        assert task.package_id == package.package_id
+        assert task.status == "completed"
+        assert task.risk_boundary == "ordinary"
+        assert task.locator_requirement == "page_or_section"
+        assert task.overlap_warnings == []
+
+    assert tasks_by_id["task_bazi_general_lecture_pattern_strength_001"].queue_item_id == (
+        "queue_bazi_general_lecture_textbook_extract"
+    )
+    assert tasks_by_id[
+        "task_bazi_general_beichen_branch_interaction_001"
+    ].intended_source_material_id == "material_bazi_general_beichen_intro_pdf"
+    assert tasks_by_id[
+        "task_bazi_general_ziping_useful_god_001"
+    ].source_library_entry_id == "entry_bazi_general_ziping_orthodox_pair_pdf"
+
+    assert slots_by_id[
+        "slot_bazi_general_lecture_pattern_strength_001"
+    ].target_rule_family == "pattern_strength"
+    assert slots_by_id[
+        "slot_bazi_general_beichen_branch_interaction_001"
+    ].target_rule_family == "branch_interaction"
+    assert slots_by_id[
+        "slot_bazi_general_ziping_useful_god_001"
+    ].target_rule_family == "useful_god_candidate"
+
+
 def test_seeded_extraction_queue_tracks_markdown_batch_005_completed_risk_review_backlog():
     packages = extraction_queue_intake.load_extraction_work_packages()
     tasks = extraction_queue_intake.load_extraction_tasks()

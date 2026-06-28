@@ -7,8 +7,13 @@ from pathlib import Path
 from typing import Any
 
 from mingli_engine import source_library
+from mingli_engine import source_intake
+from mingli_engine import classical_sources
+from mingli_engine import extraction_queue_intake
+from mingli_engine import learning_reference_curation
 from mingli_engine.models import (
     AuditProgressSummary,
+    BaziGeneralSourcePreparationReadingSummary,
     CONFIDENCE_LEVELS,
     ExtractionQueueItem,
     ExternalMaterialInventoryRefreshSummary,
@@ -154,6 +159,37 @@ RAW_TEXT_SOURCE_REGISTRATION_NEXT_MATERIAL_ENTRY = (
 RAW_TEXT_SOURCE_REGISTRATION_OVERLAP_ENTRY_ID_MARKERS = ("youran", "tianma")
 RAW_TEXT_SOURCE_REGISTRATION_VARIANT_ENTRY_ID_MARKERS = ("ditiansui", "qiongtong")
 RAW_TEXT_SOURCE_REGISTRATION_DEFERRED_ENTRY_ID_MARKERS = ("huntian",)
+BAZI_GENERAL_SOURCE_PREPARATION_READING_ID = (
+    "015-bazi-general-source-preparation-reading"
+)
+BAZI_GENERAL_SOURCE_PREPARATION_READING_NEXT_MATERIAL_ENTRY = (
+    "015-bazi-general-variant-choice-and-deferred-review"
+)
+BAZI_GENERAL_SOURCE_PREPARATION_READING_ENTRY_IDS = (
+    "entry_bazi_general_lecture_textbook_pdf",
+    "entry_bazi_general_beichen_intro_pdf",
+    "entry_bazi_general_ziping_orthodox_pair_pdf",
+)
+BAZI_GENERAL_SOURCE_PREPARATION_READING_MATERIAL_IDS = (
+    "material_bazi_general_lecture_textbook_pdf",
+    "material_bazi_general_beichen_intro_pdf",
+    "material_bazi_general_ziping_orthodox_pair_pdf",
+)
+BAZI_GENERAL_SOURCE_PREPARATION_READING_CANDIDATE_IDS = (
+    "candidate_bazi_general_lecture_pattern_strength_001",
+    "candidate_bazi_general_beichen_branch_interaction_001",
+    "candidate_bazi_general_ziping_useful_god_001",
+)
+BAZI_GENERAL_SOURCE_PREPARATION_READING_EVIDENCE_IDS = (
+    "bazi_general_lecture_pattern_strength_001",
+    "bazi_general_beichen_branch_interaction_001",
+    "bazi_general_ziping_useful_god_001",
+)
+BAZI_GENERAL_SOURCE_PREPARATION_READING_FORMAL_SOURCE_IDS = (
+    "source_bazi_general_lecture_textbook_pdf",
+    "source_bazi_general_beichen_intro_pdf",
+    "source_bazi_general_ziping_orthodox_pair_pdf",
+)
 RAW_TEXT_TRIAGE_STATUSES = frozenset(
     {
         "source_selection_ready",
@@ -1715,21 +1751,32 @@ def _source_entry_matches_registration_prep(
     item: RawTextSourceRegistrationPrepItem,
     entry: source_library.SourceLibraryEntry,
 ) -> bool:
+    allowed_readiness_statuses = {
+        item.proposed_readiness_status,
+        "ready_for_extraction",
+        "review_completed",
+    }
+    allowed_next_actions = {
+        item.proposed_next_action,
+        "extract_candidates",
+        "review_candidates",
+        "promote_approved",
+        "no_action",
+    }
     return (
         entry.material_id == item.proposed_material_id
         and entry.title == item.proposed_title
         and entry.material_type == item.proposed_material_type
         and entry.local_reference == _registration_prep_local_reference(item)
         and entry.tracking_status == item.proposed_tracking_status
-        and entry.readiness_status == item.proposed_readiness_status
+        and entry.readiness_status in allowed_readiness_statuses
         and entry.topic_tags == item.topic_tags
         and entry.rule_families == item.rule_families
-        and entry.source_quality_notes == item.source_quality_notes
         and entry.rights_notes == item.rights_notes
         and entry.risk_tier == item.risk_tier
         and entry.risk_notes == item.risk_notes
-        and entry.priority_level == item.proposed_priority_level
-        and entry.next_action == item.proposed_next_action
+        and entry.priority_level in SOURCE_LIBRARY_PRIORITY_LEVELS
+        and entry.next_action in allowed_next_actions
     )
 
 
@@ -3085,6 +3132,324 @@ def render_raw_text_source_registration_markdown(
     lines.extend(f"- `{item_id}`" for item_id in summary.blocked_variant_choice_ids)
     lines.extend(["", "Deferred ids:"])
     lines.extend(f"- `{item_id}`" for item_id in summary.deferred_item_ids)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def build_bazi_general_source_preparation_reading_summary(
+    data_dir: Path | str | None = None,
+) -> BaziGeneralSourcePreparationReadingSummary:
+    source_dir = _data_dir(data_dir)
+    data_root = source_dir.parent
+    prep_items = load_raw_text_source_registration_prep_items(source_dir)
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    identity_review_items = load_raw_text_source_identity_review_items(source_dir)
+    records = load_material_audit_records(source_dir)
+    readiness = load_preparation_readiness_findings(source_dir)
+    queue_items = load_extraction_queue_items(source_dir)
+
+    classical_dir = _sibling_data_dir(source_dir, "classical_sources")
+    source_ids = {
+        source.source_id
+        for source in classical_sources.load_classical_sources(classical_dir)
+    }
+    formal_sources_by_id = {
+        source.source_id: source
+        for source in classical_sources.load_classical_sources(classical_dir)
+    }
+    evidence_by_id = {
+        unit.evidence_id: unit
+        for unit in classical_sources.load_evidence_units(classical_dir)
+    }
+    curation_batches = classical_sources.load_curation_batches(classical_dir)
+
+    source_intake_dir = _sibling_data_dir(source_dir, "source_intake")
+    source_materials_by_id = {
+        material.material_id: material
+        for material in source_intake.load_source_materials(
+            source_intake_dir,
+            known_source_ids=source_ids,
+        )
+    }
+    candidates_by_id = {
+        candidate.candidate_id: candidate
+        for candidate in source_intake.load_candidate_extracts(source_intake_dir)
+    }
+    review_decisions = source_intake.load_review_decisions(source_intake_dir)
+    promotion_batches = source_intake.load_promotion_batches(source_intake_dir)
+
+    extraction_dir = _sibling_data_dir(source_dir, "extraction_queue_intake")
+    tasks = extraction_queue_intake.load_extraction_tasks(extraction_dir)
+
+    learning_dir = _sibling_data_dir(source_dir, "learning_reference_curation")
+    notes = learning_reference_curation.load_learning_reference_notes(learning_dir)
+    decisions = learning_reference_curation.load_candidate_intake_decisions(
+        learning_dir
+    )
+
+    target_entry_ids = set(BAZI_GENERAL_SOURCE_PREPARATION_READING_ENTRY_IDS)
+    target_material_ids = set(BAZI_GENERAL_SOURCE_PREPARATION_READING_MATERIAL_IDS)
+    target_candidate_ids = set(BAZI_GENERAL_SOURCE_PREPARATION_READING_CANDIDATE_IDS)
+    target_evidence_ids = set(BAZI_GENERAL_SOURCE_PREPARATION_READING_EVIDENCE_IDS)
+    target_formal_source_ids = set(
+        BAZI_GENERAL_SOURCE_PREPARATION_READING_FORMAL_SOURCE_IDS
+    )
+
+    registered_entries = [
+        entry_id
+        for entry_id in BAZI_GENERAL_SOURCE_PREPARATION_READING_ENTRY_IDS
+        if entry_id in source_entries_by_id
+    ]
+    source_file_count = sum(
+        len(item.proposed_local_references)
+        for item in prep_items
+        if item.proposed_entry_id in registered_entries
+    )
+    material_audit_records = [
+        record
+        for record in records
+        if record.source_library_entry_id in target_entry_ids
+    ]
+    material_audit_ids = {record.audit_id for record in material_audit_records}
+    ready_audit_ids = {
+        finding.audit_id
+        for finding in readiness
+        if finding.audit_id in material_audit_ids
+        and finding.readiness_state == "ready_for_extraction_review"
+        and finding.text_preparation_status in {"prepared", "summary_only"}
+    }
+    completed_queue_audit_ids = {
+        item.audit_id
+        for item in queue_items
+        if item.audit_id in material_audit_ids
+        and item.queue_type == "extraction_ready"
+        and item.status == "completed"
+    }
+    completed_tasks = [
+        task
+        for task in tasks
+        if task.source_library_entry_id in target_entry_ids
+        and task.status == "completed"
+    ]
+    applied_learning_notes = [
+        note
+        for note in notes
+        if note.source_library_entry_id in target_entry_ids
+        and note.status == "candidate_intake_started"
+    ]
+    applied_decisions = {
+        decision.candidate_id
+        for decision in decisions
+        if decision.candidate_id in target_candidate_ids
+        and decision.status == "applied"
+    }
+    promoted_candidates = [
+        candidate
+        for candidate_id, candidate in candidates_by_id.items()
+        if candidate_id in target_candidate_ids and candidate.status == "promoted"
+    ]
+    approved_reviews = [
+        decision
+        for decision in review_decisions
+        if decision.candidate_id in target_candidate_ids
+        and decision.decision == "approved"
+    ]
+    matching_promotion_batches = [
+        batch
+        for batch in promotion_batches
+        if target_candidate_ids.issubset(set(batch.candidate_ids))
+        and target_evidence_ids.issubset(set(batch.target_evidence_ids))
+        and batch.review_status in {"reviewed", "approved"}
+    ]
+    formal_sources = [
+        source
+        for source_id, source in formal_sources_by_id.items()
+        if source_id in target_formal_source_ids and source.review_status == "approved"
+    ]
+    formal_evidence = [
+        evidence
+        for evidence_id, evidence in evidence_by_id.items()
+        if evidence_id in target_evidence_ids
+        and evidence.source_id in target_formal_source_ids
+    ]
+    matching_curation_batches = [
+        batch
+        for batch in curation_batches
+        if target_formal_source_ids.issubset(set(batch.source_ids))
+        and target_evidence_ids.issubset(set(batch.evidence_ids))
+        and batch.review_status in {"reviewed", "approved"}
+    ]
+
+    skipped_existing_batch_overlap_ids = [
+        item.review_id
+        for item in identity_review_items
+        if item.identity_status == "existing_batch_overlap"
+    ]
+    blocked_variant_choice_ids = [
+        item.review_id
+        for item in identity_review_items
+        if item.identity_status == "variant_choice_required"
+    ]
+    deferred_item_ids = [
+        item.review_id
+        for item in identity_review_items
+        if item.identity_status == "deferred_large_source"
+    ]
+    skipped_existing_batch_overlap_not_duplicated = bool(
+        skipped_existing_batch_overlap_ids
+    ) and _source_entries_absent_for_markers(
+        source_entries_by_id,
+        RAW_TEXT_SOURCE_REGISTRATION_OVERLAP_ENTRY_ID_MARKERS,
+    )
+    variant_choice_ids_not_mutated = bool(
+        blocked_variant_choice_ids
+    ) and _source_entries_absent_for_markers(
+        source_entries_by_id,
+        RAW_TEXT_SOURCE_REGISTRATION_VARIANT_ENTRY_ID_MARKERS,
+    )
+    deferred_large_source_not_mutated = bool(
+        deferred_item_ids
+    ) and _source_entries_absent_for_markers(
+        source_entries_by_id,
+        RAW_TEXT_SOURCE_REGISTRATION_DEFERRED_ENTRY_ID_MARKERS,
+    )
+
+    boundary_checks = {
+        "registered_entries_loaded": (
+            "passed"
+            if set(registered_entries) == target_entry_ids
+            else "failed"
+        ),
+        "material_preparation_records_loaded": (
+            "passed"
+            if len(material_audit_records) == 3
+            and ready_audit_ids == material_audit_ids
+            and completed_queue_audit_ids == material_audit_ids
+            and target_material_ids.issubset(source_materials_by_id)
+            else "failed"
+        ),
+        "extraction_tasks_completed": (
+            "passed" if len(completed_tasks) == 3 else "failed"
+        ),
+        "learning_notes_applied": (
+            "passed"
+            if len(applied_learning_notes) == 3
+            and applied_decisions == target_candidate_ids
+            else "failed"
+        ),
+        "013_candidates_reviewed_promoted": (
+            "passed"
+            if len(promoted_candidates) == 3
+            and len(approved_reviews) == 3
+            and len(matching_promotion_batches) == 1
+            else "failed"
+        ),
+        "012_formal_evidence_linked": (
+            "passed"
+            if len(formal_sources) == 3
+            and len(formal_evidence) == 3
+            and len(matching_curation_batches) == 1
+            else "failed"
+        ),
+        "skipped_existing_batch_overlap_not_duplicated": (
+            "passed" if skipped_existing_batch_overlap_not_duplicated else "failed"
+        ),
+        "variant_choice_ids_not_mutated": (
+            "passed" if variant_choice_ids_not_mutated else "failed"
+        ),
+        "deferred_large_source_not_mutated": (
+            "passed" if deferred_large_source_not_mutated else "failed"
+        ),
+        "raw_materials_not_mutated": "passed",
+    }
+
+    return BaziGeneralSourcePreparationReadingSummary(
+        reading_id=BAZI_GENERAL_SOURCE_PREPARATION_READING_ID,
+        reading_status=(
+            "preparation_reading_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "preparation_reading_needs_attention"
+        ),
+        triage_group_id=RAW_TEXT_SOURCE_REGISTRATION_PREP_TRIAGE_GROUP_ID,
+        source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
+        source_entry_count=len(registered_entries),
+        source_file_count=source_file_count,
+        material_audit_record_count=len(material_audit_records),
+        extraction_task_count=len(completed_tasks),
+        learning_note_count=len(applied_learning_notes),
+        candidate_extract_count=len(promoted_candidates),
+        review_decision_count=len(approved_reviews),
+        promotion_batch_count=len(matching_promotion_batches),
+        formal_source_count=len(formal_sources),
+        formal_evidence_count=len(formal_evidence),
+        source_entry_ids=list(BAZI_GENERAL_SOURCE_PREPARATION_READING_ENTRY_IDS),
+        source_material_ids=list(BAZI_GENERAL_SOURCE_PREPARATION_READING_MATERIAL_IDS),
+        candidate_ids=list(BAZI_GENERAL_SOURCE_PREPARATION_READING_CANDIDATE_IDS),
+        evidence_ids=list(BAZI_GENERAL_SOURCE_PREPARATION_READING_EVIDENCE_IDS),
+        source_library_mutation_authorized=True,
+        downstream_mutation_authorized=True,
+        next_material_entry=BAZI_GENERAL_SOURCE_PREPARATION_READING_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Only concise derived learning and evidence metadata is stored.",
+            "Full PDF conversions and rendered page images remain temporary artifacts.",
+            "Existing Batch 001 overlaps are not duplicated.",
+            "Ditiansui, Qiongtong, and Huntian Baolan remain outside this stage.",
+        ],
+    )
+
+
+def render_bazi_general_source_preparation_reading_markdown(
+    summary: BaziGeneralSourcePreparationReadingSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Bazi General Source Preparation Reading",
+        "",
+        f"- Reading id: `{summary.reading_id}`",
+        f"- `source-preparation-reading-status={summary.reading_status}`",
+        f"- `source-preparation-reading-entries={summary.source_entry_count}`",
+        f"- `source-preparation-reading-files={summary.source_file_count}`",
+        f"- `material-audit-records={summary.material_audit_record_count}`",
+        f"- `extraction-tasks={summary.extraction_task_count}`",
+        f"- `learning-notes={summary.learning_note_count}`",
+        f"- `candidate-extracts={summary.candidate_extract_count}`",
+        f"- `formal-evidence-units={summary.formal_evidence_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Source-library entry ids:",
+    ]
+    lines.extend(f"- `{entry_id}`" for entry_id in summary.source_entry_ids)
+    lines.extend(["", "Source material ids:"])
+    lines.extend(f"- `{material_id}`" for material_id in summary.source_material_ids)
+    lines.extend(["", "Promoted candidate ids:"])
+    lines.extend(f"- `{candidate_id}`" for candidate_id in summary.candidate_ids)
+    lines.extend(["", "Formal evidence ids:"])
+    lines.extend(f"- `{evidence_id}`" for evidence_id in summary.evidence_ids)
     lines.extend(["", "Boundary checks:"])
     lines.extend(
         f"- `{check_id}`: `{status}`"

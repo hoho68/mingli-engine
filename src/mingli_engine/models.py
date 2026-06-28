@@ -3006,6 +3006,33 @@ class RawTextSourceRegistrationSummary:
 
 
 @dataclass(frozen=True)
+class BaziGeneralSourcePreparationReadingSummary:
+    reading_id: str
+    reading_status: str
+    triage_group_id: str
+    source_root: str
+    source_entry_count: int
+    source_file_count: int
+    material_audit_record_count: int
+    extraction_task_count: int
+    learning_note_count: int
+    candidate_extract_count: int
+    review_decision_count: int
+    promotion_batch_count: int
+    formal_source_count: int
+    formal_evidence_count: int
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    candidate_ids: list[str]
+    evidence_ids: list[str]
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class ExtractionWorkPackage:
     package_id: str
     package_label: str

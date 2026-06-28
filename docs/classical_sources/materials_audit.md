@@ -202,8 +202,8 @@ the newly registered raw text corpus triage backlog, and the refreshed queue
 excludes queue ids already covered by 016/017.
 
 - `queue-refresh-status=covered_or_completed_queue_exhausted`
-- `015-queue-items=17`
-- `016-covered-queue-items=16`
+- `015-queue-items=20`
+- `016-covered-queue-items=19`
 - `015-local-completed-queue-items=1`
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
@@ -542,9 +542,72 @@ Guardrails:
 - Variant sets and the deferred large source remain outside registration.
 - Reading, extraction, 013 candidate intake, and 012 evidence changes remain blocked.
 
-The next bounded work surface is source preparation and reading for the three
-newly registered entries. It may prepare readable learning material, but 013
-candidate intake and 012 evidence remain blocked unless separately authorized.
+## 015 Bazi General Source Preparation Reading
+
+The 2026-06-28 preparation-reading checkpoint completed the authorized reading
+stage for the three newly registered Bazi general PDF sources. Temporary
+conversion/render artifacts stayed outside Git; only concise derived metadata,
+013 intake records, and 012 evidence links are tracked.
+
+- Reading id: `015-bazi-general-source-preparation-reading`
+- `source-preparation-reading-status=preparation_reading_completed`
+- `source-preparation-reading-entries=3`
+- `source-preparation-reading-files=4`
+- `material-audit-records=3`
+- `extraction-tasks=3`
+- `learning-notes=3`
+- `candidate-extracts=3`
+- `formal-evidence-units=3`
+- `source-library-mutation-authorized=true`
+- `downstream-mutation-authorized=true`
+- `next-material-entry=015-bazi-general-variant-choice-and-deferred-review`
+
+Source-library entry ids:
+
+- `entry_bazi_general_lecture_textbook_pdf`
+- `entry_bazi_general_beichen_intro_pdf`
+- `entry_bazi_general_ziping_orthodox_pair_pdf`
+
+Source material ids:
+
+- `material_bazi_general_lecture_textbook_pdf`
+- `material_bazi_general_beichen_intro_pdf`
+- `material_bazi_general_ziping_orthodox_pair_pdf`
+
+Promoted candidate ids:
+
+- `candidate_bazi_general_lecture_pattern_strength_001`
+- `candidate_bazi_general_beichen_branch_interaction_001`
+- `candidate_bazi_general_ziping_useful_god_001`
+
+Formal evidence ids:
+
+- `bazi_general_lecture_pattern_strength_001`
+- `bazi_general_beichen_branch_interaction_001`
+- `bazi_general_ziping_useful_god_001`
+
+Boundary checks:
+
+- `registered_entries_loaded`: `passed`
+- `material_preparation_records_loaded`: `passed`
+- `extraction_tasks_completed`: `passed`
+- `learning_notes_applied`: `passed`
+- `013_candidates_reviewed_promoted`: `passed`
+- `012_formal_evidence_linked`: `passed`
+- `skipped_existing_batch_overlap_not_duplicated`: `passed`
+- `variant_choice_ids_not_mutated`: `passed`
+- `deferred_large_source_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+
+- Only concise derived learning and evidence metadata is stored.
+- Full PDF conversions and rendered page images remain temporary artifacts.
+- Existing Batch 001 overlaps are not duplicated.
+- Ditiansui, Qiongtong, and Huntian Baolan remain outside this stage.
+
+The next bounded work surface is
+`015-bazi-general-variant-choice-and-deferred-review`.
 
 ## Raw-File Boundary
 

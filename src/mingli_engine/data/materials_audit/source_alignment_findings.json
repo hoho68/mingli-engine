@@ -245,5 +245,44 @@
     "duplicate_or_variant_notes": "",
     "reviewer": "maintainer",
     "reviewed_at": "2026-06-27"
+  },
+  {
+    "alignment_id": "align_bazi_general_lecture_textbook_pdf",
+    "audit_id": "audit_bazi_general_lecture_textbook_pdf",
+    "match_type": "exact",
+    "source_library_entry_id": "entry_bazi_general_lecture_textbook_pdf",
+    "source_material_id": "material_bazi_general_lecture_textbook_pdf",
+    "confidence": "strong",
+    "evidence": "Audit record, source-library entry, and 013 source material describe the same bounded PDF source.",
+    "registration_recommendation": "none",
+    "duplicate_or_variant_notes": "",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28"
+  },
+  {
+    "alignment_id": "align_bazi_general_beichen_intro_pdf",
+    "audit_id": "audit_bazi_general_beichen_intro_pdf",
+    "match_type": "exact",
+    "source_library_entry_id": "entry_bazi_general_beichen_intro_pdf",
+    "source_material_id": "material_bazi_general_beichen_intro_pdf",
+    "confidence": "strong",
+    "evidence": "Audit record, source-library entry, and 013 source material describe the same bounded PDF source.",
+    "registration_recommendation": "none",
+    "duplicate_or_variant_notes": "",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28"
+  },
+  {
+    "alignment_id": "align_bazi_general_ziping_orthodox_pair_pdf",
+    "audit_id": "audit_bazi_general_ziping_orthodox_pair_pdf",
+    "match_type": "exact",
+    "source_library_entry_id": "entry_bazi_general_ziping_orthodox_pair_pdf",
+    "source_material_id": "material_bazi_general_ziping_orthodox_pair_pdf",
+    "confidence": "strong",
+    "evidence": "Audit record, source-library entry, and 013 source material describe the same bounded PDF source.",
+    "registration_recommendation": "none",
+    "duplicate_or_variant_notes": "",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28"
   }
 ]

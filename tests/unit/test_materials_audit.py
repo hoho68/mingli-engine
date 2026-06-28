@@ -658,6 +658,8 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_source_selection_items",
         "build_raw_text_source_selection_summary",
         "render_raw_text_source_selection_markdown",
+        "build_bazi_general_source_preparation_reading_summary",
+        "render_bazi_general_source_preparation_reading_markdown",
     ):
         assert callable(getattr(materials_audit, function_name))
 
@@ -1634,7 +1636,7 @@ def test_audit_progress_summary_includes_next_five_queue_items_and_backlog_count
         "queue_markdown_source_batch_004_prepare",
         "queue_duan_plain_mingxue_outline_extract",
     ]
-    assert summary.extraction_ready_count == 9
+    assert summary.extraction_ready_count == 12
     assert summary.preparation_backlog_count == 0
     assert summary.registration_backlog_count == 0
     assert summary.risk_review_backlog_count == 5
@@ -1675,8 +1677,8 @@ def test_materials_audit_queue_refresh_excludes_covered_016_queue_items():
 
     assert refresh.refresh_id == "015-materials-audit-next-action-queue-refresh"
     assert refresh.refresh_status == "covered_or_completed_queue_exhausted"
-    assert refresh.queue_item_count == 17
-    assert refresh.covered_queue_item_count == 16
+    assert refresh.queue_item_count == 20
+    assert refresh.covered_queue_item_count == 19
     assert refresh.locally_completed_queue_item_ids == [
         "queue_raw_text_materials_folder_triage",
     ]
@@ -1707,8 +1709,8 @@ def test_materials_audit_queue_refresh_markdown_and_docs_are_in_sync():
     for marker in (
         "015 Queue Refresh",
         "`queue-refresh-status=covered_or_completed_queue_exhausted`",
-        "`015-queue-items=17`",
-        "`016-covered-queue-items=16`",
+        "`015-queue-items=20`",
+        "`016-covered-queue-items=19`",
         "`015-local-completed-queue-items=1`",
         "`uncovered-queue-items=0`",
         "`refreshed-next-action-ids=0`",
@@ -2527,6 +2529,87 @@ def test_raw_text_source_registration_summary_counts_registered_bazi_general_sou
         "raw_materials_not_mutated": "passed",
         "013_012_not_mutated": "passed",
     }
+
+
+def test_bazi_general_source_preparation_reading_summary_closes_three_source_chain():
+    summary = materials_audit.build_bazi_general_source_preparation_reading_summary()
+
+    assert summary.reading_id == "015-bazi-general-source-preparation-reading"
+    assert summary.reading_status == "preparation_reading_completed"
+    assert summary.source_entry_count == 3
+    assert summary.source_file_count == 4
+    assert summary.material_audit_record_count == 3
+    assert summary.extraction_task_count == 3
+    assert summary.learning_note_count == 3
+    assert summary.candidate_extract_count == 3
+    assert summary.review_decision_count == 3
+    assert summary.promotion_batch_count == 1
+    assert summary.formal_source_count == 3
+    assert summary.formal_evidence_count == 3
+    assert summary.source_library_mutation_authorized is True
+    assert summary.downstream_mutation_authorized is True
+    assert summary.source_entry_ids == [
+        "entry_bazi_general_lecture_textbook_pdf",
+        "entry_bazi_general_beichen_intro_pdf",
+        "entry_bazi_general_ziping_orthodox_pair_pdf",
+    ]
+    assert summary.source_material_ids == [
+        "material_bazi_general_lecture_textbook_pdf",
+        "material_bazi_general_beichen_intro_pdf",
+        "material_bazi_general_ziping_orthodox_pair_pdf",
+    ]
+    assert summary.candidate_ids == [
+        "candidate_bazi_general_lecture_pattern_strength_001",
+        "candidate_bazi_general_beichen_branch_interaction_001",
+        "candidate_bazi_general_ziping_useful_god_001",
+    ]
+    assert summary.evidence_ids == [
+        "bazi_general_lecture_pattern_strength_001",
+        "bazi_general_beichen_branch_interaction_001",
+        "bazi_general_ziping_useful_god_001",
+    ]
+    assert summary.next_material_entry == (
+        "015-bazi-general-variant-choice-and-deferred-review"
+    )
+    assert summary.boundary_checks == {
+        "registered_entries_loaded": "passed",
+        "material_preparation_records_loaded": "passed",
+        "extraction_tasks_completed": "passed",
+        "learning_notes_applied": "passed",
+        "013_candidates_reviewed_promoted": "passed",
+        "012_formal_evidence_linked": "passed",
+        "skipped_existing_batch_overlap_not_duplicated": "passed",
+        "variant_choice_ids_not_mutated": "passed",
+        "deferred_large_source_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_bazi_general_source_preparation_reading_markdown_and_docs_are_in_sync():
+    summary = materials_audit.build_bazi_general_source_preparation_reading_summary()
+    markdown = materials_audit.render_bazi_general_source_preparation_reading_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Bazi General Source Preparation Reading",
+        "`source-preparation-reading-status=preparation_reading_completed`",
+        "`source-preparation-reading-entries=3`",
+        "`source-preparation-reading-files=4`",
+        "`candidate-extracts=3`",
+        "`formal-evidence-units=3`",
+        "`downstream-mutation-authorized=true`",
+        "`next-material-entry=015-bazi-general-variant-choice-and-deferred-review`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
 
 
 def test_raw_text_source_registration_markdown_and_docs_are_in_sync():

@@ -183,7 +183,7 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 The 2026-06-27 source-window learning-closure pass is now reflected in the
 017 maintainer snapshot without changing 017 data schemas or promotion state.
 
-- `selected-ready-learning-notes=16`: the 16 ready items remain selected 016
+- `selected-ready-learning-notes=19`: the 19 ready items remain selected 016
   extraction tasks and 017 learning reference notes. Here "ready" means ready
   as learning-reference input, not automatically ready for formal evidence.
 - `retained-chapter-learning-closed=11`: retained chapter-level source windows
@@ -205,7 +205,7 @@ The 2026-06-27 source-window learning-closure pass is now reflected in the
 - `completed-risk-review-actions=4`: Blind Life Manual, Immortal Fortune
   Jianghu Secret, Life Death Book, and Markdown Batch 005 have completed
   prerequisite boundary screening.
-- `formal_evidence_delta=0`: No new candidate-intake decisions, no 013 candidate extracts, no review decisions, no promotion batches, and no formal evidence are created by this sync.
+- `formal_evidence_delta=0`: No new candidate-intake decisions, no 013 candidate extracts, no review decisions, no promotion batches, and no formal evidence are created by this source-window sync; later authorized Bazi general preparation-reading records are counted separately in 013/012 snapshots.
 
 Completed, blocked, or deferred prerequisite records remain outside
 `next_action_ids`.
@@ -231,27 +231,26 @@ Both records are bounded 017 learning/reference metadata. They do not create
 
 ## Candidate/Formal Evidence Boundary Audit
 
-The 2026-06-27 candidate/formal evidence boundary audit confirms that the
-source-window learning-closure sync did not mutate the downstream candidate,
-review, promotion, or formal evidence surfaces.
+The candidate/formal evidence boundary audit confirms that 017 learning
+records remain provenance metadata while explicitly authorized downstream work
+is represented in 013 and 012.
 
-- `017-applied-decisions=30`: 017 candidate-intake decisions remain provenance
+- `017-applied-decisions=33`: 017 candidate-intake decisions remain provenance
   and planning metadata after application.
-- `017-create-candidate-decisions=27`: applied create-candidate decisions map
+- `017-create-candidate-decisions=30`: applied create-candidate decisions map
   to existing 013 candidate extracts; the reuse decisions continue to point to
   `candidate_northeast_blind_image_001`,
   `candidate_markdown_batch_004_pattern_strength_001`, and
   `candidate_markdown_batch_004_useful_god_001`.
-- `013-candidate-extracts=36`: current 013 candidate status counts remain
-  `promoted=32`, `rejected=2`, `returned=1`, and `blocked=1`.
-- `013-review-decisions=36`: current review decisions remain `approved=32`,
+- `013-candidate-extracts=39`: current 013 candidate status counts are
+  `promoted=35`, `rejected=2`, `returned=1`, and `blocked=1`.
+- `013-review-decisions=39`: current review decisions are `approved=35`,
   `rejected=2`, `returned=1`, and `blocked=1`.
-- `013-promotion-batches=25`: all current promotion batches remain
-  `reviewed`; no new batch is created by learning closure.
-- `012-formal-evidence-units=92`: formal evidence coverage remains in the
+- `013-promotion-batches=26`: all current promotion batches are `reviewed`.
+- `012-formal-evidence-units=95`: formal evidence coverage remains in the
   approved classical evidence corpus only.
-- `formal_evidence_delta=0`: the learning-closure and 017 sync passes do not
-  add or remove formal evidence.
+- `formal_evidence_delta=0`: the 017 summary itself does not add or remove
+  formal evidence.
 - `learning-reference-source-refs-in-012=0`: 012 evidence does not cite
   `learning-reference:` locators.
 - `candidate-id-source-refs-in-012=0`: 012 evidence source refs do not cite
@@ -271,13 +270,13 @@ candidate, review, promotion, or formal-evidence mutation by itself.
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=16`
+- `017-notes-closed=19`
 - `017-next-action-ids=0`
-- `017-applied-decisions=30`
-- `013-candidate-extracts=36`
-- `013-review-decisions=36`
-- `013-promotion-batches=25`
-- `012-formal-evidence-units=92`
+- `017-applied-decisions=33`
+- `013-candidate-extracts=39`
+- `013-review-decisions=39`
+- `013-promotion-batches=26`
+- `012-formal-evidence-units=95`
 - `formal_evidence_delta=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`

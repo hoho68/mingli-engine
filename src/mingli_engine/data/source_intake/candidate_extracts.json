@@ -874,5 +874,71 @@
     "duplicate_of": "",
     "created_by": "learning_reference_curation",
     "created_at": "2026-06-23"
+  },
+  {
+    "candidate_id": "candidate_bazi_general_lecture_pattern_strength_001",
+    "material_id": "material_bazi_general_lecture_textbook_pdf",
+    "source_locator": "page:八字命理讲义教材（299页）.pdf#p77",
+    "extracted_meaning": "The lecture frames strong day-master assessment through excessive peer/support force or seasonal rooting, then treats control and draining elements as conditional balancing candidates.",
+    "short_quote": "",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Use only as conditional structure support; chart context and school assumptions can change the selected balancing element.",
+      "Do not turn strength labels into deterministic outcomes."
+    ],
+    "related_evidence_ids": [
+      "bazi_general_lecture_pattern_strength_001"
+    ],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-28"
+  },
+  {
+    "candidate_id": "candidate_bazi_general_beichen_branch_interaction_001",
+    "material_id": "material_bazi_general_beichen_intro_pdf",
+    "source_locator": "page:北宸学派《命理入门》韩雨墨 258页.pdf#p30",
+    "extracted_meaning": "Beichen presents earthly-branch combination, meeting, punishment, and clash categories as a compact branch-interaction taxonomy for later chart-context review.",
+    "short_quote": "",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Use as branch-interaction taxonomy only; the table does not decide outcomes by itself.",
+      "Rendered-page source should be rechecked before adding narrower sub-rules."
+    ],
+    "related_evidence_ids": [
+      "bazi_general_beichen_branch_interaction_001"
+    ],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-28"
+  },
+  {
+    "candidate_id": "candidate_bazi_general_ziping_useful_god_001",
+    "material_id": "material_bazi_general_ziping_orthodox_pair_pdf",
+    "source_locator": "page:子平命理正宗电子版上.pdf#p9",
+    "extracted_meaning": "The Ziping manuscript uses seasonal five-element prosperity and deficiency language to frame balancing tendencies; treat it as a useful-god candidate needing later narrow transcription.",
+    "short_quote": "",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Image-page reading is suitable for taxonomy seeding, not final classical wording.",
+      "Different useful-god systems may classify the same balancing relation differently."
+    ],
+    "related_evidence_ids": [
+      "bazi_general_ziping_useful_god_001"
+    ],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-28"
   }
 ]

@@ -317,5 +317,21 @@
     "review_status": "reviewed",
     "review_notes": "Approved batch 005 branch_interaction candidate for promotion to evidence.",
     "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_bazi_general_source_preparation_reading_001",
+    "candidate_ids": [
+      "candidate_bazi_general_lecture_pattern_strength_001",
+      "candidate_bazi_general_beichen_branch_interaction_001",
+      "candidate_bazi_general_ziping_useful_god_001"
+    ],
+    "target_evidence_ids": [
+      "bazi_general_lecture_pattern_strength_001",
+      "bazi_general_beichen_branch_interaction_001",
+      "bazi_general_ziping_useful_god_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Reviewed three Bazi general preparation-reading candidates for evidence linkage.",
+    "unresolved_issues": []
   }
 ]
