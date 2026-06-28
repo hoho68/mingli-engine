@@ -2521,6 +2521,12 @@ def _selected_variant_entries_registered(
     )
 
 
+def _selected_variant_queue_surface_completed(
+    source_entries_by_id: dict[str, source_library.SourceLibraryEntry],
+) -> bool:
+    return _selected_variant_entries_registered(source_entries_by_id)
+
+
 def build_raw_text_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextSourceSelectionSummary:
@@ -3944,6 +3950,7 @@ def build_materials_audit_queue_refresh_summary(
     source_dir = _data_dir(data_dir)
     queue_items = load_extraction_queue_items(source_dir)
     progress = build_materials_audit_progress_summary(source_dir)
+    source_entries_by_id = _load_source_library_entries(source_dir)
     covered_ids = (
         covered_queue_item_ids
         if covered_queue_item_ids is not None
@@ -3967,6 +3974,11 @@ def build_materials_audit_queue_refresh_summary(
     refreshed_next_action_ids = _select_next_queue_item_ids(uncovered_items)
     all_queue_items_covered = not uncovered_queue_item_ids and bool(queue_items)
     source_selection_ready = bool(load_raw_text_source_selection_items(source_dir))
+    post_selected_variant_surface_confirmed = (
+        all_queue_items_covered
+        and bool(locally_completed_queue_item_ids)
+        and _selected_variant_queue_surface_completed(source_entries_by_id)
+    )
 
     return MaterialQueueRefreshSummary(
         refresh_id="015-materials-audit-next-action-queue-refresh",
@@ -3992,7 +4004,9 @@ def build_materials_audit_queue_refresh_summary(
         refreshed_next_action_ids=refreshed_next_action_ids,
         downstream_mutation_authorized=False,
         next_material_entry=(
-            RAW_TEXT_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY
+            "015-external-material-inventory-refresh"
+            if post_selected_variant_surface_confirmed
+            else RAW_TEXT_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY
             if all_queue_items_covered
             and locally_completed_queue_item_ids
             and source_selection_ready
@@ -4021,6 +4035,9 @@ def build_materials_audit_queue_refresh_summary(
                 "passed"
                 if not set(refreshed_next_action_ids) & locally_completed_id_set
                 else "failed"
+            ),
+            "post_selected_variant_queue_surface_confirmed": (
+                "passed" if post_selected_variant_surface_confirmed else "failed"
             ),
             "013_012_not_mutated": "passed",
         },

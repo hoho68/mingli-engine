@@ -178,7 +178,8 @@ Authorization Audit Packet:
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-liang-bazi-core-individual-review`
+- `next-material-entry=015-external-material-inventory-refresh`
+- `post_selected_variant_queue_surface_confirmed`: `passed`
 
 015 External Material Inventory Refresh:
 
@@ -266,7 +267,7 @@ Authorization Audit Packet:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-materials-audit-next-action-queue`.
+- `next-new-material-start=015-external-material-inventory-refresh`.
 - Current 015 queue coverage has no uncovered action after excluding 21
   016-covered ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -421,11 +422,10 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-materials-audit-next-action-queue`. It should refresh
-the remaining local queue surface after the selected variants, keep Huntian
-Baolan deferred to a separate large-source pass, and batch the next safe
-source-registration or preparation-reading work with explicit authorization
-before any 013/012 mutation.
+`next-material-entry=015-external-material-inventory-refresh`. It should refresh
+the external inventory/new-material surface before selecting any next source,
+keep Huntian Baolan deferred to a separate large-source pass, and require
+explicit authorization before any 013/012 mutation.
 
 ## Guardrails
 

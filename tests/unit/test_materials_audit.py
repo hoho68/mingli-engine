@@ -1728,12 +1728,13 @@ def test_materials_audit_queue_refresh_excludes_covered_016_queue_items():
     assert refresh.legacy_next_action_ids == summary.next_action_ids
     assert refresh.refreshed_next_action_ids == []
     assert refresh.downstream_mutation_authorized is False
-    assert refresh.next_material_entry == "015-liang-bazi-core-individual-review"
+    assert refresh.next_material_entry == "015-external-material-inventory-refresh"
     assert refresh.boundary_checks == {
         "015_queue_loaded": "passed",
         "016_coverage_loaded": "passed",
         "covered_items_excluded": "passed",
         "completed_items_excluded": "passed",
+        "post_selected_variant_queue_surface_confirmed": "passed",
         "013_012_not_mutated": "passed",
     }
 
@@ -1757,7 +1758,8 @@ def test_materials_audit_queue_refresh_markdown_and_docs_are_in_sync():
         "`uncovered-queue-items=0`",
         "`refreshed-next-action-ids=0`",
         "`downstream-mutation-authorized=false`",
-        "`next-material-entry=015-liang-bazi-core-individual-review`",
+        "`next-material-entry=015-external-material-inventory-refresh`",
+        "`post_selected_variant_queue_surface_confirmed`: `passed`",
     ):
         assert marker in markdown
         assert marker in materials_doc

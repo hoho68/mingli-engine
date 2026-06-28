@@ -208,14 +208,16 @@ excludes queue ids already covered by 016/017.
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-liang-bazi-core-individual-review`
+- `next-material-entry=015-external-material-inventory-refresh`
+- `post_selected_variant_queue_surface_confirmed`: `passed`
 
 This refresh is read-only planning metadata. It does not mark queue items
 completed, mutate 016 packages, create 013 candidate/review/promotion records,
 or alter 012 formal evidence. The raw text corpus triage item is locally
-completed, and the bounded Liang Xiangrun Bazi core group now has a
-source-selection packet, so the next local new-material path is individual
-cleaned-text review for the selected Liang sources.
+completed, the bounded Liang Xiangrun Bazi core path is completed, and the Bazi
+general selected-variant path is completed. The local queue is exhausted, so the
+next new-material path starts with a fresh external inventory refresh rather
+than returning to an already completed stage.
 
 ## 015 External Material Inventory Refresh
 
