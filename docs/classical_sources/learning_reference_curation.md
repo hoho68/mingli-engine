@@ -119,8 +119,8 @@ Candidate-intake decision records include these first-wave examples:
 - `decision_hongfu_remedy_boundary_001`: applied as `create_candidate`,
   creating `candidate_hongfu_remedy_boundary_017_001`.
 
-The full seeded 017 decision set now contains `reuse_existing=1`,
-`create_candidate=27`, and `status:applied=28`. Applied decisions are no
+The full seeded 017 decision set now contains `reuse_existing=3`,
+`create_candidate=32`, and `status:applied=35`. Applied decisions are no
 longer themselves evidence; any report-usable value comes only after the
 ordinary 013 review/promotion path creates matching formal evidence units.
 
@@ -157,19 +157,19 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 
 ## Current Incremental Snapshot
 
-- Learning reference notes: `candidate_intake_started=16`.
-- Learning points: `duplicate_review=3`, `ready=27`, `deferred=6`.
-- Candidate decisions: `reuse_existing=3`, `create_candidate=27`,
-  `status:applied=30`.
+- Learning reference notes: `candidate_intake_started=21`.
+- Learning points: `duplicate_review=3`, `ready=32`, `deferred=6`.
+- Candidate decisions: `reuse_existing=3`, `create_candidate=32`,
+  `status:applied=35`.
 - Prerequisite actions: `risk_review=4`, `blocked=1`, `deferred=2`,
   `status:completed=4`, `status:deferred=2`, `status:blocked=1`.
-- Candidate-ready count: `27`.
-- Candidate decision count: `30`.
-- Risk tier counts: `ordinary=11`, `sensitive=44`, `high_risk=4` across notes,
+- Candidate-ready count: `32`.
+- Candidate decision count: `35`.
+- Risk tier counts: `ordinary=21`, `sensitive=44`, `high_risk=4` across notes,
   learning points, and prerequisite actions.
 - Target rule family counts: `blind_image_method=2`,
-  `branch_interaction=4`, `pattern_strength=10`,
-  `useful_god_candidate=5`, `luck_cycle=4`, `ten_god_relation=4`,
+  `branch_interaction=5`, `pattern_strength=12`,
+  `useful_god_candidate=7`, `luck_cycle=4`, `ten_god_relation=4`,
   `five_element_balance=1`, `remedy_boundary=1`, and
   `high_risk_signal=1`.
 - Overlap warnings: `9`.
@@ -183,7 +183,7 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 The 2026-06-27 source-window learning-closure pass is now reflected in the
 017 maintainer snapshot without changing 017 data schemas or promotion state.
 
-- `selected-ready-learning-notes=19`: the 19 ready items remain selected 016
+- `selected-ready-learning-notes=21`: the 21 ready items remain selected 016
   extraction tasks and 017 learning reference notes. Here "ready" means ready
   as learning-reference input, not automatically ready for formal evidence.
 - `retained-chapter-learning-closed=11`: retained chapter-level source windows
@@ -235,19 +235,19 @@ The candidate/formal evidence boundary audit confirms that 017 learning
 records remain provenance metadata while explicitly authorized downstream work
 is represented in 013 and 012.
 
-- `017-applied-decisions=33`: 017 candidate-intake decisions remain provenance
+- `017-applied-decisions=35`: 017 candidate-intake decisions remain provenance
   and planning metadata after application.
-- `017-create-candidate-decisions=30`: applied create-candidate decisions map
+- `017-create-candidate-decisions=32`: applied create-candidate decisions map
   to existing 013 candidate extracts; the reuse decisions continue to point to
   `candidate_northeast_blind_image_001`,
   `candidate_markdown_batch_004_pattern_strength_001`, and
   `candidate_markdown_batch_004_useful_god_001`.
-- `013-candidate-extracts=42`: current 013 candidate status counts are
-  `promoted=39`, `rejected=2`, and `blocked=1`.
-- `013-review-decisions=42`: current review decisions are `approved=39`,
+- `013-candidate-extracts=44`: current 013 candidate status counts are
+  `promoted=41`, `rejected=2`, and `blocked=1`.
+- `013-review-decisions=44`: current review decisions are `approved=41`,
   `rejected=2`, and `blocked=1`.
-- `013-promotion-batches=28`: all current promotion batches are `reviewed`.
-- `012-formal-evidence-units=99`: formal evidence coverage remains in the
+- `013-promotion-batches=29`: all current promotion batches are `reviewed`.
+- `012-formal-evidence-units=101`: formal evidence coverage remains in the
   approved classical evidence corpus only.
 - `formal_evidence_delta=0`: the 017 summary itself does not add or remove
   formal evidence.
@@ -277,6 +277,14 @@ Authorized downstream update on 2026-06-28: three ordinary-risk Markdown Batch
 taxonomy items; they do not authorize deterministic outcomes without chart
 context.
 
+Authorized downstream update on 2026-06-28: the selected Bazi general variants
+`滴天髓.pdf` and `穷通宝鉴/窮通寶鑒.pdf` were registered as source-library
+metadata, promoted through 013 as weak locator-backed candidates, and added to
+012 as `bazi_general_ditiansui_pattern_strength_001` and
+`bazi_general_qiongtong_useful_god_001`. These are review-note-quality source
+preparation anchors; later page-level transcription is required before exact
+classical wording or quotation.
+
 ## Authorization Audit Packet
 
 The 2026-06-27 authorization audit packet is a read-only local clearance check
@@ -285,13 +293,13 @@ candidate, review, promotion, or formal-evidence mutation by itself.
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=19`
+- `017-notes-closed=21`
 - `017-next-action-ids=0`
-- `017-applied-decisions=33`
-- `013-candidate-extracts=42`
-- `013-review-decisions=42`
-- `013-promotion-batches=28`
-- `012-formal-evidence-units=99`
+- `017-applied-decisions=35`
+- `013-candidate-extracts=44`
+- `013-review-decisions=44`
+- `013-promotion-batches=29`
+- `012-formal-evidence-units=101`
 - `formal_evidence_delta=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
@@ -303,15 +311,17 @@ downstream mutation still requires an explicit user request.
 
 ## Phase C Source Disposition Snapshot
 
-The current 016/017 state consumes 14 selected extraction tasks as learning
+The current 016/017 state consumes 21 selected extraction tasks as learning
 reference notes and preserves 7 prerequisite backlog records as action notes.
 
-- 14 ready items are 016 extraction tasks and 017 learning reference notes:
-  five root-PDF learning notes, three Markdown batch learning notes, and six
-  knowledge-skeleton learning notes.
-- Those notes contain 34 learning points and 28 candidate-intake decisions.
-  One decision reuses an existing candidate, 27 are create-candidate decisions,
-  and 28 decisions have `status=applied`.
+- 21 ready items are 016 extraction tasks and 017 learning reference notes:
+  five root-PDF learning notes, three Markdown batch learning notes, six
+  knowledge-skeleton learning notes, three Bazi general preparation-reading
+  notes, two Liang individual-review duplicate notes, and two selected Bazi
+  general variant notes.
+- Those notes contain 41 learning points and 35 candidate-intake decisions.
+  Three decisions reuse existing candidates, 32 are create-candidate decisions,
+  and all 35 decisions have `status=applied`.
 - 7 non-ready items remain prerequisite action notes: Blind Life Manual,
   Blind School Secret, Markdown Batch 003, Immortal Fortune Jianghu Secret,
   Life Death Book 100 Pages, Source Processing Status, and Markdown Batch 005.

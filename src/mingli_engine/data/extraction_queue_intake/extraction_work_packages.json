@@ -138,5 +138,22 @@
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28",
     "notes": "Completed preparation-reading package for three registered Bazi general PDF sources with authorized 013 and 012 advancement."
+  },
+  {
+    "package_id": "package_bazi_general_selected_variant_preparation_reading_001",
+    "package_label": "Bazi general selected variant preparation-reading package 001",
+    "source_queue_snapshot_ids": [
+      "queue_bazi_general_ditiansui_pattern_strength_extract",
+      "queue_bazi_general_qiongtong_useful_god_extract"
+    ],
+    "selected_task_ids": [
+      "task_bazi_general_ditiansui_pattern_strength_001",
+      "task_bazi_general_qiongtong_useful_god_001"
+    ],
+    "backlog_record_ids": [],
+    "status": "completed",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28",
+    "notes": "Completed selected-variant registration-prep package for Ditiansui and Qiongtong with weak locator-based 013 and 012 advancement."
   }
 ]

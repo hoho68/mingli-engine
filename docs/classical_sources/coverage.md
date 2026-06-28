@@ -11,8 +11,8 @@ from the current JSON corpus instead of maintained by hand.
 
 Snapshot date: 2026-06-28
 
-- Approved evidence units: 99
-- Registered sources: 17
+- Approved evidence units: 101
+- Registered sources: 19
 - Sources with explicit gaps:
   - `blind_life_manual`: 仅条件化高风险边界已提升；单条断语仍需页码或标题级定位复核后才能支撑正式结论。
   - `immortal_fortune_jianghu_secret`: 尚未开始抽取和安全改写，恐吓式或付费化解口径未审，暂不支撑正式结论。
@@ -38,7 +38,9 @@ Snapshot date: 2026-06-28
 - `mingxue_golden_voice`: 9
 - `northeast_blind_peak`: 9
 - `source_bazi_general_beichen_intro_pdf`: 1
+- `source_bazi_general_ditiansui_selected_pdf`: 1
 - `source_bazi_general_lecture_textbook_pdf`: 1
+- `source_bazi_general_qiongtong_selected_pdf`: 1
 - `source_bazi_general_ziping_orthodox_pair_pdf`: 1
 
 ## Evidence Counts By Rule Family
@@ -48,15 +50,15 @@ Snapshot date: 2026-06-28
 - `five_element_balance`: 4
 - `high_risk_signal`: 8
 - `luck_cycle`: 10
-- `pattern_strength`: 15
+- `pattern_strength`: 16
 - `remedy_boundary`: 8
 - `taboo_god_candidate`: 6
 - `ten_god_relation`: 12
-- `useful_god_candidate`: 13
+- `useful_god_candidate`: 14
 
 ## Evidence Counts By Risk Tier
 
-- `ordinary`: 48
+- `ordinary`: 50
 - `sensitive`: 39
 - `high_risk`: 12
 

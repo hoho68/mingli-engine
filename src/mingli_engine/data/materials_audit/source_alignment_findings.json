@@ -284,5 +284,31 @@
     "duplicate_or_variant_notes": "",
     "reviewer": "maintainer",
     "reviewed_at": "2026-06-28"
+  },
+  {
+    "alignment_id": "align_bazi_general_ditiansui_selected_pdf",
+    "audit_id": "audit_bazi_general_ditiansui_selected_pdf",
+    "match_type": "exact",
+    "source_library_entry_id": "entry_bazi_general_ditiansui_selected_pdf",
+    "source_material_id": "material_bazi_general_ditiansui_selected_pdf",
+    "confidence": "strong",
+    "evidence": "Selected variant review, source-library entry, and 013 source material describe the same Ditiansui local PDF.",
+    "registration_recommendation": "none",
+    "duplicate_or_variant_notes": "Canonical variant selected from the Ditiansui variant set.",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28"
+  },
+  {
+    "alignment_id": "align_bazi_general_qiongtong_selected_pdf",
+    "audit_id": "audit_bazi_general_qiongtong_selected_pdf",
+    "match_type": "exact",
+    "source_library_entry_id": "entry_bazi_general_qiongtong_selected_pdf",
+    "source_material_id": "material_bazi_general_qiongtong_selected_pdf",
+    "confidence": "strong",
+    "evidence": "Selected variant review, source-library entry, and 013 source material describe the same Qiongtong Baojian local PDF.",
+    "registration_recommendation": "none",
+    "duplicate_or_variant_notes": "Canonical variant selected from the Qiongtong variant set.",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28"
   }
 ]

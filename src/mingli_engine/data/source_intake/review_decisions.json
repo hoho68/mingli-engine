@@ -687,5 +687,39 @@
     ],
     "source_quality": "review_note",
     "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_bazi_general_ditiansui_pattern_strength_001",
+    "candidate_id": "candidate_bazi_general_ditiansui_pattern_strength_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Selected-variant candidate accepted as weak pattern_strength metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact classical wording.",
+      "Use only as conditional comparison context."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_qiongtong_useful_god_001",
+    "candidate_id": "candidate_bazi_general_qiongtong_useful_god_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Selected-variant candidate accepted as weak useful_god_candidate metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact classical wording.",
+      "Different seasonal use-god systems may classify the same relation differently."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
   }
 ]

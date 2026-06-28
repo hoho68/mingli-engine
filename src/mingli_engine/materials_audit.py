@@ -161,6 +161,10 @@ RAW_TEXT_SOURCE_REGISTRATION_NEXT_MATERIAL_ENTRY = (
 RAW_TEXT_SOURCE_REGISTRATION_OVERLAP_ENTRY_ID_MARKERS = ("youran", "tianma")
 RAW_TEXT_SOURCE_REGISTRATION_VARIANT_ENTRY_ID_MARKERS = ("ditiansui", "qiongtong")
 RAW_TEXT_SOURCE_REGISTRATION_DEFERRED_ENTRY_ID_MARKERS = ("huntian",)
+BAZI_GENERAL_SELECTED_VARIANT_ENTRY_IDS = (
+    "entry_bazi_general_ditiansui_selected_pdf",
+    "entry_bazi_general_qiongtong_selected_pdf",
+)
 BAZI_GENERAL_SOURCE_PREPARATION_READING_ID = (
     "015-bazi-general-source-preparation-reading"
 )
@@ -2508,6 +2512,15 @@ def _source_entries_absent_for_markers(
     )
 
 
+def _selected_variant_entries_registered(
+    source_entries_by_id: dict[str, source_library.SourceLibraryEntry],
+) -> bool:
+    return all(
+        entry_id in source_entries_by_id
+        for entry_id in BAZI_GENERAL_SELECTED_VARIANT_ENTRY_IDS
+    )
+
+
 def build_raw_text_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextSourceSelectionSummary:
@@ -3229,11 +3242,12 @@ def build_raw_text_source_registration_summary(
         source_entries_by_id,
         RAW_TEXT_SOURCE_REGISTRATION_OVERLAP_ENTRY_ID_MARKERS,
     )
-    variant_choice_ids_not_registered = bool(
-        blocked_variant_choice_ids
-    ) and _source_entries_absent_for_markers(
-        source_entries_by_id,
-        RAW_TEXT_SOURCE_REGISTRATION_VARIANT_ENTRY_ID_MARKERS,
+    variant_choice_boundary_respected = bool(blocked_variant_choice_ids) and (
+        _source_entries_absent_for_markers(
+            source_entries_by_id,
+            RAW_TEXT_SOURCE_REGISTRATION_VARIANT_ENTRY_ID_MARKERS,
+        )
+        or _selected_variant_entries_registered(source_entries_by_id)
     )
     deferred_large_source_not_registered = bool(
         deferred_item_ids
@@ -3255,8 +3269,8 @@ def build_raw_text_source_registration_summary(
         "skipped_existing_batch_overlap_not_duplicated": (
             "passed" if skipped_existing_batch_overlap_not_duplicated else "failed"
         ),
-        "variant_choice_ids_not_registered": (
-            "passed" if variant_choice_ids_not_registered else "failed"
+        "variant_choice_boundary_respected": (
+            "passed" if variant_choice_boundary_respected else "failed"
         ),
         "deferred_large_source_not_registered": (
             "passed" if deferred_large_source_not_registered else "failed"
@@ -3293,7 +3307,8 @@ def build_raw_text_source_registration_summary(
         guardrails=[
             "Only source-library metadata registration is authorized in this stage.",
             "Existing Markdown Batch 001 overlaps stay represented by their existing source-library entry.",
-            "Variant sets and the deferred large source remain outside registration.",
+            "Variant sets require a separate selected-variant authorization before registration.",
+            "The deferred large source remains outside registration.",
             "Reading, extraction, 013 candidate intake, and 012 evidence changes remain blocked.",
         ],
     )
@@ -3524,11 +3539,12 @@ def build_bazi_general_source_preparation_reading_summary(
         source_entries_by_id,
         RAW_TEXT_SOURCE_REGISTRATION_OVERLAP_ENTRY_ID_MARKERS,
     )
-    variant_choice_ids_not_mutated = bool(
-        blocked_variant_choice_ids
-    ) and _source_entries_absent_for_markers(
-        source_entries_by_id,
-        RAW_TEXT_SOURCE_REGISTRATION_VARIANT_ENTRY_ID_MARKERS,
+    variant_choice_boundary_respected = bool(blocked_variant_choice_ids) and (
+        _source_entries_absent_for_markers(
+            source_entries_by_id,
+            RAW_TEXT_SOURCE_REGISTRATION_VARIANT_ENTRY_ID_MARKERS,
+        )
+        or _selected_variant_entries_registered(source_entries_by_id)
     )
     deferred_large_source_not_mutated = bool(
         deferred_item_ids
@@ -3577,8 +3593,8 @@ def build_bazi_general_source_preparation_reading_summary(
         "skipped_existing_batch_overlap_not_duplicated": (
             "passed" if skipped_existing_batch_overlap_not_duplicated else "failed"
         ),
-        "variant_choice_ids_not_mutated": (
-            "passed" if variant_choice_ids_not_mutated else "failed"
+        "variant_choice_boundary_respected": (
+            "passed" if variant_choice_boundary_respected else "failed"
         ),
         "deferred_large_source_not_mutated": (
             "passed" if deferred_large_source_not_mutated else "failed"
@@ -3617,7 +3633,8 @@ def build_bazi_general_source_preparation_reading_summary(
             "Only concise derived learning and evidence metadata is stored.",
             "Full PDF conversions and rendered page images remain temporary artifacts.",
             "Existing Batch 001 overlaps are not duplicated.",
-            "Ditiansui, Qiongtong, and Huntian Baolan remain outside this stage.",
+            "Ditiansui and Qiongtong are handled by the later selected-variant stage.",
+            "Huntian Baolan remains outside this stage.",
         ],
     )
 

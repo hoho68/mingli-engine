@@ -400,7 +400,7 @@ def test_load_source_library_entries_loads_current_registered_sources():
     entries = source_library.load_source_library_entries()
     by_id = {entry.entry_id: entry for entry in entries}
 
-    assert len(entries) == 17
+    assert len(entries) == 19
     assert set(by_id) == {
         "entry_northeast_blind_peak_pdf",
         "entry_duan_plain_mingxue_outline_pdf",
@@ -414,6 +414,8 @@ def test_load_source_library_entries_loads_current_registered_sources():
         "entry_bazi_general_lecture_textbook_pdf",
         "entry_bazi_general_beichen_intro_pdf",
         "entry_bazi_general_ziping_orthodox_pair_pdf",
+        "entry_bazi_general_ditiansui_selected_pdf",
+        "entry_bazi_general_qiongtong_selected_pdf",
         "entry_markdown_source_batch_001",
         "entry_markdown_source_batch_002_core",
         "entry_markdown_source_batch_004",
@@ -439,6 +441,30 @@ def test_load_source_library_entries_loads_current_registered_sources():
     )
     assert by_id["entry_bazi_general_ziping_orthodox_pair_pdf"].local_reference == (
         "子平命理正宗电子版上.pdf; 子平命理正宗电子版下.pdf"
+    )
+    assert by_id["entry_bazi_general_ditiansui_selected_pdf"].material_id == (
+        "material_bazi_general_ditiansui_selected_pdf"
+    )
+    assert by_id["entry_bazi_general_ditiansui_selected_pdf"].local_reference == (
+        "滴天髓.pdf"
+    )
+    assert by_id["entry_bazi_general_ditiansui_selected_pdf"].readiness_status == (
+        "review_completed"
+    )
+    assert by_id["entry_bazi_general_ditiansui_selected_pdf"].next_action == (
+        "no_action"
+    )
+    assert by_id["entry_bazi_general_qiongtong_selected_pdf"].material_id == (
+        "material_bazi_general_qiongtong_selected_pdf"
+    )
+    assert by_id["entry_bazi_general_qiongtong_selected_pdf"].local_reference == (
+        "穷通宝鉴/窮通寶鑒.pdf"
+    )
+    assert by_id["entry_bazi_general_qiongtong_selected_pdf"].readiness_status == (
+        "review_completed"
+    )
+    assert by_id["entry_bazi_general_qiongtong_selected_pdf"].next_action == (
+        "no_action"
     )
 
 
@@ -485,8 +511,6 @@ def test_bazi_general_registration_does_not_duplicate_gated_identity_records():
     for gated_fragment in (
         "youran",
         "tianma",
-        "ditiansui",
-        "qiongtong",
         "huntian",
     ):
         assert not any(
@@ -623,10 +647,16 @@ def test_load_source_priority_assessments_loads_default_assessments():
     assessments = source_library.load_source_priority_assessments()
     by_id = {assessment.assessment_id: assessment for assessment in assessments}
 
-    assert len(assessments) == 15
+    assert len(assessments) == 17
     assert "priority_blind_life_manual_001" in by_id
     assert "priority_bazi_general_lecture_textbook_001" in by_id
     assert "priority_bazi_general_ziping_orthodox_pair_001" in by_id
+    assert by_id["priority_bazi_general_ditiansui_selected_001"].entry_id == (
+        "entry_bazi_general_ditiansui_selected_pdf"
+    )
+    assert by_id["priority_bazi_general_qiongtong_selected_001"].entry_id == (
+        "entry_bazi_general_qiongtong_selected_pdf"
+    )
     assert by_id["priority_blind_life_manual_001"].entry_id == (
         "entry_blind_life_manual_pdf"
     )

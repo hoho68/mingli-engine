@@ -42,14 +42,14 @@ Related maintainer references:
 
 ## Current Computed Snapshot
 
-Computed with `build_intake_progress_report()` after Markdown Batch 002
-extension promotion:
+Computed with `build_intake_progress_report()` after the selected Bazi general
+variant registration-prep promotion:
 
 - Source material preparation: `partially_reviewed=11`, `not_started=1`,
-  `reviewed=5`.
-- Candidate status: `promoted=39`, `rejected=2`, `blocked=1`.
-- Risk tiers: `sensitive=27`, `ordinary=13`, `high_risk=2`.
-- Rule families: `pattern_strength=11`, `useful_god_candidate=7`,
+  `reviewed=7`.
+- Candidate status: `promoted=41`, `rejected=2`, `blocked=1`.
+- Risk tiers: `sensitive=27`, `ordinary=15`, `high_risk=2`.
+- Rule families: `pattern_strength=12`, `useful_god_candidate=8`,
   `blind_image_method=5`, `branch_interaction=6`, `luck_cycle=5`,
   `ten_god_relation=4`, `high_risk_signal=2`,
   `five_element_balance=1`, and `remedy_boundary=1`.
@@ -63,10 +63,11 @@ extension promotion:
 - Pending review: none.
 - Returned for revision: none.
 - Approved-not-promoted: none.
-- Promoted: 39 candidates, including the original 017 applied candidates,
+- Promoted: 41 candidates, including the original 017 applied candidates,
   markdown source batches 001/002/004/005, knowledge skeleton candidates,
   Bazi general source-preparation candidates, the Markdown Batch 002 extension
-  candidates, and
+  candidates, selected Bazi general variant candidates for `滴天髓.pdf` and
+  `穷通宝鉴/窮通寶鑒.pdf`, and
   `candidate_blind_life_manual_gap_001` as boundary-only high-risk evidence.
 - Rejected or blocked audit records:
   `candidate_mingxue_golden_voice_scope_001`,

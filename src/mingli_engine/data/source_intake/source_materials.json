@@ -202,5 +202,29 @@
     "scope_notes": "Preparation-reading completed with a bounded page-level learning point and candidate.",
     "rights_notes": "External PDF; store concise paraphrases only.",
     "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_ditiansui_selected_pdf",
+    "title": "Ditiansui Selected Base",
+    "material_type": "pdf",
+    "file_label": "滴天髓.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_ditiansui_selected_pdf",
+    "scope_notes": "Selected-variant preparation completed with a weak page anchor and bounded candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_qiongtong_selected_pdf",
+    "title": "Qiongtong Baojian Selected Standard",
+    "material_type": "pdf",
+    "file_label": "穷通宝鉴/窮通寶鑒.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_qiongtong_selected_pdf",
+    "scope_notes": "Selected-variant preparation completed with a weak page anchor and bounded candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
   }
 ]

@@ -265,5 +265,38 @@
     "rationale": "Liang Xiangrun advanced series provides strongest use-god and branch-interaction material; boundary sources require conditional rewrite.",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-23"
+  },
+  {
+    "assessment_id": "priority_bazi_general_ditiansui_selected_001",
+    "entry_id": "entry_bazi_general_ditiansui_selected_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Selected Ditiansui local reference broadens classical pattern-strength comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_qiongtong_selected_001",
+    "entry_id": "entry_bazi_general_qiongtong_selected_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Selected Qiongtong local reference broadens classical seasonal useful-god comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
   }
 ]

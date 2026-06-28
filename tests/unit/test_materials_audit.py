@@ -1678,7 +1678,7 @@ def test_audit_progress_summary_includes_next_five_queue_items_and_backlog_count
         "queue_markdown_source_batch_004_prepare",
         "queue_duan_plain_mingxue_outline_extract",
     ]
-    assert summary.extraction_ready_count == 12
+    assert summary.extraction_ready_count == 14
     assert summary.preparation_backlog_count == 0
     assert summary.registration_backlog_count == 0
     assert summary.risk_review_backlog_count == 5
@@ -1719,8 +1719,8 @@ def test_materials_audit_queue_refresh_excludes_covered_016_queue_items():
 
     assert refresh.refresh_id == "015-materials-audit-next-action-queue-refresh"
     assert refresh.refresh_status == "covered_or_completed_queue_exhausted"
-    assert refresh.queue_item_count == 20
-    assert refresh.covered_queue_item_count == 19
+    assert refresh.queue_item_count == 22
+    assert refresh.covered_queue_item_count == 21
     assert refresh.locally_completed_queue_item_ids == [
         "queue_raw_text_materials_folder_triage",
     ]
@@ -1751,8 +1751,8 @@ def test_materials_audit_queue_refresh_markdown_and_docs_are_in_sync():
     for marker in (
         "015 Queue Refresh",
         "`queue-refresh-status=covered_or_completed_queue_exhausted`",
-        "`015-queue-items=20`",
-        "`016-covered-queue-items=19`",
+        "`015-queue-items=22`",
+        "`016-covered-queue-items=21`",
         "`015-local-completed-queue-items=1`",
         "`uncovered-queue-items=0`",
         "`refreshed-next-action-ids=0`",
@@ -2566,7 +2566,7 @@ def test_raw_text_source_registration_summary_counts_registered_bazi_general_sou
         "prepared_entries_registered": "passed",
         "registered_entries_match_prep_metadata": "passed",
         "skipped_existing_batch_overlap_not_duplicated": "passed",
-        "variant_choice_ids_not_registered": "passed",
+        "variant_choice_boundary_respected": "passed",
         "deferred_large_source_not_registered": "passed",
         "raw_materials_not_mutated": "passed",
         "013_012_not_mutated": "passed",
@@ -2621,7 +2621,7 @@ def test_bazi_general_source_preparation_reading_summary_closes_three_source_cha
         "013_candidates_reviewed_promoted": "passed",
         "012_formal_evidence_linked": "passed",
         "skipped_existing_batch_overlap_not_duplicated": "passed",
-        "variant_choice_ids_not_mutated": "passed",
+        "variant_choice_boundary_respected": "passed",
         "deferred_large_source_not_mutated": "passed",
         "raw_materials_not_mutated": "passed",
     }
@@ -2807,6 +2807,78 @@ def test_bazi_general_variant_deferred_review_markdown_and_docs_are_in_sync():
         assert marker in markdown
         assert marker in materials_doc
         assert marker in handoff
+
+
+def test_bazi_general_selected_variant_registration_chain_is_completed():
+    records = materials_audit.load_material_audit_records()
+    representations = materials_audit.load_material_representations()
+    alignments = materials_audit.load_source_alignment_findings()
+    readiness_findings = materials_audit.load_preparation_readiness_findings()
+    queue_items = materials_audit.load_extraction_queue_items()
+
+    records_by_id = {record.audit_id: record for record in records}
+    representations_by_id = {
+        representation.representation_id: representation
+        for representation in representations
+    }
+    alignments_by_id = {alignment.alignment_id: alignment for alignment in alignments}
+    readiness_by_id = {
+        readiness.readiness_id: readiness for readiness in readiness_findings
+    }
+    queue_by_id = {item.queue_item_id: item for item in queue_items}
+
+    expected = {
+        "audit_bazi_general_ditiansui_selected_pdf": (
+            "entry_bazi_general_ditiansui_selected_pdf",
+            "material_bazi_general_ditiansui_selected_pdf",
+            "滴天髓.pdf",
+            "pattern_strength",
+            "queue_bazi_general_ditiansui_pattern_strength_extract",
+        ),
+        "audit_bazi_general_qiongtong_selected_pdf": (
+            "entry_bazi_general_qiongtong_selected_pdf",
+            "material_bazi_general_qiongtong_selected_pdf",
+            "穷通宝鉴/窮通寶鑒.pdf",
+            "useful_god_candidate",
+            "queue_bazi_general_qiongtong_useful_god_extract",
+        ),
+    }
+
+    for audit_id, (
+        entry_id,
+        material_id,
+        local_reference,
+        rule_family,
+        queue_id,
+    ) in expected.items():
+        record = records_by_id[audit_id]
+        assert record.source_library_entry_id == entry_id
+        assert record.source_boundary == "external_untracked"
+        assert record.preparation_state == "ready_for_extraction_review"
+        assert record.risk_tier == "ordinary"
+        assert rule_family in record.rule_families
+
+        representation = representations_by_id[f"repr_{audit_id.removeprefix('audit_')}"]
+        assert representation.audit_id == audit_id
+        assert representation.local_reference == local_reference
+        assert representation.tracking_status == "external_untracked"
+
+        alignment = alignments_by_id[f"align_{audit_id.removeprefix('audit_')}"]
+        assert alignment.audit_id == audit_id
+        assert alignment.source_library_entry_id == entry_id
+        assert alignment.source_material_id == material_id
+
+        readiness = readiness_by_id[f"ready_{audit_id.removeprefix('audit_')}"]
+        assert readiness.audit_id == audit_id
+        assert readiness.readiness_state == "ready_for_extraction_review"
+        assert readiness.source_quality == "weak"
+        assert readiness.risk_boundary == "ordinary"
+
+        queue_item = queue_by_id[queue_id]
+        assert queue_item.audit_id == audit_id
+        assert queue_item.queue_type == "extraction_ready"
+        assert queue_item.status == "completed"
+        assert queue_item.target_rule_families == [rule_family]
 
 
 def test_raw_text_source_registration_markdown_and_docs_are_in_sync():

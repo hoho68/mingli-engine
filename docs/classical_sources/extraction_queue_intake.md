@@ -52,6 +52,10 @@ Current packages:
 - `package_next_candidates_004` snapshots
   `queue_markdown_source_batch_005_risk_review` as completed
   prerequisite-only risk-review work. It has no selected extraction tasks.
+- `package_bazi_general_source_preparation_reading_001` and
+  `package_bazi_general_selected_variant_preparation_reading_001` preserve the
+  completed Bazi general preparation-reading and selected-variant
+  registration-prep passes.
 
 ## Extraction Task Boundary
 
@@ -86,6 +90,16 @@ Current US1 extraction tasks:
   `audit_fortune_reading_hongfu_qitian`,
   `entry_fortune_reading_hongfu_qitian_pdf`, and
   `material_fortune_reading_hongfu_qitian_pdf`.
+- `task_bazi_general_ditiansui_pattern_strength_001` links
+  `queue_bazi_general_ditiansui_pattern_strength_extract`,
+  `audit_bazi_general_ditiansui_selected_pdf`,
+  `entry_bazi_general_ditiansui_selected_pdf`, and
+  `material_bazi_general_ditiansui_selected_pdf`.
+- `task_bazi_general_qiongtong_useful_god_001` links
+  `queue_bazi_general_qiongtong_useful_god_extract`,
+  `audit_bazi_general_qiongtong_selected_pdf`,
+  `entry_bazi_general_qiongtong_selected_pdf`, and
+  `material_bazi_general_qiongtong_selected_pdf`.
 
 Task loading validates package membership, 015 queue eligibility, audit-record
 identity, readiness findings, source-library alignment, source-material links,
@@ -115,6 +129,12 @@ Current US2 draft slots:
 - `slot_hongfu_remedy_boundary_001` belongs to
   `task_fortune_reading_hongfu_qitian_extract_001` and targets
   `remedy_boundary`.
+- `slot_bazi_general_ditiansui_pattern_strength_001` belongs to
+  `task_bazi_general_ditiansui_pattern_strength_001` and targets
+  `pattern_strength`.
+- `slot_bazi_general_qiongtong_useful_god_001` belongs to
+  `task_bazi_general_qiongtong_useful_god_001` and targets
+  `useful_god_candidate`.
 
 Draft slots are only placeholders. They do not store source passages,
 extracted meanings, review decisions, approval status, promotion status, or
@@ -191,8 +211,10 @@ approve evidence, promote evidence, or change formal report evidence counts.
 
 US1 seeds the initial package and two extraction tasks. The completed
 incremental packages add Duan Plain Mingxue Outline, Mingxue Golden Voice,
-Fortune Reading Hongfu Qitian, three Markdown batch tasks, and six knowledge
-skeleton tasks as ready learning inputs. US2 now has eight draft slots for
+Fortune Reading Hongfu Qitian, three Markdown batch tasks, six knowledge
+skeleton tasks, three Bazi general preparation-reading tasks, and two selected
+Bazi general variant tasks as ready or completed learning inputs. US2 now has
+thirteen draft slots for
 future manual candidate creation. US3 and the current queue continuation track
 seven prerequisite backlog records, including four completed risk-review
 records, overlap warning visibility, and package progress counts while keeping

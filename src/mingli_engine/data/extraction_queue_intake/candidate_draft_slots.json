@@ -204,5 +204,41 @@
       "Do not use source wording as deterministic verdict."
     ],
     "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_ditiansui_pattern_strength_001",
+    "task_id": "task_bazi_general_ditiansui_pattern_strength_001",
+    "intended_candidate_label": "Ditiansui selected variant pattern-strength comparison seed",
+    "target_rule_family": "pattern_strength",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and school-dependent.",
+      "Do not use source wording as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_qiongtong_useful_god_001",
+    "task_id": "task_bazi_general_qiongtong_useful_god_001",
+    "intended_candidate_label": "Qiongtong selected variant useful-god comparison seed",
+    "target_rule_family": "useful_god_candidate",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and seasonal-system dependent.",
+      "Do not use source wording as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
   }
 ]

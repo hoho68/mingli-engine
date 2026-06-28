@@ -179,8 +179,8 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.materials_audit impo
 
 Expected computed summary:
 
-- 19 audited material groups and 30 material representations.
-- Queue counts: `extraction_ready=9`, `risk_review_backlog=5`, and
+- 24 audited material groups and 35 material representations.
+- Queue counts: `extraction_ready=14`, `risk_review_backlog=5`, and
   `blocked_backlog=3`.
 - Backlog counters: `registration_backlog_count=0`,
   `risk_review_backlog_count=5`, `preparation_backlog_count=0`,
@@ -202,8 +202,8 @@ the newly registered raw text corpus triage backlog, and the refreshed queue
 excludes queue ids already covered by 016/017.
 
 - `queue-refresh-status=covered_or_completed_queue_exhausted`
-- `015-queue-items=20`
-- `016-covered-queue-items=19`
+- `015-queue-items=22`
+- `016-covered-queue-items=21`
 - `015-local-completed-queue-items=1`
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
@@ -530,7 +530,7 @@ Boundary checks:
 - `prepared_entries_registered`: `passed`
 - `registered_entries_match_prep_metadata`: `passed`
 - `skipped_existing_batch_overlap_not_duplicated`: `passed`
-- `variant_choice_ids_not_registered`: `passed`
+- `variant_choice_boundary_respected`: `passed`
 - `deferred_large_source_not_registered`: `passed`
 - `raw_materials_not_mutated`: `passed`
 - `013_012_not_mutated`: `passed`
@@ -539,7 +539,8 @@ Guardrails:
 
 - Only source-library metadata registration is authorized in this stage.
 - Existing Markdown Batch 001 overlaps stay represented by their existing source-library entry.
-- Variant sets and the deferred large source remain outside registration.
+- Variant sets require separate selected-variant authorization before registration.
+- The deferred large source remains outside registration.
 - Reading, extraction, 013 candidate intake, and 012 evidence changes remain blocked.
 
 ## 015 Bazi General Source Preparation Reading
@@ -595,7 +596,7 @@ Boundary checks:
 - `013_candidates_reviewed_promoted`: `passed`
 - `012_formal_evidence_linked`: `passed`
 - `skipped_existing_batch_overlap_not_duplicated`: `passed`
-- `variant_choice_ids_not_mutated`: `passed`
+- `variant_choice_boundary_respected`: `passed`
 - `deferred_large_source_not_mutated`: `passed`
 - `raw_materials_not_mutated`: `passed`
 
@@ -604,7 +605,8 @@ Guardrails:
 - Only concise derived learning and evidence metadata is stored.
 - Full PDF conversions and rendered page images remain temporary artifacts.
 - Existing Batch 001 overlaps are not duplicated.
-- Ditiansui, Qiongtong, and Huntian Baolan remain outside this stage.
+- Ditiansui and Qiongtong are handled by the selected-variant registration-prep
+  stage; Huntian Baolan remains deferred.
 
 The next bounded work surface is
 `015-bazi-general-variant-choice-and-deferred-review`.
@@ -667,6 +669,48 @@ Guardrails:
 
 The next bounded work surface is
 `015-bazi-general-selected-variant-registration-prep`.
+
+## 015 Bazi General Selected Variant Registration Prep
+
+The 2026-06-28 selected-variant registration-prep checkpoint registered the
+canonical Ditiansui and Qiongtong local references and advanced their weak
+locator-backed metadata through 016, 017, 013, and 012 under explicit user
+authorization. It does not open, move, convert, or rewrite the external PDF
+files.
+
+- `selected-variant-registration-status=completed`
+- `selected-variant-source-entries=2`
+- `selected-variant-material-audit-records=2`
+- `selected-variant-extraction-tasks=2`
+- `selected-variant-learning-notes=2`
+- `selected-variant-candidate-extracts=2`
+- `selected-variant-formal-evidence-units=2`
+- `source-library-mutation-authorized=true`
+- `downstream-mutation-authorized=true`
+- `next-material-entry=015-materials-audit-next-action-queue`
+
+Selected source-library entry ids:
+
+- `entry_bazi_general_ditiansui_selected_pdf`: `滴天髓.pdf`
+- `entry_bazi_general_qiongtong_selected_pdf`: `穷通宝鉴/窮通寶鑒.pdf`
+
+Promoted candidate ids:
+
+- `candidate_bazi_general_ditiansui_pattern_strength_001`
+- `candidate_bazi_general_qiongtong_useful_god_001`
+
+Formal evidence ids:
+
+- `bazi_general_ditiansui_pattern_strength_001`
+- `bazi_general_qiongtong_useful_god_001`
+
+Guardrails:
+
+- These are weak selected-variant source-preparation anchors, not direct
+  transcriptions.
+- No long source passages are tracked.
+- Later page-level transcription is required before exact classical wording or
+  quotation.
 
 ## Raw-File Boundary
 

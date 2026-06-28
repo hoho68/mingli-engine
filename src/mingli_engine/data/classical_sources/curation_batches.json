@@ -203,5 +203,19 @@
     "unresolved_issues": [
       "Narrow page or quote-level Blind Life Manual evidence remains unapproved until separate locator review."
     ]
+  },
+  {
+    "batch_id": "batch_bazi_general_selected_variant_001",
+    "source_ids": [
+      "source_bazi_general_ditiansui_selected_pdf",
+      "source_bazi_general_qiongtong_selected_pdf"
+    ],
+    "evidence_ids": [
+      "bazi_general_ditiansui_pattern_strength_001",
+      "bazi_general_qiongtong_useful_god_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Reviewed two selected-variant Bazi general weak locator evidence units; no source passages are tracked.",
+    "unresolved_issues": []
   }
 ]

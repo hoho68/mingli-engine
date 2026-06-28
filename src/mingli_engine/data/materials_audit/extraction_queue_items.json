@@ -505,5 +505,49 @@
     "status": "completed",
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28"
+  },
+  {
+    "queue_item_id": "queue_bazi_general_ditiansui_pattern_strength_extract",
+    "audit_id": "audit_bazi_general_ditiansui_selected_pdf",
+    "queue_type": "extraction_ready",
+    "priority_level": "high",
+    "priority_rationale": "Selected Ditiansui canonical PDF can seed weak pattern-strength comparison metadata pending page transcription.",
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "pre_extraction_checks": [
+      "confirm selected local reference remains canonical",
+      "store concise paraphrase only",
+      "mark current source quality as weak until page transcription"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
+    "status": "completed",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "queue_item_id": "queue_bazi_general_qiongtong_useful_god_extract",
+    "audit_id": "audit_bazi_general_qiongtong_selected_pdf",
+    "queue_type": "extraction_ready",
+    "priority_level": "high",
+    "priority_rationale": "Selected Qiongtong canonical PDF can seed weak useful-god comparison metadata pending page transcription.",
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "pre_extraction_checks": [
+      "confirm selected local reference remains canonical",
+      "store concise paraphrase only",
+      "mark current source quality as weak until page transcription"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
+    "status": "completed",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
   }
 ]

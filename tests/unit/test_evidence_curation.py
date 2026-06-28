@@ -196,8 +196,12 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
         "batch002_useful_god_types_001",
         "batch002_day_master_strength_basis_001",
     }
+    expected_selected_variant_ids = {
+        "bazi_general_ditiansui_pattern_strength_001",
+        "bazi_general_qiongtong_useful_god_001",
+    }
 
-    assert report.approved_evidence_count == 99
+    assert report.approved_evidence_count == 101
     assert report.open_conflicts == ["conflict_high_risk_scope_001"]
     assert set(report.sources_with_gaps) == {
         "blind_life_manual",
@@ -226,6 +230,13 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
         assert unit.source_id == "markdown_source_batch_002_core"
         assert unit.curation_batch_id == "batch_markdown_batch_002_extension_001"
         assert unit.source_ref.startswith("review-note:Markdown/source_batch_002_cleaned/")
+    assert expected_selected_variant_ids <= set(evidence_by_id)
+    for evidence_id in expected_selected_variant_ids:
+        unit = evidence_by_id[evidence_id]
+        assert unit.curation_batch_id == "batch_bazi_general_selected_variant_001"
+        assert unit.source_ref.startswith("page:")
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
     assert validate_curation_quality(sources, evidence_units, conflicts) == []
 
 

@@ -645,5 +645,37 @@
     ],
     "candidate_readiness": "ready",
     "candidate_decision_id": "decision_bazi_general_ziping_useful_god_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_ditiansui_pattern_strength_001",
+    "note_id": "note_bazi_general_ditiansui_pattern_strength_001",
+    "point_label": "Ditiansui selected variant pattern-strength seed",
+    "source_locator": "page:滴天髓.pdf#p1",
+    "summary": "Selected Ditiansui base PDF is registered as a classical pattern-strength comparison source; use as a weak preparation seed until page-level transcription is completed.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact classical wording.",
+      "Use only as conditional comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_ditiansui_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_qiongtong_useful_god_001",
+    "note_id": "note_bazi_general_qiongtong_useful_god_001",
+    "point_label": "Qiongtong selected variant useful-god seed",
+    "source_locator": "page:穷通宝鉴/窮通寶鑒.pdf#p1",
+    "summary": "Selected Qiongtong Baojian PDF is registered as a classical seasonal useful-god comparison source; use as a weak preparation seed until page review is completed.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact classical wording.",
+      "Different seasonal use-god systems may classify the same relation differently."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_qiongtong_useful_god_001"
   }
 ]

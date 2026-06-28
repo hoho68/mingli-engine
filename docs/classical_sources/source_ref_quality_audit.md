@@ -1,16 +1,16 @@
 # Evidence Source Reference Quality Audit Report
 
 Generated: automatic analysis
-Audit scope: 99 evidence units
+Audit scope: 101 evidence units
 
 ## Precision Summary
 
 | Precision Level | Count | Share |
 |-----------------|-------|-------|
-| REVIEW_NOTE_SOURCE_WINDOW | 58 | 58.6% |
-| MARKDOWN_SOURCE_LINE | 18 | 18.2% |
-| REVIEW_NOTE_KS_PATH | 11 | 11.1% |
-| PAGE_EXACT | 12 | 12.1% |
+| REVIEW_NOTE_SOURCE_WINDOW | 58 | 57.4% |
+| MARKDOWN_SOURCE_LINE | 18 | 17.8% |
+| REVIEW_NOTE_KS_PATH | 11 | 10.9% |
+| PAGE_EXACT | 14 | 13.9% |
 
 ## Source-Window Locator Detail
 
@@ -81,13 +81,13 @@ Prior improvements are preserved:
 
 ## Priority Groups
 
-### Current Goal Progress (99 items)
+### Current Goal Progress (101 items)
 - REVIEW_NOTE_SOURCE_WINDOW: 58 items now point to source-window sections with source locators.
 - PAGE_LOCATOR: 44 source-window items now have page-level locators.
 - CHAPTER_LOCATOR: 12 source-window items remain chapter-level with explicit blocker notes, manual-review notes, and learning-closure notes.
 - MARKDOWN_SOURCE_LINE: 18 items point to cleaned Markdown files and line numbers.
 - REVIEW_NOTE_KS_PATH: 11 items point to knowledge-skeleton files.
-- PAGE_EXACT: 12 items already have exact page references.
+- PAGE_EXACT: 14 items already have exact page references.
 
 ### Optional Future Precision Work
 - For retained chapter source windows, learning closure is complete; targeted OCR/manual transcription is only needed before exact quotation or future promotion.
@@ -159,6 +159,8 @@ Prior improvements are preserved:
 | life_death_branch_interaction_001 | 高风险地支互动 | branch_interaction | 传统高风险材料 | batch_012_taxonomy_001 | `page:3; heading:地支合会灾咎` |  | PAGE_EXACT | no change needed |
 | life_death_remedy_boundary_001 | 解灾边界 | remedy_boundary | 传统高风险材料 | batch_012_taxonomy_001 | `page:2; heading:解关口秘法` |  | PAGE_EXACT | no change needed |
 | life_death_remedy_boundary_002 | 高风险行动边界 | remedy_boundary | 传统高风险材料 | batch_012_taxonomy_001 | `page:11; heading:实践应用` |  | PAGE_EXACT | no change needed |
+| bazi_general_ditiansui_pattern_strength_001 | Ditiansui selected variant source entry | pattern_strength | Ditiansui classical reference | batch_bazi_general_selected_variant_001 | `page:滴天髓.pdf#p1` |  | PAGE_EXACT | weak selected-variant anchor added |
+| bazi_general_qiongtong_useful_god_001 | Qiongtong selected variant source entry | useful_god_candidate | Qiongtong Baojian classical reference | batch_bazi_general_selected_variant_001 | `page:穷通宝鉴/窮通寶鑒.pdf#p1` |  | PAGE_EXACT | weak selected-variant anchor added |
 | life_death_book_boundary_signal_001 | 生死高风险边界 | high_risk_signal | 传统高风险材料 | batch_012_taxonomy_001 | `review-note:life_death_book_100_pages.md#source-window-risk-boundary` | `Markdown/2800.《命理生死之书》100页.md#L157` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | northeast_blind_image_007 | 象法条件信号 | blind_image_method | 东北盲派 | batch_012_taxonomy_001 | `review-note:northeast_blind_peak.md#source-window-blind-image-method` | `page:2; source=northeast_blind_peak_pdf; heading:eight-method-rules` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | duan_ten_god_relation_004 | 十神关系分类 | ten_god_relation | 段氏 | batch_012_taxonomy_001 | `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relation` | `page:66; source=duan_plain_mingxue_outline_pdf; heading:ten-god-relation-start` | REVIEW_NOTE_SOURCE_WINDOW | improved |

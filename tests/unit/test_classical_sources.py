@@ -32,6 +32,11 @@ EXPECTED_BAZI_GENERAL_SOURCE_FILES = {
     ),
 }
 
+EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES = {
+    "source_bazi_general_ditiansui_selected_pdf": "滴天髓.pdf",
+    "source_bazi_general_qiongtong_selected_pdf": "穷通宝鉴/窮通寶鑒.pdf",
+}
+
 PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS = {
     "batch001_pattern_strength_001",
     "batch001_ten_god_relation_001",
@@ -225,9 +230,11 @@ def test_source_registry_includes_all_initial_pdfs():
     sources = load_classical_sources()
     by_id = {source.source_id: source for source in sources}
 
-    assert len(sources) == 17
+    assert len(sources) == 19
     assert set(by_id) == set(EXPECTED_INITIAL_SOURCE_FILES) | set(
         EXPECTED_BAZI_GENERAL_SOURCE_FILES
+    ) | set(
+        EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES
     ) | {
         "markdown_source_batch_001",
         "markdown_source_batch_002_core",
@@ -254,6 +261,13 @@ def test_source_registry_includes_all_initial_pdfs():
         }
         assert source.scope_notes
     for source_id, file_name in EXPECTED_BAZI_GENERAL_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
+        assert source.scope_notes
+    for source_id, file_name in EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES.items():
         source = by_id[source_id]
         assert source.file_name == file_name
         assert source.source_type == "pdf"
@@ -352,6 +366,44 @@ def test_bazi_general_source_preparation_reading_evidence_is_formalized():
     assert batch.unresolved_issues == []
 
 
+def test_bazi_general_selected_variant_evidence_is_formalized():
+    sources_by_id = {source.source_id: source for source in load_classical_sources()}
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+    batches_by_id = {batch.batch_id: batch for batch in load_curation_batches()}
+
+    expected_evidence = {
+        "bazi_general_ditiansui_pattern_strength_001": (
+            "source_bazi_general_ditiansui_selected_pdf",
+            "pattern_strength",
+        ),
+        "bazi_general_qiongtong_useful_god_001": (
+            "source_bazi_general_qiongtong_selected_pdf",
+            "useful_god_candidate",
+        ),
+    }
+    for evidence_id, (source_id, rule_family) in expected_evidence.items():
+        source = sources_by_id[source_id]
+        unit = evidence_by_id[evidence_id]
+
+        assert source.review_status == "approved"
+        assert unit.source_id == source_id
+        assert unit.source_ref.startswith("page:")
+        assert unit.rule_family == rule_family
+        assert unit.risk_tier == "ordinary"
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
+        assert unit.curation_batch_id == "batch_bazi_general_selected_variant_001"
+        assert len(unit.summary) <= 280
+        assert unit.applicability
+        assert unit.limitations
+
+    batch = batches_by_id["batch_bazi_general_selected_variant_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.source_ids == list(EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES)
+    assert batch.evidence_ids == list(expected_evidence)
+    assert batch.unresolved_issues == []
+
+
 def test_markdown_batch_002_extension_evidence_is_formalized():
     evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
     batches_by_id = {batch.batch_id: batch for batch in load_curation_batches()}
@@ -425,8 +477,9 @@ def test_source_ref_quality_audit_tracks_source_window_references():
 
     assert "REVIEW_NOTE_TOPIC" not in report
     assert "FILE_SECTION" not in report
-    assert "| REVIEW_NOTE_SOURCE_WINDOW | 58 | 58.6% |" in report
-    assert "| MARKDOWN_SOURCE_LINE | 18 | 18.2% |" in report
+    assert "| REVIEW_NOTE_SOURCE_WINDOW | 58 | 57.4% |" in report
+    assert "| MARKDOWN_SOURCE_LINE | 18 | 17.8% |" in report
+    assert "| PAGE_EXACT | 14 | 13.9% |" in report
     assert "| PAGE_LOCATOR | 44 |" in report
     assert "| CHAPTER_LOCATOR | 12 |" in report
     assert "| MARKDOWN_LINE_LOCATOR | 2 |" in report

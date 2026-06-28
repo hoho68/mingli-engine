@@ -2151,5 +2151,51 @@
     "conflict_ids": [
       "conflict_high_risk_scope_001"
     ]
+  },
+  {
+    "evidence_id": "bazi_general_ditiansui_pattern_strength_001",
+    "source_id": "source_bazi_general_ditiansui_selected_pdf",
+    "source_ref": "page:滴天髓.pdf#p1",
+    "theme": "pattern strength: Ditiansui selected variant source entry",
+    "rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "summary": "Selected Ditiansui base PDF is registered as a classical pattern-strength comparison source; use as a weak preparation seed until page-level transcription is completed.",
+    "applicability": [
+      "Ditiansui selected variant registration-prep locator",
+      "pattern_strength comparison seed"
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact classical wording.",
+      "Use only as conditional comparison context."
+    ],
+    "school": "Ditiansui classical reference",
+    "curation_batch_id": "batch_bazi_general_selected_variant_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
+  },
+  {
+    "evidence_id": "bazi_general_qiongtong_useful_god_001",
+    "source_id": "source_bazi_general_qiongtong_selected_pdf",
+    "source_ref": "page:穷通宝鉴/窮通寶鑒.pdf#p1",
+    "theme": "useful god candidate: Qiongtong selected variant source entry",
+    "rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "summary": "Selected Qiongtong Baojian PDF is registered as a classical seasonal useful-god comparison source; use as a weak preparation seed until page review is completed.",
+    "applicability": [
+      "Qiongtong Baojian selected variant registration-prep locator",
+      "useful_god_candidate comparison seed"
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact classical wording.",
+      "Different seasonal use-god systems may classify the same relation differently."
+    ],
+    "school": "Qiongtong Baojian classical reference",
+    "curation_batch_id": "batch_bazi_general_selected_variant_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
   }
 ]

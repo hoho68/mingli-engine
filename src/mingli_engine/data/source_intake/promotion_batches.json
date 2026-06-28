@@ -363,5 +363,19 @@
     "unresolved_issues": [
       "Only the boundary note is promoted; aphoristic source claims still require separate locator review before any narrower evidence."
     ]
+  },
+  {
+    "promotion_batch_id": "promotion_bazi_general_selected_variant_preparation_001",
+    "candidate_ids": [
+      "candidate_bazi_general_ditiansui_pattern_strength_001",
+      "candidate_bazi_general_qiongtong_useful_god_001"
+    ],
+    "target_evidence_ids": [
+      "bazi_general_ditiansui_pattern_strength_001",
+      "bazi_general_qiongtong_useful_god_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Reviewed two selected-variant Bazi general weak candidates for evidence linkage.",
+    "unresolved_issues": []
   }
 ]

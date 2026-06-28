@@ -403,5 +403,29 @@
     "status": "applied",
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_ditiansui_pattern_strength_001",
+    "learning_point_id": "lp_bazi_general_ditiansui_pattern_strength_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_ditiansui_selected_pdf",
+    "candidate_id": "candidate_bazi_general_ditiansui_pattern_strength_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized selected-variant registration-prep to create a bounded weak candidate from the Ditiansui source-preparation learning point.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_qiongtong_useful_god_001",
+    "learning_point_id": "lp_bazi_general_qiongtong_useful_god_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_qiongtong_selected_pdf",
+    "candidate_id": "candidate_bazi_general_qiongtong_useful_god_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized selected-variant registration-prep to create a bounded weak candidate from the Qiongtong source-preparation learning point.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
   }
 ]
