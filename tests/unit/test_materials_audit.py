@@ -530,6 +530,61 @@ def test_materials_audit_dataclasses_construct_with_defaults():
     assert identity_review_item.guardrails == []
     assert identity_review_summary.guardrails == []
 
+    registration_prep_item = models.RawTextSourceRegistrationPrepItem(
+        prep_id="bazi_general_registration_prep_test_source",
+        identity_review_id=identity_review_item.review_id,
+        source_selection_id=identity_review_item.source_selection_id,
+        cluster_id=identity_review_item.cluster_id,
+        triage_group_id="raw_text_triage_bazi_general",
+        source_root=triage_group.source_root,
+        registration_status="ready_for_source_registration",
+        proposed_entry_id="entry_bazi_general_test_source_pdf",
+        proposed_material_id="material_bazi_general_test_source_pdf",
+        proposed_title="Bazi General Test Source",
+        proposed_material_type="pdf",
+        proposed_local_references=["test.pdf"],
+        proposed_tracking_status="external_untracked",
+        proposed_readiness_status="needs_preparation",
+        proposed_priority_level="medium",
+        proposed_next_action="prepare_material",
+        risk_tier="ordinary",
+        topic_tags=["foundation"],
+        rule_families=["pattern_strength"],
+        source_quality_notes="Registration-prep metadata only.",
+        rights_notes="Do not copy long passages.",
+        source_library_overlap_policy="new_entry_allowed_after_user_approval",
+    )
+    registration_prep_summary = models.RawTextSourceRegistrationPrepSummary(
+        prep_id="015-bazi-general-registration-prep",
+        prep_status="registration_prep_completed",
+        triage_group_id="raw_text_triage_bazi_general",
+        source_root=triage_group.source_root,
+        registration_prep_item_count=1,
+        proposed_source_file_count=1,
+        skipped_existing_batch_overlap_count=0,
+        blocked_variant_choice_count=0,
+        deferred_large_source_count=0,
+        registration_status_counts={"ready_for_source_registration": 1},
+        proposed_readiness_counts={"needs_preparation": 1},
+        proposed_next_action_counts={"prepare_material": 1},
+        risk_tier_counts={"ordinary": 1},
+        target_rule_family_counts={"pattern_strength": 1},
+        proposed_entry_ids=[registration_prep_item.proposed_entry_id],
+        proposed_material_ids=[registration_prep_item.proposed_material_id],
+        registration_prep_item_ids=[registration_prep_item.prep_id],
+        skipped_existing_batch_overlap_ids=[],
+        blocked_variant_choice_ids=[],
+        deferred_item_ids=[],
+        source_library_mutation_authorized=False,
+        downstream_mutation_authorized=False,
+        next_material_entry="015-next-source-registration",
+        boundary_checks={"013_012_not_mutated": "passed"},
+    )
+
+    assert registration_prep_item.risk_notes == []
+    assert registration_prep_item.guardrails == []
+    assert registration_prep_summary.guardrails == []
+
 
 def test_read_json_list_reports_missing_invalid_and_non_array_payloads(tmp_path):
     with pytest.raises(materials_audit.MaterialsAuditError, match="missing data file"):
@@ -2273,6 +2328,131 @@ def test_raw_text_source_identity_review_markdown_and_docs_are_in_sync():
         "`deferred-large-source=1`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-bazi-general-registration-prep`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_source_registration_prep_items_load_bazi_general_sources():
+    items = materials_audit.load_raw_text_source_registration_prep_items()
+    items_by_id = {item.prep_id: item for item in items}
+
+    assert len(items) == 3
+    assert {item.triage_group_id for item in items} == {"raw_text_triage_bazi_general"}
+    assert {item.registration_status for item in items} == {
+        "ready_for_source_registration"
+    }
+    assert {item.proposed_readiness_status for item in items} == {"needs_preparation"}
+    assert {item.proposed_next_action for item in items} == {"prepare_material"}
+    assert {item.proposed_tracking_status for item in items} == {
+        "external_untracked"
+    }
+    assert {
+        item.identity_review_id for item in items
+    } == {
+        "bazi_general_identity_lecture_textbook",
+        "bazi_general_identity_beichen_intro",
+        "bazi_general_identity_ziping_orthodox_pair",
+    }
+    assert all(
+        path and not path.startswith("/")
+        for item in items
+        for path in item.proposed_local_references
+    )
+    assert items_by_id[
+        "bazi_general_registration_prep_ziping_orthodox_pair"
+    ].proposed_local_references == [
+        "子平命理正宗电子版上.pdf",
+        "子平命理正宗电子版下.pdf",
+    ]
+    assert items_by_id[
+        "bazi_general_registration_prep_lecture_textbook"
+    ].proposed_entry_id == "entry_bazi_general_lecture_textbook_pdf"
+
+
+def test_raw_text_source_registration_prep_summary_counts_bazi_general_sources():
+    summary = materials_audit.build_raw_text_source_registration_prep_summary()
+
+    assert summary.prep_id == "015-bazi-general-registration-prep"
+    assert summary.prep_status == "registration_prep_completed"
+    assert summary.triage_group_id == "raw_text_triage_bazi_general"
+    assert summary.registration_prep_item_count == 3
+    assert summary.proposed_source_file_count == 4
+    assert summary.skipped_existing_batch_overlap_count == 2
+    assert summary.blocked_variant_choice_count == 2
+    assert summary.deferred_large_source_count == 1
+    assert summary.registration_status_counts == {
+        "ready_for_source_registration": 3,
+    }
+    assert summary.proposed_readiness_counts == {"needs_preparation": 3}
+    assert summary.proposed_next_action_counts == {"prepare_material": 3}
+    assert summary.risk_tier_counts == {"ordinary": 3}
+    assert summary.target_rule_family_counts == {
+        "branch_interaction": 1,
+        "pattern_strength": 3,
+        "ten_god_relation": 1,
+        "useful_god_candidate": 2,
+    }
+    assert summary.proposed_entry_ids == [
+        "entry_bazi_general_lecture_textbook_pdf",
+        "entry_bazi_general_beichen_intro_pdf",
+        "entry_bazi_general_ziping_orthodox_pair_pdf",
+    ]
+    assert summary.registration_prep_item_ids == [
+        "bazi_general_registration_prep_lecture_textbook",
+        "bazi_general_registration_prep_beichen_intro",
+        "bazi_general_registration_prep_ziping_orthodox_pair",
+    ]
+    assert summary.skipped_existing_batch_overlap_ids == [
+        "bazi_general_identity_youran_notes",
+        "bazi_general_identity_tianma_notes",
+    ]
+    assert summary.blocked_variant_choice_ids == [
+        "bazi_general_identity_ditiansui_variant_set",
+        "bazi_general_identity_qiongtong_variant_set",
+    ]
+    assert summary.deferred_item_ids == [
+        "bazi_general_identity_huntian_baolan_ziping",
+    ]
+    assert summary.source_library_mutation_authorized is False
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == "015-bazi-general-source-registration"
+    assert summary.boundary_checks == {
+        "registration_prep_items_loaded": "passed",
+        "identity_review_items_loaded": "passed",
+        "identity_review_references_valid": "passed",
+        "proposed_entries_not_in_source_library": "passed",
+        "source_paths_are_relative": "passed",
+        "raw_materials_not_mutated": "passed",
+        "source_library_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+
+def test_raw_text_source_registration_prep_markdown_and_docs_are_in_sync():
+    summary = materials_audit.build_raw_text_source_registration_prep_summary()
+    markdown = materials_audit.render_raw_text_source_registration_prep_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Bazi General Registration Prep",
+        "`registration-prep-status=registration_prep_completed`",
+        "`registration-prep-items=3`",
+        "`proposed-source-files=4`",
+        "`skipped-existing-batch-overlap=2`",
+        "`blocked-variant-choice=2`",
+        "`deferred-large-source=1`",
+        "`source-library-mutation-authorized=false`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-bazi-general-source-registration`",
     ):
         assert marker in markdown
         assert marker in materials_doc

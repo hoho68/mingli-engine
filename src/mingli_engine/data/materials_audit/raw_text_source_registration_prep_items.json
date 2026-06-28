@@ -1,0 +1,131 @@
+[
+  {
+    "prep_id": "bazi_general_registration_prep_lecture_textbook",
+    "identity_review_id": "bazi_general_identity_lecture_textbook",
+    "source_selection_id": "bazi_general_foundation_lecture_textbook",
+    "cluster_id": "bazi_general_foundation_textbook_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "registration_status": "ready_for_source_registration",
+    "proposed_entry_id": "entry_bazi_general_lecture_textbook_pdf",
+    "proposed_material_id": "material_bazi_general_lecture_textbook_pdf",
+    "proposed_title": "Bazi General Lecture Textbook",
+    "proposed_material_type": "pdf",
+    "proposed_local_references": [
+      "八字命理讲义教材（299页）.pdf"
+    ],
+    "proposed_tracking_status": "external_untracked",
+    "proposed_readiness_status": "needs_preparation",
+    "proposed_priority_level": "high",
+    "proposed_next_action": "prepare_material",
+    "risk_tier": "ordinary",
+    "topic_tags": [
+      "foundation",
+      "textbook",
+      "pattern-strength",
+      "ten-god",
+      "useful-god"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "useful_god_candidate"
+    ],
+    "source_quality_notes": "Registration metadata prepared from inventory and identity-review labels only.",
+    "rights_notes": "Do not copy long passages; prepare text before extraction.",
+    "risk_notes": [],
+    "source_library_overlap_policy": "new_entry_allowed_after_user_approval",
+    "rationale": "Small foundation textbook file has no registered overlap and is suitable for source registration.",
+    "guardrails": [
+      "Do not open or parse the raw PDF in this registration-prep stage.",
+      "Actual source-library mutation is reserved for the next explicit registration step."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "prep_id": "bazi_general_registration_prep_beichen_intro",
+    "identity_review_id": "bazi_general_identity_beichen_intro",
+    "source_selection_id": "bazi_general_foundation_beichen_intro",
+    "cluster_id": "bazi_general_foundation_textbook_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "registration_status": "ready_for_source_registration",
+    "proposed_entry_id": "entry_bazi_general_beichen_intro_pdf",
+    "proposed_material_id": "material_bazi_general_beichen_intro_pdf",
+    "proposed_title": "Beichen Mingli Intro Han Yumo",
+    "proposed_material_type": "pdf",
+    "proposed_local_references": [
+      "北宸学派《命理入门》韩雨墨 258页.pdf"
+    ],
+    "proposed_tracking_status": "external_untracked",
+    "proposed_readiness_status": "needs_preparation",
+    "proposed_priority_level": "medium",
+    "proposed_next_action": "prepare_material",
+    "risk_tier": "ordinary",
+    "topic_tags": [
+      "foundation",
+      "school-intro",
+      "pattern-strength",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registration metadata prepared from school and intro title labels only.",
+    "rights_notes": "Do not copy long passages; prepare text before extraction.",
+    "risk_notes": [],
+    "source_library_overlap_policy": "new_entry_allowed_after_user_approval",
+    "rationale": "Introductory Beichen source can broaden school coverage after registration.",
+    "guardrails": [
+      "Do not infer school authority from the title label alone.",
+      "Actual source-library mutation is reserved for the next explicit registration step."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "prep_id": "bazi_general_registration_prep_ziping_orthodox_pair",
+    "identity_review_id": "bazi_general_identity_ziping_orthodox_pair",
+    "source_selection_id": "bazi_general_classical_ziping_orthodox_pair",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "registration_status": "ready_for_source_registration",
+    "proposed_entry_id": "entry_bazi_general_ziping_orthodox_pair_pdf",
+    "proposed_material_id": "material_bazi_general_ziping_orthodox_pair_pdf",
+    "proposed_title": "Ziping Mingli Zhengzong Upper Lower Volumes",
+    "proposed_material_type": "pdf",
+    "proposed_local_references": [
+      "子平命理正宗电子版上.pdf",
+      "子平命理正宗电子版下.pdf"
+    ],
+    "proposed_tracking_status": "external_untracked",
+    "proposed_readiness_status": "needs_preparation",
+    "proposed_priority_level": "high",
+    "proposed_next_action": "prepare_material",
+    "risk_tier": "ordinary",
+    "topic_tags": [
+      "classical-reference",
+      "ziping",
+      "pattern-strength",
+      "useful-god"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "source_quality_notes": "Registration metadata treats upper and lower PDFs as one paired source identity.",
+    "rights_notes": "Do not copy long passages; prepare text before extraction.",
+    "risk_notes": [],
+    "source_library_overlap_policy": "new_entry_allowed_after_user_approval",
+    "rationale": "Paired Ziping volumes are a compact classical registration target after identity review.",
+    "guardrails": [
+      "Keep the paired volumes together during source registration.",
+      "Actual source-library mutation is reserved for the next explicit registration step."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  }
+]

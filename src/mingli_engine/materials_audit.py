@@ -36,6 +36,8 @@ from mingli_engine.models import (
     RawTextClusterSourceSelectionSummary,
     RawTextMaterialTriageGroup,
     RawTextMaterialTriageSummary,
+    RawTextSourceRegistrationPrepItem,
+    RawTextSourceRegistrationPrepSummary,
     RawTextSourceIdentityReviewItem,
     RawTextSourceIdentityReviewSummary,
     RawTextSourceClusterSelectionItem,
@@ -44,7 +46,10 @@ from mingli_engine.models import (
     RawTextSourceSelectionSummary,
     RISK_TIERS,
     RULE_FAMILIES,
+    SOURCE_LIBRARY_MATERIAL_TYPES,
+    SOURCE_LIBRARY_NEXT_ACTIONS,
     SOURCE_LIBRARY_PRIORITY_LEVELS,
+    SOURCE_LIBRARY_READINESS_STATUSES,
     SourceAlignmentFinding,
 )
 
@@ -136,6 +141,11 @@ RAW_TEXT_SOURCE_IDENTITY_REVIEW_TRIAGE_GROUP_ID = "raw_text_triage_bazi_general"
 RAW_TEXT_SOURCE_IDENTITY_REVIEW_NEXT_MATERIAL_ENTRY = (
     "015-bazi-general-registration-prep"
 )
+RAW_TEXT_SOURCE_REGISTRATION_PREP_ID = "015-bazi-general-registration-prep"
+RAW_TEXT_SOURCE_REGISTRATION_PREP_TRIAGE_GROUP_ID = "raw_text_triage_bazi_general"
+RAW_TEXT_SOURCE_REGISTRATION_PREP_NEXT_MATERIAL_ENTRY = (
+    "015-bazi-general-source-registration"
+)
 RAW_TEXT_TRIAGE_STATUSES = frozenset(
     {
         "source_selection_ready",
@@ -195,6 +205,12 @@ RAW_TEXT_SOURCE_IDENTITY_REVIEW_REGISTRATION_READINESS = frozenset(
         "needs_variant_choice",
         "deferred",
     }
+)
+RAW_TEXT_SOURCE_REGISTRATION_PREP_STATUSES = frozenset(
+    {"ready_for_source_registration"}
+)
+RAW_TEXT_SOURCE_REGISTRATION_PREP_OVERLAP_POLICIES = frozenset(
+    {"new_entry_allowed_after_user_approval"}
 )
 
 
@@ -1521,6 +1537,189 @@ def load_raw_text_source_identity_review_items(
     return items
 
 
+def _raw_text_source_registration_prep_item_from_dict(
+    data: dict[str, Any],
+    identity_review_items_by_id: dict[str, RawTextSourceIdentityReviewItem],
+    source_selection_items_by_id: dict[str, RawTextClusterSourceSelectionItem],
+    source_entries_by_id: dict[str, source_library.SourceLibraryEntry],
+) -> RawTextSourceRegistrationPrepItem:
+    try:
+        item = RawTextSourceRegistrationPrepItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid raw text source registration prep item: {error}"
+        ) from error
+
+    owner_id = item.prep_id or "?"
+    for field_name in (
+        "prep_id",
+        "identity_review_id",
+        "source_selection_id",
+        "cluster_id",
+        "triage_group_id",
+        "source_root",
+        "registration_status",
+        "proposed_entry_id",
+        "proposed_material_id",
+        "proposed_title",
+        "proposed_material_type",
+        "proposed_tracking_status",
+        "proposed_readiness_status",
+        "proposed_priority_level",
+        "proposed_next_action",
+        "risk_tier",
+        "source_quality_notes",
+        "rights_notes",
+        "source_library_overlap_policy",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    identity_review_item = identity_review_items_by_id.get(item.identity_review_id)
+    if identity_review_item is None:
+        raise MaterialsAuditError(f"{owner_id} references unknown identity_review_id")
+    if identity_review_item.identity_status != "registration_prep_ready":
+        raise MaterialsAuditError(
+            f"{owner_id} must reference registration_prep_ready identity review"
+        )
+    if item.source_selection_id != identity_review_item.source_selection_id:
+        raise MaterialsAuditError(
+            f"{owner_id} source_selection_id does not match identity review"
+        )
+    if item.cluster_id != identity_review_item.cluster_id:
+        raise MaterialsAuditError(f"{owner_id} cluster_id does not match identity")
+    source_selection_item = source_selection_items_by_id.get(item.source_selection_id)
+    if source_selection_item is None:
+        raise MaterialsAuditError(
+            f"{owner_id} references unknown source_selection_id"
+        )
+    if item.triage_group_id != RAW_TEXT_SOURCE_REGISTRATION_PREP_TRIAGE_GROUP_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid triage_group_id")
+    if item.source_root != RAW_TEXT_TRIAGE_SOURCE_ROOT:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_root")
+    _validate_enum(
+        item.registration_status,
+        RAW_TEXT_SOURCE_REGISTRATION_PREP_STATUSES,
+        "registration_status",
+        owner_id,
+    )
+    _validate_enum(
+        item.proposed_material_type,
+        SOURCE_LIBRARY_MATERIAL_TYPES,
+        "proposed_material_type",
+        owner_id,
+    )
+    _validate_enum(
+        item.proposed_tracking_status,
+        MATERIAL_TRACKING_STATUSES,
+        "proposed_tracking_status",
+        owner_id,
+    )
+    _validate_enum(
+        item.proposed_readiness_status,
+        SOURCE_LIBRARY_READINESS_STATUSES,
+        "proposed_readiness_status",
+        owner_id,
+    )
+    _validate_enum(
+        item.proposed_priority_level,
+        SOURCE_LIBRARY_PRIORITY_LEVELS,
+        "proposed_priority_level",
+        owner_id,
+    )
+    _validate_enum(
+        item.proposed_next_action,
+        SOURCE_LIBRARY_NEXT_ACTIONS,
+        "proposed_next_action",
+        owner_id,
+    )
+    _validate_enum(item.risk_tier, RISK_TIERS, "risk_tier", owner_id)
+    _validate_enum(
+        item.source_library_overlap_policy,
+        RAW_TEXT_SOURCE_REGISTRATION_PREP_OVERLAP_POLICIES,
+        "source_library_overlap_policy",
+        owner_id,
+    )
+    for field_name in (
+        "proposed_local_references",
+        "topic_tags",
+        "rule_families",
+        "risk_notes",
+        "guardrails",
+    ):
+        _require_string_list(getattr(item, field_name), field_name, owner_id)
+    if not item.proposed_local_references:
+        raise MaterialsAuditError(f"{owner_id} requires proposed_local_references")
+    if not item.topic_tags:
+        raise MaterialsAuditError(f"{owner_id} requires topic_tags")
+    if not item.rule_families:
+        raise MaterialsAuditError(f"{owner_id} requires rule_families")
+    if not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires guardrails")
+    for local_reference in item.proposed_local_references:
+        if not _is_source_relative_path(local_reference):
+            raise MaterialsAuditError(f"{owner_id} has non-relative source path")
+        if local_reference not in source_selection_item.relative_paths:
+            raise MaterialsAuditError(
+                f"{owner_id} local reference not present in source selection"
+            )
+    for rule_family in item.rule_families:
+        if rule_family not in RULE_FAMILIES:
+            raise MaterialsAuditError(
+                f"{owner_id} has unsupported rule_family: {rule_family}"
+            )
+    if item.proposed_entry_id in source_entries_by_id:
+        raise MaterialsAuditError(
+            f"{owner_id} proposed_entry_id already exists in source library"
+        )
+    existing_material_ids = {
+        source_entry.material_id for source_entry in source_entries_by_id.values()
+    }
+    if item.proposed_material_id in existing_material_ids:
+        raise MaterialsAuditError(
+            f"{owner_id} proposed_material_id already exists in source library"
+        )
+    if item.proposed_readiness_status != "needs_preparation":
+        raise MaterialsAuditError(
+            f"{owner_id} registration prep must keep source in needs_preparation"
+        )
+    if item.proposed_next_action != "prepare_material":
+        raise MaterialsAuditError(
+            f"{owner_id} registration prep must prepare material next"
+        )
+
+    return item
+
+
+def load_raw_text_source_registration_prep_items(
+    data_dir: Path | str | None = None,
+) -> list[RawTextSourceRegistrationPrepItem]:
+    source_dir = _data_dir(data_dir)
+    identity_review_items_by_id = {
+        item.review_id: item for item in load_raw_text_source_identity_review_items(source_dir)
+    }
+    source_selection_items_by_id = {
+        item.selection_id: item
+        for item in load_raw_text_cluster_source_selection_items(source_dir)
+    }
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    items = [
+        _raw_text_source_registration_prep_item_from_dict(
+            item,
+            identity_review_items_by_id,
+            source_selection_items_by_id,
+            source_entries_by_id,
+        )
+        for item in _read_optional_json_list(
+            source_dir / "raw_text_source_registration_prep_items.json"
+        )
+    ]
+    _ensure_unique([item.prep_id for item in items], "prep_id")
+    _ensure_unique([item.identity_review_id for item in items], "identity_review_id")
+    _ensure_unique([item.proposed_entry_id for item in items], "proposed_entry_id")
+    _ensure_unique([item.proposed_material_id for item in items], "proposed_material_id")
+    return items
+
+
 def _count_values(values: list[str]) -> dict[str, int]:
     return dict(Counter(values))
 
@@ -1973,6 +2172,15 @@ def _count_source_identity_rule_families(
     counts: Counter[str] = Counter()
     for item in items:
         counts.update(item.target_rule_families)
+    return dict(sorted(counts.items()))
+
+
+def _count_registration_prep_rule_families(
+    items: list[RawTextSourceRegistrationPrepItem],
+) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    for item in items:
+        counts.update(item.rule_families)
     return dict(sorted(counts.items()))
 
 
@@ -2487,6 +2695,173 @@ def render_raw_text_source_identity_review_markdown(
     return "\n".join(lines) + "\n"
 
 
+def build_raw_text_source_registration_prep_summary(
+    data_dir: Path | str | None = None,
+) -> RawTextSourceRegistrationPrepSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_raw_text_source_registration_prep_items(source_dir)
+    identity_review_items = load_raw_text_source_identity_review_items(source_dir)
+    identity_review_items_by_id = {item.review_id: item for item in identity_review_items}
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    existing_material_ids = {
+        source_entry.material_id for source_entry in source_entries_by_id.values()
+    }
+    identity_review_references_valid = bool(items) and all(
+        item.identity_review_id in identity_review_items_by_id
+        and identity_review_items_by_id[item.identity_review_id].identity_status
+        == "registration_prep_ready"
+        for item in items
+    )
+    proposed_entries_not_in_source_library = bool(items) and all(
+        item.proposed_entry_id not in source_entries_by_id
+        and item.proposed_material_id not in existing_material_ids
+        for item in items
+    )
+    source_paths_are_relative = bool(items) and all(
+        _is_source_relative_path(path)
+        for item in items
+        for path in item.proposed_local_references
+    )
+    skipped_existing_batch_overlap_ids = [
+        item.review_id
+        for item in identity_review_items
+        if item.identity_status == "existing_batch_overlap"
+    ]
+    blocked_variant_choice_ids = [
+        item.review_id
+        for item in identity_review_items
+        if item.identity_status == "variant_choice_required"
+    ]
+    deferred_item_ids = [
+        item.review_id
+        for item in identity_review_items
+        if item.identity_status == "deferred_large_source"
+    ]
+    boundary_checks = {
+        "registration_prep_items_loaded": "passed" if items else "failed",
+        "identity_review_items_loaded": (
+            "passed" if identity_review_items else "failed"
+        ),
+        "identity_review_references_valid": (
+            "passed" if identity_review_references_valid else "failed"
+        ),
+        "proposed_entries_not_in_source_library": (
+            "passed" if proposed_entries_not_in_source_library else "failed"
+        ),
+        "source_paths_are_relative": (
+            "passed" if source_paths_are_relative else "failed"
+        ),
+        "raw_materials_not_mutated": "passed",
+        "source_library_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+    return RawTextSourceRegistrationPrepSummary(
+        prep_id=RAW_TEXT_SOURCE_REGISTRATION_PREP_ID,
+        prep_status=(
+            "registration_prep_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "registration_prep_needs_attention"
+        ),
+        triage_group_id=RAW_TEXT_SOURCE_REGISTRATION_PREP_TRIAGE_GROUP_ID,
+        source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
+        registration_prep_item_count=len(items),
+        proposed_source_file_count=sum(
+            len(item.proposed_local_references) for item in items
+        ),
+        skipped_existing_batch_overlap_count=len(skipped_existing_batch_overlap_ids),
+        blocked_variant_choice_count=len(blocked_variant_choice_ids),
+        deferred_large_source_count=len(deferred_item_ids),
+        registration_status_counts=_count_values(
+            [item.registration_status for item in items]
+        ),
+        proposed_readiness_counts=_count_values(
+            [item.proposed_readiness_status for item in items]
+        ),
+        proposed_next_action_counts=_count_values(
+            [item.proposed_next_action for item in items]
+        ),
+        risk_tier_counts=_count_values([item.risk_tier for item in items]),
+        target_rule_family_counts=_count_registration_prep_rule_families(items),
+        proposed_entry_ids=[item.proposed_entry_id for item in items],
+        proposed_material_ids=[item.proposed_material_id for item in items],
+        registration_prep_item_ids=[item.prep_id for item in items],
+        skipped_existing_batch_overlap_ids=skipped_existing_batch_overlap_ids,
+        blocked_variant_choice_ids=blocked_variant_choice_ids,
+        deferred_item_ids=deferred_item_ids,
+        source_library_mutation_authorized=False,
+        downstream_mutation_authorized=False,
+        next_material_entry=RAW_TEXT_SOURCE_REGISTRATION_PREP_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Registration prep proposes source-library metadata but does not mutate source-library records.",
+            "Existing Markdown Batch 001 overlaps are skipped to avoid duplicate registration.",
+            "Variant sets remain blocked until a separate variant-choice step selects one source identity.",
+            "Prepared registration metadata does not authorize reading, extraction, 013 candidate intake, or 012 evidence changes.",
+        ],
+    )
+
+
+def render_raw_text_source_registration_prep_markdown(
+    summary: RawTextSourceRegistrationPrepSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Bazi General Registration Prep",
+        "",
+        f"- Prep id: `{summary.prep_id}`",
+        f"- `registration-prep-status={summary.prep_status}`",
+        f"- `registration-prep-items={summary.registration_prep_item_count}`",
+        f"- `proposed-source-files={summary.proposed_source_file_count}`",
+        (
+            "- `skipped-existing-batch-overlap="
+            f"{summary.skipped_existing_batch_overlap_count}`"
+        ),
+        f"- `blocked-variant-choice={summary.blocked_variant_choice_count}`",
+        f"- `deferred-large-source={summary.deferred_large_source_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Proposed source-library entry ids:",
+    ]
+    lines.extend(f"- `{entry_id}`" for entry_id in summary.proposed_entry_ids)
+    lines.extend(["", "Registration-prep records:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.registration_prep_item_ids)
+    lines.extend(["", "Skipped existing-batch overlap ids:"])
+    lines.extend(
+        f"- `{item_id}`" for item_id in summary.skipped_existing_batch_overlap_ids
+    )
+    lines.extend(["", "Blocked variant-choice ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.blocked_variant_choice_ids)
+    lines.extend(["", "Deferred ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.deferred_item_ids)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def render_raw_text_source_selection_markdown(
     summary: RawTextSourceSelectionSummary,
 ) -> str:
@@ -2777,6 +3152,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_source_identity_review_items = (
             load_raw_text_source_identity_review_items(source_dir)
         )
+        raw_text_source_registration_prep_items = (
+            load_raw_text_source_registration_prep_items(source_dir)
+        )
     except MaterialsAuditError as error:
         return [str(error)]
 
@@ -2792,6 +3170,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_source_cluster_selection_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
+        raw_text_source_registration_prep_items,
     ):
         if not value:
             continue
@@ -2823,6 +3202,7 @@ def _iter_quality_text_fields(
     raw_text_source_cluster_selection_items: list[RawTextSourceClusterSelectionItem],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
+    raw_text_source_registration_prep_items: list[RawTextSourceRegistrationPrepItem],
 ) -> list[tuple[str, str, str]]:
     fields: list[tuple[str, str, str]] = []
     for record in records:
@@ -2947,6 +3327,28 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.review_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in raw_text_source_registration_prep_items:
+        fields.extend(
+            (
+                (item.prep_id, "proposed_title", item.proposed_title),
+                (
+                    item.prep_id,
+                    "source_quality_notes",
+                    item.source_quality_notes,
+                ),
+                (item.prep_id, "rights_notes", item.rights_notes),
+                (item.prep_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.prep_id, "proposed_local_references", path)
+            for path in item.proposed_local_references
+        )
+        fields.extend((item.prep_id, "risk_notes", note) for note in item.risk_notes)
+        fields.extend(
+            (item.prep_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     return fields

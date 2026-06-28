@@ -431,10 +431,58 @@ Deferred records:
 
 - `bazi_general_identity_huntian_baolan_ziping`
 
-The next bounded work surface is registration prep for the three
-registration-prep-ready records. Existing Batch 001 overlaps should not be
+The registration-prep metadata for the three registration-prep-ready records is
+now recorded in the next section. Existing Batch 001 overlaps should not be
 registered again, variant sets need a later choice step, and the large deferred
-source should remain out of the immediate reading path.
+source remains out of the immediate reading path.
+
+## 015 Bazi General Registration Prep
+
+The 2026-06-28 Bazi general registration prep records proposed source-library
+metadata for three source identities. It does not mutate
+`source_library_entries.json`, open raw source files, create 013
+candidate/review/promotion records, or alter 012 formal evidence.
+
+- `registration-prep-status=registration_prep_completed`
+- `registration-prep-items=3`
+- `proposed-source-files=4`
+- `skipped-existing-batch-overlap=2`
+- `blocked-variant-choice=2`
+- `deferred-large-source=1`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-bazi-general-source-registration`
+
+Proposed source-library entry ids:
+
+- `entry_bazi_general_lecture_textbook_pdf`
+- `entry_bazi_general_beichen_intro_pdf`
+- `entry_bazi_general_ziping_orthodox_pair_pdf`
+
+Registration-prep records:
+
+- `bazi_general_registration_prep_lecture_textbook`
+- `bazi_general_registration_prep_beichen_intro`
+- `bazi_general_registration_prep_ziping_orthodox_pair`
+
+Skipped existing-batch overlap ids:
+
+- `bazi_general_identity_youran_notes`
+- `bazi_general_identity_tianma_notes`
+
+Blocked variant-choice ids:
+
+- `bazi_general_identity_ditiansui_variant_set`
+- `bazi_general_identity_qiongtong_variant_set`
+
+Deferred ids:
+
+- `bazi_general_identity_huntian_baolan_ziping`
+
+The next bounded work surface is source registration for the three proposed
+entry ids. It may apply these prepared metadata packets to the source library,
+but reading, extraction, 013 candidate intake, and 012 evidence remain blocked
+unless separately authorized.
 
 ## Raw-File Boundary
 
