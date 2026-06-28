@@ -774,6 +774,54 @@ Guardrails:
 - Raw files, source-library records, candidates, reviews, promotions, and formal
   evidence are not mutated.
 
+## 015 Raw Text Next Cycle Identity Review
+
+The 2026-06-28 raw text next-cycle identity review uses only the selected
+next-cycle source-selection records and source-cluster metadata. It does not
+open raw source files, create source-library records, create 013 candidate/
+review/promotion records, or alter 012 formal evidence.
+
+- Review id: `015-raw-text-next-cycle-identity-review`
+- `next-cycle-identity-review-status=next_cycle_identity_review_completed`
+- `next-cycle-identity-review-items=2`
+- `cluster-source-selection-required=2`
+- `registration-prep-ready=0`
+- `source-library-overlap-found=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-next-cycle-cluster-source-selection`
+
+Cluster-source selection required:
+
+- `next_cycle_identity_bazi_modern_method_series`
+- `next_cycle_identity_bazi_misc_review`
+
+Registration-prep-ready records:
+
+Source-library overlap records:
+
+Boundary checks:
+
+- `identity_review_items_loaded`: `passed`
+- `next_cycle_source_selection_items_loaded`: `passed`
+- `selected_source_selection_references_valid`: `passed`
+- `selected_clusters_only`: `passed`
+- `cluster_counts_match_source_selection`: `passed`
+- `deferred_clusters_remain_out_of_scope`: `passed`
+- `risk_review_clusters_remain_out_of_scope`: `passed`
+- `raw_materials_not_mutated`: `passed`
+- `source_library_not_mutated`: `passed`
+- `013_012_not_mutated`: `passed`
+
+Guardrails:
+
+- Next-cycle identity review uses source-selection metadata only.
+- Selected clusters still require source-level selection before registration
+  prep.
+- Case, formula, and sensitive clusters remain outside this identity review.
+- Raw files, source-library records, candidates, reviews, promotions, and formal
+  evidence are not mutated.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

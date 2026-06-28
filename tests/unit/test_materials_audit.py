@@ -700,6 +700,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_next_cycle_source_selection_items",
         "build_raw_text_next_cycle_source_selection_summary",
         "render_raw_text_next_cycle_source_selection_markdown",
+        "load_raw_text_next_cycle_identity_review_items",
+        "build_raw_text_next_cycle_identity_review_summary",
+        "render_raw_text_next_cycle_identity_review_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -2278,6 +2281,119 @@ def test_raw_text_next_cycle_source_selection_markdown_and_docs_are_in_sync():
         "`risk-review-clusters=1`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-raw-text-next-cycle-identity-review`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_next_cycle_identity_review_items_load_selected_clusters_only():
+    items = materials_audit.load_raw_text_next_cycle_identity_review_items()
+    items_by_id = {item.review_id: item for item in items}
+
+    assert len(items) == 2
+    assert {item.triage_group_id for item in items} == {
+        "raw_text_triage_bazi_general"
+    }
+    assert {item.source_selection_id for item in items} == {
+        "next_cycle_bazi_modern_method_series",
+        "next_cycle_bazi_misc_identity_review",
+    }
+    assert {item.cluster_id for item in items} == {
+        "bazi_general_modern_method_series_cluster",
+        "bazi_general_misc_identity_review_cluster",
+    }
+    assert all(
+        item.identity_status == "cluster_source_selection_required"
+        for item in items
+    )
+    assert all(
+        item.registration_readiness == "needs_cluster_source_selection"
+        for item in items
+    )
+    assert all(not item.matched_source_library_entry_ids for item in items)
+    assert items_by_id[
+        "next_cycle_identity_bazi_modern_method_series"
+    ].file_count == 39
+    assert items_by_id[
+        "next_cycle_identity_bazi_misc_review"
+    ].target_rule_families == ["branch_interaction"]
+
+
+def test_raw_text_next_cycle_identity_review_summary_counts_selected_clusters():
+    summary = materials_audit.build_raw_text_next_cycle_identity_review_summary()
+
+    assert summary.review_id == "015-raw-text-next-cycle-identity-review"
+    assert summary.review_status == "next_cycle_identity_review_completed"
+    assert summary.triage_group_id == "raw_text_triage_bazi_general"
+    assert summary.source_root == materials_audit.RAW_TEXT_TRIAGE_SOURCE_ROOT
+    assert summary.identity_review_item_count == 2
+    assert summary.cluster_source_selection_required_count == 2
+    assert summary.registration_prep_ready_count == 0
+    assert summary.source_library_overlap_found_count == 0
+    assert summary.identity_status_counts == {
+        "cluster_source_selection_required": 2,
+    }
+    assert summary.source_library_overlap_counts == {
+        "no_registered_cluster_overlap_found": 2,
+    }
+    assert summary.registration_readiness_counts == {
+        "needs_cluster_source_selection": 2,
+    }
+    assert summary.risk_boundary_counts == {"ordinary": 2}
+    assert summary.target_rule_family_counts == {
+        "branch_interaction": 1,
+        "pattern_strength": 1,
+        "useful_god_candidate": 1,
+    }
+    assert summary.cluster_source_selection_required_ids == [
+        "next_cycle_identity_bazi_modern_method_series",
+        "next_cycle_identity_bazi_misc_review",
+    ]
+    assert summary.registration_prep_ready_ids == []
+    assert summary.source_library_overlap_ids == []
+    assert summary.downstream_mutation_authorized is False
+    assert summary.source_library_mutation_authorized is False
+    assert (
+        summary.next_material_entry
+        == "015-raw-text-next-cycle-cluster-source-selection"
+    )
+    assert summary.boundary_checks == {
+        "identity_review_items_loaded": "passed",
+        "next_cycle_source_selection_items_loaded": "passed",
+        "selected_source_selection_references_valid": "passed",
+        "selected_clusters_only": "passed",
+        "cluster_counts_match_source_selection": "passed",
+        "deferred_clusters_remain_out_of_scope": "passed",
+        "risk_review_clusters_remain_out_of_scope": "passed",
+        "raw_materials_not_mutated": "passed",
+        "source_library_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+
+def test_raw_text_next_cycle_identity_review_markdown_and_docs_are_in_sync():
+    summary = materials_audit.build_raw_text_next_cycle_identity_review_summary()
+    markdown = materials_audit.render_raw_text_next_cycle_identity_review_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Raw Text Next Cycle Identity Review",
+        "`next-cycle-identity-review-status=next_cycle_identity_review_completed`",
+        "`next-cycle-identity-review-items=2`",
+        "`cluster-source-selection-required=2`",
+        "`registration-prep-ready=0`",
+        "`source-library-overlap-found=0`",
+        "`source-library-mutation-authorized=false`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-raw-text-next-cycle-cluster-source-selection`",
     ):
         assert marker in markdown
         assert marker in materials_doc

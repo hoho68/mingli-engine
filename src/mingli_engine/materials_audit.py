@@ -43,6 +43,8 @@ from mingli_engine.models import (
     RawTextClusterSourceSelectionSummary,
     RawTextMaterialTriageGroup,
     RawTextMaterialTriageSummary,
+    RawTextNextCycleIdentityReviewItem,
+    RawTextNextCycleIdentityReviewSummary,
     RawTextNextCycleSourceSelectionItem,
     RawTextNextCycleSourceSelectionSummary,
     RawTextSourceRegistrationPrepItem,
@@ -135,6 +137,10 @@ RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_ID = (
 RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID = "raw_text_triage_bazi_general"
 RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY = (
     "015-raw-text-next-cycle-identity-review"
+)
+RAW_TEXT_NEXT_CYCLE_IDENTITY_REVIEW_ID = "015-raw-text-next-cycle-identity-review"
+RAW_TEXT_NEXT_CYCLE_IDENTITY_REVIEW_NEXT_MATERIAL_ENTRY = (
+    "015-raw-text-next-cycle-cluster-source-selection"
 )
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
@@ -260,6 +266,26 @@ RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_STATUSES = frozenset(
         "deferred_case_collection",
         "deferred_formula_review",
         "risk_review_required",
+    }
+)
+RAW_TEXT_NEXT_CYCLE_IDENTITY_REVIEW_STATUSES = frozenset(
+    {
+        "cluster_source_selection_required",
+        "registration_prep_ready",
+        "source_library_overlap_found",
+    }
+)
+RAW_TEXT_NEXT_CYCLE_IDENTITY_REVIEW_OVERLAP_STATUSES = frozenset(
+    {
+        "no_registered_cluster_overlap_found",
+        "registered_source_overlap_found",
+    }
+)
+RAW_TEXT_NEXT_CYCLE_IDENTITY_REVIEW_REGISTRATION_READINESS = frozenset(
+    {
+        "needs_cluster_source_selection",
+        "ready_for_registration_prep",
+        "no_registration_needed_existing_source",
     }
 )
 RAW_TEXT_CLUSTER_SOURCE_SELECTION_STATUSES = frozenset(
@@ -1489,6 +1515,193 @@ def load_raw_text_next_cycle_source_selection_items(
     return items
 
 
+def _raw_text_next_cycle_identity_review_item_from_dict(
+    data: dict[str, Any],
+    source_selection_items_by_id: dict[str, RawTextNextCycleSourceSelectionItem],
+    source_entries_by_id: dict[str, source_library.SourceLibraryEntry],
+) -> RawTextNextCycleIdentityReviewItem:
+    try:
+        item = RawTextNextCycleIdentityReviewItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid raw text next-cycle identity review item: {error}"
+        ) from error
+
+    owner_id = item.review_id or "?"
+    for field_name in (
+        "review_id",
+        "source_selection_id",
+        "cluster_id",
+        "triage_group_id",
+        "source_root",
+        "canonical_cluster_label",
+        "identity_status",
+        "source_library_overlap_status",
+        "registration_readiness",
+        "recommended_next_action",
+        "next_review_target",
+        "risk_boundary",
+        "identity_review_note",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    if item.triage_group_id != RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid triage_group_id")
+    if item.source_root != RAW_TEXT_TRIAGE_SOURCE_ROOT:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_root")
+    _validate_enum(
+        item.identity_status,
+        RAW_TEXT_NEXT_CYCLE_IDENTITY_REVIEW_STATUSES,
+        "identity_status",
+        owner_id,
+    )
+    _validate_enum(
+        item.source_library_overlap_status,
+        RAW_TEXT_NEXT_CYCLE_IDENTITY_REVIEW_OVERLAP_STATUSES,
+        "source_library_overlap_status",
+        owner_id,
+    )
+    _validate_enum(
+        item.registration_readiness,
+        RAW_TEXT_NEXT_CYCLE_IDENTITY_REVIEW_REGISTRATION_READINESS,
+        "registration_readiness",
+        owner_id,
+    )
+    _validate_enum(
+        item.recommended_next_action,
+        MATERIAL_AUDIT_ACTIONS,
+        "recommended_next_action",
+        owner_id,
+    )
+    _validate_enum(item.risk_boundary, RISK_TIERS, "risk_boundary", owner_id)
+    _require_non_negative_int(item.file_count, "file_count", owner_id)
+    _require_non_negative_int(
+        item.priority_text_candidate_count,
+        "priority_text_candidate_count",
+        owner_id,
+    )
+    if item.file_count <= 0:
+        raise MaterialsAuditError(f"{owner_id} requires positive file_count")
+    if item.priority_text_candidate_count > item.file_count:
+        raise MaterialsAuditError(
+            f"{owner_id} priority count cannot exceed file_count"
+        )
+    for field_name in (
+        "matched_source_library_entry_ids",
+        "target_rule_families",
+        "guardrails",
+    ):
+        _require_string_list(getattr(item, field_name), field_name, owner_id)
+    if not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires guardrails")
+    source_selection_item = source_selection_items_by_id.get(item.source_selection_id)
+    if source_selection_item is None:
+        raise MaterialsAuditError(
+            f"{owner_id} references unknown source_selection_id"
+        )
+    if source_selection_item.selection_status != "selected_for_identity_review":
+        raise MaterialsAuditError(f"{owner_id} source selection is not selected")
+    if item.cluster_id != source_selection_item.cluster_id:
+        raise MaterialsAuditError(f"{owner_id} cluster_id does not match selection")
+    if item.cluster_id not in RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS:
+        raise MaterialsAuditError(f"{owner_id} cluster is not selected for review")
+    if item.file_count != source_selection_item.file_count:
+        raise MaterialsAuditError(f"{owner_id} file_count does not match selection")
+    if (
+        item.priority_text_candidate_count
+        != source_selection_item.priority_text_candidate_count
+    ):
+        raise MaterialsAuditError(
+            f"{owner_id} priority count does not match selection"
+        )
+    if item.risk_boundary != source_selection_item.risk_boundary:
+        raise MaterialsAuditError(f"{owner_id} risk boundary does not match selection")
+    if set(item.target_rule_families) != set(
+        source_selection_item.target_rule_families
+    ):
+        raise MaterialsAuditError(
+            f"{owner_id} rule families do not match source selection"
+        )
+    for entry_id in item.matched_source_library_entry_ids:
+        if entry_id not in source_entries_by_id:
+            raise MaterialsAuditError(
+                f"{owner_id} references unknown source-library entry: {entry_id}"
+            )
+    for rule_family in item.target_rule_families:
+        if rule_family not in RULE_FAMILIES:
+            raise MaterialsAuditError(
+                f"{owner_id} has unsupported rule_family: {rule_family}"
+            )
+
+    if item.identity_status == "cluster_source_selection_required":
+        if item.source_library_overlap_status != "no_registered_cluster_overlap_found":
+            raise MaterialsAuditError(
+                f"{owner_id} cluster-source status requires no overlap"
+            )
+        if item.matched_source_library_entry_ids:
+            raise MaterialsAuditError(
+                f"{owner_id} cluster-source status cannot reference source entries"
+            )
+        if item.registration_readiness != "needs_cluster_source_selection":
+            raise MaterialsAuditError(
+                f"{owner_id} cluster-source status has invalid readiness"
+            )
+        if item.recommended_next_action != "clarify_identity":
+            raise MaterialsAuditError(
+                f"{owner_id} cluster-source status must clarify identity"
+            )
+        if (
+            item.next_review_target
+            != RAW_TEXT_NEXT_CYCLE_IDENTITY_REVIEW_NEXT_MATERIAL_ENTRY
+        ):
+            raise MaterialsAuditError(f"{owner_id} has invalid next_review_target")
+    if item.identity_status == "registration_prep_ready":
+        if item.registration_readiness != "ready_for_registration_prep":
+            raise MaterialsAuditError(
+                f"{owner_id} registration-prep status has invalid readiness"
+            )
+        if item.recommended_next_action != "register_source":
+            raise MaterialsAuditError(
+                f"{owner_id} registration-prep status must register source"
+            )
+    if item.identity_status == "source_library_overlap_found":
+        if item.source_library_overlap_status != "registered_source_overlap_found":
+            raise MaterialsAuditError(
+                f"{owner_id} overlap status requires registered overlap"
+            )
+        if not item.matched_source_library_entry_ids:
+            raise MaterialsAuditError(f"{owner_id} overlap status requires source ids")
+        if item.registration_readiness != "no_registration_needed_existing_source":
+            raise MaterialsAuditError(
+                f"{owner_id} overlap status has invalid readiness"
+            )
+
+    return item
+
+
+def load_raw_text_next_cycle_identity_review_items(
+    data_dir: Path | str | None = None,
+) -> list[RawTextNextCycleIdentityReviewItem]:
+    source_dir = _data_dir(data_dir)
+    source_selection_items_by_id = {
+        item.selection_id: item
+        for item in load_raw_text_next_cycle_source_selection_items(source_dir)
+    }
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    items = [
+        _raw_text_next_cycle_identity_review_item_from_dict(
+            item,
+            source_selection_items_by_id,
+            source_entries_by_id,
+        )
+        for item in _read_optional_json_list(
+            source_dir / "raw_text_next_cycle_identity_review_items.json"
+        )
+    ]
+    _ensure_unique([item.review_id for item in items], "review_id")
+    return items
+
+
 def _is_source_relative_path(path: str) -> bool:
     return (
         bool(path.strip())
@@ -2657,6 +2870,15 @@ def _count_next_cycle_rule_families(
     return dict(sorted(counts.items()))
 
 
+def _count_next_cycle_identity_rule_families(
+    items: list[RawTextNextCycleIdentityReviewItem],
+) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    for item in items:
+        counts.update(item.target_rule_families)
+    return dict(sorted(counts.items()))
+
+
 def _count_cluster_source_rule_families(
     items: list[RawTextClusterSourceSelectionItem],
 ) -> dict[str, int]:
@@ -3080,6 +3302,182 @@ def render_raw_text_next_cycle_source_selection_markdown(
     lines.extend(f"- `{cluster_id}`" for cluster_id in summary.deferred_cluster_ids)
     lines.extend(["", "Risk-review clusters:"])
     lines.extend(f"- `{cluster_id}`" for cluster_id in summary.risk_review_cluster_ids)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def build_raw_text_next_cycle_identity_review_summary(
+    data_dir: Path | str | None = None,
+) -> RawTextNextCycleIdentityReviewSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_raw_text_next_cycle_identity_review_items(source_dir)
+    source_selection_items_by_id = {
+        item.selection_id: item
+        for item in load_raw_text_next_cycle_source_selection_items(source_dir)
+    }
+    selected_source_selection_references_valid = bool(items) and all(
+        item.source_selection_id in source_selection_items_by_id
+        and source_selection_items_by_id[item.source_selection_id].selection_status
+        == "selected_for_identity_review"
+        for item in items
+    )
+    selected_clusters_only = bool(items) and {
+        item.cluster_id for item in items
+    } == set(RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS)
+    cluster_counts_match_source_selection = bool(items) and all(
+        item.source_selection_id in source_selection_items_by_id
+        and item.file_count
+        == source_selection_items_by_id[item.source_selection_id].file_count
+        and item.priority_text_candidate_count
+        == source_selection_items_by_id[
+            item.source_selection_id
+        ].priority_text_candidate_count
+        for item in items
+    )
+    deferred_clusters_remain_out_of_scope = all(
+        item.cluster_id not in RAW_TEXT_NEXT_CYCLE_DEFERRED_CLUSTER_IDS
+        for item in items
+    )
+    risk_review_clusters_remain_out_of_scope = all(
+        item.cluster_id not in RAW_TEXT_NEXT_CYCLE_RISK_REVIEW_CLUSTER_IDS
+        for item in items
+    )
+    boundary_checks = {
+        "identity_review_items_loaded": "passed" if items else "failed",
+        "next_cycle_source_selection_items_loaded": (
+            "passed" if source_selection_items_by_id else "failed"
+        ),
+        "selected_source_selection_references_valid": (
+            "passed" if selected_source_selection_references_valid else "failed"
+        ),
+        "selected_clusters_only": "passed" if selected_clusters_only else "failed",
+        "cluster_counts_match_source_selection": (
+            "passed" if cluster_counts_match_source_selection else "failed"
+        ),
+        "deferred_clusters_remain_out_of_scope": (
+            "passed" if deferred_clusters_remain_out_of_scope else "failed"
+        ),
+        "risk_review_clusters_remain_out_of_scope": (
+            "passed" if risk_review_clusters_remain_out_of_scope else "failed"
+        ),
+        "raw_materials_not_mutated": "passed",
+        "source_library_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+    cluster_source_selection_required_ids = [
+        item.review_id
+        for item in items
+        if item.identity_status == "cluster_source_selection_required"
+    ]
+    registration_prep_ready_ids = [
+        item.review_id
+        for item in items
+        if item.identity_status == "registration_prep_ready"
+    ]
+    source_library_overlap_ids = [
+        item.review_id
+        for item in items
+        if item.identity_status == "source_library_overlap_found"
+    ]
+
+    return RawTextNextCycleIdentityReviewSummary(
+        review_id=RAW_TEXT_NEXT_CYCLE_IDENTITY_REVIEW_ID,
+        review_status=(
+            "next_cycle_identity_review_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "next_cycle_identity_review_needs_attention"
+        ),
+        triage_group_id=RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID,
+        source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
+        identity_review_item_count=len(items),
+        cluster_source_selection_required_count=len(
+            cluster_source_selection_required_ids
+        ),
+        registration_prep_ready_count=len(registration_prep_ready_ids),
+        source_library_overlap_found_count=len(source_library_overlap_ids),
+        identity_status_counts=_count_values([item.identity_status for item in items]),
+        source_library_overlap_counts=_count_values(
+            [item.source_library_overlap_status for item in items]
+        ),
+        registration_readiness_counts=_count_values(
+            [item.registration_readiness for item in items]
+        ),
+        risk_boundary_counts=_count_values([item.risk_boundary for item in items]),
+        target_rule_family_counts=_count_next_cycle_identity_rule_families(items),
+        cluster_source_selection_required_ids=cluster_source_selection_required_ids,
+        registration_prep_ready_ids=registration_prep_ready_ids,
+        source_library_overlap_ids=source_library_overlap_ids,
+        source_library_mutation_authorized=False,
+        downstream_mutation_authorized=False,
+        next_material_entry=RAW_TEXT_NEXT_CYCLE_IDENTITY_REVIEW_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Next-cycle identity review uses source-selection metadata only.",
+            "Selected clusters still require source-level selection before registration prep.",
+            "Case, formula, and sensitive clusters remain outside this identity review.",
+            "Raw files, source-library records, candidates, reviews, promotions, and formal evidence are not mutated.",
+        ],
+    )
+
+
+def render_raw_text_next_cycle_identity_review_markdown(
+    summary: RawTextNextCycleIdentityReviewSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Raw Text Next Cycle Identity Review",
+        "",
+        f"- Review id: `{summary.review_id}`",
+        (
+            "- `next-cycle-identity-review-status="
+            f"{summary.review_status}`"
+        ),
+        f"- `next-cycle-identity-review-items={summary.identity_review_item_count}`",
+        (
+            "- `cluster-source-selection-required="
+            f"{summary.cluster_source_selection_required_count}`"
+        ),
+        f"- `registration-prep-ready={summary.registration_prep_ready_count}`",
+        (
+            "- `source-library-overlap-found="
+            f"{summary.source_library_overlap_found_count}`"
+        ),
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Cluster-source selection required:",
+    ]
+    lines.extend(
+        f"- `{review_id}`"
+        for review_id in summary.cluster_source_selection_required_ids
+    )
+    lines.extend(["", "Registration-prep-ready records:"])
+    lines.extend(f"- `{review_id}`" for review_id in summary.registration_prep_ready_ids)
+    lines.extend(["", "Source-library overlap records:"])
+    lines.extend(f"- `{review_id}`" for review_id in summary.source_library_overlap_ids)
     lines.extend(["", "Boundary checks:"])
     lines.extend(
         f"- `{check_id}`: `{status}`"
@@ -4534,6 +4932,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_next_cycle_source_selection_items = (
             load_raw_text_next_cycle_source_selection_items(source_dir)
         )
+        raw_text_next_cycle_identity_review_items = (
+            load_raw_text_next_cycle_identity_review_items(source_dir)
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -4560,6 +4961,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_source_selection_items,
         raw_text_source_cluster_selection_items,
         raw_text_next_cycle_source_selection_items,
+        raw_text_next_cycle_identity_review_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -4595,6 +4997,9 @@ def _iter_quality_text_fields(
     raw_text_source_cluster_selection_items: list[RawTextSourceClusterSelectionItem],
     raw_text_next_cycle_source_selection_items: list[
         RawTextNextCycleSourceSelectionItem
+    ],
+    raw_text_next_cycle_identity_review_items: list[
+        RawTextNextCycleIdentityReviewItem
     ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
@@ -4697,6 +5102,26 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.selection_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in raw_text_next_cycle_identity_review_items:
+        fields.extend(
+            (
+                (
+                    item.review_id,
+                    "canonical_cluster_label",
+                    item.canonical_cluster_label,
+                ),
+                (
+                    item.review_id,
+                    "identity_review_note",
+                    item.identity_review_note,
+                ),
+                (item.review_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.review_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

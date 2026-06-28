@@ -2866,6 +2866,56 @@ class RawTextNextCycleSourceSelectionSummary:
 
 
 @dataclass(frozen=True)
+class RawTextNextCycleIdentityReviewItem:
+    review_id: str
+    source_selection_id: str
+    cluster_id: str
+    triage_group_id: str
+    source_root: str
+    canonical_cluster_label: str
+    identity_status: str
+    source_library_overlap_status: str
+    registration_readiness: str
+    recommended_next_action: str
+    next_review_target: str
+    risk_boundary: str
+    file_count: int
+    priority_text_candidate_count: int
+    matched_source_library_entry_ids: list[str] = field(default_factory=list)
+    target_rule_families: list[str] = field(default_factory=list)
+    identity_review_note: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextNextCycleIdentityReviewSummary:
+    review_id: str
+    review_status: str
+    triage_group_id: str
+    source_root: str
+    identity_review_item_count: int
+    cluster_source_selection_required_count: int
+    registration_prep_ready_count: int
+    source_library_overlap_found_count: int
+    identity_status_counts: dict[str, int]
+    source_library_overlap_counts: dict[str, int]
+    registration_readiness_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    target_rule_family_counts: dict[str, int]
+    cluster_source_selection_required_ids: list[str]
+    registration_prep_ready_ids: list[str]
+    source_library_overlap_ids: list[str]
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextClusterSourceSelectionItem:
     selection_id: str
     cluster_id: str
