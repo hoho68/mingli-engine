@@ -12,15 +12,13 @@ inventory refresh, raw text materials folder risk triage, Liang Bazi core
 source selection, Liang Bazi core individual review, and Bazi general source
 cluster selection, cluster source selection, source identity review,
 registration prep, source-library registration, and Bazi general
-source-preparation reading, variant choice/deferred review, and selected
-variant registration prep.
-The latest local checkpoint completed preparation reading for the three Bazi
-general source-library entries, including authorized 013 intake and 012
-evidence linkage, then closed the remaining Ditiansui, Qiongtong, and Huntian
-Baolan variant/deferred review surface. The selected `滴天髓.pdf` and
-`穷通宝鉴/窮通寶鑒.pdf` variants are now registered as weak locator-backed
-source metadata with authorized 013/012 linkage. Huntian Baolan remains
-deferred as a large source. Raw PDF files remain unchanged.
+source-preparation reading, variant choice/deferred review, selected variant
+registration prep, and raw text next-cycle source selection.
+The latest local checkpoint selected the next raw-text source-cycle surface
+from existing Bazi general source-cluster metadata. It selected the ordinary
+modern-method and miscellaneous identity-review clusters, kept case/formula
+clusters deferred, kept the sensitive-topic cluster behind risk review, and did
+not mutate source-library, 013, or 012 data. Raw files remain unchanged.
 
 ## Completed Checkpoints
 
@@ -112,6 +110,12 @@ deferred as a large source. Raw PDF files remain unchanged.
   `source-library-mutation-authorized=true`,
   `downstream-mutation-authorized=true`, and
   `next-material-entry=015-materials-audit-next-action-queue`.
+- 015 Raw Text Next Cycle Source Selection is completed:
+  `next-cycle-source-selection-status=next_cycle_source_selection_completed`,
+  `next-cycle-source-selection-items=5`, `selected-for-identity-review=2`,
+  `deferred-clusters=2`, `risk-review-clusters=1`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-raw-text-next-cycle-identity-review`.
 
 Primary detailed references:
 
@@ -136,6 +140,7 @@ Primary detailed references:
 - [2026-06-28-bazi-general-source-registration.md](../superpowers/plans/2026-06-28-bazi-general-source-registration.md)
 - [2026-06-28-bazi-general-source-preparation-reading.md](../superpowers/plans/2026-06-28-bazi-general-source-preparation-reading.md)
 - [2026-06-28-bazi-general-selected-variant-registration-prep.md](../superpowers/plans/2026-06-28-bazi-general-selected-variant-registration-prep.md)
+- [2026-06-28-raw-text-next-cycle-source-selection.md](../superpowers/plans/2026-06-28-raw-text-next-cycle-source-selection.md)
 - [2026-06-28-blind-life-manual-013-012-promotion.md](../superpowers/plans/2026-06-28-blind-life-manual-013-012-promotion.md)
 
 ## Current Frozen Snapshot
@@ -250,6 +255,27 @@ Authorization Audit Packet:
 - `downstream-mutation-authorized=false`
 - `next-material-entry=015-bazi-general-source-registration`
 
+015 Raw Text Next Cycle Source Selection:
+
+- `next-cycle-source-selection-status=next_cycle_source_selection_completed`
+- `next-cycle-source-selection-items=5`
+- `selected-for-identity-review=2`
+- `deferred-clusters=2`
+- `risk-review-clusters=1`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-next-cycle-identity-review`
+
+Selected next-cycle clusters:
+
+- `bazi_general_modern_method_series_cluster`
+- `bazi_general_misc_identity_review_cluster`
+
+Deferred or boundary-gated next-cycle clusters:
+
+- `bazi_general_case_collection_cluster`
+- `bazi_general_practical_formula_cluster`
+- `bazi_general_sensitive_topic_cluster`
+
 013 and 012 boundary state:
 
 - `013-candidate-extracts=44`
@@ -268,7 +294,7 @@ Authorization Audit Packet:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-raw-text-next-cycle-source-selection`.
+- `next-new-material-start=015-raw-text-next-cycle-identity-review`.
 - Current 015 queue coverage has no uncovered action after excluding 21
   016-covered ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -304,6 +330,15 @@ Authorization Audit Packet:
   `deferred-after-cluster-selection=1`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-bazi-general-source-identity-review`.
+- 015 Raw Text Next Cycle Source Selection is completed:
+  `next-cycle-source-selection-status=next_cycle_source_selection_completed`,
+  `next-cycle-source-selection-items=5`,
+  `selected-for-identity-review=2`, `deferred-clusters=2`,
+  `risk-review-clusters=1`, `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-raw-text-next-cycle-identity-review`.
+- Selected next-cycle cluster ids:
+  `bazi_general_modern_method_series_cluster` and
+  `bazi_general_misc_identity_review_cluster`.
 - Selected source ids:
   `bazi_general_foundation_youran_notes`,
   `bazi_general_foundation_tianma_notes`,
@@ -423,10 +458,12 @@ Authorization Audit Packet:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-raw-text-next-cycle-source-selection`. It should select
-the next bounded raw-text source surface from already inventoried materials,
-keep Huntian Baolan deferred to a separate large-source pass, and require
-explicit authorization before any 013/012 mutation.
+`next-material-entry=015-raw-text-next-cycle-identity-review`. It should resolve
+identity, duplicate, and registration-readiness boundaries for
+`bazi_general_modern_method_series_cluster` and
+`bazi_general_misc_identity_review_cluster`, keep case/formula/sensitive
+clusters deferred or risk-gated, and require explicit authorization before any
+source-library, 013, or 012 mutation.
 
 ## Guardrails
 

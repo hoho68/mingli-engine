@@ -2824,6 +2824,48 @@ class RawTextSourceClusterSelectionSummary:
 
 
 @dataclass(frozen=True)
+class RawTextNextCycleSourceSelectionItem:
+    selection_id: str
+    triage_group_id: str
+    cluster_id: str
+    source_root: str
+    selection_label: str
+    selection_status: str
+    risk_boundary: str
+    recommended_next_action: str
+    file_count: int
+    priority_text_candidate_count: int
+    target_rule_families: list[str] = field(default_factory=list)
+    next_material_entry: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextNextCycleSourceSelectionSummary:
+    selection_id: str
+    selection_status: str
+    triage_group_id: str
+    source_root: str
+    selection_item_count: int
+    selected_for_identity_review_count: int
+    deferred_cluster_count: int
+    risk_review_cluster_count: int
+    status_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    target_rule_family_counts: dict[str, int]
+    selected_cluster_ids: list[str]
+    deferred_cluster_ids: list[str]
+    risk_review_cluster_ids: list[str]
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextClusterSourceSelectionItem:
     selection_id: str
     cluster_id: str

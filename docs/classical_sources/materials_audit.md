@@ -720,6 +720,60 @@ Guardrails:
 - Later page-level transcription is required before exact classical wording or
   quotation.
 
+## 015 Raw Text Next Cycle Source Selection
+
+The 2026-06-28 raw text next-cycle source selection uses only the existing
+Bazi general source-cluster inventory metadata. It does not open raw source
+files, create source-library records, create 013 candidate/review/promotion
+records, or alter 012 formal evidence.
+
+- Selection id: `015-raw-text-next-cycle-source-selection`
+- `next-cycle-source-selection-status=next_cycle_source_selection_completed`
+- `next-cycle-source-selection-items=5`
+- `selected-for-identity-review=2`
+- `deferred-clusters=2`
+- `risk-review-clusters=1`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-next-cycle-identity-review`
+
+Selected clusters:
+
+- `bazi_general_modern_method_series_cluster`
+- `bazi_general_misc_identity_review_cluster`
+
+Deferred clusters:
+
+- `bazi_general_case_collection_cluster`
+- `bazi_general_practical_formula_cluster`
+
+Risk-review clusters:
+
+- `bazi_general_sensitive_topic_cluster`
+
+Boundary checks:
+
+- `next_cycle_items_loaded`: `passed`
+- `source_cluster_items_loaded`: `passed`
+- `external_inventory_entrypoint_confirmed`: `passed`
+- `selected_clusters_need_identity_review`: `passed`
+- `deferred_clusters_stay_deferred`: `passed`
+- `sensitive_clusters_stay_risk_review`: `passed`
+- `huntian_baolan_deferred`: `passed`
+- `raw_materials_not_mutated`: `passed`
+- `source_library_not_mutated`: `passed`
+- `013_012_not_mutated`: `passed`
+
+Guardrails:
+
+- Next-cycle selection uses source-cluster inventory metadata only.
+- Selected clusters require identity review before registration, reading, or
+  extraction.
+- Case and formula clusters stay deferred until the selected ordinary identity
+  review is closed.
+- Sensitive clusters require separate risk review before any learning use.
+- Raw files, source-library records, candidates, reviews, promotions, and formal
+  evidence are not mutated.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

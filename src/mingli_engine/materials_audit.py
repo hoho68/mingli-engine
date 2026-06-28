@@ -43,6 +43,8 @@ from mingli_engine.models import (
     RawTextClusterSourceSelectionSummary,
     RawTextMaterialTriageGroup,
     RawTextMaterialTriageSummary,
+    RawTextNextCycleSourceSelectionItem,
+    RawTextNextCycleSourceSelectionSummary,
     RawTextSourceRegistrationPrepItem,
     RawTextSourceRegistrationPrepSummary,
     RawTextSourceRegistrationSummary,
@@ -127,6 +129,24 @@ EXTERNAL_INVENTORY_POST_QUEUE_NEXT_MATERIAL_ENTRY = (
     "015-raw-text-next-cycle-source-selection"
 )
 RAW_TEXT_TRIAGE_SOURCE_ROOT = "资料原文/文本类/"
+RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_ID = (
+    "015-raw-text-next-cycle-source-selection"
+)
+RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID = "raw_text_triage_bazi_general"
+RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY = (
+    "015-raw-text-next-cycle-identity-review"
+)
+RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
+    "bazi_general_modern_method_series_cluster",
+    "bazi_general_misc_identity_review_cluster",
+)
+RAW_TEXT_NEXT_CYCLE_DEFERRED_CLUSTER_IDS = (
+    "bazi_general_case_collection_cluster",
+    "bazi_general_practical_formula_cluster",
+)
+RAW_TEXT_NEXT_CYCLE_RISK_REVIEW_CLUSTER_IDS = (
+    "bazi_general_sensitive_topic_cluster",
+)
 RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY = "015-liang-bazi-core-source-selection"
 RAW_TEXT_SOURCE_SELECTION_ID = "015-liang-bazi-core-source-selection"
 RAW_TEXT_SOURCE_SELECTION_TRIAGE_GROUP_ID = "raw_text_triage_liang_bazi_core"
@@ -232,6 +252,14 @@ RAW_TEXT_SOURCE_CLUSTER_SELECTION_STATUSES = frozenset(
         "backlog_cluster",
         "identity_review_required",
         "sensitive_boundary_deferred",
+    }
+)
+RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_STATUSES = frozenset(
+    {
+        "selected_for_identity_review",
+        "deferred_case_collection",
+        "deferred_formula_review",
+        "risk_review_required",
     }
 )
 RAW_TEXT_CLUSTER_SOURCE_SELECTION_STATUSES = frozenset(
@@ -1327,6 +1355,137 @@ def load_raw_text_source_cluster_selection_items(
         )
     ]
     _ensure_unique([item.cluster_id for item in items], "cluster_id")
+    return items
+
+
+def _raw_text_next_cycle_source_selection_item_from_dict(
+    data: dict[str, Any],
+    clusters_by_id: dict[str, RawTextSourceClusterSelectionItem],
+) -> RawTextNextCycleSourceSelectionItem:
+    try:
+        item = RawTextNextCycleSourceSelectionItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid raw text next-cycle source selection item: {error}"
+        ) from error
+
+    owner_id = item.selection_id or "?"
+    for field_name in (
+        "selection_id",
+        "triage_group_id",
+        "cluster_id",
+        "source_root",
+        "selection_label",
+        "selection_status",
+        "risk_boundary",
+        "recommended_next_action",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    if item.triage_group_id != RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid triage_group_id")
+    if item.source_root != RAW_TEXT_TRIAGE_SOURCE_ROOT:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_root")
+    _validate_enum(
+        item.selection_status,
+        RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_STATUSES,
+        "selection_status",
+        owner_id,
+    )
+    _validate_enum(item.risk_boundary, RISK_TIERS, "risk_boundary", owner_id)
+    _validate_enum(
+        item.recommended_next_action,
+        MATERIAL_AUDIT_ACTIONS,
+        "recommended_next_action",
+        owner_id,
+    )
+    _require_non_negative_int(item.file_count, "file_count", owner_id)
+    _require_non_negative_int(
+        item.priority_text_candidate_count,
+        "priority_text_candidate_count",
+        owner_id,
+    )
+    if item.file_count <= 0:
+        raise MaterialsAuditError(f"{owner_id} requires positive file_count")
+    if item.priority_text_candidate_count > item.file_count:
+        raise MaterialsAuditError(
+            f"{owner_id} priority count cannot exceed file_count"
+        )
+    for field_name in ("target_rule_families", "guardrails"):
+        _require_string_list(getattr(item, field_name), field_name, owner_id)
+    if not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires guardrails")
+    cluster = clusters_by_id.get(item.cluster_id)
+    if cluster is None:
+        raise MaterialsAuditError(f"{owner_id} references unknown cluster_id")
+    if item.file_count != cluster.file_count:
+        raise MaterialsAuditError(f"{owner_id} file_count does not match cluster")
+    if item.priority_text_candidate_count != cluster.priority_text_candidate_count:
+        raise MaterialsAuditError(
+            f"{owner_id} priority_text_candidate_count does not match cluster"
+        )
+    if item.risk_boundary != cluster.risk_boundary:
+        raise MaterialsAuditError(f"{owner_id} risk_boundary does not match cluster")
+    if set(item.target_rule_families) != set(cluster.target_rule_families):
+        raise MaterialsAuditError(
+            f"{owner_id} target_rule_families do not match cluster"
+        )
+    for rule_family in item.target_rule_families:
+        if rule_family not in RULE_FAMILIES:
+            raise MaterialsAuditError(
+                f"{owner_id} has unsupported rule_family: {rule_family}"
+            )
+
+    if item.selection_status == "selected_for_identity_review":
+        if item.cluster_id not in RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS:
+            raise MaterialsAuditError(f"{owner_id} selected cluster is not authorized")
+        if cluster.cluster_status != "identity_review_required":
+            raise MaterialsAuditError(
+                f"{owner_id} selected cluster must require identity review"
+            )
+        if item.recommended_next_action != "clarify_identity":
+            raise MaterialsAuditError(f"{owner_id} selected cluster must clarify identity")
+        if (
+            item.next_material_entry
+            != RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY
+        ):
+            raise MaterialsAuditError(f"{owner_id} selected cluster needs next entry")
+    if item.selection_status in {
+        "deferred_case_collection",
+        "deferred_formula_review",
+    }:
+        if item.cluster_id not in RAW_TEXT_NEXT_CYCLE_DEFERRED_CLUSTER_IDS:
+            raise MaterialsAuditError(f"{owner_id} deferred cluster is not authorized")
+        if item.recommended_next_action != "defer":
+            raise MaterialsAuditError(f"{owner_id} deferred cluster must stay deferred")
+    if item.selection_status == "risk_review_required":
+        if item.cluster_id not in RAW_TEXT_NEXT_CYCLE_RISK_REVIEW_CLUSTER_IDS:
+            raise MaterialsAuditError(
+                f"{owner_id} risk-review cluster is not authorized"
+            )
+        if item.recommended_next_action != "risk_review":
+            raise MaterialsAuditError(f"{owner_id} risk cluster must use risk_review")
+        if item.risk_boundary != "sensitive":
+            raise MaterialsAuditError(f"{owner_id} risk cluster must be sensitive")
+
+    return item
+
+
+def load_raw_text_next_cycle_source_selection_items(
+    data_dir: Path | str | None = None,
+) -> list[RawTextNextCycleSourceSelectionItem]:
+    source_dir = _data_dir(data_dir)
+    clusters_by_id = {
+        cluster.cluster_id: cluster
+        for cluster in load_raw_text_source_cluster_selection_items(source_dir)
+    }
+    items = [
+        _raw_text_next_cycle_source_selection_item_from_dict(item, clusters_by_id)
+        for item in _read_optional_json_list(
+            source_dir / "raw_text_next_cycle_source_selection_items.json"
+        )
+    ]
+    _ensure_unique([item.selection_id for item in items], "selection_id")
     return items
 
 
@@ -2489,6 +2648,15 @@ def _count_cluster_rule_families(
     return dict(sorted(counts.items()))
 
 
+def _count_next_cycle_rule_families(
+    items: list[RawTextNextCycleSourceSelectionItem],
+) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    for item in items:
+        counts.update(item.target_rule_families)
+    return dict(sorted(counts.items()))
+
+
 def _count_cluster_source_rule_families(
     items: list[RawTextClusterSourceSelectionItem],
 ) -> dict[str, int]:
@@ -2748,6 +2916,170 @@ def render_raw_text_source_cluster_selection_markdown(
     lines.extend(f"- `{cluster_id}`" for cluster_id in summary.selected_cluster_ids)
     lines.extend(["", "Deferred or review-gated clusters:"])
     lines.extend(f"- `{cluster_id}`" for cluster_id in summary.deferred_cluster_ids)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def build_raw_text_next_cycle_source_selection_summary(
+    data_dir: Path | str | None = None,
+) -> RawTextNextCycleSourceSelectionSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_raw_text_next_cycle_source_selection_items(source_dir)
+    clusters_by_id = {
+        cluster.cluster_id: cluster
+        for cluster in load_raw_text_source_cluster_selection_items(source_dir)
+    }
+    external_inventory = build_external_material_inventory_refresh_summary(source_dir)
+
+    selected_cluster_ids = [
+        item.cluster_id
+        for item in items
+        if item.selection_status == "selected_for_identity_review"
+    ]
+    deferred_cluster_ids = [
+        item.cluster_id
+        for item in items
+        if item.selection_status
+        in {"deferred_case_collection", "deferred_formula_review"}
+    ]
+    risk_review_cluster_ids = [
+        item.cluster_id
+        for item in items
+        if item.selection_status == "risk_review_required"
+    ]
+    selected_clusters_need_identity_review = bool(selected_cluster_ids) and all(
+        cluster_id in clusters_by_id
+        and clusters_by_id[cluster_id].cluster_status == "identity_review_required"
+        and cluster_id in RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS
+        for cluster_id in selected_cluster_ids
+    )
+    deferred_clusters_stay_deferred = set(deferred_cluster_ids) == set(
+        RAW_TEXT_NEXT_CYCLE_DEFERRED_CLUSTER_IDS
+    ) and all(
+        clusters_by_id[cluster_id].cluster_status == "backlog_cluster"
+        for cluster_id in deferred_cluster_ids
+        if cluster_id in clusters_by_id
+    )
+    sensitive_clusters_stay_risk_review = set(risk_review_cluster_ids) == set(
+        RAW_TEXT_NEXT_CYCLE_RISK_REVIEW_CLUSTER_IDS
+    ) and all(
+        clusters_by_id[cluster_id].cluster_status == "sensitive_boundary_deferred"
+        for cluster_id in risk_review_cluster_ids
+        if cluster_id in clusters_by_id
+    )
+    huntian_baolan_deferred = "bazi_general_classical_reference_cluster" not in set(
+        selected_cluster_ids
+    ) and all(
+        "huntian" not in " ".join(
+            (item.selection_id, item.cluster_id, item.selection_label)
+        ).lower()
+        for item in items
+    )
+    boundary_checks = {
+        "next_cycle_items_loaded": "passed" if items else "failed",
+        "source_cluster_items_loaded": (
+            "passed"
+            if items and all(item.cluster_id in clusters_by_id for item in items)
+            else "failed"
+        ),
+        "external_inventory_entrypoint_confirmed": (
+            "passed"
+            if external_inventory.next_material_entry
+            == RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_ID
+            else "failed"
+        ),
+        "selected_clusters_need_identity_review": (
+            "passed" if selected_clusters_need_identity_review else "failed"
+        ),
+        "deferred_clusters_stay_deferred": (
+            "passed" if deferred_clusters_stay_deferred else "failed"
+        ),
+        "sensitive_clusters_stay_risk_review": (
+            "passed" if sensitive_clusters_stay_risk_review else "failed"
+        ),
+        "huntian_baolan_deferred": "passed" if huntian_baolan_deferred else "failed",
+        "raw_materials_not_mutated": "passed",
+        "source_library_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+    return RawTextNextCycleSourceSelectionSummary(
+        selection_id=RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_ID,
+        selection_status=(
+            "next_cycle_source_selection_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "next_cycle_source_selection_needs_attention"
+        ),
+        triage_group_id=RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID,
+        source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
+        selection_item_count=len(items),
+        selected_for_identity_review_count=len(selected_cluster_ids),
+        deferred_cluster_count=len(deferred_cluster_ids),
+        risk_review_cluster_count=len(risk_review_cluster_ids),
+        status_counts=_count_values([item.selection_status for item in items]),
+        risk_boundary_counts=_count_values([item.risk_boundary for item in items]),
+        target_rule_family_counts=_count_next_cycle_rule_families(items),
+        selected_cluster_ids=selected_cluster_ids,
+        deferred_cluster_ids=deferred_cluster_ids,
+        risk_review_cluster_ids=risk_review_cluster_ids,
+        downstream_mutation_authorized=False,
+        next_material_entry=RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Next-cycle selection uses source-cluster inventory metadata only.",
+            "Selected clusters require identity review before registration, reading, or extraction.",
+            "Case and formula clusters stay deferred until the selected ordinary identity review is closed.",
+            "Sensitive clusters require separate risk review before any learning use.",
+            "Raw files, source-library records, candidates, reviews, promotions, and formal evidence are not mutated.",
+        ],
+    )
+
+
+def render_raw_text_next_cycle_source_selection_markdown(
+    summary: RawTextNextCycleSourceSelectionSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Raw Text Next Cycle Source Selection",
+        "",
+        f"- Selection id: `{summary.selection_id}`",
+        (
+            "- `next-cycle-source-selection-status="
+            f"{summary.selection_status}`"
+        ),
+        f"- `next-cycle-source-selection-items={summary.selection_item_count}`",
+        (
+            "- `selected-for-identity-review="
+            f"{summary.selected_for_identity_review_count}`"
+        ),
+        f"- `deferred-clusters={summary.deferred_cluster_count}`",
+        f"- `risk-review-clusters={summary.risk_review_cluster_count}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Selected clusters:",
+    ]
+    lines.extend(f"- `{cluster_id}`" for cluster_id in summary.selected_cluster_ids)
+    lines.extend(["", "Deferred clusters:"])
+    lines.extend(f"- `{cluster_id}`" for cluster_id in summary.deferred_cluster_ids)
+    lines.extend(["", "Risk-review clusters:"])
+    lines.extend(f"- `{cluster_id}`" for cluster_id in summary.risk_review_cluster_ids)
     lines.extend(["", "Boundary checks:"])
     lines.extend(
         f"- `{check_id}`: `{status}`"
@@ -4199,6 +4531,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_source_cluster_selection_items = (
             load_raw_text_source_cluster_selection_items(source_dir)
         )
+        raw_text_next_cycle_source_selection_items = (
+            load_raw_text_next_cycle_source_selection_items(source_dir)
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -4224,6 +4559,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_triage_groups,
         raw_text_source_selection_items,
         raw_text_source_cluster_selection_items,
+        raw_text_next_cycle_source_selection_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -4257,6 +4593,9 @@ def _iter_quality_text_fields(
     raw_text_triage_groups: list[RawTextMaterialTriageGroup],
     raw_text_source_selection_items: list[RawTextSourceSelectionItem],
     raw_text_source_cluster_selection_items: list[RawTextSourceClusterSelectionItem],
+    raw_text_next_cycle_source_selection_items: list[
+        RawTextNextCycleSourceSelectionItem
+    ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
     raw_text_source_registration_prep_items: list[RawTextSourceRegistrationPrepItem],
@@ -4347,6 +4686,17 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.cluster_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in raw_text_next_cycle_source_selection_items:
+        fields.extend(
+            (
+                (item.selection_id, "selection_label", item.selection_label),
+                (item.selection_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.selection_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

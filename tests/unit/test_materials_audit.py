@@ -697,6 +697,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_source_selection_items",
         "build_raw_text_source_selection_summary",
         "render_raw_text_source_selection_markdown",
+        "load_raw_text_next_cycle_source_selection_items",
+        "build_raw_text_next_cycle_source_selection_summary",
+        "render_raw_text_next_cycle_source_selection_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -2158,6 +2161,123 @@ def test_raw_text_source_cluster_selection_markdown_and_docs_are_in_sync():
         "`deferred-clusters=3`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-bazi-general-cluster-source-selection`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_next_cycle_source_selection_items_load_boundary_plan():
+    items = materials_audit.load_raw_text_next_cycle_source_selection_items()
+    items_by_id = {item.selection_id: item for item in items}
+
+    assert len(items) == 5
+    assert {item.triage_group_id for item in items} == {
+        "raw_text_triage_bazi_general"
+    }
+    assert all(
+        item.source_root == materials_audit.RAW_TEXT_TRIAGE_SOURCE_ROOT
+        for item in items
+    )
+    assert {
+        item.cluster_id for item in items if item.selection_status == "selected_for_identity_review"
+    } == {
+        "bazi_general_modern_method_series_cluster",
+        "bazi_general_misc_identity_review_cluster",
+    }
+    assert items_by_id[
+        "next_cycle_bazi_modern_method_series"
+    ].recommended_next_action == "clarify_identity"
+    assert items_by_id[
+        "next_cycle_bazi_misc_identity_review"
+    ].file_count == 36
+    assert items_by_id[
+        "next_cycle_bazi_case_collection_deferred"
+    ].selection_status == "deferred_case_collection"
+    assert items_by_id[
+        "next_cycle_bazi_practical_formula_deferred"
+    ].recommended_next_action == "defer"
+    assert items_by_id[
+        "next_cycle_bazi_sensitive_topic_risk_review"
+    ].risk_boundary == "sensitive"
+
+
+def test_raw_text_next_cycle_source_selection_summary_counts_boundary_plan():
+    summary = materials_audit.build_raw_text_next_cycle_source_selection_summary()
+
+    assert summary.selection_id == "015-raw-text-next-cycle-source-selection"
+    assert summary.selection_status == "next_cycle_source_selection_completed"
+    assert summary.triage_group_id == "raw_text_triage_bazi_general"
+    assert summary.source_root == materials_audit.RAW_TEXT_TRIAGE_SOURCE_ROOT
+    assert summary.selection_item_count == 5
+    assert summary.selected_for_identity_review_count == 2
+    assert summary.deferred_cluster_count == 2
+    assert summary.risk_review_cluster_count == 1
+    assert summary.status_counts == {
+        "selected_for_identity_review": 2,
+        "deferred_case_collection": 1,
+        "deferred_formula_review": 1,
+        "risk_review_required": 1,
+    }
+    assert summary.risk_boundary_counts == {
+        "ordinary": 4,
+        "sensitive": 1,
+    }
+    assert summary.target_rule_family_counts == {
+        "branch_interaction": 3,
+        "luck_cycle": 2,
+        "pattern_strength": 3,
+        "ten_god_relation": 2,
+        "useful_god_candidate": 1,
+    }
+    assert summary.selected_cluster_ids == [
+        "bazi_general_modern_method_series_cluster",
+        "bazi_general_misc_identity_review_cluster",
+    ]
+    assert summary.deferred_cluster_ids == [
+        "bazi_general_case_collection_cluster",
+        "bazi_general_practical_formula_cluster",
+    ]
+    assert summary.risk_review_cluster_ids == [
+        "bazi_general_sensitive_topic_cluster",
+    ]
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == "015-raw-text-next-cycle-identity-review"
+    assert summary.boundary_checks == {
+        "next_cycle_items_loaded": "passed",
+        "source_cluster_items_loaded": "passed",
+        "external_inventory_entrypoint_confirmed": "passed",
+        "selected_clusters_need_identity_review": "passed",
+        "deferred_clusters_stay_deferred": "passed",
+        "sensitive_clusters_stay_risk_review": "passed",
+        "huntian_baolan_deferred": "passed",
+        "raw_materials_not_mutated": "passed",
+        "source_library_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+    }
+
+
+def test_raw_text_next_cycle_source_selection_markdown_and_docs_are_in_sync():
+    summary = materials_audit.build_raw_text_next_cycle_source_selection_summary()
+    markdown = materials_audit.render_raw_text_next_cycle_source_selection_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Raw Text Next Cycle Source Selection",
+        "`next-cycle-source-selection-status=next_cycle_source_selection_completed`",
+        "`next-cycle-source-selection-items=5`",
+        "`selected-for-identity-review=2`",
+        "`deferred-clusters=2`",
+        "`risk-review-clusters=1`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-raw-text-next-cycle-identity-review`",
     ):
         assert marker in markdown
         assert marker in materials_doc
