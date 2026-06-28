@@ -172,5 +172,22 @@
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28",
     "notes": "Completed next-cycle cluster-source selection package for two bounded sources with weak locator-based 013 and 012 advancement."
+  },
+  {
+    "package_id": "package_bazi_general_next_cycle_followup_001",
+    "package_label": "Bazi general next-cycle followup package 001",
+    "source_queue_snapshot_ids": [
+      "queue_bazi_general_xinpai_essence_pattern_strength_extract",
+      "queue_bazi_general_xingming_shuozheng_branch_interaction_extract"
+    ],
+    "selected_task_ids": [
+      "task_bazi_general_xinpai_essence_pattern_strength_001",
+      "task_bazi_general_xingming_shuozheng_branch_interaction_001"
+    ],
+    "backlog_record_ids": [],
+    "status": "completed",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28",
+    "notes": "Completed next-cycle followup selection package for two bounded ordinary-risk sources with weak locator-based 013 and 012 advancement."
   }
 ]

@@ -1,7 +1,7 @@
 # Evidence Source Reference Quality Audit Report
 
 Generated: automatic analysis
-Audit scope: 101 evidence units
+Audit scope: 105 evidence units
 
 ## Precision Summary
 
@@ -199,6 +199,9 @@ Prior improvements are preserved:
 
 | bazi_general_true_spirit_useful_god_001 | True-spirit positioning source entry | useful_god_candidate | Bazi modern method reference | batch_bazi_general_next_cycle_cluster_source_001 | `page:八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf#p1` |  | PAGE_EXACT | weak next-cycle cluster-source anchor added |
 | bazi_general_wangdoujing_branch_interaction_001 | Wangdoujing source entry | branch_interaction | Bazi miscellaneous reference | batch_bazi_general_next_cycle_cluster_source_001 | `page:1_命理望斗经(1).pdf#p1` |  | PAGE_EXACT | weak next-cycle cluster-source anchor added |
+
+| bazi_general_xinpai_essence_pattern_strength_001 | Xin Pai essence part 2 source entry | pattern_strength | Bazi modern method reference | batch_bazi_general_next_cycle_followup_001 | `page:佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf#p1` |  | PAGE_EXACT | weak next-cycle followup anchor added |
+| bazi_general_xingming_shuozheng_branch_interaction_001 | Xingming Shuozheng volume 1 source entry | branch_interaction | Bazi miscellaneous reference | batch_bazi_general_next_cycle_followup_001 | `page:霍敏卿-星命说证正续合编上册.pdf#p1` |  | PAGE_EXACT | weak next-cycle followup anchor added |
 
 ## Recommendations
 

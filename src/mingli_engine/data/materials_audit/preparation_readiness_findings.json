@@ -482,5 +482,41 @@
     "recommended_next_action": "extract_candidates",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_xinpai_essence_part2_pdf",
+    "audit_id": "audit_bazi_general_xinpai_essence_part2_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary risk cluster was already selected"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_xingming_shuozheng_vol1_pdf",
+    "audit_id": "audit_bazi_general_xingming_shuozheng_vol1_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary risk cluster was already selected"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
   }
 ]

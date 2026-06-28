@@ -816,11 +816,65 @@ def test_bazi_general_next_cycle_cluster_source_selection_has_completed_package(
         assert slot.risk_boundary == "ordinary"
 
 
+def test_bazi_general_next_cycle_followup_selection_has_completed_package():
+    packages = extraction_queue_intake.load_extraction_work_packages()
+    tasks = extraction_queue_intake.load_extraction_tasks()
+    slots = extraction_queue_intake.load_candidate_draft_slots()
+
+    packages_by_id = {package.package_id: package for package in packages}
+    tasks_by_id = {task.task_id: task for task in tasks}
+    slots_by_id = {slot.draft_slot_id: slot for slot in slots}
+
+    package = packages_by_id["package_bazi_general_next_cycle_followup_001"]
+    expected_tasks = [
+        "task_bazi_general_xinpai_essence_pattern_strength_001",
+        "task_bazi_general_xingming_shuozheng_branch_interaction_001",
+    ]
+    assert package.status == "completed"
+    assert package.source_queue_snapshot_ids == [
+        "queue_bazi_general_xinpai_essence_pattern_strength_extract",
+        "queue_bazi_general_xingming_shuozheng_branch_interaction_extract",
+    ]
+    assert package.selected_task_ids == expected_tasks
+    assert package.backlog_record_ids == []
+
+    expected = {
+        "task_bazi_general_xinpai_essence_pattern_strength_001": (
+            "entry_bazi_general_xinpai_essence_part2_pdf",
+            "material_bazi_general_xinpai_essence_part2_pdf",
+            "queue_bazi_general_xinpai_essence_pattern_strength_extract",
+            "pattern_strength",
+        ),
+        "task_bazi_general_xingming_shuozheng_branch_interaction_001": (
+            "entry_bazi_general_xingming_shuozheng_vol1_pdf",
+            "material_bazi_general_xingming_shuozheng_vol1_pdf",
+            "queue_bazi_general_xingming_shuozheng_branch_interaction_extract",
+            "branch_interaction",
+        ),
+    }
+
+    for task_id, (entry_id, material_id, queue_id, rule_family) in expected.items():
+        task = tasks_by_id[task_id]
+        assert task.package_id == package.package_id
+        assert task.queue_item_id == queue_id
+        assert task.source_library_entry_id == entry_id
+        assert task.intended_source_material_id == material_id
+        assert task.status == "completed"
+        assert task.risk_boundary == "ordinary"
+        assert task.locator_requirement == "page_or_section"
+        assert task.overlap_warnings == []
+
+        slot = slots_by_id[f"slot_{task_id.removeprefix('task_')}"]
+        assert slot.task_id == task_id
+        assert slot.target_rule_family == rule_family
+        assert slot.risk_boundary == "ordinary"
+
+
 def test_post_external_inventory_refresh_closes_applied_manual_actions():
     summary = extraction_queue_intake.build_package_progress_summary()
 
-    assert summary.task_counts == {"completed": 21}
-    assert summary.extraction_task_count == 21
+    assert summary.task_counts == {"completed": 23}
+    assert summary.extraction_task_count == 23
     assert summary.next_manual_action_ids == []
 
 

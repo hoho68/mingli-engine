@@ -702,6 +702,22 @@ formal-evidence deltas remain zero.
 
 ## Bazi General Next-Cycle Cluster-Source Intake
 
+
+The 2026-06-28 `015-raw-text-next-cycle-followup-selection` stage added
+two more ordinary-risk weak-locator candidates under explicit user authorization:
+
+- `candidate_bazi_general_xinpai_essence_pattern_strength_001` from
+  `material_bazi_general_xinpai_essence_part2_pdf`, approved by
+  `review_bazi_general_xinpai_essence_pattern_strength_001` and promoted to
+  `bazi_general_xinpai_essence_pattern_strength_001`.
+- `candidate_bazi_general_xingming_shuozheng_branch_interaction_001` from
+  `material_bazi_general_xingming_shuozheng_vol1_pdf`, approved by
+  `review_bazi_general_xingming_shuozheng_branch_interaction_001` and promoted
+  to `bazi_general_xingming_shuozheng_branch_interaction_001`.
+
+These records keep weak page anchors and concise paraphrases only; raw PDFs
+remain external and unchanged.
+
 The 2026-06-28 `015-raw-text-next-cycle-cluster-source-selection` stage added
 two authorized weak-locator 013 candidates:
 

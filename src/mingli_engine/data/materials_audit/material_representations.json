@@ -471,5 +471,31 @@
     "modified_hint": "",
     "contains_images": true,
     "notes": "Next-cycle source-level selection; current pass tracks weak locator metadata only."
+  },
+  {
+    "representation_id": "repr_bazi_general_xinpai_essence_part2_pdf",
+    "audit_id": "audit_bazi_general_xinpai_essence_part2_pdf",
+    "representation_type": "root_pdf",
+    "local_reference": "佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf",
+    "tracking_status": "external_untracked",
+    "text_quality": "unknown",
+    "locator_quality": "page_or_section",
+    "size_hint": "",
+    "modified_hint": "",
+    "contains_images": true,
+    "notes": "Followup source-level PDF selected from ordinary modern-method cluster; exact pages not transcribed."
+  },
+  {
+    "representation_id": "repr_bazi_general_xingming_shuozheng_vol1_pdf",
+    "audit_id": "audit_bazi_general_xingming_shuozheng_vol1_pdf",
+    "representation_type": "root_pdf",
+    "local_reference": "霍敏卿-星命说证正续合编上册.pdf",
+    "tracking_status": "external_untracked",
+    "text_quality": "unknown",
+    "locator_quality": "page_or_section",
+    "size_hint": "",
+    "modified_hint": "",
+    "contains_images": true,
+    "notes": "Followup source-level PDF selected from ordinary miscellaneous identity-review cluster; exact pages not transcribed."
   }
 ]

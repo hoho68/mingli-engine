@@ -250,5 +250,29 @@
     "scope_notes": "Next-cycle cluster source preparation completed with a weak page anchor and bounded candidate.",
     "rights_notes": "External PDF; store concise paraphrases only.",
     "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_xinpai_essence_part2_pdf",
+    "title": "Xin Pai Mingli Essence Explanation Part 2",
+    "material_type": "pdf",
+    "file_label": "佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_xinpai_essence_part2_pdf",
+    "scope_notes": "Next-cycle followup source preparation completed with a weak page anchor and bounded candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_xingming_shuozheng_vol1_pdf",
+    "title": "Xingming Shuozheng Continuation Combined Volume 1",
+    "material_type": "pdf",
+    "file_label": "霍敏卿-星命说证正续合编上册.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_xingming_shuozheng_vol1_pdf",
+    "scope_notes": "Next-cycle followup source preparation completed with a weak page anchor and bounded candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
   }
 ]

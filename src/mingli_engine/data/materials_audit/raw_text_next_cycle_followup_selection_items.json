@@ -1,0 +1,74 @@
+[
+  {
+    "selection_id": "next_cycle_followup_source_xinpai_essence_part2",
+    "prior_selection_id": "next_cycle_cluster_source_true_spirit_positioning",
+    "cluster_id": "bazi_general_modern_method_series_cluster",
+    "source_selection_id": "next_cycle_bazi_modern_method_series",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Xin Pai Mingli Essence Explanation Part 2",
+    "selection_status": "selected_for_registration",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "register_source",
+    "relative_paths": [
+      "佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "source_library_entry_id": "entry_bazi_general_xinpai_essence_part2_pdf",
+    "source_material_id": "material_bazi_general_xinpai_essence_part2_pdf",
+    "audit_id": "audit_bazi_general_xinpai_essence_part2_pdf",
+    "queue_item_id": "queue_bazi_general_xinpai_essence_pattern_strength_extract",
+    "candidate_id": "candidate_bazi_general_xinpai_essence_pattern_strength_001",
+    "evidence_id": "bazi_general_xinpai_essence_pattern_strength_001",
+    "priority_score": 68,
+    "selection_note": "Followup source-level boundary is one ordinary PDF from the modern method series.",
+    "rationale": "Selected as a bounded single-file followup after the first modern-method weak locator anchor; broader series files remain unmerged.",
+    "guardrails": [
+      "Use weak page-level locator metadata until page transcription is available.",
+      "Do not treat the full 34-file series as one source.",
+      "Store concise paraphrase only."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "next_cycle_followup_source_xingming_shuozheng_vol1",
+    "prior_selection_id": "next_cycle_cluster_source_mingli_wangdoujing",
+    "cluster_id": "bazi_general_misc_identity_review_cluster",
+    "source_selection_id": "next_cycle_bazi_misc_identity_review",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Xingming Shuozheng Continuation Combined Volume 1",
+    "selection_status": "selected_for_registration",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "register_source",
+    "relative_paths": [
+      "霍敏卿-星命说证正续合编上册.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_library_entry_id": "entry_bazi_general_xingming_shuozheng_vol1_pdf",
+    "source_material_id": "material_bazi_general_xingming_shuozheng_vol1_pdf",
+    "audit_id": "audit_bazi_general_xingming_shuozheng_vol1_pdf",
+    "queue_item_id": "queue_bazi_general_xingming_shuozheng_branch_interaction_extract",
+    "candidate_id": "candidate_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "evidence_id": "bazi_general_xingming_shuozheng_branch_interaction_001",
+    "priority_score": 66,
+    "selection_note": "Followup source-level boundary is one ordinary PDF from the miscellaneous identity-review cluster.",
+    "rationale": "Selected as a bounded classical/miscellaneous followup after Wangdoujing; weak title identity is clear enough for metadata registration.",
+    "guardrails": [
+      "Use weak page-level locator metadata until page transcription is available.",
+      "Do not merge this volume with other miscellaneous sources.",
+      "Store concise paraphrase only."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  }
+]

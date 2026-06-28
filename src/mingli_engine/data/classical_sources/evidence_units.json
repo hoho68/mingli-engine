@@ -2243,5 +2243,49 @@
     "confidence": "weak",
     "source_quality": "review_note",
     "conflict_ids": []
+  },
+  {
+    "evidence_id": "bazi_general_xinpai_essence_pattern_strength_001",
+    "source_id": "source_bazi_general_xinpai_essence_part2_pdf",
+    "source_ref": "page:佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf#p1",
+    "theme": "Xin Pai essence pattern-strength seed",
+    "rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "summary": "Xin Pai Mingli Essence part 2 is retained as weak modern pattern-strength comparison evidence pending page transcription.",
+    "applicability": [
+      "Use as school-specific comparison context for pattern-strength rule review.",
+      "Require chart-context confirmation before any interpretive use."
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording."
+    ],
+    "school": "Bazi modern method reference",
+    "curation_batch_id": "batch_bazi_general_next_cycle_followup_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
+  },
+  {
+    "evidence_id": "bazi_general_xingming_shuozheng_branch_interaction_001",
+    "source_id": "source_bazi_general_xingming_shuozheng_vol1_pdf",
+    "source_ref": "page:霍敏卿-星命说证正续合编上册.pdf#p1",
+    "theme": "Xingming Shuozheng branch-interaction seed",
+    "rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "summary": "Xingming Shuozheng volume 1 is retained as weak branch-interaction comparison evidence pending page transcription.",
+    "applicability": [
+      "Use as comparison context for branch-interaction rule review.",
+      "Require chart-context confirmation before any interpretive use."
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording."
+    ],
+    "school": "Bazi miscellaneous reference",
+    "curation_batch_id": "batch_bazi_general_next_cycle_followup_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
   }
 ]

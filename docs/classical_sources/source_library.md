@@ -77,7 +77,7 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.source_library impor
 Computed with `build_source_library_progress_report()` after selected Bazi
 general variant registration prep:
 
-- Registered source entries: 19.
+- Registered source entries: 23.
 - Readiness: `ready_for_extraction=11`, `blocked=1`,
   `needs_preparation=2`, `review_completed=5`.
 - Priority: `high=11`, `medium=6`, `deferred=1`, `low=1`.
@@ -183,6 +183,12 @@ variant registration prep:
 - `entry_bazi_general_mingli_wangdoujing_pdf`: `candidate_count=1`,
   `approved_candidate_count=1`, `promoted_evidence_count=1`,
   `value_status=value_produced`.
+- `entry_bazi_general_xinpai_essence_part2_pdf`: `candidate_count=1`,
+  `approved_candidate_count=1`, `promoted_evidence_count=1`,
+  `value_status=value_produced`.
+- `entry_bazi_general_xingming_shuozheng_vol1_pdf`: `candidate_count=1`,
+  `approved_candidate_count=1`, `promoted_evidence_count=1`,
+  `value_status=value_produced`.
 - `batch_plan_high_risk_boundaries_001`: `candidate_count=2`,
   `approved_candidate_count=1`, `conflict_count=1`, `gap_count=1`,
   `promoted_evidence_count=1`, `value_status=value_produced`.
@@ -234,6 +240,12 @@ level, so the next queue remains reviewable and stable.
 - `entry_bazi_general_mingli_wangdoujing_pdf`: review completed; bounded
   next-cycle miscellaneous source stored as weak locator-backed source
   metadata.
+- `entry_bazi_general_xinpai_essence_part2_pdf`: review completed; bounded
+  next-cycle followup modern-method source stored as weak locator-backed
+  source metadata.
+- `entry_bazi_general_xingming_shuozheng_vol1_pdf`: review completed;
+  bounded next-cycle followup miscellaneous source stored as weak
+  locator-backed source metadata.
 
 ## US1 Review Notes
 

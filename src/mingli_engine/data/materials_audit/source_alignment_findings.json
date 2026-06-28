@@ -336,5 +336,31 @@
     "duplicate_or_variant_notes": "Selected as the bounded source from the miscellaneous identity-review cluster.",
     "reviewer": "maintainer",
     "reviewed_at": "2026-06-28"
+  },
+  {
+    "alignment_id": "align_bazi_general_xinpai_essence_part2_pdf",
+    "audit_id": "audit_bazi_general_xinpai_essence_part2_pdf",
+    "match_type": "exact",
+    "confidence": "weak",
+    "evidence": "Followup selection points to one bounded PDF under the modern-method series.",
+    "source_library_entry_id": "entry_bazi_general_xinpai_essence_part2_pdf",
+    "source_material_id": "material_bazi_general_xinpai_essence_part2_pdf",
+    "registration_recommendation": "registered",
+    "duplicate_or_variant_notes": "Do not merge with the full 34-file series.",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28"
+  },
+  {
+    "alignment_id": "align_bazi_general_xingming_shuozheng_vol1_pdf",
+    "audit_id": "audit_bazi_general_xingming_shuozheng_vol1_pdf",
+    "match_type": "exact",
+    "confidence": "weak",
+    "evidence": "Followup selection points to one bounded PDF under the miscellaneous identity-review cluster.",
+    "source_library_entry_id": "entry_bazi_general_xingming_shuozheng_vol1_pdf",
+    "source_material_id": "material_bazi_general_xingming_shuozheng_vol1_pdf",
+    "registration_recommendation": "registered",
+    "duplicate_or_variant_notes": "Do not merge with other miscellaneous sources or volumes.",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28"
   }
 ]

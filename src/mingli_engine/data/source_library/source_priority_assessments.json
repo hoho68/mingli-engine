@@ -330,5 +330,37 @@
     "rationale": "Mingli Wangdoujing broadens branch-interaction comparison coverage; page transcription remains later work.",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_xinpai_essence_part2_001",
+    "entry_id": "entry_bazi_general_xinpai_essence_part2_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Xin Pai essence part 2 broadens modern pattern-strength comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_xingming_shuozheng_vol1_001",
+    "entry_id": "entry_bazi_general_xingming_shuozheng_vol1_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Xingming Shuozheng volume 1 broadens branch-interaction comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
   }
 ]

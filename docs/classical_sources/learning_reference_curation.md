@@ -120,7 +120,7 @@ Candidate-intake decision records include these first-wave examples:
   creating `candidate_hongfu_remedy_boundary_017_001`.
 
 The full seeded 017 decision set now contains `reuse_existing=3`,
-`create_candidate=34`, and `status:applied=37`. Applied decisions are no
+`create_candidate=36`, and `status:applied=39`. Applied decisions are no
 longer themselves evidence; any report-usable value comes only after the
 ordinary 013 review/promotion path creates matching formal evidence units.
 
@@ -157,18 +157,18 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 
 ## Current Incremental Snapshot
 
-- Learning reference notes: `candidate_intake_started=21`.
-- Learning points: `duplicate_review=3`, `ready=34`, `deferred=6`.
-- Candidate decisions: `reuse_existing=3`, `create_candidate=34`,
-  `status:applied=37`.
+- Learning reference notes: `candidate_intake_started=25`.
+- Learning points: `duplicate_review=3`, `ready=36`, `deferred=6`.
+- Candidate decisions: `reuse_existing=3`, `create_candidate=36`,
+  `status:applied=39`.
 - Prerequisite actions: `risk_review=4`, `blocked=1`, `deferred=2`,
   `status:completed=4`, `status:deferred=2`, `status:blocked=1`.
-- Candidate-ready count: `34`.
-- Candidate decision count: `37`.
-- Risk tier counts: `ordinary=25`, `sensitive=44`, `high_risk=4` across notes,
+- Candidate-ready count: `36`.
+- Candidate decision count: `39`.
+- Risk tier counts: `ordinary=29`, `sensitive=44`, `high_risk=4` across notes,
   learning points, and prerequisite actions.
 - Target rule family counts: `blind_image_method=2`,
-  `branch_interaction=5`, `pattern_strength=12`,
+  `branch_interaction=7`, `pattern_strength=13`,
   `useful_god_candidate=7`, `luck_cycle=4`, `ten_god_relation=4`,
   `five_element_balance=1`, `remedy_boundary=1`, and
   `high_risk_signal=1`.
@@ -183,7 +183,7 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 The 2026-06-27 source-window learning-closure pass is now reflected in the
 017 maintainer snapshot without changing 017 data schemas or promotion state.
 
-- `selected-ready-learning-notes=23`: the 23 ready items remain selected 016
+- `selected-ready-learning-notes=25`: the 25 ready items remain selected 016
   extraction tasks and 017 learning reference notes. Here "ready" means ready
   as learning-reference input, not automatically ready for formal evidence.
 - `retained-chapter-learning-closed=11`: retained chapter-level source windows
@@ -235,19 +235,19 @@ The candidate/formal evidence boundary audit confirms that 017 learning
 records remain provenance metadata while explicitly authorized downstream work
 is represented in 013 and 012.
 
-- `017-applied-decisions=37`: 017 candidate-intake decisions remain provenance
+- `017-applied-decisions=39`: 017 candidate-intake decisions remain provenance
   and planning metadata after application.
-- `017-create-candidate-decisions=34`: applied create-candidate decisions map
+- `017-create-candidate-decisions=36`: applied create-candidate decisions map
   to existing 013 candidate extracts; the reuse decisions continue to point to
   `candidate_northeast_blind_image_001`,
   `candidate_markdown_batch_004_pattern_strength_001`, and
   `candidate_markdown_batch_004_useful_god_001`.
-- `013-candidate-extracts=46`: current 013 candidate status counts are
+- `013-candidate-extracts=48`: current 013 candidate status counts are
   `promoted=43`, `rejected=2`, and `blocked=1`.
-- `013-review-decisions=46`: current review decisions are `approved=43`,
+- `013-review-decisions=48`: current review decisions are `approved=43`,
   `rejected=2`, and `blocked=1`.
-- `013-promotion-batches=30`: all current promotion batches are `reviewed`.
-- `012-formal-evidence-units=103`: formal evidence coverage remains in the
+- `013-promotion-batches=31`: all current promotion batches are `reviewed`.
+- `012-formal-evidence-units=105`: formal evidence coverage remains in the
   approved classical evidence corpus only.
 - `formal_evidence_delta=0`: the 017 summary itself does not add or remove
   formal evidence.
@@ -293,13 +293,13 @@ candidate, review, promotion, or formal-evidence mutation by itself.
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=23`
+- `017-notes-closed=25`
 - `017-next-action-ids=0`
-- `017-applied-decisions=37`
-- `013-candidate-extracts=46`
-- `013-review-decisions=46`
-- `013-promotion-batches=30`
-- `012-formal-evidence-units=103`
+- `017-applied-decisions=39`
+- `013-candidate-extracts=48`
+- `013-review-decisions=48`
+- `013-promotion-batches=31`
+- `012-formal-evidence-units=105`
 - `formal_evidence_delta=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`

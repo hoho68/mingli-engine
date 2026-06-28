@@ -271,5 +271,29 @@
     "risk_notes": [],
     "curation_gap_reason": "",
     "review_reference": "015-raw-text-next-cycle-cluster-source-selection"
+  },
+  {
+    "source_id": "source_bazi_general_xinpai_essence_part2_pdf",
+    "title": "Xin Pai Mingli Essence Explanation Part 2",
+    "file_name": "佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Next-cycle followup selection for Bazi general corpus; weak locator metadata only.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "015-raw-text-next-cycle-followup-selection"
+  },
+  {
+    "source_id": "source_bazi_general_xingming_shuozheng_vol1_pdf",
+    "title": "Xingming Shuozheng Continuation Combined Volume 1",
+    "file_name": "霍敏卿-星命说证正续合编上册.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Next-cycle followup selection for Bazi general corpus; weak locator metadata only.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "015-raw-text-next-cycle-followup-selection"
   }
 ]

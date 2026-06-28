@@ -204,8 +204,12 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
         "bazi_general_true_spirit_useful_god_001",
         "bazi_general_wangdoujing_branch_interaction_001",
     }
+    expected_followup_ids = {
+        "bazi_general_xinpai_essence_pattern_strength_001",
+        "bazi_general_xingming_shuozheng_branch_interaction_001",
+    }
 
-    assert report.approved_evidence_count == 103
+    assert report.approved_evidence_count == 105
     assert report.open_conflicts == ["conflict_high_risk_scope_001"]
     assert set(report.sources_with_gaps) == {
         "blind_life_manual",
@@ -245,6 +249,13 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
     for evidence_id in expected_next_cycle_ids:
         unit = evidence_by_id[evidence_id]
         assert unit.curation_batch_id == "batch_bazi_general_next_cycle_cluster_source_001"
+        assert unit.source_ref.startswith("page:")
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
+    assert expected_followup_ids <= set(evidence_by_id)
+    for evidence_id in expected_followup_ids:
+        unit = evidence_by_id[evidence_id]
+        assert unit.curation_batch_id == "batch_bazi_general_next_cycle_followup_001"
         assert unit.source_ref.startswith("page:")
         assert unit.source_quality == "review_note"
         assert unit.confidence == "weak"

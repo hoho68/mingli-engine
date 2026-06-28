@@ -213,8 +213,8 @@ US1 seeded the initial package and two extraction tasks. The completed
 incremental packages add Duan Plain Mingxue Outline, Mingxue Golden Voice,
 Fortune Reading Hongfu Qitian, three Markdown batch tasks, six knowledge
 skeleton tasks, three Bazi general preparation-reading tasks, two selected
-Bazi general variant tasks, and two next-cycle cluster-source tasks. All 21 extraction tasks are now completed and
-`next_manual_action_ids=0`. US2 keeps thirteen draft slots as historical
+Bazi general variant tasks, two next-cycle cluster-source tasks, and two next-cycle followup tasks. All 23 extraction tasks are now completed and
+`next_manual_action_ids=0`. US2 keeps seventeen draft slots as historical
 planning metadata. US3 and the current queue continuation track seven
 prerequisite backlog records, including four completed risk-review records,
 overlap warning visibility, and package progress counts while keeping all 016
@@ -228,9 +228,9 @@ materials. The authorized downstream passes that now exist in 013/012 remain
 tracked by their normal source-intake and formal-evidence records.
 
 The latest completed package,
-`package_bazi_general_next_cycle_cluster_source_001`, covers
-`queue_bazi_general_true_spirit_useful_god_extract` and
-`queue_bazi_general_wangdoujing_branch_interaction_extract`. Both tasks are
+`package_bazi_general_next_cycle_followup_001`, covers
+`queue_bazi_general_xinpai_essence_pattern_strength_extract` and
+`queue_bazi_general_xingming_shuozheng_branch_interaction_extract`. Both tasks are
 ordinary-risk, weak-locator metadata tasks; raw PDFs remain external and
 unchanged.
 

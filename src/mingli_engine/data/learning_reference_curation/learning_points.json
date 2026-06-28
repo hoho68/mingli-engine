@@ -709,5 +709,37 @@
     ],
     "candidate_readiness": "ready",
     "candidate_decision_id": "decision_bazi_general_wangdoujing_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_xinpai_essence_pattern_strength_001",
+    "note_id": "note_bazi_general_xinpai_essence_pattern_strength_001",
+    "point_label": "Xin Pai essence pattern-strength seed",
+    "source_locator": "page:佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf#p1",
+    "summary": "Xin Pai Mingli Essence part 2 PDF is registered as a modern pattern-strength comparison source; use as a weak preparation seed until page review is completed.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Treat Xin Pai framing as school-specific comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_xinpai_essence_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "note_id": "note_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "point_label": "Xingming Shuozheng branch-interaction seed",
+    "source_locator": "page:霍敏卿-星命说证正续合编上册.pdf#p1",
+    "summary": "Xingming Shuozheng volume 1 is registered as a weak branch-interaction comparison source; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as branch-interaction comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_xingming_shuozheng_branch_interaction_001"
   }
 ]

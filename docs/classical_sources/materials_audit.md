@@ -202,8 +202,8 @@ the newly registered raw text corpus triage backlog, and the refreshed queue
 excludes queue ids already covered by 016/017.
 
 - `queue-refresh-status=covered_or_completed_queue_exhausted`
-- `015-queue-items=24`
-- `016-covered-queue-items=23`
+- `015-queue-items=26`
+- `016-covered-queue-items=25`
 - `015-local-completed-queue-items=1`
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
@@ -879,6 +879,64 @@ Guardrails:
   slice.
 - All locators remain weak page-level placeholders until later transcription.
 - Case, formula, and sensitive clusters remain outside this selection.
+- Raw external materials are not moved, converted, or rewritten.
+
+## 015 Raw Text Next Cycle Followup Selection
+
+This followup slice selects two additional bounded ordinary-risk source-level
+records from the already selected modern-method and miscellaneous clusters, then
+records the authorized source-library, 013, and 012 weak-locator metadata chain.
+It does not move, convert, or rewrite external raw materials.
+
+- Selection id: `015-raw-text-next-cycle-followup-selection`
+- `next-cycle-followup-selection-status=next_cycle_followup_selection_completed`
+- `next-cycle-followup-selection-items=2`
+- `selected-for-registration=2`
+- `registered-source-entries=2`
+- `candidate-extracts=2`
+- `formal-evidence-units=2`
+- `source-library-mutation-authorized=true`
+- `downstream-mutation-authorized=true`
+- `next-material-entry=015-raw-text-next-cycle-gated-cluster-review-prep`
+
+Selected source records:
+
+- `next_cycle_followup_source_xinpai_essence_part2`
+- `next_cycle_followup_source_xingming_shuozheng_vol1`
+
+Source-library entry ids:
+
+- `entry_bazi_general_xinpai_essence_part2_pdf`
+- `entry_bazi_general_xingming_shuozheng_vol1_pdf`
+
+Promoted candidate ids:
+
+- `candidate_bazi_general_xinpai_essence_pattern_strength_001`
+- `candidate_bazi_general_xingming_shuozheng_branch_interaction_001`
+
+Formal evidence ids:
+
+- `bazi_general_xinpai_essence_pattern_strength_001`
+- `bazi_general_xingming_shuozheng_branch_interaction_001`
+
+Boundary checks:
+
+- `followup_selection_items_loaded`: `passed`
+- `cluster_source_selection_references_valid`: `passed`
+- `source_paths_are_relative`: `passed`
+- `selected_clusters_only`: `passed`
+- `source_library_entries_registered`: `passed`
+- `013_candidates_promoted`: `passed`
+- `012_evidence_promoted`: `passed`
+- `case_formula_clusters_remain_deferred`: `passed`
+- `sensitive_clusters_remain_risk_gated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+
+- Followup selection adds only ordinary-risk bounded sources.
+- All locators remain weak page-level placeholders until later transcription.
+- Case, formula, and sensitive clusters remain deferred or risk-gated.
 - Raw external materials are not moved, converted, or rewritten.
 
 ## Raw-File Boundary

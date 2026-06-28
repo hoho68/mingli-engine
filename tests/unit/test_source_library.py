@@ -400,7 +400,7 @@ def test_load_source_library_entries_loads_current_registered_sources():
     entries = source_library.load_source_library_entries()
     by_id = {entry.entry_id: entry for entry in entries}
 
-    assert len(entries) == 21
+    assert len(entries) == 23
     assert set(by_id) == {
         "entry_northeast_blind_peak_pdf",
         "entry_duan_plain_mingxue_outline_pdf",
@@ -418,6 +418,8 @@ def test_load_source_library_entries_loads_current_registered_sources():
         "entry_bazi_general_qiongtong_selected_pdf",
         "entry_bazi_general_true_spirit_positioning_pdf",
         "entry_bazi_general_mingli_wangdoujing_pdf",
+        "entry_bazi_general_xinpai_essence_part2_pdf",
+        "entry_bazi_general_xingming_shuozheng_vol1_pdf",
         "entry_markdown_source_batch_001",
         "entry_markdown_source_batch_002_core",
         "entry_markdown_source_batch_004",
@@ -491,6 +493,24 @@ def test_load_source_library_entries_loads_current_registered_sources():
     )
     assert by_id["entry_bazi_general_mingli_wangdoujing_pdf"].next_action == (
         "no_action"
+    )
+    assert by_id["entry_bazi_general_xinpai_essence_part2_pdf"].material_id == (
+        "material_bazi_general_xinpai_essence_part2_pdf"
+    )
+    assert by_id["entry_bazi_general_xinpai_essence_part2_pdf"].local_reference == (
+        "佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf"
+    )
+    assert by_id["entry_bazi_general_xinpai_essence_part2_pdf"].readiness_status == (
+        "review_completed"
+    )
+    assert by_id["entry_bazi_general_xingming_shuozheng_vol1_pdf"].material_id == (
+        "material_bazi_general_xingming_shuozheng_vol1_pdf"
+    )
+    assert by_id["entry_bazi_general_xingming_shuozheng_vol1_pdf"].local_reference == (
+        "霍敏卿-星命说证正续合编上册.pdf"
+    )
+    assert by_id["entry_bazi_general_xingming_shuozheng_vol1_pdf"].readiness_status == (
+        "review_completed"
     )
 
 
@@ -673,7 +693,7 @@ def test_load_source_priority_assessments_loads_default_assessments():
     assessments = source_library.load_source_priority_assessments()
     by_id = {assessment.assessment_id: assessment for assessment in assessments}
 
-    assert len(assessments) == 19
+    assert len(assessments) == 21
     assert "priority_blind_life_manual_001" in by_id
     assert "priority_bazi_general_lecture_textbook_001" in by_id
     assert "priority_bazi_general_ziping_orthodox_pair_001" in by_id
@@ -693,6 +713,18 @@ def test_load_source_priority_assessments_loads_default_assessments():
         "entry_bazi_general_mingli_wangdoujing_pdf"
     )
     assert by_id["priority_bazi_general_mingli_wangdoujing_001"].target_rule_families == [
+        "branch_interaction"
+    ]
+    assert by_id["priority_bazi_general_xinpai_essence_part2_001"].entry_id == (
+        "entry_bazi_general_xinpai_essence_part2_pdf"
+    )
+    assert by_id["priority_bazi_general_xinpai_essence_part2_001"].target_rule_families == [
+        "pattern_strength"
+    ]
+    assert by_id["priority_bazi_general_xingming_shuozheng_vol1_001"].entry_id == (
+        "entry_bazi_general_xingming_shuozheng_vol1_pdf"
+    )
+    assert by_id["priority_bazi_general_xingming_shuozheng_vol1_001"].target_rule_families == [
         "branch_interaction"
     ]
     assert by_id["priority_blind_life_manual_001"].entry_id == (
