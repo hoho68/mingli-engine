@@ -2056,5 +2056,31 @@
     "confidence": "moderate",
     "source_quality": "review_note",
     "conflict_ids": []
+  },
+  {
+    "evidence_id": "blind_life_manual_high_risk_boundary_001",
+    "source_id": "blind_life_manual",
+    "source_ref": "review-note:blind_life_manual.md#source-window-high-risk-boundary",
+    "theme": "high-risk boundary: aphoristic blind-life material",
+    "rule_family": "high_risk_signal",
+    "risk_tier": "high_risk",
+    "summary": "Blind-life aphoristic material is usable only as a conditional high-risk boundary reminder; do not carry absolute warning language into reports.",
+    "applicability": [
+      "high_risk_context_allowed",
+      "formal_report_requested",
+      "boundary_language_review_required"
+    ],
+    "limitations": [
+      "拒绝精确寿命、死亡时间与诊断结论。",
+      "不得使用恐吓式断语、保证结果或专业建议。",
+      "Use only with uncertainty language as traditional risk-signal context."
+    ],
+    "school": "盲派高风险材料",
+    "curation_batch_id": "batch_blind_life_manual_high_risk_boundary_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": [
+      "conflict_high_risk_scope_001"
+    ]
   }
 ]

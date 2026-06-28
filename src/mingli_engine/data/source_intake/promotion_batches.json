@@ -333,5 +333,19 @@
     "review_status": "reviewed",
     "review_notes": "Reviewed three Bazi general preparation-reading candidates for evidence linkage.",
     "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_blind_life_manual_high_risk_boundary_001",
+    "candidate_ids": [
+      "candidate_blind_life_manual_gap_001"
+    ],
+    "target_evidence_ids": [
+      "blind_life_manual_high_risk_boundary_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Approved Blind Life Manual returned candidate as conditional high-risk boundary evidence.",
+    "unresolved_issues": [
+      "Only the boundary note is promoted; aphoristic source claims still require separate locator review before any narrower evidence."
+    ]
   }
 ]

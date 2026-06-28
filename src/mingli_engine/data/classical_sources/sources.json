@@ -45,12 +45,12 @@
     "file_name": "盲人断命秘典.pdf",
     "source_type": "pdf",
     "extraction_status": "partial",
-    "review_status": "reviewed",
-    "scope_notes": "断语体材料，当前仅保留为来源清单，待进一步拆解为证据卡。",
+    "review_status": "approved",
+    "scope_notes": "断语体盲派材料；当前仅批准条件化高风险边界证据，具体断语仍待进一步拆解为证据卡。",
     "risk_notes": [
       "high_risk_signal"
     ],
-    "curation_gap_reason": "断语体和高风险口径尚未完成条件化改写，暂不支撑正式结论。",
+    "curation_gap_reason": "仅条件化高风险边界已提升；单条断语仍需页码或标题级定位复核后才能支撑正式结论。",
     "review_reference": "docs/classical_sources/extracts/blind_life_manual.md"
   },
   {

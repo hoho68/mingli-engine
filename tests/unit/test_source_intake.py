@@ -12340,6 +12340,53 @@ def test_bazi_general_source_preparation_reading_intake_records_are_promoted():
     assert batch.unresolved_issues == []
 
 
+def test_blind_life_manual_high_risk_boundary_candidate_is_promoted():
+    materials = source_intake.load_source_materials()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    batches = source_intake.load_promotion_batches()
+
+    materials_by_id = {material.material_id: material for material in materials}
+    candidates_by_id = {candidate.candidate_id: candidate for candidate in candidates}
+    reviews_by_id = {review.decision_id: review for review in reviews}
+    batches_by_id = {batch.promotion_batch_id: batch for batch in batches}
+
+    material = materials_by_id["material_blind_life_manual_pdf"]
+    assert material.preparation_status == "partially_reviewed"
+
+    candidate = candidates_by_id["candidate_blind_life_manual_gap_001"]
+    assert (
+        candidate.source_locator
+        == "review-note:blind_life_manual.md#source-window-high-risk-boundary"
+    )
+    assert candidate.proposed_rule_family == "high_risk_signal"
+    assert candidate.risk_tier == "high_risk"
+    assert candidate.status == "promoted"
+    assert candidate.related_evidence_ids == ["blind_life_manual_high_risk_boundary_001"]
+    assert candidate.related_conflict_ids == ["conflict_high_risk_scope_001"]
+    assert candidate.related_gap_ids == ["gap_blind_life_manual"]
+    assert any(
+        marker in limitation
+        for limitation in candidate.proposed_limitations
+        for marker in ("拒绝", "不得", "exact death")
+    )
+
+    review = reviews_by_id["review_candidate_blind_life_manual_gap_001"]
+    assert review.candidate_id == candidate.candidate_id
+    assert review.decision == "approved"
+    assert review.required_changes == []
+    assert review.rejection_reason == ""
+    assert review.source_quality == "review_note"
+    assert review.confidence == "moderate"
+    assert review.approval_limitations
+
+    batch = batches_by_id["promotion_blind_life_manual_high_risk_boundary_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.candidate_ids == ["candidate_blind_life_manual_gap_001"]
+    assert batch.target_evidence_ids == ["blind_life_manual_high_risk_boundary_001"]
+    assert batch.unresolved_issues
+
+
 def test_seeded_intake_progress_report_loads_after_batch_registration():
     report = source_intake.build_intake_progress_report()
 

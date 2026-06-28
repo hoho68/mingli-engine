@@ -117,7 +117,9 @@ FILE_SECTION_EVIDENCE_IDS = {
 
 
 REVIEW_NOTE_SOURCE_WINDOW_EVIDENCE_IDS = (
-    REVIEW_NOTE_TOPIC_EVIDENCE_IDS | FILE_SECTION_EVIDENCE_IDS
+    REVIEW_NOTE_TOPIC_EVIDENCE_IDS
+    | FILE_SECTION_EVIDENCE_IDS
+    | {"blind_life_manual_high_risk_boundary_001"}
 )
 
 
@@ -390,13 +392,14 @@ def test_source_ref_quality_audit_tracks_source_window_references():
 
     assert "REVIEW_NOTE_TOPIC" not in report
     assert "FILE_SECTION" not in report
-    assert "| REVIEW_NOTE_SOURCE_WINDOW | 57 | 62.0% |" in report
+    assert "| REVIEW_NOTE_SOURCE_WINDOW | 58 | 60.4% |" in report
     assert "| PAGE_LOCATOR | 44 |" in report
-    assert "| CHAPTER_LOCATOR | 11 |" in report
+    assert "| CHAPTER_LOCATOR | 12 |" in report
     assert "| MARKDOWN_LINE_LOCATOR | 2 |" in report
     assert "| blocked:rendered-review-no-topic-page-match | 4 |" in report
     assert "| blocked:rendered-review-no-remedy-boundary-page-match | 5 |" in report
     assert "| blocked:rendered-review-no-risk-boundary-page-match | 2 |" in report
+    assert "| blocked:blind-life-boundary-only-no-page-review | 1 |" in report
     assert "## OCR/Page Review Pass" in report
     assert "| blind_school_secret_pdf | prior-page-reviewed | 1 |" in report
     assert "| duan_plain_mingxue_outline_pdf | page-reviewed | 5 |" in report
@@ -421,7 +424,8 @@ def test_source_ref_quality_audit_tracks_source_window_references():
         in report
     )
     assert "| northeast_blind_peak_pdf | safety-boundary-retained | 2 |" in report
-    assert "| Total | retained-chapter-learning-closed | 11 |" in report
+    assert "| blind_life_manual_pdf | boundary-only-retained | 1 |" in report
+    assert "| Total | retained-chapter-learning-closed | 12 |" in report
     assert "Converted 51 legacy topic-only review-note references" in report
     assert "Converted 6 legacy file-section review-note references" in report
 

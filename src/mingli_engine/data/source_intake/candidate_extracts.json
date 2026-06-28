@@ -31,17 +31,23 @@
   {
     "candidate_id": "candidate_blind_life_manual_gap_001",
     "material_id": "material_blind_life_manual_pdf",
-    "source_locator": "review-note:blind_life_manual.md#gap",
-    "extracted_meaning": "Aphoristic material from this source needs conditional rewrite before any evidence promotion.",
+    "source_locator": "review-note:blind_life_manual.md#source-window-high-risk-boundary",
+    "extracted_meaning": "Blind-life aphoristic material may only support a conditional high-risk boundary: traditional warning language must be rewritten as uncertainty-bound risk context, never as exact death, lifespan, diagnosis, or standalone verdict.",
     "short_quote": "",
-    "proposed_rule_family": "blind_image_method",
+    "proposed_rule_family": "high_risk_signal",
     "risk_tier": "high_risk",
-    "status": "returned",
+    "status": "promoted",
     "proposed_limitations": [
-      "Do not use for exact outcomes or standalone verdicts."
+      "拒绝精确寿命、死亡时间与诊断结论。",
+      "Use only as conditional high-risk boundary context with uncertainty language.",
+      "Do not use as a standalone verdict or fear-inducing prediction."
     ],
-    "related_evidence_ids": [],
-    "related_conflict_ids": [],
+    "related_evidence_ids": [
+      "blind_life_manual_high_risk_boundary_001"
+    ],
+    "related_conflict_ids": [
+      "conflict_high_risk_scope_001"
+    ],
     "related_gap_ids": [
       "gap_blind_life_manual"
     ],

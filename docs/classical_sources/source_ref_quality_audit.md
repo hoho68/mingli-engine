@@ -1,23 +1,23 @@
 # Evidence Source Reference Quality Audit Report
 
 Generated: automatic analysis
-Audit scope: 92 evidence units
+Audit scope: 96 evidence units
 
 ## Precision Summary
 
 | Precision Level | Count | Share |
 |-----------------|-------|-------|
-| REVIEW_NOTE_SOURCE_WINDOW | 57 | 62.0% |
-| MARKDOWN_SOURCE_LINE | 15 | 16.3% |
-| REVIEW_NOTE_KS_PATH | 11 | 12.0% |
-| PAGE_EXACT | 9 | 9.8% |
+| REVIEW_NOTE_SOURCE_WINDOW | 58 | 60.4% |
+| MARKDOWN_SOURCE_LINE | 15 | 15.6% |
+| REVIEW_NOTE_KS_PATH | 11 | 11.5% |
+| PAGE_EXACT | 12 | 12.5% |
 
 ## Source-Window Locator Detail
 
 | Locator Type | Count |
 |--------------|-------|
 | PAGE_LOCATOR | 44 |
-| CHAPTER_LOCATOR | 11 |
+| CHAPTER_LOCATOR | 12 |
 | MARKDOWN_LINE_LOCATOR | 2 |
 
 ## Chapter Locator Blocker Detail
@@ -27,6 +27,7 @@ Audit scope: 92 evidence units
 | blocked:rendered-review-no-topic-page-match | 4 |
 | blocked:rendered-review-no-remedy-boundary-page-match | 5 |
 | blocked:rendered-review-no-risk-boundary-page-match | 2 |
+| blocked:blind-life-boundary-only-no-page-review | 1 |
 
 ## OCR/Page Review Pass
 
@@ -57,14 +58,15 @@ Audit scope: 92 evidence units
 | duan_plain_mingxue_outline_pdf | learning-paraphrase-ready | 4 |
 | fortune_reading_hongfu_qitian_pdf | policy-boundary-retained | 5 |
 | northeast_blind_peak_pdf | safety-boundary-retained | 2 |
-| Total | retained-chapter-learning-closed | 11 |
+| blind_life_manual_pdf | boundary-only-retained | 1 |
+| Total | retained-chapter-learning-closed | 12 |
 
 ## Improvement Notes
 
 Converted 51 legacy topic-only review-note references in the prior pass and preserved them as source-window locators.
 Converted 6 legacy file-section review-note references into verifiable source-window locators in the prior pass.
 Upgraded 25 additional source-window locators from chapter-level to page-level after local PDF rendering and visual review.
-- All 57 review-note-backed evidence units now point to `review-note:<extract>.md#source-window-<slug>`.
+- All 58 review-note-backed evidence units now point to `review-note:<extract>.md#source-window-<slug>`.
 - Each source-window section has a `Source locator` field using `page:`, `chapter:`, or `Markdown/...#L...`.
 - Remaining chapter-level locators carry a `Locator note` explaining why page or Markdown-line precision is currently blocked after rendered review.
 - Page-level locator coverage is used where PDF text extraction, table-of-contents mapping, or rendered page review is reliable.
@@ -79,16 +81,16 @@ Prior improvements are preserved:
 
 ## Priority Groups
 
-### Current Goal Progress (92 items)
-- REVIEW_NOTE_SOURCE_WINDOW: 57 items now point to source-window sections with source locators.
+### Current Goal Progress (96 items)
+- REVIEW_NOTE_SOURCE_WINDOW: 58 items now point to source-window sections with source locators.
 - PAGE_LOCATOR: 44 source-window items now have page-level locators.
-- CHAPTER_LOCATOR: 11 source-window items remain chapter-level with explicit blocker notes, manual-review notes, and learning-closure notes.
+- CHAPTER_LOCATOR: 12 source-window items remain chapter-level with explicit blocker notes, manual-review notes, and learning-closure notes.
 - MARKDOWN_SOURCE_LINE: 15 items point to cleaned Markdown files and line numbers.
 - REVIEW_NOTE_KS_PATH: 11 items point to knowledge-skeleton files.
-- PAGE_EXACT: 9 items already have exact page references.
+- PAGE_EXACT: 12 items already have exact page references.
 
 ### Optional Future Precision Work
-- For the remaining 9 CID-backed chapter source windows, learning closure is complete; targeted OCR/manual transcription is only needed before exact quotation or future promotion.
+- For retained chapter source windows, learning closure is complete; targeted OCR/manual transcription is only needed before exact quotation or future promotion.
 - For the remaining 2 Northeast source windows, safety-boundary learning closure is complete; keep them as paraphrase-only unless a source-specific boundary page is identified.
 - Promote this audit builder into a checked utility command if future curation passes need repeatable report generation.
 
@@ -96,6 +98,7 @@ Prior improvements are preserved:
 
 | Evidence ID | Theme | Rule Family | School | Batch | Current source_ref | Source locator | Precision | Status |
 |-------------|-------|-------------|--------|-------|--------------------|----------------|-----------|--------|
+| blind_life_manual_high_risk_boundary_001 | high-risk boundary | high_risk_signal | blind life manual | batch_blind_life_manual_high_risk_boundary_001 | `review-note:blind_life_manual.md#source-window-high-risk-boundary` | `chapter:source=blind_life_manual_pdf; section=high-risk-boundary` | REVIEW_NOTE_SOURCE_WINDOW | boundary-only promoted |
 | duan_ten_god_relation_001 | 十神关系 | ten_god_relation | 段氏 | batch_012_seed_001 | `review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relationships` | `page:66; source=duan_plain_mingxue_outline_pdf; heading:ten-god-section-start` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | mingxue_five_element_balance_001 | 五行强弱 | five_element_balance | 通论 | batch_012_seed_001 | `review-note:mingxue_golden_voice.md#source-window-five-element-balance` | `page:104; source=mingxue_golden_voice_pdf; heading:five-element-command` | REVIEW_NOTE_SOURCE_WINDOW | improved |
 | teacher_pattern_strength_001 | 格局旺衰 | pattern_strength | 师传口径 | batch_012_seed_001 | `review-note:mingli_true_formula_teacher.md#source-window-pattern-strength` | `page:121; source=mingli_true_formula_teacher_pdf; heading:wangshuai-pattern-context` | REVIEW_NOTE_SOURCE_WINDOW | improved |
@@ -191,6 +194,6 @@ Prior improvements are preserved:
 
 ## Recommendations
 
-1. Targeted transcription: only transcribe the 9 CID-backed retained chapter windows if a future promotion requires exact quotation or page-level proof.
+1. Targeted transcription: only transcribe retained chapter windows if a future promotion requires exact quotation or page-level proof.
 2. Northeast safety-boundary handling: keep the 2 remaining Northeast risk-boundary windows as safety-paraphrase learning notes unless a source-specific boundary page is identified.
 3. Audit automation: promote this classification logic into a dedicated command if future curation passes need repeatable report generation.

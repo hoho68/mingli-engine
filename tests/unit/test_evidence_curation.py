@@ -188,12 +188,32 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
 
     report = build_coverage_report(sources, evidence_units, conflicts)
 
-    assert report.approved_evidence_count == 95
+    evidence_by_id = {unit.evidence_id: unit for unit in evidence_units}
+    blind_life_boundary = evidence_by_id["blind_life_manual_high_risk_boundary_001"]
+
+    assert report.approved_evidence_count == 96
     assert report.open_conflicts == ["conflict_high_risk_scope_001"]
     assert set(report.sources_with_gaps) == {
         "blind_life_manual",
         "immortal_fortune_jianghu_secret",
     }
+    assert blind_life_boundary.source_id == "blind_life_manual"
+    assert (
+        blind_life_boundary.source_ref
+        == "review-note:blind_life_manual.md#source-window-high-risk-boundary"
+    )
+    assert blind_life_boundary.rule_family == "high_risk_signal"
+    assert blind_life_boundary.risk_tier == "high_risk"
+    assert (
+        blind_life_boundary.curation_batch_id
+        == "batch_blind_life_manual_high_risk_boundary_001"
+    )
+    assert blind_life_boundary.conflict_ids == ["conflict_high_risk_scope_001"]
+    assert any(
+        marker in limitation
+        for limitation in blind_life_boundary.limitations
+        for marker in ("拒绝", "不得", "exact death")
+    )
     assert validate_curation_quality(sources, evidence_units, conflicts) == []
 
 

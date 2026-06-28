@@ -42,29 +42,31 @@ Related maintainer references:
 
 ## Current Computed Snapshot
 
-Computed with `build_intake_progress_report()` after batch005 candidate repair:
+Computed with `build_intake_progress_report()` after Blind Life Manual boundary
+promotion:
 
-- Source material preparation: `partially_reviewed=10`, `indexed=1`,
-  `not_started=1`, `reviewed=2`.
-- Candidate status: `promoted=32`, `returned=1`, `rejected=2`,
-  `blocked=1`.
-- Risk tiers: `sensitive=27`, `high_risk=2`, `ordinary=7`.
-- Rule families: `blind_image_method=6`, `high_risk_signal=1`,
-  `pattern_strength=9`, `ten_god_relation=4`, `five_element_balance=1`,
-  `remedy_boundary=1`, `useful_god_candidate=5`, `branch_interaction=4`,
-  `luck_cycle=5`.
+- Source material preparation: `partially_reviewed=11`, `not_started=1`,
+  `reviewed=5`.
+- Candidate status: `promoted=36`, `rejected=2`, `blocked=1`.
+- Risk tiers: `sensitive=27`, `ordinary=10`, `high_risk=2`.
+- Rule families: `pattern_strength=10`, `useful_god_candidate=6`,
+  `blind_image_method=5`, `branch_interaction=5`, `luck_cycle=5`,
+  `ten_god_relation=4`, `high_risk_signal=2`,
+  `five_element_balance=1`, and `remedy_boundary=1`.
 - Promotion readiness: `approved_not_promoted=0`.
-- Audit links: `duplicate_candidates=1`, `conflict_link_count=1`,
+- Audit links: `duplicate_candidates=1`, `conflict_link_count=2`,
   `gap_link_count=1`.
 - Intake quality failures: none.
 
 ## Next Review Queues
 
 - Pending review: none.
-- Returned for revision: `candidate_blind_life_manual_gap_001`.
+- Returned for revision: none.
 - Approved-not-promoted: none.
-- Promoted: 32 candidates, including the original 017 applied candidates,
-  markdown source batches 001/002/004/005, and knowledge skeleton candidates.
+- Promoted: 36 candidates, including the original 017 applied candidates,
+  markdown source batches 001/002/004/005, knowledge skeleton candidates,
+  Bazi general source-preparation candidates, and
+  `candidate_blind_life_manual_gap_001` as boundary-only high-risk evidence.
 - Rejected or blocked audit records:
   `candidate_mingxue_golden_voice_scope_001`,
   `candidate_blind_school_secret_blocked_001`, and

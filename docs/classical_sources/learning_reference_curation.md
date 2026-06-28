@@ -243,11 +243,11 @@ is represented in 013 and 012.
   `candidate_markdown_batch_004_pattern_strength_001`, and
   `candidate_markdown_batch_004_useful_god_001`.
 - `013-candidate-extracts=39`: current 013 candidate status counts are
-  `promoted=35`, `rejected=2`, `returned=1`, and `blocked=1`.
-- `013-review-decisions=39`: current review decisions are `approved=35`,
-  `rejected=2`, `returned=1`, and `blocked=1`.
-- `013-promotion-batches=26`: all current promotion batches are `reviewed`.
-- `012-formal-evidence-units=95`: formal evidence coverage remains in the
+  `promoted=36`, `rejected=2`, and `blocked=1`.
+- `013-review-decisions=39`: current review decisions are `approved=36`,
+  `rejected=2`, and `blocked=1`.
+- `013-promotion-batches=27`: all current promotion batches are `reviewed`.
+- `012-formal-evidence-units=96`: formal evidence coverage remains in the
   approved classical evidence corpus only.
 - `formal_evidence_delta=0`: the 017 summary itself does not add or remove
   formal evidence.
@@ -262,6 +262,13 @@ Maintained boundary: 017 records describe learning/provenance decisions; 013
 records carry candidate, review, and promotion pipeline state; 012 evidence
 units are the only formal report evidence surface.
 
+Authorized downstream update on 2026-06-28: the returned
+`candidate_blind_life_manual_gap_001` record was promoted through 013 as
+`promotion_blind_life_manual_high_risk_boundary_001` and added to 012 as
+`blind_life_manual_high_risk_boundary_001`. This is boundary-only high-risk
+evidence; individual aphoristic claims from the source still require separate
+page or heading locators before use.
+
 ## Authorization Audit Packet
 
 The 2026-06-27 authorization audit packet is a read-only local clearance check
@@ -275,8 +282,8 @@ candidate, review, promotion, or formal-evidence mutation by itself.
 - `017-applied-decisions=33`
 - `013-candidate-extracts=39`
 - `013-review-decisions=39`
-- `013-promotion-batches=26`
-- `012-formal-evidence-units=95`
+- `013-promotion-batches=27`
+- `012-formal-evidence-units=96`
 - `formal_evidence_delta=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`

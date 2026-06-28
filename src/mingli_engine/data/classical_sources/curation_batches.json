@@ -175,5 +175,19 @@
     "review_status": "reviewed",
     "review_notes": "Reviewed preparation-reading evidence for three registered Bazi general PDF sources; no source passages are tracked.",
     "unresolved_issues": []
+  },
+  {
+    "batch_id": "batch_blind_life_manual_high_risk_boundary_001",
+    "source_ids": [
+      "blind_life_manual"
+    ],
+    "evidence_ids": [
+      "blind_life_manual_high_risk_boundary_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Reviewed the returned Blind Life Manual candidate as boundary-only high-risk evidence; no aphoristic source claims are promoted.",
+    "unresolved_issues": [
+      "Narrow page or quote-level Blind Life Manual evidence remains unapproved until separate locator review."
+    ]
   }
 ]

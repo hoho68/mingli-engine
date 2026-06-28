@@ -124,6 +124,7 @@ Primary detailed references:
 - [2026-06-28-bazi-general-registration-prep.md](../superpowers/plans/2026-06-28-bazi-general-registration-prep.md)
 - [2026-06-28-bazi-general-source-registration.md](../superpowers/plans/2026-06-28-bazi-general-source-registration.md)
 - [2026-06-28-bazi-general-source-preparation-reading.md](../superpowers/plans/2026-06-28-bazi-general-source-preparation-reading.md)
+- [2026-06-28-blind-life-manual-013-012-promotion.md](../superpowers/plans/2026-06-28-blind-life-manual-013-012-promotion.md)
 
 ## Current Frozen Snapshot
 
@@ -239,8 +240,8 @@ Authorization Audit Packet:
 
 - `013-candidate-extracts=39`
 - `013-review-decisions=39`
-- `013-promotion-batches=26`
-- `012-formal-evidence-units=95`
+- `013-promotion-batches=27`
+- `012-formal-evidence-units=96`
 - `formal_evidence_delta=0`
 
 ## Continuation Entry Points

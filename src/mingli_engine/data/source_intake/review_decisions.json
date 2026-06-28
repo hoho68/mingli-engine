@@ -17,17 +17,18 @@
   {
     "decision_id": "review_candidate_blind_life_manual_gap_001",
     "candidate_id": "candidate_blind_life_manual_gap_001",
-    "decision": "returned",
+    "decision": "approved",
     "reviewer": "maintainer",
-    "reviewed_at": "2026-05-28",
-    "rationale": "The summary needs a narrower locator and safer conditional rewrite before approval.",
-    "required_changes": [
-      "Add a page or heading-level locator and rewrite as conditional evidence."
-    ],
+    "reviewed_at": "2026-06-28",
+    "rationale": "Returned gap candidate was revised with a heading-level review-note locator and conditional high-risk boundary wording.",
+    "required_changes": [],
     "rejection_reason": "",
-    "approval_limitations": [],
-    "source_quality": "needs_recheck",
-    "confidence": "weak"
+    "approval_limitations": [
+      "拒绝精确寿命、死亡时间与诊断结论。",
+      "Use only as boundary context; individual aphoristic source claims still require separate locator review."
+    ],
+    "source_quality": "review_note",
+    "confidence": "moderate"
   },
   {
     "decision_id": "review_candidate_mingxue_golden_voice_scope_001",
