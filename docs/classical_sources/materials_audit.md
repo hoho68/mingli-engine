@@ -1198,6 +1198,56 @@ Guardrails:
 - No source-library, 013, or 012 mutation is authorized in this step.
 - External raw materials are not moved, converted, opened, or rewritten.
 
+## 015 Raw Text Next Cycle Sensitive Source-Level Risk Review
+
+- Selection id: `015-raw-text-next-cycle-sensitive-source-level-risk-review`
+- `sensitive-source-level-risk-review-status=sensitive_source_level_risk_review_completed`
+- `sensitive-source-level-risk-review-items=1`
+- `cleared-for-registration-prep=1`
+- `registered-source-entries=0`
+- `candidate-extracts=0`
+- `formal-evidence=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-next-cycle-sensitive-registration-prep`
+
+Reviewed sensitive source-level items:
+- `sensitive_source_review_bazi_psychology_pdf`
+
+Cleared for registration prep:
+- `sensitive_source_review_bazi_psychology_pdf`
+
+Prep items reviewed:
+- `sensitive_risk_prep_bazi_psychology_pdf`
+
+Prep items retained blocked:
+- `sensitive_risk_prep_erotic_fate_collection_pdf`
+
+Prep items retained deferred:
+- `sensitive_risk_prep_bazi_comic_ppt`
+
+Reviewed paths:
+- `陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf`
+
+Boundary checks:
+- `sensitive_source_level_risk_review_items_loaded`: `passed`
+- `sensitive_risk_review_prep_completed`: `passed`
+- `only_prepared_prep_items_reviewed`: `passed`
+- `blocked_and_deferred_prep_retained`: `passed`
+- `source_paths_are_relative`: `passed`
+- `action_routing_valid`: `passed`
+- `source_library_mutation_blocked`: `passed`
+- `downstream_mutation_blocked`: `passed`
+- `no_downstream_records_created`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Cleared-for-registration-prep is not source-library registration.
+- No source-library, 013, or 012 mutation is authorized in this review.
+- Blocked and deferred sensitive prep items remain unavailable.
+- Psychology framing must stay non-diagnostic and non-deterministic.
+- External raw materials are not moved, converted, opened, or rewritten.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

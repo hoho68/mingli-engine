@@ -3337,6 +3337,66 @@ class RawTextNextCycleSensitiveRiskReviewPrepSummary:
 
 
 @dataclass(frozen=True)
+class RawTextNextCycleSensitiveSourceLevelRiskReviewItem:
+    review_item_id: str
+    prep_item_id: str
+    prep_id: str
+    source_selection_id: str
+    cluster_id: str
+    triage_group_id: str
+    source_root: str
+    title_label: str
+    review_status: str
+    risk_boundary: str
+    recommended_next_action: str
+    relative_paths: list[str]
+    file_count: int
+    priority_text_candidate_count: int
+    registration_prep_allowed: bool = False
+    target_rule_families: list[str] = field(default_factory=list)
+    risk_review_topics: list[str] = field(default_factory=list)
+    risk_findings: list[str] = field(default_factory=list)
+    source_library_mutation_authorized: bool = False
+    downstream_mutation_authorized: bool = False
+    priority_score: int = 0
+    boundary_decision: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextNextCycleSensitiveSourceLevelRiskReviewSummary:
+    selection_id: str
+    selection_status: str
+    triage_group_id: str
+    source_root: str
+    review_item_count: int
+    source_file_count: int
+    priority_text_candidate_count: int
+    cleared_for_registration_prep_count: int
+    registered_source_entry_count: int
+    candidate_extract_count: int
+    formal_evidence_count: int
+    review_item_ids: list[str]
+    cleared_for_registration_prep_item_ids: list[str]
+    prep_item_ids: list[str]
+    blocked_prep_item_ids: list[str]
+    deferred_prep_item_ids: list[str]
+    relative_paths: list[str]
+    status_counts: dict[str, int]
+    action_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    target_rule_family_counts: dict[str, int]
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextClusterSourceSelectionItem:
     selection_id: str
     cluster_id: str

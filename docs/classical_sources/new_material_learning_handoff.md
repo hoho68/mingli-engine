@@ -422,7 +422,7 @@ Risk-review items:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-raw-text-next-cycle-sensitive-source-level-risk-review`.
+- `next-new-material-start=015-raw-text-next-cycle-sensitive-registration-prep`.
 - Current 015 queue coverage has no uncovered action after excluding 30
   016-covered/completed ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -603,6 +603,23 @@ Risk-review items:
   `情色命理汇总.pdf`, and `八字命理漫画.ppt`.
 - Sensitive prep created no source-library, 013 candidate, or 012 evidence
   records.
+- 015 Raw Text Next Cycle Sensitive Source-Level Risk Review is completed:
+  `sensitive-source-level-risk-review-status=sensitive_source_level_risk_review_completed`,
+  `sensitive-source-level-risk-review-items=1`,
+  `cleared-for-registration-prep=1`,
+  `registered-source-entries=0`,
+  `candidate-extracts=0`,
+  `formal-evidence=0`,
+  `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-raw-text-next-cycle-sensitive-registration-prep`.
+- Sensitive source-level review id:
+  `sensitive_source_review_bazi_psychology_pdf`.
+- Reviewed sensitive prep id:
+  `sensitive_risk_prep_bazi_psychology_pdf`.
+- Sensitive blocked/deferred prep ids remain unavailable:
+  `sensitive_risk_prep_erotic_fate_collection_pdf` and
+  `sensitive_risk_prep_bazi_comic_ppt`.
 
 ## Remaining Optional Precision Work
 
@@ -619,7 +636,7 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-raw-text-next-cycle-sensitive-source-level-risk-review`. It should review the prepared psychology-labeled source at source level before any source-library, 013, or 012 mutation.
+`next-material-entry=015-raw-text-next-cycle-sensitive-registration-prep`. It should prepare the reviewed psychology-labeled source for possible source-library registration while keeping 013 and 012 mutation gated.
 
 ## Guardrails
 
@@ -631,4 +648,4 @@ When continuing new-material work, use a long goal that starts from
 
 ## Next Target
 
-Next target: `015-raw-text-next-cycle-sensitive-source-level-risk-review`. Review `sensitive_risk_prep_bazi_psychology_pdf` at source level before deciding whether any bounded sensitive source can be registered.
+Next target: `015-raw-text-next-cycle-sensitive-registration-prep`. Prepare `sensitive_source_review_bazi_psychology_pdf` for possible source-library registration while preserving sensitive guardrails and downstream authorization gates.

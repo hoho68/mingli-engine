@@ -725,6 +725,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_next_cycle_sensitive_risk_review_prep_items",
         "build_raw_text_next_cycle_sensitive_risk_review_prep_summary",
         "render_raw_text_next_cycle_sensitive_risk_review_prep_markdown",
+        "load_raw_text_next_cycle_sensitive_source_level_risk_review_items",
+        "build_raw_text_next_cycle_sensitive_source_level_risk_review_summary",
+        "render_raw_text_next_cycle_sensitive_source_level_risk_review_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -3270,6 +3273,120 @@ def test_raw_text_next_cycle_sensitive_risk_review_prep_markdown_and_docs_sync()
         "`source-library-mutation-authorized=false`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-raw-text-next-cycle-sensitive-source-level-risk-review`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_next_cycle_sensitive_source_level_risk_review_items_load_review_record():
+    items = (
+        materials_audit.load_raw_text_next_cycle_sensitive_source_level_risk_review_items()
+    )
+    items_by_id = {item.review_item_id: item for item in items}
+
+    assert len(items) == 1
+    assert set(items_by_id) == {"sensitive_source_review_bazi_psychology_pdf"}
+    item = items_by_id["sensitive_source_review_bazi_psychology_pdf"]
+    assert item.prep_item_id == "sensitive_risk_prep_bazi_psychology_pdf"
+    assert item.prep_id == "gated_prep_sensitive_topic_boundary_001"
+    assert item.source_selection_id == "next_cycle_bazi_sensitive_topic_risk_review"
+    assert item.cluster_id == "bazi_general_sensitive_topic_cluster"
+    assert item.review_status == "cleared_for_sensitive_registration_prep"
+    assert item.risk_boundary == "sensitive"
+    assert item.recommended_next_action == "register_source"
+    assert item.registration_prep_allowed is True
+    assert item.source_library_mutation_authorized is False
+    assert item.downstream_mutation_authorized is False
+    assert item.relative_paths == [
+        "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf"
+    ]
+    assert item.file_count == 1
+    assert item.priority_text_candidate_count == 1
+    assert item.target_rule_families == ["ten_god_relation"]
+    assert "sensitive_risk_prep_erotic_fate_collection_pdf" not in {
+        review.prep_item_id for review in items
+    }
+    assert "sensitive_risk_prep_bazi_comic_ppt" not in {
+        review.prep_item_id for review in items
+    }
+
+
+def test_raw_text_next_cycle_sensitive_source_level_risk_review_summary_counts_closure():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_sensitive_source_level_risk_review_summary()
+    )
+
+    assert summary.selection_id == (
+        "015-raw-text-next-cycle-sensitive-source-level-risk-review"
+    )
+    assert summary.selection_status == "sensitive_source_level_risk_review_completed"
+    assert summary.review_item_count == 1
+    assert summary.source_file_count == 1
+    assert summary.priority_text_candidate_count == 1
+    assert summary.cleared_for_registration_prep_count == 1
+    assert summary.registered_source_entry_count == 0
+    assert summary.candidate_extract_count == 0
+    assert summary.formal_evidence_count == 0
+    assert summary.source_library_mutation_authorized is False
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "015-raw-text-next-cycle-sensitive-registration-prep"
+    )
+    assert summary.review_item_ids == ["sensitive_source_review_bazi_psychology_pdf"]
+    assert summary.cleared_for_registration_prep_item_ids == [
+        "sensitive_source_review_bazi_psychology_pdf"
+    ]
+    assert summary.prep_item_ids == ["sensitive_risk_prep_bazi_psychology_pdf"]
+    assert summary.blocked_prep_item_ids == [
+        "sensitive_risk_prep_erotic_fate_collection_pdf"
+    ]
+    assert summary.deferred_prep_item_ids == ["sensitive_risk_prep_bazi_comic_ppt"]
+    assert summary.status_counts == {"cleared_for_sensitive_registration_prep": 1}
+    assert summary.action_counts == {"register_source": 1}
+    assert summary.risk_boundary_counts == {"sensitive": 1}
+    assert summary.target_rule_family_counts == {"ten_god_relation": 1}
+    assert summary.boundary_checks == {
+        "sensitive_source_level_risk_review_items_loaded": "passed",
+        "sensitive_risk_review_prep_completed": "passed",
+        "only_prepared_prep_items_reviewed": "passed",
+        "blocked_and_deferred_prep_retained": "passed",
+        "source_paths_are_relative": "passed",
+        "action_routing_valid": "passed",
+        "source_library_mutation_blocked": "passed",
+        "downstream_mutation_blocked": "passed",
+        "no_downstream_records_created": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_raw_text_next_cycle_sensitive_source_level_risk_review_markdown_and_docs_sync():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_sensitive_source_level_risk_review_summary()
+    )
+    markdown = (
+        materials_audit.render_raw_text_next_cycle_sensitive_source_level_risk_review_markdown(
+            summary
+        )
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Raw Text Next Cycle Sensitive Source-Level Risk Review",
+        "`sensitive-source-level-risk-review-status=sensitive_source_level_risk_review_completed`",
+        "`sensitive-source-level-risk-review-items=1`",
+        "`cleared-for-registration-prep=1`",
+        "`registered-source-entries=0`",
+        "`candidate-extracts=0`",
+        "`formal-evidence=0`",
+        "`source-library-mutation-authorized=false`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-raw-text-next-cycle-sensitive-registration-prep`",
     ):
         assert marker in markdown
         assert marker in materials_doc
