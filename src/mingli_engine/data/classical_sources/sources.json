@@ -319,5 +319,29 @@
     "risk_notes": [],
     "curation_gap_reason": "",
     "review_reference": "015-raw-text-next-cycle-gated-ordinary-source-selection"
+  },
+  {
+    "source_id": "source_bazi_general_bazi_baijue_case_pdf",
+    "title": "Bazi Baijue Case Collection Volume 1",
+    "file_name": "八字18本/八字百诀 上册  214P.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Gated ordinary followup selection for Bazi general corpus; weak locator metadata only.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "015-raw-text-next-cycle-gated-ordinary-followup-selection"
+  },
+  {
+    "source_id": "source_bazi_general_mingli_mijue_pdf",
+    "title": "Mingli Mijue Formula Reference",
+    "file_name": "命理秘诀(1).pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Gated ordinary followup selection for Bazi general corpus; weak locator metadata only.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "015-raw-text-next-cycle-gated-ordinary-followup-selection"
   }
 ]

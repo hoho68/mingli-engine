@@ -499,5 +499,29 @@
     "status": "applied",
     "created_at": "2026-06-29",
     "updated_at": "2026-06-29"
+  },
+  {
+    "decision_id": "decision_bazi_general_bazi_baijue_ten_god_001",
+    "learning_point_id": "lp_bazi_general_bazi_baijue_ten_god_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_bazi_baijue_case_pdf",
+    "candidate_id": "candidate_bazi_general_bazi_baijue_ten_god_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized gated ordinary followup selection to create a bounded weak candidate from the Bazi Baijue Case Collection Volume 1 learning point.",
+    "status": "applied",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "decision_id": "decision_bazi_general_mingli_mijue_branch_interaction_001",
+    "learning_point_id": "lp_bazi_general_mingli_mijue_branch_interaction_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_mingli_mijue_pdf",
+    "candidate_id": "candidate_bazi_general_mingli_mijue_branch_interaction_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized gated ordinary followup selection to create a bounded weak candidate from the Mingli Mijue Formula Reference learning point.",
+    "status": "applied",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
   }
 ]

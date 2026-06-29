@@ -419,5 +419,19 @@
     "review_status": "reviewed",
     "review_notes": "Gated ordinary weak locator candidates promoted as bounded ordinary-risk comparison evidence.",
     "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_bazi_general_gated_ordinary_followup_selection_001",
+    "candidate_ids": [
+      "candidate_bazi_general_bazi_baijue_ten_god_001",
+      "candidate_bazi_general_mingli_mijue_branch_interaction_001"
+    ],
+    "target_evidence_ids": [
+      "bazi_general_bazi_baijue_ten_god_001",
+      "bazi_general_mingli_mijue_branch_interaction_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Gated ordinary followup weak locator candidates promoted as bounded ordinary-risk comparison evidence.",
+    "unresolved_issues": []
   }
 ]

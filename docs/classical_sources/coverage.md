@@ -11,8 +11,8 @@ from the current JSON corpus instead of maintained by hand.
 
 Snapshot date: 2026-06-29
 
-- Approved evidence units: 107
-- Registered sources: 25
+- Approved evidence units: 109
+- Registered sources: 27
 - Sources with explicit gaps:
   - `blind_life_manual`: high-risk boundary evidence is promoted; page-level single-claim support still requires later review.
   - `immortal_fortune_jianghu_secret`: extraction and safety rewrite have not started, so it does not support formal conclusions.
@@ -36,9 +36,11 @@ Snapshot date: 2026-06-29
 - `mingli_true_formula_teacher`: 11
 - `mingxue_golden_voice`: 9
 - `northeast_blind_peak`: 9
+- `source_bazi_general_bazi_baijue_case_pdf`: 1
 - `source_bazi_general_beichen_intro_pdf`: 1
 - `source_bazi_general_ditiansui_selected_pdf`: 1
 - `source_bazi_general_lecture_textbook_pdf`: 1
+- `source_bazi_general_mingli_mijue_pdf`: 1
 - `source_bazi_general_mingli_wangdoujing_pdf`: 1
 - `source_bazi_general_mingzao_chunqiu_case_pdf`: 1
 - `source_bazi_general_qiongtong_selected_pdf`: 1
@@ -51,20 +53,20 @@ Snapshot date: 2026-06-29
 ## Evidence Counts By Rule Family
 
 - `blind_image_method`: 11
-- `branch_interaction`: 14
+- `branch_interaction`: 15
 - `five_element_balance`: 4
 - `high_risk_signal`: 8
 - `luck_cycle`: 11
 - `pattern_strength`: 18
 - `remedy_boundary`: 8
 - `taboo_god_candidate`: 6
-- `ten_god_relation`: 12
+- `ten_god_relation`: 13
 - `useful_god_candidate`: 15
 
 ## Evidence Counts By Risk Tier
 
 - `high_risk`: 12
-- `ordinary`: 56
+- `ordinary`: 58
 - `sensitive`: 39
 
 ## Quality Check Result

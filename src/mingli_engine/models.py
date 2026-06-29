@@ -3147,6 +3147,72 @@ class RawTextNextCycleGatedOrdinarySourceSelectionSummary:
 
 
 @dataclass(frozen=True)
+class RawTextNextCycleGatedOrdinaryFollowupSelectionItem:
+    selection_id: str
+    prior_selection_id: str
+    prep_id: str
+    source_selection_id: str
+    cluster_id: str
+    triage_group_id: str
+    source_root: str
+    title_label: str
+    selection_status: str
+    risk_boundary: str
+    recommended_next_action: str
+    relative_paths: list[str]
+    file_count: int
+    priority_text_candidate_count: int
+    source_library_entry_id: str
+    source_material_id: str
+    audit_id: str
+    queue_item_id: str
+    candidate_id: str
+    evidence_id: str
+    target_rule_families: list[str] = field(default_factory=list)
+    source_library_mutation_authorized: bool = True
+    downstream_mutation_authorized: bool = True
+    priority_score: int = 0
+    selection_note: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextNextCycleGatedOrdinaryFollowupSelectionSummary:
+    selection_id: str
+    selection_status: str
+    triage_group_id: str
+    source_root: str
+    source_selection_item_count: int
+    source_file_count: int
+    priority_text_candidate_count: int
+    selected_for_registration_count: int
+    registered_source_entry_count: int
+    candidate_extract_count: int
+    formal_evidence_count: int
+    selected_item_ids: list[str]
+    prior_selection_item_ids: list[str]
+    prep_item_ids: list[str]
+    sensitive_risk_review_item_ids: list[str]
+    registered_entry_ids: list[str]
+    registered_material_ids: list[str]
+    audit_ids: list[str]
+    queue_item_ids: list[str]
+    candidate_ids: list[str]
+    evidence_ids: list[str]
+    status_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    target_rule_family_counts: dict[str, int]
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextClusterSourceSelectionItem:
     selection_id: str
     cluster_id: str

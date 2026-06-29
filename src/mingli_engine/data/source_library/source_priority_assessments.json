@@ -394,5 +394,37 @@
     "rationale": "Sizhu Yuce Yaojue broadens practical-formula pattern-strength comparison coverage; page transcription remains later work.",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_bazi_baijue_case_001",
+    "entry_id": "entry_bazi_general_bazi_baijue_case_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Bazi Baijue volume 1 broadens case-collection ten-god relation coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_mingli_mijue_001",
+    "entry_id": "entry_bazi_general_mingli_mijue_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Mingli Mijue broadens practical-formula branch-interaction comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
   }
 ]

@@ -1196,5 +1196,51 @@
     "duplicate_of": "",
     "created_by": "learning_reference_curation",
     "created_at": "2026-06-29"
+  },
+  {
+    "candidate_id": "candidate_bazi_general_bazi_baijue_ten_god_001",
+    "material_id": "material_bazi_general_bazi_baijue_case_pdf",
+    "source_locator": "page:八字18本/八字百诀 上册  214P.pdf#p1",
+    "extracted_meaning": "Bazi Baijue volume 1 is registered as a weak case-collection source for ten-god relation comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "ten_god_relation",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "short_quote": "",
+    "related_evidence_ids": [
+      "bazi_general_bazi_baijue_ten_god_001"
+    ],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-29"
+  },
+  {
+    "candidate_id": "candidate_bazi_general_mingli_mijue_branch_interaction_001",
+    "material_id": "material_bazi_general_mingli_mijue_pdf",
+    "source_locator": "page:命理秘诀(1).pdf#p1",
+    "extracted_meaning": "Mingli Mijue is registered as a weak practical-formula source for branch-interaction comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "short_quote": "",
+    "related_evidence_ids": [
+      "bazi_general_mingli_mijue_branch_interaction_001"
+    ],
+    "related_conflict_ids": [],
+    "related_gap_ids": [],
+    "duplicate_of": "",
+    "created_by": "learning_reference_curation",
+    "created_at": "2026-06-29"
   }
 ]

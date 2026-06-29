@@ -1059,5 +1059,69 @@
     "outcome_reason": "Gated ordinary source selected and advanced through weak locator-based preparation metadata.",
     "created_at": "2026-06-29",
     "updated_at": "2026-06-29"
+  },
+  {
+    "audit_id": "audit_bazi_general_bazi_baijue_case_pdf",
+    "canonical_title": "Bazi Baijue Case Collection Volume 1",
+    "alternate_titles": [
+      "八字18本/八字百诀 上册  214P.pdf"
+    ],
+    "material_scope": "bazi",
+    "primary_material_type": "pdf",
+    "representations": [
+      "repr_bazi_general_bazi_baijue_case_pdf"
+    ],
+    "source_library_entry_id": "entry_bazi_general_bazi_baijue_case_pdf",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "ready_for_extraction_review",
+    "source_boundary": "external_untracked",
+    "topic_tags": [
+      "case-collection",
+      "bazi-baijue",
+      "ten-god-relation"
+    ],
+    "rule_families": [
+      "ten_god_relation"
+    ],
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "rights_notes": "External PDF; use locator notes only and store concise paraphrases.",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
+    "outcome_reason": "Gated ordinary followup source selected and advanced through weak locator-based preparation metadata.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "audit_id": "audit_bazi_general_mingli_mijue_pdf",
+    "canonical_title": "Mingli Mijue Formula Reference",
+    "alternate_titles": [
+      "命理秘诀(1).pdf"
+    ],
+    "material_scope": "bazi",
+    "primary_material_type": "pdf",
+    "representations": [
+      "repr_bazi_general_mingli_mijue_pdf"
+    ],
+    "source_library_entry_id": "entry_bazi_general_mingli_mijue_pdf",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "ready_for_extraction_review",
+    "source_boundary": "external_untracked",
+    "topic_tags": [
+      "practical-formula",
+      "mingli-mijue",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "rights_notes": "External PDF; use locator notes only and store concise paraphrases.",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
+    "outcome_reason": "Gated ordinary followup source selected and advanced through weak locator-based preparation metadata.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
   }
 ]

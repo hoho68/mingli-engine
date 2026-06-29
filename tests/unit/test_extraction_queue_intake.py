@@ -873,8 +873,8 @@ def test_bazi_general_next_cycle_followup_selection_has_completed_package():
 def test_post_external_inventory_refresh_closes_applied_manual_actions():
     summary = extraction_queue_intake.build_package_progress_summary()
 
-    assert summary.task_counts == {"completed": 25}
-    assert summary.extraction_task_count == 25
+    assert summary.task_counts == {"completed": 27}
+    assert summary.extraction_task_count == 27
     assert summary.next_manual_action_ids == []
 
 

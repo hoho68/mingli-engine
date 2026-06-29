@@ -1,7 +1,7 @@
 # Evidence Source Reference Quality Audit Report
 
 Generated: automatic analysis
-Audit scope: 107 evidence units
+Audit scope: 109 evidence units
 
 ## Precision Summary
 
@@ -212,3 +212,7 @@ Prior improvements are preserved:
 ## Gated Ordinary Source Selection Addendum
 
 Gated ordinary weak page locators added: `bazi_general_mingzao_chunqiu_luck_cycle_001` and `bazi_general_sizhu_yuce_yaojue_pattern_strength_001`. Both remain weak `page:<source>#p1` locators pending later page transcription.
+
+## Gated Ordinary Followup Selection Addendum
+
+Gated ordinary followup weak page locators added: `bazi_general_bazi_baijue_ten_god_001` and `bazi_general_mingli_mijue_branch_interaction_001`. Both remain weak `page:<source>#p1` locators pending later page transcription.

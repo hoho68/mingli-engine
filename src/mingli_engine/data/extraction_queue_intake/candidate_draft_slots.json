@@ -348,5 +348,41 @@
       "Do not use formula framing as deterministic verdict."
     ],
     "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_bazi_baijue_ten_god_001",
+    "task_id": "task_bazi_general_bazi_baijue_ten_god_001",
+    "intended_candidate_label": "Bazi Baijue ten-god case seed",
+    "target_rule_family": "ten_god_relation",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and chart-context dependent.",
+      "Do not use case examples as deterministic verdicts."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_mingli_mijue_branch_interaction_001",
+    "task_id": "task_bazi_general_mingli_mijue_branch_interaction_001",
+    "intended_candidate_label": "Mingli Mijue branch-interaction formula seed",
+    "target_rule_family": "branch_interaction",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and school-dependent.",
+      "Do not use formula framing as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
   }
 ]

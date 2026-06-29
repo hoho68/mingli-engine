@@ -2331,5 +2331,49 @@
     "confidence": "weak",
     "source_quality": "review_note",
     "conflict_ids": []
+  },
+  {
+    "evidence_id": "bazi_general_bazi_baijue_ten_god_001",
+    "source_id": "source_bazi_general_bazi_baijue_case_pdf",
+    "source_ref": "page:八字18本/八字百诀 上册  214P.pdf#p1",
+    "theme": "Bazi Baijue ten-god case seed",
+    "rule_family": "ten_god_relation",
+    "risk_tier": "ordinary",
+    "summary": "Bazi Baijue volume 1 is retained as weak ten-god relation case comparison evidence pending page transcription.",
+    "applicability": [
+      "Use as comparison context for ten-god relation case review.",
+      "Require chart-context confirmation before any interpretive use."
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording."
+    ],
+    "school": "Bazi case collection reference",
+    "curation_batch_id": "batch_bazi_general_gated_ordinary_followup_selection_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
+  },
+  {
+    "evidence_id": "bazi_general_mingli_mijue_branch_interaction_001",
+    "source_id": "source_bazi_general_mingli_mijue_pdf",
+    "source_ref": "page:命理秘诀(1).pdf#p1",
+    "theme": "Mingli Mijue branch-interaction formula seed",
+    "rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "summary": "Mingli Mijue is retained as weak branch-interaction formula comparison evidence pending page transcription.",
+    "applicability": [
+      "Use as school-specific comparison context for branch-interaction rule review.",
+      "Require chart-context confirmation before any interpretive use."
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording."
+    ],
+    "school": "Bazi practical formula reference",
+    "curation_batch_id": "batch_bazi_general_gated_ordinary_followup_selection_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
   }
 ]

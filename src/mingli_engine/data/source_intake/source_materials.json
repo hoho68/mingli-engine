@@ -298,5 +298,29 @@
     "scope_notes": "Gated ordinary source preparation completed with a weak page anchor and bounded candidate.",
     "rights_notes": "External PDF; store concise paraphrases only.",
     "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_bazi_baijue_case_pdf",
+    "title": "Bazi Baijue Case Collection Volume 1",
+    "material_type": "pdf",
+    "file_label": "八字18本/八字百诀 上册  214P.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_bazi_baijue_case_pdf",
+    "scope_notes": "Gated ordinary followup source preparation completed with a weak page anchor and bounded candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_mingli_mijue_pdf",
+    "title": "Mingli Mijue Formula Reference",
+    "material_type": "pdf",
+    "file_label": "命理秘诀(1).pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_mingli_mijue_pdf",
+    "scope_notes": "Gated ordinary followup source preparation completed with a weak page anchor and bounded candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
   }
 ]

@@ -16,11 +16,11 @@ source-preparation reading, variant choice/deferred review, selected variant
 registration prep, raw text next-cycle source selection, raw text next-cycle
 identity review, raw text next-cycle cluster-source selection, raw text
 next-cycle followup selection, and raw text next-cycle gated-cluster review
-prep, and raw text next-cycle gated ordinary source selection.
-The latest local checkpoint selected two bounded ordinary source-level
-records from the prepared case/formula gated clusters, registered weak-locator
-source-library metadata, and promoted matching 013/012 records. The
-sensitive-topic cluster remains risk-gated and raw files remain unchanged.
+prep, and raw text next-cycle gated ordinary source selection, and raw text next-cycle gated ordinary followup selection.
+The latest local checkpoint selected the second pair of bounded ordinary
+source-level records from the prepared case/formula gated clusters, registered
+weak-locator source-library metadata, and promoted matching 013/012 records.
+The sensitive-topic cluster remains risk-gated and raw files remain unchanged.
 
 ## Completed Checkpoints
 
@@ -33,7 +33,7 @@ sensitive-topic cluster remains risk-gated and raw files remain unchanged.
   source window: `retained-chapter-learning-closed=11`.
 - 017 learning-reference sync recorded that selected ready learning inputs
   remain stable after Liang individual review:
-  `selected-ready-learning-notes=27`.
+  `selected-ready-learning-notes=29`.
 - Draft learning-note closure closed the remaining seven 017 learning-note
   handles: `closed-draft-learning-notes=7`, `next_action_ids=0`.
 - The risk-review prerequisite sweep is closed:
@@ -45,7 +45,7 @@ sensitive-topic cluster remains risk-gated and raw files remain unchanged.
   explicit user authorization:
   `authorization-status=ready_for_explicit_downstream_authorization`,
   `downstream-mutation-authorized=false`.
-- 015 coverage-aware queue refresh excludes the 27 queue ids already covered by
+- 015 coverage-aware queue refresh excludes the 29 queue ids already covered by
   016/017 and the locally completed raw text corpus triage item:
   `queue-refresh-status=covered_or_completed_queue_exhausted`,
   `refreshed-next-action-ids=0`.
@@ -158,6 +158,14 @@ sensitive-topic cluster remains risk-gated and raw files remain unchanged.
   `source-library-mutation-authorized=true`,
   `downstream-mutation-authorized=true`, and
   `next-material-entry=015-raw-text-next-cycle-gated-ordinary-followup-selection`.
+- 015 Raw Text Next Cycle Gated Ordinary Followup Selection is completed:
+  `gated-ordinary-followup-selection-status=gated_ordinary_followup_selection_completed`,
+  `gated-ordinary-followup-selection-items=2`,
+  `selected-for-registration=2`, `registered-source-entries=2`,
+  `candidate-extracts=2`, `formal-evidence=2`,
+  `source-library-mutation-authorized=true`,
+  `downstream-mutation-authorized=true`, and
+  `next-material-entry=015-raw-text-next-cycle-gated-ordinary-final-selection`.
 
 Primary detailed references:
 
@@ -188,6 +196,7 @@ Primary detailed references:
 - [2026-06-28-raw-text-next-cycle-followup-selection.md](../superpowers/plans/2026-06-28-raw-text-next-cycle-followup-selection.md)
 - [2026-06-28-raw-text-next-cycle-gated-cluster-review-prep.md](../superpowers/plans/2026-06-28-raw-text-next-cycle-gated-cluster-review-prep.md)
 - [2026-06-29-raw-text-next-cycle-gated-ordinary-source-selection.md](../superpowers/plans/2026-06-29-raw-text-next-cycle-gated-ordinary-source-selection.md)
+- [2026-06-29-raw-text-next-cycle-gated-ordinary-followup-selection.md](../superpowers/plans/2026-06-29-raw-text-next-cycle-gated-ordinary-followup-selection.md)
 - [2026-06-28-blind-life-manual-013-012-promotion.md](../superpowers/plans/2026-06-28-blind-life-manual-013-012-promotion.md)
 
 ## Current Frozen Snapshot
@@ -204,19 +213,19 @@ Source-window and locator state:
 
 017 learning-reference state:
 
-- `selected-ready-learning-notes=27`
+- `selected-ready-learning-notes=29`
 - `closed-draft-learning-notes=7`
 - `next_action_ids=0`
 - `planned-risk-review-actions=0`
 - `completed-risk-review-actions=4`
-- `017-applied-decisions=41`
-- `017-create-candidate-decisions=38`
+- `017-applied-decisions=43`
+- `017-create-candidate-decisions=40`
 
 Authorization Audit Packet:
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=27`
+- `017-notes-closed=29`
 - `017-next-action-ids=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
@@ -224,8 +233,8 @@ Authorization Audit Packet:
 015 Queue Refresh:
 
 - `queue-refresh-status=covered_or_completed_queue_exhausted`
-- `015-queue-items=28`
-- `016-covered-queue-items=27`
+- `015-queue-items=30`
+- `016-covered-queue-items=29`
 - `015-local-completed-queue-items=1`
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
@@ -378,10 +387,10 @@ Risk-review items:
 
 013 and 012 boundary state:
 
-- `013-candidate-extracts=50`
-- `013-review-decisions=50`
-- `013-promotion-batches=32`
-- `012-formal-evidence-units=107`
+- `013-candidate-extracts=52`
+- `013-review-decisions=52`
+- `013-promotion-batches=33`
+- `012-formal-evidence-units=109`
 - `formal_evidence_delta=0`
 
 ## Continuation Entry Points
@@ -394,9 +403,9 @@ Risk-review items:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-raw-text-next-cycle-gated-ordinary-followup-selection`.
-- Current 015 queue coverage has no uncovered action after excluding 25
-  016-covered ids and the locally completed
+- `next-new-material-start=015-raw-text-next-cycle-gated-ordinary-final-selection`.
+- Current 015 queue coverage has no uncovered action after excluding 30
+  016-covered/completed ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
   prerequisite actions are completed, and 017 now has no active
   `next_action_ids`.
@@ -585,4 +594,4 @@ and require explicit authorization before any additional source-library, 013, or
 
 ## Next Target
 
-Next target: `015-raw-text-next-cycle-gated-ordinary-followup-selection`. Continue selecting additional bounded ordinary source-level records from the case/formula gated clusters while keeping the sensitive-topic cluster behind risk review.
+Next target: `015-raw-text-next-cycle-gated-ordinary-final-selection`. Continue selecting additional bounded ordinary source-level records from the case/formula gated clusters while keeping the sensitive-topic cluster behind risk review.

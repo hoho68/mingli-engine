@@ -35,20 +35,20 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.learning_reference_c
 Expected result after implementation:
 
 - The progress summary prints:
-  `note_counts={'candidate_intake_started': 27}`,
-  `learning_point_counts={'duplicate_review': 3, 'ready': 38, 'deferred': 6}`,
-  `decision_counts={'reuse_existing': 3, 'create_candidate': 38, 'status:applied': 41}`,
+  `note_counts={'candidate_intake_started': 29}`,
+  `learning_point_counts={'duplicate_review': 3, 'ready': 40, 'deferred': 6}`,
+  `decision_counts={'reuse_existing': 3, 'create_candidate': 40, 'status:applied': 43}`,
   `prerequisite_action_counts={'risk_review': 4, 'blocked': 1, 'deferred': 2, 'status:completed': 4, 'status:blocked': 1, 'status:deferred': 2}`,
-  `risk_tier_counts={'sensitive': 44, 'ordinary': 29, 'high_risk': 4}`,
+  `risk_tier_counts={'sensitive': 44, 'ordinary': 37, 'high_risk': 4}`,
   `overlap_warning_count=9`,
-  `candidate_ready_count=38`,
-  `candidate_decision_count=41`,
+  `candidate_ready_count=40`,
+  `candidate_decision_count=43`,
   `formal_evidence_delta=0`, and `next_action_ids=[]`.
 - The quality check prints `[]`.
 - Completed, blocked, and deferred prerequisite actions remain outside
   `next_action_ids`.
 - Candidate-intake decisions are applied: three decisions reuse existing
-  candidates, and 38 create-candidate decisions have been applied through 013
+  candidates, and 40 create-candidate decisions have been applied through 013
   intake. The 017 metadata itself still has `formal_evidence_delta=0`; formal
   report evidence comes only from reviewed evidence units.
 
@@ -57,7 +57,7 @@ Expected result after implementation:
 The source-window learning-closure pass is an operational sync for maintainer
 review, not a candidate or evidence promotion step.
 
-- `selected-ready-learning-notes=27`: the 27 ready items remain selected 016
+- `selected-ready-learning-notes=29`: the 27 ready items remain selected 016
   extraction tasks and 017 learning reference notes. This means
   learning-reference input readiness, not automatic formal-evidence readiness.
 - `retained-chapter-learning-closed=11`: retained chapter-level source windows
@@ -96,7 +96,7 @@ Expected markers:
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=27`
+- `017-notes-closed=29`
 - `017-next-action-ids=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
@@ -115,7 +115,7 @@ The 015 raw text next-cycle gated-cluster review prep is complete:
 - `risk-review-required=1`
 - `source-library-mutation-authorized=false`
 - `downstream-mutation-authorized=false`
-- `next-new-material-start=015-raw-text-next-cycle-gated-ordinary-followup-selection`
+- `next-new-material-start=015-raw-text-next-cycle-gated-ordinary-final-selection`
 
 The next long goal should select bounded ordinary source-level records from the
 prepared case/formula clusters while keeping sensitive-topic material behind

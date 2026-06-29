@@ -60,6 +60,13 @@ EXPECTED_BAZI_GENERAL_GATED_ORDINARY_SOURCE_FILES = {
     "source_bazi_general_sizhu_yuce_yaojue_pdf": "四柱预测要诀.pdf",
 }
 
+EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FOLLOWUP_SOURCE_FILES = {
+    "source_bazi_general_bazi_baijue_case_pdf": (
+        "八字18本/八字百诀 上册  214P.pdf"
+    ),
+    "source_bazi_general_mingli_mijue_pdf": "命理秘诀(1).pdf",
+}
+
 PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS = {
     "batch001_pattern_strength_001",
     "batch001_ten_god_relation_001",
@@ -253,7 +260,7 @@ def test_source_registry_includes_all_initial_pdfs():
     sources = load_classical_sources()
     by_id = {source.source_id: source for source in sources}
 
-    assert len(sources) == 25
+    assert len(sources) == 27
     assert set(by_id) == set(EXPECTED_INITIAL_SOURCE_FILES) | set(
         EXPECTED_BAZI_GENERAL_SOURCE_FILES
     ) | set(
@@ -264,6 +271,8 @@ def test_source_registry_includes_all_initial_pdfs():
         EXPECTED_BAZI_GENERAL_FOLLOWUP_SOURCE_FILES
     ) | set(
         EXPECTED_BAZI_GENERAL_GATED_ORDINARY_SOURCE_FILES
+    ) | set(
+        EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FOLLOWUP_SOURCE_FILES
     ) | {
         "markdown_source_batch_001",
         "markdown_source_batch_002_core",
@@ -303,6 +312,12 @@ def test_source_registry_includes_all_initial_pdfs():
         assert source.extraction_status == "partial"
         assert source.review_status == "approved"
     for source_id, file_name in EXPECTED_BAZI_GENERAL_GATED_ORDINARY_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
+    for source_id, file_name in EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FOLLOWUP_SOURCE_FILES.items():
         source = by_id[source_id]
         assert source.file_name == file_name
         assert source.source_type == "pdf"

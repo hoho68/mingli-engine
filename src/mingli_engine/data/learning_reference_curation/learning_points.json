@@ -773,5 +773,37 @@
     ],
     "candidate_readiness": "ready",
     "candidate_decision_id": "decision_bazi_general_sizhu_yuce_yaojue_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_bazi_baijue_ten_god_001",
+    "note_id": "note_bazi_general_bazi_baijue_ten_god_001",
+    "point_label": "Bazi Baijue ten-god case seed",
+    "source_locator": "page:八字18本/八字百诀 上册  214P.pdf#p1",
+    "summary": "Bazi Baijue volume 1 is registered as a weak case-collection source for ten-god relation comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "ten_god_relation",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_bazi_baijue_ten_god_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_mingli_mijue_branch_interaction_001",
+    "note_id": "note_bazi_general_mingli_mijue_branch_interaction_001",
+    "point_label": "Mingli Mijue branch-interaction formula seed",
+    "source_locator": "page:命理秘诀(1).pdf#p1",
+    "summary": "Mingli Mijue is registered as a weak practical-formula source for branch-interaction comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_mingli_mijue_branch_interaction_001"
   }
 ]
