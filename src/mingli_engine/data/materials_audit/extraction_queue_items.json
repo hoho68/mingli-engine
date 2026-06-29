@@ -725,5 +725,49 @@
     "status": "completed",
     "created_at": "2026-06-29",
     "updated_at": "2026-06-29"
+  },
+  {
+    "queue_item_id": "queue_bazi_general_choujin_bosi_branch_interaction_extract",
+    "audit_id": "audit_bazi_general_choujin_bosi_case_pdf",
+    "queue_type": "extraction_ready",
+    "priority_level": "high",
+    "priority_rationale": "Selected Choujin Bosi Bazi case-method PDF can seed weak branch-interaction comparison metadata pending page transcription.",
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "pre_extraction_checks": [
+      "confirm selected local reference remains bounded",
+      "store concise paraphrase only",
+      "mark current source quality as weak until page transcription"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
+    "status": "completed",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "queue_item_id": "queue_bazi_general_bazi_shizhan_mifa_luck_cycle_extract",
+    "audit_id": "audit_bazi_general_bazi_shizhan_mifa_pdf",
+    "queue_type": "extraction_ready",
+    "priority_level": "high",
+    "priority_rationale": "Selected Bazi Shizhan Mifa PDF can seed weak luck-cycle formula comparison metadata pending page transcription.",
+    "target_rule_families": [
+      "luck_cycle"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "pre_extraction_checks": [
+      "confirm selected local reference remains bounded",
+      "store concise paraphrase only",
+      "mark current source quality as weak until page transcription"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
+    "status": "completed",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
   }
 ]

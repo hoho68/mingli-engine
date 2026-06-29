@@ -322,5 +322,29 @@
     "scope_notes": "Gated ordinary followup source preparation completed with a weak page anchor and bounded candidate.",
     "rights_notes": "External PDF; store concise paraphrases only.",
     "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_choujin_bosi_case_pdf",
+    "title": "Choujin Bosi Bazi Case Method",
+    "material_type": "pdf",
+    "file_label": "八字18本/抽筋剥丝讲八字  274P.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_choujin_bosi_case_pdf",
+    "scope_notes": "Gated ordinary final source preparation completed with a weak page anchor and bounded candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_bazi_shizhan_mifa_pdf",
+    "title": "Bazi Shizhan Mifa Practical Formula",
+    "material_type": "pdf",
+    "file_label": "八字实战秘法公开.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_bazi_shizhan_mifa_pdf",
+    "scope_notes": "Gated ordinary final source preparation completed with a weak page anchor and bounded candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
   }
 ]

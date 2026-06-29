@@ -343,5 +343,29 @@
     "risk_notes": [],
     "curation_gap_reason": "",
     "review_reference": "015-raw-text-next-cycle-gated-ordinary-followup-selection"
+  },
+  {
+    "source_id": "source_bazi_general_choujin_bosi_case_pdf",
+    "title": "Choujin Bosi Bazi Case Method",
+    "file_name": "八字18本/抽筋剥丝讲八字  274P.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Gated ordinary final selection for Bazi general corpus; weak locator metadata only.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "015-raw-text-next-cycle-gated-ordinary-final-selection"
+  },
+  {
+    "source_id": "source_bazi_general_bazi_shizhan_mifa_pdf",
+    "title": "Bazi Shizhan Mifa Practical Formula",
+    "file_name": "八字实战秘法公开.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "Gated ordinary final selection for Bazi general corpus; weak locator metadata only.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": "015-raw-text-next-cycle-gated-ordinary-final-selection"
   }
 ]

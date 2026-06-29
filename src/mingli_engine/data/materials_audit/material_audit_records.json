@@ -1123,5 +1123,69 @@
     "outcome_reason": "Gated ordinary followup source selected and advanced through weak locator-based preparation metadata.",
     "created_at": "2026-06-29",
     "updated_at": "2026-06-29"
+  },
+  {
+    "audit_id": "audit_bazi_general_choujin_bosi_case_pdf",
+    "canonical_title": "Choujin Bosi Bazi Case Method",
+    "alternate_titles": [
+      "八字18本/抽筋剥丝讲八字  274P.pdf"
+    ],
+    "material_scope": "bazi",
+    "primary_material_type": "pdf",
+    "representations": [
+      "repr_bazi_general_choujin_bosi_case_pdf"
+    ],
+    "source_library_entry_id": "entry_bazi_general_choujin_bosi_case_pdf",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "ready_for_extraction_review",
+    "source_boundary": "external_untracked",
+    "topic_tags": [
+      "case-collection",
+      "choujin-bosi",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "rights_notes": "External PDF; use locator notes only and store concise paraphrases.",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
+    "outcome_reason": "Gated ordinary final source selected and advanced through weak locator-based preparation metadata.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "audit_id": "audit_bazi_general_bazi_shizhan_mifa_pdf",
+    "canonical_title": "Bazi Shizhan Mifa Practical Formula",
+    "alternate_titles": [
+      "八字实战秘法公开.pdf"
+    ],
+    "material_scope": "bazi",
+    "primary_material_type": "pdf",
+    "representations": [
+      "repr_bazi_general_bazi_shizhan_mifa_pdf"
+    ],
+    "source_library_entry_id": "entry_bazi_general_bazi_shizhan_mifa_pdf",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "ready_for_extraction_review",
+    "source_boundary": "external_untracked",
+    "topic_tags": [
+      "practical-formula",
+      "bazi-shizhan-mifa",
+      "luck-cycle"
+    ],
+    "rule_families": [
+      "luck_cycle"
+    ],
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "rights_notes": "External PDF; use locator notes only and store concise paraphrases.",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
+    "outcome_reason": "Gated ordinary final source selected and advanced through weak locator-based preparation metadata.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
   }
 ]

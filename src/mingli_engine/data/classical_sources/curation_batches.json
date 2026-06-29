@@ -273,5 +273,19 @@
     "review_status": "reviewed",
     "review_notes": "Gated ordinary followup sources promoted as weak locator-based ordinary-risk comparison evidence.",
     "unresolved_issues": []
+  },
+  {
+    "batch_id": "batch_bazi_general_gated_ordinary_final_selection_001",
+    "source_ids": [
+      "source_bazi_general_choujin_bosi_case_pdf",
+      "source_bazi_general_bazi_shizhan_mifa_pdf"
+    ],
+    "evidence_ids": [
+      "bazi_general_choujin_bosi_branch_interaction_001",
+      "bazi_general_bazi_shizhan_mifa_luck_cycle_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Gated ordinary final sources promoted as weak locator-based ordinary-risk comparison evidence.",
+    "unresolved_issues": []
   }
 ]

@@ -223,5 +223,22 @@
     "created_at": "2026-06-29",
     "updated_at": "2026-06-29",
     "notes": "Completed gated ordinary followup selection package for two bounded ordinary sources with weak locator-based 013 and 012 advancement."
+  },
+  {
+    "package_id": "package_bazi_general_gated_ordinary_final_selection_001",
+    "package_label": "Bazi general gated ordinary final selection package 001",
+    "source_queue_snapshot_ids": [
+      "queue_bazi_general_choujin_bosi_branch_interaction_extract",
+      "queue_bazi_general_bazi_shizhan_mifa_luck_cycle_extract"
+    ],
+    "selected_task_ids": [
+      "task_bazi_general_choujin_bosi_branch_interaction_001",
+      "task_bazi_general_bazi_shizhan_mifa_luck_cycle_001"
+    ],
+    "backlog_record_ids": [],
+    "status": "completed",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29",
+    "notes": "Completed gated ordinary final selection package for the remaining bounded ordinary sources with weak locator-based 013 and 012 advancement."
   }
 ]

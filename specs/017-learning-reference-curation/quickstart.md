@@ -57,7 +57,7 @@ Expected result after implementation:
 The source-window learning-closure pass is an operational sync for maintainer
 review, not a candidate or evidence promotion step.
 
-- `selected-ready-learning-notes=29`: the 27 ready items remain selected 016
+- `selected-ready-learning-notes=31`: the 31 ready items remain selected 016
   extraction tasks and 017 learning reference notes. This means
   learning-reference input readiness, not automatic formal-evidence readiness.
 - `retained-chapter-learning-closed=11`: retained chapter-level source windows
@@ -96,7 +96,7 @@ Expected markers:
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=29`
+- `017-notes-closed=31`
 - `017-next-action-ids=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
@@ -115,7 +115,7 @@ The 015 raw text next-cycle gated-cluster review prep is complete:
 - `risk-review-required=1`
 - `source-library-mutation-authorized=false`
 - `downstream-mutation-authorized=false`
-- `next-new-material-start=015-raw-text-next-cycle-gated-ordinary-final-selection`
+- `next-new-material-start=015-raw-text-next-cycle-sensitive-risk-review-prep`
 
 The next long goal should select bounded ordinary source-level records from the
 prepared case/formula clusters while keeping sensitive-topic material behind

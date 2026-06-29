@@ -2375,5 +2375,49 @@
     "confidence": "weak",
     "source_quality": "review_note",
     "conflict_ids": []
+  },
+  {
+    "evidence_id": "bazi_general_choujin_bosi_branch_interaction_001",
+    "source_id": "source_bazi_general_choujin_bosi_case_pdf",
+    "source_ref": "page:八字18本/抽筋剥丝讲八字  274P.pdf#p1",
+    "theme": "Choujin Bosi branch-interaction case seed",
+    "rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "summary": "Choujin Bosi Bazi is retained as weak case-method source for branch-interaction comparison; use as a preparation seed until page review is completed.",
+    "applicability": [
+      "Use as comparison context for branch-interaction case review.",
+      "Require chart-context confirmation before any interpretive use."
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording."
+    ],
+    "school": "Bazi case collection reference",
+    "curation_batch_id": "batch_bazi_general_gated_ordinary_final_selection_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
+  },
+  {
+    "evidence_id": "bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "source_id": "source_bazi_general_bazi_shizhan_mifa_pdf",
+    "source_ref": "page:八字实战秘法公开.pdf#p1",
+    "theme": "Bazi Shizhan Mifa luck-cycle formula seed",
+    "rule_family": "luck_cycle",
+    "risk_tier": "ordinary",
+    "summary": "Bazi Shizhan Mifa is retained as weak practical-formula source for luck-cycle comparison; use as a preparation seed until page review is completed.",
+    "applicability": [
+      "Use as school-specific comparison context for luck-cycle rule review.",
+      "Require chart-context confirmation before any interpretive use."
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording."
+    ],
+    "school": "Bazi practical formula reference",
+    "curation_batch_id": "batch_bazi_general_gated_ordinary_final_selection_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
   }
 ]

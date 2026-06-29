@@ -719,6 +719,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_next_cycle_gated_ordinary_followup_selection_items",
         "build_raw_text_next_cycle_gated_ordinary_followup_selection_summary",
         "render_raw_text_next_cycle_gated_ordinary_followup_selection_markdown",
+        "load_raw_text_next_cycle_gated_ordinary_final_selection_items",
+        "build_raw_text_next_cycle_gated_ordinary_final_selection_summary",
+        "render_raw_text_next_cycle_gated_ordinary_final_selection_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -1700,7 +1703,7 @@ def test_audit_progress_summary_includes_next_five_queue_items_and_backlog_count
         "queue_markdown_source_batch_004_prepare",
         "queue_duan_plain_mingxue_outline_extract",
     ]
-    assert summary.extraction_ready_count == 22
+    assert summary.extraction_ready_count == 24
     assert summary.preparation_backlog_count == 0
     assert summary.registration_backlog_count == 0
     assert summary.risk_review_backlog_count == 5
@@ -1741,8 +1744,8 @@ def test_materials_audit_queue_refresh_excludes_covered_016_queue_items():
 
     assert refresh.refresh_id == "015-materials-audit-next-action-queue-refresh"
     assert refresh.refresh_status == "covered_or_completed_queue_exhausted"
-    assert refresh.queue_item_count == 30
-    assert refresh.covered_queue_item_count == 29
+    assert refresh.queue_item_count == 32
+    assert refresh.covered_queue_item_count == 31
     assert refresh.locally_completed_queue_item_ids == [
         "queue_raw_text_materials_folder_triage",
     ]
@@ -1774,8 +1777,8 @@ def test_materials_audit_queue_refresh_markdown_and_docs_are_in_sync():
     for marker in (
         "015 Queue Refresh",
         "`queue-refresh-status=covered_or_completed_queue_exhausted`",
-        "`015-queue-items=30`",
-        "`016-covered-queue-items=29`",
+        "`015-queue-items=32`",
+        "`016-covered-queue-items=31`",
         "`015-local-completed-queue-items=1`",
         "`uncovered-queue-items=0`",
         "`refreshed-next-action-ids=0`",
@@ -2984,6 +2987,151 @@ def test_raw_text_next_cycle_gated_ordinary_followup_selection_markdown_and_docs
         "`source-library-mutation-authorized=true`",
         "`downstream-mutation-authorized=true`",
         "`next-material-entry=015-raw-text-next-cycle-gated-ordinary-final-selection`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_next_cycle_gated_ordinary_final_selection_items_load_selected_records():
+    items = (
+        materials_audit.load_raw_text_next_cycle_gated_ordinary_final_selection_items()
+    )
+    items_by_id = {item.selection_id: item for item in items}
+
+    assert len(items) == 2
+    assert set(items_by_id) == {
+        "gated_ordinary_final_source_choujin_bosi_case_collection",
+        "gated_ordinary_final_source_bazi_shizhan_mifa_formula",
+    }
+    assert {item.prep_id for item in items} == {
+        "gated_prep_case_collection_boundary_001",
+        "gated_prep_practical_formula_boundary_001",
+    }
+    assert {item.prior_selection_id for item in items} == {
+        "gated_ordinary_followup_source_bazi_baijue_case_collection",
+        "gated_ordinary_followup_source_mingli_mijue_formula",
+    }
+    assert {item.cluster_id for item in items} == {
+        "bazi_general_case_collection_cluster",
+        "bazi_general_practical_formula_cluster",
+    }
+    assert all(item.selection_status == "selected_for_registration" for item in items)
+    assert all(item.risk_boundary == "ordinary" for item in items)
+    assert all(item.source_library_mutation_authorized for item in items)
+    assert all(item.downstream_mutation_authorized for item in items)
+    assert items_by_id[
+        "gated_ordinary_final_source_choujin_bosi_case_collection"
+    ].relative_paths == ["八字18本/抽筋剥丝讲八字  274P.pdf"]
+    assert items_by_id[
+        "gated_ordinary_final_source_bazi_shizhan_mifa_formula"
+    ].relative_paths == ["八字实战秘法公开.pdf"]
+    prior_paths = {
+        path
+        for item in [
+            *materials_audit.load_raw_text_next_cycle_gated_ordinary_source_selection_items(),
+            *materials_audit.load_raw_text_next_cycle_gated_ordinary_followup_selection_items(),
+        ]
+        for path in item.relative_paths
+    }
+    assert all(
+        path not in prior_paths for item in items for path in item.relative_paths
+    )
+
+
+def test_raw_text_next_cycle_gated_ordinary_final_selection_summary_counts_closure():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_gated_ordinary_final_selection_summary()
+    )
+
+    assert summary.selection_id == (
+        "015-raw-text-next-cycle-gated-ordinary-final-selection"
+    )
+    assert summary.selection_status == "gated_ordinary_final_selection_completed"
+    assert summary.source_selection_item_count == 2
+    assert summary.source_file_count == 2
+    assert summary.priority_text_candidate_count == 2
+    assert summary.selected_for_registration_count == 2
+    assert summary.registered_source_entry_count == 2
+    assert summary.candidate_extract_count == 2
+    assert summary.formal_evidence_count == 2
+    assert summary.source_library_mutation_authorized is True
+    assert summary.downstream_mutation_authorized is True
+    assert summary.next_material_entry == (
+        "015-raw-text-next-cycle-sensitive-risk-review-prep"
+    )
+    assert summary.selected_item_ids == [
+        "gated_ordinary_final_source_choujin_bosi_case_collection",
+        "gated_ordinary_final_source_bazi_shizhan_mifa_formula",
+    ]
+    assert summary.prior_selection_item_ids == [
+        "gated_ordinary_followup_source_bazi_baijue_case_collection",
+        "gated_ordinary_followup_source_mingli_mijue_formula",
+    ]
+    assert summary.sensitive_risk_review_item_ids == [
+        "gated_prep_sensitive_topic_boundary_001"
+    ]
+    assert summary.registered_entry_ids == [
+        "entry_bazi_general_choujin_bosi_case_pdf",
+        "entry_bazi_general_bazi_shizhan_mifa_pdf",
+    ]
+    assert summary.candidate_ids == [
+        "candidate_bazi_general_choujin_bosi_branch_interaction_001",
+        "candidate_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    ]
+    assert summary.evidence_ids == [
+        "bazi_general_choujin_bosi_branch_interaction_001",
+        "bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    ]
+    assert summary.status_counts == {"selected_for_registration": 2}
+    assert summary.risk_boundary_counts == {"ordinary": 2}
+    assert summary.target_rule_family_counts == {
+        "branch_interaction": 1,
+        "luck_cycle": 1,
+    }
+    assert summary.boundary_checks == {
+        "gated_ordinary_final_items_loaded": "passed",
+        "gated_prep_references_valid": "passed",
+        "prior_selection_references_valid": "passed",
+        "source_paths_are_relative": "passed",
+        "prior_selected_paths_not_duplicated": "passed",
+        "ordinary_gated_clusters_only": "passed",
+        "source_library_entries_registered": "passed",
+        "013_candidates_promoted": "passed",
+        "012_evidence_promoted": "passed",
+        "ordinary_representative_paths_exhausted": "passed",
+        "sensitive_cluster_remains_risk_review": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_raw_text_next_cycle_gated_ordinary_final_selection_markdown_and_docs_sync():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_gated_ordinary_final_selection_summary()
+    )
+    markdown = (
+        materials_audit.render_raw_text_next_cycle_gated_ordinary_final_selection_markdown(
+            summary
+        )
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Raw Text Next Cycle Gated Ordinary Final Selection",
+        "`gated-ordinary-final-selection-status=gated_ordinary_final_selection_completed`",
+        "`gated-ordinary-final-selection-items=2`",
+        "`selected-for-registration=2`",
+        "`registered-source-entries=2`",
+        "`candidate-extracts=2`",
+        "`formal-evidence=2`",
+        "`source-library-mutation-authorized=true`",
+        "`downstream-mutation-authorized=true`",
+        "`next-material-entry=015-raw-text-next-cycle-sensitive-risk-review-prep`",
     ):
         assert marker in markdown
         assert marker in materials_doc

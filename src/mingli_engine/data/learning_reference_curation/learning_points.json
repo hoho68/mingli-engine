@@ -805,5 +805,37 @@
     ],
     "candidate_readiness": "ready",
     "candidate_decision_id": "decision_bazi_general_mingli_mijue_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_choujin_bosi_branch_interaction_001",
+    "note_id": "note_bazi_general_choujin_bosi_branch_interaction_001",
+    "point_label": "Choujin Bosi branch-interaction case seed",
+    "source_locator": "page:八字18本/抽筋剥丝讲八字  274P.pdf#p1",
+    "summary": "Choujin Bosi Bazi is registered as a weak case-method source for branch-interaction comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_choujin_bosi_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "note_id": "note_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "point_label": "Bazi Shizhan Mifa luck-cycle formula seed",
+    "source_locator": "page:八字实战秘法公开.pdf#p1",
+    "summary": "Bazi Shizhan Mifa is registered as a weak practical-formula source for luck-cycle comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "luck_cycle",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_bazi_shizhan_mifa_luck_cycle_001"
   }
 ]

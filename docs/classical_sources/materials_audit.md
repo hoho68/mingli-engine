@@ -179,7 +179,7 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.materials_audit impo
 
 Expected computed summary:
 
-- 24 audited material groups and 35 material representations.
+- 34 audited material groups and 45 material representations.
 - Queue counts: `extraction_ready=14`, `risk_review_backlog=5`, and
   `blocked_backlog=3`.
 - Backlog counters: `registration_backlog_count=0`,
@@ -198,12 +198,12 @@ Expected computed summary:
 
 The 2026-06-27 coverage-aware queue refresh compares the 015 next-action queue
 with completed 016 work-package snapshots. The current 015 summary now includes
-the newly registered raw text corpus triage backlog, and the refreshed queue
+the newly registered final ordinary gated sources, and the refreshed queue
 excludes queue ids already covered by 016/017.
 
 - `queue-refresh-status=covered_or_completed_queue_exhausted`
-- `015-queue-items=30`
-- `016-covered-queue-items=29`
+- `015-queue-items=32`
+- `016-covered-queue-items=31`
 - `015-local-completed-queue-items=1`
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
@@ -1088,6 +1088,63 @@ Boundary checks:
 Guardrails:
 - Only two ordinary gated followup source-level records are selected.
 - Previously selected ordinary gated paths are not duplicated.
+- Sensitive-topic material stays behind risk review.
+- Weak locators are accepted only as preparation metadata.
+- External raw materials are not moved, converted, or rewritten.
+
+## 015 Raw Text Next Cycle Gated Ordinary Final Selection
+
+- Selection id: `015-raw-text-next-cycle-gated-ordinary-final-selection`
+- `gated-ordinary-final-selection-status=gated_ordinary_final_selection_completed`
+- `gated-ordinary-final-selection-items=2`
+- `selected-for-registration=2`
+- `registered-source-entries=2`
+- `candidate-extracts=2`
+- `formal-evidence=2`
+- `source-library-mutation-authorized=true`
+- `downstream-mutation-authorized=true`
+- `next-material-entry=015-raw-text-next-cycle-sensitive-risk-review-prep`
+
+Selected ordinary gated final items:
+- `gated_ordinary_final_source_choujin_bosi_case_collection`
+- `gated_ordinary_final_source_bazi_shizhan_mifa_formula`
+
+Prior ordinary gated followup items:
+- `gated_ordinary_followup_source_bazi_baijue_case_collection`
+- `gated_ordinary_followup_source_mingli_mijue_formula`
+
+Registered source-library entries:
+- `entry_bazi_general_choujin_bosi_case_pdf`
+- `entry_bazi_general_bazi_shizhan_mifa_pdf`
+
+Promoted 013 candidates:
+- `candidate_bazi_general_choujin_bosi_branch_interaction_001`
+- `candidate_bazi_general_bazi_shizhan_mifa_luck_cycle_001`
+
+Formal 012 evidence units:
+- `bazi_general_choujin_bosi_branch_interaction_001`
+- `bazi_general_bazi_shizhan_mifa_luck_cycle_001`
+
+Sensitive items retained for risk review:
+- `gated_prep_sensitive_topic_boundary_001`
+
+Boundary checks:
+- `gated_ordinary_final_items_loaded`: `passed`
+- `gated_prep_references_valid`: `passed`
+- `prior_selection_references_valid`: `passed`
+- `source_paths_are_relative`: `passed`
+- `prior_selected_paths_not_duplicated`: `passed`
+- `ordinary_gated_clusters_only`: `passed`
+- `source_library_entries_registered`: `passed`
+- `013_candidates_promoted`: `passed`
+- `012_evidence_promoted`: `passed`
+- `ordinary_representative_paths_exhausted`: `passed`
+- `sensitive_cluster_remains_risk_review`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Only the remaining ordinary gated source-level records are selected.
+- All case/formula representative paths are now covered by ordinary gated selections.
 - Sensitive-topic material stays behind risk review.
 - Weak locators are accepted only as preparation metadata.
 - External raw materials are not moved, converted, or rewritten.

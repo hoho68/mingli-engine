@@ -2252,3 +2252,8 @@ formal-evidence deltas remain zero.
 
 - `candidate_bazi_general_bazi_baijue_ten_god_001` and `candidate_bazi_general_mingli_mijue_branch_interaction_001` are promoted weak-locator 013 candidates from the 015 gated ordinary followup selection pass.
 - `promotion_bazi_general_gated_ordinary_followup_selection_001` links them to `bazi_general_bazi_baijue_ten_god_001` and `bazi_general_mingli_mijue_branch_interaction_001` formal evidence units.
+
+## Gated Ordinary Final Selection Promotions
+
+- `candidate_bazi_general_choujin_bosi_branch_interaction_001` and `candidate_bazi_general_bazi_shizhan_mifa_luck_cycle_001` are promoted weak-locator 013 candidates from the 015 gated ordinary final selection pass.
+- `promotion_bazi_general_gated_ordinary_final_selection_001` links them to `bazi_general_choujin_bosi_branch_interaction_001` and `bazi_general_bazi_shizhan_mifa_luck_cycle_001` formal evidence units.

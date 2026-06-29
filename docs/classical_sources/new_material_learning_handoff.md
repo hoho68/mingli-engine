@@ -33,7 +33,7 @@ The sensitive-topic cluster remains risk-gated and raw files remain unchanged.
   source window: `retained-chapter-learning-closed=11`.
 - 017 learning-reference sync recorded that selected ready learning inputs
   remain stable after Liang individual review:
-  `selected-ready-learning-notes=29`.
+  `selected-ready-learning-notes=31`.
 - Draft learning-note closure closed the remaining seven 017 learning-note
   handles: `closed-draft-learning-notes=7`, `next_action_ids=0`.
 - The risk-review prerequisite sweep is closed:
@@ -166,6 +166,14 @@ The sensitive-topic cluster remains risk-gated and raw files remain unchanged.
   `source-library-mutation-authorized=true`,
   `downstream-mutation-authorized=true`, and
   `next-material-entry=015-raw-text-next-cycle-gated-ordinary-final-selection`.
+- 015 Raw Text Next Cycle Gated Ordinary Final Selection is completed:
+  `gated-ordinary-final-selection-status=gated_ordinary_final_selection_completed`,
+  `gated-ordinary-final-selection-items=2`,
+  `selected-for-registration=2`, `registered-source-entries=2`,
+  `candidate-extracts=2`, `formal-evidence=2`,
+  `source-library-mutation-authorized=true`,
+  `downstream-mutation-authorized=true`, and
+  `next-material-entry=015-raw-text-next-cycle-sensitive-risk-review-prep`.
 
 Primary detailed references:
 
@@ -197,6 +205,7 @@ Primary detailed references:
 - [2026-06-28-raw-text-next-cycle-gated-cluster-review-prep.md](../superpowers/plans/2026-06-28-raw-text-next-cycle-gated-cluster-review-prep.md)
 - [2026-06-29-raw-text-next-cycle-gated-ordinary-source-selection.md](../superpowers/plans/2026-06-29-raw-text-next-cycle-gated-ordinary-source-selection.md)
 - [2026-06-29-raw-text-next-cycle-gated-ordinary-followup-selection.md](../superpowers/plans/2026-06-29-raw-text-next-cycle-gated-ordinary-followup-selection.md)
+- [2026-06-29-raw-text-next-cycle-gated-ordinary-final-selection.md](../superpowers/plans/2026-06-29-raw-text-next-cycle-gated-ordinary-final-selection.md)
 - [2026-06-28-blind-life-manual-013-012-promotion.md](../superpowers/plans/2026-06-28-blind-life-manual-013-012-promotion.md)
 
 ## Current Frozen Snapshot
@@ -213,19 +222,19 @@ Source-window and locator state:
 
 017 learning-reference state:
 
-- `selected-ready-learning-notes=29`
+- `selected-ready-learning-notes=31`
 - `closed-draft-learning-notes=7`
 - `next_action_ids=0`
 - `planned-risk-review-actions=0`
 - `completed-risk-review-actions=4`
-- `017-applied-decisions=43`
-- `017-create-candidate-decisions=40`
+- `017-applied-decisions=45`
+- `017-create-candidate-decisions=42`
 
 Authorization Audit Packet:
 
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `downstream-mutation-authorized=false`
-- `017-notes-closed=29`
+- `017-notes-closed=31`
 - `017-next-action-ids=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
@@ -233,8 +242,8 @@ Authorization Audit Packet:
 015 Queue Refresh:
 
 - `queue-refresh-status=covered_or_completed_queue_exhausted`
-- `015-queue-items=30`
-- `016-covered-queue-items=29`
+- `015-queue-items=32`
+- `016-covered-queue-items=31`
 - `015-local-completed-queue-items=1`
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
@@ -385,12 +394,22 @@ Risk-review items:
 
 - `gated_prep_sensitive_topic_boundary_001`
 
+015 Raw Text Next Cycle Gated Ordinary Final Selection:
+
+- `gated-ordinary-final-selection-status=gated_ordinary_final_selection_completed`
+- `gated-ordinary-final-selection-items=2`
+- Selected final ordinary ids:
+  `gated_ordinary_final_source_choujin_bosi_case_collection` and
+  `gated_ordinary_final_source_bazi_shizhan_mifa_formula`.
+- `ordinary_representative_paths_exhausted=passed`
+- `next-material-entry=015-raw-text-next-cycle-sensitive-risk-review-prep`
+
 013 and 012 boundary state:
 
-- `013-candidate-extracts=52`
-- `013-review-decisions=52`
-- `013-promotion-batches=33`
-- `012-formal-evidence-units=109`
+- `013-candidate-extracts=54`
+- `013-review-decisions=54`
+- `013-promotion-batches=34`
+- `012-formal-evidence-units=111`
 - `formal_evidence_delta=0`
 
 ## Continuation Entry Points
@@ -403,7 +422,7 @@ Risk-review items:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-raw-text-next-cycle-gated-ordinary-final-selection`.
+- `next-new-material-start=015-raw-text-next-cycle-sensitive-risk-review-prep`.
 - Current 015 queue coverage has no uncovered action after excluding 30
   016-covered/completed ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -578,11 +597,7 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-raw-text-next-cycle-gated-ordinary-source-selection`.
-It should select one or more bounded ordinary source-level records from the
-prepared case/formula clusters, keep the sensitive cluster behind risk review,
-and require explicit authorization before any additional source-library, 013, or
-012 mutation.
+`next-material-entry=015-raw-text-next-cycle-sensitive-risk-review-prep`. It should review the sensitive-topic gated cluster boundary before any source-library, 013, or 012 mutation.
 
 ## Guardrails
 
@@ -594,4 +609,4 @@ and require explicit authorization before any additional source-library, 013, or
 
 ## Next Target
 
-Next target: `015-raw-text-next-cycle-gated-ordinary-final-selection`. Continue selecting additional bounded ordinary source-level records from the case/formula gated clusters while keeping the sensitive-topic cluster behind risk review.
+Next target: `015-raw-text-next-cycle-sensitive-risk-review-prep`. Review the sensitive-topic gated cluster boundary before deciding whether any bounded source can be registered.

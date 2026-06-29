@@ -851,5 +851,37 @@
     ],
     "source_quality": "review_note",
     "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_choujin_bosi_branch_interaction_001",
+    "candidate_id": "candidate_bazi_general_choujin_bosi_branch_interaction_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-29",
+    "rationale": "Candidate is bounded to a weak page anchor and concise paraphrase; approved only as weak comparison evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator only; do not use as exact quoted authority.",
+      "Requires later page transcription for stronger evidence."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "candidate_id": "candidate_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-29",
+    "rationale": "Candidate is bounded to a weak page anchor and concise paraphrase; approved only as weak comparison evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator only; do not use as exact quoted authority.",
+      "Requires later page transcription for stronger evidence."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
   }
 ]

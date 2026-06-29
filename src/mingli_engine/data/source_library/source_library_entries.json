@@ -784,5 +784,57 @@
     "outcome_reason": "Gated ordinary followup source-level record selected and downstream metadata prepared under user authorization.",
     "created_at": "2026-06-29",
     "updated_at": "2026-06-29"
+  },
+  {
+    "entry_id": "entry_bazi_general_choujin_bosi_case_pdf",
+    "material_id": "material_bazi_general_choujin_bosi_case_pdf",
+    "title": "Choujin Bosi Bazi Case Method",
+    "material_type": "pdf",
+    "local_reference": "八字18本/抽筋剥丝讲八字  274P.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "case-collection",
+      "choujin-bosi",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registered from gated ordinary final selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Gated ordinary final source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "entry_id": "entry_bazi_general_bazi_shizhan_mifa_pdf",
+    "material_id": "material_bazi_general_bazi_shizhan_mifa_pdf",
+    "title": "Bazi Shizhan Mifa Practical Formula",
+    "material_type": "pdf",
+    "local_reference": "八字实战秘法公开.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "practical-formula",
+      "bazi-shizhan-mifa",
+      "luck-cycle"
+    ],
+    "rule_families": [
+      "luck_cycle"
+    ],
+    "source_quality_notes": "Registered from gated ordinary final selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Gated ordinary final source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
   }
 ]

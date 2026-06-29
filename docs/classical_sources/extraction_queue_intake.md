@@ -61,6 +61,8 @@ Current packages:
   Sizhu Yuce Yaojue.
 - `package_bazi_general_gated_ordinary_followup_selection_001` preserves the
   completed gated ordinary followup pass for Bazi Baijue and Mingli Mijue.
+- `package_bazi_general_gated_ordinary_final_selection_001` preserves the
+  completed gated ordinary final pass for Choujin Bosi and Bazi Shizhan Mifa.
 
 ## Extraction Task Boundary
 
@@ -125,6 +127,16 @@ Current US1 extraction tasks:
   `audit_bazi_general_mingli_mijue_pdf`,
   `entry_bazi_general_mingli_mijue_pdf`, and
   `material_bazi_general_mingli_mijue_pdf`.
+- `task_bazi_general_choujin_bosi_branch_interaction_001` links
+  `queue_bazi_general_choujin_bosi_branch_interaction_extract`,
+  `audit_bazi_general_choujin_bosi_case_pdf`,
+  `entry_bazi_general_choujin_bosi_case_pdf`, and
+  `material_bazi_general_choujin_bosi_case_pdf`.
+- `task_bazi_general_bazi_shizhan_mifa_luck_cycle_001` links
+  `queue_bazi_general_bazi_shizhan_mifa_luck_cycle_extract`,
+  `audit_bazi_general_bazi_shizhan_mifa_pdf`,
+  `entry_bazi_general_bazi_shizhan_mifa_pdf`, and
+  `material_bazi_general_bazi_shizhan_mifa_pdf`.
 
 Task loading validates package membership, 015 queue eligibility, audit-record
 identity, readiness findings, source-library alignment, source-material links,
@@ -238,8 +250,8 @@ US1 seeded the initial package and two extraction tasks. The completed
 incremental packages add Duan Plain Mingxue Outline, Mingxue Golden Voice,
 Fortune Reading Hongfu Qitian, three Markdown batch tasks, six knowledge
 skeleton tasks, three Bazi general preparation-reading tasks, two selected
-Bazi general variant tasks, two next-cycle cluster-source tasks, and two next-cycle followup tasks. All 23 extraction tasks are now completed and
-`next_manual_action_ids=0`. US2 keeps seventeen draft slots as historical
+Bazi general variant tasks, two next-cycle cluster-source tasks, and two next-cycle followup tasks, and two gated ordinary final tasks. All 29 extraction tasks are now completed and
+`next_manual_action_ids=0`. US2 keeps twenty-three draft slots as historical
 planning metadata. US3 and the current queue continuation track seven
 prerequisite backlog records, including four completed risk-review records,
 overlap warning visibility, and package progress counts while keeping all 016

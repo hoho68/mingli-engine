@@ -11,7 +11,7 @@ from the current JSON corpus instead of maintained by hand.
 
 Snapshot date: 2026-06-29
 
-- Approved evidence units: 109
+- Approved evidence units: 111
 - Registered sources: 27
 - Sources with explicit gaps:
   - `blind_life_manual`: high-risk boundary evidence is promoted; page-level single-claim support still requires later review.

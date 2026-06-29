@@ -426,5 +426,37 @@
     "rationale": "Mingli Mijue broadens practical-formula branch-interaction comparison coverage; page transcription remains later work.",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_choujin_bosi_case_001",
+    "entry_id": "entry_bazi_general_choujin_bosi_case_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Choujin Bosi Bazi broadens case-collection branch-interaction coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_bazi_shizhan_mifa_001",
+    "entry_id": "entry_bazi_general_bazi_shizhan_mifa_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "luck_cycle"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Bazi Shizhan Mifa broadens practical-formula luck-cycle coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
   }
 ]
