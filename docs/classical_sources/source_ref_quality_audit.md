@@ -1,7 +1,7 @@
 # Evidence Source Reference Quality Audit Report
 
 Generated: automatic analysis
-Audit scope: 105 evidence units
+Audit scope: 107 evidence units
 
 ## Precision Summary
 
@@ -208,3 +208,7 @@ Prior improvements are preserved:
 1. Targeted transcription: only transcribe retained chapter windows if a future promotion requires exact quotation or page-level proof.
 2. Northeast safety-boundary handling: keep the 2 remaining Northeast risk-boundary windows as safety-paraphrase learning notes unless a source-specific boundary page is identified.
 3. Audit automation: promote this classification logic into a dedicated command if future curation passes need repeatable report generation.
+
+## Gated Ordinary Source Selection Addendum
+
+Gated ordinary weak page locators added: `bazi_general_mingzao_chunqiu_luck_cycle_001` and `bazi_general_sizhu_yuce_yaojue_pattern_strength_001`. Both remain weak `page:<source>#p1` locators pending later page transcription.

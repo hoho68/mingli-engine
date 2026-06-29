@@ -2242,3 +2242,8 @@ session items are waiting, the seal preserves
 step remains `execute_apply_correction_queue_first`. The seal remains a
 planning artifact only; applied review-decision, candidate-status, and
 formal-evidence deltas remain zero.
+
+## Gated Ordinary Source Selection Promotions
+
+- `candidate_bazi_general_mingzao_chunqiu_luck_cycle_001` and `candidate_bazi_general_sizhu_yuce_yaojue_pattern_strength_001` are promoted weak-locator 013 candidates from the 015 gated ordinary source-selection pass.
+- `promotion_bazi_general_gated_ordinary_source_selection_001` links them to `bazi_general_mingzao_chunqiu_luck_cycle_001` and `bazi_general_sizhu_yuce_yaojue_pattern_strength_001` formal evidence units.

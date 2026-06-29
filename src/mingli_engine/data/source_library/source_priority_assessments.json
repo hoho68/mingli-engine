@@ -362,5 +362,37 @@
     "rationale": "Xingming Shuozheng volume 1 broadens branch-interaction comparison coverage; page transcription remains later work.",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_mingzao_chunqiu_case_001",
+    "entry_id": "entry_bazi_general_mingzao_chunqiu_case_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "luck_cycle"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Mingzao Chunqiu broadens case-collection luck-cycle comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_sizhu_yuce_yaojue_001",
+    "entry_id": "entry_bazi_general_sizhu_yuce_yaojue_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Sizhu Yuce Yaojue broadens practical-formula pattern-strength comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
   }
 ]

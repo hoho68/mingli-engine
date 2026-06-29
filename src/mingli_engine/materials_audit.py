@@ -49,6 +49,8 @@ from mingli_engine.models import (
     RawTextNextCycleFollowupSelectionSummary,
     RawTextNextCycleGatedClusterReviewPrepItem,
     RawTextNextCycleGatedClusterReviewPrepSummary,
+    RawTextNextCycleGatedOrdinarySourceSelectionItem,
+    RawTextNextCycleGatedOrdinarySourceSelectionSummary,
     RawTextNextCycleIdentityReviewItem,
     RawTextNextCycleIdentityReviewSummary,
     RawTextNextCycleSourceSelectionItem,
@@ -166,6 +168,12 @@ RAW_TEXT_NEXT_CYCLE_GATED_CLUSTER_REVIEW_PREP_ID = (
 RAW_TEXT_NEXT_CYCLE_GATED_CLUSTER_REVIEW_PREP_NEXT_MATERIAL_ENTRY = (
     "015-raw-text-next-cycle-gated-ordinary-source-selection"
 )
+RAW_TEXT_NEXT_CYCLE_GATED_ORDINARY_SOURCE_SELECTION_ID = (
+    "015-raw-text-next-cycle-gated-ordinary-source-selection"
+)
+RAW_TEXT_NEXT_CYCLE_GATED_ORDINARY_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY = (
+    "015-raw-text-next-cycle-gated-ordinary-followup-selection"
+)
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
     "bazi_general_misc_identity_review_cluster",
@@ -183,6 +191,9 @@ RAW_TEXT_NEXT_CYCLE_GATED_CLUSTER_REVIEW_PREP_STATUSES = frozenset(
         "risk_review_required",
         "deferred_after_prep",
     }
+)
+RAW_TEXT_NEXT_CYCLE_GATED_ORDINARY_SOURCE_SELECTION_STATUSES = frozenset(
+    {"selected_for_registration"}
 )
 RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY = "015-liang-bazi-core-source-selection"
 RAW_TEXT_SOURCE_SELECTION_ID = "015-liang-bazi-core-source-selection"
@@ -2171,6 +2182,141 @@ def load_raw_text_next_cycle_gated_cluster_review_prep_items(
         )
     ]
     _ensure_unique([item.prep_id for item in items], "prep_id")
+    return items
+
+
+def _raw_text_next_cycle_gated_ordinary_source_selection_item_from_dict(
+    data: dict[str, Any],
+    prep_items_by_id: dict[str, RawTextNextCycleGatedClusterReviewPrepItem],
+) -> RawTextNextCycleGatedOrdinarySourceSelectionItem:
+    try:
+        item = RawTextNextCycleGatedOrdinarySourceSelectionItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            "invalid raw text next-cycle gated ordinary source selection item: "
+            f"{error}"
+        ) from error
+
+    owner_id = item.selection_id or "?"
+    for field_name in (
+        "selection_id",
+        "prep_id",
+        "source_selection_id",
+        "cluster_id",
+        "triage_group_id",
+        "source_root",
+        "title_label",
+        "selection_status",
+        "risk_boundary",
+        "recommended_next_action",
+        "source_library_entry_id",
+        "source_material_id",
+        "audit_id",
+        "queue_item_id",
+        "candidate_id",
+        "evidence_id",
+        "selection_note",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    if item.triage_group_id != RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid triage_group_id")
+    if item.source_root != RAW_TEXT_TRIAGE_SOURCE_ROOT:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_root")
+    _validate_enum(
+        item.selection_status,
+        RAW_TEXT_NEXT_CYCLE_GATED_ORDINARY_SOURCE_SELECTION_STATUSES,
+        "selection_status",
+        owner_id,
+    )
+    _validate_enum(item.risk_boundary, RISK_TIERS, "risk_boundary", owner_id)
+    _validate_enum(
+        item.recommended_next_action,
+        MATERIAL_AUDIT_ACTIONS,
+        "recommended_next_action",
+        owner_id,
+    )
+    if item.recommended_next_action != "register_source":
+        raise MaterialsAuditError(f"{owner_id} must register selected source")
+    _require_non_negative_int(item.file_count, "file_count", owner_id)
+    _require_non_negative_int(
+        item.priority_text_candidate_count,
+        "priority_text_candidate_count",
+        owner_id,
+    )
+    if item.file_count != len(item.relative_paths) or item.file_count != 1:
+        raise MaterialsAuditError(f"{owner_id} must select one bounded source file")
+    if item.priority_text_candidate_count != 1:
+        raise MaterialsAuditError(
+            f"{owner_id} must have one priority text candidate"
+        )
+    for field_name in ("relative_paths", "target_rule_families", "guardrails"):
+        _require_string_list(getattr(item, field_name), field_name, owner_id)
+    if not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires guardrails")
+    for path in item.relative_paths:
+        if Path(path).is_absolute() or ".." in Path(path).parts:
+            raise MaterialsAuditError(f"{owner_id} relative_paths must stay relative")
+        if item.source_root in path:
+            raise MaterialsAuditError(
+                f"{owner_id} relative_paths must not include source root"
+            )
+    for rule_family in item.target_rule_families:
+        if rule_family not in RULE_FAMILIES:
+            raise MaterialsAuditError(
+                f"{owner_id} has unsupported rule_family: {rule_family}"
+            )
+    if len(item.target_rule_families) != 1:
+        raise MaterialsAuditError(f"{owner_id} must target one rule family")
+    if item.risk_boundary != "ordinary":
+        raise MaterialsAuditError(f"{owner_id} must stay ordinary risk")
+    if not item.source_library_mutation_authorized:
+        raise MaterialsAuditError(
+            f"{owner_id} must authorize source-library mutation"
+        )
+    if not item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must authorize downstream mutation")
+
+    prep = prep_items_by_id.get(item.prep_id)
+    if prep is None:
+        raise MaterialsAuditError(f"{owner_id} references unknown prep_id")
+    if prep.prep_status != "prepared_for_bounded_source_selection":
+        raise MaterialsAuditError(f"{owner_id} prep_id is not ordinary prepared")
+    if prep.cluster_id != item.cluster_id:
+        raise MaterialsAuditError(f"{owner_id} cluster_id mismatch")
+    if prep.source_selection_id != item.source_selection_id:
+        raise MaterialsAuditError(f"{owner_id} source_selection_id mismatch")
+    if prep.risk_boundary != item.risk_boundary:
+        raise MaterialsAuditError(f"{owner_id} risk_boundary mismatch")
+    if item.cluster_id not in RAW_TEXT_NEXT_CYCLE_DEFERRED_CLUSTER_IDS:
+        raise MaterialsAuditError(f"{owner_id} must select ordinary gated cluster")
+    if not set(item.target_rule_families).issubset(set(prep.target_rule_families)):
+        raise MaterialsAuditError(f"{owner_id} target_rule_families mismatch")
+
+    return item
+
+
+def load_raw_text_next_cycle_gated_ordinary_source_selection_items(
+    data_dir: Path | str | None = None,
+) -> list[RawTextNextCycleGatedOrdinarySourceSelectionItem]:
+    source_dir = _data_dir(data_dir)
+    prep_items_by_id = {
+        item.prep_id: item
+        for item in load_raw_text_next_cycle_gated_cluster_review_prep_items(
+            source_dir
+        )
+    }
+    items = [
+        _raw_text_next_cycle_gated_ordinary_source_selection_item_from_dict(
+            item,
+            prep_items_by_id,
+        )
+        for item in _read_optional_json_list(
+            source_dir
+            / "raw_text_next_cycle_gated_ordinary_source_selection_items.json"
+        )
+    ]
+    _ensure_unique([item.selection_id for item in items], "selection_id")
     return items
 
 
@@ -4579,6 +4725,236 @@ def render_raw_text_next_cycle_gated_cluster_review_prep_markdown(
     return "\n".join(lines) + "\n"
 
 
+def build_raw_text_next_cycle_gated_ordinary_source_selection_summary(
+    data_dir: Path | str | None = None,
+) -> RawTextNextCycleGatedOrdinarySourceSelectionSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_raw_text_next_cycle_gated_ordinary_source_selection_items(source_dir)
+    prep_items = load_raw_text_next_cycle_gated_cluster_review_prep_items(source_dir)
+    prep_items_by_id = {item.prep_id: item for item in prep_items}
+    sensitive_risk_review_item_ids = [
+        item.prep_id
+        for item in prep_items
+        if item.cluster_id in RAW_TEXT_NEXT_CYCLE_RISK_REVIEW_CLUSTER_IDS
+        and item.prep_status == "risk_review_required"
+    ]
+
+    source_entries_by_id = {
+        entry.entry_id: entry for entry in source_library.load_source_library_entries()
+    }
+    source_materials_by_id = {
+        material.material_id: material
+        for material in source_intake.load_source_materials()
+    }
+    candidates_by_id = {
+        candidate.candidate_id: candidate
+        for candidate in source_intake.load_candidate_extracts()
+    }
+    evidence_by_id = {
+        evidence.evidence_id: evidence
+        for evidence in classical_sources.load_evidence_units()
+    }
+
+    selected_ids = [item.selection_id for item in items]
+    prep_item_ids = [item.prep_id for item in items]
+    entry_ids = [item.source_library_entry_id for item in items]
+    material_ids = [item.source_material_id for item in items]
+    audit_ids = [item.audit_id for item in items]
+    queue_item_ids = [item.queue_item_id for item in items]
+    candidate_ids = [item.candidate_id for item in items]
+    evidence_ids = [item.evidence_id for item in items]
+
+    source_paths_are_relative = all(
+        path
+        and not Path(path).is_absolute()
+        and ".." not in Path(path).parts
+        and item.source_root not in path
+        for item in items
+        for path in item.relative_paths
+    )
+    ordinary_gated_clusters_only = {
+        item.cluster_id for item in items
+    } == set(RAW_TEXT_NEXT_CYCLE_DEFERRED_CLUSTER_IDS) and all(
+        item.risk_boundary == "ordinary"
+        and prep_items_by_id[item.prep_id].prep_status
+        == "prepared_for_bounded_source_selection"
+        for item in items
+    )
+    entries_registered = all(
+        item.source_library_entry_id in source_entries_by_id
+        and source_entries_by_id[item.source_library_entry_id].material_id
+        == item.source_material_id
+        and item.source_material_id in source_materials_by_id
+        for item in items
+    )
+    candidates_promoted = all(
+        item.candidate_id in candidates_by_id
+        and candidates_by_id[item.candidate_id].material_id == item.source_material_id
+        and candidates_by_id[item.candidate_id].status == "promoted"
+        and candidates_by_id[item.candidate_id].related_evidence_ids
+        == [item.evidence_id]
+        for item in items
+    )
+    evidence_promoted = all(
+        item.evidence_id in evidence_by_id
+        and evidence_by_id[item.evidence_id].source_id
+        == item.source_material_id.replace("material_", "source_", 1)
+        for item in items
+    )
+    sensitive_cluster_remains_risk_review = sensitive_risk_review_item_ids == [
+        "gated_prep_sensitive_topic_boundary_001"
+    ]
+    boundary_checks = {
+        "gated_ordinary_selection_items_loaded": "passed" if items else "failed",
+        "gated_prep_references_valid": (
+            "passed"
+            if all(item.prep_id in prep_items_by_id for item in items)
+            else "failed"
+        ),
+        "source_paths_are_relative": (
+            "passed" if source_paths_are_relative else "failed"
+        ),
+        "ordinary_gated_clusters_only": (
+            "passed" if ordinary_gated_clusters_only else "failed"
+        ),
+        "source_library_entries_registered": (
+            "passed" if entries_registered else "failed"
+        ),
+        "013_candidates_promoted": (
+            "passed" if candidates_promoted else "failed"
+        ),
+        "012_evidence_promoted": "passed" if evidence_promoted else "failed",
+        "sensitive_cluster_remains_risk_review": (
+            "passed" if sensitive_cluster_remains_risk_review else "failed"
+        ),
+        "raw_materials_not_mutated": "passed",
+    }
+
+    return RawTextNextCycleGatedOrdinarySourceSelectionSummary(
+        selection_id=RAW_TEXT_NEXT_CYCLE_GATED_ORDINARY_SOURCE_SELECTION_ID,
+        selection_status=(
+            "gated_ordinary_source_selection_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "gated_ordinary_source_selection_needs_attention"
+        ),
+        triage_group_id=RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID,
+        source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
+        source_selection_item_count=len(items),
+        source_file_count=sum(item.file_count for item in items),
+        priority_text_candidate_count=sum(
+            item.priority_text_candidate_count for item in items
+        ),
+        selected_for_registration_count=sum(
+            1 for item in items if item.selection_status == "selected_for_registration"
+        ),
+        registered_source_entry_count=sum(
+            1 for item in items if item.source_library_entry_id in source_entries_by_id
+        ),
+        candidate_extract_count=sum(
+            1
+            for item in items
+            if item.candidate_id in candidates_by_id
+            and candidates_by_id[item.candidate_id].status == "promoted"
+        ),
+        formal_evidence_count=sum(
+            1 for item in items if item.evidence_id in evidence_by_id
+        ),
+        selected_item_ids=selected_ids,
+        prep_item_ids=prep_item_ids,
+        sensitive_risk_review_item_ids=sensitive_risk_review_item_ids,
+        registered_entry_ids=entry_ids,
+        registered_material_ids=material_ids,
+        audit_ids=audit_ids,
+        queue_item_ids=queue_item_ids,
+        candidate_ids=candidate_ids,
+        evidence_ids=evidence_ids,
+        status_counts=_count_values([item.selection_status for item in items]),
+        risk_boundary_counts=_count_values([item.risk_boundary for item in items]),
+        target_rule_family_counts=_count_values(
+            [rule for item in items for rule in item.target_rule_families]
+        ),
+        source_library_mutation_authorized=all(
+            item.source_library_mutation_authorized for item in items
+        ),
+        downstream_mutation_authorized=all(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=(
+            RAW_TEXT_NEXT_CYCLE_GATED_ORDINARY_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY
+        ),
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Only two ordinary gated source-level records are selected in this pass.",
+            "Sensitive-topic material stays behind risk review.",
+            "Weak locators are accepted only as preparation metadata.",
+            "External raw materials are not moved, converted, or rewritten.",
+        ],
+    )
+
+
+def render_raw_text_next_cycle_gated_ordinary_source_selection_markdown(
+    summary: RawTextNextCycleGatedOrdinarySourceSelectionSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Raw Text Next Cycle Gated Ordinary Source Selection",
+        "",
+        f"- Selection id: `{summary.selection_id}`",
+        (
+            "- `gated-ordinary-source-selection-status="
+            f"{summary.selection_status}`"
+        ),
+        (
+            "- `gated-ordinary-source-selection-items="
+            f"{summary.source_selection_item_count}`"
+        ),
+        f"- `selected-for-registration={summary.selected_for_registration_count}`",
+        f"- `registered-source-entries={summary.registered_source_entry_count}`",
+        f"- `candidate-extracts={summary.candidate_extract_count}`",
+        f"- `formal-evidence={summary.formal_evidence_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Selected ordinary gated items:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.selected_item_ids)
+    lines.extend(["", "Registered source-library entries:"])
+    lines.extend(f"- `{entry_id}`" for entry_id in summary.registered_entry_ids)
+    lines.extend(["", "Promoted 013 candidates:"])
+    lines.extend(f"- `{candidate_id}`" for candidate_id in summary.candidate_ids)
+    lines.extend(["", "Formal 012 evidence units:"])
+    lines.extend(f"- `{evidence_id}`" for evidence_id in summary.evidence_ids)
+    lines.extend(["", "Sensitive items retained for risk review:"])
+    lines.extend(
+        f"- `{item_id}`" for item_id in summary.sensitive_risk_review_item_ids
+    )
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_raw_text_cluster_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextClusterSourceSelectionSummary:
@@ -6030,6 +6406,11 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_next_cycle_gated_cluster_review_prep_items = (
             load_raw_text_next_cycle_gated_cluster_review_prep_items(source_dir)
         )
+        raw_text_next_cycle_gated_ordinary_source_selection_items = (
+            load_raw_text_next_cycle_gated_ordinary_source_selection_items(
+                source_dir
+            )
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -6060,6 +6441,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_next_cycle_cluster_source_selection_items,
         raw_text_next_cycle_followup_selection_items,
         raw_text_next_cycle_gated_cluster_review_prep_items,
+        raw_text_next_cycle_gated_ordinary_source_selection_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -6107,6 +6489,9 @@ def _iter_quality_text_fields(
     ],
     raw_text_next_cycle_gated_cluster_review_prep_items: list[
         RawTextNextCycleGatedClusterReviewPrepItem
+    ],
+    raw_text_next_cycle_gated_ordinary_source_selection_items: list[
+        RawTextNextCycleGatedOrdinarySourceSelectionItem
     ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
@@ -6277,6 +6662,22 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.prep_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in raw_text_next_cycle_gated_ordinary_source_selection_items:
+        fields.extend(
+            (
+                (item.selection_id, "title_label", item.title_label),
+                (item.selection_id, "selection_note", item.selection_note),
+                (item.selection_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.selection_id, "relative_paths", path)
+            for path in item.relative_paths
+        )
+        fields.extend(
+            (item.selection_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

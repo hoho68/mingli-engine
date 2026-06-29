@@ -2287,5 +2287,49 @@
     "confidence": "weak",
     "source_quality": "review_note",
     "conflict_ids": []
+  },
+  {
+    "evidence_id": "bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "source_id": "source_bazi_general_mingzao_chunqiu_case_pdf",
+    "source_ref": "page:八字18本/命造春秋  188P.pdf#p1",
+    "theme": "Mingzao Chunqiu luck-cycle case seed",
+    "rule_family": "luck_cycle",
+    "risk_tier": "ordinary",
+    "summary": "Mingzao Chunqiu is retained as weak luck-cycle case comparison evidence pending page transcription.",
+    "applicability": [
+      "Use as comparison context for luck-cycle case review.",
+      "Require chart-context confirmation before any interpretive use."
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording."
+    ],
+    "school": "Bazi case collection reference",
+    "curation_batch_id": "batch_bazi_general_gated_ordinary_source_selection_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
+  },
+  {
+    "evidence_id": "bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "source_id": "source_bazi_general_sizhu_yuce_yaojue_pdf",
+    "source_ref": "page:四柱预测要诀.pdf#p1",
+    "theme": "Sizhu Yuce Yaojue pattern-strength formula seed",
+    "rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "summary": "Sizhu Yuce Yaojue is retained as weak pattern-strength formula comparison evidence pending page transcription.",
+    "applicability": [
+      "Use as school-specific comparison context for pattern-strength rule review.",
+      "Require chart-context confirmation before any interpretive use."
+    ],
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording."
+    ],
+    "school": "Bazi practical formula reference",
+    "curation_batch_id": "batch_bazi_general_gated_ordinary_source_selection_001",
+    "confidence": "weak",
+    "source_quality": "review_note",
+    "conflict_ids": []
   }
 ]

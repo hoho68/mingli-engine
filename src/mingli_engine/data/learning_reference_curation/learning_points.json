@@ -741,5 +741,37 @@
     ],
     "candidate_readiness": "ready",
     "candidate_decision_id": "decision_bazi_general_xingming_shuozheng_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "note_id": "note_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "point_label": "Mingzao Chunqiu luck-cycle case seed",
+    "source_locator": "page:八字18本/命造春秋  188P.pdf#p1",
+    "summary": "Mingzao Chunqiu is registered as a weak case-collection source for luck-cycle comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "luck_cycle",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_mingzao_chunqiu_luck_cycle_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "note_id": "note_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "point_label": "Sizhu Yuce Yaojue pattern-strength formula seed",
+    "source_locator": "page:四柱预测要诀.pdf#p1",
+    "summary": "Sizhu Yuce Yaojue is registered as a weak practical-formula source for pattern-strength comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_sizhu_yuce_yaojue_pattern_strength_001"
   }
 ]

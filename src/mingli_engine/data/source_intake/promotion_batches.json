@@ -405,5 +405,19 @@
     "review_status": "reviewed",
     "review_notes": "Next-cycle followup weak locator candidates promoted as bounded ordinary-risk comparison evidence.",
     "unresolved_issues": []
+  },
+  {
+    "promotion_batch_id": "promotion_bazi_general_gated_ordinary_source_selection_001",
+    "candidate_ids": [
+      "candidate_bazi_general_mingzao_chunqiu_luck_cycle_001",
+      "candidate_bazi_general_sizhu_yuce_yaojue_pattern_strength_001"
+    ],
+    "target_evidence_ids": [
+      "bazi_general_mingzao_chunqiu_luck_cycle_001",
+      "bazi_general_sizhu_yuce_yaojue_pattern_strength_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Gated ordinary weak locator candidates promoted as bounded ordinary-risk comparison evidence.",
+    "unresolved_issues": []
   }
 ]

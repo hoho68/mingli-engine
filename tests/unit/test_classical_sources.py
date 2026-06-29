@@ -53,6 +53,13 @@ EXPECTED_BAZI_GENERAL_FOLLOWUP_SOURCE_FILES = {
     ),
 }
 
+EXPECTED_BAZI_GENERAL_GATED_ORDINARY_SOURCE_FILES = {
+    "source_bazi_general_mingzao_chunqiu_case_pdf": (
+        "八字18本/命造春秋  188P.pdf"
+    ),
+    "source_bazi_general_sizhu_yuce_yaojue_pdf": "四柱预测要诀.pdf",
+}
+
 PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS = {
     "batch001_pattern_strength_001",
     "batch001_ten_god_relation_001",
@@ -246,7 +253,7 @@ def test_source_registry_includes_all_initial_pdfs():
     sources = load_classical_sources()
     by_id = {source.source_id: source for source in sources}
 
-    assert len(sources) == 23
+    assert len(sources) == 25
     assert set(by_id) == set(EXPECTED_INITIAL_SOURCE_FILES) | set(
         EXPECTED_BAZI_GENERAL_SOURCE_FILES
     ) | set(
@@ -255,6 +262,8 @@ def test_source_registry_includes_all_initial_pdfs():
         EXPECTED_BAZI_GENERAL_NEXT_CYCLE_SOURCE_FILES
     ) | set(
         EXPECTED_BAZI_GENERAL_FOLLOWUP_SOURCE_FILES
+    ) | set(
+        EXPECTED_BAZI_GENERAL_GATED_ORDINARY_SOURCE_FILES
     ) | {
         "markdown_source_batch_001",
         "markdown_source_batch_002_core",
@@ -288,6 +297,12 @@ def test_source_registry_includes_all_initial_pdfs():
         assert source.review_status == "approved"
         assert source.scope_notes
     for source_id, file_name in EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
+    for source_id, file_name in EXPECTED_BAZI_GENERAL_GATED_ORDINARY_SOURCE_FILES.items():
         source = by_id[source_id]
         assert source.file_name == file_name
         assert source.source_type == "pdf"

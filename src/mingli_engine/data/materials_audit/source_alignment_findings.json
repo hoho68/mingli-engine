@@ -362,5 +362,31 @@
     "duplicate_or_variant_notes": "Do not merge with other miscellaneous sources or volumes.",
     "reviewer": "maintainer",
     "reviewed_at": "2026-06-28"
+  },
+  {
+    "alignment_id": "align_bazi_general_mingzao_chunqiu_case_pdf",
+    "audit_id": "audit_bazi_general_mingzao_chunqiu_case_pdf",
+    "match_type": "exact",
+    "confidence": "weak",
+    "evidence": "Gated ordinary selection points to one bounded PDF under the case-collection cluster.",
+    "source_library_entry_id": "entry_bazi_general_mingzao_chunqiu_case_pdf",
+    "source_material_id": "material_bazi_general_mingzao_chunqiu_case_pdf",
+    "registration_recommendation": "registered",
+    "duplicate_or_variant_notes": "Do not merge with other sources from the broader gated cluster.",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-29"
+  },
+  {
+    "alignment_id": "align_bazi_general_sizhu_yuce_yaojue_pdf",
+    "audit_id": "audit_bazi_general_sizhu_yuce_yaojue_pdf",
+    "match_type": "exact",
+    "confidence": "weak",
+    "evidence": "Gated ordinary selection points to one bounded PDF under the practical-formula cluster.",
+    "source_library_entry_id": "entry_bazi_general_sizhu_yuce_yaojue_pdf",
+    "source_material_id": "material_bazi_general_sizhu_yuce_yaojue_pdf",
+    "registration_recommendation": "registered",
+    "duplicate_or_variant_notes": "Do not merge with other sources from the broader gated cluster.",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-29"
   }
 ]

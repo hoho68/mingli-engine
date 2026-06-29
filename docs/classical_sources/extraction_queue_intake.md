@@ -56,6 +56,9 @@ Current packages:
   `package_bazi_general_selected_variant_preparation_reading_001` preserve the
   completed Bazi general preparation-reading and selected-variant
   registration-prep passes.
+- `package_bazi_general_gated_ordinary_source_selection_001` preserves the
+  completed gated ordinary source-selection pass for Mingzao Chunqiu and
+  Sizhu Yuce Yaojue.
 
 ## Extraction Task Boundary
 
@@ -100,6 +103,16 @@ Current US1 extraction tasks:
   `audit_bazi_general_qiongtong_selected_pdf`,
   `entry_bazi_general_qiongtong_selected_pdf`, and
   `material_bazi_general_qiongtong_selected_pdf`.
+- `task_bazi_general_mingzao_chunqiu_luck_cycle_001` links
+  `queue_bazi_general_mingzao_chunqiu_luck_cycle_extract`,
+  `audit_bazi_general_mingzao_chunqiu_case_pdf`,
+  `entry_bazi_general_mingzao_chunqiu_case_pdf`, and
+  `material_bazi_general_mingzao_chunqiu_case_pdf`.
+- `task_bazi_general_sizhu_yuce_yaojue_pattern_strength_001` links
+  `queue_bazi_general_sizhu_yuce_yaojue_pattern_strength_extract`,
+  `audit_bazi_general_sizhu_yuce_yaojue_pdf`,
+  `entry_bazi_general_sizhu_yuce_yaojue_pdf`, and
+  `material_bazi_general_sizhu_yuce_yaojue_pdf`.
 
 Task loading validates package membership, 015 queue eligibility, audit-record
 identity, readiness findings, source-library alignment, source-material links,

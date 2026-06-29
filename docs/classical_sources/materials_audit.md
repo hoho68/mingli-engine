@@ -202,8 +202,8 @@ the newly registered raw text corpus triage backlog, and the refreshed queue
 excludes queue ids already covered by 016/017.
 
 - `queue-refresh-status=covered_or_completed_queue_exhausted`
-- `015-queue-items=26`
-- `016-covered-queue-items=25`
+- `015-queue-items=28`
+- `016-covered-queue-items=27`
 - `015-local-completed-queue-items=1`
 - `uncovered-queue-items=0`
 - `refreshed-next-action-ids=0`
@@ -982,6 +982,57 @@ Guardrails:
 - Sensitive-topic material remains behind risk review.
 - No source-library, 013, or 012 mutation is performed in this prep step.
 - Raw external materials are not moved, converted, or rewritten.
+
+## 015 Raw Text Next Cycle Gated Ordinary Source Selection
+
+This selection layer advances the two prepared ordinary gated clusters from cluster-level prep into bounded source-level registration. It selects one case-collection PDF and one practical-formula PDF, keeps the sensitive-topic cluster behind risk review, and records weak-locator source-library, 016/017, 013, and 012 metadata without mutating external raw materials.
+
+- Selection id: `015-raw-text-next-cycle-gated-ordinary-source-selection`
+- `gated-ordinary-source-selection-status=gated_ordinary_source_selection_completed`
+- `gated-ordinary-source-selection-items=2`
+- `selected-for-registration=2`
+- `registered-source-entries=2`
+- `candidate-extracts=2`
+- `formal-evidence=2`
+- `source-library-mutation-authorized=true`
+- `downstream-mutation-authorized=true`
+- `next-material-entry=015-raw-text-next-cycle-gated-ordinary-followup-selection`
+
+Selected ordinary gated items:
+- `gated_ordinary_source_mingzao_chunqiu_case_collection`
+- `gated_ordinary_source_sizhu_yuce_yaojue_formula`
+
+Registered source-library entries:
+- `entry_bazi_general_mingzao_chunqiu_case_pdf`
+- `entry_bazi_general_sizhu_yuce_yaojue_pdf`
+
+Promoted 013 candidates:
+- `candidate_bazi_general_mingzao_chunqiu_luck_cycle_001`
+- `candidate_bazi_general_sizhu_yuce_yaojue_pattern_strength_001`
+
+Formal 012 evidence units:
+- `bazi_general_mingzao_chunqiu_luck_cycle_001`
+- `bazi_general_sizhu_yuce_yaojue_pattern_strength_001`
+
+Sensitive items retained for risk review:
+- `gated_prep_sensitive_topic_boundary_001`
+
+Boundary checks:
+- `gated_ordinary_selection_items_loaded`: `passed`
+- `gated_prep_references_valid`: `passed`
+- `source_paths_are_relative`: `passed`
+- `ordinary_gated_clusters_only`: `passed`
+- `source_library_entries_registered`: `passed`
+- `013_candidates_promoted`: `passed`
+- `012_evidence_promoted`: `passed`
+- `sensitive_cluster_remains_risk_review`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Only two ordinary gated source-level records are selected in this pass.
+- Sensitive-topic material stays behind risk review.
+- Weak locators are accepted only as preparation metadata.
+- External raw materials are not moved, converted, or rewritten.
 
 ## Raw-File Boundary
 

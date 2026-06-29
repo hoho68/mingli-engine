@@ -637,5 +637,49 @@
     "status": "completed",
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28"
+  },
+  {
+    "queue_item_id": "queue_bazi_general_mingzao_chunqiu_luck_cycle_extract",
+    "audit_id": "audit_bazi_general_mingzao_chunqiu_case_pdf",
+    "queue_type": "extraction_ready",
+    "priority_level": "high",
+    "priority_rationale": "Selected Mingzao Chunqiu case collection PDF can seed weak luck-cycle comparison metadata pending page transcription.",
+    "target_rule_families": [
+      "luck_cycle"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "pre_extraction_checks": [
+      "confirm selected local reference remains bounded",
+      "store concise paraphrase only",
+      "mark current source quality as weak until page transcription"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
+    "status": "completed",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "queue_item_id": "queue_bazi_general_sizhu_yuce_yaojue_pattern_strength_extract",
+    "audit_id": "audit_bazi_general_sizhu_yuce_yaojue_pdf",
+    "queue_type": "extraction_ready",
+    "priority_level": "high",
+    "priority_rationale": "Selected Sizhu Yuce Yaojue PDF can seed weak pattern-strength formula comparison metadata pending page transcription.",
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "target_gap_ids": [],
+    "risk_boundary": "ordinary",
+    "pre_extraction_checks": [
+      "confirm selected local reference remains bounded",
+      "store concise paraphrase only",
+      "mark current source quality as weak until page transcription"
+    ],
+    "recommended_action": "extract_candidates",
+    "depends_on": [],
+    "status": "completed",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
   }
 ]

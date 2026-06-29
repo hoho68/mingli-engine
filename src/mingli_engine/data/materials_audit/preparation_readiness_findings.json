@@ -518,5 +518,41 @@
     "recommended_next_action": "extract_candidates",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_mingzao_chunqiu_case_pdf",
+    "audit_id": "audit_bazi_general_mingzao_chunqiu_case_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary gated cluster was prepared for bounded source selection"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "readiness_id": "ready_bazi_general_sizhu_yuce_yaojue_pdf",
+    "audit_id": "audit_bazi_general_sizhu_yuce_yaojue_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary gated cluster was prepared for bounded source selection"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
   }
 ]

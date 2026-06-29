@@ -274,5 +274,29 @@
     "scope_notes": "Next-cycle followup source preparation completed with a weak page anchor and bounded candidate.",
     "rights_notes": "External PDF; store concise paraphrases only.",
     "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_mingzao_chunqiu_case_pdf",
+    "title": "Mingzao Chunqiu Case Collection",
+    "material_type": "pdf",
+    "file_label": "八字18本/命造春秋  188P.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_mingzao_chunqiu_case_pdf",
+    "scope_notes": "Gated ordinary source preparation completed with a weak page anchor and bounded candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
+  },
+  {
+    "material_id": "material_bazi_general_sizhu_yuce_yaojue_pdf",
+    "title": "Sizhu Yuce Yaojue Formula Reference",
+    "material_type": "pdf",
+    "file_label": "四柱预测要诀.pdf",
+    "tracking_status": "external_untracked",
+    "preparation_status": "reviewed",
+    "related_source_id": "source_bazi_general_sizhu_yuce_yaojue_pdf",
+    "scope_notes": "Gated ordinary source preparation completed with a weak page anchor and bounded candidate.",
+    "rights_notes": "External PDF; store concise paraphrases only.",
+    "gap_reason": ""
   }
 ]

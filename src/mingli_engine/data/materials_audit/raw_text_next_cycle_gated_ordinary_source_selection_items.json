@@ -1,0 +1,78 @@
+[
+  {
+    "selection_id": "gated_ordinary_source_mingzao_chunqiu_case_collection",
+    "prep_id": "gated_prep_case_collection_boundary_001",
+    "source_selection_id": "next_cycle_bazi_case_collection_deferred",
+    "cluster_id": "bazi_general_case_collection_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Mingzao Chunqiu Case Collection",
+    "selection_status": "selected_for_registration",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "register_source",
+    "relative_paths": [
+      "八字18本/命造春秋  188P.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "source_library_entry_id": "entry_bazi_general_mingzao_chunqiu_case_pdf",
+    "source_material_id": "material_bazi_general_mingzao_chunqiu_case_pdf",
+    "audit_id": "audit_bazi_general_mingzao_chunqiu_case_pdf",
+    "queue_item_id": "queue_bazi_general_mingzao_chunqiu_luck_cycle_extract",
+    "candidate_id": "candidate_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "evidence_id": "bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "target_rule_families": [
+      "luck_cycle"
+    ],
+    "source_library_mutation_authorized": true,
+    "downstream_mutation_authorized": true,
+    "priority_score": 24,
+    "selection_note": "Selected as one bounded case-collection PDF from the prepared ordinary gated cluster.",
+    "rationale": "Mingzao Chunqiu gives a source-level case collection anchor for luck-cycle comparison while keeping exact pages as later transcription work.",
+    "guardrails": [
+      "Keep this as weak locator preparation metadata until page review.",
+      "Do not infer deterministic outcomes from case examples.",
+      "Do not copy long passages from the external PDF."
+    ],
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "selection_id": "gated_ordinary_source_sizhu_yuce_yaojue_formula",
+    "prep_id": "gated_prep_practical_formula_boundary_001",
+    "source_selection_id": "next_cycle_bazi_practical_formula_deferred",
+    "cluster_id": "bazi_general_practical_formula_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Sizhu Yuce Yaojue Formula Reference",
+    "selection_status": "selected_for_registration",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "register_source",
+    "relative_paths": [
+      "四柱预测要诀.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "source_library_entry_id": "entry_bazi_general_sizhu_yuce_yaojue_pdf",
+    "source_material_id": "material_bazi_general_sizhu_yuce_yaojue_pdf",
+    "audit_id": "audit_bazi_general_sizhu_yuce_yaojue_pdf",
+    "queue_item_id": "queue_bazi_general_sizhu_yuce_yaojue_pattern_strength_extract",
+    "candidate_id": "candidate_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "evidence_id": "bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "source_library_mutation_authorized": true,
+    "downstream_mutation_authorized": true,
+    "priority_score": 31,
+    "selection_note": "Selected as one bounded practical-formula PDF from the prepared ordinary gated cluster.",
+    "rationale": "Sizhu Yuce Yaojue gives a source-level formula reference for pattern-strength comparison while keeping exact pages as later transcription work.",
+    "guardrails": [
+      "Keep this as weak locator preparation metadata until page review.",
+      "Treat formula framing as school-specific comparison context.",
+      "Do not copy long passages from the external PDF."
+    ],
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  }
+]

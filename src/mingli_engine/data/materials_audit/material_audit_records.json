@@ -995,5 +995,69 @@
     "outcome_reason": "Next-cycle followup source selected and advanced through weak locator-based preparation metadata.",
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28"
+  },
+  {
+    "audit_id": "audit_bazi_general_mingzao_chunqiu_case_pdf",
+    "canonical_title": "Mingzao Chunqiu Case Collection",
+    "alternate_titles": [
+      "八字18本/命造春秋  188P.pdf"
+    ],
+    "material_scope": "bazi",
+    "primary_material_type": "pdf",
+    "representations": [
+      "repr_bazi_general_mingzao_chunqiu_case_pdf"
+    ],
+    "source_library_entry_id": "entry_bazi_general_mingzao_chunqiu_case_pdf",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "ready_for_extraction_review",
+    "source_boundary": "external_untracked",
+    "topic_tags": [
+      "case-collection",
+      "mingzao-chunqiu",
+      "luck-cycle"
+    ],
+    "rule_families": [
+      "luck_cycle"
+    ],
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "rights_notes": "External PDF; use locator notes only and store concise paraphrases.",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
+    "outcome_reason": "Gated ordinary source selected and advanced through weak locator-based preparation metadata.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "audit_id": "audit_bazi_general_sizhu_yuce_yaojue_pdf",
+    "canonical_title": "Sizhu Yuce Yaojue Formula Reference",
+    "alternate_titles": [
+      "四柱预测要诀.pdf"
+    ],
+    "material_scope": "bazi",
+    "primary_material_type": "pdf",
+    "representations": [
+      "repr_bazi_general_sizhu_yuce_yaojue_pdf"
+    ],
+    "source_library_entry_id": "entry_bazi_general_sizhu_yuce_yaojue_pdf",
+    "source_identity_confidence": "confirmed",
+    "preparation_state": "ready_for_extraction_review",
+    "source_boundary": "external_untracked",
+    "topic_tags": [
+      "practical-formula",
+      "sizhu-yuce-yaojue",
+      "pattern-strength"
+    ],
+    "rule_families": [
+      "pattern_strength"
+    ],
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "rights_notes": "External PDF; use locator notes only and store concise paraphrases.",
+    "missing_prerequisites": [],
+    "recommended_next_action": "extract_candidates",
+    "outcome_reason": "Gated ordinary source selected and advanced through weak locator-based preparation metadata.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
   }
 ]

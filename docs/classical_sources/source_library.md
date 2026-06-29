@@ -77,20 +77,20 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.source_library impor
 Computed with `build_source_library_progress_report()` after selected Bazi
 general variant registration prep:
 
-- Registered source entries: 23.
+- Registered source entries: 25.
 - Readiness: `ready_for_extraction=11`, `blocked=1`,
-  `needs_preparation=2`, `review_completed=5`.
-- Priority: `high=11`, `medium=6`, `deferred=1`, `low=1`.
-- Risk tiers: `sensitive=8`, `ordinary=8`, `high_risk=3`.
+  `needs_preparation=2`, `review_completed=11`.
+- Priority: `high=17`, `medium=6`, `deferred=1`, `low=1`.
+- Risk tiers: `sensitive=8`, `ordinary=14`, `high_risk=3`.
 - High-risk entries:
   `entry_blind_life_manual_pdf`,
   `entry_immortal_fortune_jianghu_secret_pdf`, and
   `entry_life_death_book_100_pages_pdf`.
 - Rule-family coverage:
-  `pattern_strength=12`, `blind_image_method=6`,
-  `high_risk_signal=7`, `branch_interaction=7`,
+  `pattern_strength=14`, `blind_image_method=6`,
+  `high_risk_signal=7`, `branch_interaction=9`,
   `ten_god_relation=8`, `remedy_boundary=2`,
-  `useful_god_candidate=8`, `luck_cycle=5`, and
+  `useful_god_candidate=9`, `luck_cycle=6`, and
   `five_element_balance=1`.
 - Next source candidates:
   `entry_northeast_blind_peak_pdf`,

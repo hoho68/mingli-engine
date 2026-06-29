@@ -189,5 +189,22 @@
     "created_at": "2026-06-28",
     "updated_at": "2026-06-28",
     "notes": "Completed next-cycle followup selection package for two bounded ordinary-risk sources with weak locator-based 013 and 012 advancement."
+  },
+  {
+    "package_id": "package_bazi_general_gated_ordinary_source_selection_001",
+    "package_label": "Bazi general gated ordinary source selection package 001",
+    "source_queue_snapshot_ids": [
+      "queue_bazi_general_mingzao_chunqiu_luck_cycle_extract",
+      "queue_bazi_general_sizhu_yuce_yaojue_pattern_strength_extract"
+    ],
+    "selected_task_ids": [
+      "task_bazi_general_mingzao_chunqiu_luck_cycle_001",
+      "task_bazi_general_sizhu_yuce_yaojue_pattern_strength_001"
+    ],
+    "backlog_record_ids": [],
+    "status": "completed",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29",
+    "notes": "Completed gated ordinary source selection package for two bounded ordinary sources with weak locator-based 013 and 012 advancement."
   }
 ]
