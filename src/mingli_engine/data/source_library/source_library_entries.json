@@ -836,5 +836,34 @@
     "outcome_reason": "Gated ordinary final source-level record selected and downstream metadata prepared under user authorization.",
     "created_at": "2026-06-29",
     "updated_at": "2026-06-29"
+  },
+  {
+    "entry_id": "entry_bazi_general_bazi_psychology_pdf",
+    "material_id": "material_bazi_general_bazi_psychology_pdf",
+    "title": "Bazi Psychology Lu Wang Source",
+    "material_type": "pdf",
+    "local_reference": "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "needs_preparation",
+    "topic_tags": [
+      "sensitive-boundary",
+      "bazi-psychology",
+      "ten-god-relation"
+    ],
+    "rule_families": [
+      "ten_god_relation"
+    ],
+    "source_quality_notes": "Registered from sensitive source-registration prep; source text remains unread.",
+    "rights_notes": "External PDF; do not copy long passages. Use concise metadata only until preparation closes.",
+    "risk_tier": "sensitive",
+    "risk_notes": [
+      "Keep non-diagnostic framing during registration and later preparation.",
+      "Do not use this source for fixed personality or relationship claims."
+    ],
+    "priority_level": "high",
+    "next_action": "prepare_material",
+    "outcome_reason": "Sensitive source-library metadata registered under authorization while downstream candidate use remains gated.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
   }
 ]

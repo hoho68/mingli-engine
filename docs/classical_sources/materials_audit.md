@@ -1254,7 +1254,7 @@ Guardrails:
 - `sensitive-registration-prep-status=sensitive_registration_prep_completed`
 - `sensitive-registration-prep-items=1`
 - `proposed-source-files=1`
-- `registered-source-entries=0`
+- `registered-source-entries=1`
 - `candidate-extracts=0`
 - `formal-evidence=0`
 - `source-library-mutation-authorized=false`
@@ -1296,6 +1296,50 @@ Guardrails:
 - Actual source-library registration remains a separate next step.
 - No 013 candidate or 012 formal evidence mutation is authorized.
 - Blocked and deferred sensitive prep items remain unavailable.
+- External raw materials are not moved, converted, opened, or rewritten.
+
+## 015 Raw Text Next Cycle Sensitive Source Registration
+
+- Registration id: `015-raw-text-next-cycle-sensitive-source-registration`
+- `sensitive-source-registration-status=sensitive_source_registration_completed`
+- `registered-source-entries=1`
+- `registered-source-files=1`
+- `candidate-extracts=0`
+- `formal-evidence=0`
+- `source-library-mutation-authorized=true`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-next-cycle-sensitive-preparation-boundary`
+
+Registered source-library entry ids:
+- `entry_bazi_general_bazi_psychology_pdf`
+
+Registered material ids:
+- `material_bazi_general_bazi_psychology_pdf`
+
+Registration-prep item ids:
+- `sensitive_registration_prep_bazi_psychology_pdf`
+
+Prep items retained blocked:
+- `sensitive_risk_prep_erotic_fate_collection_pdf`
+
+Prep items retained deferred:
+- `sensitive_risk_prep_bazi_comic_ppt`
+
+Boundary checks:
+- `sensitive_source_registration_items_loaded`: `passed`
+- `sensitive_registration_prep_completed`: `passed`
+- `source_library_entries_loaded`: `passed`
+- `registered_entries_match_prep_metadata`: `passed`
+- `blocked_and_deferred_prep_retained`: `passed`
+- `source_paths_are_relative`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Only source-library metadata registration is authorized in this stage.
+- The registered sensitive source still needs preparation before reading.
+- Blocked and deferred sensitive prep items remain unavailable.
+- 013 candidate intake and 012 formal evidence remain blocked.
 - External raw materials are not moved, converted, opened, or rewritten.
 
 ## Raw-File Boundary

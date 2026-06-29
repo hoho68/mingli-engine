@@ -3461,6 +3461,44 @@ class RawTextNextCycleSensitiveRegistrationPrepSummary:
 
 
 @dataclass(frozen=True)
+class RawTextNextCycleSensitiveSourceRegistrationItem:
+    registration_item_id: str
+    registration_prep_item_id: str
+    registered_entry_id: str
+    registered_material_id: str
+    registration_status: str
+    registered_local_references: list[str]
+    source_library_mutation_authorized: bool = True
+    downstream_mutation_authorized: bool = False
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextNextCycleSensitiveSourceRegistrationSummary:
+    registration_id: str
+    registration_status: str
+    triage_group_id: str
+    source_root: str
+    registered_entry_count: int
+    registered_source_file_count: int
+    candidate_extract_count: int
+    formal_evidence_count: int
+    registered_entry_ids: list[str]
+    registered_material_ids: list[str]
+    registration_prep_item_ids: list[str]
+    blocked_prep_item_ids: list[str]
+    deferred_prep_item_ids: list[str]
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextClusterSourceSelectionItem:
     selection_id: str
     cluster_id: str

@@ -731,6 +731,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_next_cycle_sensitive_registration_prep_items",
         "build_raw_text_next_cycle_sensitive_registration_prep_summary",
         "render_raw_text_next_cycle_sensitive_registration_prep_markdown",
+        "load_raw_text_next_cycle_sensitive_source_registration_items",
+        "build_raw_text_next_cycle_sensitive_source_registration_summary",
+        "render_raw_text_next_cycle_sensitive_source_registration_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -3435,7 +3438,7 @@ def test_raw_text_next_cycle_sensitive_registration_prep_summary_counts_closure(
     assert summary.prep_status == "sensitive_registration_prep_completed"
     assert summary.registration_prep_item_count == 1
     assert summary.proposed_source_file_count == 1
-    assert summary.registered_source_entry_count == 0
+    assert summary.registered_source_entry_count == 1
     assert summary.candidate_extract_count == 0
     assert summary.formal_evidence_count == 0
     assert summary.proposed_entry_ids == ["entry_bazi_general_bazi_psychology_pdf"]
@@ -3497,12 +3500,103 @@ def test_raw_text_next_cycle_sensitive_registration_prep_markdown_and_docs_sync(
         "`sensitive-registration-prep-status=sensitive_registration_prep_completed`",
         "`sensitive-registration-prep-items=1`",
         "`proposed-source-files=1`",
-        "`registered-source-entries=0`",
+        "`registered-source-entries=1`",
         "`candidate-extracts=0`",
         "`formal-evidence=0`",
         "`source-library-mutation-authorized=false`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-raw-text-next-cycle-sensitive-source-registration`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_next_cycle_sensitive_source_registration_items_load_registered_record():
+    items = materials_audit.load_raw_text_next_cycle_sensitive_source_registration_items()
+    items_by_id = {item.registration_item_id: item for item in items}
+
+    assert len(items) == 1
+    assert set(items_by_id) == {"sensitive_source_registration_bazi_psychology_pdf"}
+    item = items_by_id["sensitive_source_registration_bazi_psychology_pdf"]
+    assert item.registration_prep_item_id == (
+        "sensitive_registration_prep_bazi_psychology_pdf"
+    )
+    assert item.registered_entry_id == "entry_bazi_general_bazi_psychology_pdf"
+    assert item.registered_material_id == "material_bazi_general_bazi_psychology_pdf"
+    assert item.registration_status == "registered_sensitive_source_library_entry"
+    assert item.registered_local_references == [
+        "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf"
+    ]
+    assert item.source_library_mutation_authorized is True
+    assert item.downstream_mutation_authorized is False
+
+
+def test_raw_text_next_cycle_sensitive_source_registration_summary_counts_closure():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_sensitive_source_registration_summary()
+    )
+
+    assert summary.registration_id == (
+        "015-raw-text-next-cycle-sensitive-source-registration"
+    )
+    assert summary.registration_status == "sensitive_source_registration_completed"
+    assert summary.registered_entry_count == 1
+    assert summary.registered_source_file_count == 1
+    assert summary.candidate_extract_count == 0
+    assert summary.formal_evidence_count == 0
+    assert summary.registered_entry_ids == ["entry_bazi_general_bazi_psychology_pdf"]
+    assert summary.registered_material_ids == [
+        "material_bazi_general_bazi_psychology_pdf"
+    ]
+    assert summary.registration_prep_item_ids == [
+        "sensitive_registration_prep_bazi_psychology_pdf"
+    ]
+    assert summary.blocked_prep_item_ids == [
+        "sensitive_risk_prep_erotic_fate_collection_pdf"
+    ]
+    assert summary.deferred_prep_item_ids == ["sensitive_risk_prep_bazi_comic_ppt"]
+    assert summary.source_library_mutation_authorized is True
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "015-raw-text-next-cycle-sensitive-preparation-boundary"
+    )
+    assert summary.boundary_checks == {
+        "sensitive_source_registration_items_loaded": "passed",
+        "sensitive_registration_prep_completed": "passed",
+        "source_library_entries_loaded": "passed",
+        "registered_entries_match_prep_metadata": "passed",
+        "blocked_and_deferred_prep_retained": "passed",
+        "source_paths_are_relative": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_raw_text_next_cycle_sensitive_source_registration_markdown_and_docs_sync():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_sensitive_source_registration_summary()
+    )
+    markdown = materials_audit.render_raw_text_next_cycle_sensitive_source_registration_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Raw Text Next Cycle Sensitive Source Registration",
+        "`sensitive-source-registration-status=sensitive_source_registration_completed`",
+        "`registered-source-entries=1`",
+        "`registered-source-files=1`",
+        "`candidate-extracts=0`",
+        "`formal-evidence=0`",
+        "`source-library-mutation-authorized=true`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-raw-text-next-cycle-sensitive-preparation-boundary`",
     ):
         assert marker in markdown
         assert marker in materials_doc

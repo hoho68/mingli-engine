@@ -74,13 +74,13 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.source_library impor
 
 ## Current Registered Snapshot
 
-Computed with `build_source_library_progress_report()` after gated ordinary final selection:
+Computed with `build_source_library_progress_report()` after sensitive source registration:
 
-- Registered source entries: 29.
+- Registered source entries: 30.
 - Readiness: `ready_for_extraction=11`, `blocked=1`,
-  `needs_preparation=2`, `review_completed=15`.
-- Priority: `high=21`, `medium=6`, `deferred=1`, `low=1`.
-- Risk tiers: `sensitive=8`, `ordinary=18`, `high_risk=3`.
+  `needs_preparation=3`, `review_completed=15`.
+- Priority: `high=22`, `medium=6`, `deferred=1`, `low=1`.
+- Risk tiers: `sensitive=9`, `ordinary=18`, `high_risk=3`.
 - High-risk entries:
   `entry_blind_life_manual_pdf`,
   `entry_immortal_fortune_jianghu_secret_pdf`, and
@@ -88,7 +88,7 @@ Computed with `build_source_library_progress_report()` after gated ordinary fina
 - Rule-family coverage:
   `pattern_strength=14`, `blind_image_method=6`,
   `high_risk_signal=7`, `branch_interaction=11`,
-  `ten_god_relation=9`, `remedy_boundary=2`,
+  `ten_god_relation=10`, `remedy_boundary=2`,
   `useful_god_candidate=9`, `luck_cycle=7`, and
   `five_element_balance=1`.
 - Next source candidates:
@@ -257,3 +257,4 @@ level, so the next queue remains reviewable and stable.
 
 - `entry_bazi_general_choujin_bosi_case_pdf`: review completed; bounded final case-method source stored as weak locator-backed source metadata.
 - `entry_bazi_general_bazi_shizhan_mifa_pdf`: review completed; bounded final practical-formula source stored as weak locator-backed source metadata.
+- `entry_bazi_general_bazi_psychology_pdf`: needs preparation; sensitive psychology-labeled source registered with non-diagnostic guardrails.

@@ -458,5 +458,21 @@
     "rationale": "Bazi Shizhan Mifa broadens practical-formula luck-cycle coverage; page transcription remains later work.",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_bazi_psychology_001",
+    "entry_id": "entry_bazi_general_bazi_psychology_pdf",
+    "priority_level": "high",
+    "expected_value": "improves_high_risk_boundary",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "sensitive",
+    "rationale": "Bazi Psychology source can improve sensitive ten-god boundary handling after preparation; text remains unread.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
   }
 ]

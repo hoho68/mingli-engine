@@ -61,6 +61,8 @@ from mingli_engine.models import (
     RawTextNextCycleSensitiveRiskReviewPrepSummary,
     RawTextNextCycleSensitiveRegistrationPrepItem,
     RawTextNextCycleSensitiveRegistrationPrepSummary,
+    RawTextNextCycleSensitiveSourceRegistrationItem,
+    RawTextNextCycleSensitiveSourceRegistrationSummary,
     RawTextNextCycleSensitiveSourceLevelRiskReviewItem,
     RawTextNextCycleSensitiveSourceLevelRiskReviewSummary,
     RawTextNextCycleSourceSelectionItem,
@@ -214,6 +216,12 @@ RAW_TEXT_NEXT_CYCLE_SENSITIVE_REGISTRATION_PREP_ID = (
 RAW_TEXT_NEXT_CYCLE_SENSITIVE_REGISTRATION_PREP_NEXT_MATERIAL_ENTRY = (
     "015-raw-text-next-cycle-sensitive-source-registration"
 )
+RAW_TEXT_NEXT_CYCLE_SENSITIVE_SOURCE_REGISTRATION_ID = (
+    "015-raw-text-next-cycle-sensitive-source-registration"
+)
+RAW_TEXT_NEXT_CYCLE_SENSITIVE_SOURCE_REGISTRATION_NEXT_MATERIAL_ENTRY = (
+    "015-raw-text-next-cycle-sensitive-preparation-boundary"
+)
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
     "bazi_general_misc_identity_review_cluster",
@@ -253,6 +261,9 @@ RAW_TEXT_NEXT_CYCLE_SENSITIVE_SOURCE_LEVEL_RISK_REVIEW_STATUSES = frozenset(
 )
 RAW_TEXT_NEXT_CYCLE_SENSITIVE_REGISTRATION_PREP_STATUSES = frozenset(
     {"ready_for_sensitive_source_registration"}
+)
+RAW_TEXT_NEXT_CYCLE_SENSITIVE_SOURCE_REGISTRATION_STATUSES = frozenset(
+    {"registered_sensitive_source_library_entry"}
 )
 RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY = "015-liang-bazi-core-source-selection"
 RAW_TEXT_SOURCE_SELECTION_ID = "015-liang-bazi-core-source-selection"
@@ -3210,6 +3221,109 @@ def load_raw_text_next_cycle_sensitive_registration_prep_items(
     )
     _ensure_unique([item.proposed_entry_id for item in items], "proposed_entry_id")
     _ensure_unique([item.proposed_material_id for item in items], "proposed_material_id")
+    return items
+
+
+def _raw_text_next_cycle_sensitive_source_registration_item_from_dict(
+    data: dict[str, Any],
+    prep_items_by_id: dict[str, RawTextNextCycleSensitiveRegistrationPrepItem],
+    source_entries_by_id: dict[str, source_library.SourceLibraryEntry],
+) -> RawTextNextCycleSensitiveSourceRegistrationItem:
+    try:
+        item = RawTextNextCycleSensitiveSourceRegistrationItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            "invalid raw text next-cycle sensitive source registration item: "
+            f"{error}"
+        ) from error
+
+    owner_id = item.registration_item_id or "?"
+    for field_name in (
+        "registration_item_id",
+        "registration_prep_item_id",
+        "registered_entry_id",
+        "registered_material_id",
+        "registration_status",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    _validate_enum(
+        item.registration_status,
+        RAW_TEXT_NEXT_CYCLE_SENSITIVE_SOURCE_REGISTRATION_STATUSES,
+        "registration_status",
+        owner_id,
+    )
+    for field_name in ("registered_local_references", "guardrails"):
+        _require_string_list(getattr(item, field_name), field_name, owner_id)
+    if not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires guardrails")
+    if not item.source_library_mutation_authorized:
+        raise MaterialsAuditError(
+            f"{owner_id} must authorize source-library mutation"
+        )
+    if item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize downstream mutation")
+    for local_reference in item.registered_local_references:
+        if not _is_source_relative_path(local_reference):
+            raise MaterialsAuditError(f"{owner_id} has non-relative source path")
+
+    prep_item = prep_items_by_id.get(item.registration_prep_item_id)
+    if prep_item is None:
+        raise MaterialsAuditError(
+            f"{owner_id} references unknown registration_prep_item_id"
+        )
+    if prep_item.registration_status != "ready_for_sensitive_source_registration":
+        raise MaterialsAuditError(f"{owner_id} prep item is not registration-ready")
+    if prep_item.proposed_entry_id != item.registered_entry_id:
+        raise MaterialsAuditError(f"{owner_id} registered_entry_id mismatch")
+    if prep_item.proposed_material_id != item.registered_material_id:
+        raise MaterialsAuditError(f"{owner_id} registered_material_id mismatch")
+    if prep_item.proposed_local_references != item.registered_local_references:
+        raise MaterialsAuditError(f"{owner_id} registered_local_references mismatch")
+
+    source_entry = source_entries_by_id.get(item.registered_entry_id)
+    if source_entry is None:
+        raise MaterialsAuditError(f"{owner_id} registered_entry_id is missing")
+    if not _sensitive_registration_prep_entry_matches_existing(prep_item, source_entry):
+        raise MaterialsAuditError(
+            f"{owner_id} registered entry does not match prep metadata"
+        )
+
+    return item
+
+
+def load_raw_text_next_cycle_sensitive_source_registration_items(
+    data_dir: Path | str | None = None,
+) -> list[RawTextNextCycleSensitiveSourceRegistrationItem]:
+    source_dir = _data_dir(data_dir)
+    prep_items_by_id = {
+        item.prep_item_id: item
+        for item in load_raw_text_next_cycle_sensitive_registration_prep_items(
+            source_dir
+        )
+    }
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    items = [
+        _raw_text_next_cycle_sensitive_source_registration_item_from_dict(
+            item,
+            prep_items_by_id,
+            source_entries_by_id,
+        )
+        for item in _read_optional_json_list(
+            source_dir
+            / "raw_text_next_cycle_sensitive_source_registration_items.json"
+        )
+    ]
+    _ensure_unique([item.registration_item_id for item in items], "registration_item_id")
+    _ensure_unique(
+        [item.registration_prep_item_id for item in items],
+        "registration_prep_item_id",
+    )
+    _ensure_unique([item.registered_entry_id for item in items], "registered_entry_id")
+    _ensure_unique(
+        [item.registered_material_id for item in items],
+        "registered_material_id",
+    )
     return items
 
 
@@ -6871,8 +6985,17 @@ def build_raw_text_next_cycle_sensitive_registration_prep_summary(
         for item in items
     )
     proposed_entries_available = bool(items) and all(
-        item.proposed_entry_id not in source_entries_by_id
-        and item.proposed_material_id not in existing_material_ids
+        (
+            item.proposed_entry_id in source_entries_by_id
+            and _sensitive_registration_prep_entry_matches_existing(
+                item,
+                source_entries_by_id[item.proposed_entry_id],
+            )
+        )
+        or (
+            item.proposed_entry_id not in source_entries_by_id
+            and item.proposed_material_id not in existing_material_ids
+        )
         for item in items
     )
     blocked_and_deferred_prep_retained = (
@@ -7028,6 +7151,191 @@ def render_raw_text_next_cycle_sensitive_registration_prep_markdown(
     lines.extend(f"- `{entry_id}`" for entry_id in summary.proposed_entry_ids)
     lines.extend(["", "Proposed source material ids:"])
     lines.extend(f"- `{material_id}`" for material_id in summary.proposed_material_ids)
+    lines.extend(["", "Prep items retained blocked:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.blocked_prep_item_ids)
+    lines.extend(["", "Prep items retained deferred:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.deferred_prep_item_ids)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def build_raw_text_next_cycle_sensitive_source_registration_summary(
+    data_dir: Path | str | None = None,
+) -> RawTextNextCycleSensitiveSourceRegistrationSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_raw_text_next_cycle_sensitive_source_registration_items(source_dir)
+    prep_summary = build_raw_text_next_cycle_sensitive_registration_prep_summary(
+        source_dir
+    )
+    prep_items = load_raw_text_next_cycle_sensitive_registration_prep_items(source_dir)
+    sensitive_prep_items = load_raw_text_next_cycle_sensitive_risk_review_prep_items(
+        source_dir
+    )
+    source_entries_by_id = _load_source_library_entries(source_dir)
+
+    prep_items_by_id = {item.prep_item_id: item for item in prep_items}
+    blocked_prep_item_ids = [
+        item.prep_item_id
+        for item in sensitive_prep_items
+        if item.prep_status == "blocked_after_sensitive_prep"
+    ]
+    deferred_prep_item_ids = [
+        item.prep_item_id
+        for item in sensitive_prep_items
+        if item.prep_status == "deferred_after_sensitive_prep"
+    ]
+    registered_entries_match_prep_metadata = bool(items) and all(
+        item.registration_prep_item_id in prep_items_by_id
+        and _sensitive_registration_prep_entry_matches_existing(
+            prep_items_by_id[item.registration_prep_item_id],
+            source_entries_by_id[item.registered_entry_id],
+        )
+        for item in items
+        if item.registered_entry_id in source_entries_by_id
+    )
+    all_registered_entries_present = bool(items) and all(
+        item.registered_entry_id in source_entries_by_id for item in items
+    )
+    registered_material_ids_match = bool(items) and all(
+        item.registered_entry_id in source_entries_by_id
+        and source_entries_by_id[item.registered_entry_id].material_id
+        == item.registered_material_id
+        for item in items
+    )
+    blocked_and_deferred_prep_retained = (
+        bool(blocked_prep_item_ids)
+        and bool(deferred_prep_item_ids)
+        and all(
+            item.registration_prep_item_id
+            not in set(blocked_prep_item_ids) | set(deferred_prep_item_ids)
+            for item in items
+        )
+    )
+    source_paths_are_relative = all(
+        _is_source_relative_path(path)
+        for item in items
+        for path in item.registered_local_references
+    )
+    boundary_checks = {
+        "sensitive_source_registration_items_loaded": (
+            "passed" if items else "failed"
+        ),
+        "sensitive_registration_prep_completed": (
+            "passed"
+            if prep_summary.prep_status == "sensitive_registration_prep_completed"
+            else "failed"
+        ),
+        "source_library_entries_loaded": (
+            "passed" if source_entries_by_id else "failed"
+        ),
+        "registered_entries_match_prep_metadata": (
+            "passed"
+            if all_registered_entries_present
+            and registered_material_ids_match
+            and registered_entries_match_prep_metadata
+            else "failed"
+        ),
+        "blocked_and_deferred_prep_retained": (
+            "passed" if blocked_and_deferred_prep_retained else "failed"
+        ),
+        "source_paths_are_relative": (
+            "passed" if source_paths_are_relative else "failed"
+        ),
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+    return RawTextNextCycleSensitiveSourceRegistrationSummary(
+        registration_id=RAW_TEXT_NEXT_CYCLE_SENSITIVE_SOURCE_REGISTRATION_ID,
+        registration_status=(
+            "sensitive_source_registration_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "sensitive_source_registration_needs_attention"
+        ),
+        triage_group_id=RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID,
+        source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
+        registered_entry_count=len(items),
+        registered_source_file_count=sum(
+            len(item.registered_local_references) for item in items
+        ),
+        candidate_extract_count=0,
+        formal_evidence_count=0,
+        registered_entry_ids=[item.registered_entry_id for item in items],
+        registered_material_ids=[item.registered_material_id for item in items],
+        registration_prep_item_ids=[
+            item.registration_prep_item_id for item in items
+        ],
+        blocked_prep_item_ids=blocked_prep_item_ids,
+        deferred_prep_item_ids=deferred_prep_item_ids,
+        source_library_mutation_authorized=any(
+            item.source_library_mutation_authorized for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=(
+            RAW_TEXT_NEXT_CYCLE_SENSITIVE_SOURCE_REGISTRATION_NEXT_MATERIAL_ENTRY
+        ),
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Only source-library metadata registration is authorized in this stage.",
+            "The registered sensitive source still needs preparation before reading.",
+            "Blocked and deferred sensitive prep items remain unavailable.",
+            "013 candidate intake and 012 formal evidence remain blocked.",
+            "External raw materials are not moved, converted, opened, or rewritten.",
+        ],
+    )
+
+
+def render_raw_text_next_cycle_sensitive_source_registration_markdown(
+    summary: RawTextNextCycleSensitiveSourceRegistrationSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Raw Text Next Cycle Sensitive Source Registration",
+        "",
+        f"- Registration id: `{summary.registration_id}`",
+        (
+            "- `sensitive-source-registration-status="
+            f"{summary.registration_status}`"
+        ),
+        f"- `registered-source-entries={summary.registered_entry_count}`",
+        f"- `registered-source-files={summary.registered_source_file_count}`",
+        f"- `candidate-extracts={summary.candidate_extract_count}`",
+        f"- `formal-evidence={summary.formal_evidence_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Registered source-library entry ids:",
+    ]
+    lines.extend(f"- `{entry_id}`" for entry_id in summary.registered_entry_ids)
+    lines.extend(["", "Registered material ids:"])
+    lines.extend(f"- `{material_id}`" for material_id in summary.registered_material_ids)
+    lines.extend(["", "Registration-prep item ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.registration_prep_item_ids)
     lines.extend(["", "Prep items retained blocked:"])
     lines.extend(f"- `{item_id}`" for item_id in summary.blocked_prep_item_ids)
     lines.extend(["", "Prep items retained deferred:"])
@@ -8522,6 +8830,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_next_cycle_sensitive_registration_prep_items = (
             load_raw_text_next_cycle_sensitive_registration_prep_items(source_dir)
         )
+        raw_text_next_cycle_sensitive_source_registration_items = (
+            load_raw_text_next_cycle_sensitive_source_registration_items(source_dir)
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -8558,6 +8869,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_next_cycle_sensitive_risk_review_prep_items,
         raw_text_next_cycle_sensitive_source_level_risk_review_items,
         raw_text_next_cycle_sensitive_registration_prep_items,
+        raw_text_next_cycle_sensitive_source_registration_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -8623,6 +8935,9 @@ def _iter_quality_text_fields(
     ],
     raw_text_next_cycle_sensitive_registration_prep_items: list[
         RawTextNextCycleSensitiveRegistrationPrepItem
+    ],
+    raw_text_next_cycle_sensitive_source_registration_items: list[
+        RawTextNextCycleSensitiveSourceRegistrationItem
     ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
@@ -8917,6 +9232,18 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.prep_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in raw_text_next_cycle_sensitive_source_registration_items:
+        fields.append(
+            (item.registration_item_id, "rationale", item.rationale)
+        )
+        fields.extend(
+            (item.registration_item_id, "registered_local_references", reference)
+            for reference in item.registered_local_references
+        )
+        fields.extend(
+            (item.registration_item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

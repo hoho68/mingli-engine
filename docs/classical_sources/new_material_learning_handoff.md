@@ -422,7 +422,7 @@ Risk-review items:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-raw-text-next-cycle-sensitive-source-registration`.
+- `next-new-material-start=015-raw-text-next-cycle-sensitive-preparation-boundary`.
 - Current 015 queue coverage has no uncovered action after excluding 30
   016-covered/completed ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -624,7 +624,7 @@ Risk-review items:
   `sensitive-registration-prep-status=sensitive_registration_prep_completed`,
   `sensitive-registration-prep-items=1`,
   `proposed-source-files=1`,
-  `registered-source-entries=0`,
+  `registered-source-entries=1`,
   `candidate-extracts=0`,
   `formal-evidence=0`,
   `source-library-mutation-authorized=false`,
@@ -635,8 +635,20 @@ Risk-review items:
 - Proposed sensitive source-library ids:
   `entry_bazi_general_bazi_psychology_pdf` and
   `material_bazi_general_bazi_psychology_pdf`.
-- Sensitive registration prep did not create source-library, 013 candidate, or
-  012 evidence records.
+- 015 Raw Text Next Cycle Sensitive Source Registration is completed:
+  `sensitive-source-registration-status=sensitive_source_registration_completed`,
+  `registered-source-entries=1`,
+  `registered-source-files=1`,
+  `candidate-extracts=0`,
+  `formal-evidence=0`,
+  `source-library-mutation-authorized=true`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-raw-text-next-cycle-sensitive-preparation-boundary`.
+- Registered sensitive source-library ids:
+  `entry_bazi_general_bazi_psychology_pdf` and
+  `material_bazi_general_bazi_psychology_pdf`.
+- Sensitive source registration did not create 013 candidate or 012 evidence
+  records.
 
 ## Remaining Optional Precision Work
 
@@ -653,7 +665,7 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-raw-text-next-cycle-sensitive-source-registration`. It should register the prepared sensitive source-library entry under explicit authorization while keeping 013 and 012 mutation gated.
+`next-material-entry=015-raw-text-next-cycle-sensitive-preparation-boundary`. It should prepare the registered sensitive source for a later reading/extraction boundary while keeping 013 and 012 mutation gated.
 
 ## Guardrails
 
@@ -665,4 +677,4 @@ When continuing new-material work, use a long goal that starts from
 
 ## Next Target
 
-Next target: `015-raw-text-next-cycle-sensitive-source-registration`. Register `entry_bazi_general_bazi_psychology_pdf` from the prepared sensitive metadata while preserving sensitive guardrails and downstream authorization gates.
+Next target: `015-raw-text-next-cycle-sensitive-preparation-boundary`. Prepare the registered sensitive source for a later reading/extraction boundary while preserving sensitive guardrails and downstream authorization gates.
