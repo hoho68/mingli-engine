@@ -59,6 +59,8 @@ from mingli_engine.models import (
     RawTextNextCycleIdentityReviewSummary,
     RawTextNextCycleSensitiveRiskReviewPrepItem,
     RawTextNextCycleSensitiveRiskReviewPrepSummary,
+    RawTextNextCycleSensitivePreparationBoundaryItem,
+    RawTextNextCycleSensitivePreparationBoundarySummary,
     RawTextNextCycleSensitiveRegistrationPrepItem,
     RawTextNextCycleSensitiveRegistrationPrepSummary,
     RawTextNextCycleSensitiveSourceRegistrationItem,
@@ -222,6 +224,12 @@ RAW_TEXT_NEXT_CYCLE_SENSITIVE_SOURCE_REGISTRATION_ID = (
 RAW_TEXT_NEXT_CYCLE_SENSITIVE_SOURCE_REGISTRATION_NEXT_MATERIAL_ENTRY = (
     "015-raw-text-next-cycle-sensitive-preparation-boundary"
 )
+RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_BOUNDARY_ID = (
+    "015-raw-text-next-cycle-sensitive-preparation-boundary"
+)
+RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_BOUNDARY_NEXT_MATERIAL_ENTRY = (
+    "015-raw-text-next-cycle-sensitive-preparation-reading"
+)
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
     "bazi_general_misc_identity_review_cluster",
@@ -264,6 +272,9 @@ RAW_TEXT_NEXT_CYCLE_SENSITIVE_REGISTRATION_PREP_STATUSES = frozenset(
 )
 RAW_TEXT_NEXT_CYCLE_SENSITIVE_SOURCE_REGISTRATION_STATUSES = frozenset(
     {"registered_sensitive_source_library_entry"}
+)
+RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_BOUNDARY_STATUSES = frozenset(
+    {"cleared_for_sensitive_preparation"}
 )
 RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY = "015-liang-bazi-core-source-selection"
 RAW_TEXT_SOURCE_SELECTION_ID = "015-liang-bazi-core-source-selection"
@@ -3324,6 +3335,149 @@ def load_raw_text_next_cycle_sensitive_source_registration_items(
         [item.registered_material_id for item in items],
         "registered_material_id",
     )
+    return items
+
+
+def _raw_text_next_cycle_sensitive_preparation_boundary_item_from_dict(
+    data: dict[str, Any],
+    registration_items_by_id: dict[str, RawTextNextCycleSensitiveSourceRegistrationItem],
+    source_entries_by_id: dict[str, source_library.SourceLibraryEntry],
+) -> RawTextNextCycleSensitivePreparationBoundaryItem:
+    try:
+        item = RawTextNextCycleSensitivePreparationBoundaryItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            "invalid raw text next-cycle sensitive preparation boundary item: "
+            f"{error}"
+        ) from error
+
+    owner_id = item.boundary_item_id or "?"
+    for field_name in (
+        "boundary_item_id",
+        "source_registration_item_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "boundary_status",
+        "risk_boundary",
+        "recommended_next_action",
+        "boundary_decision",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    _validate_enum(
+        item.boundary_status,
+        RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_BOUNDARY_STATUSES,
+        "boundary_status",
+        owner_id,
+    )
+    _validate_enum(item.risk_boundary, RISK_TIERS, "risk_boundary", owner_id)
+    _validate_enum(
+        item.recommended_next_action,
+        SOURCE_LIBRARY_NEXT_ACTIONS,
+        "recommended_next_action",
+        owner_id,
+    )
+    for field_name in (
+        "local_references",
+        "target_rule_families",
+        "preparation_topics",
+        "risk_controls",
+        "guardrails",
+    ):
+        _require_string_list(getattr(item, field_name), field_name, owner_id)
+    if not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires guardrails")
+    if item.file_count != len(item.local_references):
+        raise MaterialsAuditError(f"{owner_id} file_count mismatch")
+    for field_name in (
+        "preparation_allowed",
+        "reading_allowed",
+        "downstream_mutation_authorized",
+    ):
+        if not isinstance(getattr(item, field_name), bool):
+            raise MaterialsAuditError(f"{owner_id} has invalid {field_name}")
+    if not item.preparation_allowed:
+        raise MaterialsAuditError(f"{owner_id} must allow preparation")
+    if item.reading_allowed:
+        raise MaterialsAuditError(f"{owner_id} must not allow reading yet")
+    if item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize downstream mutation")
+    if item.risk_boundary != "sensitive":
+        raise MaterialsAuditError(f"{owner_id} must stay within sensitive boundary")
+    for rule_family in item.target_rule_families:
+        _validate_enum(rule_family, RULE_FAMILIES, "target_rule_family", owner_id)
+    for local_reference in item.local_references:
+        if not _is_source_relative_path(local_reference):
+            raise MaterialsAuditError(f"{owner_id} has non-relative source path")
+
+    registration_item = registration_items_by_id.get(item.source_registration_item_id)
+    if registration_item is None:
+        raise MaterialsAuditError(
+            f"{owner_id} references unknown source_registration_item_id"
+        )
+    if (
+        registration_item.registration_status
+        != "registered_sensitive_source_library_entry"
+    ):
+        raise MaterialsAuditError(f"{owner_id} registration item is not complete")
+    if registration_item.registered_entry_id != item.source_library_entry_id:
+        raise MaterialsAuditError(f"{owner_id} source_library_entry_id mismatch")
+    if registration_item.registered_material_id != item.source_material_id:
+        raise MaterialsAuditError(f"{owner_id} source_material_id mismatch")
+    if registration_item.registered_local_references != item.local_references:
+        raise MaterialsAuditError(f"{owner_id} local_references mismatch")
+
+    source_entry = source_entries_by_id.get(item.source_library_entry_id)
+    if source_entry is None:
+        raise MaterialsAuditError(f"{owner_id} source_library_entry_id is missing")
+    if source_entry.material_id != item.source_material_id:
+        raise MaterialsAuditError(f"{owner_id} source material mismatch")
+    if source_entry.local_reference not in item.local_references:
+        raise MaterialsAuditError(f"{owner_id} source local reference mismatch")
+    if source_entry.risk_tier != "sensitive":
+        raise MaterialsAuditError(f"{owner_id} source entry is not sensitive")
+    if source_entry.readiness_status != "needs_preparation":
+        raise MaterialsAuditError(f"{owner_id} source entry is not preparation-ready")
+    if source_entry.next_action != item.recommended_next_action:
+        raise MaterialsAuditError(f"{owner_id} source next_action mismatch")
+    if item.recommended_next_action != "prepare_material":
+        raise MaterialsAuditError(f"{owner_id} must route to prepare_material")
+
+    return item
+
+
+def load_raw_text_next_cycle_sensitive_preparation_boundary_items(
+    data_dir: Path | str | None = None,
+) -> list[RawTextNextCycleSensitivePreparationBoundaryItem]:
+    source_dir = _data_dir(data_dir)
+    registration_items_by_id = {
+        item.registration_item_id: item
+        for item in load_raw_text_next_cycle_sensitive_source_registration_items(
+            source_dir
+        )
+    }
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    items = [
+        _raw_text_next_cycle_sensitive_preparation_boundary_item_from_dict(
+            item,
+            registration_items_by_id,
+            source_entries_by_id,
+        )
+        for item in _read_optional_json_list(
+            source_dir
+            / "raw_text_next_cycle_sensitive_preparation_boundary_items.json"
+        )
+    ]
+    _ensure_unique([item.boundary_item_id for item in items], "boundary_item_id")
+    _ensure_unique(
+        [item.source_registration_item_id for item in items],
+        "source_registration_item_id",
+    )
+    _ensure_unique(
+        [item.source_library_entry_id for item in items],
+        "source_library_entry_id",
+    )
+    _ensure_unique([item.source_material_id for item in items], "source_material_id")
     return items
 
 
@@ -7355,6 +7509,222 @@ def render_raw_text_next_cycle_sensitive_source_registration_markdown(
     return "\n".join(lines) + "\n"
 
 
+def build_raw_text_next_cycle_sensitive_preparation_boundary_summary(
+    data_dir: Path | str | None = None,
+) -> RawTextNextCycleSensitivePreparationBoundarySummary:
+    source_dir = _data_dir(data_dir)
+    items = load_raw_text_next_cycle_sensitive_preparation_boundary_items(source_dir)
+    registration_summary = build_raw_text_next_cycle_sensitive_source_registration_summary(
+        source_dir
+    )
+    registration_items_by_id = {
+        item.registration_item_id: item
+        for item in load_raw_text_next_cycle_sensitive_source_registration_items(
+            source_dir
+        )
+    }
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    source_file_count = sum(item.file_count for item in items)
+    local_references = [
+        reference for item in items for reference in item.local_references
+    ]
+    registered_source_references_valid = bool(items) and all(
+        item.source_registration_item_id in registration_items_by_id
+        and registration_items_by_id[
+            item.source_registration_item_id
+        ].registered_entry_id
+        == item.source_library_entry_id
+        and registration_items_by_id[
+            item.source_registration_item_id
+        ].registered_material_id
+        == item.source_material_id
+        and registration_items_by_id[
+            item.source_registration_item_id
+        ].registered_local_references
+        == item.local_references
+        for item in items
+    )
+    source_library_entry_ready_for_preparation = bool(items) and all(
+        item.source_library_entry_id in source_entries_by_id
+        and source_entries_by_id[item.source_library_entry_id].material_id
+        == item.source_material_id
+        and source_entries_by_id[item.source_library_entry_id].risk_tier
+        == "sensitive"
+        and source_entries_by_id[item.source_library_entry_id].readiness_status
+        == "needs_preparation"
+        and source_entries_by_id[item.source_library_entry_id].next_action
+        == "prepare_material"
+        for item in items
+    )
+    source_paths_are_relative = bool(items) and all(
+        _is_source_relative_path(path) for path in local_references
+    )
+    action_routing_valid = bool(items) and all(
+        item.boundary_status == "cleared_for_sensitive_preparation"
+        and item.recommended_next_action == "prepare_material"
+        and item.preparation_allowed
+        and not item.reading_allowed
+        for item in items
+    )
+    downstream_mutation_blocked = not any(
+        item.downstream_mutation_authorized for item in items
+    )
+    boundary_checks = {
+        "sensitive_preparation_boundary_items_loaded": (
+            "passed" if items else "failed"
+        ),
+        "source_registration_completed": (
+            "passed"
+            if registration_summary.registration_status
+            == "sensitive_source_registration_completed"
+            else "failed"
+        ),
+        "registered_source_references_valid": (
+            "passed" if registered_source_references_valid else "failed"
+        ),
+        "source_library_entry_ready_for_preparation": (
+            "passed" if source_library_entry_ready_for_preparation else "failed"
+        ),
+        "source_paths_are_relative": (
+            "passed" if source_paths_are_relative else "failed"
+        ),
+        "action_routing_valid": "passed" if action_routing_valid else "failed",
+        "downstream_mutation_blocked": (
+            "passed" if downstream_mutation_blocked else "failed"
+        ),
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+    return RawTextNextCycleSensitivePreparationBoundarySummary(
+        boundary_id=RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_BOUNDARY_ID,
+        boundary_status=(
+            "sensitive_preparation_boundary_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "sensitive_preparation_boundary_needs_attention"
+        ),
+        triage_group_id=RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID,
+        source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
+        boundary_item_count=len(items),
+        source_file_count=source_file_count,
+        preparation_allowed_count=sum(
+            1 for item in items if item.preparation_allowed
+        ),
+        reading_allowed_count=sum(1 for item in items if item.reading_allowed),
+        candidate_extract_count=0,
+        formal_evidence_count=0,
+        boundary_item_ids=[item.boundary_item_id for item in items],
+        source_registration_item_ids=[
+            item.source_registration_item_id for item in items
+        ],
+        source_entry_ids=[item.source_library_entry_id for item in items],
+        source_material_ids=[item.source_material_id for item in items],
+        local_references=local_references,
+        status_counts=_count_values([item.boundary_status for item in items]),
+        action_counts=_count_values(
+            [item.recommended_next_action for item in items]
+        ),
+        risk_boundary_counts=_count_values([item.risk_boundary for item in items]),
+        target_rule_family_counts=_count_values(
+            [
+                rule_family
+                for item in items
+                for rule_family in item.target_rule_families
+            ]
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=(
+            RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_BOUNDARY_NEXT_MATERIAL_ENTRY
+        ),
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "This stage clears metadata-only preparation for one sensitive source.",
+            "Raw PDF reading remains blocked until a later bounded reading stage.",
+            "013 candidate intake and 012 formal evidence remain blocked.",
+            "Do not infer traits, outcomes, or advice from the title alone.",
+            "External raw materials are not moved, converted, opened, or rewritten.",
+        ],
+    )
+
+
+def render_raw_text_next_cycle_sensitive_preparation_boundary_markdown(
+    summary: RawTextNextCycleSensitivePreparationBoundarySummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 Raw Text Next Cycle Sensitive Preparation Boundary",
+        "",
+        f"- Boundary id: `{summary.boundary_id}`",
+        (
+            "- `sensitive-preparation-boundary-status="
+            f"{summary.boundary_status}`"
+        ),
+        (
+            "- `sensitive-preparation-boundary-items="
+            f"{summary.boundary_item_count}`"
+        ),
+        f"- `source-files={summary.source_file_count}`",
+        f"- `preparation-allowed={summary.preparation_allowed_count}`",
+        f"- `reading-allowed={summary.reading_allowed_count}`",
+        f"- `candidate-extracts={summary.candidate_extract_count}`",
+        f"- `formal-evidence={summary.formal_evidence_count}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Boundary item ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.boundary_item_ids)
+    lines.extend(["", "Source registration item ids:"])
+    lines.extend(
+        f"- `{item_id}`" for item_id in summary.source_registration_item_ids
+    )
+    lines.extend(["", "Source-library entry ids:"])
+    lines.extend(f"- `{entry_id}`" for entry_id in summary.source_entry_ids)
+    lines.extend(["", "Source material ids:"])
+    lines.extend(f"- `{material_id}`" for material_id in summary.source_material_ids)
+    lines.extend(["", "Local references:"])
+    lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Status counts:"])
+    lines.extend(
+        f"- `{status}`: `{count}`"
+        for status, count in summary.status_counts.items()
+    )
+    lines.extend(["", "Action counts:"])
+    lines.extend(
+        f"- `{action}`: `{count}`" for action, count in summary.action_counts.items()
+    )
+    lines.extend(["", "Risk boundary counts:"])
+    lines.extend(
+        f"- `{risk}`: `{count}`"
+        for risk, count in summary.risk_boundary_counts.items()
+    )
+    lines.extend(["", "Target rule family counts:"])
+    lines.extend(
+        f"- `{rule_family}`: `{count}`"
+        for rule_family, count in summary.target_rule_family_counts.items()
+    )
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_raw_text_cluster_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextClusterSourceSelectionSummary:
@@ -8833,6 +9203,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_next_cycle_sensitive_source_registration_items = (
             load_raw_text_next_cycle_sensitive_source_registration_items(source_dir)
         )
+        raw_text_next_cycle_sensitive_preparation_boundary_items = (
+            load_raw_text_next_cycle_sensitive_preparation_boundary_items(source_dir)
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -8870,6 +9243,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_next_cycle_sensitive_source_level_risk_review_items,
         raw_text_next_cycle_sensitive_registration_prep_items,
         raw_text_next_cycle_sensitive_source_registration_items,
+        raw_text_next_cycle_sensitive_preparation_boundary_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -8938,6 +9312,9 @@ def _iter_quality_text_fields(
     ],
     raw_text_next_cycle_sensitive_source_registration_items: list[
         RawTextNextCycleSensitiveSourceRegistrationItem
+    ],
+    raw_text_next_cycle_sensitive_preparation_boundary_items: list[
+        RawTextNextCycleSensitivePreparationBoundaryItem
     ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
@@ -9244,6 +9621,29 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.registration_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in raw_text_next_cycle_sensitive_preparation_boundary_items:
+        fields.extend(
+            (
+                (item.boundary_item_id, "boundary_decision", item.boundary_decision),
+                (item.boundary_item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.boundary_item_id, "local_references", reference)
+            for reference in item.local_references
+        )
+        fields.extend(
+            (item.boundary_item_id, "preparation_topics", topic)
+            for topic in item.preparation_topics
+        )
+        fields.extend(
+            (item.boundary_item_id, "risk_controls", control)
+            for control in item.risk_controls
+        )
+        fields.extend(
+            (item.boundary_item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

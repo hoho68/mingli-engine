@@ -422,7 +422,7 @@ Risk-review items:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-raw-text-next-cycle-sensitive-preparation-boundary`.
+- `next-new-material-start=015-raw-text-next-cycle-sensitive-preparation-reading`.
 - Current 015 queue coverage has no uncovered action after excluding 30
   016-covered/completed ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -649,6 +649,19 @@ Risk-review items:
   `material_bazi_general_bazi_psychology_pdf`.
 - Sensitive source registration did not create 013 candidate or 012 evidence
   records.
+- 015 Raw Text Next Cycle Sensitive Preparation Boundary is completed:
+  `sensitive-preparation-boundary-status=sensitive_preparation_boundary_completed`,
+  `sensitive-preparation-boundary-items=1`,
+  `preparation-allowed=1`,
+  `reading-allowed=0`,
+  `candidate-extracts=0`,
+  `formal-evidence=0`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-raw-text-next-cycle-sensitive-preparation-reading`.
+- Sensitive preparation boundary id:
+  `sensitive_preparation_boundary_bazi_psychology_pdf`.
+- Current new-material continuation marker:
+  `next-new-material-start=015-raw-text-next-cycle-sensitive-preparation-reading`.
 
 ## Remaining Optional Precision Work
 
@@ -665,7 +678,7 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-raw-text-next-cycle-sensitive-preparation-boundary`. It should prepare the registered sensitive source for a later reading/extraction boundary while keeping 013 and 012 mutation gated.
+`next-material-entry=015-raw-text-next-cycle-sensitive-preparation-reading`. It should perform the bounded sensitive preparation-reading pass for the registered source while keeping 013 and 012 mutation gated.
 
 ## Guardrails
 
@@ -677,4 +690,4 @@ When continuing new-material work, use a long goal that starts from
 
 ## Next Target
 
-Next target: `015-raw-text-next-cycle-sensitive-preparation-boundary`. Prepare the registered sensitive source for a later reading/extraction boundary while preserving sensitive guardrails and downstream authorization gates.
+Next target: `015-raw-text-next-cycle-sensitive-preparation-reading`. Perform the bounded sensitive preparation-reading pass for the registered source while preserving sensitive guardrails and downstream authorization gates.

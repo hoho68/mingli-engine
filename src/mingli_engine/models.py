@@ -3499,6 +3499,57 @@ class RawTextNextCycleSensitiveSourceRegistrationSummary:
 
 
 @dataclass(frozen=True)
+class RawTextNextCycleSensitivePreparationBoundaryItem:
+    boundary_item_id: str
+    source_registration_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    boundary_status: str
+    risk_boundary: str
+    recommended_next_action: str
+    local_references: list[str]
+    file_count: int
+    preparation_allowed: bool = False
+    reading_allowed: bool = False
+    downstream_mutation_authorized: bool = False
+    target_rule_families: list[str] = field(default_factory=list)
+    preparation_topics: list[str] = field(default_factory=list)
+    risk_controls: list[str] = field(default_factory=list)
+    boundary_decision: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextNextCycleSensitivePreparationBoundarySummary:
+    boundary_id: str
+    boundary_status: str
+    triage_group_id: str
+    source_root: str
+    boundary_item_count: int
+    source_file_count: int
+    preparation_allowed_count: int
+    reading_allowed_count: int
+    candidate_extract_count: int
+    formal_evidence_count: int
+    boundary_item_ids: list[str]
+    source_registration_item_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    status_counts: dict[str, int]
+    action_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    target_rule_family_counts: dict[str, int]
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextClusterSourceSelectionItem:
     selection_id: str
     cluster_id: str

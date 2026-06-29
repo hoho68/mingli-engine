@@ -734,6 +734,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_next_cycle_sensitive_source_registration_items",
         "build_raw_text_next_cycle_sensitive_source_registration_summary",
         "render_raw_text_next_cycle_sensitive_source_registration_markdown",
+        "load_raw_text_next_cycle_sensitive_preparation_boundary_items",
+        "build_raw_text_next_cycle_sensitive_preparation_boundary_summary",
+        "render_raw_text_next_cycle_sensitive_preparation_boundary_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -3597,6 +3600,105 @@ def test_raw_text_next_cycle_sensitive_source_registration_markdown_and_docs_syn
         "`source-library-mutation-authorized=true`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-raw-text-next-cycle-sensitive-preparation-boundary`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_next_cycle_sensitive_preparation_boundary_items_load_record():
+    items = (
+        materials_audit.load_raw_text_next_cycle_sensitive_preparation_boundary_items()
+    )
+    items_by_id = {item.boundary_item_id: item for item in items}
+
+    assert len(items) == 1
+    assert set(items_by_id) == {"sensitive_preparation_boundary_bazi_psychology_pdf"}
+    item = items_by_id["sensitive_preparation_boundary_bazi_psychology_pdf"]
+    assert item.source_registration_item_id == (
+        "sensitive_source_registration_bazi_psychology_pdf"
+    )
+    assert item.source_library_entry_id == "entry_bazi_general_bazi_psychology_pdf"
+    assert item.source_material_id == "material_bazi_general_bazi_psychology_pdf"
+    assert item.boundary_status == "cleared_for_sensitive_preparation"
+    assert item.risk_boundary == "sensitive"
+    assert item.recommended_next_action == "prepare_material"
+    assert item.local_references == [
+        "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf"
+    ]
+    assert item.file_count == 1
+    assert item.preparation_allowed is True
+    assert item.reading_allowed is False
+    assert item.downstream_mutation_authorized is False
+    assert item.target_rule_families == ["ten_god_relation"]
+
+
+def test_raw_text_next_cycle_sensitive_preparation_boundary_summary_counts_closure():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_sensitive_preparation_boundary_summary()
+    )
+
+    assert summary.boundary_id == (
+        "015-raw-text-next-cycle-sensitive-preparation-boundary"
+    )
+    assert summary.boundary_status == "sensitive_preparation_boundary_completed"
+    assert summary.boundary_item_count == 1
+    assert summary.source_file_count == 1
+    assert summary.preparation_allowed_count == 1
+    assert summary.reading_allowed_count == 0
+    assert summary.candidate_extract_count == 0
+    assert summary.formal_evidence_count == 0
+    assert summary.boundary_item_ids == [
+        "sensitive_preparation_boundary_bazi_psychology_pdf"
+    ]
+    assert summary.source_registration_item_ids == [
+        "sensitive_source_registration_bazi_psychology_pdf"
+    ]
+    assert summary.source_entry_ids == ["entry_bazi_general_bazi_psychology_pdf"]
+    assert summary.source_material_ids == [
+        "material_bazi_general_bazi_psychology_pdf"
+    ]
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "015-raw-text-next-cycle-sensitive-preparation-reading"
+    )
+    assert summary.boundary_checks == {
+        "sensitive_preparation_boundary_items_loaded": "passed",
+        "source_registration_completed": "passed",
+        "registered_source_references_valid": "passed",
+        "source_library_entry_ready_for_preparation": "passed",
+        "source_paths_are_relative": "passed",
+        "action_routing_valid": "passed",
+        "downstream_mutation_blocked": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_raw_text_next_cycle_sensitive_preparation_boundary_markdown_and_docs_sync():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_sensitive_preparation_boundary_summary()
+    )
+    markdown = materials_audit.render_raw_text_next_cycle_sensitive_preparation_boundary_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Raw Text Next Cycle Sensitive Preparation Boundary",
+        "`sensitive-preparation-boundary-status=sensitive_preparation_boundary_completed`",
+        "`sensitive-preparation-boundary-items=1`",
+        "`preparation-allowed=1`",
+        "`reading-allowed=0`",
+        "`candidate-extracts=0`",
+        "`formal-evidence=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-raw-text-next-cycle-sensitive-preparation-reading`",
     ):
         assert marker in markdown
         assert marker in materials_doc

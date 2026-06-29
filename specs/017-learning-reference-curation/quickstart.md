@@ -107,19 +107,19 @@ promotion batches, or formal evidence.
 
 ## Current New-Material Continuation
 
-The 015 raw text next-cycle sensitive source registration is complete:
+The 015 raw text next-cycle sensitive preparation boundary is complete:
 
-- `sensitive-source-registration-status=sensitive_source_registration_completed`
-- `registered-source-entries=1`
-- `registered-source-files=1`
+- `sensitive-preparation-boundary-status=sensitive_preparation_boundary_completed`
+- `sensitive-preparation-boundary-items=1`
+- `preparation-allowed=1`
+- `reading-allowed=0`
 - `candidate-extracts=0`
 - `formal-evidence=0`
-- `source-library-mutation-authorized=true`
 - `downstream-mutation-authorized=false`
-- `next-new-material-start=015-raw-text-next-cycle-sensitive-preparation-boundary`
+- `next-new-material-start=015-raw-text-next-cycle-sensitive-preparation-reading`
 
-The next long goal should prepare the registered sensitive source for a later
-reading/extraction boundary while keeping 013 and 012 mutation gated.
+The next long goal should perform the bounded sensitive preparation-reading
+pass while keeping 013 and 012 mutation gated.
 
 Run focused learning reference curation tests:
 
