@@ -107,19 +107,21 @@ promotion batches, or formal evidence.
 
 ## Current New-Material Continuation
 
-The 015 raw text next-cycle sensitive preparation boundary is complete:
+The 015 raw text next-cycle sensitive preparation reading is complete:
 
-- `sensitive-preparation-boundary-status=sensitive_preparation_boundary_completed`
-- `sensitive-preparation-boundary-items=1`
-- `preparation-allowed=1`
-- `reading-allowed=0`
+- `sensitive-preparation-reading-status=sensitive_preparation_reading_completed`
+- `sensitive-preparation-reading-items=1`
+- `safe-reading-notes=3`
+- `candidate-intake-ready=0`
+- `formal-evidence-ready=0`
 - `candidate-extracts=0`
 - `formal-evidence=0`
 - `downstream-mutation-authorized=false`
-- `next-new-material-start=015-raw-text-next-cycle-sensitive-preparation-reading`
+- `next-new-material-start=013-explicit-candidate-review-or-015-queue-refresh`
 
-The next long goal should perform the bounded sensitive preparation-reading
-pass while keeping 013 and 012 mutation gated.
+The next long goal should either run the explicit downstream authorization
+audit for candidate review or refresh the 015 queue without bypassing 013 and
+012 gates.
 
 Run focused learning reference curation tests:
 

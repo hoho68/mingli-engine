@@ -3550,6 +3550,58 @@ class RawTextNextCycleSensitivePreparationBoundarySummary:
 
 
 @dataclass(frozen=True)
+class RawTextNextCycleSensitivePreparationReadingItem:
+    reading_item_id: str
+    boundary_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    reading_status: str
+    risk_boundary: str
+    local_references: list[str]
+    safe_reading_note_count: int
+    candidate_intake_ready: bool = False
+    formal_evidence_ready: bool = False
+    downstream_mutation_authorized: bool = False
+    target_rule_families: list[str] = field(default_factory=list)
+    safe_reading_notes: list[str] = field(default_factory=list)
+    sensitive_controls: list[str] = field(default_factory=list)
+    reading_decision: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextNextCycleSensitivePreparationReadingSummary:
+    reading_id: str
+    reading_status: str
+    triage_group_id: str
+    source_root: str
+    reading_item_count: int
+    source_file_count: int
+    safe_reading_note_count: int
+    candidate_intake_ready_count: int
+    formal_evidence_ready_count: int
+    candidate_extract_count: int
+    review_decision_count: int
+    promotion_batch_count: int
+    formal_evidence_count: int
+    reading_item_ids: list[str]
+    boundary_item_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    status_counts: dict[str, int]
+    risk_boundary_counts: dict[str, int]
+    target_rule_family_counts: dict[str, int]
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextClusterSourceSelectionItem:
     selection_id: str
     cluster_id: str

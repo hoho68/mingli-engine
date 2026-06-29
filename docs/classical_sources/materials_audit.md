@@ -1400,6 +1400,65 @@ Guardrails:
 - Do not infer traits, outcomes, or advice from the title alone.
 - External raw materials are not moved, converted, opened, or rewritten.
 
+## 015 Raw Text Next Cycle Sensitive Preparation Reading
+
+- Reading id: `015-raw-text-next-cycle-sensitive-preparation-reading`
+- `sensitive-preparation-reading-status=sensitive_preparation_reading_completed`
+- `sensitive-preparation-reading-items=1`
+- `source-files=1`
+- `safe-reading-notes=3`
+- `candidate-intake-ready=0`
+- `formal-evidence-ready=0`
+- `candidate-extracts=0`
+- `review-decisions=0`
+- `promotion-batches=0`
+- `formal-evidence=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=013-explicit-candidate-review-or-015-queue-refresh`
+
+Reading item ids:
+- `sensitive_preparation_reading_bazi_psychology_pdf`
+
+Boundary item ids:
+- `sensitive_preparation_boundary_bazi_psychology_pdf`
+
+Source-library entry ids:
+- `entry_bazi_general_bazi_psychology_pdf`
+
+Source material ids:
+- `material_bazi_general_bazi_psychology_pdf`
+
+Local references:
+- `陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf`
+
+Status counts:
+- `sensitive_preparation_reading_completed`: `1`
+
+Risk boundary counts:
+- `sensitive`: `1`
+
+Target rule family counts:
+- `ten_god_relation`: `1`
+
+Boundary checks:
+- `sensitive_preparation_reading_items_loaded`: `passed`
+- `preparation_boundary_completed`: `passed`
+- `boundary_references_valid`: `passed`
+- `source_library_entry_still_preparation_gated`: `passed`
+- `safe_reading_notes_present`: `passed`
+- `source_paths_are_relative`: `passed`
+- `downstream_mutation_blocked`: `passed`
+- `013_candidate_intake_blocked`: `passed`
+- `012_formal_evidence_blocked`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- This stage records safe preparation-reading controls only.
+- The source remains sensitive and preparation-gated in source-library metadata.
+- 013 candidate intake requires a later explicit authorization step.
+- 012 formal evidence remains blocked.
+- External raw materials are not moved, converted, opened, or rewritten.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

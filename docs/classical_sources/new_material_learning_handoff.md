@@ -422,7 +422,7 @@ Risk-review items:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-raw-text-next-cycle-sensitive-preparation-reading`.
+- `next-new-material-start=013-explicit-candidate-review-or-015-queue-refresh`.
 - Current 015 queue coverage has no uncovered action after excluding 30
   016-covered/completed ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -660,8 +660,20 @@ Risk-review items:
   `next-material-entry=015-raw-text-next-cycle-sensitive-preparation-reading`.
 - Sensitive preparation boundary id:
   `sensitive_preparation_boundary_bazi_psychology_pdf`.
+- 015 Raw Text Next Cycle Sensitive Preparation Reading is completed:
+  `sensitive-preparation-reading-status=sensitive_preparation_reading_completed`,
+  `sensitive-preparation-reading-items=1`,
+  `safe-reading-notes=3`,
+  `candidate-intake-ready=0`,
+  `formal-evidence-ready=0`,
+  `candidate-extracts=0`,
+  `formal-evidence=0`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=013-explicit-candidate-review-or-015-queue-refresh`.
+- Sensitive preparation reading id:
+  `sensitive_preparation_reading_bazi_psychology_pdf`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-raw-text-next-cycle-sensitive-preparation-reading`.
+  `next-new-material-start=013-explicit-candidate-review-or-015-queue-refresh`.
 
 ## Remaining Optional Precision Work
 
@@ -678,7 +690,7 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-raw-text-next-cycle-sensitive-preparation-reading`. It should perform the bounded sensitive preparation-reading pass for the registered source while keeping 013 and 012 mutation gated.
+`next-material-entry=013-explicit-candidate-review-or-015-queue-refresh`. It should either run the explicit downstream authorization audit for candidate review or refresh the 015 queue without bypassing 013 and 012 gates.
 
 ## Guardrails
 
@@ -690,4 +702,4 @@ When continuing new-material work, use a long goal that starts from
 
 ## Next Target
 
-Next target: `015-raw-text-next-cycle-sensitive-preparation-reading`. Perform the bounded sensitive preparation-reading pass for the registered source while preserving sensitive guardrails and downstream authorization gates.
+Next target: `013-explicit-candidate-review-or-015-queue-refresh`. Run the explicit downstream authorization audit for candidate review, or refresh the 015 queue if downstream mutation is not authorized.
