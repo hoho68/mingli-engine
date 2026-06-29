@@ -422,7 +422,7 @@ Risk-review items:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-raw-text-next-cycle-sensitive-risk-review-prep`.
+- `next-new-material-start=015-raw-text-next-cycle-sensitive-source-level-risk-review`.
 - Current 015 queue coverage has no uncovered action after excluding 30
   016-covered/completed ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -581,6 +581,28 @@ Risk-review items:
 - Selected-variant formal evidence ids:
   `bazi_general_ditiansui_pattern_strength_001` and
   `bazi_general_qiongtong_useful_god_001`.
+- 015 Raw Text Next Cycle Sensitive Risk Review Prep is completed:
+  `sensitive-risk-review-prep-status=sensitive_risk_review_prep_completed`,
+  `sensitive-risk-review-prep-items=3`,
+  `source-level-risk-review=1`,
+  `blocked-after-sensitive-prep=1`,
+  `deferred-after-sensitive-prep=1`,
+  `registered-source-entries=0`,
+  `candidate-extracts=0`,
+  `formal-evidence=0`,
+  `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-raw-text-next-cycle-sensitive-source-level-risk-review`.
+- Sensitive prep source-level risk review item:
+  `sensitive_risk_prep_bazi_psychology_pdf`.
+- Sensitive prep blocked/deferred ids:
+  `sensitive_risk_prep_erotic_fate_collection_pdf` and
+  `sensitive_risk_prep_bazi_comic_ppt`.
+- Sensitive representative paths covered:
+  `陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf`,
+  `情色命理汇总.pdf`, and `八字命理漫画.ppt`.
+- Sensitive prep created no source-library, 013 candidate, or 012 evidence
+  records.
 
 ## Remaining Optional Precision Work
 
@@ -597,7 +619,7 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-raw-text-next-cycle-sensitive-risk-review-prep`. It should review the sensitive-topic gated cluster boundary before any source-library, 013, or 012 mutation.
+`next-material-entry=015-raw-text-next-cycle-sensitive-source-level-risk-review`. It should review the prepared psychology-labeled source at source level before any source-library, 013, or 012 mutation.
 
 ## Guardrails
 
@@ -609,4 +631,4 @@ When continuing new-material work, use a long goal that starts from
 
 ## Next Target
 
-Next target: `015-raw-text-next-cycle-sensitive-risk-review-prep`. Review the sensitive-topic gated cluster boundary before deciding whether any bounded source can be registered.
+Next target: `015-raw-text-next-cycle-sensitive-source-level-risk-review`. Review `sensitive_risk_prep_bazi_psychology_pdf` at source level before deciding whether any bounded sensitive source can be registered.

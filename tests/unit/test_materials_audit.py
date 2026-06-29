@@ -722,6 +722,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_next_cycle_gated_ordinary_final_selection_items",
         "build_raw_text_next_cycle_gated_ordinary_final_selection_summary",
         "render_raw_text_next_cycle_gated_ordinary_final_selection_markdown",
+        "load_raw_text_next_cycle_sensitive_risk_review_prep_items",
+        "build_raw_text_next_cycle_sensitive_risk_review_prep_summary",
+        "render_raw_text_next_cycle_sensitive_risk_review_prep_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -3132,6 +3135,141 @@ def test_raw_text_next_cycle_gated_ordinary_final_selection_markdown_and_docs_sy
         "`source-library-mutation-authorized=true`",
         "`downstream-mutation-authorized=true`",
         "`next-material-entry=015-raw-text-next-cycle-sensitive-risk-review-prep`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_next_cycle_sensitive_risk_review_prep_items_load_boundary_records():
+    items = materials_audit.load_raw_text_next_cycle_sensitive_risk_review_prep_items()
+    items_by_id = {item.prep_item_id: item for item in items}
+
+    assert len(items) == 3
+    assert set(items_by_id) == {
+        "sensitive_risk_prep_bazi_psychology_pdf",
+        "sensitive_risk_prep_erotic_fate_collection_pdf",
+        "sensitive_risk_prep_bazi_comic_ppt",
+    }
+    assert {item.prep_id for item in items} == {
+        "gated_prep_sensitive_topic_boundary_001"
+    }
+    assert {item.source_selection_id for item in items} == {
+        "next_cycle_bazi_sensitive_topic_risk_review"
+    }
+    assert {item.cluster_id for item in items} == {
+        "bazi_general_sensitive_topic_cluster"
+    }
+    assert all(item.risk_boundary == "sensitive" for item in items)
+    assert all(item.file_count == 1 for item in items)
+    assert all(len(item.relative_paths) == 1 for item in items)
+    assert all(
+        path and not Path(path).is_absolute() and ".." not in Path(path).parts
+        for item in items
+        for path in item.relative_paths
+    )
+    assert all(not item.source_library_mutation_authorized for item in items)
+    assert all(not item.downstream_mutation_authorized for item in items)
+    assert {
+        item.prep_status: item.recommended_next_action for item in items
+    } == {
+        "prepared_for_source_level_risk_review": "risk_review",
+        "blocked_after_sensitive_prep": "block",
+        "deferred_after_sensitive_prep": "defer",
+    }
+    assert items_by_id[
+        "sensitive_risk_prep_bazi_psychology_pdf"
+    ].relative_paths == [
+        "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf"
+    ]
+    assert items_by_id[
+        "sensitive_risk_prep_erotic_fate_collection_pdf"
+    ].relative_paths == ["情色命理汇总.pdf"]
+    assert items_by_id["sensitive_risk_prep_bazi_comic_ppt"].relative_paths == [
+        "八字命理漫画.ppt"
+    ]
+
+
+def test_raw_text_next_cycle_sensitive_risk_review_prep_summary_counts_closure():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_sensitive_risk_review_prep_summary()
+    )
+
+    assert summary.selection_id == "015-raw-text-next-cycle-sensitive-risk-review-prep"
+    assert summary.selection_status == "sensitive_risk_review_prep_completed"
+    assert summary.prep_item_count == 3
+    assert summary.source_file_count == 3
+    assert summary.priority_text_candidate_count == 3
+    assert summary.source_level_risk_review_count == 1
+    assert summary.blocked_count == 1
+    assert summary.deferred_count == 1
+    assert summary.registered_source_entry_count == 0
+    assert summary.candidate_extract_count == 0
+    assert summary.formal_evidence_count == 0
+    assert summary.source_library_mutation_authorized is False
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "015-raw-text-next-cycle-sensitive-source-level-risk-review"
+    )
+    assert summary.source_level_risk_review_item_ids == [
+        "sensitive_risk_prep_bazi_psychology_pdf"
+    ]
+    assert summary.blocked_item_ids == [
+        "sensitive_risk_prep_erotic_fate_collection_pdf"
+    ]
+    assert summary.deferred_item_ids == ["sensitive_risk_prep_bazi_comic_ppt"]
+    assert summary.status_counts == {
+        "prepared_for_source_level_risk_review": 1,
+        "blocked_after_sensitive_prep": 1,
+        "deferred_after_sensitive_prep": 1,
+    }
+    assert summary.action_counts == {"risk_review": 1, "block": 1, "defer": 1}
+    assert summary.risk_boundary_counts == {"sensitive": 3}
+    assert summary.target_rule_family_counts == {"ten_god_relation": 3}
+    assert summary.boundary_checks == {
+        "sensitive_risk_review_prep_items_loaded": "passed",
+        "gated_prep_reference_valid": "passed",
+        "source_selection_reference_valid": "passed",
+        "sensitive_cluster_only": "passed",
+        "source_paths_are_relative": "passed",
+        "representative_paths_covered": "passed",
+        "action_routing_valid": "passed",
+        "source_library_mutation_blocked": "passed",
+        "downstream_mutation_blocked": "passed",
+        "ordinary_final_selection_completed": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_raw_text_next_cycle_sensitive_risk_review_prep_markdown_and_docs_sync():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_sensitive_risk_review_prep_summary()
+    )
+    markdown = (
+        materials_audit.render_raw_text_next_cycle_sensitive_risk_review_prep_markdown(
+            summary
+        )
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Raw Text Next Cycle Sensitive Risk Review Prep",
+        "`sensitive-risk-review-prep-status=sensitive_risk_review_prep_completed`",
+        "`sensitive-risk-review-prep-items=3`",
+        "`source-level-risk-review=1`",
+        "`blocked-after-sensitive-prep=1`",
+        "`deferred-after-sensitive-prep=1`",
+        "`registered-source-entries=0`",
+        "`candidate-extracts=0`",
+        "`formal-evidence=0`",
+        "`source-library-mutation-authorized=false`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-raw-text-next-cycle-sensitive-source-level-risk-review`",
     ):
         assert marker in markdown
         assert marker in materials_doc

@@ -1149,6 +1149,55 @@ Guardrails:
 - Weak locators are accepted only as preparation metadata.
 - External raw materials are not moved, converted, or rewritten.
 
+## 015 Raw Text Next Cycle Sensitive Risk Review Prep
+
+- Selection id: `015-raw-text-next-cycle-sensitive-risk-review-prep`
+- `sensitive-risk-review-prep-status=sensitive_risk_review_prep_completed`
+- `sensitive-risk-review-prep-items=3`
+- `source-level-risk-review=1`
+- `blocked-after-sensitive-prep=1`
+- `deferred-after-sensitive-prep=1`
+- `registered-source-entries=0`
+- `candidate-extracts=0`
+- `formal-evidence=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-next-cycle-sensitive-source-level-risk-review`
+
+Prepared for source-level risk review:
+- `sensitive_risk_prep_bazi_psychology_pdf`
+
+Blocked after sensitive prep:
+- `sensitive_risk_prep_erotic_fate_collection_pdf`
+
+Deferred after sensitive prep:
+- `sensitive_risk_prep_bazi_comic_ppt`
+
+Representative paths covered:
+- `陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf`
+- `情色命理汇总.pdf`
+- `八字命理漫画.ppt`
+
+Boundary checks:
+- `sensitive_risk_review_prep_items_loaded`: `passed`
+- `gated_prep_reference_valid`: `passed`
+- `source_selection_reference_valid`: `passed`
+- `sensitive_cluster_only`: `passed`
+- `source_paths_are_relative`: `passed`
+- `representative_paths_covered`: `passed`
+- `action_routing_valid`: `passed`
+- `source_library_mutation_blocked`: `passed`
+- `downstream_mutation_blocked`: `passed`
+- `ordinary_final_selection_completed`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Only path-label metadata is used for sensitive prep routing.
+- Only one bounded source can proceed to source-level risk review.
+- Blocked and deferred sensitive paths do not receive downstream records.
+- No source-library, 013, or 012 mutation is authorized in this step.
+- External raw materials are not moved, converted, opened, or rewritten.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

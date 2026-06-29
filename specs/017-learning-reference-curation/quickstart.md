@@ -107,19 +107,19 @@ promotion batches, or formal evidence.
 
 ## Current New-Material Continuation
 
-The 015 raw text next-cycle gated-cluster review prep is complete:
+The 015 raw text next-cycle sensitive risk-review prep is complete:
 
-- `gated-cluster-review-prep-status=gated_cluster_review_prep_completed`
-- `gated-cluster-review-prep-items=3`
-- `selected-for-source-selection=2`
-- `risk-review-required=1`
+- `sensitive-risk-review-prep-status=sensitive_risk_review_prep_completed`
+- `sensitive-risk-review-prep-items=3`
+- `source-level-risk-review=1`
+- `blocked-after-sensitive-prep=1`
+- `deferred-after-sensitive-prep=1`
 - `source-library-mutation-authorized=false`
 - `downstream-mutation-authorized=false`
-- `next-new-material-start=015-raw-text-next-cycle-sensitive-risk-review-prep`
+- `next-new-material-start=015-raw-text-next-cycle-sensitive-source-level-risk-review`
 
-The next long goal should select bounded ordinary source-level records from the
-prepared case/formula clusters while keeping sensitive-topic material behind
-risk review.
+The next long goal should review the prepared psychology-labeled source at
+source level before any source-library, 013, or 012 mutation.
 
 Run focused learning reference curation tests:
 
