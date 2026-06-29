@@ -107,20 +107,20 @@ promotion batches, or formal evidence.
 
 ## Current New-Material Continuation
 
-The 015 raw text next-cycle sensitive source-level risk review is complete:
+The 015 raw text next-cycle sensitive registration prep is complete:
 
-- `sensitive-source-level-risk-review-status=sensitive_source_level_risk_review_completed`
-- `sensitive-source-level-risk-review-items=1`
-- `cleared-for-registration-prep=1`
+- `sensitive-registration-prep-status=sensitive_registration_prep_completed`
+- `sensitive-registration-prep-items=1`
+- `proposed-source-files=1`
 - `registered-source-entries=0`
 - `candidate-extracts=0`
 - `formal-evidence=0`
 - `source-library-mutation-authorized=false`
 - `downstream-mutation-authorized=false`
-- `next-new-material-start=015-raw-text-next-cycle-sensitive-registration-prep`
+- `next-new-material-start=015-raw-text-next-cycle-sensitive-source-registration`
 
-The next long goal should prepare the reviewed psychology-labeled source for
-possible source-library registration while keeping 013 and 012 mutation gated.
+The next long goal should register the prepared sensitive source-library entry
+while keeping 013 and 012 mutation gated.
 
 Run focused learning reference curation tests:
 

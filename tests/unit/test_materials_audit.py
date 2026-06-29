@@ -728,6 +728,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_next_cycle_sensitive_source_level_risk_review_items",
         "build_raw_text_next_cycle_sensitive_source_level_risk_review_summary",
         "render_raw_text_next_cycle_sensitive_source_level_risk_review_markdown",
+        "load_raw_text_next_cycle_sensitive_registration_prep_items",
+        "build_raw_text_next_cycle_sensitive_registration_prep_summary",
+        "render_raw_text_next_cycle_sensitive_registration_prep_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -3387,6 +3390,119 @@ def test_raw_text_next_cycle_sensitive_source_level_risk_review_markdown_and_doc
         "`source-library-mutation-authorized=false`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-raw-text-next-cycle-sensitive-registration-prep`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_raw_text_next_cycle_sensitive_registration_prep_items_load_prep_record():
+    items = materials_audit.load_raw_text_next_cycle_sensitive_registration_prep_items()
+    items_by_id = {item.prep_item_id: item for item in items}
+
+    assert len(items) == 1
+    assert set(items_by_id) == {"sensitive_registration_prep_bazi_psychology_pdf"}
+    item = items_by_id["sensitive_registration_prep_bazi_psychology_pdf"]
+    assert item.source_level_review_id == "sensitive_source_review_bazi_psychology_pdf"
+    assert item.prep_review_item_id == "sensitive_risk_prep_bazi_psychology_pdf"
+    assert item.registration_status == "ready_for_sensitive_source_registration"
+    assert item.proposed_entry_id == "entry_bazi_general_bazi_psychology_pdf"
+    assert item.proposed_material_id == "material_bazi_general_bazi_psychology_pdf"
+    assert item.proposed_title == "Bazi Psychology Lu Wang Source"
+    assert item.proposed_material_type == "pdf"
+    assert item.proposed_local_references == [
+        "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf"
+    ]
+    assert item.proposed_tracking_status == "external_untracked"
+    assert item.proposed_readiness_status == "needs_preparation"
+    assert item.proposed_priority_level == "high"
+    assert item.proposed_next_action == "prepare_material"
+    assert item.risk_tier == "sensitive"
+    assert item.source_library_mutation_authorized is False
+    assert item.downstream_mutation_authorized is False
+    assert item.rule_families == ["ten_god_relation"]
+    assert item.source_library_overlap_policy == (
+        "new_entry_allowed_after_user_approval"
+    )
+
+
+def test_raw_text_next_cycle_sensitive_registration_prep_summary_counts_closure():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_sensitive_registration_prep_summary()
+    )
+
+    assert summary.prep_id == "015-raw-text-next-cycle-sensitive-registration-prep"
+    assert summary.prep_status == "sensitive_registration_prep_completed"
+    assert summary.registration_prep_item_count == 1
+    assert summary.proposed_source_file_count == 1
+    assert summary.registered_source_entry_count == 0
+    assert summary.candidate_extract_count == 0
+    assert summary.formal_evidence_count == 0
+    assert summary.proposed_entry_ids == ["entry_bazi_general_bazi_psychology_pdf"]
+    assert summary.proposed_material_ids == [
+        "material_bazi_general_bazi_psychology_pdf"
+    ]
+    assert summary.registration_prep_item_ids == [
+        "sensitive_registration_prep_bazi_psychology_pdf"
+    ]
+    assert summary.source_level_review_item_ids == [
+        "sensitive_source_review_bazi_psychology_pdf"
+    ]
+    assert summary.blocked_prep_item_ids == [
+        "sensitive_risk_prep_erotic_fate_collection_pdf"
+    ]
+    assert summary.deferred_prep_item_ids == ["sensitive_risk_prep_bazi_comic_ppt"]
+    assert summary.registration_status_counts == {
+        "ready_for_sensitive_source_registration": 1
+    }
+    assert summary.proposed_readiness_counts == {"needs_preparation": 1}
+    assert summary.proposed_next_action_counts == {"prepare_material": 1}
+    assert summary.risk_tier_counts == {"sensitive": 1}
+    assert summary.target_rule_family_counts == {"ten_god_relation": 1}
+    assert summary.source_library_mutation_authorized is False
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "015-raw-text-next-cycle-sensitive-source-registration"
+    )
+    assert summary.boundary_checks == {
+        "sensitive_registration_prep_items_loaded": "passed",
+        "source_level_risk_review_completed": "passed",
+        "source_level_review_references_valid": "passed",
+        "proposed_entries_available": "passed",
+        "blocked_and_deferred_prep_retained": "passed",
+        "source_paths_are_relative": "passed",
+        "source_library_mutation_blocked": "passed",
+        "downstream_mutation_blocked": "passed",
+        "no_downstream_records_created": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_raw_text_next_cycle_sensitive_registration_prep_markdown_and_docs_sync():
+    summary = (
+        materials_audit.build_raw_text_next_cycle_sensitive_registration_prep_summary()
+    )
+    markdown = materials_audit.render_raw_text_next_cycle_sensitive_registration_prep_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 Raw Text Next Cycle Sensitive Registration Prep",
+        "`sensitive-registration-prep-status=sensitive_registration_prep_completed`",
+        "`sensitive-registration-prep-items=1`",
+        "`proposed-source-files=1`",
+        "`registered-source-entries=0`",
+        "`candidate-extracts=0`",
+        "`formal-evidence=0`",
+        "`source-library-mutation-authorized=false`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-raw-text-next-cycle-sensitive-source-registration`",
     ):
         assert marker in markdown
         assert marker in materials_doc

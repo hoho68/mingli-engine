@@ -3397,6 +3397,70 @@ class RawTextNextCycleSensitiveSourceLevelRiskReviewSummary:
 
 
 @dataclass(frozen=True)
+class RawTextNextCycleSensitiveRegistrationPrepItem:
+    prep_item_id: str
+    source_level_review_id: str
+    prep_review_item_id: str
+    prep_id: str
+    source_selection_id: str
+    cluster_id: str
+    triage_group_id: str
+    source_root: str
+    registration_status: str
+    proposed_entry_id: str
+    proposed_material_id: str
+    proposed_title: str
+    proposed_material_type: str
+    proposed_local_references: list[str]
+    proposed_tracking_status: str
+    proposed_readiness_status: str
+    proposed_priority_level: str
+    proposed_next_action: str
+    risk_tier: str
+    topic_tags: list[str] = field(default_factory=list)
+    rule_families: list[str] = field(default_factory=list)
+    source_quality_notes: str = ""
+    rights_notes: str = ""
+    risk_notes: list[str] = field(default_factory=list)
+    source_library_overlap_policy: str = ""
+    source_library_mutation_authorized: bool = False
+    downstream_mutation_authorized: bool = False
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class RawTextNextCycleSensitiveRegistrationPrepSummary:
+    prep_id: str
+    prep_status: str
+    triage_group_id: str
+    source_root: str
+    registration_prep_item_count: int
+    proposed_source_file_count: int
+    registered_source_entry_count: int
+    candidate_extract_count: int
+    formal_evidence_count: int
+    registration_status_counts: dict[str, int]
+    proposed_readiness_counts: dict[str, int]
+    proposed_next_action_counts: dict[str, int]
+    risk_tier_counts: dict[str, int]
+    target_rule_family_counts: dict[str, int]
+    proposed_entry_ids: list[str]
+    proposed_material_ids: list[str]
+    registration_prep_item_ids: list[str]
+    source_level_review_item_ids: list[str]
+    blocked_prep_item_ids: list[str]
+    deferred_prep_item_ids: list[str]
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextClusterSourceSelectionItem:
     selection_id: str
     cluster_id: str

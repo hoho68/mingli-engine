@@ -1248,6 +1248,56 @@ Guardrails:
 - Psychology framing must stay non-diagnostic and non-deterministic.
 - External raw materials are not moved, converted, opened, or rewritten.
 
+## 015 Raw Text Next Cycle Sensitive Registration Prep
+
+- Prep id: `015-raw-text-next-cycle-sensitive-registration-prep`
+- `sensitive-registration-prep-status=sensitive_registration_prep_completed`
+- `sensitive-registration-prep-items=1`
+- `proposed-source-files=1`
+- `registered-source-entries=0`
+- `candidate-extracts=0`
+- `formal-evidence=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-next-cycle-sensitive-source-registration`
+
+Sensitive registration-prep items:
+- `sensitive_registration_prep_bazi_psychology_pdf`
+
+Source-level review items:
+- `sensitive_source_review_bazi_psychology_pdf`
+
+Proposed source-library entries:
+- `entry_bazi_general_bazi_psychology_pdf`
+
+Proposed source material ids:
+- `material_bazi_general_bazi_psychology_pdf`
+
+Prep items retained blocked:
+- `sensitive_risk_prep_erotic_fate_collection_pdf`
+
+Prep items retained deferred:
+- `sensitive_risk_prep_bazi_comic_ppt`
+
+Boundary checks:
+- `sensitive_registration_prep_items_loaded`: `passed`
+- `source_level_risk_review_completed`: `passed`
+- `source_level_review_references_valid`: `passed`
+- `proposed_entries_available`: `passed`
+- `blocked_and_deferred_prep_retained`: `passed`
+- `source_paths_are_relative`: `passed`
+- `source_library_mutation_blocked`: `passed`
+- `downstream_mutation_blocked`: `passed`
+- `no_downstream_records_created`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Registration prep records proposed source-library metadata only.
+- Actual source-library registration remains a separate next step.
+- No 013 candidate or 012 formal evidence mutation is authorized.
+- Blocked and deferred sensitive prep items remain unavailable.
+- External raw materials are not moved, converted, opened, or rewritten.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`
