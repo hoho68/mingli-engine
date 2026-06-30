@@ -42,6 +42,8 @@ from mingli_engine.models import (
     MaterialQueueRefreshSummary,
     MaterialAuditRecord,
     MaterialRepresentation,
+    NewMaterialHumanCorrectedTranscriptionPrepItem,
+    NewMaterialHumanCorrectedTranscriptionPrepSummary,
     NewMaterialExtractionLearningLoopClosureItem,
     NewMaterialExtractionLearningLoopClosureSummary,
     NewMaterialControlledTextPreparationItem,
@@ -339,6 +341,12 @@ NEW_MATERIAL_OCR_QUALITY_REMEDIATION_ID = (
 NEW_MATERIAL_OCR_QUALITY_REMEDIATION_NEXT_MATERIAL_ENTRY = (
     "015-new-material-human-corrected-transcription-prep"
 )
+NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_ID = (
+    "015-new-material-human-corrected-transcription-prep"
+)
+NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_NEXT_MATERIAL_ENTRY = (
+    "015-new-material-human-corrected-transcription-execution"
+)
 NEW_MATERIAL_SOURCE_LIBRARY_ENTRY_ID = "entry_new_material_xiahai_suanmingji_pdf"
 NEW_MATERIAL_SOURCE_MATERIAL_ID = "material_new_material_xiahai_suanmingji_pdf"
 NEW_MATERIAL_REGISTRATION_PREP_STATUSES = frozenset(
@@ -364,6 +372,9 @@ NEW_MATERIAL_OCR_RUNTIME_SETUP_STATUSES = frozenset(
 )
 NEW_MATERIAL_OCR_QUALITY_REMEDIATION_STATUSES = frozenset(
     {"blocked_requires_human_correction"}
+)
+NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_STATUSES = frozenset(
+    {"blocked_ready_for_human_correction"}
 )
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
@@ -11722,6 +11733,296 @@ def render_new_material_ocr_quality_remediation_markdown(
     return "\n".join(lines) + "\n"
 
 
+def _new_material_human_corrected_transcription_prep_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialHumanCorrectedTranscriptionPrepItem:
+    try:
+        item = NewMaterialHumanCorrectedTranscriptionPrepItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid new material human corrected transcription prep item: {error}"
+        ) from error
+    owner_id = item.prep_item_id or "?"
+    for field_name in (
+        "prep_item_id",
+        "prep_id",
+        "ocr_quality_remediation_item_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "prep_status",
+        "local_reference",
+        "layout_profile",
+        "assistive_ocr_method",
+        "draft_source_policy",
+        "planned_output_artifact",
+        "blocker_reason",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    if item.prep_id != NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid prep_id")
+    if item.selected_next_material_entry != (
+        NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_NEXT_MATERIAL_ENTRY
+    ):
+        raise MaterialsAuditError(f"{owner_id} selected unexpected next entry")
+    _validate_enum(
+        item.prep_status,
+        NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_STATUSES,
+        "prep_status",
+        owner_id,
+    )
+    _require_string_list(item.selected_page_ranges, "selected_page_ranges", owner_id)
+    _require_string_list(
+        item.validation_requirements, "validation_requirements", owner_id
+    )
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    for field_name in (
+        "page_count",
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+    if item.page_count <= 0:
+        raise MaterialsAuditError(f"{owner_id} page_count must be positive")
+    if not item.correction_packet_ready:
+        raise MaterialsAuditError(f"{owner_id} correction packet must be ready")
+    if item.uncorrected_ocr_committed:
+        raise MaterialsAuditError(f"{owner_id} must not commit uncorrected OCR")
+    if item.prepared_text_artifact_created or item.human_corrected_text_available:
+        raise MaterialsAuditError(f"{owner_id} must not claim corrected text exists")
+    if item.source_library_mutation_authorized or item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize mutation")
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(item, field_name) != 0:
+            raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
+
+    remediation_items_by_id = {
+        remediation.remediation_item_id: remediation
+        for remediation in load_new_material_ocr_quality_remediation_items(source_dir)
+    }
+    remediation = remediation_items_by_id.get(item.ocr_quality_remediation_item_id)
+    if remediation is None:
+        raise MaterialsAuditError(f"{owner_id} references unknown remediation item")
+    if remediation.remediation_status != "blocked_requires_human_correction":
+        raise MaterialsAuditError(f"{owner_id} remediation item not correction-blocked")
+    if item.source_library_entry_id != remediation.source_library_entry_id:
+        raise MaterialsAuditError(f"{owner_id} source entry mismatch")
+    if item.source_material_id != remediation.source_material_id:
+        raise MaterialsAuditError(f"{owner_id} source material mismatch")
+    if item.local_reference != remediation.local_reference:
+        raise MaterialsAuditError(f"{owner_id} local reference mismatch")
+    if item.page_count != remediation.page_count:
+        raise MaterialsAuditError(f"{owner_id} page count mismatch")
+    return item
+
+
+def load_new_material_human_corrected_transcription_prep_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialHumanCorrectedTranscriptionPrepItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = (
+        source_dir / "new_material_human_corrected_transcription_prep_items.json"
+    )
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_human_corrected_transcription_prep_item_from_dict(
+            item, source_dir
+        )
+        for item in _read_optional_json_list(items_path)
+    ]
+    _ensure_unique([item.prep_item_id for item in items], "prep_item_id")
+    return items
+
+
+def build_new_material_human_corrected_transcription_prep_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialHumanCorrectedTranscriptionPrepSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_human_corrected_transcription_prep_items(source_dir)
+    remediation_summary = build_new_material_ocr_quality_remediation_summary(
+        source_dir
+    )
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        and not item.source_library_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "human_corrected_transcription_prep_items_loaded": (
+            "passed" if items else "failed"
+        ),
+        "previous_human_correction_blocker_recorded": (
+            "passed"
+            if remediation_summary.remediation_status
+            == "blocked_requires_human_correction"
+            else "failed"
+        ),
+        "correction_packet_ready": (
+            "passed" if all(item.correction_packet_ready for item in items) else "failed"
+        ),
+        "uncorrected_ocr_not_committed": (
+            "passed"
+            if all(not item.uncorrected_ocr_committed for item in items)
+            else "failed"
+        ),
+        "corrected_text_not_yet_available": (
+            "passed"
+            if all(not item.human_corrected_text_available for item in items)
+            else "failed"
+        ),
+        "prepared_text_artifact_absent": (
+            "passed"
+            if all(not item.prepared_text_artifact_created for item in items)
+            else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    return NewMaterialHumanCorrectedTranscriptionPrepSummary(
+        prep_id=NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_ID,
+        prep_status=(
+            "blocked_ready_for_human_correction"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "human_corrected_transcription_prep_needs_attention"
+        ),
+        prep_item_count=len(items),
+        source_file_count=len(items),
+        page_count=sum(item.page_count for item in items),
+        correction_packet_ready_count=sum(
+            1 for item in items if item.correction_packet_ready
+        ),
+        selected_page_range_count=sum(len(item.selected_page_ranges) for item in items),
+        uncorrected_ocr_committed_count=sum(
+            1 for item in items if item.uncorrected_ocr_committed
+        ),
+        prepared_text_artifact_count=sum(
+            1 for item in items if item.prepared_text_artifact_created
+        ),
+        human_corrected_text_available_count=sum(
+            1 for item in items if item.human_corrected_text_available
+        ),
+        blocked_item_count=sum(
+            1
+            for item in items
+            if item.prep_status == "blocked_ready_for_human_correction"
+        ),
+        prep_item_ids=[item.prep_item_id for item in items],
+        ocr_quality_remediation_item_ids=[
+            item.ocr_quality_remediation_item_id for item in items
+        ],
+        source_entry_ids=[item.source_library_entry_id for item in items],
+        source_material_ids=[item.source_material_id for item in items],
+        local_references=[item.local_reference for item in items],
+        planned_output_artifacts=[item.planned_output_artifact for item in items],
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        source_library_mutation_authorized=any(
+            item.source_library_mutation_authorized for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=(
+            NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_NEXT_MATERIAL_ENTRY
+        ),
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "The correction packet is metadata-only and contains no OCR draft text.",
+            "Only human-corrected prepared text can unlock learning notes or candidate intake.",
+            "Do not commit uncorrected OCR passages, page images, or temporary crops.",
+            "Original external materials remain unmoved and unchanged.",
+        ],
+    )
+
+
+def render_new_material_human_corrected_transcription_prep_markdown(
+    summary: NewMaterialHumanCorrectedTranscriptionPrepSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 New Material Human Corrected Transcription Prep",
+        "",
+        f"- Prep id: `{summary.prep_id}`",
+        f"- `new-material-human-corrected-transcription-prep-status={summary.prep_status}`",
+        f"- `human-corrected-transcription-prep-items={summary.prep_item_count}`",
+        f"- `source-files={summary.source_file_count}`",
+        f"- `pdf-pages={summary.page_count}`",
+        f"- `correction-packet-ready={summary.correction_packet_ready_count}`",
+        f"- `selected-page-ranges={summary.selected_page_range_count}`",
+        f"- `uncorrected-ocr-committed={summary.uncorrected_ocr_committed_count}`",
+        f"- `prepared-text-artifacts={summary.prepared_text_artifact_count}`",
+        (
+            "- `human-corrected-text-available="
+            f"{summary.human_corrected_text_available_count}`"
+        ),
+        f"- `blocked-items={summary.blocked_item_count}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Human-corrected transcription prep item ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.prep_item_ids)
+    lines.extend(["", "OCR quality remediation item ids:"])
+    lines.extend(
+        f"- `{item_id}`" for item_id in summary.ocr_quality_remediation_item_ids
+    )
+    lines.extend(["", "Planned output artifacts:"])
+    lines.extend(f"- `{artifact}`" for artifact in summary.planned_output_artifacts)
+    lines.extend(["", "Local references:"])
+    lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_raw_text_cluster_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextClusterSourceSelectionSummary:
@@ -13240,6 +13541,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         new_material_ocr_quality_remediation_items = (
             load_new_material_ocr_quality_remediation_items(source_dir)
         )
+        new_material_human_corrected_transcription_prep_items = (
+            load_new_material_human_corrected_transcription_prep_items(source_dir)
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -13291,6 +13595,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         new_material_ocr_or_manual_transcription_items,
         new_material_ocr_runtime_setup_items,
         new_material_ocr_quality_remediation_items,
+        new_material_human_corrected_transcription_prep_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -13393,6 +13698,9 @@ def _iter_quality_text_fields(
     new_material_ocr_runtime_setup_items: list[NewMaterialOcrRuntimeSetupItem],
     new_material_ocr_quality_remediation_items: list[
         NewMaterialOcrQualityRemediationItem
+    ],
+    new_material_human_corrected_transcription_prep_items: list[
+        NewMaterialHumanCorrectedTranscriptionPrepItem
     ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
@@ -13900,6 +14208,30 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.remediation_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in new_material_human_corrected_transcription_prep_items:
+        fields.extend(
+            (
+                (item.prep_item_id, "local_reference", item.local_reference),
+                (item.prep_item_id, "layout_profile", item.layout_profile),
+                (item.prep_item_id, "assistive_ocr_method", item.assistive_ocr_method),
+                (item.prep_item_id, "draft_source_policy", item.draft_source_policy),
+                (item.prep_item_id, "planned_output_artifact", item.planned_output_artifact),
+                (item.prep_item_id, "blocker_reason", item.blocker_reason),
+                (item.prep_item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.prep_item_id, "selected_page_ranges", page_range)
+            for page_range in item.selected_page_ranges
+        )
+        fields.extend(
+            (item.prep_item_id, "validation_requirements", requirement)
+            for requirement in item.validation_requirements
+        )
+        fields.extend(
+            (item.prep_item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

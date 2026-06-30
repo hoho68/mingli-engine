@@ -177,13 +177,18 @@ Explicit Downstream Authorization Receipt:
 - `assistive-ocr-route=1`
 - `human-correction-required=1`
 - `prepared-text-artifacts=0`
-- `next-material-entry=015-new-material-human-corrected-transcription-prep`
-- `next-new-material-start=015-new-material-human-corrected-transcription-prep`
+- `new-material-human-corrected-transcription-prep-status=blocked_ready_for_human_correction`
+- `correction-packet-ready=1`
+- `selected-page-ranges=2`
+- `uncorrected-ocr-committed=0`
+- `human-corrected-text-available=0`
+- `prepared-text-artifacts=0`
+- `next-material-entry=015-new-material-human-corrected-transcription-execution`
+- `next-new-material-start=015-new-material-human-corrected-transcription-execution`
 
-The next long goal should use the vertical OCR route as a draft aid, prepare a
-human-correction packet for `下海算命记.pdf`, create bounded corrected prepared
-text, and only then decide whether learning notes or 013 candidate intake can
-begin.
+The next long goal should execute human correction using the prepared packet,
+create bounded corrected prepared text for `下海算命记.pdf`, and only then decide
+whether learning notes or 013 candidate intake can begin.
 
 Run focused learning reference curation tests:
 

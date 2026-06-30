@@ -1967,6 +1967,53 @@ Guardrails:
 - Do not commit OCR probe images or uncorrected OCR passages.
 - Original external materials remain unmoved and unchanged.
 
+## 015 New Material Human Corrected Transcription Prep
+
+- Prep id: `015-new-material-human-corrected-transcription-prep`
+- `new-material-human-corrected-transcription-prep-status=blocked_ready_for_human_correction`
+- `human-corrected-transcription-prep-items=1`
+- `source-files=1`
+- `pdf-pages=84`
+- `correction-packet-ready=1`
+- `selected-page-ranges=2`
+- `uncorrected-ocr-committed=0`
+- `prepared-text-artifacts=0`
+- `human-corrected-text-available=0`
+- `blocked-items=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-human-corrected-transcription-execution`
+
+Human-corrected transcription prep item ids:
+- `new_material_human_corrected_transcription_prep_xiahai_suanmingji_pdf`
+
+OCR quality remediation item ids:
+- `new_material_ocr_quality_remediation_xiahai_suanmingji_pdf`
+
+Planned output artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `human_corrected_transcription_prep_items_loaded`: `passed`
+- `previous_human_correction_blocker_recorded`: `passed`
+- `correction_packet_ready`: `passed`
+- `uncorrected_ocr_not_committed`: `passed`
+- `corrected_text_not_yet_available`: `passed`
+- `prepared_text_artifact_absent`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The correction packet is metadata-only and contains no OCR draft text.
+- Only human-corrected prepared text can unlock learning notes or candidate intake.
+- Do not commit uncorrected OCR passages, page images, or temporary crops.
+- Original external materials remain unmoved and unchanged.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

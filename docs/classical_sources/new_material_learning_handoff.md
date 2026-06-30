@@ -796,8 +796,23 @@ Risk-review items:
   `next-material-entry=015-new-material-human-corrected-transcription-prep`.
 - OCR quality remediation item:
   `new_material_ocr_quality_remediation_xiahai_suanmingji_pdf`.
+- 015 New Material Human Corrected Transcription Prep is completed as a
+  ready-for-correction blocker:
+  `new-material-human-corrected-transcription-prep-status=blocked_ready_for_human_correction`,
+  `human-corrected-transcription-prep-items=1`, `pdf-pages=84`,
+  `correction-packet-ready=1`, `selected-page-ranges=2`,
+  `uncorrected-ocr-committed=0`, `prepared-text-artifacts=0`,
+  `human-corrected-text-available=0`, `blocked-items=1`,
+  `candidate-extract-delta=0`, `formal-evidence-delta=0`,
+  `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-new-material-human-corrected-transcription-execution`.
+- Human-corrected transcription prep item:
+  `new_material_human_corrected_transcription_prep_xiahai_suanmingji_pdf`.
+- Planned corrected prepared-text artifact:
+  `docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-new-material-human-corrected-transcription-prep`.
+  `next-new-material-start=015-new-material-human-corrected-transcription-execution`.
 
 ## Remaining Optional Precision Work
 
@@ -814,10 +829,11 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-new-material-human-corrected-transcription-prep`.
-It should use the vertical OCR assistive route as a draft aid, prepare a
-human-correction packet for `下海算命记.pdf`, and create only corrected bounded
-prepared text before learning notes or 013 candidate intake can begin.
+`next-material-entry=015-new-material-human-corrected-transcription-execution`.
+It should execute human correction using the prepared packet and only then
+create the bounded corrected prepared-text artifact for `下海算命记.pdf`.
+Learning notes and 013 candidate intake remain blocked until that artifact
+exists.
 
 ## Guardrails
 
@@ -829,6 +845,6 @@ prepared text before learning notes or 013 candidate intake can begin.
 
 ## Next Target
 
-Next target: `015-new-material-human-corrected-transcription-prep`.
-Prepare the human-correction packet from the vertical OCR route, then create a
-bounded corrected prepared-text artifact.
+Next target: `015-new-material-human-corrected-transcription-execution`.
+Execute human correction from the prepared packet, then create the bounded
+corrected prepared-text artifact.

@@ -3346,6 +3346,70 @@ class NewMaterialOcrQualityRemediationSummary:
 
 
 @dataclass(frozen=True)
+class NewMaterialHumanCorrectedTranscriptionPrepItem:
+    prep_item_id: str
+    prep_id: str
+    ocr_quality_remediation_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    prep_status: str
+    local_reference: str
+    page_count: int
+    correction_packet_ready: bool
+    selected_page_ranges: list[str]
+    layout_profile: str
+    assistive_ocr_method: str
+    draft_source_policy: str
+    planned_output_artifact: str
+    validation_requirements: list[str]
+    uncorrected_ocr_committed: bool
+    prepared_text_artifact_created: bool
+    human_corrected_text_available: bool
+    blocker_reason: str
+    selected_next_material_entry: str
+    source_library_mutation_authorized: bool = False
+    downstream_mutation_authorized: bool = False
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialHumanCorrectedTranscriptionPrepSummary:
+    prep_id: str
+    prep_status: str
+    prep_item_count: int
+    source_file_count: int
+    page_count: int
+    correction_packet_ready_count: int
+    selected_page_range_count: int
+    uncorrected_ocr_committed_count: int
+    prepared_text_artifact_count: int
+    human_corrected_text_available_count: int
+    blocked_item_count: int
+    prep_item_ids: list[str]
+    ocr_quality_remediation_item_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    planned_output_artifacts: list[str]
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextMaterialTriageGroup:
     group_id: str
     source_root: str
