@@ -2835,6 +2835,61 @@ class NewMaterialExtractionLearningLoopClosureSummary:
 
 
 @dataclass(frozen=True)
+class NewMaterialIntakeItem:
+    intake_item_id: str
+    intake_id: str
+    authorization_id: str
+    source_selection_id: str
+    cluster_id: str
+    triage_group_id: str
+    source_root: str
+    source_label: str
+    intake_status: str
+    risk_boundary: str
+    recommended_next_action: str
+    relative_paths: list[str]
+    file_count: int
+    priority_text_candidate_count: int
+    target_rule_families: list[str]
+    selected_next_material_entry: str
+    source_library_mutation_authorized: bool = False
+    downstream_mutation_authorized: bool = False
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialIntakeSummary:
+    intake_id: str
+    intake_status: str
+    intake_item_count: int
+    source_file_count: int
+    priority_text_candidate_count: int
+    selected_for_identity_review_count: int
+    authorization_status: str
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    selected_item_ids: list[str]
+    cluster_ids: list[str]
+    source_selection_ids: list[str]
+    relative_paths: list[str]
+    target_rule_family_counts: dict[str, int]
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextMaterialTriageGroup:
     group_id: str
     source_root: str

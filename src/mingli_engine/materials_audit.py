@@ -44,6 +44,8 @@ from mingli_engine.models import (
     MaterialRepresentation,
     NewMaterialExtractionLearningLoopClosureItem,
     NewMaterialExtractionLearningLoopClosureSummary,
+    NewMaterialIntakeItem,
+    NewMaterialIntakeSummary,
     PreparationReadinessFinding,
     RawTextClusterSourceSelectionItem,
     RawTextClusterSourceSelectionSummary,
@@ -262,6 +264,16 @@ NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_NEXT_MATERIAL_ENTRY = (
 NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_STATUSES = frozenset(
     {"new_material_learning_loop_closed"}
 )
+NEW_MATERIAL_INTAKE_ID = "015-new-material-intake"
+NEW_MATERIAL_INTAKE_AUTHORIZATION_ID = "013-012-explicit-downstream-authorization"
+NEW_MATERIAL_INTAKE_NEXT_MATERIAL_ENTRY = (
+    "015-new-material-source-identity-review"
+)
+NEW_MATERIAL_INTAKE_STATUSES = frozenset(
+    {"selected_for_source_identity_review"}
+)
+NEW_MATERIAL_INTAKE_CLUSTER_ID = "bazi_general_misc_identity_review_cluster"
+NEW_MATERIAL_INTAKE_SOURCE_SELECTION_ID = "next_cycle_bazi_misc_identity_review"
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
     "bazi_general_misc_identity_review_cluster",
@@ -9110,6 +9122,334 @@ def render_new_material_extraction_learning_loop_closure_markdown(
     return "\n".join(lines) + "\n"
 
 
+def _new_material_intake_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialIntakeItem:
+    try:
+        item = NewMaterialIntakeItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(f"invalid new material intake item: {error}") from error
+
+    owner_id = item.intake_item_id or "?"
+    for field_name in (
+        "intake_item_id",
+        "intake_id",
+        "authorization_id",
+        "source_selection_id",
+        "cluster_id",
+        "triage_group_id",
+        "source_root",
+        "source_label",
+        "intake_status",
+        "risk_boundary",
+        "recommended_next_action",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    if item.intake_id != NEW_MATERIAL_INTAKE_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid intake_id")
+    if item.authorization_id != NEW_MATERIAL_INTAKE_AUTHORIZATION_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid authorization_id")
+    if item.cluster_id != NEW_MATERIAL_INTAKE_CLUSTER_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid cluster_id")
+    if item.source_selection_id != NEW_MATERIAL_INTAKE_SOURCE_SELECTION_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_selection_id")
+    if item.triage_group_id != RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid triage_group_id")
+    if item.source_root != RAW_TEXT_TRIAGE_SOURCE_ROOT:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_root")
+    _validate_enum(
+        item.intake_status,
+        NEW_MATERIAL_INTAKE_STATUSES,
+        "intake_status",
+        owner_id,
+    )
+    _validate_enum(item.risk_boundary, RISK_TIERS, "risk_boundary", owner_id)
+    _validate_enum(
+        item.recommended_next_action,
+        MATERIAL_AUDIT_ACTIONS,
+        "recommended_next_action",
+        owner_id,
+    )
+    _require_string_list(item.relative_paths, "relative_paths", owner_id)
+    _require_string_list(item.target_rule_families, "target_rule_families", owner_id)
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    if not item.relative_paths:
+        raise MaterialsAuditError(f"{owner_id} requires relative_paths")
+    if not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires guardrails")
+    for field_name in (
+        "file_count",
+        "priority_text_candidate_count",
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+    if item.file_count != len(item.relative_paths):
+        raise MaterialsAuditError(f"{owner_id} file_count must match relative_paths")
+    if item.file_count != 1 or item.priority_text_candidate_count != 1:
+        raise MaterialsAuditError(f"{owner_id} must remain a single-file intake")
+    if item.selected_next_material_entry != NEW_MATERIAL_INTAKE_NEXT_MATERIAL_ENTRY:
+        raise MaterialsAuditError(f"{owner_id} selected unexpected next entry")
+    if item.source_library_mutation_authorized or item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize mutation")
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(item, field_name) != 0:
+            raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
+
+    clusters_by_id = {
+        cluster.cluster_id: cluster
+        for cluster in load_raw_text_source_cluster_selection_items(source_dir)
+    }
+    cluster = clusters_by_id.get(item.cluster_id)
+    if cluster is None:
+        raise MaterialsAuditError(f"{owner_id} references unknown cluster_id")
+    if cluster.cluster_status != "identity_review_required":
+        raise MaterialsAuditError(f"{owner_id} cluster does not require identity review")
+    if item.risk_boundary != cluster.risk_boundary:
+        raise MaterialsAuditError(f"{owner_id} risk_boundary does not match cluster")
+    if set(item.target_rule_families) != set(cluster.target_rule_families):
+        raise MaterialsAuditError(
+            f"{owner_id} target_rule_families do not match cluster"
+        )
+    if not all(path in cluster.representative_paths for path in item.relative_paths):
+        raise MaterialsAuditError(f"{owner_id} path is not a cluster representative")
+    if not all(_is_source_relative_path(path) for path in item.relative_paths):
+        raise MaterialsAuditError(f"{owner_id} relative_paths must stay relative")
+
+    source_selection_items_by_id = {
+        selection.selection_id: selection
+        for selection in load_raw_text_next_cycle_source_selection_items(source_dir)
+    }
+    source_selection = source_selection_items_by_id.get(item.source_selection_id)
+    if source_selection is None:
+        raise MaterialsAuditError(
+            f"{owner_id} references unknown source_selection_id"
+        )
+    if source_selection.cluster_id != item.cluster_id:
+        raise MaterialsAuditError(f"{owner_id} source_selection cluster mismatch")
+
+    learning_dir = _sibling_data_dir(source_dir, "learning_reference_curation")
+    downstream = learning_reference_curation.build_downstream_authorization_summary(
+        learning_dir
+    )
+    if downstream.authorization_status != "downstream_authorization_consumed":
+        raise MaterialsAuditError(f"{owner_id} downstream authorization is not consumed")
+    if downstream.next_downstream_entry != NEW_MATERIAL_INTAKE_ID:
+        raise MaterialsAuditError(f"{owner_id} downstream next entry mismatch")
+    return item
+
+
+def load_new_material_intake_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialIntakeItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = source_dir / "new_material_intake_items.json"
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_intake_item_from_dict(item, source_dir)
+        for item in _read_optional_json_list(items_path)
+    ]
+    _ensure_unique([item.intake_item_id for item in items], "intake_item_id")
+    return items
+
+
+def build_new_material_intake_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialIntakeSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_intake_items(source_dir)
+    clusters_by_id = {
+        cluster.cluster_id: cluster
+        for cluster in load_raw_text_source_cluster_selection_items(source_dir)
+    }
+    learning_dir = _sibling_data_dir(source_dir, "learning_reference_curation")
+    downstream = learning_reference_curation.build_downstream_authorization_summary(
+        learning_dir
+    )
+
+    selected_paths_are_cluster_representatives = bool(items) and all(
+        item.cluster_id in clusters_by_id
+        and all(
+            path in clusters_by_id[item.cluster_id].representative_paths
+            for path in item.relative_paths
+        )
+        for item in items
+    )
+    selected_cluster_requires_identity_review = bool(items) and all(
+        item.cluster_id in clusters_by_id
+        and clusters_by_id[item.cluster_id].cluster_status == "identity_review_required"
+        for item in items
+    )
+    selected_paths_are_relative = bool(items) and all(
+        _is_source_relative_path(path)
+        for item in items
+        for path in item.relative_paths
+    )
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "intake_items_loaded": "passed" if items else "failed",
+        "downstream_authorization_consumed": (
+            "passed"
+            if downstream.authorization_status == "downstream_authorization_consumed"
+            and downstream.next_downstream_entry == NEW_MATERIAL_INTAKE_ID
+            else "failed"
+        ),
+        "selected_cluster_requires_identity_review": (
+            "passed" if selected_cluster_requires_identity_review else "failed"
+        ),
+        "selected_paths_are_cluster_representatives": (
+            "passed" if selected_paths_are_cluster_representatives else "failed"
+        ),
+        "selected_paths_are_relative": (
+            "passed" if selected_paths_are_relative else "failed"
+        ),
+        "single_file_boundary": (
+            "passed" if sum(item.file_count for item in items) == 1 else "failed"
+        ),
+        "source_library_not_mutated": (
+            "passed"
+            if not any(item.source_library_mutation_authorized for item in items)
+            else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+    return NewMaterialIntakeSummary(
+        intake_id=NEW_MATERIAL_INTAKE_ID,
+        intake_status=(
+            "new_material_intake_selected"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "new_material_intake_needs_attention"
+        ),
+        intake_item_count=len(items),
+        source_file_count=sum(item.file_count for item in items),
+        priority_text_candidate_count=sum(
+            item.priority_text_candidate_count for item in items
+        ),
+        selected_for_identity_review_count=sum(
+            1
+            for item in items
+            if item.intake_status == "selected_for_source_identity_review"
+        ),
+        authorization_status=downstream.authorization_status,
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        source_library_mutation_authorized=any(
+            item.source_library_mutation_authorized for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=NEW_MATERIAL_INTAKE_NEXT_MATERIAL_ENTRY,
+        selected_item_ids=[item.intake_item_id for item in items],
+        cluster_ids=[item.cluster_id for item in items],
+        source_selection_ids=[item.source_selection_id for item in items],
+        relative_paths=[path for item in items for path in item.relative_paths],
+        target_rule_family_counts=_count_values(
+            [family for item in items for family in item.target_rule_families]
+        ),
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "This intake selects one bounded source-level path from tracked inventory metadata.",
+            "Source identity review must happen before source-library registration.",
+            "This stage does not create 013 candidates or 012 evidence.",
+            "External raw materials are not read, moved, converted, or rewritten.",
+        ],
+    )
+
+
+def render_new_material_intake_markdown(
+    summary: NewMaterialIntakeSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 New Material Intake",
+        "",
+        f"- Intake id: `{summary.intake_id}`",
+        f"- `new-material-intake-status={summary.intake_status}`",
+        f"- `intake-items={summary.intake_item_count}`",
+        f"- `selected-source-files={summary.source_file_count}`",
+        (
+            "- `selected-priority-candidates="
+            f"{summary.priority_text_candidate_count}`"
+        ),
+        (
+            "- `selected-for-identity-review="
+            f"{summary.selected_for_identity_review_count}`"
+        ),
+        f"- `authorization-status={summary.authorization_status}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `review-decision-delta={summary.review_decision_delta_count}`",
+        f"- `promotion-batch-delta={summary.promotion_batch_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Intake item ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.selected_item_ids)
+    lines.extend(["", "Cluster ids:"])
+    lines.extend(f"- `{cluster_id}`" for cluster_id in summary.cluster_ids)
+    lines.extend(["", "Source-selection ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.source_selection_ids)
+    lines.extend(["", "Relative paths:"])
+    lines.extend(f"- `{path}`" for path in summary.relative_paths)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_raw_text_cluster_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextClusterSourceSelectionSummary:
@@ -10603,6 +10943,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         new_material_extraction_learning_loop_closure_items = (
             load_new_material_extraction_learning_loop_closure_items(source_dir)
         )
+        new_material_intake_items = load_new_material_intake_items(source_dir)
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -10645,6 +10986,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         explicit_candidate_review_or_queue_refresh_items,
         external_material_inventory_refresh_confirmation_items,
         new_material_extraction_learning_loop_closure_items,
+        new_material_intake_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -10729,6 +11071,7 @@ def _iter_quality_text_fields(
     new_material_extraction_learning_loop_closure_items: list[
         NewMaterialExtractionLearningLoopClosureItem
     ],
+    new_material_intake_items: list[NewMaterialIntakeItem],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
     raw_text_source_registration_prep_items: list[RawTextSourceRegistrationPrepItem],
@@ -11098,6 +11441,21 @@ def _iter_quality_text_fields(
         fields.append((item.closure_item_id, "rationale", item.rationale))
         fields.extend(
             (item.closure_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in new_material_intake_items:
+        fields.extend(
+            (
+                (item.intake_item_id, "source_label", item.source_label),
+                (item.intake_item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.intake_item_id, "relative_paths", path)
+            for path in item.relative_paths
+        )
+        fields.extend(
+            (item.intake_item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

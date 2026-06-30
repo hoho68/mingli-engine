@@ -140,12 +140,15 @@ Explicit Downstream Authorization Receipt:
 - `formal-evidence-delta=0`
 - `downstream-mutation-authorized=true`
 - `next-downstream-entry=015-new-material-intake`
-- `next-new-material-start=015-new-material-intake`
+- `new-material-intake-status=new_material_intake_selected`
+- `selected-source-files=1`
+- `selected-for-identity-review=1`
+- `source-library-mutation-authorized=false`
+- `next-material-entry=015-new-material-source-identity-review`
+- `next-new-material-start=015-new-material-source-identity-review`
 
-The next long goal should add or choose a genuinely new bounded material intake
-surface before restarting 015 source selection. The safest first candidate from
-the recent read-only scan is `下海算命记.pdf` in
-`bazi_general_misc_identity_review_cluster`.
+The next long goal should verify the selected single-file source identity for
+`下海算命记.pdf` before source-library registration or 013/012 downstream writes.
 
 Run focused learning reference curation tests:
 

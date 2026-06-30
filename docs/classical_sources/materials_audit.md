@@ -1589,6 +1589,52 @@ Guardrails:
 - 017 is ready for explicit downstream authorization, but this checkpoint does not authorize mutation.
 - Use the next target to choose explicit 013/012 authorization or a genuinely new material intake surface.
 
+## 015 New Material Intake
+
+- Intake id: `015-new-material-intake`
+- `new-material-intake-status=new_material_intake_selected`
+- `intake-items=1`
+- `selected-source-files=1`
+- `selected-priority-candidates=1`
+- `selected-for-identity-review=1`
+- `authorization-status=downstream_authorization_consumed`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-source-identity-review`
+
+Intake item ids:
+- `new_material_intake_xiahai_suanmingji_pdf`
+
+Cluster ids:
+- `bazi_general_misc_identity_review_cluster`
+
+Source-selection ids:
+- `next_cycle_bazi_misc_identity_review`
+
+Relative paths:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `intake_items_loaded`: `passed`
+- `downstream_authorization_consumed`: `passed`
+- `selected_cluster_requires_identity_review`: `passed`
+- `selected_paths_are_cluster_representatives`: `passed`
+- `selected_paths_are_relative`: `passed`
+- `single_file_boundary`: `passed`
+- `source_library_not_mutated`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- This intake selects one bounded source-level path from tracked inventory metadata.
+- Source identity review must happen before source-library registration.
+- This stage does not create 013 candidates or 012 evidence.
+- External raw materials are not read, moved, converted, or rewritten.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

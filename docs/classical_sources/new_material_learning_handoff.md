@@ -705,8 +705,18 @@ Risk-review items:
   `012-formal-evidence-units=111`, `candidate-extract-delta=0`,
   `formal-evidence-delta=0`, `downstream-mutation-authorized=true`, and
   `next-downstream-entry=015-new-material-intake`.
+- 015 New Material Intake is completed:
+  `new-material-intake-status=new_material_intake_selected`,
+  `intake-items=1`, `selected-source-files=1`,
+  `selected-for-identity-review=1`,
+  `authorization-status=downstream_authorization_consumed`,
+  `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-new-material-source-identity-review`.
+- Selected intake item: `new_material_intake_xiahai_suanmingji_pdf` from
+  `bazi_general_misc_identity_review_cluster` at `下海算命记.pdf`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-new-material-intake`.
+  `next-new-material-start=015-new-material-source-identity-review`.
 
 ## Remaining Optional Precision Work
 
@@ -723,9 +733,9 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-new-material-intake`. It should add or choose a
-genuinely new bounded material intake surface before restarting 015 source
-selection.
+`next-material-entry=015-new-material-source-identity-review`. It should verify
+the selected single-file source identity before source-library registration or
+013/012 downstream writes.
 
 ## Guardrails
 
@@ -737,6 +747,5 @@ selection.
 
 ## Next Target
 
-Next target: `015-new-material-intake`. Start a genuinely new bounded material
-intake surface; the first safe candidate is `下海算命记.pdf` from
-`bazi_general_misc_identity_review_cluster`.
+Next target: `015-new-material-source-identity-review`. Verify the source
+identity for `下海算命记.pdf` before any registration or downstream write.

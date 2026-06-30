@@ -749,6 +749,9 @@ def test_public_materials_audit_functions_exist():
         "load_new_material_extraction_learning_loop_closure_items",
         "build_new_material_extraction_learning_loop_closure_summary",
         "render_new_material_extraction_learning_loop_closure_markdown",
+        "load_new_material_intake_items",
+        "build_new_material_intake_summary",
+        "render_new_material_intake_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -4072,13 +4075,108 @@ def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-intake`"
+        "`next-new-material-start=015-new-material-source-identity-review`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-intake`"
+        "`next-new-material-start=015-new-material-source-identity-review`"
         in quickstart
     )
+
+
+def test_new_material_intake_items_select_xiahai_suanmingji():
+    items = materials_audit.load_new_material_intake_items()
+    items_by_id = {item.intake_item_id: item for item in items}
+
+    assert len(items) == 1
+    assert set(items_by_id) == {"new_material_intake_xiahai_suanmingji_pdf"}
+    item = items_by_id["new_material_intake_xiahai_suanmingji_pdf"]
+    assert item.intake_id == "015-new-material-intake"
+    assert item.authorization_id == "013-012-explicit-downstream-authorization"
+    assert item.cluster_id == "bazi_general_misc_identity_review_cluster"
+    assert item.source_selection_id == "next_cycle_bazi_misc_identity_review"
+    assert item.intake_status == "selected_for_source_identity_review"
+    assert item.risk_boundary == "ordinary"
+    assert item.recommended_next_action == "clarify_identity"
+    assert item.relative_paths == ["下海算命记.pdf"]
+    assert item.file_count == 1
+    assert item.priority_text_candidate_count == 1
+    assert item.target_rule_families == ["branch_interaction"]
+    assert item.source_library_mutation_authorized is False
+    assert item.downstream_mutation_authorized is False
+    assert item.selected_next_material_entry == (
+        "015-new-material-source-identity-review"
+    )
+
+
+def test_new_material_intake_summary_routes_to_source_identity_review():
+    summary = materials_audit.build_new_material_intake_summary()
+
+    assert summary.intake_id == "015-new-material-intake"
+    assert summary.intake_status == "new_material_intake_selected"
+    assert summary.intake_item_count == 1
+    assert summary.source_file_count == 1
+    assert summary.priority_text_candidate_count == 1
+    assert summary.selected_for_identity_review_count == 1
+    assert summary.authorization_status == "downstream_authorization_consumed"
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.source_library_mutation_authorized is False
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == "015-new-material-source-identity-review"
+    assert summary.selected_item_ids == ["new_material_intake_xiahai_suanmingji_pdf"]
+    assert summary.cluster_ids == ["bazi_general_misc_identity_review_cluster"]
+    assert summary.relative_paths == ["下海算命记.pdf"]
+    assert summary.boundary_checks == {
+        "intake_items_loaded": "passed",
+        "downstream_authorization_consumed": "passed",
+        "selected_cluster_requires_identity_review": "passed",
+        "selected_paths_are_cluster_representatives": "passed",
+        "selected_paths_are_relative": "passed",
+        "single_file_boundary": "passed",
+        "source_library_not_mutated": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_intake_markdown_and_docs_sync():
+    summary = materials_audit.build_new_material_intake_summary()
+    markdown = materials_audit.render_new_material_intake_markdown(summary)
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 New Material Intake",
+        "`new-material-intake-status=new_material_intake_selected`",
+        "`intake-items=1`",
+        "`selected-source-files=1`",
+        "`selected-for-identity-review=1`",
+        "`authorization-status=downstream_authorization_consumed`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`source-library-mutation-authorized=false`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-new-material-source-identity-review`",
+        "`new_material_intake_xiahai_suanmingji_pdf`",
+        "`bazi_general_misc_identity_review_cluster`",
+        "`下海算命记.pdf`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+    assert "`next-new-material-start=015-new-material-source-identity-review`" in handoff
+    assert "`next-new-material-start=015-new-material-source-identity-review`" in quickstart
 
 
 def test_raw_text_cluster_source_selection_items_load_bazi_general_sources():
