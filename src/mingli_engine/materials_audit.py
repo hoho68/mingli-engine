@@ -44,6 +44,8 @@ from mingli_engine.models import (
     MaterialRepresentation,
     NewMaterialExtractionLearningLoopClosureItem,
     NewMaterialExtractionLearningLoopClosureSummary,
+    NewMaterialControlledTextPreparationItem,
+    NewMaterialControlledTextPreparationSummary,
     NewMaterialIntakeItem,
     NewMaterialIntakeSummary,
     NewMaterialPreparationBoundaryItem,
@@ -307,6 +309,12 @@ NEW_MATERIAL_PREPARATION_BOUNDARY_ID = "015-new-material-preparation-boundary"
 NEW_MATERIAL_PREPARATION_BOUNDARY_NEXT_MATERIAL_ENTRY = (
     "015-new-material-controlled-text-preparation"
 )
+NEW_MATERIAL_CONTROLLED_TEXT_PREPARATION_ID = (
+    "015-new-material-controlled-text-preparation"
+)
+NEW_MATERIAL_CONTROLLED_TEXT_PREPARATION_NEXT_MATERIAL_ENTRY = (
+    "015-new-material-ocr-or-manual-transcription"
+)
 NEW_MATERIAL_SOURCE_LIBRARY_ENTRY_ID = "entry_new_material_xiahai_suanmingji_pdf"
 NEW_MATERIAL_SOURCE_MATERIAL_ID = "material_new_material_xiahai_suanmingji_pdf"
 NEW_MATERIAL_REGISTRATION_PREP_STATUSES = frozenset(
@@ -320,6 +328,9 @@ NEW_MATERIAL_PREPARATION_BOUNDARY_STATUSES = frozenset(
 )
 NEW_MATERIAL_PREPARATION_READING_STATUSES = frozenset(
     {"blocked_until_controlled_text_preparation"}
+)
+NEW_MATERIAL_CONTROLLED_TEXT_PREPARATION_STATUSES = frozenset(
+    {"blocked_requires_ocr_or_manual_transcription"}
 )
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
@@ -10577,6 +10588,261 @@ def render_new_material_preparation_boundary_markdown(
     return "\n".join(lines) + "\n"
 
 
+def _new_material_controlled_text_preparation_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialControlledTextPreparationItem:
+    try:
+        item = NewMaterialControlledTextPreparationItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid new material controlled text preparation item: {error}"
+        ) from error
+    owner_id = item.preparation_item_id or "?"
+    for field_name in (
+        "preparation_item_id",
+        "preparation_id",
+        "boundary_item_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "preparation_status",
+        "probe_method",
+        "local_reference",
+        "blocked_reason",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    if item.preparation_id != NEW_MATERIAL_CONTROLLED_TEXT_PREPARATION_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid preparation_id")
+    if item.selected_next_material_entry != (
+        NEW_MATERIAL_CONTROLLED_TEXT_PREPARATION_NEXT_MATERIAL_ENTRY
+    ):
+        raise MaterialsAuditError(f"{owner_id} selected unexpected next entry")
+    _validate_enum(
+        item.preparation_status,
+        NEW_MATERIAL_CONTROLLED_TEXT_PREPARATION_STATUSES,
+        "preparation_status",
+        owner_id,
+    )
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    for field_name in (
+        "page_count",
+        "text_layer_nonempty_page_count",
+        "extracted_text_char_count",
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+    if item.page_count <= 0:
+        raise MaterialsAuditError(f"{owner_id} page_count must be positive")
+    if item.text_layer_nonempty_page_count > item.page_count:
+        raise MaterialsAuditError(f"{owner_id} text page count exceeds page count")
+    if item.usable_text_layer:
+        raise MaterialsAuditError(f"{owner_id} must not mark unusable probe usable")
+    if item.source_library_mutation_authorized or item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize mutation")
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(item, field_name) != 0:
+            raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
+
+    boundary_items_by_id = {
+        boundary.boundary_item_id: boundary
+        for boundary in load_new_material_preparation_boundary_items(source_dir)
+    }
+    boundary = boundary_items_by_id.get(item.boundary_item_id)
+    if boundary is None:
+        raise MaterialsAuditError(f"{owner_id} references unknown boundary_item_id")
+    if boundary.boundary_status != "preparation_boundary_completed":
+        raise MaterialsAuditError(f"{owner_id} boundary is not completed")
+    if item.source_library_entry_id != boundary.source_library_entry_id:
+        raise MaterialsAuditError(f"{owner_id} source entry mismatch")
+    if item.source_material_id != boundary.source_material_id:
+        raise MaterialsAuditError(f"{owner_id} source material mismatch")
+    if item.local_reference != boundary.local_reference:
+        raise MaterialsAuditError(f"{owner_id} local reference mismatch")
+    return item
+
+
+def load_new_material_controlled_text_preparation_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialControlledTextPreparationItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = source_dir / "new_material_controlled_text_preparation_items.json"
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_controlled_text_preparation_item_from_dict(item, source_dir)
+        for item in _read_optional_json_list(items_path)
+    ]
+    _ensure_unique([item.preparation_item_id for item in items], "preparation_item_id")
+    return items
+
+
+def build_new_material_controlled_text_preparation_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialControlledTextPreparationSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_controlled_text_preparation_items(source_dir)
+    boundary_summary = build_new_material_preparation_boundary_summary(source_dir)
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        and not item.source_library_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "controlled_text_preparation_items_loaded": (
+            "passed" if items else "failed"
+        ),
+        "preparation_boundary_completed": (
+            "passed"
+            if boundary_summary.boundary_status == "preparation_boundary_completed"
+            else "failed"
+        ),
+        "text_layer_probe_completed": (
+            "passed"
+            if all(item.probe_method == "pdfplumber_text_layer_probe" for item in items)
+            else "failed"
+        ),
+        "usable_text_layer_absent": (
+            "passed" if all(not item.usable_text_layer for item in items) else "failed"
+        ),
+        "ocr_or_manual_transcription_required": (
+            "passed"
+            if all(
+                item.preparation_status
+                == "blocked_requires_ocr_or_manual_transcription"
+                for item in items
+            )
+            else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    return NewMaterialControlledTextPreparationSummary(
+        preparation_id=NEW_MATERIAL_CONTROLLED_TEXT_PREPARATION_ID,
+        preparation_status=(
+            "blocked_requires_ocr_or_manual_transcription"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "controlled_text_preparation_needs_attention"
+        ),
+        preparation_item_count=len(items),
+        source_file_count=len(items),
+        page_count=sum(item.page_count for item in items),
+        text_layer_nonempty_page_count=sum(
+            item.text_layer_nonempty_page_count for item in items
+        ),
+        extracted_text_char_count=sum(item.extracted_text_char_count for item in items),
+        usable_text_layer_count=sum(1 for item in items if item.usable_text_layer),
+        blocked_item_count=sum(
+            1
+            for item in items
+            if item.preparation_status
+            == "blocked_requires_ocr_or_manual_transcription"
+        ),
+        preparation_item_ids=[item.preparation_item_id for item in items],
+        boundary_item_ids=[item.boundary_item_id for item in items],
+        source_entry_ids=[item.source_library_entry_id for item in items],
+        source_material_ids=[item.source_material_id for item in items],
+        local_references=[item.local_reference for item in items],
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        source_library_mutation_authorized=any(
+            item.source_library_mutation_authorized for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=NEW_MATERIAL_CONTROLLED_TEXT_PREPARATION_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "The embedded text layer is not usable as prepared source text.",
+            "OCR or manual transcription requires an explicit next stage.",
+            "Do not create learning notes, 013 candidates, or 012 units from watermark text.",
+            "External raw materials are not moved, converted, or rewritten.",
+        ],
+    )
+
+
+def render_new_material_controlled_text_preparation_markdown(
+    summary: NewMaterialControlledTextPreparationSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 New Material Controlled Text Preparation",
+        "",
+        f"- Preparation id: `{summary.preparation_id}`",
+        (
+            "- `new-material-controlled-text-preparation-status="
+            f"{summary.preparation_status}`"
+        ),
+        f"- `controlled-text-preparation-items={summary.preparation_item_count}`",
+        f"- `source-files={summary.source_file_count}`",
+        f"- `pdf-pages={summary.page_count}`",
+        f"- `text-layer-nonempty-pages={summary.text_layer_nonempty_page_count}`",
+        f"- `text-layer-chars={summary.extracted_text_char_count}`",
+        f"- `usable-text-layer={summary.usable_text_layer_count}`",
+        f"- `blocked-items={summary.blocked_item_count}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Controlled text-preparation item ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.preparation_item_ids)
+    lines.extend(["", "Source-library entry ids:"])
+    lines.extend(f"- `{entry_id}`" for entry_id in summary.source_entry_ids)
+    lines.extend(["", "Local references:"])
+    lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_raw_text_cluster_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextClusterSourceSelectionSummary:
@@ -12083,6 +12349,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         new_material_preparation_boundary_items = (
             load_new_material_preparation_boundary_items(source_dir)
         )
+        new_material_controlled_text_preparation_items = (
+            load_new_material_controlled_text_preparation_items(source_dir)
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -12130,6 +12399,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         new_material_registration_prep_items,
         new_material_source_registration_items,
         new_material_preparation_boundary_items,
+        new_material_controlled_text_preparation_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -12222,6 +12492,9 @@ def _iter_quality_text_fields(
     new_material_source_registration_items: list[NewMaterialSourceRegistrationItem],
     new_material_preparation_boundary_items: list[
         NewMaterialPreparationBoundaryItem
+    ],
+    new_material_controlled_text_preparation_items: list[
+        NewMaterialControlledTextPreparationItem
     ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
@@ -12676,6 +12949,18 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.boundary_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in new_material_controlled_text_preparation_items:
+        fields.extend(
+            (
+                (item.preparation_item_id, "local_reference", item.local_reference),
+                (item.preparation_item_id, "blocked_reason", item.blocked_reason),
+                (item.preparation_item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.preparation_item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

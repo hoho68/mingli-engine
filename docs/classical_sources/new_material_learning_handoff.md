@@ -749,8 +749,19 @@ Risk-review items:
   `formal-evidence-delta=0`, `source-library-mutation-authorized=false`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-new-material-controlled-text-preparation`.
+- 015 New Material Controlled Text Preparation is completed as a blocker audit:
+  `new-material-controlled-text-preparation-status=blocked_requires_ocr_or_manual_transcription`,
+  `controlled-text-preparation-items=1`, `pdf-pages=84`,
+  `text-layer-nonempty-pages=13`, `text-layer-chars=592`,
+  `usable-text-layer=0`, `blocked-items=1`,
+  `candidate-extract-delta=0`, `formal-evidence-delta=0`,
+  `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-new-material-ocr-or-manual-transcription`.
+- Controlled text-preparation item:
+  `new_material_controlled_text_prep_xiahai_suanmingji_pdf`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-new-material-controlled-text-preparation`.
+  `next-new-material-start=015-new-material-ocr-or-manual-transcription`.
 
 ## Remaining Optional Precision Work
 
@@ -767,10 +778,10 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-new-material-controlled-text-preparation`. It should
-explicitly decide and perform the allowed text-preparation method for
-`下海算命记.pdf` before learning notes, 013 candidate intake, or 012 evidence
-changes.
+`next-material-entry=015-new-material-ocr-or-manual-transcription`. It should
+explicitly choose OCR or human transcription for `下海算命记.pdf`, create a
+bounded prepared-text artifact, and only then decide whether learning notes or
+013 candidate intake can begin.
 
 ## Guardrails
 
@@ -782,6 +793,6 @@ changes.
 
 ## Next Target
 
-Next target: `015-new-material-controlled-text-preparation`. Decide the
-controlled text-preparation path for `下海算命记.pdf`; PDF parsing, OCR, or
-conversion requires an explicit follow-up stage before learning or extraction.
+Next target: `015-new-material-ocr-or-manual-transcription`. Choose and run the
+allowed OCR/manual transcription path for `下海算命记.pdf`, then prepare learning
+notes from the resulting bounded text.

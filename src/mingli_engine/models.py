@@ -3103,6 +3103,61 @@ class NewMaterialPreparationBoundarySummary:
 
 
 @dataclass(frozen=True)
+class NewMaterialControlledTextPreparationItem:
+    preparation_item_id: str
+    preparation_id: str
+    boundary_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    preparation_status: str
+    probe_method: str
+    local_reference: str
+    page_count: int
+    text_layer_nonempty_page_count: int
+    extracted_text_char_count: int
+    usable_text_layer: bool
+    blocked_reason: str
+    selected_next_material_entry: str
+    source_library_mutation_authorized: bool = False
+    downstream_mutation_authorized: bool = False
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialControlledTextPreparationSummary:
+    preparation_id: str
+    preparation_status: str
+    preparation_item_count: int
+    source_file_count: int
+    page_count: int
+    text_layer_nonempty_page_count: int
+    extracted_text_char_count: int
+    usable_text_layer_count: int
+    blocked_item_count: int
+    preparation_item_ids: list[str]
+    boundary_item_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextMaterialTriageGroup:
     group_id: str
     source_root: str

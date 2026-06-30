@@ -156,12 +156,17 @@ Explicit Downstream Authorization Receipt:
 - `registered-source-entries=1`
 - `text-preparation-required=1`
 - `reading-blocked=1`
-- `next-material-entry=015-new-material-controlled-text-preparation`
-- `next-new-material-start=015-new-material-controlled-text-preparation`
+- `new-material-controlled-text-preparation-status=blocked_requires_ocr_or_manual_transcription`
+- `pdf-pages=84`
+- `text-layer-nonempty-pages=13`
+- `text-layer-chars=592`
+- `usable-text-layer=0`
+- `next-material-entry=015-new-material-ocr-or-manual-transcription`
+- `next-new-material-start=015-new-material-ocr-or-manual-transcription`
 
-The next long goal should decide the controlled text-preparation path for
-`下海算命记.pdf`. PDF parsing, OCR, or conversion requires an explicit follow-up
-stage before learning notes, 013 candidate intake, or 012 evidence changes.
+The next long goal should choose OCR or human transcription for
+`下海算命记.pdf`, create a bounded prepared-text artifact, and only then decide
+whether learning notes or 013 candidate intake can begin.
 
 Run focused learning reference curation tests:
 

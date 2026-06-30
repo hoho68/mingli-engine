@@ -1788,6 +1788,47 @@ Guardrails:
 - Controlled text preparation requires an explicit follow-up stage.
 - No 013 candidate or 012 unit is created before prepared text exists.
 
+## 015 New Material Controlled Text Preparation
+
+- Preparation id: `015-new-material-controlled-text-preparation`
+- `new-material-controlled-text-preparation-status=blocked_requires_ocr_or_manual_transcription`
+- `controlled-text-preparation-items=1`
+- `source-files=1`
+- `pdf-pages=84`
+- `text-layer-nonempty-pages=13`
+- `text-layer-chars=592`
+- `usable-text-layer=0`
+- `blocked-items=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-ocr-or-manual-transcription`
+
+Controlled text-preparation item ids:
+- `new_material_controlled_text_prep_xiahai_suanmingji_pdf`
+
+Source-library entry ids:
+- `entry_new_material_xiahai_suanmingji_pdf`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `controlled_text_preparation_items_loaded`: `passed`
+- `preparation_boundary_completed`: `passed`
+- `text_layer_probe_completed`: `passed`
+- `usable_text_layer_absent`: `passed`
+- `ocr_or_manual_transcription_required`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The embedded text layer is not usable as prepared source text.
+- OCR or manual transcription requires an explicit next stage.
+- Do not create learning notes, 013 candidates, or 012 units from watermark text.
+- External raw materials are not moved, converted, or rewritten.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

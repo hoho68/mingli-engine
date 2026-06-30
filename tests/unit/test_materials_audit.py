@@ -764,6 +764,9 @@ def test_public_materials_audit_functions_exist():
         "load_new_material_preparation_boundary_items",
         "build_new_material_preparation_boundary_summary",
         "render_new_material_preparation_boundary_markdown",
+        "load_new_material_controlled_text_preparation_items",
+        "build_new_material_controlled_text_preparation_summary",
+        "render_new_material_controlled_text_preparation_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -4087,11 +4090,11 @@ def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-controlled-text-preparation`"
+        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-controlled-text-preparation`"
+        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
         in quickstart
     )
 
@@ -4187,8 +4190,8 @@ def test_new_material_intake_markdown_and_docs_sync():
         assert marker in materials_doc
         assert marker in handoff
 
-    assert "`next-new-material-start=015-new-material-controlled-text-preparation`" in handoff
-    assert "`next-new-material-start=015-new-material-controlled-text-preparation`" in quickstart
+    assert "`next-new-material-start=015-new-material-ocr-or-manual-transcription`" in handoff
+    assert "`next-new-material-start=015-new-material-ocr-or-manual-transcription`" in quickstart
 
 
 def test_new_material_source_identity_review_item_prepares_registration():
@@ -4290,8 +4293,8 @@ def test_new_material_source_identity_review_markdown_and_docs_sync():
         assert marker in materials_doc
         assert marker in handoff
 
-    assert "`next-new-material-start=015-new-material-controlled-text-preparation`" in handoff
-    assert "`next-new-material-start=015-new-material-controlled-text-preparation`" in quickstart
+    assert "`next-new-material-start=015-new-material-ocr-or-manual-transcription`" in handoff
+    assert "`next-new-material-start=015-new-material-ocr-or-manual-transcription`" in quickstart
 
 
 def test_new_material_registration_prep_registers_xiahai_metadata():
@@ -4404,11 +4407,107 @@ def test_new_material_long_goal_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-controlled-text-preparation`"
+        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-controlled-text-preparation`"
+        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
+        in quickstart
+    )
+
+
+def test_new_material_controlled_text_preparation_blocks_on_unusable_text_layer():
+    items = materials_audit.load_new_material_controlled_text_preparation_items()
+    summary = materials_audit.build_new_material_controlled_text_preparation_summary()
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.preparation_id == "015-new-material-controlled-text-preparation"
+    assert item.boundary_item_id == (
+        "new_material_preparation_boundary_xiahai_suanmingji_pdf"
+    )
+    assert item.preparation_status == "blocked_requires_ocr_or_manual_transcription"
+    assert item.probe_method == "pdfplumber_text_layer_probe"
+    assert item.local_reference == "下海算命记.pdf"
+    assert item.page_count == 84
+    assert item.text_layer_nonempty_page_count == 13
+    assert item.extracted_text_char_count == 592
+    assert item.usable_text_layer is False
+    assert item.selected_next_material_entry == (
+        "015-new-material-ocr-or-manual-transcription"
+    )
+    assert item.candidate_extract_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+
+    assert summary.preparation_status == (
+        "blocked_requires_ocr_or_manual_transcription"
+    )
+    assert summary.preparation_item_count == 1
+    assert summary.page_count == 84
+    assert summary.text_layer_nonempty_page_count == 13
+    assert summary.extracted_text_char_count == 592
+    assert summary.usable_text_layer_count == 0
+    assert summary.blocked_item_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.next_material_entry == (
+        "015-new-material-ocr-or-manual-transcription"
+    )
+    assert summary.boundary_checks == {
+        "controlled_text_preparation_items_loaded": "passed",
+        "preparation_boundary_completed": "passed",
+        "text_layer_probe_completed": "passed",
+        "usable_text_layer_absent": "passed",
+        "ocr_or_manual_transcription_required": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_controlled_text_preparation_markdown_and_docs_sync():
+    summary = materials_audit.build_new_material_controlled_text_preparation_summary()
+    markdown = materials_audit.render_new_material_controlled_text_preparation_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 New Material Controlled Text Preparation",
+        (
+            "`new-material-controlled-text-preparation-status="
+            "blocked_requires_ocr_or_manual_transcription`"
+        ),
+        "`controlled-text-preparation-items=1`",
+        "`pdf-pages=84`",
+        "`text-layer-nonempty-pages=13`",
+        "`text-layer-chars=592`",
+        "`usable-text-layer=0`",
+        "`blocked-items=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`next-material-entry=015-new-material-ocr-or-manual-transcription`",
+        "`new_material_controlled_text_prep_xiahai_suanmingji_pdf`",
+        "`entry_new_material_xiahai_suanmingji_pdf`",
+        "`下海算命记.pdf`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
         in quickstart
     )
 
