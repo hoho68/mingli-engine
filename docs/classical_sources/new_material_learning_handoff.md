@@ -725,8 +725,32 @@ Risk-review items:
   `next-material-entry=015-new-material-registration-prep`.
 - Identity review item: `new_material_identity_xiahai_suanmingji_pdf` for
   `Xiahai Suanmingji` at `下海算命记.pdf`.
+- 015 New Material Registration Prep is completed:
+  `new-material-registration-prep-status=registration_prep_completed`,
+  `registration-prep-items=1`, `registered-source-entries=1`,
+  `source-library-mutation-authorized=true`,
+  `downstream-mutation-authorized=false`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, and
+  `next-material-entry=015-new-material-source-registration`.
+- 015 New Material Source Registration is completed:
+  `new-material-source-registration-status=source_registration_completed`,
+  `source-registration-items=1`, `registered-source-entries=1`,
+  `registered-source-files=1`, `source-library-mutation-authorized=true`,
+  `downstream-mutation-authorized=false`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, and
+  `next-material-entry=015-new-material-preparation-boundary`.
+- Registered source-library entry:
+  `entry_new_material_xiahai_suanmingji_pdf`,
+  `material_new_material_xiahai_suanmingji_pdf`, `下海算命记.pdf`.
+- 015 New Material Preparation Boundary is completed:
+  `new-material-preparation-boundary-status=preparation_boundary_completed`,
+  `preparation-boundary-items=1`, `text-preparation-required=1`,
+  `reading-blocked=1`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-new-material-controlled-text-preparation`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-new-material-registration-prep`.
+  `next-new-material-start=015-new-material-controlled-text-preparation`.
 
 ## Remaining Optional Precision Work
 
@@ -743,9 +767,10 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-new-material-registration-prep`. It should prepare
-source-library registration metadata for the reviewed single-file source while
-keeping raw-file reading/conversion and 013/012 downstream writes blocked.
+`next-material-entry=015-new-material-controlled-text-preparation`. It should
+explicitly decide and perform the allowed text-preparation method for
+`下海算命记.pdf` before learning notes, 013 candidate intake, or 012 evidence
+changes.
 
 ## Guardrails
 
@@ -757,6 +782,6 @@ keeping raw-file reading/conversion and 013/012 downstream writes blocked.
 
 ## Next Target
 
-Next target: `015-new-material-registration-prep`. Prepare registration
-metadata for `下海算命记.pdf` before any source-library write or downstream
-write.
+Next target: `015-new-material-controlled-text-preparation`. Decide the
+controlled text-preparation path for `下海算命记.pdf`; PDF parsing, OCR, or
+conversion requires an explicit follow-up stage before learning or extraction.

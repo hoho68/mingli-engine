@@ -150,11 +150,18 @@ Explicit Downstream Authorization Receipt:
 - `source-library-overlap-found=0`
 - `candidate-extract-delta=0`
 - `formal-evidence-delta=0`
-- `next-material-entry=015-new-material-registration-prep`
-- `next-new-material-start=015-new-material-registration-prep`
+- `new-material-registration-prep-status=registration_prep_completed`
+- `new-material-source-registration-status=source_registration_completed`
+- `new-material-preparation-boundary-status=preparation_boundary_completed`
+- `registered-source-entries=1`
+- `text-preparation-required=1`
+- `reading-blocked=1`
+- `next-material-entry=015-new-material-controlled-text-preparation`
+- `next-new-material-start=015-new-material-controlled-text-preparation`
 
-The next long goal should prepare source-library registration metadata for
-`下海算命记.pdf` before any source-library write or 013/012 downstream writes.
+The next long goal should decide the controlled text-preparation path for
+`下海算命记.pdf`. PDF parsing, OCR, or conversion requires an explicit follow-up
+stage before learning notes, 013 candidate intake, or 012 evidence changes.
 
 Run focused learning reference curation tests:
 

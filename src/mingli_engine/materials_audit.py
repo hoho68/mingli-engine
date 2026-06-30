@@ -46,8 +46,14 @@ from mingli_engine.models import (
     NewMaterialExtractionLearningLoopClosureSummary,
     NewMaterialIntakeItem,
     NewMaterialIntakeSummary,
+    NewMaterialPreparationBoundaryItem,
+    NewMaterialPreparationBoundarySummary,
+    NewMaterialRegistrationPrepItem,
+    NewMaterialRegistrationPrepSummary,
     NewMaterialSourceIdentityReviewItem,
     NewMaterialSourceIdentityReviewSummary,
+    NewMaterialSourceRegistrationItem,
+    NewMaterialSourceRegistrationSummary,
     PreparationReadinessFinding,
     RawTextClusterSourceSelectionItem,
     RawTextClusterSourceSelectionSummary,
@@ -288,6 +294,32 @@ NEW_MATERIAL_SOURCE_IDENTITY_REVIEW_OVERLAP_STATUSES = frozenset(
 )
 NEW_MATERIAL_SOURCE_IDENTITY_REVIEW_REGISTRATION_READINESS = frozenset(
     {"ready_for_registration_prep"}
+)
+NEW_MATERIAL_REGISTRATION_PREP_ID = "015-new-material-registration-prep"
+NEW_MATERIAL_REGISTRATION_PREP_NEXT_MATERIAL_ENTRY = (
+    "015-new-material-source-registration"
+)
+NEW_MATERIAL_SOURCE_REGISTRATION_ID = "015-new-material-source-registration"
+NEW_MATERIAL_SOURCE_REGISTRATION_NEXT_MATERIAL_ENTRY = (
+    "015-new-material-preparation-boundary"
+)
+NEW_MATERIAL_PREPARATION_BOUNDARY_ID = "015-new-material-preparation-boundary"
+NEW_MATERIAL_PREPARATION_BOUNDARY_NEXT_MATERIAL_ENTRY = (
+    "015-new-material-controlled-text-preparation"
+)
+NEW_MATERIAL_SOURCE_LIBRARY_ENTRY_ID = "entry_new_material_xiahai_suanmingji_pdf"
+NEW_MATERIAL_SOURCE_MATERIAL_ID = "material_new_material_xiahai_suanmingji_pdf"
+NEW_MATERIAL_REGISTRATION_PREP_STATUSES = frozenset(
+    {"ready_for_source_registration"}
+)
+NEW_MATERIAL_SOURCE_REGISTRATION_STATUSES = frozenset(
+    {"source_registration_completed"}
+)
+NEW_MATERIAL_PREPARATION_BOUNDARY_STATUSES = frozenset(
+    {"preparation_boundary_completed"}
+)
+NEW_MATERIAL_PREPARATION_READING_STATUSES = frozenset(
+    {"blocked_until_controlled_text_preparation"}
 )
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
@@ -9606,6 +9638,7 @@ def _new_material_source_identity_review_item_from_dict(
         entry.entry_id
         for entry in source_entries_by_id.values()
         if entry.local_reference in item.relative_paths
+        and entry.entry_id != NEW_MATERIAL_SOURCE_LIBRARY_ENTRY_ID
     ]
     if (
         item.source_library_overlap_status == "no_registered_overlap_found"
@@ -9658,6 +9691,7 @@ def build_new_material_source_identity_review_summary(
         not any(
             entry.local_reference in item.relative_paths
             for entry in source_entries_by_id.values()
+            if entry.entry_id != NEW_MATERIAL_SOURCE_LIBRARY_ENTRY_ID
         )
         for item in items
     )
@@ -9823,6 +9857,723 @@ def render_new_material_source_identity_review_markdown(
             *[f"- {guardrail}" for guardrail in summary.guardrails],
         ]
     )
+    return "\n".join(lines) + "\n"
+
+
+def _new_material_source_entry_matches_prep(
+    item: NewMaterialRegistrationPrepItem,
+    entry: source_library.SourceLibraryEntry,
+) -> bool:
+    return (
+        entry.entry_id == item.source_library_entry_id
+        and entry.material_id == item.source_material_id
+        and entry.title == item.proposed_title
+        and entry.material_type == item.proposed_material_type
+        and entry.local_reference == item.proposed_local_reference
+        and entry.tracking_status == item.proposed_tracking_status
+        and entry.readiness_status == item.proposed_readiness_status
+        and entry.topic_tags == item.topic_tags
+        and entry.rule_families == item.rule_families
+        and entry.rights_notes == item.rights_notes
+        and entry.risk_tier == item.risk_tier
+        and entry.priority_level == item.proposed_priority_level
+        and entry.next_action == item.proposed_next_action
+    )
+
+
+def _new_material_registration_prep_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialRegistrationPrepItem:
+    try:
+        item = NewMaterialRegistrationPrepItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid new material registration prep item: {error}"
+        ) from error
+
+    owner_id = item.prep_item_id or "?"
+    for field_name in (
+        "prep_item_id",
+        "prep_id",
+        "identity_review_item_id",
+        "review_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "registration_status",
+        "proposed_title",
+        "proposed_material_type",
+        "proposed_local_reference",
+        "proposed_tracking_status",
+        "proposed_readiness_status",
+        "proposed_priority_level",
+        "proposed_next_action",
+        "risk_tier",
+        "source_quality_notes",
+        "rights_notes",
+        "source_library_overlap_policy",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    if item.prep_id != NEW_MATERIAL_REGISTRATION_PREP_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid prep_id")
+    if item.review_id != NEW_MATERIAL_SOURCE_IDENTITY_REVIEW_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid review_id")
+    if item.source_library_entry_id != NEW_MATERIAL_SOURCE_LIBRARY_ENTRY_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_library_entry_id")
+    if item.source_material_id != NEW_MATERIAL_SOURCE_MATERIAL_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_material_id")
+    if item.selected_next_material_entry != (
+        NEW_MATERIAL_REGISTRATION_PREP_NEXT_MATERIAL_ENTRY
+    ):
+        raise MaterialsAuditError(f"{owner_id} selected unexpected next entry")
+    _validate_enum(
+        item.registration_status,
+        NEW_MATERIAL_REGISTRATION_PREP_STATUSES,
+        "registration_status",
+        owner_id,
+    )
+    _validate_enum(
+        item.proposed_material_type,
+        SOURCE_LIBRARY_MATERIAL_TYPES,
+        "proposed_material_type",
+        owner_id,
+    )
+    _validate_enum(
+        item.proposed_tracking_status,
+        MATERIAL_TRACKING_STATUSES,
+        "proposed_tracking_status",
+        owner_id,
+    )
+    _validate_enum(
+        item.proposed_readiness_status,
+        SOURCE_LIBRARY_READINESS_STATUSES,
+        "proposed_readiness_status",
+        owner_id,
+    )
+    _validate_enum(
+        item.proposed_priority_level,
+        SOURCE_LIBRARY_PRIORITY_LEVELS,
+        "proposed_priority_level",
+        owner_id,
+    )
+    _validate_enum(
+        item.proposed_next_action,
+        SOURCE_LIBRARY_NEXT_ACTIONS,
+        "proposed_next_action",
+        owner_id,
+    )
+    _validate_enum(item.risk_tier, RISK_TIERS, "risk_tier", owner_id)
+    _require_string_list(item.topic_tags, "topic_tags", owner_id)
+    _require_string_list(item.rule_families, "rule_families", owner_id)
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    if not item.topic_tags or not item.rule_families or not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires tags, rules, and guardrails")
+    if not _is_source_relative_path(item.proposed_local_reference):
+        raise MaterialsAuditError(f"{owner_id} proposed_local_reference must be relative")
+    for rule_family in item.rule_families:
+        if rule_family not in RULE_FAMILIES:
+            raise MaterialsAuditError(
+                f"{owner_id} has unsupported rule_family: {rule_family}"
+            )
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+        if getattr(item, field_name) != 0:
+            raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
+    if not item.source_library_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must authorize source-library mutation")
+    if item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize downstream mutation")
+
+    review_items_by_id = {
+        review.review_item_id: review
+        for review in load_new_material_source_identity_review_items(source_dir)
+    }
+    review = review_items_by_id.get(item.identity_review_item_id)
+    if review is None:
+        raise MaterialsAuditError(
+            f"{owner_id} references unknown identity_review_item_id"
+        )
+    if review.identity_status != "identity_review_completed":
+        raise MaterialsAuditError(f"{owner_id} identity review is not completed")
+    if item.proposed_local_reference not in review.relative_paths:
+        raise MaterialsAuditError(f"{owner_id} local reference not in identity review")
+    if set(item.rule_families) != set(review.target_rule_families):
+        raise MaterialsAuditError(f"{owner_id} rule families do not match review")
+    if item.risk_tier != review.risk_boundary:
+        raise MaterialsAuditError(f"{owner_id} risk tier does not match review")
+    return item
+
+
+def load_new_material_registration_prep_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialRegistrationPrepItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = source_dir / "new_material_registration_prep_items.json"
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_registration_prep_item_from_dict(item, source_dir)
+        for item in _read_optional_json_list(items_path)
+    ]
+    _ensure_unique([item.prep_item_id for item in items], "prep_item_id")
+    _ensure_unique(
+        [item.source_library_entry_id for item in items],
+        "source_library_entry_id",
+    )
+    return items
+
+
+def build_new_material_registration_prep_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialRegistrationPrepSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_registration_prep_items(source_dir)
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    registered_items = [
+        item for item in items if item.source_library_entry_id in source_entries_by_id
+    ]
+    registered_entries_match_prep = bool(items) and all(
+        _new_material_source_entry_matches_prep(
+            item,
+            source_entries_by_id[item.source_library_entry_id],
+        )
+        for item in registered_items
+    )
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "registration_prep_items_loaded": "passed" if items else "failed",
+        "source_library_entry_registered": (
+            "passed" if len(registered_items) == len(items) and items else "failed"
+        ),
+        "registered_entries_match_prep": (
+            "passed" if registered_entries_match_prep else "failed"
+        ),
+        "source_library_mutation_authorized": (
+            "passed" if any(item.source_library_mutation_authorized for item in items) else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    return NewMaterialRegistrationPrepSummary(
+        prep_id=NEW_MATERIAL_REGISTRATION_PREP_ID,
+        prep_status=(
+            "registration_prep_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "registration_prep_needs_attention"
+        ),
+        prep_item_count=len(items),
+        proposed_source_file_count=len(items),
+        proposed_entry_ids=[item.source_library_entry_id for item in items],
+        proposed_material_ids=[item.source_material_id for item in items],
+        prep_item_ids=[item.prep_item_id for item in items],
+        identity_review_item_ids=[item.identity_review_item_id for item in items],
+        local_references=[item.proposed_local_reference for item in items],
+        registered_source_entry_count=len(registered_items),
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        source_library_mutation_authorized=any(
+            item.source_library_mutation_authorized for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=NEW_MATERIAL_REGISTRATION_PREP_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Registration prep uses identity-review metadata only.",
+            "The source-library entry is metadata registration, not text reading.",
+            "013/012 downstream records remain unchanged.",
+            "External raw materials are not read, moved, converted, or rewritten.",
+        ],
+    )
+
+
+def render_new_material_registration_prep_markdown(
+    summary: NewMaterialRegistrationPrepSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 New Material Registration Prep",
+        "",
+        f"- Prep id: `{summary.prep_id}`",
+        f"- `new-material-registration-prep-status={summary.prep_status}`",
+        f"- `registration-prep-items={summary.prep_item_count}`",
+        f"- `proposed-source-files={summary.proposed_source_file_count}`",
+        f"- `registered-source-entries={summary.registered_source_entry_count}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `review-decision-delta={summary.review_decision_delta_count}`",
+        f"- `promotion-batch-delta={summary.promotion_batch_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Registration-prep item ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.prep_item_ids)
+    lines.extend(["", "Proposed source-library entry ids:"])
+    lines.extend(f"- `{entry_id}`" for entry_id in summary.proposed_entry_ids)
+    lines.extend(["", "Local references:"])
+    lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(["", "Guardrails:", *[f"- {guardrail}" for guardrail in summary.guardrails]])
+    return "\n".join(lines) + "\n"
+
+
+def _new_material_source_registration_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialSourceRegistrationItem:
+    try:
+        item = NewMaterialSourceRegistrationItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid new material source registration item: {error}"
+        ) from error
+    owner_id = item.registration_item_id or "?"
+    for field_name in (
+        "registration_item_id",
+        "registration_id",
+        "prep_item_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "registration_status",
+        "local_reference",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    if item.registration_id != NEW_MATERIAL_SOURCE_REGISTRATION_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid registration_id")
+    if item.selected_next_material_entry != (
+        NEW_MATERIAL_SOURCE_REGISTRATION_NEXT_MATERIAL_ENTRY
+    ):
+        raise MaterialsAuditError(f"{owner_id} selected unexpected next entry")
+    _validate_enum(
+        item.registration_status,
+        NEW_MATERIAL_SOURCE_REGISTRATION_STATUSES,
+        "registration_status",
+        owner_id,
+    )
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    prep_items_by_id = {
+        prep.prep_item_id: prep for prep in load_new_material_registration_prep_items(source_dir)
+    }
+    prep = prep_items_by_id.get(item.prep_item_id)
+    if prep is None:
+        raise MaterialsAuditError(f"{owner_id} references unknown prep_item_id")
+    source_entries_by_id = _load_source_library_entries(source_dir)
+    entry = source_entries_by_id.get(item.source_library_entry_id)
+    if entry is None:
+        raise MaterialsAuditError(f"{owner_id} references unknown source-library entry")
+    if not _new_material_source_entry_matches_prep(prep, entry):
+        raise MaterialsAuditError(f"{owner_id} source-library entry mismatch")
+    if item.source_material_id != prep.source_material_id:
+        raise MaterialsAuditError(f"{owner_id} source material mismatch")
+    if item.local_reference != prep.proposed_local_reference:
+        raise MaterialsAuditError(f"{owner_id} local reference mismatch")
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+        if getattr(item, field_name) != 0:
+            raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
+    if not item.source_library_mutation_authorized or item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} has invalid mutation boundary")
+    return item
+
+
+def load_new_material_source_registration_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialSourceRegistrationItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = source_dir / "new_material_source_registration_items.json"
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_source_registration_item_from_dict(item, source_dir)
+        for item in _read_optional_json_list(items_path)
+    ]
+    _ensure_unique([item.registration_item_id for item in items], "registration_item_id")
+    return items
+
+
+def build_new_material_source_registration_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialSourceRegistrationSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_source_registration_items(source_dir)
+    prep_summary = build_new_material_registration_prep_summary(source_dir)
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "source_registration_items_loaded": "passed" if items else "failed",
+        "registration_prep_completed": (
+            "passed"
+            if prep_summary.prep_status == "registration_prep_completed"
+            else "failed"
+        ),
+        "registered_entry_count_matches": (
+            "passed" if len(items) == prep_summary.registered_source_entry_count else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    return NewMaterialSourceRegistrationSummary(
+        registration_id=NEW_MATERIAL_SOURCE_REGISTRATION_ID,
+        registration_status=(
+            "source_registration_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "source_registration_needs_attention"
+        ),
+        registration_item_count=len(items),
+        registered_entry_count=len(items),
+        registered_source_file_count=len(items),
+        registered_entry_ids=[item.source_library_entry_id for item in items],
+        registered_material_ids=[item.source_material_id for item in items],
+        prep_item_ids=[item.prep_item_id for item in items],
+        local_references=[item.local_reference for item in items],
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        source_library_mutation_authorized=any(
+            item.source_library_mutation_authorized for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=NEW_MATERIAL_SOURCE_REGISTRATION_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Source-library metadata is registered; source text is still unread.",
+            "No extraction candidate or 012 unit is created by source registration.",
+            "The next stage must decide the controlled text-preparation boundary.",
+        ],
+    )
+
+
+def render_new_material_source_registration_markdown(
+    summary: NewMaterialSourceRegistrationSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 New Material Source Registration",
+        "",
+        f"- Registration id: `{summary.registration_id}`",
+        f"- `new-material-source-registration-status={summary.registration_status}`",
+        f"- `source-registration-items={summary.registration_item_count}`",
+        f"- `registered-source-entries={summary.registered_entry_count}`",
+        f"- `registered-source-files={summary.registered_source_file_count}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Registered source-library entry ids:",
+    ]
+    lines.extend(f"- `{entry_id}`" for entry_id in summary.registered_entry_ids)
+    lines.extend(["", "Registered material ids:"])
+    lines.extend(f"- `{material_id}`" for material_id in summary.registered_material_ids)
+    lines.extend(["", "Local references:"])
+    lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(["", "Guardrails:", *[f"- {guardrail}" for guardrail in summary.guardrails]])
+    return "\n".join(lines) + "\n"
+
+
+def _new_material_preparation_boundary_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialPreparationBoundaryItem:
+    try:
+        item = NewMaterialPreparationBoundaryItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid new material preparation boundary item: {error}"
+        ) from error
+    owner_id = item.boundary_item_id or "?"
+    for field_name in (
+        "boundary_item_id",
+        "boundary_id",
+        "registration_item_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "boundary_status",
+        "reading_status",
+        "local_reference",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    if item.boundary_id != NEW_MATERIAL_PREPARATION_BOUNDARY_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid boundary_id")
+    if item.selected_next_material_entry != (
+        NEW_MATERIAL_PREPARATION_BOUNDARY_NEXT_MATERIAL_ENTRY
+    ):
+        raise MaterialsAuditError(f"{owner_id} selected unexpected next entry")
+    _validate_enum(
+        item.boundary_status,
+        NEW_MATERIAL_PREPARATION_BOUNDARY_STATUSES,
+        "boundary_status",
+        owner_id,
+    )
+    _validate_enum(
+        item.reading_status,
+        NEW_MATERIAL_PREPARATION_READING_STATUSES,
+        "reading_status",
+        owner_id,
+    )
+    _require_non_negative_int(item.file_count, "file_count", owner_id)
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    registration_items_by_id = {
+        registration.registration_item_id: registration
+        for registration in load_new_material_source_registration_items(source_dir)
+    }
+    registration = registration_items_by_id.get(item.registration_item_id)
+    if registration is None:
+        raise MaterialsAuditError(
+            f"{owner_id} references unknown registration_item_id"
+        )
+    if item.source_library_entry_id != registration.source_library_entry_id:
+        raise MaterialsAuditError(f"{owner_id} source entry mismatch")
+    if item.source_material_id != registration.source_material_id:
+        raise MaterialsAuditError(f"{owner_id} source material mismatch")
+    if item.local_reference != registration.local_reference:
+        raise MaterialsAuditError(f"{owner_id} local reference mismatch")
+    if item.file_count != 1 or not item.text_preparation_required:
+        raise MaterialsAuditError(f"{owner_id} must require text preparation")
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+        if getattr(item, field_name) != 0:
+            raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
+    if item.source_library_mutation_authorized or item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize mutation")
+    return item
+
+
+def load_new_material_preparation_boundary_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialPreparationBoundaryItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = source_dir / "new_material_preparation_boundary_items.json"
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_preparation_boundary_item_from_dict(item, source_dir)
+        for item in _read_optional_json_list(items_path)
+    ]
+    _ensure_unique([item.boundary_item_id for item in items], "boundary_item_id")
+    return items
+
+
+def build_new_material_preparation_boundary_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialPreparationBoundarySummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_preparation_boundary_items(source_dir)
+    registration_summary = build_new_material_source_registration_summary(source_dir)
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        and not item.source_library_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "preparation_boundary_items_loaded": "passed" if items else "failed",
+        "source_registration_completed": (
+            "passed"
+            if registration_summary.registration_status
+            == "source_registration_completed"
+            else "failed"
+        ),
+        "text_preparation_required": (
+            "passed" if all(item.text_preparation_required for item in items) else "failed"
+        ),
+        "reading_blocked_until_controlled_text_preparation": (
+            "passed"
+            if all(
+                item.reading_status == "blocked_until_controlled_text_preparation"
+                for item in items
+            )
+            else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    return NewMaterialPreparationBoundarySummary(
+        boundary_id=NEW_MATERIAL_PREPARATION_BOUNDARY_ID,
+        boundary_status=(
+            "preparation_boundary_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "preparation_boundary_needs_attention"
+        ),
+        boundary_item_count=len(items),
+        source_file_count=sum(item.file_count for item in items),
+        text_preparation_required_count=sum(
+            1 for item in items if item.text_preparation_required
+        ),
+        blocked_reading_count=sum(
+            1
+            for item in items
+            if item.reading_status == "blocked_until_controlled_text_preparation"
+        ),
+        source_entry_ids=[item.source_library_entry_id for item in items],
+        source_material_ids=[item.source_material_id for item in items],
+        registration_item_ids=[item.registration_item_id for item in items],
+        local_references=[item.local_reference for item in items],
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        source_library_mutation_authorized=any(
+            item.source_library_mutation_authorized for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=NEW_MATERIAL_PREPARATION_BOUNDARY_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "The source is registered but not read.",
+            "Controlled text preparation requires an explicit follow-up stage.",
+            "No 013 candidate or 012 unit is created before prepared text exists.",
+        ],
+    )
+
+
+def render_new_material_preparation_boundary_markdown(
+    summary: NewMaterialPreparationBoundarySummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 New Material Preparation Boundary",
+        "",
+        f"- Boundary id: `{summary.boundary_id}`",
+        f"- `new-material-preparation-boundary-status={summary.boundary_status}`",
+        f"- `preparation-boundary-items={summary.boundary_item_count}`",
+        f"- `source-files={summary.source_file_count}`",
+        (
+            "- `text-preparation-required="
+            f"{summary.text_preparation_required_count}`"
+        ),
+        f"- `reading-blocked={summary.blocked_reading_count}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Source-library entry ids:",
+    ]
+    lines.extend(f"- `{entry_id}`" for entry_id in summary.source_entry_ids)
+    lines.extend(["", "Local references:"])
+    lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(["", "Guardrails:", *[f"- {guardrail}" for guardrail in summary.guardrails]])
     return "\n".join(lines) + "\n"
 
 
@@ -11323,6 +12074,15 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         new_material_source_identity_review_items = (
             load_new_material_source_identity_review_items(source_dir)
         )
+        new_material_registration_prep_items = (
+            load_new_material_registration_prep_items(source_dir)
+        )
+        new_material_source_registration_items = (
+            load_new_material_source_registration_items(source_dir)
+        )
+        new_material_preparation_boundary_items = (
+            load_new_material_preparation_boundary_items(source_dir)
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -11367,6 +12127,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         new_material_extraction_learning_loop_closure_items,
         new_material_intake_items,
         new_material_source_identity_review_items,
+        new_material_registration_prep_items,
+        new_material_source_registration_items,
+        new_material_preparation_boundary_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -11454,6 +12217,11 @@ def _iter_quality_text_fields(
     new_material_intake_items: list[NewMaterialIntakeItem],
     new_material_source_identity_review_items: list[
         NewMaterialSourceIdentityReviewItem
+    ],
+    new_material_registration_prep_items: list[NewMaterialRegistrationPrepItem],
+    new_material_source_registration_items: list[NewMaterialSourceRegistrationItem],
+    new_material_preparation_boundary_items: list[
+        NewMaterialPreparationBoundaryItem
     ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
@@ -11864,6 +12632,50 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.review_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in new_material_registration_prep_items:
+        fields.extend(
+            (
+                (item.prep_item_id, "proposed_title", item.proposed_title),
+                (
+                    item.prep_item_id,
+                    "source_quality_notes",
+                    item.source_quality_notes,
+                ),
+                (item.prep_item_id, "rights_notes", item.rights_notes),
+                (item.prep_item_id, "rationale", item.rationale),
+                (
+                    item.prep_item_id,
+                    "proposed_local_reference",
+                    item.proposed_local_reference,
+                ),
+            )
+        )
+        fields.extend(
+            (item.prep_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in new_material_source_registration_items:
+        fields.extend(
+            (
+                (item.registration_item_id, "local_reference", item.local_reference),
+                (item.registration_item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.registration_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in new_material_preparation_boundary_items:
+        fields.extend(
+            (
+                (item.boundary_item_id, "local_reference", item.local_reference),
+                (item.boundary_item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.boundary_item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

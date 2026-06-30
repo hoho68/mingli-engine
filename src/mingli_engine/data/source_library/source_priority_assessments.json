@@ -474,5 +474,21 @@
     "rationale": "Bazi Psychology source can improve sensitive ten-god boundary handling after preparation; text remains unread.",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_new_material_xiahai_suanmingji_001",
+    "entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Xiahai Suanmingji can broaden ordinary branch-interaction comparison coverage after controlled text preparation; text remains unread.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-30"
   }
 ]

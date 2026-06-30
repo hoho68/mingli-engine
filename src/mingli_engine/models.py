@@ -2953,6 +2953,156 @@ class NewMaterialSourceIdentityReviewSummary:
 
 
 @dataclass(frozen=True)
+class NewMaterialRegistrationPrepItem:
+    prep_item_id: str
+    prep_id: str
+    identity_review_item_id: str
+    review_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    registration_status: str
+    proposed_title: str
+    proposed_material_type: str
+    proposed_local_reference: str
+    proposed_tracking_status: str
+    proposed_readiness_status: str
+    proposed_priority_level: str
+    proposed_next_action: str
+    risk_tier: str
+    topic_tags: list[str]
+    rule_families: list[str]
+    source_quality_notes: str
+    rights_notes: str
+    source_library_overlap_policy: str
+    selected_next_material_entry: str
+    source_library_mutation_authorized: bool = True
+    downstream_mutation_authorized: bool = False
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialRegistrationPrepSummary:
+    prep_id: str
+    prep_status: str
+    prep_item_count: int
+    proposed_source_file_count: int
+    proposed_entry_ids: list[str]
+    proposed_material_ids: list[str]
+    prep_item_ids: list[str]
+    identity_review_item_ids: list[str]
+    local_references: list[str]
+    registered_source_entry_count: int
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class NewMaterialSourceRegistrationItem:
+    registration_item_id: str
+    registration_id: str
+    prep_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    registration_status: str
+    local_reference: str
+    source_library_mutation_authorized: bool = True
+    downstream_mutation_authorized: bool = False
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    selected_next_material_entry: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialSourceRegistrationSummary:
+    registration_id: str
+    registration_status: str
+    registration_item_count: int
+    registered_entry_count: int
+    registered_source_file_count: int
+    registered_entry_ids: list[str]
+    registered_material_ids: list[str]
+    prep_item_ids: list[str]
+    local_references: list[str]
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class NewMaterialPreparationBoundaryItem:
+    boundary_item_id: str
+    boundary_id: str
+    registration_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    boundary_status: str
+    reading_status: str
+    local_reference: str
+    file_count: int
+    text_preparation_required: bool
+    source_library_mutation_authorized: bool = False
+    downstream_mutation_authorized: bool = False
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    selected_next_material_entry: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialPreparationBoundarySummary:
+    boundary_id: str
+    boundary_status: str
+    boundary_item_count: int
+    source_file_count: int
+    text_preparation_required_count: int
+    blocked_reading_count: int
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    registration_item_ids: list[str]
+    local_references: list[str]
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextMaterialTriageGroup:
     group_id: str
     source_root: str

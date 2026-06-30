@@ -1683,6 +1683,111 @@ Guardrails:
 - This stage does not create 013 candidates or 012 units.
 - External raw materials are not read, moved, converted, or rewritten.
 
+## 015 New Material Registration Prep
+
+- Prep id: `015-new-material-registration-prep`
+- `new-material-registration-prep-status=registration_prep_completed`
+- `registration-prep-items=1`
+- `proposed-source-files=1`
+- `registered-source-entries=1`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `source-library-mutation-authorized=true`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-source-registration`
+
+Registration-prep item ids:
+- `new_material_registration_prep_xiahai_suanmingji_pdf`
+
+Proposed source-library entry ids:
+- `entry_new_material_xiahai_suanmingji_pdf`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `registration_prep_items_loaded`: `passed`
+- `source_library_entry_registered`: `passed`
+- `registered_entries_match_prep`: `passed`
+- `source_library_mutation_authorized`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Registration prep uses identity-review metadata only.
+- The source-library entry is metadata registration, not text reading.
+- 013/012 downstream records remain unchanged.
+- External raw materials are not read, moved, converted, or rewritten.
+
+## 015 New Material Source Registration
+
+- Registration id: `015-new-material-source-registration`
+- `new-material-source-registration-status=source_registration_completed`
+- `source-registration-items=1`
+- `registered-source-entries=1`
+- `registered-source-files=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `source-library-mutation-authorized=true`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-preparation-boundary`
+
+Registered source-library entry ids:
+- `entry_new_material_xiahai_suanmingji_pdf`
+
+Registered material ids:
+- `material_new_material_xiahai_suanmingji_pdf`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `source_registration_items_loaded`: `passed`
+- `registration_prep_completed`: `passed`
+- `registered_entry_count_matches`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Source-library metadata is registered; source text is still unread.
+- No extraction candidate or 012 unit is created by source registration.
+- The next stage must decide the controlled text-preparation boundary.
+
+## 015 New Material Preparation Boundary
+
+- Boundary id: `015-new-material-preparation-boundary`
+- `new-material-preparation-boundary-status=preparation_boundary_completed`
+- `preparation-boundary-items=1`
+- `source-files=1`
+- `text-preparation-required=1`
+- `reading-blocked=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-controlled-text-preparation`
+
+Source-library entry ids:
+- `entry_new_material_xiahai_suanmingji_pdf`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `preparation_boundary_items_loaded`: `passed`
+- `source_registration_completed`: `passed`
+- `text_preparation_required`: `passed`
+- `reading_blocked_until_controlled_text_preparation`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The source is registered but not read.
+- Controlled text preparation requires an explicit follow-up stage.
+- No 013 candidate or 012 unit is created before prepared text exists.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

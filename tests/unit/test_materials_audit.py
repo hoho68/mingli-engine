@@ -755,6 +755,15 @@ def test_public_materials_audit_functions_exist():
         "load_new_material_source_identity_review_items",
         "build_new_material_source_identity_review_summary",
         "render_new_material_source_identity_review_markdown",
+        "load_new_material_registration_prep_items",
+        "build_new_material_registration_prep_summary",
+        "render_new_material_registration_prep_markdown",
+        "load_new_material_source_registration_items",
+        "build_new_material_source_registration_summary",
+        "render_new_material_source_registration_markdown",
+        "load_new_material_preparation_boundary_items",
+        "build_new_material_preparation_boundary_summary",
+        "render_new_material_preparation_boundary_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -4078,11 +4087,11 @@ def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-registration-prep`"
+        "`next-new-material-start=015-new-material-controlled-text-preparation`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-registration-prep`"
+        "`next-new-material-start=015-new-material-controlled-text-preparation`"
         in quickstart
     )
 
@@ -4178,8 +4187,8 @@ def test_new_material_intake_markdown_and_docs_sync():
         assert marker in materials_doc
         assert marker in handoff
 
-    assert "`next-new-material-start=015-new-material-registration-prep`" in handoff
-    assert "`next-new-material-start=015-new-material-registration-prep`" in quickstart
+    assert "`next-new-material-start=015-new-material-controlled-text-preparation`" in handoff
+    assert "`next-new-material-start=015-new-material-controlled-text-preparation`" in quickstart
 
 
 def test_new_material_source_identity_review_item_prepares_registration():
@@ -4281,8 +4290,127 @@ def test_new_material_source_identity_review_markdown_and_docs_sync():
         assert marker in materials_doc
         assert marker in handoff
 
-    assert "`next-new-material-start=015-new-material-registration-prep`" in handoff
-    assert "`next-new-material-start=015-new-material-registration-prep`" in quickstart
+    assert "`next-new-material-start=015-new-material-controlled-text-preparation`" in handoff
+    assert "`next-new-material-start=015-new-material-controlled-text-preparation`" in quickstart
+
+
+def test_new_material_registration_prep_registers_xiahai_metadata():
+    prep_items = materials_audit.load_new_material_registration_prep_items()
+    prep_summary = materials_audit.build_new_material_registration_prep_summary()
+
+    assert len(prep_items) == 1
+    item = prep_items[0]
+    assert item.prep_id == "015-new-material-registration-prep"
+    assert item.identity_review_item_id == "new_material_identity_xiahai_suanmingji_pdf"
+    assert item.source_library_entry_id == "entry_new_material_xiahai_suanmingji_pdf"
+    assert item.source_material_id == "material_new_material_xiahai_suanmingji_pdf"
+    assert item.registration_status == "ready_for_source_registration"
+    assert item.proposed_local_reference == "下海算命记.pdf"
+    assert item.source_library_mutation_authorized is True
+    assert item.downstream_mutation_authorized is False
+    assert item.selected_next_material_entry == "015-new-material-source-registration"
+    assert prep_summary.prep_status == "registration_prep_completed"
+    assert prep_summary.registered_source_entry_count == 1
+    assert prep_summary.next_material_entry == "015-new-material-source-registration"
+    assert prep_summary.boundary_checks == {
+        "registration_prep_items_loaded": "passed",
+        "source_library_entry_registered": "passed",
+        "registered_entries_match_prep": "passed",
+        "source_library_mutation_authorized": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_source_registration_and_boundary_block_reading():
+    registration_summary = materials_audit.build_new_material_source_registration_summary()
+    boundary_summary = materials_audit.build_new_material_preparation_boundary_summary()
+
+    assert registration_summary.registration_status == "source_registration_completed"
+    assert registration_summary.registered_entry_ids == [
+        "entry_new_material_xiahai_suanmingji_pdf"
+    ]
+    assert registration_summary.registered_material_ids == [
+        "material_new_material_xiahai_suanmingji_pdf"
+    ]
+    assert registration_summary.local_references == ["下海算命记.pdf"]
+    assert registration_summary.candidate_extract_delta_count == 0
+    assert registration_summary.formal_evidence_delta_count == 0
+    assert registration_summary.source_library_mutation_authorized is True
+    assert registration_summary.downstream_mutation_authorized is False
+    assert registration_summary.next_material_entry == (
+        "015-new-material-preparation-boundary"
+    )
+
+    assert boundary_summary.boundary_status == "preparation_boundary_completed"
+    assert boundary_summary.text_preparation_required_count == 1
+    assert boundary_summary.blocked_reading_count == 1
+    assert boundary_summary.source_entry_ids == [
+        "entry_new_material_xiahai_suanmingji_pdf"
+    ]
+    assert boundary_summary.candidate_extract_delta_count == 0
+    assert boundary_summary.formal_evidence_delta_count == 0
+    assert boundary_summary.source_library_mutation_authorized is False
+    assert boundary_summary.downstream_mutation_authorized is False
+    assert boundary_summary.next_material_entry == (
+        "015-new-material-controlled-text-preparation"
+    )
+
+
+def test_new_material_long_goal_markdown_and_docs_sync():
+    prep_summary = materials_audit.build_new_material_registration_prep_summary()
+    registration_summary = materials_audit.build_new_material_source_registration_summary()
+    boundary_summary = materials_audit.build_new_material_preparation_boundary_summary()
+    markdown = "\n".join(
+        (
+            materials_audit.render_new_material_registration_prep_markdown(
+                prep_summary
+            ),
+            materials_audit.render_new_material_source_registration_markdown(
+                registration_summary
+            ),
+            materials_audit.render_new_material_preparation_boundary_markdown(
+                boundary_summary
+            ),
+        )
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 New Material Registration Prep",
+        "`new-material-registration-prep-status=registration_prep_completed`",
+        "015 New Material Source Registration",
+        "`new-material-source-registration-status=source_registration_completed`",
+        "015 New Material Preparation Boundary",
+        "`new-material-preparation-boundary-status=preparation_boundary_completed`",
+        "`text-preparation-required=1`",
+        "`reading-blocked=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`entry_new_material_xiahai_suanmingji_pdf`",
+        "`下海算命记.pdf`",
+        "`next-material-entry=015-new-material-controlled-text-preparation`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=015-new-material-controlled-text-preparation`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=015-new-material-controlled-text-preparation`"
+        in quickstart
+    )
 
 
 def test_raw_text_cluster_source_selection_items_load_bazi_general_sources():

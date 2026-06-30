@@ -865,5 +865,31 @@
     "outcome_reason": "Sensitive source-library metadata registered under authorization while downstream candidate use remains gated.",
     "created_at": "2026-06-29",
     "updated_at": "2026-06-29"
+  },
+  {
+    "entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "title": "Xiahai Suanmingji",
+    "material_type": "pdf",
+    "local_reference": "下海算命记.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "needs_preparation",
+    "topic_tags": [
+      "misc-identity-review",
+      "xiahai-suanmingji",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registered from new-material registration prep; source text remains unread.",
+    "rights_notes": "External PDF; do not copy long passages. Prepare controlled text before extraction.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "prepare_material",
+    "outcome_reason": "New material source-library metadata registered under authorization while downstream candidate use remains gated.",
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
   }
 ]
