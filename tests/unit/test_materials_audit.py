@@ -746,6 +746,9 @@ def test_public_materials_audit_functions_exist():
         "load_external_material_inventory_refresh_confirmation_items",
         "build_external_material_inventory_refresh_confirmation_summary",
         "render_external_material_inventory_refresh_confirmation_markdown",
+        "load_new_material_extraction_learning_loop_closure_items",
+        "build_new_material_extraction_learning_loop_closure_summary",
+        "render_new_material_extraction_learning_loop_closure_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -3961,6 +3964,121 @@ def test_external_material_inventory_refresh_confirmation_markdown_and_docs_sync
         assert marker in markdown
         assert marker in materials_doc
         assert marker in handoff
+
+
+def test_new_material_extraction_learning_loop_closure_items_load_record():
+    items = materials_audit.load_new_material_extraction_learning_loop_closure_items()
+    items_by_id = {item.closure_item_id: item for item in items}
+
+    assert len(items) == 1
+    assert set(items_by_id) == {"new_material_loop_closure_001"}
+    item = items_by_id["new_material_loop_closure_001"]
+    assert item.closure_id == "017-new-material-extraction-learning-loop-closure"
+    assert item.source_selection_id == "015-raw-text-next-cycle-source-selection"
+    assert (
+        item.sensitive_reading_id
+        == "015-raw-text-next-cycle-sensitive-preparation-reading"
+    )
+    assert item.authorization_audit_id == (
+        "017-candidate-formal-evidence-authorization-audit"
+    )
+    assert item.routing_id == "013-explicit-candidate-review-or-015-queue-refresh"
+    assert item.inventory_confirmation_id == "015-external-material-inventory-refresh"
+    assert item.closure_status == "new_material_learning_loop_closed"
+    assert (
+        item.selected_next_material_entry
+        == "013-explicit-candidate-review-or-new-material-intake"
+    )
+    assert item.completed_stage_count == 16
+    assert item.source_selection_item_count == 5
+    assert item.registered_source_entry_count == 11
+    assert item.preparation_reading_item_count == 1
+    assert item.candidate_intake_ready_count == 0
+    assert item.candidate_extract_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+    assert item.downstream_mutation_authorized is False
+
+
+def test_new_material_extraction_learning_loop_closure_summary_closes_loop():
+    summary = materials_audit.build_new_material_extraction_learning_loop_closure_summary()
+
+    assert summary.closure_id == "017-new-material-extraction-learning-loop-closure"
+    assert summary.closure_status == "new_material_learning_loop_closed"
+    assert summary.closure_item_count == 1
+    assert summary.completed_stage_count == 16
+    assert summary.source_selection_item_count == 5
+    assert summary.registered_source_entry_count == 11
+    assert summary.preparation_reading_item_count == 1
+    assert summary.candidate_intake_ready_count == 0
+    assert summary.formal_evidence_ready_count == 0
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.authorization_status == (
+        "ready_for_explicit_downstream_authorization"
+    )
+    assert summary.downstream_mutation_authorized is False
+    assert (
+        summary.next_material_entry
+        == "013-explicit-candidate-review-or-new-material-intake"
+    )
+    assert summary.boundary_checks == {
+        "closure_items_loaded": "passed",
+        "source_selection_completed": "passed",
+        "raw_text_next_cycle_completed": "passed",
+        "sensitive_preparation_reading_completed": "passed",
+        "017_authorization_audit_ready": "passed",
+        "explicit_routing_completed": "passed",
+        "external_inventory_refresh_confirmed": "passed",
+        "no_untracked_material_entries": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync():
+    summary = materials_audit.build_new_material_extraction_learning_loop_closure_summary()
+    markdown = (
+        materials_audit
+        .render_new_material_extraction_learning_loop_closure_markdown(summary)
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Extraction Learning Loop Closure",
+        "`new-material-learning-loop-status=new_material_learning_loop_closed`",
+        "`completed-loop-stages=16`",
+        "`registered-source-entries=11`",
+        "`preparation-reading-items=1`",
+        "`candidate-intake-ready=0`",
+        "`formal-evidence-ready=0`",
+        "`authorization-status=ready_for_explicit_downstream_authorization`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=013-explicit-candidate-review-or-new-material-intake`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=013-explicit-candidate-review-or-new-material-intake`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=013-explicit-candidate-review-or-new-material-intake`"
+        in quickstart
+    )
 
 
 def test_raw_text_cluster_source_selection_items_load_bazi_general_sources():

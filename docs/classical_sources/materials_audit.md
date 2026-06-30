@@ -1534,6 +1534,61 @@ Guardrails:
 - No 013 candidate, review, promotion, or 012 evidence mutation is authorized.
 - Continue with raw text next-cycle source selection.
 
+## 017 New Material Extraction Learning Loop Closure
+
+- Closure id: `017-new-material-extraction-learning-loop-closure`
+- `new-material-learning-loop-status=new_material_learning_loop_closed`
+- `closure-items=1`
+- `completed-loop-stages=16`
+- `source-selection-items=5`
+- `registered-source-entries=11`
+- `preparation-reading-items=1`
+- `candidate-intake-ready=0`
+- `formal-evidence-ready=0`
+- `authorization-status=ready_for_explicit_downstream_authorization`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=013-explicit-candidate-review-or-new-material-intake`
+
+Closure item ids:
+- `new_material_loop_closure_001`
+
+Source-selection ids:
+- `015-raw-text-next-cycle-source-selection`
+
+Sensitive reading ids:
+- `015-raw-text-next-cycle-sensitive-preparation-reading`
+
+Authorization audit ids:
+- `017-candidate-formal-evidence-authorization-audit`
+
+Routing ids:
+- `013-explicit-candidate-review-or-015-queue-refresh`
+
+Inventory confirmation ids:
+- `015-external-material-inventory-refresh`
+
+Boundary checks:
+- `closure_items_loaded`: `passed`
+- `source_selection_completed`: `passed`
+- `raw_text_next_cycle_completed`: `passed`
+- `sensitive_preparation_reading_completed`: `passed`
+- `017_authorization_audit_ready`: `passed`
+- `explicit_routing_completed`: `passed`
+- `external_inventory_refresh_confirmed`: `passed`
+- `no_untracked_material_entries`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- This closure checkpoint is metadata-only and does not reopen raw files.
+- The current raw-text next-cycle surfaces are closed through preparation reading.
+- 017 is ready for explicit downstream authorization, but this checkpoint does not authorize mutation.
+- Use the next target to choose explicit 013/012 authorization or a genuinely new material intake surface.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

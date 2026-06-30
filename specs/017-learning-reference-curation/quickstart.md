@@ -122,11 +122,14 @@ The 015 raw text next-cycle sensitive preparation reading is complete:
 - `formal-evidence-delta=0`
 - `external-inventory-confirmation-status=external_inventory_refresh_confirmed`
 - `untracked-material-entries=0`
-- `next-new-material-start=015-raw-text-next-cycle-source-selection`
+- `new-material-learning-loop-status=new_material_learning_loop_closed`
+- `completed-loop-stages=16`
+- `registered-source-entries=11`
+- `next-new-material-start=013-explicit-candidate-review-or-new-material-intake`
 
-The next long goal should select the next bounded raw-text source surface from
-the already refreshed inventory while keeping 013 and 012 gates closed unless
-separately authorized.
+The next long goal should either explicitly authorize downstream 013/012 work
+or add/choose a genuinely new bounded material intake surface before restarting
+015 source selection.
 
 Run focused learning reference curation tests:
 

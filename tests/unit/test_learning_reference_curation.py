@@ -2352,7 +2352,10 @@ def test_new_material_learning_handoff_tracks_final_state():
         f"`013-promotion-batches={len(promotion_batches)}`",
         f"`012-formal-evidence-units={len(evidence_units)}`",
         f"`formal_evidence_delta={summary.formal_evidence_delta}`",
-        "`next-new-material-start=015-raw-text-next-cycle-source-selection`",
+        (
+            "`next-new-material-start="
+            "013-explicit-candidate-review-or-new-material-intake`"
+        ),
         "Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`",
         "Do not create candidates, review decisions, promotion batches, or formal evidence unless explicitly requested",
         "Do not push remote work from this handoff",

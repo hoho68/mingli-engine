@@ -42,6 +42,8 @@ from mingli_engine.models import (
     MaterialQueueRefreshSummary,
     MaterialAuditRecord,
     MaterialRepresentation,
+    NewMaterialExtractionLearningLoopClosureItem,
+    NewMaterialExtractionLearningLoopClosureSummary,
     PreparationReadinessFinding,
     RawTextClusterSourceSelectionItem,
     RawTextClusterSourceSelectionSummary,
@@ -250,6 +252,15 @@ EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_NEXT_MATERIAL_ENTRY = (
 )
 EXTERNAL_MATERIAL_INVENTORY_REFRESH_CONFIRMATION_NEXT_MATERIAL_ENTRY = (
     "015-raw-text-next-cycle-source-selection"
+)
+NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_ID = (
+    "017-new-material-extraction-learning-loop-closure"
+)
+NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_NEXT_MATERIAL_ENTRY = (
+    "013-explicit-candidate-review-or-new-material-intake"
+)
+NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_STATUSES = frozenset(
+    {"new_material_learning_loop_closed"}
 )
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
@@ -3860,6 +3871,279 @@ def load_external_material_inventory_refresh_confirmation_items(
     )
     _ensure_unique([item.refresh_id for item in items], "refresh_id")
     _ensure_unique([item.routing_id for item in items], "routing_id")
+    return items
+
+
+def _new_material_loop_stage_summaries(
+    source_dir: Path,
+) -> list[tuple[str, str, str]]:
+    return [
+        (
+            "source_selection",
+            build_raw_text_next_cycle_source_selection_summary(
+                source_dir
+            ).selection_status,
+            "next_cycle_source_selection_completed",
+        ),
+        (
+            "identity_review",
+            build_raw_text_next_cycle_identity_review_summary(source_dir).review_status,
+            "next_cycle_identity_review_completed",
+        ),
+        (
+            "cluster_source_selection",
+            build_raw_text_next_cycle_cluster_source_selection_summary(
+                source_dir
+            ).selection_status,
+            "next_cycle_cluster_source_selection_completed",
+        ),
+        (
+            "followup_selection",
+            build_raw_text_next_cycle_followup_selection_summary(
+                source_dir
+            ).selection_status,
+            "next_cycle_followup_selection_completed",
+        ),
+        (
+            "gated_cluster_review_prep",
+            build_raw_text_next_cycle_gated_cluster_review_prep_summary(
+                source_dir
+            ).prep_status,
+            "gated_cluster_review_prep_completed",
+        ),
+        (
+            "gated_ordinary_source_selection",
+            build_raw_text_next_cycle_gated_ordinary_source_selection_summary(
+                source_dir
+            ).selection_status,
+            "gated_ordinary_source_selection_completed",
+        ),
+        (
+            "gated_ordinary_followup_selection",
+            build_raw_text_next_cycle_gated_ordinary_followup_selection_summary(
+                source_dir
+            ).selection_status,
+            "gated_ordinary_followup_selection_completed",
+        ),
+        (
+            "gated_ordinary_final_selection",
+            build_raw_text_next_cycle_gated_ordinary_final_selection_summary(
+                source_dir
+            ).selection_status,
+            "gated_ordinary_final_selection_completed",
+        ),
+        (
+            "sensitive_risk_review_prep",
+            build_raw_text_next_cycle_sensitive_risk_review_prep_summary(
+                source_dir
+            ).selection_status,
+            "sensitive_risk_review_prep_completed",
+        ),
+        (
+            "sensitive_source_level_risk_review",
+            build_raw_text_next_cycle_sensitive_source_level_risk_review_summary(
+                source_dir
+            ).selection_status,
+            "sensitive_source_level_risk_review_completed",
+        ),
+        (
+            "sensitive_registration_prep",
+            build_raw_text_next_cycle_sensitive_registration_prep_summary(
+                source_dir
+            ).prep_status,
+            "sensitive_registration_prep_completed",
+        ),
+        (
+            "sensitive_source_registration",
+            build_raw_text_next_cycle_sensitive_source_registration_summary(
+                source_dir
+            ).registration_status,
+            "sensitive_source_registration_completed",
+        ),
+        (
+            "sensitive_preparation_boundary",
+            build_raw_text_next_cycle_sensitive_preparation_boundary_summary(
+                source_dir
+            ).boundary_status,
+            "sensitive_preparation_boundary_completed",
+        ),
+        (
+            "sensitive_preparation_reading",
+            build_raw_text_next_cycle_sensitive_preparation_reading_summary(
+                source_dir
+            ).reading_status,
+            "sensitive_preparation_reading_completed",
+        ),
+        (
+            "explicit_routing",
+            build_explicit_candidate_review_or_queue_refresh_summary(
+                source_dir
+            ).routing_status,
+            "routed_to_015_queue_refresh",
+        ),
+        (
+            "external_inventory_confirmation",
+            build_external_material_inventory_refresh_confirmation_summary(
+                source_dir
+            ).confirmation_status,
+            "external_inventory_refresh_confirmed",
+        ),
+    ]
+
+
+def _registered_source_entries_in_new_material_loop(source_dir: Path) -> int:
+    return sum(
+        (
+            build_raw_text_next_cycle_cluster_source_selection_summary(
+                source_dir
+            ).registered_source_entry_count,
+            build_raw_text_next_cycle_followup_selection_summary(
+                source_dir
+            ).registered_source_entry_count,
+            build_raw_text_next_cycle_gated_ordinary_source_selection_summary(
+                source_dir
+            ).registered_source_entry_count,
+            build_raw_text_next_cycle_gated_ordinary_followup_selection_summary(
+                source_dir
+            ).registered_source_entry_count,
+            build_raw_text_next_cycle_gated_ordinary_final_selection_summary(
+                source_dir
+            ).registered_source_entry_count,
+            build_raw_text_next_cycle_sensitive_source_registration_summary(
+                source_dir
+            ).registered_entry_count,
+        )
+    )
+
+
+def _new_material_extraction_learning_loop_closure_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialExtractionLearningLoopClosureItem:
+    try:
+        item = NewMaterialExtractionLearningLoopClosureItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            "invalid new material extraction learning loop closure item: "
+            f"{error}"
+        ) from error
+
+    owner_id = item.closure_item_id or "?"
+    for field_name in (
+        "closure_item_id",
+        "closure_id",
+        "source_selection_id",
+        "sensitive_reading_id",
+        "authorization_audit_id",
+        "routing_id",
+        "inventory_confirmation_id",
+        "closure_status",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    _validate_enum(
+        item.closure_status,
+        NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_STATUSES,
+        "closure_status",
+        owner_id,
+    )
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    if not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires guardrails")
+    if item.closure_id != NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid closure_id")
+    if item.source_selection_id != RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid source_selection_id")
+    if item.sensitive_reading_id != RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_READING_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid sensitive_reading_id")
+    if item.routing_id != EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid routing_id")
+    if item.inventory_confirmation_id != "015-external-material-inventory-refresh":
+        raise MaterialsAuditError(f"{owner_id} has invalid inventory_confirmation_id")
+    if (
+        item.selected_next_material_entry
+        != NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_NEXT_MATERIAL_ENTRY
+    ):
+        raise MaterialsAuditError(f"{owner_id} selected unexpected next entry")
+    for field_name in (
+        "completed_stage_count",
+        "source_selection_item_count",
+        "registered_source_entry_count",
+        "preparation_reading_item_count",
+        "candidate_intake_ready_count",
+        "formal_evidence_ready_count",
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+    if item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize downstream mutation")
+
+    stage_summaries = _new_material_loop_stage_summaries(source_dir)
+    completed_stage_count = sum(
+        1 for _, actual, expected in stage_summaries if actual == expected
+    )
+    source_selection = build_raw_text_next_cycle_source_selection_summary(source_dir)
+    sensitive_reading = (
+        build_raw_text_next_cycle_sensitive_preparation_reading_summary(source_dir)
+    )
+    learning_dir = _sibling_data_dir(source_dir, "learning_reference_curation")
+    authorization_audit = (
+        learning_reference_curation.build_learning_reference_authorization_audit(
+            learning_dir
+        )
+    )
+    registered_entry_count = _registered_source_entries_in_new_material_loop(
+        source_dir
+    )
+
+    if item.completed_stage_count != completed_stage_count:
+        raise MaterialsAuditError(f"{owner_id} completed_stage_count mismatch")
+    if item.source_selection_item_count != source_selection.selection_item_count:
+        raise MaterialsAuditError(f"{owner_id} source_selection_item_count mismatch")
+    if item.registered_source_entry_count != registered_entry_count:
+        raise MaterialsAuditError(f"{owner_id} registered_source_entry_count mismatch")
+    if item.preparation_reading_item_count != sensitive_reading.reading_item_count:
+        raise MaterialsAuditError(f"{owner_id} preparation_reading_item_count mismatch")
+    if item.candidate_intake_ready_count != (
+        sensitive_reading.candidate_intake_ready_count
+    ):
+        raise MaterialsAuditError(f"{owner_id} candidate_intake_ready_count mismatch")
+    if item.formal_evidence_ready_count != sensitive_reading.formal_evidence_ready_count:
+        raise MaterialsAuditError(f"{owner_id} formal_evidence_ready_count mismatch")
+    if item.authorization_audit_id != authorization_audit.audit_id:
+        raise MaterialsAuditError(f"{owner_id} authorization_audit_id mismatch")
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(item, field_name) != 0:
+            raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
+
+    return item
+
+
+def load_new_material_extraction_learning_loop_closure_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialExtractionLearningLoopClosureItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = source_dir / "new_material_extraction_learning_loop_closure_items.json"
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_extraction_learning_loop_closure_item_from_dict(
+            item,
+            source_dir,
+        )
+        for item in _read_optional_json_list(items_path)
+    ]
+    _ensure_unique([item.closure_item_id for item in items], "closure_item_id")
+    _ensure_unique([item.closure_id for item in items], "closure_id")
     return items
 
 
@@ -8627,6 +8911,205 @@ def render_external_material_inventory_refresh_confirmation_markdown(
     return "\n".join(lines) + "\n"
 
 
+def build_new_material_extraction_learning_loop_closure_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialExtractionLearningLoopClosureSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_extraction_learning_loop_closure_items(source_dir)
+    stage_summaries = _new_material_loop_stage_summaries(source_dir)
+    source_selection = build_raw_text_next_cycle_source_selection_summary(source_dir)
+    sensitive_reading = (
+        build_raw_text_next_cycle_sensitive_preparation_reading_summary(source_dir)
+    )
+    routing_summary = build_explicit_candidate_review_or_queue_refresh_summary(
+        source_dir
+    )
+    inventory_confirmation = (
+        build_external_material_inventory_refresh_confirmation_summary(source_dir)
+    )
+    learning_dir = _sibling_data_dir(source_dir, "learning_reference_curation")
+    authorization_audit = (
+        learning_reference_curation.build_learning_reference_authorization_audit(
+            learning_dir
+        )
+    )
+
+    completed_stage_count = sum(
+        1 for _, actual, expected in stage_summaries if actual == expected
+    )
+    raw_text_next_cycle_completed = completed_stage_count == len(stage_summaries)
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        for item in items
+    )
+    next_entry_selected = bool(items) and all(
+        item.selected_next_material_entry
+        == NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_NEXT_MATERIAL_ENTRY
+        for item in items
+    )
+    boundary_checks = {
+        "closure_items_loaded": "passed" if items else "failed",
+        "source_selection_completed": (
+            "passed"
+            if source_selection.selection_status
+            == "next_cycle_source_selection_completed"
+            else "failed"
+        ),
+        "raw_text_next_cycle_completed": (
+            "passed" if raw_text_next_cycle_completed else "failed"
+        ),
+        "sensitive_preparation_reading_completed": (
+            "passed"
+            if sensitive_reading.reading_status
+            == "sensitive_preparation_reading_completed"
+            else "failed"
+        ),
+        "017_authorization_audit_ready": (
+            "passed"
+            if authorization_audit.authorization_status
+            == "ready_for_explicit_downstream_authorization"
+            else "failed"
+        ),
+        "explicit_routing_completed": (
+            "passed"
+            if routing_summary.routing_status == "routed_to_015_queue_refresh"
+            else "failed"
+        ),
+        "external_inventory_refresh_confirmed": (
+            "passed"
+            if inventory_confirmation.confirmation_status
+            == "external_inventory_refresh_confirmed"
+            else "failed"
+        ),
+        "no_untracked_material_entries": (
+            "passed"
+            if inventory_confirmation.untracked_material_entry_count == 0
+            else "failed"
+        ),
+        "013_012_not_mutated": (
+            "passed" if no_downstream_delta and next_entry_selected else "failed"
+        ),
+        "raw_materials_not_mutated": "passed",
+    }
+
+    return NewMaterialExtractionLearningLoopClosureSummary(
+        closure_id=NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_ID,
+        closure_status=(
+            "new_material_learning_loop_closed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "new_material_learning_loop_needs_attention"
+        ),
+        closure_item_count=len(items),
+        completed_stage_count=completed_stage_count,
+        source_selection_item_count=source_selection.selection_item_count,
+        registered_source_entry_count=_registered_source_entries_in_new_material_loop(
+            source_dir
+        ),
+        preparation_reading_item_count=sensitive_reading.reading_item_count,
+        candidate_intake_ready_count=sensitive_reading.candidate_intake_ready_count,
+        formal_evidence_ready_count=sensitive_reading.formal_evidence_ready_count,
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        authorization_status=authorization_audit.authorization_status,
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        )
+        or authorization_audit.downstream_mutation_authorized,
+        next_material_entry=(
+            NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_NEXT_MATERIAL_ENTRY
+        ),
+        closure_item_ids=[item.closure_item_id for item in items],
+        source_selection_ids=[item.source_selection_id for item in items],
+        sensitive_reading_ids=[item.sensitive_reading_id for item in items],
+        authorization_audit_ids=[item.authorization_audit_id for item in items],
+        routing_ids=[item.routing_id for item in items],
+        inventory_confirmation_ids=[
+            item.inventory_confirmation_id for item in items
+        ],
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "This closure checkpoint is metadata-only and does not reopen raw files.",
+            "The current raw-text next-cycle surfaces are closed through preparation reading.",
+            "017 is ready for explicit downstream authorization, but this checkpoint does not authorize mutation.",
+            "Use the next target to choose explicit 013/012 authorization or a genuinely new material intake surface.",
+        ],
+    )
+
+
+def render_new_material_extraction_learning_loop_closure_markdown(
+    summary: NewMaterialExtractionLearningLoopClosureSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 017 New Material Extraction Learning Loop Closure",
+        "",
+        f"- Closure id: `{summary.closure_id}`",
+        (
+            "- `new-material-learning-loop-status="
+            f"{summary.closure_status}`"
+        ),
+        f"- `closure-items={summary.closure_item_count}`",
+        f"- `completed-loop-stages={summary.completed_stage_count}`",
+        f"- `source-selection-items={summary.source_selection_item_count}`",
+        f"- `registered-source-entries={summary.registered_source_entry_count}`",
+        f"- `preparation-reading-items={summary.preparation_reading_item_count}`",
+        f"- `candidate-intake-ready={summary.candidate_intake_ready_count}`",
+        f"- `formal-evidence-ready={summary.formal_evidence_ready_count}`",
+        f"- `authorization-status={summary.authorization_status}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `review-decision-delta={summary.review_decision_delta_count}`",
+        f"- `promotion-batch-delta={summary.promotion_batch_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Closure item ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.closure_item_ids)
+    lines.extend(["", "Source-selection ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.source_selection_ids)
+    lines.extend(["", "Sensitive reading ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.sensitive_reading_ids)
+    lines.extend(["", "Authorization audit ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.authorization_audit_ids)
+    lines.extend(["", "Routing ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.routing_ids)
+    lines.extend(["", "Inventory confirmation ids:"])
+    lines.extend(f"- `{item_id}`" for item_id in summary.inventory_confirmation_ids)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_raw_text_cluster_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextClusterSourceSelectionSummary:
@@ -10117,6 +10600,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         external_material_inventory_refresh_confirmation_items = (
             load_external_material_inventory_refresh_confirmation_items(source_dir)
         )
+        new_material_extraction_learning_loop_closure_items = (
+            load_new_material_extraction_learning_loop_closure_items(source_dir)
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -10158,6 +10644,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_next_cycle_sensitive_preparation_reading_items,
         explicit_candidate_review_or_queue_refresh_items,
         external_material_inventory_refresh_confirmation_items,
+        new_material_extraction_learning_loop_closure_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -10238,6 +10725,9 @@ def _iter_quality_text_fields(
     ],
     external_material_inventory_refresh_confirmation_items: list[
         ExternalMaterialInventoryRefreshConfirmationItem
+    ],
+    new_material_extraction_learning_loop_closure_items: list[
+        NewMaterialExtractionLearningLoopClosureItem
     ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
@@ -10602,6 +11092,12 @@ def _iter_quality_text_fields(
         fields.append((item.confirmation_item_id, "rationale", item.rationale))
         fields.extend(
             (item.confirmation_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in new_material_extraction_learning_loop_closure_items:
+        fields.append((item.closure_item_id, "rationale", item.rationale))
+        fields.extend(
+            (item.closure_item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

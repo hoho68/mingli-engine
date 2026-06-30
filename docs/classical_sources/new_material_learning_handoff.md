@@ -688,8 +688,17 @@ Risk-review items:
   `formal-evidence-delta=0`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-raw-text-next-cycle-source-selection`.
+- 017 New Material Extraction Learning Loop Closure is completed:
+  `new-material-learning-loop-status=new_material_learning_loop_closed`,
+  `completed-loop-stages=16`, `registered-source-entries=11`,
+  `preparation-reading-items=1`, `candidate-intake-ready=0`,
+  `formal-evidence-ready=0`,
+  `authorization-status=ready_for_explicit_downstream_authorization`,
+  `candidate-extract-delta=0`, `formal-evidence-delta=0`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=013-explicit-candidate-review-or-new-material-intake`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-raw-text-next-cycle-source-selection`.
+  `next-new-material-start=013-explicit-candidate-review-or-new-material-intake`.
 
 ## Remaining Optional Precision Work
 
@@ -706,7 +715,10 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-raw-text-next-cycle-source-selection`. It should select the next bounded raw-text source surface from the already refreshed inventory while keeping 013 and 012 gates closed unless separately authorized.
+`next-material-entry=013-explicit-candidate-review-or-new-material-intake`.
+It should either explicitly authorize downstream 013/012 work or add/choose a
+genuinely new bounded material intake surface before restarting 015 source
+selection.
 
 ## Guardrails
 
@@ -718,4 +730,7 @@ When continuing new-material work, use a long goal that starts from
 
 ## Next Target
 
-Next target: `015-raw-text-next-cycle-source-selection`. Select the next bounded raw-text source surface from the already refreshed inventory while preserving downstream authorization gates.
+Next target: `013-explicit-candidate-review-or-new-material-intake`. Choose
+between explicit downstream authorization and a genuinely new bounded material
+intake surface; if restarting 015, the first safe candidate is
+`下海算命记.pdf` from `bazi_general_misc_identity_review_cluster`.
