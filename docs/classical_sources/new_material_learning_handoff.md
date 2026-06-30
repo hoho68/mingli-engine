@@ -836,10 +836,27 @@ Risk-review items:
   `next-material-entry=017-new-material-corrected-pilot-learning-note-prep`.
 - Corrected pilot learning entry evaluation item:
   `new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf`.
+- 017 New Material Corrected Pilot Learning Note Prep is completed as a
+  bounded draft-prep packet:
+  `new-material-corrected-pilot-learning-note-prep-status=ready_for_learning_note_draft`,
+  `learning-note-prep-items=1`, `proposed-learning-notes=1`,
+  `proposed-learning-points=1`, `prepared-text-artifacts=1`,
+  `corrected-excerpts=4`, `corrected-characters=35`, `page-locators=4`,
+  `learning-note-draft-allowed=1`, `candidate-intake-allowed=0`,
+  `overlap-review-required=1`, `risk-boundary-review-required=1`,
+  `candidate-extract-delta=0`, `formal-evidence-delta=0`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=017-new-material-corrected-pilot-learning-note-draft`.
+- Corrected pilot learning note prep item:
+  `new_material_corrected_pilot_learning_note_prep_xiahai_suanmingji_pdf`.
+- Proposed learning note id:
+  `note_xiahai_suanmingji_corrected_pilot_001`.
 - Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`.
-- Current new-material continuation marker:
+- Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`.
+- Current new-material continuation marker:
+  `next-new-material-start=017-new-material-corrected-pilot-learning-note-draft`.
 
 ## Remaining Optional Precision Work
 
@@ -856,10 +873,9 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=017-new-material-corrected-pilot-learning-note-prep`.
-It should create the bounded 017 learning-note prep packet from the corrected
-pilot, run overlap and risk-boundary checks, and keep candidate intake blocked
-until the prep packet is reviewed.
+`next-material-entry=017-new-material-corrected-pilot-learning-note-draft`.
+It should create the bounded 017 learning-note draft from the prep packet, keep
+the note concise, and keep candidate intake blocked until the draft is reviewed.
 
 ## Guardrails
 
@@ -871,6 +887,6 @@ until the prep packet is reviewed.
 
 ## Next Target
 
-Next target: `017-new-material-corrected-pilot-learning-note-prep`.
-Create the bounded learning-note prep packet from the corrected pilot before
-any candidate-intake step.
+Next target: `017-new-material-corrected-pilot-learning-note-draft`.
+Create the bounded learning-note draft from the prep packet before any
+candidate-intake step.

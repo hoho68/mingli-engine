@@ -208,11 +208,30 @@ Explicit Downstream Authorization Receipt:
 - `new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf`
 - Previous completed marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`
-- `next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`
+- Previous completed marker:
+  `next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`
 
-The next long goal should create a bounded 017 learning-note prep packet from
-the corrected pilot, run overlap and risk-boundary checks, and still keep
-candidate intake blocked until that packet is reviewed.
+017 New Material Corrected Pilot Learning Note Prep:
+
+- `new-material-corrected-pilot-learning-note-prep-status=ready_for_learning_note_draft`
+- `learning-note-prep-items=1`
+- `proposed-learning-notes=1`
+- `proposed-learning-points=1`
+- `learning-note-draft-allowed=1`
+- `candidate-intake-allowed=0`
+- `overlap-review-required=1`
+- `risk-boundary-review-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-corrected-pilot-learning-note-draft`
+- `new_material_corrected_pilot_learning_note_prep_xiahai_suanmingji_pdf`
+- `note_xiahai_suanmingji_corrected_pilot_001`
+- `next-new-material-start=017-new-material-corrected-pilot-learning-note-draft`
+
+The next long goal should create the bounded 017 learning-note draft from the
+prep packet, keep it concise, and still block candidate intake until the draft
+is reviewed.
 
 Run focused learning reference curation tests:
 

@@ -2534,6 +2534,136 @@ def test_new_material_corrected_pilot_learning_entry_evaluation_markdown_and_doc
     )
 
 
+def test_new_material_corrected_pilot_learning_note_prep_ready_for_draft():
+    items = (
+        learning_reference_curation
+        .load_new_material_corrected_pilot_learning_note_prep_items()
+    )
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_note_prep_summary()
+    )
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.prep_item_id == (
+        "new_material_corrected_pilot_learning_note_prep_xiahai_suanmingji_pdf"
+    )
+    assert item.prep_id == "017-new-material-corrected-pilot-learning-note-prep"
+    assert item.evaluation_item_id == (
+        "new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf"
+    )
+    assert item.prep_status == "ready_for_learning_note_draft"
+    assert item.proposed_note_id == "note_xiahai_suanmingji_corrected_pilot_001"
+    assert item.proposed_learning_point_count == 1
+    assert item.source_library_entry_id == "entry_new_material_xiahai_suanmingji_pdf"
+    assert item.source_material_id == "material_new_material_xiahai_suanmingji_pdf"
+    assert item.prepared_text_artifact == (
+        "docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md"
+    )
+    assert item.target_rule_families == ["high_risk_signal"]
+    assert item.corrected_excerpt_count == 4
+    assert item.corrected_character_count == 35
+    assert item.page_locator_count == 4
+    assert item.learning_note_draft_allowed is True
+    assert item.candidate_intake_allowed is False
+    assert item.overlap_review_required is True
+    assert item.risk_boundary_review_required is True
+    assert item.downstream_mutation_authorized is False
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+    assert item.selected_next_material_entry == (
+        "017-new-material-corrected-pilot-learning-note-draft"
+    )
+
+    assert summary.prep_id == "017-new-material-corrected-pilot-learning-note-prep"
+    assert summary.prep_status == "ready_for_learning_note_draft"
+    assert summary.prep_item_count == 1
+    assert summary.proposed_note_count == 1
+    assert summary.proposed_learning_point_count == 1
+    assert summary.prepared_text_artifact_count == 1
+    assert summary.corrected_excerpt_count == 4
+    assert summary.corrected_character_count == 35
+    assert summary.page_locator_count == 4
+    assert summary.learning_note_draft_allowed_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.overlap_review_required_count == 1
+    assert summary.risk_boundary_review_required_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "017-new-material-corrected-pilot-learning-note-draft"
+    )
+    assert summary.target_rule_family_counts == {"high_risk_signal": 1}
+    assert summary.boundary_checks == {
+        "learning_note_prep_items_loaded": "passed",
+        "previous_entry_evaluation_ready": "passed",
+        "prepared_text_artifact_exists": "passed",
+        "learning_note_draft_allowed": "passed",
+        "candidate_intake_blocked": "passed",
+        "overlap_review_required": "passed",
+        "risk_boundary_review_required": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_corrected_pilot_learning_note_prep_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_note_prep_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_corrected_pilot_learning_note_prep_markdown(summary)
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Corrected Pilot Learning Note Prep",
+        "`new-material-corrected-pilot-learning-note-prep-status=ready_for_learning_note_draft`",
+        "`learning-note-prep-items=1`",
+        "`proposed-learning-notes=1`",
+        "`proposed-learning-points=1`",
+        "`learning-note-draft-allowed=1`",
+        "`candidate-intake-allowed=0`",
+        "`overlap-review-required=1`",
+        "`risk-boundary-review-required=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=017-new-material-corrected-pilot-learning-note-draft`",
+        "`new_material_corrected_pilot_learning_note_prep_xiahai_suanmingji_pdf`",
+        "`note_xiahai_suanmingji_corrected_pilot_001`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-note-draft`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-note-draft`"
+        in quickstart
+    )
+
+
 def test_new_material_learning_handoff_tracks_final_state():
     closure_counts = _source_window_learning_closure_counts()
     summary = learning_reference_curation.build_learning_reference_progress_summary()
@@ -2586,7 +2716,7 @@ def test_new_material_learning_handoff_tracks_final_state():
         "`next-downstream-entry=015-new-material-intake`",
         (
             "`next-new-material-start="
-            "017-new-material-corrected-pilot-learning-note-prep`"
+            "017-new-material-corrected-pilot-learning-note-draft`"
         ),
         "Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`",
         "Do not duplicate existing 013/012 downstream records",

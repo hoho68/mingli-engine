@@ -33,6 +33,8 @@ from mingli_engine.models import (
     LearningReferenceProgressSummary,
     NewMaterialCorrectedPilotLearningEntryEvaluationItem,
     NewMaterialCorrectedPilotLearningEntryEvaluationSummary,
+    NewMaterialCorrectedPilotLearningNotePrepItem,
+    NewMaterialCorrectedPilotLearningNotePrepSummary,
     PrerequisiteActionNote,
 )
 
@@ -110,6 +112,15 @@ NEW_MATERIAL_CORRECTED_PILOT_LEARNING_ENTRY_EVALUATION_NEXT_ENTRY = (
 )
 NEW_MATERIAL_CORRECTED_PILOT_LEARNING_ENTRY_EVALUATION_STATUSES = frozenset(
     {"ready_for_learning_note_prep"}
+)
+NEW_MATERIAL_CORRECTED_PILOT_LEARNING_NOTE_PREP_ID = (
+    "017-new-material-corrected-pilot-learning-note-prep"
+)
+NEW_MATERIAL_CORRECTED_PILOT_LEARNING_NOTE_PREP_NEXT_ENTRY = (
+    "017-new-material-corrected-pilot-learning-note-draft"
+)
+NEW_MATERIAL_CORRECTED_PILOT_LEARNING_NOTE_PREP_STATUSES = frozenset(
+    {"ready_for_learning_note_draft"}
 )
 
 
@@ -1435,6 +1446,363 @@ def render_new_material_corrected_pilot_learning_entry_evaluation_markdown(
     return "\n".join(lines) + "\n"
 
 
+def _new_material_corrected_pilot_learning_note_prep_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialCorrectedPilotLearningNotePrepItem:
+    try:
+        item = NewMaterialCorrectedPilotLearningNotePrepItem(**data)
+    except TypeError as error:
+        raise LearningReferenceCurationError(
+            f"invalid new material corrected pilot learning note prep item: {error}"
+        ) from error
+
+    owner_id = item.prep_item_id or "?"
+    for field_name in (
+        "prep_item_id",
+        "prep_id",
+        "evaluation_item_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "prepared_text_artifact",
+        "local_reference",
+        "prep_status",
+        "proposed_note_id",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    _require_nonempty_string_list(
+        item.target_rule_families,
+        "target_rule_families",
+        owner_id,
+    )
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    _validate_enum(
+        item.prep_status,
+        NEW_MATERIAL_CORRECTED_PILOT_LEARNING_NOTE_PREP_STATUSES,
+        "prep_status",
+        owner_id,
+    )
+    if item.prep_id != NEW_MATERIAL_CORRECTED_PILOT_LEARNING_NOTE_PREP_ID:
+        raise LearningReferenceCurationError(f"{owner_id} has invalid prep_id")
+    if item.selected_next_material_entry != (
+        NEW_MATERIAL_CORRECTED_PILOT_LEARNING_NOTE_PREP_NEXT_ENTRY
+    ):
+        raise LearningReferenceCurationError(f"{owner_id} selected unexpected next entry")
+    for rule_family in item.target_rule_families:
+        if rule_family not in RULE_FAMILIES:
+            raise LearningReferenceCurationError(
+                f"{owner_id} has unsupported rule_family: {rule_family}"
+            )
+
+    for field_name in (
+        "proposed_learning_point_count",
+        "corrected_excerpt_count",
+        "corrected_character_count",
+        "page_locator_count",
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+    for field_name in (
+        "learning_note_draft_allowed",
+        "candidate_intake_allowed",
+        "overlap_review_required",
+        "risk_boundary_review_required",
+        "downstream_mutation_authorized",
+    ):
+        _require_bool(getattr(item, field_name), field_name, owner_id)
+
+    if item.proposed_learning_point_count <= 0:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must propose learning points"
+        )
+    if item.corrected_excerpt_count <= 0 or item.corrected_character_count <= 0:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must reference corrected pilot excerpts"
+        )
+    if item.page_locator_count <= 0:
+        raise LearningReferenceCurationError(f"{owner_id} must include page locators")
+    if not item.learning_note_draft_allowed:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must allow learning-note drafting"
+        )
+    if item.candidate_intake_allowed:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must keep candidate intake blocked"
+        )
+    if item.downstream_mutation_authorized:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must not authorize downstream mutation"
+        )
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(item, field_name) != 0:
+            raise LearningReferenceCurationError(
+                f"{owner_id} has non-zero {field_name}"
+            )
+
+    artifact_path = Path(item.prepared_text_artifact)
+    if artifact_path.is_absolute() or ".." in artifact_path.parts:
+        raise LearningReferenceCurationError(
+            f"{owner_id} prepared text path must be relative"
+        )
+    if not (Path.cwd() / artifact_path).exists():
+        raise LearningReferenceCurationError(
+            f"{owner_id} prepared text artifact is missing"
+        )
+
+    evaluation_items_by_id = {
+        evaluation.evaluation_item_id: evaluation
+        for evaluation in (
+            load_new_material_corrected_pilot_learning_entry_evaluation_items(
+                source_dir
+            )
+        )
+    }
+    evaluation = evaluation_items_by_id.get(item.evaluation_item_id)
+    if evaluation is None:
+        raise LearningReferenceCurationError(
+            f"{owner_id} references unknown learning entry evaluation"
+        )
+    if evaluation.evaluation_status != "ready_for_learning_note_prep":
+        raise LearningReferenceCurationError(
+            f"{owner_id} evaluation is not ready for learning-note prep"
+        )
+    matching_fields = (
+        "source_library_entry_id",
+        "source_material_id",
+        "prepared_text_artifact",
+        "local_reference",
+        "corrected_excerpt_count",
+        "corrected_character_count",
+        "page_locator_count",
+    )
+    for field_name in matching_fields:
+        if getattr(item, field_name) != getattr(evaluation, field_name):
+            raise LearningReferenceCurationError(
+                f"{owner_id} {field_name} does not match evaluation item"
+            )
+    if not evaluation.learning_note_allowed or evaluation.candidate_intake_allowed:
+        raise LearningReferenceCurationError(
+            f"{owner_id} evaluation boundary does not allow prep"
+        )
+    return item
+
+
+def load_new_material_corrected_pilot_learning_note_prep_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialCorrectedPilotLearningNotePrepItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = (
+        source_dir / "new_material_corrected_pilot_learning_note_prep_items.json"
+    )
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_corrected_pilot_learning_note_prep_item_from_dict(
+            item,
+            source_dir,
+        )
+        for item in _read_json_list(items_path)
+    ]
+    _ensure_unique([item.prep_item_id for item in items], "prep_item_id")
+    _ensure_unique([item.proposed_note_id for item in items], "proposed_note_id")
+    return items
+
+
+def build_new_material_corrected_pilot_learning_note_prep_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialCorrectedPilotLearningNotePrepSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_corrected_pilot_learning_note_prep_items(source_dir)
+    evaluation_summary = (
+        build_new_material_corrected_pilot_learning_entry_evaluation_summary(
+            source_dir
+        )
+    )
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        for item in items
+    )
+    target_rule_family_counts = Counter(
+        rule_family for item in items for rule_family in item.target_rule_families
+    )
+    boundary_checks = {
+        "learning_note_prep_items_loaded": "passed" if items else "failed",
+        "previous_entry_evaluation_ready": (
+            "passed"
+            if evaluation_summary.evaluation_status == "ready_for_learning_note_prep"
+            else "failed"
+        ),
+        "prepared_text_artifact_exists": (
+            "passed"
+            if all((Path.cwd() / item.prepared_text_artifact).exists() for item in items)
+            else "failed"
+        ),
+        "learning_note_draft_allowed": (
+            "passed"
+            if items and all(item.learning_note_draft_allowed for item in items)
+            else "failed"
+        ),
+        "candidate_intake_blocked": (
+            "passed"
+            if items and all(not item.candidate_intake_allowed for item in items)
+            else "failed"
+        ),
+        "overlap_review_required": (
+            "passed"
+            if items and all(item.overlap_review_required for item in items)
+            else "failed"
+        ),
+        "risk_boundary_review_required": (
+            "passed"
+            if items and all(item.risk_boundary_review_required for item in items)
+            else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    return NewMaterialCorrectedPilotLearningNotePrepSummary(
+        prep_id=NEW_MATERIAL_CORRECTED_PILOT_LEARNING_NOTE_PREP_ID,
+        prep_status=(
+            "ready_for_learning_note_draft"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "corrected_pilot_learning_note_prep_needs_attention"
+        ),
+        prep_item_count=len(items),
+        proposed_note_count=len({item.proposed_note_id for item in items}),
+        proposed_learning_point_count=sum(
+            item.proposed_learning_point_count for item in items
+        ),
+        prepared_text_artifact_count=len(
+            {item.prepared_text_artifact for item in items}
+        ),
+        corrected_excerpt_count=sum(item.corrected_excerpt_count for item in items),
+        corrected_character_count=sum(item.corrected_character_count for item in items),
+        page_locator_count=sum(item.page_locator_count for item in items),
+        learning_note_draft_allowed_count=sum(
+            1 for item in items if item.learning_note_draft_allowed
+        ),
+        candidate_intake_allowed_count=sum(
+            1 for item in items if item.candidate_intake_allowed
+        ),
+        overlap_review_required_count=sum(
+            1 for item in items if item.overlap_review_required
+        ),
+        risk_boundary_review_required_count=sum(
+            1 for item in items if item.risk_boundary_review_required
+        ),
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=NEW_MATERIAL_CORRECTED_PILOT_LEARNING_NOTE_PREP_NEXT_ENTRY,
+        prep_item_ids=[item.prep_item_id for item in items],
+        evaluation_item_ids=[item.evaluation_item_id for item in items],
+        proposed_note_ids=[item.proposed_note_id for item in items],
+        source_entry_ids=[item.source_library_entry_id for item in items],
+        source_material_ids=[item.source_material_id for item in items],
+        local_references=[item.local_reference for item in items],
+        prepared_text_artifacts=[item.prepared_text_artifact for item in items],
+        target_rule_family_counts=dict(target_rule_family_counts),
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Draft the learning note from bounded pilot metadata only.",
+            "Keep candidate intake blocked until overlap and risk checks are resolved.",
+            "Do not add 013 or 012 records from the prep packet.",
+            "Do not expand the prepared-text artifact during note prep.",
+        ],
+    )
+
+
+def render_new_material_corrected_pilot_learning_note_prep_markdown(
+    summary: NewMaterialCorrectedPilotLearningNotePrepSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 017 New Material Corrected Pilot Learning Note Prep",
+        "",
+        f"- Prep id: `{summary.prep_id}`",
+        f"- `new-material-corrected-pilot-learning-note-prep-status={summary.prep_status}`",
+        f"- `learning-note-prep-items={summary.prep_item_count}`",
+        f"- `proposed-learning-notes={summary.proposed_note_count}`",
+        f"- `proposed-learning-points={summary.proposed_learning_point_count}`",
+        f"- `prepared-text-artifacts={summary.prepared_text_artifact_count}`",
+        f"- `corrected-excerpts={summary.corrected_excerpt_count}`",
+        f"- `corrected-characters={summary.corrected_character_count}`",
+        f"- `page-locators={summary.page_locator_count}`",
+        (
+            "- `learning-note-draft-allowed="
+            f"{summary.learning_note_draft_allowed_count}`"
+        ),
+        f"- `candidate-intake-allowed={summary.candidate_intake_allowed_count}`",
+        f"- `overlap-review-required={summary.overlap_review_required_count}`",
+        (
+            "- `risk-boundary-review-required="
+            f"{summary.risk_boundary_review_required_count}`"
+        ),
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Learning note prep item ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.prep_item_ids)
+    lines.extend(["", "Proposed learning note ids:"])
+    lines.extend(f"- `{note_id}`" for note_id in summary.proposed_note_ids)
+    lines.extend(["", "Prepared text artifacts:"])
+    lines.extend(f"- `{artifact}`" for artifact in summary.prepared_text_artifacts)
+    lines.extend(["", "Local references:"])
+    lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Target rule families:"])
+    lines.extend(
+        f"- `{rule_family}`: `{count}`"
+        for rule_family, count in summary.target_rule_family_counts.items()
+    )
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def _write_json_list(path: Path, payload: list[dict[str, Any]]) -> None:
     path.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
@@ -2145,6 +2513,36 @@ def _iter_corrected_pilot_learning_entry_evaluation_quality_text_fields(
     return fields
 
 
+def _iter_corrected_pilot_learning_note_prep_quality_text_fields(
+    items: list[NewMaterialCorrectedPilotLearningNotePrepItem],
+) -> list[tuple[str, str, str]]:
+    fields: list[tuple[str, str, str]] = []
+    for item in items:
+        fields.extend(
+            (
+                (item.prep_item_id, "prepared_text_artifact", item.prepared_text_artifact),
+                (item.prep_item_id, "local_reference", item.local_reference),
+                (item.prep_item_id, "prep_status", item.prep_status),
+                (item.prep_item_id, "proposed_note_id", item.proposed_note_id),
+                (
+                    item.prep_item_id,
+                    "selected_next_material_entry",
+                    item.selected_next_material_entry,
+                ),
+                (item.prep_item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.prep_item_id, "target_rule_families", rule_family)
+            for rule_family in item.target_rule_families
+        )
+        fields.extend(
+            (item.prep_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    return fields
+
+
 def _validate_quality_text(fields: list[tuple[str, str, str]]) -> list[str]:
     failures: list[str] = []
     for owner_id, field_name, value in fields:
@@ -2187,6 +2585,9 @@ def validate_learning_reference_quality(
     corrected_pilot_evaluations = (
         load_new_material_corrected_pilot_learning_entry_evaluation_items(source_dir)
     )
+    corrected_pilot_note_preps = (
+        load_new_material_corrected_pilot_learning_note_prep_items(source_dir)
+    )
     return _validate_quality_text(
         [
             *_iter_note_quality_text_fields(notes),
@@ -2196,6 +2597,9 @@ def validate_learning_reference_quality(
             *_iter_downstream_receipt_quality_text_fields(receipts),
             *_iter_corrected_pilot_learning_entry_evaluation_quality_text_fields(
                 corrected_pilot_evaluations
+            ),
+            *_iter_corrected_pilot_learning_note_prep_quality_text_fields(
+                corrected_pilot_note_preps
             ),
         ]
     )
