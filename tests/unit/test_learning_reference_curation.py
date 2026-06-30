@@ -2406,6 +2406,134 @@ def test_downstream_authorization_markdown_and_docs_are_in_sync():
     )
 
 
+def test_new_material_corrected_pilot_learning_entry_evaluation_ready_for_note_prep():
+    items = (
+        learning_reference_curation
+        .load_new_material_corrected_pilot_learning_entry_evaluation_items()
+    )
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_entry_evaluation_summary()
+    )
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.evaluation_item_id == (
+        "new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf"
+    )
+    assert item.transcription_execution_item_id == (
+        "new_material_human_corrected_transcription_execution_xiahai_suanmingji_pdf"
+    )
+    assert item.evaluation_status == "ready_for_learning_note_prep"
+    assert item.source_library_entry_id == "entry_new_material_xiahai_suanmingji_pdf"
+    assert item.source_material_id == "material_new_material_xiahai_suanmingji_pdf"
+    assert item.prepared_text_artifact == (
+        "docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md"
+    )
+    assert item.corrected_excerpt_count == 4
+    assert item.corrected_character_count == 35
+    assert item.page_locator_count == 4
+    assert item.learning_note_allowed is True
+    assert item.candidate_intake_allowed is False
+    assert item.duplicate_overlap_review_required is True
+    assert item.risk_boundary_review_required is True
+    assert item.downstream_mutation_authorized is False
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+    assert item.selected_next_material_entry == (
+        "017-new-material-corrected-pilot-learning-note-prep"
+    )
+
+    assert summary.evaluation_id == (
+        "017-new-material-corrected-pilot-learning-entry-evaluation"
+    )
+    assert summary.evaluation_status == "ready_for_learning_note_prep"
+    assert summary.evaluation_item_count == 1
+    assert summary.prepared_text_artifact_count == 1
+    assert summary.corrected_excerpt_count == 4
+    assert summary.corrected_character_count == 35
+    assert summary.page_locator_count == 4
+    assert summary.learning_note_allowed_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.duplicate_overlap_review_required_count == 1
+    assert summary.risk_boundary_review_required_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "017-new-material-corrected-pilot-learning-note-prep"
+    )
+    assert summary.boundary_checks == {
+        "evaluation_items_loaded": "passed",
+        "previous_corrected_pilot_ready": "passed",
+        "prepared_text_artifact_exists": "passed",
+        "learning_note_allowed": "passed",
+        "candidate_intake_blocked": "passed",
+        "duplicate_overlap_review_required": "passed",
+        "risk_boundary_review_required": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_corrected_pilot_learning_entry_evaluation_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_entry_evaluation_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_corrected_pilot_learning_entry_evaluation_markdown(
+            summary
+        )
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Corrected Pilot Learning Entry Evaluation",
+        "`new-material-corrected-pilot-learning-entry-evaluation-status=ready_for_learning_note_prep`",
+        "`learning-entry-evaluation-items=1`",
+        "`prepared-text-artifacts=1`",
+        "`corrected-excerpts=4`",
+        "`corrected-characters=35`",
+        "`page-locators=4`",
+        "`learning-note-allowed=1`",
+        "`candidate-intake-allowed=0`",
+        "`duplicate-overlap-review-required=1`",
+        "`risk-boundary-review-required=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=017-new-material-corrected-pilot-learning-note-prep`",
+        "`new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`"
+        in quickstart
+    )
+
+
 def test_new_material_learning_handoff_tracks_final_state():
     closure_counts = _source_window_learning_closure_counts()
     summary = learning_reference_curation.build_learning_reference_progress_summary()
@@ -2458,7 +2586,7 @@ def test_new_material_learning_handoff_tracks_final_state():
         "`next-downstream-entry=015-new-material-intake`",
         (
             "`next-new-material-start="
-            "017-new-material-corrected-pilot-learning-entry-evaluation`"
+            "017-new-material-corrected-pilot-learning-note-prep`"
         ),
         "Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`",
         "Do not duplicate existing 013/012 downstream records",

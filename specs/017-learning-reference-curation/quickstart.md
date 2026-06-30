@@ -192,11 +192,27 @@ Explicit Downstream Authorization Receipt:
 - `uncorrected-ocr-committed=0`
 - `long-form-transcription-committed=0`
 - `next-material-entry=017-new-material-corrected-pilot-learning-entry-evaluation`
-- `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`
 
-The next long goal should evaluate the short corrected pilot artifact for
-learning-note eligibility, duplicate/overlap risk, and candidate-intake
-boundaries before any 017 note or 013 candidate is created.
+017 New Material Corrected Pilot Learning Entry Evaluation:
+
+- `new-material-corrected-pilot-learning-entry-evaluation-status=ready_for_learning_note_prep`
+- `learning-entry-evaluation-items=1`
+- `learning-note-allowed=1`
+- `candidate-intake-allowed=0`
+- `duplicate-overlap-review-required=1`
+- `risk-boundary-review-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-corrected-pilot-learning-note-prep`
+- `new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf`
+- Previous completed marker:
+  `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`
+- `next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`
+
+The next long goal should create a bounded 017 learning-note prep packet from
+the corrected pilot, run overlap and risk-boundary checks, and still keep
+candidate intake blocked until that packet is reviewed.
 
 Run focused learning reference curation tests:
 

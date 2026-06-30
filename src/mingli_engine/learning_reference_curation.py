@@ -31,6 +31,8 @@ from mingli_engine.models import (
     LearningPoint,
     LearningReferenceNote,
     LearningReferenceProgressSummary,
+    NewMaterialCorrectedPilotLearningEntryEvaluationItem,
+    NewMaterialCorrectedPilotLearningEntryEvaluationSummary,
     PrerequisiteActionNote,
 )
 
@@ -100,6 +102,15 @@ ACTION_TYPES_REQUIRING_MISSING_PREREQUISITES = frozenset(
     {"registration", "preparation", "locator_review", "risk_review"}
 )
 ACTION_TYPES_REQUIRING_DURABLE_REASON = frozenset({"deferred", "blocked"})
+NEW_MATERIAL_CORRECTED_PILOT_LEARNING_ENTRY_EVALUATION_ID = (
+    "017-new-material-corrected-pilot-learning-entry-evaluation"
+)
+NEW_MATERIAL_CORRECTED_PILOT_LEARNING_ENTRY_EVALUATION_NEXT_ENTRY = (
+    "017-new-material-corrected-pilot-learning-note-prep"
+)
+NEW_MATERIAL_CORRECTED_PILOT_LEARNING_ENTRY_EVALUATION_STATUSES = frozenset(
+    {"ready_for_learning_note_prep"}
+)
 
 
 def _data_dir(data_dir: Path | str | None) -> Path:
@@ -177,6 +188,11 @@ def _validate_enum(
 
 def _require_non_negative_int(value: Any, field_name: str, owner_id: str) -> None:
     if not isinstance(value, int) or value < 0:
+        raise LearningReferenceCurationError(f"{owner_id} has invalid {field_name}")
+
+
+def _require_bool(value: Any, field_name: str, owner_id: str) -> None:
+    if not isinstance(value, bool):
         raise LearningReferenceCurationError(f"{owner_id} has invalid {field_name}")
 
 
@@ -1074,6 +1090,351 @@ def load_downstream_authorization_receipts(
     return receipts
 
 
+def _new_material_corrected_pilot_learning_entry_evaluation_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialCorrectedPilotLearningEntryEvaluationItem:
+    try:
+        item = NewMaterialCorrectedPilotLearningEntryEvaluationItem(**data)
+    except TypeError as error:
+        raise LearningReferenceCurationError(
+            "invalid new material corrected pilot learning entry evaluation "
+            f"item: {error}"
+        ) from error
+
+    owner_id = item.evaluation_item_id or "?"
+    for field_name in (
+        "evaluation_item_id",
+        "evaluation_id",
+        "transcription_execution_item_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "prepared_text_artifact",
+        "local_reference",
+        "evaluation_status",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    _validate_enum(
+        item.evaluation_status,
+        NEW_MATERIAL_CORRECTED_PILOT_LEARNING_ENTRY_EVALUATION_STATUSES,
+        "evaluation_status",
+        owner_id,
+    )
+    if item.evaluation_id != NEW_MATERIAL_CORRECTED_PILOT_LEARNING_ENTRY_EVALUATION_ID:
+        raise LearningReferenceCurationError(f"{owner_id} has invalid evaluation_id")
+    if item.selected_next_material_entry != (
+        NEW_MATERIAL_CORRECTED_PILOT_LEARNING_ENTRY_EVALUATION_NEXT_ENTRY
+    ):
+        raise LearningReferenceCurationError(f"{owner_id} selected unexpected next entry")
+
+    for field_name in (
+        "corrected_excerpt_count",
+        "corrected_character_count",
+        "page_locator_count",
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+    for field_name in (
+        "learning_note_allowed",
+        "candidate_intake_allowed",
+        "duplicate_overlap_review_required",
+        "risk_boundary_review_required",
+        "downstream_mutation_authorized",
+    ):
+        _require_bool(getattr(item, field_name), field_name, owner_id)
+
+    if item.corrected_excerpt_count <= 0 or item.corrected_character_count <= 0:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must reference corrected pilot excerpts"
+        )
+    if item.page_locator_count <= 0:
+        raise LearningReferenceCurationError(f"{owner_id} must include page locators")
+    if not item.learning_note_allowed:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must allow learning-note preparation"
+        )
+    if item.candidate_intake_allowed:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must block candidate intake"
+        )
+    if item.downstream_mutation_authorized:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must not authorize downstream mutation"
+        )
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(item, field_name) != 0:
+            raise LearningReferenceCurationError(
+                f"{owner_id} has non-zero {field_name}"
+            )
+
+    artifact_path = Path(item.prepared_text_artifact)
+    if artifact_path.is_absolute() or ".." in artifact_path.parts:
+        raise LearningReferenceCurationError(
+            f"{owner_id} prepared text path must be relative"
+        )
+    if not (Path.cwd() / artifact_path).exists():
+        raise LearningReferenceCurationError(
+            f"{owner_id} prepared text artifact is missing"
+        )
+
+    materials_dir = _sibling_data_dir(source_dir, "materials_audit")
+    if materials_dir is None:
+        return item
+    execution_items_by_id = {
+        execution.execution_item_id: execution
+        for execution in (
+            materials_audit
+            .load_new_material_human_corrected_transcription_execution_items(
+                materials_dir
+            )
+        )
+    }
+    execution = execution_items_by_id.get(item.transcription_execution_item_id)
+    if execution is None:
+        raise LearningReferenceCurationError(
+            f"{owner_id} references unknown transcription execution item"
+        )
+    if execution.execution_status != "pilot_prepared_text_created":
+        raise LearningReferenceCurationError(
+            f"{owner_id} transcription execution is not pilot-ready"
+        )
+    if not execution.learning_entry_ready:
+        raise LearningReferenceCurationError(
+            f"{owner_id} transcription execution is not learning-entry ready"
+        )
+    matching_fields = (
+        "source_library_entry_id",
+        "source_material_id",
+        "prepared_text_artifact",
+        "local_reference",
+        "corrected_excerpt_count",
+        "corrected_character_count",
+        "page_locator_count",
+    )
+    for field_name in matching_fields:
+        if getattr(item, field_name) != getattr(execution, field_name):
+            raise LearningReferenceCurationError(
+                f"{owner_id} {field_name} does not match execution item"
+            )
+    return item
+
+
+def load_new_material_corrected_pilot_learning_entry_evaluation_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialCorrectedPilotLearningEntryEvaluationItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = (
+        source_dir
+        / "new_material_corrected_pilot_learning_entry_evaluation_items.json"
+    )
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_corrected_pilot_learning_entry_evaluation_item_from_dict(
+            item, source_dir
+        )
+        for item in _read_json_list(items_path)
+    ]
+    _ensure_unique(
+        [item.evaluation_item_id for item in items],
+        "evaluation_item_id",
+    )
+    return items
+
+
+def build_new_material_corrected_pilot_learning_entry_evaluation_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialCorrectedPilotLearningEntryEvaluationSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_corrected_pilot_learning_entry_evaluation_items(
+        source_dir
+    )
+    materials_dir = _sibling_data_dir(source_dir, "materials_audit")
+    execution_summary = None
+    if materials_dir is not None:
+        execution_summary = (
+            materials_audit
+            .build_new_material_human_corrected_transcription_execution_summary(
+                materials_dir
+            )
+        )
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "evaluation_items_loaded": "passed" if items else "failed",
+        "previous_corrected_pilot_ready": (
+            "passed"
+            if execution_summary is not None
+            and execution_summary.execution_status == "pilot_prepared_text_created"
+            else "failed"
+        ),
+        "prepared_text_artifact_exists": (
+            "passed"
+            if all((Path.cwd() / item.prepared_text_artifact).exists() for item in items)
+            else "failed"
+        ),
+        "learning_note_allowed": (
+            "passed"
+            if items and all(item.learning_note_allowed for item in items)
+            else "failed"
+        ),
+        "candidate_intake_blocked": (
+            "passed"
+            if items and all(not item.candidate_intake_allowed for item in items)
+            else "failed"
+        ),
+        "duplicate_overlap_review_required": (
+            "passed"
+            if items
+            and all(item.duplicate_overlap_review_required for item in items)
+            else "failed"
+        ),
+        "risk_boundary_review_required": (
+            "passed"
+            if items and all(item.risk_boundary_review_required for item in items)
+            else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    return NewMaterialCorrectedPilotLearningEntryEvaluationSummary(
+        evaluation_id=NEW_MATERIAL_CORRECTED_PILOT_LEARNING_ENTRY_EVALUATION_ID,
+        evaluation_status=(
+            "ready_for_learning_note_prep"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "corrected_pilot_learning_entry_evaluation_needs_attention"
+        ),
+        evaluation_item_count=len(items),
+        prepared_text_artifact_count=len(
+            {item.prepared_text_artifact for item in items}
+        ),
+        corrected_excerpt_count=sum(item.corrected_excerpt_count for item in items),
+        corrected_character_count=sum(item.corrected_character_count for item in items),
+        page_locator_count=sum(item.page_locator_count for item in items),
+        learning_note_allowed_count=sum(
+            1 for item in items if item.learning_note_allowed
+        ),
+        candidate_intake_allowed_count=sum(
+            1 for item in items if item.candidate_intake_allowed
+        ),
+        duplicate_overlap_review_required_count=sum(
+            1 for item in items if item.duplicate_overlap_review_required
+        ),
+        risk_boundary_review_required_count=sum(
+            1 for item in items if item.risk_boundary_review_required
+        ),
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=(
+            NEW_MATERIAL_CORRECTED_PILOT_LEARNING_ENTRY_EVALUATION_NEXT_ENTRY
+        ),
+        evaluation_item_ids=[item.evaluation_item_id for item in items],
+        transcription_execution_item_ids=[
+            item.transcription_execution_item_id for item in items
+        ],
+        source_entry_ids=[item.source_library_entry_id for item in items],
+        source_material_ids=[item.source_material_id for item in items],
+        local_references=[item.local_reference for item in items],
+        prepared_text_artifacts=[item.prepared_text_artifact for item in items],
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Use the corrected pilot only for learning-note preparation.",
+            "Run overlap review before any candidate-intake decision.",
+            "Run risk-boundary review before expanding the prepared-text artifact.",
+            "Keep 013 and 012 writes out of this evaluation stage.",
+        ],
+    )
+
+
+def render_new_material_corrected_pilot_learning_entry_evaluation_markdown(
+    summary: NewMaterialCorrectedPilotLearningEntryEvaluationSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 017 New Material Corrected Pilot Learning Entry Evaluation",
+        "",
+        f"- Evaluation id: `{summary.evaluation_id}`",
+        (
+            "- `new-material-corrected-pilot-learning-entry-evaluation-status="
+            f"{summary.evaluation_status}`"
+        ),
+        f"- `learning-entry-evaluation-items={summary.evaluation_item_count}`",
+        f"- `prepared-text-artifacts={summary.prepared_text_artifact_count}`",
+        f"- `corrected-excerpts={summary.corrected_excerpt_count}`",
+        f"- `corrected-characters={summary.corrected_character_count}`",
+        f"- `page-locators={summary.page_locator_count}`",
+        f"- `learning-note-allowed={summary.learning_note_allowed_count}`",
+        f"- `candidate-intake-allowed={summary.candidate_intake_allowed_count}`",
+        (
+            "- `duplicate-overlap-review-required="
+            f"{summary.duplicate_overlap_review_required_count}`"
+        ),
+        (
+            "- `risk-boundary-review-required="
+            f"{summary.risk_boundary_review_required_count}`"
+        ),
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Learning entry evaluation item ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.evaluation_item_ids)
+    lines.extend(["", "Prepared text artifacts:"])
+    lines.extend(f"- `{artifact}`" for artifact in summary.prepared_text_artifacts)
+    lines.extend(["", "Local references:"])
+    lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def _write_json_list(path: Path, payload: list[dict[str, Any]]) -> None:
     path.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
@@ -1751,6 +2112,39 @@ def _iter_downstream_receipt_quality_text_fields(
     return fields
 
 
+def _iter_corrected_pilot_learning_entry_evaluation_quality_text_fields(
+    items: list[NewMaterialCorrectedPilotLearningEntryEvaluationItem],
+) -> list[tuple[str, str, str]]:
+    fields: list[tuple[str, str, str]] = []
+    for item in items:
+        fields.extend(
+            (
+                (
+                    item.evaluation_item_id,
+                    "prepared_text_artifact",
+                    item.prepared_text_artifact,
+                ),
+                (item.evaluation_item_id, "local_reference", item.local_reference),
+                (
+                    item.evaluation_item_id,
+                    "evaluation_status",
+                    item.evaluation_status,
+                ),
+                (
+                    item.evaluation_item_id,
+                    "selected_next_material_entry",
+                    item.selected_next_material_entry,
+                ),
+                (item.evaluation_item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.evaluation_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    return fields
+
+
 def _validate_quality_text(fields: list[tuple[str, str, str]]) -> list[str]:
     failures: list[str] = []
     for owner_id, field_name, value in fields:
@@ -1790,6 +2184,9 @@ def validate_learning_reference_quality(
     decisions = load_candidate_intake_decisions(source_dir)
     action_notes = load_prerequisite_action_notes(source_dir)
     receipts = load_downstream_authorization_receipts(source_dir)
+    corrected_pilot_evaluations = (
+        load_new_material_corrected_pilot_learning_entry_evaluation_items(source_dir)
+    )
     return _validate_quality_text(
         [
             *_iter_note_quality_text_fields(notes),
@@ -1797,5 +2194,8 @@ def validate_learning_reference_quality(
             *_iter_decision_quality_text_fields(decisions),
             *_iter_action_note_quality_text_fields(action_notes),
             *_iter_downstream_receipt_quality_text_fields(receipts),
+            *_iter_corrected_pilot_learning_entry_evaluation_quality_text_fields(
+                corrected_pilot_evaluations
+            ),
         ]
     )

@@ -3472,6 +3472,64 @@ class NewMaterialHumanCorrectedTranscriptionExecutionSummary:
 
 
 @dataclass(frozen=True)
+class NewMaterialCorrectedPilotLearningEntryEvaluationItem:
+    evaluation_item_id: str
+    evaluation_id: str
+    transcription_execution_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    prepared_text_artifact: str
+    local_reference: str
+    evaluation_status: str
+    corrected_excerpt_count: int
+    corrected_character_count: int
+    page_locator_count: int
+    learning_note_allowed: bool
+    candidate_intake_allowed: bool
+    duplicate_overlap_review_required: bool
+    risk_boundary_review_required: bool
+    downstream_mutation_authorized: bool
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    selected_next_material_entry: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialCorrectedPilotLearningEntryEvaluationSummary:
+    evaluation_id: str
+    evaluation_status: str
+    evaluation_item_count: int
+    prepared_text_artifact_count: int
+    corrected_excerpt_count: int
+    corrected_character_count: int
+    page_locator_count: int
+    learning_note_allowed_count: int
+    candidate_intake_allowed_count: int
+    duplicate_overlap_review_required_count: int
+    risk_boundary_review_required_count: int
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    evaluation_item_ids: list[str]
+    transcription_execution_item_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    prepared_text_artifacts: list[str]
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextMaterialTriageGroup:
     group_id: str
     source_root: str

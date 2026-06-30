@@ -824,8 +824,22 @@ Risk-review items:
   `next-material-entry=017-new-material-corrected-pilot-learning-entry-evaluation`.
 - Human-corrected transcription execution item:
   `new_material_human_corrected_transcription_execution_xiahai_suanmingji_pdf`.
-- Current new-material continuation marker:
+- 017 New Material Corrected Pilot Learning Entry Evaluation is completed as a
+  learning-note prep gate:
+  `new-material-corrected-pilot-learning-entry-evaluation-status=ready_for_learning_note_prep`,
+  `learning-entry-evaluation-items=1`, `prepared-text-artifacts=1`,
+  `corrected-excerpts=4`, `corrected-characters=35`, `page-locators=4`,
+  `learning-note-allowed=1`, `candidate-intake-allowed=0`,
+  `duplicate-overlap-review-required=1`,
+  `risk-boundary-review-required=1`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, `downstream-mutation-authorized=false`, and
+  `next-material-entry=017-new-material-corrected-pilot-learning-note-prep`.
+- Corrected pilot learning entry evaluation item:
+  `new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf`.
+- Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`.
+- Current new-material continuation marker:
+  `next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`.
 
 ## Remaining Optional Precision Work
 
@@ -842,10 +856,10 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=017-new-material-corrected-pilot-learning-entry-evaluation`.
-It should evaluate the short corrected pilot artifact for learning-note
-eligibility, duplicate/overlap risk, and candidate-intake boundaries before any
-017 note or 013 candidate is created.
+`next-material-entry=017-new-material-corrected-pilot-learning-note-prep`.
+It should create the bounded 017 learning-note prep packet from the corrected
+pilot, run overlap and risk-boundary checks, and keep candidate intake blocked
+until the prep packet is reviewed.
 
 ## Guardrails
 
@@ -857,6 +871,6 @@ eligibility, duplicate/overlap risk, and candidate-intake boundaries before any
 
 ## Next Target
 
-Next target: `017-new-material-corrected-pilot-learning-entry-evaluation`.
-Evaluate the bounded corrected pilot artifact before creating learning notes or
-candidate intake.
+Next target: `017-new-material-corrected-pilot-learning-note-prep`.
+Create the bounded learning-note prep packet from the corrected pilot before
+any candidate-intake step.

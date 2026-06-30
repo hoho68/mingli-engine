@@ -338,6 +338,54 @@ the 017 authorization audit is ready, no 017 decisions remain pending, current
 013 candidate/review counts are aligned, 012 boundary leakage is zero, and no
 duplicate downstream delta is recorded.
 
+## 017 New Material Corrected Pilot Learning Entry Evaluation
+
+The 2026-06-30 corrected pilot for `下海算命记.pdf` is now registered as a
+learning-entry evaluation item. It is eligible for a 017 learning-note prep
+stage, but it is not candidate intake and does not write 013/012 records.
+
+- Evaluation id: `017-new-material-corrected-pilot-learning-entry-evaluation`
+- `new-material-corrected-pilot-learning-entry-evaluation-status=ready_for_learning_note_prep`
+- `learning-entry-evaluation-items=1`
+- `prepared-text-artifacts=1`
+- `corrected-excerpts=4`
+- `corrected-characters=35`
+- `page-locators=4`
+- `learning-note-allowed=1`
+- `candidate-intake-allowed=0`
+- `duplicate-overlap-review-required=1`
+- `risk-boundary-review-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-corrected-pilot-learning-note-prep`
+
+Learning entry evaluation item ids:
+- `new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf`
+
+Prepared text artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `evaluation_items_loaded`: `passed`
+- `previous_corrected_pilot_ready`: `passed`
+- `prepared_text_artifact_exists`: `passed`
+- `learning_note_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `duplicate_overlap_review_required`: `passed`
+- `risk_boundary_review_required`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Use the corrected pilot only for learning-note preparation.
+- Run overlap review before any candidate-intake decision.
+- Run risk-boundary review before expanding the prepared-text artifact.
+- Keep 013 and 012 writes out of this evaluation stage.
+
 ## Phase C Source Disposition Snapshot
 
 The current 016/017 state consumes 23 selected extraction tasks as learning
