@@ -171,12 +171,19 @@ Explicit Downstream Authorization Receipt:
 - `tesseract-available=1`
 - `chi-sim-available=1`
 - `prepared-text-artifacts=0`
-- `next-material-entry=015-new-material-ocr-quality-remediation-or-human-transcription`
-- `next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`
+- `new-material-ocr-quality-remediation-status=blocked_requires_human_correction`
+- `probe-dpi-values=400`
+- `vertical-tessdata-available=1`
+- `assistive-ocr-route=1`
+- `human-correction-required=1`
+- `prepared-text-artifacts=0`
+- `next-material-entry=015-new-material-human-corrected-transcription-prep`
+- `next-new-material-start=015-new-material-human-corrected-transcription-prep`
 
-The next long goal should improve local OCR quality or perform human
-transcription for `下海算命记.pdf`, create a bounded prepared-text artifact, and
-only then decide whether learning notes or 013 candidate intake can begin.
+The next long goal should use the vertical OCR route as a draft aid, prepare a
+human-correction packet for `下海算命记.pdf`, create bounded corrected prepared
+text, and only then decide whether learning notes or 013 candidate intake can
+begin.
 
 Run focused learning reference curation tests:
 

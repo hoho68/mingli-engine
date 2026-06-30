@@ -1919,6 +1919,54 @@ Guardrails:
 - Next work must improve OCR quality or use human transcription before prepared text.
 - Temporary OCR probe files are working artifacts and are not source-library material.
 
+## 015 New Material OCR Quality Remediation Or Human Transcription
+
+- Remediation id: `015-new-material-ocr-quality-remediation-or-human-transcription`
+- `new-material-ocr-quality-remediation-status=blocked_requires_human_correction`
+- `ocr-quality-remediation-items=1`
+- `source-files=1`
+- `pdf-pages=84`
+- `probe-pages=4`
+- `probe-dpi-values=400`
+- `vertical-tessdata-available=1`
+- `assistive-ocr-route=1`
+- `prepared-text-artifacts=0`
+- `human-correction-required=1`
+- `blocked-items=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-human-corrected-transcription-prep`
+
+OCR quality remediation item ids:
+- `new_material_ocr_quality_remediation_xiahai_suanmingji_pdf`
+
+OCR runtime setup item ids:
+- `new_material_ocr_runtime_setup_xiahai_suanmingji_pdf`
+
+Source-library entry ids:
+- `entry_new_material_xiahai_suanmingji_pdf`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `ocr_quality_remediation_items_loaded`: `passed`
+- `previous_ocr_quality_blocker_recorded`: `passed`
+- `vertical_tessdata_available`: `passed`
+- `assistive_ocr_route_identified`: `passed`
+- `prepared_text_artifact_absent`: `passed`
+- `human_correction_required`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Vertical OCR is an assistive draft route, not controlled source text.
+- Human correction is required before prepared text, learning notes, or candidate intake.
+- Do not commit OCR probe images or uncorrected OCR passages.
+- Original external materials remain unmoved and unchanged.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

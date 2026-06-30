@@ -1,0 +1,62 @@
+[
+  {
+    "remediation_item_id": "new_material_ocr_quality_remediation_xiahai_suanmingji_pdf",
+    "remediation_id": "015-new-material-ocr-quality-remediation-or-human-transcription",
+    "ocr_runtime_setup_item_id": "new_material_ocr_runtime_setup_xiahai_suanmingji_pdf",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "remediation_status": "blocked_requires_human_correction",
+    "local_reference": "下海算命记.pdf",
+    "page_count": 84,
+    "probe_page_count": 4,
+    "probe_dpi": 400,
+    "vertical_tessdata_available": true,
+    "tessdata_language_codes": [
+      "chi_tra_vert",
+      "chi_sim_vert",
+      "chi_tra",
+      "chi_sim",
+      "eng",
+      "osd"
+    ],
+    "preprocessing_methods": [
+      "ascii_temp_pdf_copy",
+      "render_400_dpi",
+      "split_left_right_pages",
+      "remove_bottom_watermark",
+      "crop_text_region",
+      "autocontrast_sharpen",
+      "vertical_psm5_probe"
+    ],
+    "probe_page_numbers": [
+      20,
+      35,
+      50,
+      70
+    ],
+    "best_probe_region": "page_70_left_page_chi_tra_vert_psm5",
+    "best_probe_han_count": 539,
+    "best_probe_ascii_count": 4,
+    "best_probe_noise_count": 4,
+    "assistive_ocr_route_available": true,
+    "prepared_text_artifact_created": false,
+    "human_correction_required": true,
+    "blocker_reason": "Vertical OCR with page splitting improved readability, but uncorrected output still has enough errors to block controlled prepared text.",
+    "selected_next_material_entry": "015-new-material-human-corrected-transcription-prep",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "The best local route is chi_tra_vert OCR on cropped vertical page regions, followed by human correction before learning or candidate intake.",
+    "guardrails": [
+      "Do not commit OCR probe images or uncorrected OCR passages.",
+      "Do not create learning notes, 013 candidates, or 012 units before corrected prepared text.",
+      "Use vertical OCR only as an assistive draft for human correction.",
+      "Keep the original PDF unmoved and unchanged."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  }
+]

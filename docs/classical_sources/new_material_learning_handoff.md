@@ -783,8 +783,21 @@ Risk-review items:
   `next-material-entry=015-new-material-ocr-quality-remediation-or-human-transcription`.
 - OCR runtime setup item:
   `new_material_ocr_runtime_setup_xiahai_suanmingji_pdf`.
+- 015 New Material OCR Quality Remediation Or Human Transcription is completed
+  as a human-correction blocker audit:
+  `new-material-ocr-quality-remediation-status=blocked_requires_human_correction`,
+  `ocr-quality-remediation-items=1`, `pdf-pages=84`, `probe-pages=4`,
+  `probe-dpi-values=400`, `vertical-tessdata-available=1`,
+  `assistive-ocr-route=1`, `prepared-text-artifacts=0`,
+  `human-correction-required=1`, `blocked-items=1`,
+  `candidate-extract-delta=0`, `formal-evidence-delta=0`,
+  `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-new-material-human-corrected-transcription-prep`.
+- OCR quality remediation item:
+  `new_material_ocr_quality_remediation_xiahai_suanmingji_pdf`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`.
+  `next-new-material-start=015-new-material-human-corrected-transcription-prep`.
 
 ## Remaining Optional Precision Work
 
@@ -801,10 +814,10 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-new-material-ocr-quality-remediation-or-human-transcription`.
-It should improve local OCR quality with preprocessing/page segmentation or use
-human transcription for `下海算命记.pdf`, create a bounded prepared-text artifact,
-and only then decide whether learning notes or 013 candidate intake can begin.
+`next-material-entry=015-new-material-human-corrected-transcription-prep`.
+It should use the vertical OCR assistive route as a draft aid, prepare a
+human-correction packet for `下海算命记.pdf`, and create only corrected bounded
+prepared text before learning notes or 013 candidate intake can begin.
 
 ## Guardrails
 
@@ -816,6 +829,6 @@ and only then decide whether learning notes or 013 candidate intake can begin.
 
 ## Next Target
 
-Next target: `015-new-material-ocr-quality-remediation-or-human-transcription`.
-Improve OCR quality or perform human transcription for `下海算命记.pdf`, then
-create a bounded prepared-text artifact.
+Next target: `015-new-material-human-corrected-transcription-prep`.
+Prepare the human-correction packet from the vertical OCR route, then create a
+bounded corrected prepared-text artifact.

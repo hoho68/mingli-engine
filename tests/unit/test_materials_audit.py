@@ -1,4 +1,4 @@
-import json
+﻿import json
 import time
 from pathlib import Path
 
@@ -773,6 +773,9 @@ def test_public_materials_audit_functions_exist():
         "load_new_material_ocr_runtime_setup_items",
         "build_new_material_ocr_runtime_setup_summary",
         "render_new_material_ocr_runtime_setup_markdown",
+        "load_new_material_ocr_quality_remediation_items",
+        "build_new_material_ocr_quality_remediation_summary",
+        "render_new_material_ocr_quality_remediation_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -4096,11 +4099,11 @@ def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`"
+        "`next-new-material-start=015-new-material-human-corrected-transcription-prep`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`"
+        "`next-new-material-start=015-new-material-human-corrected-transcription-prep`"
         in quickstart
     )
 
@@ -4196,8 +4199,8 @@ def test_new_material_intake_markdown_and_docs_sync():
         assert marker in materials_doc
         assert marker in handoff
 
-    assert "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`" in handoff
-    assert "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`" in quickstart
+    assert "`next-new-material-start=015-new-material-human-corrected-transcription-prep`" in handoff
+    assert "`next-new-material-start=015-new-material-human-corrected-transcription-prep`" in quickstart
 
 
 def test_new_material_source_identity_review_item_prepares_registration():
@@ -4299,8 +4302,8 @@ def test_new_material_source_identity_review_markdown_and_docs_sync():
         assert marker in materials_doc
         assert marker in handoff
 
-    assert "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`" in handoff
-    assert "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`" in quickstart
+    assert "`next-new-material-start=015-new-material-human-corrected-transcription-prep`" in handoff
+    assert "`next-new-material-start=015-new-material-human-corrected-transcription-prep`" in quickstart
 
 
 def test_new_material_registration_prep_registers_xiahai_metadata():
@@ -4413,11 +4416,11 @@ def test_new_material_long_goal_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`"
+        "`next-new-material-start=015-new-material-human-corrected-transcription-prep`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`"
+        "`next-new-material-start=015-new-material-human-corrected-transcription-prep`"
         in quickstart
     )
 
@@ -4509,11 +4512,11 @@ def test_new_material_controlled_text_preparation_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`"
+        "`next-new-material-start=015-new-material-human-corrected-transcription-prep`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`"
+        "`next-new-material-start=015-new-material-human-corrected-transcription-prep`"
         in quickstart
     )
 
@@ -4600,11 +4603,11 @@ def test_new_material_ocr_or_manual_transcription_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`"
+        "`next-new-material-start=015-new-material-human-corrected-transcription-prep`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`"
+        "`next-new-material-start=015-new-material-human-corrected-transcription-prep`"
         in quickstart
     )
 
@@ -4705,12 +4708,122 @@ def test_new_material_ocr_runtime_setup_markdown_and_docs_sync():
 
     assert (
         "`next-new-material-start="
-        "015-new-material-ocr-quality-remediation-or-human-transcription`"
+        "015-new-material-human-corrected-transcription-prep`"
         in handoff
     )
     assert (
         "`next-new-material-start="
-        "015-new-material-ocr-quality-remediation-or-human-transcription`"
+        "015-new-material-human-corrected-transcription-prep`"
+        in quickstart
+    )
+
+
+def test_new_material_ocr_quality_remediation_requires_human_correction():
+    items = materials_audit.load_new_material_ocr_quality_remediation_items()
+    summary = materials_audit.build_new_material_ocr_quality_remediation_summary()
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.remediation_id == (
+        "015-new-material-ocr-quality-remediation-or-human-transcription"
+    )
+    assert item.ocr_runtime_setup_item_id == (
+        "new_material_ocr_runtime_setup_xiahai_suanmingji_pdf"
+    )
+    assert item.remediation_status == "blocked_requires_human_correction"
+    assert item.local_reference == "下海算命记.pdf"
+    assert item.page_count == 84
+    assert item.probe_page_count == 4
+    assert item.probe_dpi == 400
+    assert item.vertical_tessdata_available is True
+    assert "chi_tra_vert" in item.tessdata_language_codes
+    assert "vertical_psm5_probe" in item.preprocessing_methods
+    assert item.probe_page_numbers == [20, 35, 50, 70]
+    assert item.best_probe_region == "page_70_left_page_chi_tra_vert_psm5"
+    assert item.best_probe_han_count == 539
+    assert item.best_probe_ascii_count == 4
+    assert item.best_probe_noise_count == 4
+    assert item.assistive_ocr_route_available is True
+    assert item.prepared_text_artifact_created is False
+    assert item.human_correction_required is True
+    assert item.selected_next_material_entry == (
+        "015-new-material-human-corrected-transcription-prep"
+    )
+
+    assert summary.remediation_status == "blocked_requires_human_correction"
+    assert summary.remediation_item_count == 1
+    assert summary.page_count == 84
+    assert summary.probe_page_count == 4
+    assert summary.probe_dpi_values == [400]
+    assert summary.vertical_tessdata_available_count == 1
+    assert summary.assistive_ocr_route_count == 1
+    assert summary.prepared_text_artifact_count == 0
+    assert summary.human_correction_required_count == 1
+    assert summary.blocked_item_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.next_material_entry == (
+        "015-new-material-human-corrected-transcription-prep"
+    )
+    assert summary.boundary_checks == {
+        "ocr_quality_remediation_items_loaded": "passed",
+        "previous_ocr_quality_blocker_recorded": "passed",
+        "vertical_tessdata_available": "passed",
+        "assistive_ocr_route_identified": "passed",
+        "prepared_text_artifact_absent": "passed",
+        "human_correction_required": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_ocr_quality_remediation_markdown_and_docs_sync():
+    summary = materials_audit.build_new_material_ocr_quality_remediation_summary()
+    markdown = materials_audit.render_new_material_ocr_quality_remediation_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 New Material OCR Quality Remediation Or Human Transcription",
+        "`new-material-ocr-quality-remediation-status=blocked_requires_human_correction`",
+        "`ocr-quality-remediation-items=1`",
+        "`pdf-pages=84`",
+        "`probe-pages=4`",
+        "`probe-dpi-values=400`",
+        "`vertical-tessdata-available=1`",
+        "`assistive-ocr-route=1`",
+        "`prepared-text-artifacts=0`",
+        "`human-correction-required=1`",
+        "`blocked-items=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`next-material-entry=015-new-material-human-corrected-transcription-prep`",
+        "`new_material_ocr_quality_remediation_xiahai_suanmingji_pdf`",
+        "`new_material_ocr_runtime_setup_xiahai_suanmingji_pdf`",
+        "`entry_new_material_xiahai_suanmingji_pdf`",
+        "`下海算命记.pdf`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start="
+        "015-new-material-human-corrected-transcription-prep`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start="
+        "015-new-material-human-corrected-transcription-prep`"
         in quickstart
     )
 
