@@ -697,8 +697,16 @@ Risk-review items:
   `candidate-extract-delta=0`, `formal-evidence-delta=0`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=013-explicit-candidate-review-or-new-material-intake`.
+- Explicit Downstream Authorization Receipt is consumed:
+  `downstream-authorization-status=downstream_authorization_consumed`,
+  `authorization-scope=013_012_downstream`, `pending-017-decisions=0`,
+  `017-applied-decisions=45`, `013-candidate-extracts=54`,
+  `013-review-decisions=54`, `013-promotion-batches=34`,
+  `012-formal-evidence-units=111`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, `downstream-mutation-authorized=true`, and
+  `next-downstream-entry=015-new-material-intake`.
 - Current new-material continuation marker:
-  `next-new-material-start=013-explicit-candidate-review-or-new-material-intake`.
+  `next-new-material-start=015-new-material-intake`.
 
 ## Remaining Optional Precision Work
 
@@ -715,22 +723,20 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=013-explicit-candidate-review-or-new-material-intake`.
-It should either explicitly authorize downstream 013/012 work or add/choose a
+`next-material-entry=015-new-material-intake`. It should add or choose a
 genuinely new bounded material intake surface before restarting 015 source
 selection.
 
 ## Guardrails
 
 - Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`.
-- Do not create candidates, review decisions, promotion batches, or formal evidence unless explicitly requested.
+- Do not duplicate existing 013/012 downstream records.
 - Do not promote retained chapter learning closures without source-specific
   transcription or page-level proof.
 - Do not push remote work from this handoff.
 
 ## Next Target
 
-Next target: `013-explicit-candidate-review-or-new-material-intake`. Choose
-between explicit downstream authorization and a genuinely new bounded material
-intake surface; if restarting 015, the first safe candidate is
-`下海算命记.pdf` from `bazi_general_misc_identity_review_cluster`.
+Next target: `015-new-material-intake`. Start a genuinely new bounded material
+intake surface; the first safe candidate is `下海算命记.pdf` from
+`bazi_general_misc_identity_review_cluster`.

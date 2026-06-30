@@ -2307,6 +2307,99 @@ def test_learning_reference_authorization_audit_markdown_and_docs_are_in_sync():
         assert marker in handoff
 
 
+def test_downstream_authorization_receipts_load_user_authorization():
+    receipts = learning_reference_curation.load_downstream_authorization_receipts()
+    receipts_by_id = {receipt.receipt_id: receipt for receipt in receipts}
+
+    assert len(receipts) == 1
+    assert set(receipts_by_id) == {"downstream_authorization_receipt_2026_06_30"}
+    receipt = receipts_by_id["downstream_authorization_receipt_2026_06_30"]
+    assert receipt.authorization_audit_id == (
+        "017-candidate-formal-evidence-authorization-audit"
+    )
+    assert receipt.authorization_status == "user_authorized_downstream"
+    assert receipt.authorization_scope == "013_012_downstream"
+    assert receipt.pending_decision_count == 0
+    assert receipt.candidate_extract_delta_count == 0
+    assert receipt.review_decision_delta_count == 0
+    assert receipt.promotion_batch_delta_count == 0
+    assert receipt.formal_evidence_delta_count == 0
+    assert receipt.selected_next_downstream_entry == "015-new-material-intake"
+    assert receipt.downstream_mutation_authorized is True
+
+
+def test_downstream_authorization_summary_consumes_authorization_without_duplicate_writes():
+    summary = learning_reference_curation.build_downstream_authorization_summary()
+
+    assert summary.authorization_id == "013-012-explicit-downstream-authorization"
+    assert summary.authorization_status == "downstream_authorization_consumed"
+    assert summary.authorization_receipt_count == 1
+    assert summary.authorization_scope == "013_012_downstream"
+    assert summary.audit_authorization_status == (
+        "ready_for_explicit_downstream_authorization"
+    )
+    assert summary.pending_decision_count == 0
+    assert summary.applied_decision_count == 45
+    assert summary.candidate_extract_count == 54
+    assert summary.review_decision_count == 54
+    assert summary.promotion_batch_count == 34
+    assert summary.formal_evidence_unit_count == 111
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is True
+    assert summary.next_downstream_entry == "015-new-material-intake"
+    assert summary.boundary_checks == {
+        "authorization_receipts_loaded": "passed",
+        "user_authorized_downstream": "passed",
+        "authorization_audit_ready": "passed",
+        "no_pending_017_decisions": "passed",
+        "013_candidate_review_counts_aligned": "passed",
+        "012_formal_evidence_boundary_clean": "passed",
+        "no_duplicate_downstream_delta": "passed",
+    }
+
+
+def test_downstream_authorization_markdown_and_docs_are_in_sync():
+    summary = learning_reference_curation.build_downstream_authorization_summary()
+    markdown = learning_reference_curation.render_downstream_authorization_markdown(
+        summary
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "Explicit Downstream Authorization Receipt",
+        "`downstream-authorization-status=downstream_authorization_consumed`",
+        "`authorization-scope=013_012_downstream`",
+        "`pending-017-decisions=0`",
+        "`017-applied-decisions=45`",
+        "`013-candidate-extracts=54`",
+        "`013-review-decisions=54`",
+        "`013-promotion-batches=34`",
+        "`012-formal-evidence-units=111`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=true`",
+        "`next-downstream-entry=015-new-material-intake`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert "`next-new-material-start=015-new-material-intake`" in handoff
+    assert "`next-new-material-start=015-new-material-intake`" in quickstart
+
+
 def test_new_material_learning_handoff_tracks_final_state():
     closure_counts = _source_window_learning_closure_counts()
     summary = learning_reference_curation.build_learning_reference_progress_summary()
@@ -2352,12 +2445,17 @@ def test_new_material_learning_handoff_tracks_final_state():
         f"`013-promotion-batches={len(promotion_batches)}`",
         f"`012-formal-evidence-units={len(evidence_units)}`",
         f"`formal_evidence_delta={summary.formal_evidence_delta}`",
+        "`downstream-authorization-status=downstream_authorization_consumed`",
+        "`authorization-scope=013_012_downstream`",
+        "`pending-017-decisions=0`",
+        "`downstream-mutation-authorized=true`",
+        "`next-downstream-entry=015-new-material-intake`",
         (
             "`next-new-material-start="
-            "013-explicit-candidate-review-or-new-material-intake`"
+            "015-new-material-intake`"
         ),
         "Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`",
-        "Do not create candidates, review decisions, promotion batches, or formal evidence unless explicitly requested",
+        "Do not duplicate existing 013/012 downstream records",
         "Do not push remote work from this handoff",
     ):
         assert marker in handoff

@@ -4183,6 +4183,50 @@ class LearningReferenceAuthorizationAudit:
 
 
 @dataclass(frozen=True)
+class DownstreamAuthorizationReceipt:
+    receipt_id: str
+    authorization_audit_id: str
+    authorization_status: str
+    authorization_scope: str
+    selected_next_downstream_entry: str
+    pending_decision_count: int
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    downstream_mutation_authorized: bool = False
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class DownstreamAuthorizationSummary:
+    authorization_id: str
+    authorization_status: str
+    authorization_receipt_count: int
+    authorization_scope: str
+    audit_authorization_status: str
+    pending_decision_count: int
+    applied_decision_count: int
+    candidate_extract_count: int
+    review_decision_count: int
+    promotion_batch_count: int
+    formal_evidence_unit_count: int
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    downstream_mutation_authorized: bool
+    next_downstream_entry: str
+    receipt_ids: list[str]
+    authorization_audit_ids: list[str]
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class EvidenceTrace:
     trace_id: str
     conclusion_id: str

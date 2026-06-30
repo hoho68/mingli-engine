@@ -4072,11 +4072,11 @@ def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=013-explicit-candidate-review-or-new-material-intake`"
+        "`next-new-material-start=015-new-material-intake`"
         in handoff
     )
     assert (
-        "`next-new-material-start=013-explicit-candidate-review-or-new-material-intake`"
+        "`next-new-material-start=015-new-material-intake`"
         in quickstart
     )
 

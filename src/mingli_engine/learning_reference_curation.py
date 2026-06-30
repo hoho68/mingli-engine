@@ -25,6 +25,8 @@ from mingli_engine.models import (
     PREREQUISITE_ACTION_TYPES,
     RULE_FAMILIES,
     CandidateIntakeDecision,
+    DownstreamAuthorizationReceipt,
+    DownstreamAuthorizationSummary,
     LearningReferenceAuthorizationAudit,
     LearningPoint,
     LearningReferenceNote,
@@ -171,6 +173,11 @@ def _validate_enum(
         raise LearningReferenceCurationError(
             f"{owner_id} has invalid {field_name}: {value}"
         )
+
+
+def _require_non_negative_int(value: Any, field_name: str, owner_id: str) -> None:
+    if not isinstance(value, int) or value < 0:
+        raise LearningReferenceCurationError(f"{owner_id} has invalid {field_name}")
 
 
 def _is_durable_reason(value: str) -> bool:
@@ -827,6 +834,64 @@ def _prerequisite_action_note_from_dict(
     return action_note
 
 
+def _downstream_authorization_receipt_from_dict(
+    data: dict[str, Any],
+) -> DownstreamAuthorizationReceipt:
+    try:
+        receipt = DownstreamAuthorizationReceipt(**data)
+    except TypeError as error:
+        raise LearningReferenceCurationError(
+            f"invalid downstream authorization receipt: {error}"
+        ) from error
+
+    owner_id = receipt.receipt_id or "?"
+    for field_name in (
+        "receipt_id",
+        "authorization_audit_id",
+        "authorization_status",
+        "authorization_scope",
+        "selected_next_downstream_entry",
+        "rationale",
+    ):
+        _require_text(getattr(receipt, field_name), field_name, owner_id)
+    if receipt.authorization_status != "user_authorized_downstream":
+        raise LearningReferenceCurationError(
+            f"{owner_id} has invalid authorization_status"
+        )
+    if receipt.authorization_scope != "013_012_downstream":
+        raise LearningReferenceCurationError(
+            f"{owner_id} has invalid authorization_scope"
+        )
+    if receipt.selected_next_downstream_entry != "015-new-material-intake":
+        raise LearningReferenceCurationError(
+            f"{owner_id} has invalid selected_next_downstream_entry"
+        )
+    _require_nonempty_string_list(receipt.guardrails, "guardrails", owner_id)
+    for field_name in (
+        "pending_decision_count",
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(receipt, field_name), field_name, owner_id)
+    if not receipt.downstream_mutation_authorized:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must record explicit downstream authorization"
+        )
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(receipt, field_name) != 0:
+            raise LearningReferenceCurationError(
+                f"{owner_id} must not carry duplicate {field_name}"
+            )
+    return receipt
+
+
 def _validate_prerequisite_action_note_links(
     action_notes: list[PrerequisiteActionNote],
     source_dir: Path,
@@ -992,6 +1057,21 @@ def load_prerequisite_action_notes(
     )
     _validate_prerequisite_action_note_links(action_notes, source_dir)
     return action_notes
+
+
+def load_downstream_authorization_receipts(
+    data_dir: Path | str | None = None,
+) -> list[DownstreamAuthorizationReceipt]:
+    source_dir = _data_dir(data_dir)
+    receipts_path = source_dir / "downstream_authorization_receipts.json"
+    if not receipts_path.exists():
+        return []
+    receipts = [
+        _downstream_authorization_receipt_from_dict(item)
+        for item in _read_json_list(receipts_path)
+    ]
+    _ensure_unique([receipt.receipt_id for receipt in receipts], "receipt_id")
+    return receipts
 
 
 def _write_json_list(path: Path, payload: list[dict[str, Any]]) -> None:
@@ -1340,6 +1420,183 @@ def render_learning_reference_authorization_audit_markdown(
     return "\n".join(lines) + "\n"
 
 
+def build_downstream_authorization_summary(
+    data_dir: Path | str | None = None,
+    *,
+    source_intake_data_dir: Path | str | None = None,
+    classical_sources_data_dir: Path | str | None = None,
+) -> DownstreamAuthorizationSummary:
+    source_dir = _data_dir(data_dir)
+    receipts = load_downstream_authorization_receipts(source_dir)
+    audit = build_learning_reference_authorization_audit(
+        source_dir,
+        source_intake_data_dir=source_intake_data_dir,
+        classical_sources_data_dir=classical_sources_data_dir,
+    )
+    decisions = load_candidate_intake_decisions(source_dir)
+    intake_dir = _resolve_source_intake_dir(source_dir, source_intake_data_dir)
+    classical_dir = _resolve_classical_sources_dir(
+        source_dir,
+        classical_sources_data_dir,
+    )
+    candidates = source_intake.load_candidate_extracts(intake_dir)
+    reviews = source_intake.load_review_decisions(intake_dir)
+    promotion_batches = source_intake.load_promotion_batches(intake_dir)
+    evidence_units = classical_sources.load_evidence_units(classical_dir)
+
+    pending_decision_count = sum(
+        1 for decision in decisions if decision.status == "planned"
+    )
+    no_duplicate_downstream_delta = all(
+        receipt.pending_decision_count == pending_decision_count
+        and receipt.candidate_extract_delta_count == 0
+        and receipt.review_decision_delta_count == 0
+        and receipt.promotion_batch_delta_count == 0
+        and receipt.formal_evidence_delta_count == 0
+        for receipt in receipts
+    )
+    boundary_checks = {
+        "authorization_receipts_loaded": "passed" if receipts else "failed",
+        "user_authorized_downstream": (
+            "passed"
+            if receipts
+            and all(
+                receipt.authorization_status == "user_authorized_downstream"
+                and receipt.downstream_mutation_authorized
+                for receipt in receipts
+            )
+            else "failed"
+        ),
+        "authorization_audit_ready": (
+            "passed"
+            if audit.authorization_status
+            == "ready_for_explicit_downstream_authorization"
+            else "failed"
+        ),
+        "no_pending_017_decisions": (
+            "passed" if pending_decision_count == 0 else "failed"
+        ),
+        "013_candidate_review_counts_aligned": (
+            "passed" if len(candidates) == len(reviews) else "failed"
+        ),
+        "012_formal_evidence_boundary_clean": (
+            "passed"
+            if audit.formal_evidence_delta == 0
+            and not any(audit.leakage_counts.values())
+            else "failed"
+        ),
+        "no_duplicate_downstream_delta": (
+            "passed" if no_duplicate_downstream_delta else "failed"
+        ),
+    }
+
+    return DownstreamAuthorizationSummary(
+        authorization_id="013-012-explicit-downstream-authorization",
+        authorization_status=(
+            "downstream_authorization_consumed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "downstream_authorization_needs_attention"
+        ),
+        authorization_receipt_count=len(receipts),
+        authorization_scope=(
+            receipts[0].authorization_scope if receipts else "013_012_downstream"
+        ),
+        audit_authorization_status=audit.authorization_status,
+        pending_decision_count=pending_decision_count,
+        applied_decision_count=audit.decision_counts.get("status:applied", 0),
+        candidate_extract_count=len(candidates),
+        review_decision_count=len(reviews),
+        promotion_batch_count=len(promotion_batches),
+        formal_evidence_unit_count=len(evidence_units),
+        candidate_extract_delta_count=sum(
+            receipt.candidate_extract_delta_count for receipt in receipts
+        ),
+        review_decision_delta_count=sum(
+            receipt.review_decision_delta_count for receipt in receipts
+        ),
+        promotion_batch_delta_count=sum(
+            receipt.promotion_batch_delta_count for receipt in receipts
+        ),
+        formal_evidence_delta_count=sum(
+            receipt.formal_evidence_delta_count for receipt in receipts
+        ),
+        downstream_mutation_authorized=any(
+            receipt.downstream_mutation_authorized for receipt in receipts
+        ),
+        next_downstream_entry=(
+            receipts[0].selected_next_downstream_entry
+            if receipts
+            else "015-new-material-intake"
+        ),
+        receipt_ids=[receipt.receipt_id for receipt in receipts],
+        authorization_audit_ids=[
+            receipt.authorization_audit_id for receipt in receipts
+        ],
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "The explicit user authorization is recorded for 013/012 downstream work.",
+            "Current 017 candidate-intake decisions are already applied, so no duplicate downstream writes are needed.",
+            "Future downstream additions should start from a new bounded material intake surface.",
+            "External raw materials remain unchanged.",
+        ],
+    )
+
+
+def render_downstream_authorization_markdown(
+    summary: DownstreamAuthorizationSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## Explicit Downstream Authorization Receipt",
+        "",
+        f"- Authorization id: `{summary.authorization_id}`",
+        (
+            "- `downstream-authorization-status="
+            f"{summary.authorization_status}`"
+        ),
+        f"- `authorization-receipts={summary.authorization_receipt_count}`",
+        f"- `authorization-scope={summary.authorization_scope}`",
+        f"- `audit-authorization-status={summary.audit_authorization_status}`",
+        f"- `pending-017-decisions={summary.pending_decision_count}`",
+        f"- `017-applied-decisions={summary.applied_decision_count}`",
+        f"- `013-candidate-extracts={summary.candidate_extract_count}`",
+        f"- `013-review-decisions={summary.review_decision_count}`",
+        f"- `013-promotion-batches={summary.promotion_batch_count}`",
+        f"- `012-formal-evidence-units={summary.formal_evidence_unit_count}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `review-decision-delta={summary.review_decision_delta_count}`",
+        f"- `promotion-batch-delta={summary.promotion_batch_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-downstream-entry={summary.next_downstream_entry}`",
+        "",
+        "Receipt ids:",
+    ]
+    lines.extend(f"- `{receipt_id}`" for receipt_id in summary.receipt_ids)
+    lines.extend(["", "Authorization audit ids:"])
+    lines.extend(
+        f"- `{audit_id}`" for audit_id in summary.authorization_audit_ids
+    )
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def _normalize_boundary_text(value: str) -> str:
     return value.lower().replace("_", " ").replace("-", " ")
 
@@ -1467,6 +1724,33 @@ def _iter_action_note_quality_text_fields(
     return fields
 
 
+def _iter_downstream_receipt_quality_text_fields(
+    receipts: list[DownstreamAuthorizationReceipt],
+) -> list[tuple[str, str, str]]:
+    fields: list[tuple[str, str, str]] = []
+    for receipt in receipts:
+        fields.extend(
+            (
+                (
+                    receipt.receipt_id,
+                    "authorization_scope",
+                    receipt.authorization_scope,
+                ),
+                (
+                    receipt.receipt_id,
+                    "selected_next_downstream_entry",
+                    receipt.selected_next_downstream_entry,
+                ),
+                (receipt.receipt_id, "rationale", receipt.rationale),
+            )
+        )
+        fields.extend(
+            (receipt.receipt_id, "guardrails", guardrail)
+            for guardrail in receipt.guardrails
+        )
+    return fields
+
+
 def _validate_quality_text(fields: list[tuple[str, str, str]]) -> list[str]:
     failures: list[str] = []
     for owner_id, field_name, value in fields:
@@ -1505,11 +1789,13 @@ def validate_learning_reference_quality(
     points = load_learning_points(source_dir)
     decisions = load_candidate_intake_decisions(source_dir)
     action_notes = load_prerequisite_action_notes(source_dir)
+    receipts = load_downstream_authorization_receipts(source_dir)
     return _validate_quality_text(
         [
             *_iter_note_quality_text_fields(notes),
             *_iter_point_quality_text_fields(points),
             *_iter_decision_quality_text_fields(decisions),
             *_iter_action_note_quality_text_fields(action_notes),
+            *_iter_downstream_receipt_quality_text_fields(receipts),
         ]
     )

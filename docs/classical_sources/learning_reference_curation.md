@@ -309,6 +309,35 @@ Clearance checks are all passed: 017 notes are closed, 017 has no active
 counts are aligned, 012 formal evidence has no boundary leakage, and any
 downstream mutation still requires an explicit user request.
 
+## Explicit Downstream Authorization Receipt
+
+The 2026-06-30 user authorization for 013/012 downstream work has been recorded.
+All 017 candidate-intake decisions were already applied before this receipt, so
+the authorization is consumed without duplicate downstream writes.
+
+- Authorization id: `013-012-explicit-downstream-authorization`
+- `downstream-authorization-status=downstream_authorization_consumed`
+- `authorization-receipts=1`
+- `authorization-scope=013_012_downstream`
+- `audit-authorization-status=ready_for_explicit_downstream_authorization`
+- `pending-017-decisions=0`
+- `017-applied-decisions=45`
+- `013-candidate-extracts=54`
+- `013-review-decisions=54`
+- `013-promotion-batches=34`
+- `012-formal-evidence-units=111`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=true`
+- `next-downstream-entry=015-new-material-intake`
+
+Boundary checks are all passed: the explicit authorization receipt is loaded,
+the 017 authorization audit is ready, no 017 decisions remain pending, current
+013 candidate/review counts are aligned, 012 boundary leakage is zero, and no
+duplicate downstream delta is recorded.
+
 ## Phase C Source Disposition Snapshot
 
 The current 016/017 state consumes 23 selected extraction tasks as learning

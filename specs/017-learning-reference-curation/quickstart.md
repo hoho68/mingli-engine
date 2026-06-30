@@ -125,11 +125,27 @@ The 015 raw text next-cycle sensitive preparation reading is complete:
 - `new-material-learning-loop-status=new_material_learning_loop_closed`
 - `completed-loop-stages=16`
 - `registered-source-entries=11`
-- `next-new-material-start=013-explicit-candidate-review-or-new-material-intake`
 
-The next long goal should either explicitly authorize downstream 013/012 work
-or add/choose a genuinely new bounded material intake surface before restarting
-015 source selection.
+Explicit Downstream Authorization Receipt:
+
+- `downstream-authorization-status=downstream_authorization_consumed`
+- `authorization-scope=013_012_downstream`
+- `pending-017-decisions=0`
+- `017-applied-decisions=45`
+- `013-candidate-extracts=54`
+- `013-review-decisions=54`
+- `013-promotion-batches=34`
+- `012-formal-evidence-units=111`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=true`
+- `next-downstream-entry=015-new-material-intake`
+- `next-new-material-start=015-new-material-intake`
+
+The next long goal should add or choose a genuinely new bounded material intake
+surface before restarting 015 source selection. The safest first candidate from
+the recent read-only scan is `下海算命记.pdf` in
+`bazi_general_misc_identity_review_cluster`.
 
 Run focused learning reference curation tests:
 
