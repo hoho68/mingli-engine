@@ -2154,6 +2154,62 @@ Guardrails:
 - Candidate intake remains blocked until corrected text is reviewed.
 - External materials remain unchanged.
 
+## 015 New Material Expanded Corrected Transcription Execution
+
+- Execution id: `015-new-material-expanded-corrected-transcription-execution`
+- `new-material-expanded-corrected-transcription-execution-status=expanded_prepared_text_created`
+- `expanded-correction-execution-items=1`
+- `source-files=1`
+- `prepared-text-artifacts=1`
+- `selected-page-ranges=2`
+- `selected-page-locators=4`
+- `selected-pages=15`
+- `expanded-windows=2`
+- `corrected-excerpts=3`
+- `corrected-characters=27`
+- `page-locators=4`
+- `learning-entry-ready=1`
+- `human-corrected-text-available=1`
+- `uncorrected-ocr-committed=0`
+- `long-form-transcription-committed=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-expanded-corrected-learning-entry-evaluation`
+
+Expanded correction execution item ids:
+- `new_material_expanded_corrected_transcription_execution_xiahai_suanmingji_pdf`
+
+Expanded correction prep item ids:
+- `new_material_expanded_corrected_transcription_prep_xiahai_suanmingji_pdf`
+
+Prepared text artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `expanded_corrected_transcription_execution_items_loaded`: `passed`
+- `previous_expanded_correction_packet_ready`: `passed`
+- `prepared_text_artifact_created`: `passed`
+- `corrected_text_available`: `passed`
+- `uncorrected_ocr_not_committed`: `passed`
+- `long_form_transcription_absent`: `passed`
+- `learning_entry_ready`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The expanded prepared text is a controlled excerpt artifact.
+- It records page-window anchors, not a full transcription.
+- Learning entry evaluation must run before 017 note drafting.
+- No 013 candidate or 012 formal evidence is created by this stage.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

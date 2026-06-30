@@ -788,6 +788,9 @@ def test_public_materials_audit_functions_exist():
         "load_new_material_expanded_corrected_transcription_prep_items",
         "build_new_material_expanded_corrected_transcription_prep_summary",
         "render_new_material_expanded_corrected_transcription_prep_markdown",
+        "load_new_material_expanded_corrected_transcription_execution_items",
+        "build_new_material_expanded_corrected_transcription_execution_summary",
+        "render_new_material_expanded_corrected_transcription_execution_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -5328,6 +5331,172 @@ def test_new_material_expanded_corrected_transcription_prep_markdown_and_docs_sy
     )
     assert (
         "`next-new-material-start=015-new-material-expanded-corrected-transcription-execution`"
+        in quickstart
+    )
+
+
+def test_new_material_expanded_corrected_transcription_execution_creates_artifact():
+    items = (
+        materials_audit
+        .load_new_material_expanded_corrected_transcription_execution_items()
+    )
+    summary = (
+        materials_audit
+        .build_new_material_expanded_corrected_transcription_execution_summary()
+    )
+    artifact = Path(
+        "docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md"
+    )
+    artifact_text = artifact.read_text(encoding="utf-8")
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.execution_item_id == (
+        "new_material_expanded_corrected_transcription_execution_xiahai_suanmingji_pdf"
+    )
+    assert item.execution_id == (
+        "015-new-material-expanded-corrected-transcription-execution"
+    )
+    assert item.prep_item_id == (
+        "new_material_expanded_corrected_transcription_prep_xiahai_suanmingji_pdf"
+    )
+    assert item.execution_status == "expanded_prepared_text_created"
+    assert item.local_reference == "下海算命记.pdf"
+    assert item.prepared_text_artifact == (
+        "docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md"
+    )
+    assert item.selected_page_ranges == [
+        "pages_18_25_method_discussion_window",
+        "pages_66_72_case_examples_window",
+    ]
+    assert item.selected_page_locators == [
+        "page_20_method_context",
+        "page_20_topic_context",
+        "page_70_case_context",
+        "page_72_case_followup_context",
+    ]
+    assert item.selected_page_count == 15
+    assert item.expanded_window_count == 2
+    assert item.corrected_excerpt_count == 3
+    assert item.corrected_character_count == 27
+    assert item.page_locator_count == 4
+    assert item.uncorrected_ocr_committed is False
+    assert item.long_form_transcription_committed is False
+    assert item.prepared_text_artifact_created is True
+    assert item.human_corrected_text_available is True
+    assert item.learning_entry_ready is True
+    assert item.candidate_intake_allowed is False
+    assert item.downstream_mutation_authorized is False
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+    assert item.selected_next_material_entry == (
+        "017-new-material-expanded-corrected-learning-entry-evaluation"
+    )
+
+    assert summary.execution_status == "expanded_prepared_text_created"
+    assert summary.execution_item_count == 1
+    assert summary.source_file_count == 1
+    assert summary.prepared_text_artifact_count == 1
+    assert summary.selected_page_range_count == 2
+    assert summary.selected_page_locator_count == 4
+    assert summary.selected_page_count == 15
+    assert summary.expanded_window_count == 2
+    assert summary.corrected_excerpt_count == 3
+    assert summary.corrected_character_count == 27
+    assert summary.page_locator_count == 4
+    assert summary.learning_entry_ready_count == 1
+    assert summary.human_corrected_text_available_count == 1
+    assert summary.uncorrected_ocr_committed_count == 0
+    assert summary.long_form_transcription_committed_count == 0
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "017-new-material-expanded-corrected-learning-entry-evaluation"
+    )
+    assert summary.boundary_checks == {
+        "expanded_corrected_transcription_execution_items_loaded": "passed",
+        "previous_expanded_correction_packet_ready": "passed",
+        "prepared_text_artifact_created": "passed",
+        "corrected_text_available": "passed",
+        "uncorrected_ocr_not_committed": "passed",
+        "long_form_transcription_absent": "passed",
+        "learning_entry_ready": "passed",
+        "candidate_intake_blocked": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+    assert "卜卦無關乎神鬼" in artifact_text
+    assert "腦算命的程式" in artifact_text
+    assert "以下我且舉幾個實際的卦例來談" in artifact_text
+    assert "`uncorrected-ocr-committed=0`" in artifact_text
+
+
+def test_new_material_expanded_corrected_transcription_execution_markdown_and_docs_sync():
+    summary = (
+        materials_audit
+        .build_new_material_expanded_corrected_transcription_execution_summary()
+    )
+    markdown = (
+        materials_audit
+        .render_new_material_expanded_corrected_transcription_execution_markdown(
+            summary
+        )
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 New Material Expanded Corrected Transcription Execution",
+        "`new-material-expanded-corrected-transcription-execution-status=expanded_prepared_text_created`",
+        "`expanded-correction-execution-items=1`",
+        "`prepared-text-artifacts=1`",
+        "`selected-page-ranges=2`",
+        "`selected-page-locators=4`",
+        "`selected-pages=15`",
+        "`expanded-windows=2`",
+        "`corrected-excerpts=3`",
+        "`corrected-characters=27`",
+        "`page-locators=4`",
+        "`learning-entry-ready=1`",
+        "`human-corrected-text-available=1`",
+        "`uncorrected-ocr-committed=0`",
+        "`long-form-transcription-committed=0`",
+        "`candidate-intake-allowed=0`",
+        "`candidate-extract-delta=0`",
+        "`review-decision-delta=0`",
+        "`promotion-batch-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=017-new-material-expanded-corrected-learning-entry-evaluation`",
+        "`new_material_expanded_corrected_transcription_execution_xiahai_suanmingji_pdf`",
+        "`new_material_expanded_corrected_transcription_prep_xiahai_suanmingji_pdf`",
+        "`docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`",
+        "`下海算命记.pdf`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+        assert marker in quickstart
+
+    assert (
+        "`next-new-material-start=017-new-material-expanded-corrected-learning-entry-evaluation`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=017-new-material-expanded-corrected-learning-entry-evaluation`"
         in quickstart
     )
 

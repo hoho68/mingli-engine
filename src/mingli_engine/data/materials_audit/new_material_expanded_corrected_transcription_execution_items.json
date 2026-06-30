@@ -1,0 +1,48 @@
+[
+  {
+    "execution_item_id": "new_material_expanded_corrected_transcription_execution_xiahai_suanmingji_pdf",
+    "execution_id": "015-new-material-expanded-corrected-transcription-execution",
+    "prep_item_id": "new_material_expanded_corrected_transcription_prep_xiahai_suanmingji_pdf",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "execution_status": "expanded_prepared_text_created",
+    "local_reference": "下海算命记.pdf",
+    "prepared_text_artifact": "docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md",
+    "selected_page_ranges": [
+      "pages_18_25_method_discussion_window",
+      "pages_66_72_case_examples_window"
+    ],
+    "selected_page_locators": [
+      "page_20_method_context",
+      "page_20_topic_context",
+      "page_70_case_context",
+      "page_72_case_followup_context"
+    ],
+    "selected_page_count": 15,
+    "expanded_window_count": 2,
+    "corrected_excerpt_count": 3,
+    "corrected_character_count": 27,
+    "page_locator_count": 4,
+    "uncorrected_ocr_committed": false,
+    "long_form_transcription_committed": false,
+    "prepared_text_artifact_created": true,
+    "human_corrected_text_available": true,
+    "learning_entry_ready": true,
+    "candidate_intake_allowed": false,
+    "selected_next_material_entry": "017-new-material-expanded-corrected-learning-entry-evaluation",
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "The expanded selected windows now have a controlled corrected-anchor artifact for learning-entry evaluation without committing uncorrected OCR or long-form source text.",
+    "guardrails": [
+      "Treat the expanded artifact as corrected anchors, not a full transcription.",
+      "Keep candidate intake blocked until 017 learning-entry evaluation is complete.",
+      "Do not create 013 candidates or 012 units from this stage.",
+      "Keep external source materials unchanged."
+    ],
+    "created_at": "2026-07-01",
+    "updated_at": "2026-07-01"
+  }
+]

@@ -300,11 +300,42 @@ Explicit Downstream Authorization Receipt:
 - `new_material_expanded_corrected_transcription_prep_xiahai_suanmingji_pdf`
 - `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
 - `下海算命记.pdf`
-- `next-new-material-start=015-new-material-expanded-corrected-transcription-execution`
+- Previous completed marker:
+  `next-new-material-start=015-new-material-expanded-corrected-transcription-execution`
 
-The next long goal should create the expanded corrected artifact for the
-selected page windows, then return to 017 learning only after reviewed
-corrected text exists.
+015 New Material Expanded Corrected Transcription Execution:
+
+- `new-material-expanded-corrected-transcription-execution-status=expanded_prepared_text_created`
+- `expanded-correction-execution-items=1`
+- `source-files=1`
+- `prepared-text-artifacts=1`
+- `selected-page-ranges=2`
+- `selected-page-locators=4`
+- `selected-pages=15`
+- `expanded-windows=2`
+- `corrected-excerpts=3`
+- `corrected-characters=27`
+- `page-locators=4`
+- `learning-entry-ready=1`
+- `human-corrected-text-available=1`
+- `uncorrected-ocr-committed=0`
+- `long-form-transcription-committed=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-expanded-corrected-learning-entry-evaluation`
+- `new_material_expanded_corrected_transcription_execution_xiahai_suanmingji_pdf`
+- `new_material_expanded_corrected_transcription_prep_xiahai_suanmingji_pdf`
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+- `下海算命记.pdf`
+- `next-new-material-start=017-new-material-expanded-corrected-learning-entry-evaluation`
+
+The next long goal should evaluate the expanded corrected artifact as a 017
+learning-entry candidate, keep candidate intake blocked, and only draft the next
+learning note after the evaluation passes.
 
 Run focused learning reference curation tests:
 

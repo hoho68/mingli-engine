@@ -3588,6 +3588,76 @@ class NewMaterialExpandedCorrectedTranscriptionPrepSummary:
 
 
 @dataclass(frozen=True)
+class NewMaterialExpandedCorrectedTranscriptionExecutionItem:
+    execution_item_id: str
+    execution_id: str
+    prep_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    execution_status: str
+    local_reference: str
+    prepared_text_artifact: str
+    selected_page_ranges: list[str]
+    selected_page_locators: list[str]
+    selected_page_count: int
+    expanded_window_count: int
+    corrected_excerpt_count: int
+    corrected_character_count: int
+    page_locator_count: int
+    uncorrected_ocr_committed: bool
+    long_form_transcription_committed: bool
+    prepared_text_artifact_created: bool
+    human_corrected_text_available: bool
+    learning_entry_ready: bool
+    candidate_intake_allowed: bool
+    selected_next_material_entry: str
+    downstream_mutation_authorized: bool = False
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialExpandedCorrectedTranscriptionExecutionSummary:
+    execution_id: str
+    execution_status: str
+    execution_item_count: int
+    source_file_count: int
+    prepared_text_artifact_count: int
+    selected_page_range_count: int
+    selected_page_locator_count: int
+    selected_page_count: int
+    expanded_window_count: int
+    corrected_excerpt_count: int
+    corrected_character_count: int
+    page_locator_count: int
+    learning_entry_ready_count: int
+    human_corrected_text_available_count: int
+    uncorrected_ocr_committed_count: int
+    long_form_transcription_committed_count: int
+    candidate_intake_allowed_count: int
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    execution_item_ids: list[str]
+    prep_item_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    prepared_text_artifacts: list[str]
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class NewMaterialCorrectedPilotLearningEntryEvaluationItem:
     evaluation_item_id: str
     evaluation_id: str
