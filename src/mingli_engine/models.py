@@ -2679,6 +2679,49 @@ class MaterialQueueRefreshSummary:
 
 
 @dataclass(frozen=True)
+class ExplicitCandidateReviewOrQueueRefreshItem:
+    routing_item_id: str
+    routing_entry_id: str
+    sensitive_reading_item_id: str
+    authorization_audit_id: str
+    queue_refresh_id: str
+    routing_status: str
+    authorization_status: str
+    queue_refresh_status: str
+    selected_next_material_entry: str
+    downstream_mutation_authorized: bool = False
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class ExplicitCandidateReviewOrQueueRefreshSummary:
+    routing_id: str
+    routing_status: str
+    routing_item_count: int
+    sensitive_reading_item_ids: list[str]
+    authorization_audit_ids: list[str]
+    queue_refresh_ids: list[str]
+    authorization_status: str
+    queue_refresh_status: str
+    selected_next_material_entry: str
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class ExternalMaterialInventoryRefreshSummary:
     refresh_id: str
     refresh_status: str

@@ -422,7 +422,7 @@ Risk-review items:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=013-explicit-candidate-review-or-015-queue-refresh`.
+- `next-new-material-start=015-external-material-inventory-refresh`.
 - Current 015 queue coverage has no uncovered action after excluding 30
   016-covered/completed ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -672,8 +672,16 @@ Risk-review items:
   `next-material-entry=013-explicit-candidate-review-or-015-queue-refresh`.
 - Sensitive preparation reading id:
   `sensitive_preparation_reading_bazi_psychology_pdf`.
+- 013 Explicit Candidate Review Or 015 Queue Refresh routing is completed:
+  `explicit-routing-status=routed_to_015_queue_refresh`,
+  `authorization-status=ready_for_explicit_downstream_authorization`,
+  `queue-refresh-status=covered_or_completed_queue_exhausted`,
+  `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-external-material-inventory-refresh`.
 - Current new-material continuation marker:
-  `next-new-material-start=013-explicit-candidate-review-or-015-queue-refresh`.
+  `next-new-material-start=015-external-material-inventory-refresh`.
 
 ## Remaining Optional Precision Work
 
@@ -690,7 +698,7 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=013-explicit-candidate-review-or-015-queue-refresh`. It should either run the explicit downstream authorization audit for candidate review or refresh the 015 queue without bypassing 013 and 012 gates.
+`next-material-entry=015-external-material-inventory-refresh`. It should refresh the external-material inventory and select any genuinely new bounded 015 material surface while keeping 013 and 012 gates closed unless separately authorized.
 
 ## Guardrails
 
@@ -702,4 +710,4 @@ When continuing new-material work, use a long goal that starts from
 
 ## Next Target
 
-Next target: `013-explicit-candidate-review-or-015-queue-refresh`. Run the explicit downstream authorization audit for candidate review, or refresh the 015 queue if downstream mutation is not authorized.
+Next target: `015-external-material-inventory-refresh`. Refresh the external-material inventory and select any genuinely new bounded 015 material surface while preserving downstream authorization gates.

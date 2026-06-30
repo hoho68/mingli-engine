@@ -740,6 +740,9 @@ def test_public_materials_audit_functions_exist():
         "load_raw_text_next_cycle_sensitive_preparation_reading_items",
         "build_raw_text_next_cycle_sensitive_preparation_reading_summary",
         "render_raw_text_next_cycle_sensitive_preparation_reading_markdown",
+        "load_explicit_candidate_review_or_queue_refresh_items",
+        "build_explicit_candidate_review_or_queue_refresh_summary",
+        "render_explicit_candidate_review_or_queue_refresh_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -3799,6 +3802,82 @@ def test_raw_text_next_cycle_sensitive_preparation_reading_markdown_and_docs_syn
         "`formal-evidence=0`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=013-explicit-candidate-review-or-015-queue-refresh`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+
+def test_explicit_candidate_review_or_queue_refresh_items_load_routing_record():
+    items = materials_audit.load_explicit_candidate_review_or_queue_refresh_items()
+    items_by_id = {item.routing_item_id: item for item in items}
+
+    assert len(items) == 1
+    assert set(items_by_id) == {"explicit_candidate_review_or_queue_refresh_001"}
+    item = items_by_id["explicit_candidate_review_or_queue_refresh_001"]
+    assert item.routing_entry_id == "013-explicit-candidate-review-or-015-queue-refresh"
+    assert item.sensitive_reading_item_id == (
+        "sensitive_preparation_reading_bazi_psychology_pdf"
+    )
+    assert item.authorization_audit_id == (
+        "017-candidate-formal-evidence-authorization-audit"
+    )
+    assert item.queue_refresh_id == "015-materials-audit-next-action-queue-refresh"
+    assert item.routing_status == "routed_to_015_queue_refresh"
+    assert item.authorization_status == "ready_for_explicit_downstream_authorization"
+    assert item.queue_refresh_status == "covered_or_completed_queue_exhausted"
+    assert item.selected_next_material_entry == "015-external-material-inventory-refresh"
+    assert item.downstream_mutation_authorized is False
+
+
+def test_explicit_candidate_review_or_queue_refresh_summary_routes_to_inventory_refresh():
+    summary = materials_audit.build_explicit_candidate_review_or_queue_refresh_summary()
+
+    assert summary.routing_id == "013-explicit-candidate-review-or-015-queue-refresh"
+    assert summary.routing_status == "routed_to_015_queue_refresh"
+    assert summary.routing_item_count == 1
+    assert summary.authorization_status == "ready_for_explicit_downstream_authorization"
+    assert summary.queue_refresh_status == "covered_or_completed_queue_exhausted"
+    assert summary.selected_next_material_entry == "015-external-material-inventory-refresh"
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == "015-external-material-inventory-refresh"
+    assert summary.boundary_checks == {
+        "routing_items_loaded": "passed",
+        "sensitive_preparation_reading_completed": "passed",
+        "authorization_audit_ready": "passed",
+        "downstream_mutation_not_authorized": "passed",
+        "queue_refresh_completed": "passed",
+        "queue_refresh_route_selected": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_explicit_candidate_review_or_queue_refresh_markdown_and_docs_sync():
+    summary = materials_audit.build_explicit_candidate_review_or_queue_refresh_summary()
+    markdown = materials_audit.render_explicit_candidate_review_or_queue_refresh_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "013 Explicit Candidate Review Or 015 Queue Refresh",
+        "`explicit-routing-status=routed_to_015_queue_refresh`",
+        "`authorization-status=ready_for_explicit_downstream_authorization`",
+        "`queue-refresh-status=covered_or_completed_queue_exhausted`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-external-material-inventory-refresh`",
     ):
         assert marker in markdown
         assert marker in materials_doc

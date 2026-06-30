@@ -17,6 +17,8 @@ from mingli_engine.models import (
     BaziGeneralVariantDeferredReviewSummary,
     BaziGeneralSourcePreparationReadingSummary,
     CONFIDENCE_LEVELS,
+    ExplicitCandidateReviewOrQueueRefreshItem,
+    ExplicitCandidateReviewOrQueueRefreshSummary,
     ExtractionQueueItem,
     ExternalMaterialInventoryRefreshSummary,
     MATERIAL_AUDIT_ACTIONS,
@@ -238,6 +240,12 @@ RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_READING_ID = (
 RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_READING_NEXT_MATERIAL_ENTRY = (
     "013-explicit-candidate-review-or-015-queue-refresh"
 )
+EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_ID = (
+    "013-explicit-candidate-review-or-015-queue-refresh"
+)
+EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_NEXT_MATERIAL_ENTRY = (
+    "015-external-material-inventory-refresh"
+)
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
     "bazi_general_misc_identity_review_cluster",
@@ -286,6 +294,9 @@ RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_BOUNDARY_STATUSES = frozenset(
 )
 RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_READING_STATUSES = frozenset(
     {"sensitive_preparation_reading_completed"}
+)
+EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_STATUSES = frozenset(
+    {"routed_to_015_queue_refresh"}
 )
 RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY = "015-liang-bazi-core-source-selection"
 RAW_TEXT_SOURCE_SELECTION_ID = "015-liang-bazi-core-source-selection"
@@ -3619,6 +3630,126 @@ def load_raw_text_next_cycle_sensitive_preparation_reading_items(
         "source_library_entry_id",
     )
     _ensure_unique([item.source_material_id for item in items], "source_material_id")
+    return items
+
+
+def _explicit_candidate_review_or_queue_refresh_item_from_dict(
+    data: dict[str, Any],
+    sensitive_reading_items_by_id: dict[
+        str,
+        RawTextNextCycleSensitivePreparationReadingItem,
+    ],
+    authorization_audit: Any,
+    queue_refresh: MaterialQueueRefreshSummary,
+) -> ExplicitCandidateReviewOrQueueRefreshItem:
+    try:
+        item = ExplicitCandidateReviewOrQueueRefreshItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            "invalid explicit candidate review or queue refresh item: "
+            f"{error}"
+        ) from error
+
+    owner_id = item.routing_item_id or "?"
+    for field_name in (
+        "routing_item_id",
+        "routing_entry_id",
+        "sensitive_reading_item_id",
+        "authorization_audit_id",
+        "queue_refresh_id",
+        "routing_status",
+        "authorization_status",
+        "queue_refresh_status",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    _validate_enum(
+        item.routing_status,
+        EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_STATUSES,
+        "routing_status",
+        owner_id,
+    )
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    if not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires guardrails")
+    if item.routing_entry_id != EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid routing_entry_id")
+    if item.sensitive_reading_item_id not in sensitive_reading_items_by_id:
+        raise MaterialsAuditError(
+            f"{owner_id} references unknown sensitive_reading_item_id"
+        )
+    sensitive_reading_item = sensitive_reading_items_by_id[
+        item.sensitive_reading_item_id
+    ]
+    if (
+        sensitive_reading_item.reading_status
+        != "sensitive_preparation_reading_completed"
+    ):
+        raise MaterialsAuditError(f"{owner_id} reading item is not complete")
+    if item.authorization_audit_id != authorization_audit.audit_id:
+        raise MaterialsAuditError(f"{owner_id} authorization_audit_id mismatch")
+    if item.authorization_status != authorization_audit.authorization_status:
+        raise MaterialsAuditError(f"{owner_id} authorization_status mismatch")
+    if item.queue_refresh_id != queue_refresh.refresh_id:
+        raise MaterialsAuditError(f"{owner_id} queue_refresh_id mismatch")
+    if item.queue_refresh_status != queue_refresh.refresh_status:
+        raise MaterialsAuditError(f"{owner_id} queue_refresh_status mismatch")
+    if item.selected_next_material_entry != queue_refresh.next_material_entry:
+        raise MaterialsAuditError(f"{owner_id} selected_next_material_entry mismatch")
+    if item.selected_next_material_entry != (
+        EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_NEXT_MATERIAL_ENTRY
+    ):
+        raise MaterialsAuditError(f"{owner_id} selected next entry is not expected")
+    if item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize downstream mutation")
+    if authorization_audit.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} audit unexpectedly authorizes mutation")
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(item, field_name) != 0:
+            raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
+
+    return item
+
+
+def load_explicit_candidate_review_or_queue_refresh_items(
+    data_dir: Path | str | None = None,
+) -> list[ExplicitCandidateReviewOrQueueRefreshItem]:
+    source_dir = _data_dir(data_dir)
+    sensitive_reading_items_by_id = {
+        item.reading_item_id: item
+        for item in load_raw_text_next_cycle_sensitive_preparation_reading_items(
+            source_dir
+        )
+    }
+    learning_dir = _sibling_data_dir(source_dir, "learning_reference_curation")
+    authorization_audit = (
+        learning_reference_curation.build_learning_reference_authorization_audit(
+            learning_dir
+        )
+    )
+    queue_refresh = build_materials_audit_queue_refresh_summary(source_dir)
+    items = [
+        _explicit_candidate_review_or_queue_refresh_item_from_dict(
+            item,
+            sensitive_reading_items_by_id,
+            authorization_audit,
+            queue_refresh,
+        )
+        for item in _read_optional_json_list(
+            source_dir / "explicit_candidate_review_or_queue_refresh_items.json"
+        )
+    ]
+    _ensure_unique([item.routing_item_id for item in items], "routing_item_id")
+    _ensure_unique(
+        [item.sensitive_reading_item_id for item in items],
+        "sensitive_reading_item_id",
+    )
     return items
 
 
@@ -8085,6 +8216,164 @@ def render_raw_text_next_cycle_sensitive_preparation_reading_markdown(
     return "\n".join(lines) + "\n"
 
 
+def build_explicit_candidate_review_or_queue_refresh_summary(
+    data_dir: Path | str | None = None,
+) -> ExplicitCandidateReviewOrQueueRefreshSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_explicit_candidate_review_or_queue_refresh_items(source_dir)
+    sensitive_reading_summary = (
+        build_raw_text_next_cycle_sensitive_preparation_reading_summary(source_dir)
+    )
+    learning_dir = _sibling_data_dir(source_dir, "learning_reference_curation")
+    authorization_audit = (
+        learning_reference_curation.build_learning_reference_authorization_audit(
+            learning_dir
+        )
+    )
+    queue_refresh = build_materials_audit_queue_refresh_summary(source_dir)
+    routing_items_loaded = bool(items)
+    sensitive_preparation_reading_completed = (
+        sensitive_reading_summary.reading_status
+        == "sensitive_preparation_reading_completed"
+    )
+    authorization_audit_ready = (
+        authorization_audit.authorization_status
+        == "ready_for_explicit_downstream_authorization"
+    )
+    downstream_mutation_not_authorized = (
+        not authorization_audit.downstream_mutation_authorized
+        and not any(item.downstream_mutation_authorized for item in items)
+    )
+    queue_refresh_completed = (
+        queue_refresh.refresh_status == "covered_or_completed_queue_exhausted"
+    )
+    queue_refresh_route_selected = bool(items) and all(
+        item.routing_status == "routed_to_015_queue_refresh"
+        and item.selected_next_material_entry == queue_refresh.next_material_entry
+        and item.selected_next_material_entry
+        == EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_NEXT_MATERIAL_ENTRY
+        for item in items
+    )
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        for item in items
+    )
+    boundary_checks = {
+        "routing_items_loaded": "passed" if routing_items_loaded else "failed",
+        "sensitive_preparation_reading_completed": (
+            "passed" if sensitive_preparation_reading_completed else "failed"
+        ),
+        "authorization_audit_ready": (
+            "passed" if authorization_audit_ready else "failed"
+        ),
+        "downstream_mutation_not_authorized": (
+            "passed" if downstream_mutation_not_authorized else "failed"
+        ),
+        "queue_refresh_completed": (
+            "passed" if queue_refresh_completed else "failed"
+        ),
+        "queue_refresh_route_selected": (
+            "passed" if queue_refresh_route_selected else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    routing_status = (
+        "routed_to_015_queue_refresh"
+        if all(status == "passed" for status in boundary_checks.values())
+        else "routing_needs_attention"
+    )
+
+    return ExplicitCandidateReviewOrQueueRefreshSummary(
+        routing_id=EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_ID,
+        routing_status=routing_status,
+        routing_item_count=len(items),
+        sensitive_reading_item_ids=[
+            item.sensitive_reading_item_id for item in items
+        ],
+        authorization_audit_ids=[item.authorization_audit_id for item in items],
+        queue_refresh_ids=[item.queue_refresh_id for item in items],
+        authorization_status=authorization_audit.authorization_status,
+        queue_refresh_status=queue_refresh.refresh_status,
+        selected_next_material_entry=queue_refresh.next_material_entry,
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        )
+        or authorization_audit.downstream_mutation_authorized,
+        next_material_entry=queue_refresh.next_material_entry,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "This routing stage is read-only and does not mutate 013 or 012.",
+            "Authorization audit readiness is not itself downstream mutation authorization.",
+            "Because downstream mutation remains false, continue through the 015 queue-refresh route.",
+            "External raw materials are not moved, converted, opened, or rewritten.",
+        ],
+    )
+
+
+def render_explicit_candidate_review_or_queue_refresh_markdown(
+    summary: ExplicitCandidateReviewOrQueueRefreshSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 013 Explicit Candidate Review Or 015 Queue Refresh",
+        "",
+        f"- Routing id: `{summary.routing_id}`",
+        f"- `explicit-routing-status={summary.routing_status}`",
+        f"- `routing-items={summary.routing_item_count}`",
+        f"- `authorization-status={summary.authorization_status}`",
+        f"- `queue-refresh-status={summary.queue_refresh_status}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `review-decision-delta={summary.review_decision_delta_count}`",
+        f"- `promotion-batch-delta={summary.promotion_batch_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Sensitive preparation-reading item ids:",
+    ]
+    lines.extend(
+        f"- `{item_id}`" for item_id in summary.sensitive_reading_item_ids
+    )
+    lines.extend(["", "Authorization audit ids:"])
+    lines.extend(f"- `{audit_id}`" for audit_id in summary.authorization_audit_ids)
+    lines.extend(["", "Queue refresh ids:"])
+    lines.extend(f"- `{refresh_id}`" for refresh_id in summary.queue_refresh_ids)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_raw_text_cluster_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextClusterSourceSelectionSummary:
@@ -9569,6 +9858,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_next_cycle_sensitive_preparation_reading_items = (
             load_raw_text_next_cycle_sensitive_preparation_reading_items(source_dir)
         )
+        explicit_candidate_review_or_queue_refresh_items = (
+            load_explicit_candidate_review_or_queue_refresh_items(source_dir)
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -9608,6 +9900,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_next_cycle_sensitive_source_registration_items,
         raw_text_next_cycle_sensitive_preparation_boundary_items,
         raw_text_next_cycle_sensitive_preparation_reading_items,
+        explicit_candidate_review_or_queue_refresh_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -9682,6 +9975,9 @@ def _iter_quality_text_fields(
     ],
     raw_text_next_cycle_sensitive_preparation_reading_items: list[
         RawTextNextCycleSensitivePreparationReadingItem
+    ],
+    explicit_candidate_review_or_queue_refresh_items: list[
+        ExplicitCandidateReviewOrQueueRefreshItem
     ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
@@ -10034,6 +10330,12 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.reading_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in explicit_candidate_review_or_queue_refresh_items:
+        fields.append((item.routing_item_id, "rationale", item.rationale))
+        fields.extend(
+            (item.routing_item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

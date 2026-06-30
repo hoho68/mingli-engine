@@ -1459,6 +1459,45 @@ Guardrails:
 - 012 formal evidence remains blocked.
 - External raw materials are not moved, converted, opened, or rewritten.
 
+## 013 Explicit Candidate Review Or 015 Queue Refresh
+
+- Routing id: `013-explicit-candidate-review-or-015-queue-refresh`
+- `explicit-routing-status=routed_to_015_queue_refresh`
+- `routing-items=1`
+- `authorization-status=ready_for_explicit_downstream_authorization`
+- `queue-refresh-status=covered_or_completed_queue_exhausted`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-external-material-inventory-refresh`
+
+Sensitive preparation-reading item ids:
+- `sensitive_preparation_reading_bazi_psychology_pdf`
+
+Authorization audit ids:
+- `017-candidate-formal-evidence-authorization-audit`
+
+Queue refresh ids:
+- `015-materials-audit-next-action-queue-refresh`
+
+Boundary checks:
+- `routing_items_loaded`: `passed`
+- `sensitive_preparation_reading_completed`: `passed`
+- `authorization_audit_ready`: `passed`
+- `downstream_mutation_not_authorized`: `passed`
+- `queue_refresh_completed`: `passed`
+- `queue_refresh_route_selected`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- This routing stage is read-only and does not mutate 013 or 012.
+- Authorization audit readiness is not itself downstream mutation authorization.
+- Because downstream mutation remains false, continue through the 015 queue-refresh route.
+- External raw materials are not moved, converted, opened, or rewritten.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

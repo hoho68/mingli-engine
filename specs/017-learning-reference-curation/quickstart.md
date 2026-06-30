@@ -117,11 +117,14 @@ The 015 raw text next-cycle sensitive preparation reading is complete:
 - `candidate-extracts=0`
 - `formal-evidence=0`
 - `downstream-mutation-authorized=false`
-- `next-new-material-start=013-explicit-candidate-review-or-015-queue-refresh`
+- `explicit-routing-status=routed_to_015_queue_refresh`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `next-new-material-start=015-external-material-inventory-refresh`
 
-The next long goal should either run the explicit downstream authorization
-audit for candidate review or refresh the 015 queue without bypassing 013 and
-012 gates.
+The next long goal should refresh the external-material inventory and select
+any genuinely new bounded 015 material surface while keeping 013 and 012 gates
+closed unless separately authorized.
 
 Run focused learning reference curation tests:
 
