@@ -3472,6 +3472,122 @@ class NewMaterialHumanCorrectedTranscriptionExecutionSummary:
 
 
 @dataclass(frozen=True)
+class NewMaterialExpandedCorrectedTranscriptionSelectionItem:
+    selection_item_id: str
+    selection_id: str
+    completion_review_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    local_reference: str
+    selection_status: str
+    selected_page_ranges: list[str]
+    selected_page_locators: list[str]
+    selected_page_count: int
+    planned_output_artifact: str
+    learning_purpose: str
+    risk_boundary: str
+    candidate_intake_allowed: bool
+    correction_prep_allowed: bool
+    downstream_mutation_authorized: bool
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    selected_next_material_entry: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialExpandedCorrectedTranscriptionSelectionSummary:
+    selection_id: str
+    selection_status: str
+    selection_item_count: int
+    selected_page_range_count: int
+    selected_page_locator_count: int
+    selected_page_count: int
+    correction_prep_allowed_count: int
+    candidate_intake_allowed_count: int
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    selection_item_ids: list[str]
+    completion_review_item_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    planned_output_artifacts: list[str]
+    risk_boundary_counts: dict[str, int]
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class NewMaterialExpandedCorrectedTranscriptionPrepItem:
+    prep_item_id: str
+    prep_id: str
+    selection_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    local_reference: str
+    prep_status: str
+    selected_page_ranges: list[str]
+    selected_page_locators: list[str]
+    selected_page_count: int
+    correction_packet_ready: bool
+    planned_output_artifact: str
+    validation_requirements: list[str]
+    uncorrected_ocr_committed: bool
+    prepared_text_artifact_created: bool
+    human_corrected_text_available: bool
+    candidate_intake_allowed: bool
+    downstream_mutation_authorized: bool
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    selected_next_material_entry: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialExpandedCorrectedTranscriptionPrepSummary:
+    prep_id: str
+    prep_status: str
+    prep_item_count: int
+    selected_page_range_count: int
+    selected_page_locator_count: int
+    selected_page_count: int
+    correction_packet_ready_count: int
+    uncorrected_ocr_committed_count: int
+    prepared_text_artifact_count: int
+    human_corrected_text_available_count: int
+    candidate_intake_allowed_count: int
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    prep_item_ids: list[str]
+    selection_item_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    planned_output_artifacts: list[str]
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class NewMaterialCorrectedPilotLearningEntryEvaluationItem:
     evaluation_item_id: str
     evaluation_id: str

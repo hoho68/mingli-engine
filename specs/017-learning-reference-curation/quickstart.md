@@ -257,11 +257,54 @@ Explicit Downstream Authorization Receipt:
 - `downstream-mutation-authorized=false`
 - `next-material-entry=015-new-material-expanded-corrected-transcription-selection`
 - `new_material_corrected_pilot_learning_completion_review_xiahai_suanmingji_pdf`
-- `next-new-material-start=015-new-material-expanded-corrected-transcription-selection`
+- Previous completed marker:
+  `next-new-material-start=015-new-material-expanded-corrected-transcription-selection`
 
-The next long goal should select a bounded additional correction window for the
-same source, so later learning can use broader corrected context before any
-candidate-intake step.
+015 New Material Expanded Corrected Transcription Selection:
+
+- `new-material-expanded-corrected-transcription-selection-status=selected_for_expanded_correction_prep`
+- `expanded-correction-selection-items=1`
+- `selected-page-ranges=2`
+- `selected-page-locators=4`
+- `selected-pages=15`
+- `correction-prep-allowed=1`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-expanded-corrected-transcription-prep`
+- `new_material_expanded_corrected_transcription_selection_xiahai_suanmingji_pdf`
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+- `下海算命记.pdf`
+
+015 New Material Expanded Corrected Transcription Prep:
+
+- `new-material-expanded-corrected-transcription-prep-status=ready_for_expanded_correction_execution`
+- `expanded-correction-prep-items=1`
+- `selected-page-ranges=2`
+- `selected-page-locators=4`
+- `selected-pages=15`
+- `correction-packet-ready=1`
+- `uncorrected-ocr-committed=0`
+- `prepared-text-artifacts=0`
+- `human-corrected-text-available=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-expanded-corrected-transcription-execution`
+- `new_material_expanded_corrected_transcription_prep_xiahai_suanmingji_pdf`
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+- `下海算命记.pdf`
+- `next-new-material-start=015-new-material-expanded-corrected-transcription-execution`
+
+The next long goal should create the expanded corrected artifact for the
+selected page windows, then return to 017 learning only after reviewed
+corrected text exists.
 
 Run focused learning reference curation tests:
 

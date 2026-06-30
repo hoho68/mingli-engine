@@ -2058,6 +2058,102 @@ Guardrails:
 - No 013 candidate or 012 formal evidence is created by this stage.
 - Do not expand beyond bounded corrected excerpts without review.
 
+## 015 New Material Expanded Corrected Transcription Selection
+
+- Selection id: `015-new-material-expanded-corrected-transcription-selection`
+- `new-material-expanded-corrected-transcription-selection-status=selected_for_expanded_correction_prep`
+- `expanded-correction-selection-items=1`
+- `selected-page-ranges=2`
+- `selected-page-locators=4`
+- `selected-pages=15`
+- `correction-prep-allowed=1`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-expanded-corrected-transcription-prep`
+
+Expanded correction selection item ids:
+- `new_material_expanded_corrected_transcription_selection_xiahai_suanmingji_pdf`
+
+Completion review item ids:
+- `new_material_corrected_pilot_learning_completion_review_xiahai_suanmingji_pdf`
+
+Planned output artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Risk boundaries:
+- `high_risk`: `1`
+
+Boundary checks:
+- `expanded_correction_selection_items_loaded`: `passed`
+- `previous_pilot_learning_closed`: `passed`
+- `additional_correction_required`: `passed`
+- `bounded_page_windows_selected`: `passed`
+- `correction_prep_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Selection only identifies bounded correction windows.
+- Do not treat selected windows as prepared text.
+- Candidate intake remains blocked until corrected text is reviewed.
+- External materials remain unchanged.
+
+## 015 New Material Expanded Corrected Transcription Prep
+
+- Prep id: `015-new-material-expanded-corrected-transcription-prep`
+- `new-material-expanded-corrected-transcription-prep-status=ready_for_expanded_correction_execution`
+- `expanded-correction-prep-items=1`
+- `selected-page-ranges=2`
+- `selected-page-locators=4`
+- `selected-pages=15`
+- `correction-packet-ready=1`
+- `uncorrected-ocr-committed=0`
+- `prepared-text-artifacts=0`
+- `human-corrected-text-available=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-expanded-corrected-transcription-execution`
+
+Expanded correction prep item ids:
+- `new_material_expanded_corrected_transcription_prep_xiahai_suanmingji_pdf`
+
+Expanded correction selection item ids:
+- `new_material_expanded_corrected_transcription_selection_xiahai_suanmingji_pdf`
+
+Planned output artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `expanded_correction_prep_items_loaded`: `passed`
+- `previous_selection_ready`: `passed`
+- `correction_packet_ready`: `passed`
+- `uncorrected_ocr_not_committed`: `passed`
+- `corrected_text_not_yet_available`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The expanded correction packet is metadata-only.
+- No uncorrected OCR or page images are committed.
+- Candidate intake remains blocked until corrected text is reviewed.
+- External materials remain unchanged.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

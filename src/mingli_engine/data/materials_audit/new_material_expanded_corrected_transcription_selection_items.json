@@ -1,0 +1,42 @@
+[
+  {
+    "selection_item_id": "new_material_expanded_corrected_transcription_selection_xiahai_suanmingji_pdf",
+    "selection_id": "015-new-material-expanded-corrected-transcription-selection",
+    "completion_review_item_id": "new_material_corrected_pilot_learning_completion_review_xiahai_suanmingji_pdf",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "local_reference": "下海算命记.pdf",
+    "selection_status": "selected_for_expanded_correction_prep",
+    "selected_page_ranges": [
+      "pages_18_25_method_discussion_window",
+      "pages_66_72_case_examples_window"
+    ],
+    "selected_page_locators": [
+      "page_20_method_context",
+      "page_20_topic_context",
+      "page_70_case_context",
+      "page_72_case_followup_context"
+    ],
+    "selected_page_count": 15,
+    "planned_output_artifact": "docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md",
+    "learning_purpose": "Expand corrected context around method framing and case discussion before any candidate step.",
+    "risk_boundary": "high_risk",
+    "candidate_intake_allowed": false,
+    "correction_prep_allowed": true,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "selected_next_material_entry": "015-new-material-expanded-corrected-transcription-prep",
+    "rationale": "The pilot learning closure requires broader corrected context; these windows extend the existing method and case anchors without changing raw materials.",
+    "guardrails": [
+      "Selection only identifies bounded correction windows.",
+      "Do not treat selected windows as prepared text.",
+      "Keep candidate intake blocked until corrected text is reviewed.",
+      "Do not move or rewrite external source files."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  }
+]

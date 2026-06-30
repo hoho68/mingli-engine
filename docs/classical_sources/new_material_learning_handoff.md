@@ -871,14 +871,41 @@ Risk-review items:
   `next-material-entry=015-new-material-expanded-corrected-transcription-selection`.
 - Corrected pilot learning completion review item:
   `new_material_corrected_pilot_learning_completion_review_xiahai_suanmingji_pdf`.
+- 015 New Material Expanded Corrected Transcription Selection is completed:
+  `new-material-expanded-corrected-transcription-selection-status=selected_for_expanded_correction_prep`,
+  `expanded-correction-selection-items=1`, `selected-page-ranges=2`,
+  `selected-page-locators=4`, `selected-pages=15`,
+  `correction-prep-allowed=1`, `candidate-intake-allowed=0`,
+  `candidate-extract-delta=0`, `review-decision-delta=0`,
+  `promotion-batch-delta=0`, `formal-evidence-delta=0`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-new-material-expanded-corrected-transcription-prep`.
+- Expanded corrected transcription selection item:
+  `new_material_expanded_corrected_transcription_selection_xiahai_suanmingji_pdf`.
+- 015 New Material Expanded Corrected Transcription Prep is completed:
+  `new-material-expanded-corrected-transcription-prep-status=ready_for_expanded_correction_execution`,
+  `expanded-correction-prep-items=1`, `selected-page-ranges=2`,
+  `selected-page-locators=4`, `selected-pages=15`,
+  `correction-packet-ready=1`, `uncorrected-ocr-committed=0`,
+  `prepared-text-artifacts=0`, `human-corrected-text-available=0`,
+  `candidate-intake-allowed=0`, `candidate-extract-delta=0`,
+  `review-decision-delta=0`, `promotion-batch-delta=0`,
+  `formal-evidence-delta=0`, `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-new-material-expanded-corrected-transcription-execution`.
+- Expanded corrected transcription prep item:
+  `new_material_expanded_corrected_transcription_prep_xiahai_suanmingji_pdf`.
+- Planned expanded corrected artifact:
+  `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`.
 - Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`.
 - Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`.
 - Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-note-draft`.
-- Current new-material continuation marker:
+- Previous completed continuation marker:
   `next-new-material-start=015-new-material-expanded-corrected-transcription-selection`.
+- Current new-material continuation marker:
+  `next-new-material-start=015-new-material-expanded-corrected-transcription-execution`.
 
 ## Remaining Optional Precision Work
 
@@ -895,10 +922,9 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-new-material-expanded-corrected-transcription-selection`.
-It should select a bounded additional correction window for the same source, so
-later learning can use broader corrected context before any candidate-intake
-step.
+`next-material-entry=015-new-material-expanded-corrected-transcription-execution`.
+It should create the expanded corrected artifact for the selected page windows,
+then return to 017 learning only after reviewed corrected text exists.
 
 ## Guardrails
 
@@ -910,6 +936,6 @@ step.
 
 ## Next Target
 
-Next target: `015-new-material-expanded-corrected-transcription-selection`.
-Select the next bounded correction window for `下海算命记.pdf` before any
+Next target: `015-new-material-expanded-corrected-transcription-execution`.
+Create the expanded corrected artifact for `下海算命记.pdf` before any
 candidate-intake step.
