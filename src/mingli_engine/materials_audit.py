@@ -20,6 +20,8 @@ from mingli_engine.models import (
     ExplicitCandidateReviewOrQueueRefreshItem,
     ExplicitCandidateReviewOrQueueRefreshSummary,
     ExtractionQueueItem,
+    ExternalMaterialInventoryRefreshConfirmationItem,
+    ExternalMaterialInventoryRefreshConfirmationSummary,
     ExternalMaterialInventoryRefreshSummary,
     MATERIAL_AUDIT_ACTIONS,
     MATERIAL_AUDIT_IDENTITY_CONFIDENCES,
@@ -246,6 +248,9 @@ EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_ID = (
 EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_NEXT_MATERIAL_ENTRY = (
     "015-external-material-inventory-refresh"
 )
+EXTERNAL_MATERIAL_INVENTORY_REFRESH_CONFIRMATION_NEXT_MATERIAL_ENTRY = (
+    "015-raw-text-next-cycle-source-selection"
+)
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
     "bazi_general_misc_identity_review_cluster",
@@ -297,6 +302,9 @@ RAW_TEXT_NEXT_CYCLE_SENSITIVE_PREPARATION_READING_STATUSES = frozenset(
 )
 EXPLICIT_CANDIDATE_REVIEW_OR_QUEUE_REFRESH_STATUSES = frozenset(
     {"routed_to_015_queue_refresh"}
+)
+EXTERNAL_MATERIAL_INVENTORY_REFRESH_CONFIRMATION_STATUSES = frozenset(
+    {"external_inventory_refresh_confirmed"}
 )
 RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY = "015-liang-bazi-core-source-selection"
 RAW_TEXT_SOURCE_SELECTION_ID = "015-liang-bazi-core-source-selection"
@@ -3721,6 +3729,9 @@ def load_explicit_candidate_review_or_queue_refresh_items(
     data_dir: Path | str | None = None,
 ) -> list[ExplicitCandidateReviewOrQueueRefreshItem]:
     source_dir = _data_dir(data_dir)
+    items_path = source_dir / "explicit_candidate_review_or_queue_refresh_items.json"
+    if not items_path.exists():
+        return []
     sensitive_reading_items_by_id = {
         item.reading_item_id: item
         for item in load_raw_text_next_cycle_sensitive_preparation_reading_items(
@@ -3742,7 +3753,7 @@ def load_explicit_candidate_review_or_queue_refresh_items(
             queue_refresh,
         )
         for item in _read_optional_json_list(
-            source_dir / "explicit_candidate_review_or_queue_refresh_items.json"
+            items_path
         )
     ]
     _ensure_unique([item.routing_item_id for item in items], "routing_item_id")
@@ -3750,6 +3761,105 @@ def load_explicit_candidate_review_or_queue_refresh_items(
         [item.sensitive_reading_item_id for item in items],
         "sensitive_reading_item_id",
     )
+    return items
+
+
+def _external_material_inventory_refresh_confirmation_item_from_dict(
+    data: dict[str, Any],
+    external_inventory: ExternalMaterialInventoryRefreshSummary,
+    routing_summary: ExplicitCandidateReviewOrQueueRefreshSummary,
+) -> ExternalMaterialInventoryRefreshConfirmationItem:
+    try:
+        item = ExternalMaterialInventoryRefreshConfirmationItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            "invalid external material inventory refresh confirmation item: "
+            f"{error}"
+        ) from error
+
+    owner_id = item.confirmation_item_id or "?"
+    for field_name in (
+        "confirmation_item_id",
+        "refresh_id",
+        "routing_id",
+        "confirmation_status",
+        "external_inventory_status",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    _validate_enum(
+        item.confirmation_status,
+        EXTERNAL_MATERIAL_INVENTORY_REFRESH_CONFIRMATION_STATUSES,
+        "confirmation_status",
+        owner_id,
+    )
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    if not item.guardrails:
+        raise MaterialsAuditError(f"{owner_id} requires guardrails")
+    if item.refresh_id != external_inventory.refresh_id:
+        raise MaterialsAuditError(f"{owner_id} refresh_id mismatch")
+    if item.routing_id != routing_summary.routing_id:
+        raise MaterialsAuditError(f"{owner_id} routing_id mismatch")
+    if routing_summary.routing_status != "routed_to_015_queue_refresh":
+        raise MaterialsAuditError(f"{owner_id} routing summary is not complete")
+    if item.external_inventory_status != external_inventory.refresh_status:
+        raise MaterialsAuditError(f"{owner_id} external inventory status mismatch")
+    if item.untracked_material_entry_count != len(
+        external_inventory.untracked_material_entry_ids
+    ):
+        raise MaterialsAuditError(f"{owner_id} untracked material count mismatch")
+    if item.untracked_material_entry_count != 0:
+        raise MaterialsAuditError(f"{owner_id} has untracked material entries")
+    if item.selected_next_material_entry != external_inventory.next_material_entry:
+        raise MaterialsAuditError(f"{owner_id} selected next entry mismatch")
+    if item.selected_next_material_entry != (
+        EXTERNAL_MATERIAL_INVENTORY_REFRESH_CONFIRMATION_NEXT_MATERIAL_ENTRY
+    ):
+        raise MaterialsAuditError(f"{owner_id} selected unexpected next entry")
+    if item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize downstream mutation")
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(item, field_name) != 0:
+            raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
+
+    return item
+
+
+def load_external_material_inventory_refresh_confirmation_items(
+    data_dir: Path | str | None = None,
+) -> list[ExternalMaterialInventoryRefreshConfirmationItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = (
+        source_dir / "external_material_inventory_refresh_confirmation_items.json"
+    )
+    if not items_path.exists():
+        return []
+    external_inventory = build_external_material_inventory_refresh_summary(source_dir)
+    routing_summary = build_explicit_candidate_review_or_queue_refresh_summary(
+        source_dir
+    )
+    items = [
+        _external_material_inventory_refresh_confirmation_item_from_dict(
+            item,
+            external_inventory,
+            routing_summary,
+        )
+        for item in _read_optional_json_list(
+            items_path
+        )
+    ]
+    _ensure_unique(
+        [item.confirmation_item_id for item in items],
+        "confirmation_item_id",
+    )
+    _ensure_unique([item.refresh_id for item in items], "refresh_id")
+    _ensure_unique([item.routing_id for item in items], "routing_id")
     return items
 
 
@@ -8374,6 +8484,149 @@ def render_explicit_candidate_review_or_queue_refresh_markdown(
     return "\n".join(lines) + "\n"
 
 
+def build_external_material_inventory_refresh_confirmation_summary(
+    data_dir: Path | str | None = None,
+) -> ExternalMaterialInventoryRefreshConfirmationSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_external_material_inventory_refresh_confirmation_items(source_dir)
+    external_inventory = build_external_material_inventory_refresh_summary(source_dir)
+    routing_summary = build_explicit_candidate_review_or_queue_refresh_summary(
+        source_dir
+    )
+    confirmation_items_loaded = bool(items)
+    explicit_routing_completed = (
+        routing_summary.routing_status == "routed_to_015_queue_refresh"
+    )
+    external_inventory_refresh_completed = (
+        external_inventory.refresh_status == "scoped_metadata_registered"
+    )
+    no_untracked_material_entries = (
+        not external_inventory.untracked_material_entry_ids
+        and all(item.untracked_material_entry_count == 0 for item in items)
+    )
+    next_cycle_source_selection_selected = bool(items) and all(
+        item.selected_next_material_entry == external_inventory.next_material_entry
+        and item.selected_next_material_entry
+        == EXTERNAL_MATERIAL_INVENTORY_REFRESH_CONFIRMATION_NEXT_MATERIAL_ENTRY
+        for item in items
+    )
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "confirmation_items_loaded": (
+            "passed" if confirmation_items_loaded else "failed"
+        ),
+        "explicit_routing_completed": (
+            "passed" if explicit_routing_completed else "failed"
+        ),
+        "external_inventory_refresh_completed": (
+            "passed" if external_inventory_refresh_completed else "failed"
+        ),
+        "no_untracked_material_entries": (
+            "passed" if no_untracked_material_entries else "failed"
+        ),
+        "next_cycle_source_selection_selected": (
+            "passed" if next_cycle_source_selection_selected else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+    return ExternalMaterialInventoryRefreshConfirmationSummary(
+        confirmation_id="015-external-material-inventory-refresh",
+        confirmation_status=(
+            "external_inventory_refresh_confirmed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "external_inventory_refresh_needs_attention"
+        ),
+        confirmation_item_count=len(items),
+        refresh_ids=[item.refresh_id for item in items],
+        routing_ids=[item.routing_id for item in items],
+        external_inventory_status=external_inventory.refresh_status,
+        scanned_entry_count=external_inventory.scanned_entry_count,
+        untracked_material_entry_count=len(
+            external_inventory.untracked_material_entry_ids
+        ),
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=external_inventory.next_material_entry,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "This confirmation reuses existing inventory metadata and path labels only.",
+            "No external raw material is opened, moved, converted, or rewritten.",
+            "No 013 candidate, review, promotion, or 012 evidence mutation is authorized.",
+            "Continue with raw text next-cycle source selection.",
+        ],
+    )
+
+
+def render_external_material_inventory_refresh_confirmation_markdown(
+    summary: ExternalMaterialInventoryRefreshConfirmationSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 External Material Inventory Refresh Confirmation",
+        "",
+        f"- Confirmation id: `{summary.confirmation_id}`",
+        (
+            "- `external-inventory-confirmation-status="
+            f"{summary.confirmation_status}`"
+        ),
+        f"- `confirmation-items={summary.confirmation_item_count}`",
+        f"- `external-inventory-status={summary.external_inventory_status}`",
+        f"- `external-entries={summary.scanned_entry_count}`",
+        f"- `untracked-material-entries={summary.untracked_material_entry_count}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `review-decision-delta={summary.review_decision_delta_count}`",
+        f"- `promotion-batch-delta={summary.promotion_batch_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Refresh ids:",
+    ]
+    lines.extend(f"- `{refresh_id}`" for refresh_id in summary.refresh_ids)
+    lines.extend(["", "Routing ids:"])
+    lines.extend(f"- `{routing_id}`" for routing_id in summary.routing_ids)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_raw_text_cluster_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextClusterSourceSelectionSummary:
@@ -9861,6 +10114,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         explicit_candidate_review_or_queue_refresh_items = (
             load_explicit_candidate_review_or_queue_refresh_items(source_dir)
         )
+        external_material_inventory_refresh_confirmation_items = (
+            load_external_material_inventory_refresh_confirmation_items(source_dir)
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -9901,6 +10157,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         raw_text_next_cycle_sensitive_preparation_boundary_items,
         raw_text_next_cycle_sensitive_preparation_reading_items,
         explicit_candidate_review_or_queue_refresh_items,
+        external_material_inventory_refresh_confirmation_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -9978,6 +10235,9 @@ def _iter_quality_text_fields(
     ],
     explicit_candidate_review_or_queue_refresh_items: list[
         ExplicitCandidateReviewOrQueueRefreshItem
+    ],
+    external_material_inventory_refresh_confirmation_items: list[
+        ExternalMaterialInventoryRefreshConfirmationItem
     ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
@@ -10336,6 +10596,12 @@ def _iter_quality_text_fields(
         fields.append((item.routing_item_id, "rationale", item.rationale))
         fields.extend(
             (item.routing_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in external_material_inventory_refresh_confirmation_items:
+        fields.append((item.confirmation_item_id, "rationale", item.rationale))
+        fields.extend(
+            (item.confirmation_item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

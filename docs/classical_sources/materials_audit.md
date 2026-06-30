@@ -1498,6 +1498,42 @@ Guardrails:
 - Because downstream mutation remains false, continue through the 015 queue-refresh route.
 - External raw materials are not moved, converted, opened, or rewritten.
 
+## 015 External Material Inventory Refresh Confirmation
+
+- Confirmation id: `015-external-material-inventory-refresh`
+- `external-inventory-confirmation-status=external_inventory_refresh_confirmed`
+- `confirmation-items=1`
+- `external-inventory-status=scoped_metadata_registered`
+- `external-entries=31`
+- `untracked-material-entries=0`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-raw-text-next-cycle-source-selection`
+
+Refresh ids:
+- `015-external-material-inventory-refresh`
+
+Routing ids:
+- `013-explicit-candidate-review-or-015-queue-refresh`
+
+Boundary checks:
+- `confirmation_items_loaded`: `passed`
+- `explicit_routing_completed`: `passed`
+- `external_inventory_refresh_completed`: `passed`
+- `no_untracked_material_entries`: `passed`
+- `next_cycle_source_selection_selected`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- This confirmation reuses existing inventory metadata and path labels only.
+- No external raw material is opened, moved, converted, or rewritten.
+- No 013 candidate, review, promotion, or 012 evidence mutation is authorized.
+- Continue with raw text next-cycle source selection.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

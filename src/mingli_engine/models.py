@@ -2739,6 +2739,46 @@ class ExternalMaterialInventoryRefreshSummary:
 
 
 @dataclass(frozen=True)
+class ExternalMaterialInventoryRefreshConfirmationItem:
+    confirmation_item_id: str
+    refresh_id: str
+    routing_id: str
+    confirmation_status: str
+    external_inventory_status: str
+    selected_next_material_entry: str
+    untracked_material_entry_count: int
+    downstream_mutation_authorized: bool = False
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class ExternalMaterialInventoryRefreshConfirmationSummary:
+    confirmation_id: str
+    confirmation_status: str
+    confirmation_item_count: int
+    refresh_ids: list[str]
+    routing_ids: list[str]
+    external_inventory_status: str
+    scanned_entry_count: int
+    untracked_material_entry_count: int
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextMaterialTriageGroup:
     group_id: str
     source_root: str

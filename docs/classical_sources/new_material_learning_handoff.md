@@ -680,8 +680,16 @@ Risk-review items:
   `formal-evidence-delta=0`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-external-material-inventory-refresh`.
+- 015 External Material Inventory Refresh Confirmation is completed:
+  `external-inventory-confirmation-status=external_inventory_refresh_confirmed`,
+  `external-inventory-status=scoped_metadata_registered`,
+  `untracked-material-entries=0`,
+  `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-raw-text-next-cycle-source-selection`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-external-material-inventory-refresh`.
+  `next-new-material-start=015-raw-text-next-cycle-source-selection`.
 
 ## Remaining Optional Precision Work
 
@@ -698,7 +706,7 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-external-material-inventory-refresh`. It should refresh the external-material inventory and select any genuinely new bounded 015 material surface while keeping 013 and 012 gates closed unless separately authorized.
+`next-material-entry=015-raw-text-next-cycle-source-selection`. It should select the next bounded raw-text source surface from the already refreshed inventory while keeping 013 and 012 gates closed unless separately authorized.
 
 ## Guardrails
 
@@ -710,4 +718,4 @@ When continuing new-material work, use a long goal that starts from
 
 ## Next Target
 
-Next target: `015-external-material-inventory-refresh`. Refresh the external-material inventory and select any genuinely new bounded 015 material surface while preserving downstream authorization gates.
+Next target: `015-raw-text-next-cycle-source-selection`. Select the next bounded raw-text source surface from the already refreshed inventory while preserving downstream authorization gates.
