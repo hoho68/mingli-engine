@@ -49,6 +49,8 @@ from mingli_engine.models import (
     NewMaterialIntakeItem,
     NewMaterialOcrOrManualTranscriptionItem,
     NewMaterialOcrOrManualTranscriptionSummary,
+    NewMaterialOcrRuntimeSetupItem,
+    NewMaterialOcrRuntimeSetupSummary,
     NewMaterialIntakeSummary,
     NewMaterialPreparationBoundaryItem,
     NewMaterialPreparationBoundarySummary,
@@ -323,6 +325,12 @@ NEW_MATERIAL_OCR_OR_MANUAL_TRANSCRIPTION_ID = (
 NEW_MATERIAL_OCR_OR_MANUAL_TRANSCRIPTION_NEXT_MATERIAL_ENTRY = (
     "015-new-material-ocr-runtime-setup-or-human-transcription"
 )
+NEW_MATERIAL_OCR_RUNTIME_SETUP_ID = (
+    "015-new-material-ocr-runtime-setup-or-human-transcription"
+)
+NEW_MATERIAL_OCR_RUNTIME_SETUP_NEXT_MATERIAL_ENTRY = (
+    "015-new-material-ocr-quality-remediation-or-human-transcription"
+)
 NEW_MATERIAL_SOURCE_LIBRARY_ENTRY_ID = "entry_new_material_xiahai_suanmingji_pdf"
 NEW_MATERIAL_SOURCE_MATERIAL_ID = "material_new_material_xiahai_suanmingji_pdf"
 NEW_MATERIAL_REGISTRATION_PREP_STATUSES = frozenset(
@@ -342,6 +350,9 @@ NEW_MATERIAL_CONTROLLED_TEXT_PREPARATION_STATUSES = frozenset(
 )
 NEW_MATERIAL_OCR_OR_MANUAL_TRANSCRIPTION_STATUSES = frozenset(
     {"blocked_ocr_runtime_unavailable"}
+)
+NEW_MATERIAL_OCR_RUNTIME_SETUP_STATUSES = frozenset(
+    {"blocked_ocr_quality_insufficient"}
 )
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
@@ -11123,6 +11134,289 @@ def render_new_material_ocr_or_manual_transcription_markdown(
     return "\n".join(lines) + "\n"
 
 
+def _new_material_ocr_runtime_setup_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialOcrRuntimeSetupItem:
+    try:
+        item = NewMaterialOcrRuntimeSetupItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid new material OCR runtime setup item: {error}"
+        ) from error
+    owner_id = item.setup_item_id or "?"
+    for field_name in (
+        "setup_item_id",
+        "setup_id",
+        "ocr_or_manual_transcription_item_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "setup_status",
+        "selected_path",
+        "local_reference",
+        "tesseract_version",
+        "blocker_reason",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    if item.setup_id != NEW_MATERIAL_OCR_RUNTIME_SETUP_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid setup_id")
+    if item.selected_next_material_entry != (
+        NEW_MATERIAL_OCR_RUNTIME_SETUP_NEXT_MATERIAL_ENTRY
+    ):
+        raise MaterialsAuditError(f"{owner_id} selected unexpected next entry")
+    _validate_enum(
+        item.setup_status,
+        NEW_MATERIAL_OCR_RUNTIME_SETUP_STATUSES,
+        "setup_status",
+        owner_id,
+    )
+    if item.selected_path != "local_tesseract_quality_probe":
+        raise MaterialsAuditError(f"{owner_id} has invalid selected_path")
+    _require_string_list(item.tessdata_language_codes, "tessdata_language_codes", owner_id)
+    _require_string_list(item.probe_psm_values, "probe_psm_values", owner_id)
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    for field_name in (
+        "page_count",
+        "probe_page_count",
+        "probe_dpi",
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+    if item.page_count <= 0 or item.probe_page_count <= 0 or item.probe_dpi <= 0:
+        raise MaterialsAuditError(f"{owner_id} has invalid OCR probe counts")
+    if not item.pdftoppm_available:
+        raise MaterialsAuditError(f"{owner_id} must have PDF rendering available")
+    if not item.tesseract_available or not item.chi_sim_available:
+        raise MaterialsAuditError(f"{owner_id} must have local Tesseract Chinese OCR")
+    if "chi_sim" not in item.tessdata_language_codes:
+        raise MaterialsAuditError(f"{owner_id} missing chi_sim tessdata")
+    if item.prepared_text_artifact_created:
+        raise MaterialsAuditError(f"{owner_id} must not create prepared text")
+    if item.source_library_mutation_authorized or item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize mutation")
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(item, field_name) != 0:
+            raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
+
+    previous_items_by_id = {
+        previous.transcription_item_id: previous
+        for previous in load_new_material_ocr_or_manual_transcription_items(source_dir)
+    }
+    previous = previous_items_by_id.get(item.ocr_or_manual_transcription_item_id)
+    if previous is None:
+        raise MaterialsAuditError(
+            f"{owner_id} references unknown OCR/manual transcription item"
+        )
+    if previous.transcription_status != "blocked_ocr_runtime_unavailable":
+        raise MaterialsAuditError(f"{owner_id} previous OCR/manual item not blocked")
+    if item.source_library_entry_id != previous.source_library_entry_id:
+        raise MaterialsAuditError(f"{owner_id} source entry mismatch")
+    if item.source_material_id != previous.source_material_id:
+        raise MaterialsAuditError(f"{owner_id} source material mismatch")
+    if item.local_reference != previous.local_reference:
+        raise MaterialsAuditError(f"{owner_id} local reference mismatch")
+    if item.page_count != previous.page_count:
+        raise MaterialsAuditError(f"{owner_id} page count mismatch")
+    return item
+
+
+def load_new_material_ocr_runtime_setup_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialOcrRuntimeSetupItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = source_dir / "new_material_ocr_runtime_setup_items.json"
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_ocr_runtime_setup_item_from_dict(item, source_dir)
+        for item in _read_optional_json_list(items_path)
+    ]
+    _ensure_unique([item.setup_item_id for item in items], "setup_item_id")
+    return items
+
+
+def build_new_material_ocr_runtime_setup_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialOcrRuntimeSetupSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_ocr_runtime_setup_items(source_dir)
+    previous_summary = build_new_material_ocr_or_manual_transcription_summary(
+        source_dir
+    )
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        and not item.source_library_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "ocr_runtime_setup_items_loaded": "passed" if items else "failed",
+        "previous_ocr_runtime_blocker_recorded": (
+            "passed"
+            if previous_summary.transcription_status
+            == "blocked_ocr_runtime_unavailable"
+            else "failed"
+        ),
+        "pdf_rendering_available": (
+            "passed" if all(item.pdftoppm_available for item in items) else "failed"
+        ),
+        "local_tesseract_available": (
+            "passed" if all(item.tesseract_available for item in items) else "failed"
+        ),
+        "chi_sim_tessdata_available": (
+            "passed" if all(item.chi_sim_available for item in items) else "failed"
+        ),
+        "prepared_text_artifact_absent": (
+            "passed"
+            if all(not item.prepared_text_artifact_created for item in items)
+            else "failed"
+        ),
+        "ocr_quality_gate_blocked": (
+            "passed"
+            if all(
+                item.setup_status == "blocked_ocr_quality_insufficient"
+                for item in items
+            )
+            else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    return NewMaterialOcrRuntimeSetupSummary(
+        setup_id=NEW_MATERIAL_OCR_RUNTIME_SETUP_ID,
+        setup_status=(
+            "blocked_ocr_quality_insufficient"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "ocr_runtime_setup_needs_attention"
+        ),
+        setup_item_count=len(items),
+        source_file_count=len(items),
+        page_count=sum(item.page_count for item in items),
+        probe_page_count=sum(item.probe_page_count for item in items),
+        probe_dpi_values=sorted({item.probe_dpi for item in items}),
+        pdftoppm_available_count=sum(1 for item in items if item.pdftoppm_available),
+        tesseract_available_count=sum(1 for item in items if item.tesseract_available),
+        chi_sim_available_count=sum(1 for item in items if item.chi_sim_available),
+        prepared_text_artifact_count=sum(
+            1 for item in items if item.prepared_text_artifact_created
+        ),
+        blocked_item_count=sum(
+            1
+            for item in items
+            if item.setup_status == "blocked_ocr_quality_insufficient"
+        ),
+        setup_item_ids=[item.setup_item_id for item in items],
+        ocr_or_manual_transcription_item_ids=[
+            item.ocr_or_manual_transcription_item_id for item in items
+        ],
+        source_entry_ids=[item.source_library_entry_id for item in items],
+        source_material_ids=[item.source_material_id for item in items],
+        local_references=[item.local_reference for item in items],
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        source_library_mutation_authorized=any(
+            item.source_library_mutation_authorized for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=NEW_MATERIAL_OCR_RUNTIME_SETUP_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Local OCR runtime is configured, but sampled output is not controlled source text.",
+            "Do not create learning notes, 013 candidates, or 012 units from noisy OCR probes.",
+            "Next work must improve OCR quality or use human transcription before prepared text.",
+            "Temporary OCR probe files are working artifacts and are not source-library material.",
+        ],
+    )
+
+
+def render_new_material_ocr_runtime_setup_markdown(
+    summary: NewMaterialOcrRuntimeSetupSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    probe_dpi_values = ",".join(str(value) for value in summary.probe_dpi_values)
+    lines = [
+        "## 015 New Material OCR Runtime Setup Or Human Transcription",
+        "",
+        f"- Setup id: `{summary.setup_id}`",
+        f"- `new-material-ocr-runtime-setup-status={summary.setup_status}`",
+        f"- `ocr-runtime-setup-items={summary.setup_item_count}`",
+        f"- `source-files={summary.source_file_count}`",
+        f"- `pdf-pages={summary.page_count}`",
+        f"- `probe-pages={summary.probe_page_count}`",
+        f"- `probe-dpi-values={probe_dpi_values}`",
+        f"- `pdftoppm-available={summary.pdftoppm_available_count}`",
+        f"- `tesseract-available={summary.tesseract_available_count}`",
+        f"- `chi-sim-available={summary.chi_sim_available_count}`",
+        f"- `prepared-text-artifacts={summary.prepared_text_artifact_count}`",
+        f"- `blocked-items={summary.blocked_item_count}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "OCR runtime setup item ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.setup_item_ids)
+    lines.extend(["", "Previous OCR/manual transcription item ids:"])
+    lines.extend(
+        f"- `{item_id}`" for item_id in summary.ocr_or_manual_transcription_item_ids
+    )
+    lines.extend(["", "Source-library entry ids:"])
+    lines.extend(f"- `{entry_id}`" for entry_id in summary.source_entry_ids)
+    lines.extend(["", "Local references:"])
+    lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_raw_text_cluster_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextClusterSourceSelectionSummary:
@@ -12635,6 +12929,9 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         new_material_ocr_or_manual_transcription_items = (
             load_new_material_ocr_or_manual_transcription_items(source_dir)
         )
+        new_material_ocr_runtime_setup_items = (
+            load_new_material_ocr_runtime_setup_items(source_dir)
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -12684,6 +12981,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         new_material_preparation_boundary_items,
         new_material_controlled_text_preparation_items,
         new_material_ocr_or_manual_transcription_items,
+        new_material_ocr_runtime_setup_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -12783,6 +13081,7 @@ def _iter_quality_text_fields(
     new_material_ocr_or_manual_transcription_items: list[
         NewMaterialOcrOrManualTranscriptionItem
     ],
+    new_material_ocr_runtime_setup_items: list[NewMaterialOcrRuntimeSetupItem],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
     raw_text_source_registration_prep_items: list[RawTextSourceRegistrationPrepItem],
@@ -13260,6 +13559,18 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.transcription_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in new_material_ocr_runtime_setup_items:
+        fields.extend(
+            (
+                (item.setup_item_id, "local_reference", item.local_reference),
+                (item.setup_item_id, "blocker_reason", item.blocker_reason),
+                (item.setup_item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.setup_item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

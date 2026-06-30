@@ -771,8 +771,20 @@ Risk-review items:
   `next-material-entry=015-new-material-ocr-runtime-setup-or-human-transcription`.
 - OCR/manual transcription item:
   `new_material_ocr_or_manual_xiahai_suanmingji_pdf`.
+- 015 New Material OCR Runtime Setup Or Human Transcription is completed as a
+  quality blocker audit:
+  `new-material-ocr-runtime-setup-status=blocked_ocr_quality_insufficient`,
+  `ocr-runtime-setup-items=1`, `pdf-pages=84`, `probe-pages=4`,
+  `probe-dpi-values=300`, `tesseract-available=1`,
+  `chi-sim-available=1`, `prepared-text-artifacts=0`, `blocked-items=1`,
+  `candidate-extract-delta=0`, `formal-evidence-delta=0`,
+  `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-new-material-ocr-quality-remediation-or-human-transcription`.
+- OCR runtime setup item:
+  `new_material_ocr_runtime_setup_xiahai_suanmingji_pdf`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`.
+  `next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`.
 
 ## Remaining Optional Precision Work
 
@@ -789,10 +801,10 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-new-material-ocr-runtime-setup-or-human-transcription`.
-It should either install/configure a local OCR runtime or perform human
-transcription for `下海算命记.pdf`, create a bounded prepared-text artifact, and
-only then decide whether learning notes or 013 candidate intake can begin.
+`next-material-entry=015-new-material-ocr-quality-remediation-or-human-transcription`.
+It should improve local OCR quality with preprocessing/page segmentation or use
+human transcription for `下海算命记.pdf`, create a bounded prepared-text artifact,
+and only then decide whether learning notes or 013 candidate intake can begin.
 
 ## Guardrails
 
@@ -804,6 +816,6 @@ only then decide whether learning notes or 013 candidate intake can begin.
 
 ## Next Target
 
-Next target: `015-new-material-ocr-runtime-setup-or-human-transcription`.
-Install/configure local OCR or perform human transcription for
-`下海算命记.pdf`, then create a bounded prepared-text artifact.
+Next target: `015-new-material-ocr-quality-remediation-or-human-transcription`.
+Improve OCR quality or perform human transcription for `下海算命记.pdf`, then
+create a bounded prepared-text artifact.

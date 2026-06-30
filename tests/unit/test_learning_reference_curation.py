@@ -2397,11 +2397,11 @@ def test_downstream_authorization_markdown_and_docs_are_in_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`"
+        "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`"
+        "`next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`"
         in quickstart
     )
 
@@ -2458,7 +2458,7 @@ def test_new_material_learning_handoff_tracks_final_state():
         "`next-downstream-entry=015-new-material-intake`",
         (
             "`next-new-material-start="
-            "015-new-material-ocr-runtime-setup-or-human-transcription`"
+            "015-new-material-ocr-quality-remediation-or-human-transcription`"
         ),
         "Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`",
         "Do not duplicate existing 013/012 downstream records",

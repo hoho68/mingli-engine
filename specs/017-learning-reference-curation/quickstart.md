@@ -165,10 +165,16 @@ Explicit Downstream Authorization Receipt:
 - `pdftoppm-available=1`
 - `ocr-runtime-available=0`
 - `prepared-text-artifacts=0`
-- `next-material-entry=015-new-material-ocr-runtime-setup-or-human-transcription`
-- `next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`
+- `new-material-ocr-runtime-setup-status=blocked_ocr_quality_insufficient`
+- `probe-pages=4`
+- `probe-dpi-values=300`
+- `tesseract-available=1`
+- `chi-sim-available=1`
+- `prepared-text-artifacts=0`
+- `next-material-entry=015-new-material-ocr-quality-remediation-or-human-transcription`
+- `next-new-material-start=015-new-material-ocr-quality-remediation-or-human-transcription`
 
-The next long goal should install/configure local OCR or perform human
+The next long goal should improve local OCR quality or perform human
 transcription for `下海算命记.pdf`, create a bounded prepared-text artifact, and
 only then decide whether learning notes or 013 candidate intake can begin.
 

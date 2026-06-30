@@ -1870,6 +1870,55 @@ Guardrails:
 - Do not use network OCR services for this source without explicit approval.
 - Do not create learning notes, 013 candidates, or 012 units until prepared text exists.
 
+## 015 New Material OCR Runtime Setup Or Human Transcription
+
+- Setup id: `015-new-material-ocr-runtime-setup-or-human-transcription`
+- `new-material-ocr-runtime-setup-status=blocked_ocr_quality_insufficient`
+- `ocr-runtime-setup-items=1`
+- `source-files=1`
+- `pdf-pages=84`
+- `probe-pages=4`
+- `probe-dpi-values=300`
+- `pdftoppm-available=1`
+- `tesseract-available=1`
+- `chi-sim-available=1`
+- `prepared-text-artifacts=0`
+- `blocked-items=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-ocr-quality-remediation-or-human-transcription`
+
+OCR runtime setup item ids:
+- `new_material_ocr_runtime_setup_xiahai_suanmingji_pdf`
+
+Previous OCR/manual transcription item ids:
+- `new_material_ocr_or_manual_xiahai_suanmingji_pdf`
+
+Source-library entry ids:
+- `entry_new_material_xiahai_suanmingji_pdf`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `ocr_runtime_setup_items_loaded`: `passed`
+- `previous_ocr_runtime_blocker_recorded`: `passed`
+- `pdf_rendering_available`: `passed`
+- `local_tesseract_available`: `passed`
+- `chi_sim_tessdata_available`: `passed`
+- `prepared_text_artifact_absent`: `passed`
+- `ocr_quality_gate_blocked`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Local OCR runtime is configured, but sampled output is not controlled source text.
+- Do not create learning notes, 013 candidates, or 012 units from noisy OCR probes.
+- Next work must improve OCR quality or use human transcription before prepared text.
+- Temporary OCR probe files are working artifacts and are not source-library material.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`
