@@ -3595,6 +3595,119 @@ class NewMaterialCorrectedPilotLearningNotePrepSummary:
 
 
 @dataclass(frozen=True)
+class NewMaterialCorrectedPilotLearningNoteDraftItem:
+    draft_item_id: str
+    draft_id: str
+    prep_item_id: str
+    note_id: str
+    learning_point_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    prepared_text_artifact: str
+    local_reference: str
+    draft_status: str
+    target_rule_family: str
+    risk_tier: str
+    locator_summary: str
+    learning_summary: str
+    limitations: list[str]
+    candidate_intake_allowed: bool
+    completion_review_allowed: bool
+    downstream_mutation_authorized: bool
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    selected_next_material_entry: str = ""
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialCorrectedPilotLearningNoteDraftSummary:
+    draft_id: str
+    draft_status: str
+    draft_item_count: int
+    learning_note_count: int
+    learning_point_count: int
+    candidate_intake_allowed_count: int
+    completion_review_allowed_count: int
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    draft_item_ids: list[str]
+    prep_item_ids: list[str]
+    note_ids: list[str]
+    learning_point_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    prepared_text_artifacts: list[str]
+    target_rule_family_counts: dict[str, int]
+    risk_tier_counts: dict[str, int]
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class NewMaterialCorrectedPilotLearningCompletionReviewItem:
+    completion_item_id: str
+    completion_id: str
+    draft_item_id: str
+    note_id: str
+    learning_point_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    prepared_text_artifact: str
+    local_reference: str
+    completion_status: str
+    learning_note_closed: bool
+    candidate_intake_allowed: bool
+    additional_correction_required: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialCorrectedPilotLearningCompletionReviewSummary:
+    completion_id: str
+    completion_status: str
+    completion_item_count: int
+    learning_note_closed_count: int
+    candidate_intake_allowed_count: int
+    additional_correction_required_count: int
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    completion_item_ids: list[str]
+    draft_item_ids: list[str]
+    note_ids: list[str]
+    learning_point_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    prepared_text_artifacts: list[str]
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextMaterialTriageGroup:
     group_id: str
     source_root: str

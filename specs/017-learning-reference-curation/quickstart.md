@@ -227,11 +227,41 @@ Explicit Downstream Authorization Receipt:
 - `next-material-entry=017-new-material-corrected-pilot-learning-note-draft`
 - `new_material_corrected_pilot_learning_note_prep_xiahai_suanmingji_pdf`
 - `note_xiahai_suanmingji_corrected_pilot_001`
-- `next-new-material-start=017-new-material-corrected-pilot-learning-note-draft`
+- Previous completed marker:
+  `next-new-material-start=017-new-material-corrected-pilot-learning-note-draft`
 
-The next long goal should create the bounded 017 learning-note draft from the
-prep packet, keep it concise, and still block candidate intake until the draft
-is reviewed.
+017 New Material Corrected Pilot Learning Note Draft:
+
+- `new-material-corrected-pilot-learning-note-draft-status=ready_for_learning_completion_review`
+- `learning-note-draft-items=1`
+- `learning-notes=1`
+- `learning-points=1`
+- `candidate-intake-allowed=0`
+- `completion-review-allowed=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-corrected-pilot-learning-completion-review`
+- `new_material_corrected_pilot_learning_note_draft_xiahai_suanmingji_pdf`
+- `lp_xiahai_suanmingji_pilot_boundary_001`
+
+017 New Material Corrected Pilot Learning Completion Review:
+
+- `new-material-corrected-pilot-learning-completion-review-status=current_pilot_learning_completed_candidate_intake_blocked`
+- `learning-completion-review-items=1`
+- `learning-notes-closed=1`
+- `candidate-intake-allowed=0`
+- `additional-correction-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-expanded-corrected-transcription-selection`
+- `new_material_corrected_pilot_learning_completion_review_xiahai_suanmingji_pdf`
+- `next-new-material-start=015-new-material-expanded-corrected-transcription-selection`
+
+The next long goal should select a bounded additional correction window for the
+same source, so later learning can use broader corrected context before any
+candidate-intake step.
 
 Run focused learning reference curation tests:
 

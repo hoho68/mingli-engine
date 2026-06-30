@@ -851,12 +851,34 @@ Risk-review items:
   `new_material_corrected_pilot_learning_note_prep_xiahai_suanmingji_pdf`.
 - Proposed learning note id:
   `note_xiahai_suanmingji_corrected_pilot_001`.
+- 017 New Material Corrected Pilot Learning Note Draft is completed:
+  `new-material-corrected-pilot-learning-note-draft-status=ready_for_learning_completion_review`,
+  `learning-note-draft-items=1`, `learning-notes=1`,
+  `learning-points=1`, `candidate-intake-allowed=0`,
+  `completion-review-allowed=1`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, `downstream-mutation-authorized=false`, and
+  `next-material-entry=017-new-material-corrected-pilot-learning-completion-review`.
+- Corrected pilot learning note draft item:
+  `new_material_corrected_pilot_learning_note_draft_xiahai_suanmingji_pdf`.
+- Pilot learning point id:
+  `lp_xiahai_suanmingji_pilot_boundary_001`.
+- 017 New Material Corrected Pilot Learning Completion Review is completed:
+  `new-material-corrected-pilot-learning-completion-review-status=current_pilot_learning_completed_candidate_intake_blocked`,
+  `learning-completion-review-items=1`, `learning-notes-closed=1`,
+  `candidate-intake-allowed=0`, `additional-correction-required=1`,
+  `candidate-extract-delta=0`, `formal-evidence-delta=0`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-new-material-expanded-corrected-transcription-selection`.
+- Corrected pilot learning completion review item:
+  `new_material_corrected_pilot_learning_completion_review_xiahai_suanmingji_pdf`.
 - Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`.
 - Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`.
-- Current new-material continuation marker:
+- Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-note-draft`.
+- Current new-material continuation marker:
+  `next-new-material-start=015-new-material-expanded-corrected-transcription-selection`.
 
 ## Remaining Optional Precision Work
 
@@ -873,9 +895,10 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=017-new-material-corrected-pilot-learning-note-draft`.
-It should create the bounded 017 learning-note draft from the prep packet, keep
-the note concise, and keep candidate intake blocked until the draft is reviewed.
+`next-material-entry=015-new-material-expanded-corrected-transcription-selection`.
+It should select a bounded additional correction window for the same source, so
+later learning can use broader corrected context before any candidate-intake
+step.
 
 ## Guardrails
 
@@ -887,6 +910,6 @@ the note concise, and keep candidate intake blocked until the draft is reviewed.
 
 ## Next Target
 
-Next target: `017-new-material-corrected-pilot-learning-note-draft`.
-Create the bounded learning-note draft from the prep packet before any
+Next target: `015-new-material-expanded-corrected-transcription-selection`.
+Select the next bounded correction window for `下海算命记.pdf` before any
 candidate-intake step.

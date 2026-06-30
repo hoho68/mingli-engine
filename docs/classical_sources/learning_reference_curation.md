@@ -442,6 +442,95 @@ Guardrails:
 - Do not add 013 or 012 records from the prep packet.
 - Do not expand the prepared-text artifact during note prep.
 
+## 017 New Material Corrected Pilot Learning Note Draft
+
+The corrected pilot now has one concise 017 learning-note draft. It captures one
+pilot-level boundary learning point, keeps candidate intake blocked, and routes
+the item to a completion review rather than downstream records.
+
+- Draft id: `017-new-material-corrected-pilot-learning-note-draft`
+- `new-material-corrected-pilot-learning-note-draft-status=ready_for_learning_completion_review`
+- `learning-note-draft-items=1`
+- `learning-notes=1`
+- `learning-points=1`
+- `candidate-intake-allowed=0`
+- `completion-review-allowed=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-corrected-pilot-learning-completion-review`
+
+Learning note draft item ids:
+- `new_material_corrected_pilot_learning_note_draft_xiahai_suanmingji_pdf`
+
+Learning note ids:
+- `note_xiahai_suanmingji_corrected_pilot_001`
+
+Learning point ids:
+- `lp_xiahai_suanmingji_pilot_boundary_001`
+
+Target rule families:
+- `high_risk_signal`: `1`
+
+Risk tiers:
+- `high_risk`: `1`
+
+Boundary checks:
+- `learning_note_draft_items_loaded`: `passed`
+- `previous_note_prep_ready`: `passed`
+- `learning_note_ids_prepared`: `passed`
+- `completion_review_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The draft is a concise pilot learning note only.
+- Candidate intake remains blocked by limited corrected context.
+- Completion review must decide whether to stop or request more correction.
+- No 013 or 012 records are created by the draft stage.
+
+## 017 New Material Corrected Pilot Learning Completion Review
+
+The current pilot learning task is closed at 017. The corrected pilot is useful
+as a learning boundary note, but it is too small for candidate intake or 012
+work. The next material action is bounded additional correction selection.
+
+- Completion id: `017-new-material-corrected-pilot-learning-completion-review`
+- `new-material-corrected-pilot-learning-completion-review-status=current_pilot_learning_completed_candidate_intake_blocked`
+- `learning-completion-review-items=1`
+- `learning-notes-closed=1`
+- `candidate-intake-allowed=0`
+- `additional-correction-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-expanded-corrected-transcription-selection`
+
+Learning completion review item ids:
+- `new_material_corrected_pilot_learning_completion_review_xiahai_suanmingji_pdf`
+
+Learning note ids:
+- `note_xiahai_suanmingji_corrected_pilot_001`
+
+Learning point ids:
+- `lp_xiahai_suanmingji_pilot_boundary_001`
+
+Boundary checks:
+- `completion_review_items_loaded`: `passed`
+- `previous_note_draft_ready`: `passed`
+- `learning_note_closed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `additional_correction_routed`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The current pilot learning task is closed at 017 only.
+- Candidate intake remains blocked until more corrected context exists.
+- The next material action is additional bounded correction selection.
+- No 013 or 012 records are created by this completion review.
+
 ## Phase C Source Disposition Snapshot
 
 The current 016/017 state consumes 23 selected extraction tasks as learning
