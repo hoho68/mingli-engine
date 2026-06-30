@@ -779,6 +779,9 @@ def test_public_materials_audit_functions_exist():
         "load_new_material_human_corrected_transcription_prep_items",
         "build_new_material_human_corrected_transcription_prep_summary",
         "render_new_material_human_corrected_transcription_prep_markdown",
+        "load_new_material_human_corrected_transcription_execution_items",
+        "build_new_material_human_corrected_transcription_execution_summary",
+        "render_new_material_human_corrected_transcription_execution_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -4102,11 +4105,11 @@ def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-human-corrected-transcription-execution`"
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-human-corrected-transcription-execution`"
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`"
         in quickstart
     )
 
@@ -4202,8 +4205,8 @@ def test_new_material_intake_markdown_and_docs_sync():
         assert marker in materials_doc
         assert marker in handoff
 
-    assert "`next-new-material-start=015-new-material-human-corrected-transcription-execution`" in handoff
-    assert "`next-new-material-start=015-new-material-human-corrected-transcription-execution`" in quickstart
+    assert "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`" in handoff
+    assert "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`" in quickstart
 
 
 def test_new_material_source_identity_review_item_prepares_registration():
@@ -4305,8 +4308,8 @@ def test_new_material_source_identity_review_markdown_and_docs_sync():
         assert marker in materials_doc
         assert marker in handoff
 
-    assert "`next-new-material-start=015-new-material-human-corrected-transcription-execution`" in handoff
-    assert "`next-new-material-start=015-new-material-human-corrected-transcription-execution`" in quickstart
+    assert "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`" in handoff
+    assert "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`" in quickstart
 
 
 def test_new_material_registration_prep_registers_xiahai_metadata():
@@ -4419,11 +4422,11 @@ def test_new_material_long_goal_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-human-corrected-transcription-execution`"
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-human-corrected-transcription-execution`"
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`"
         in quickstart
     )
 
@@ -4515,11 +4518,11 @@ def test_new_material_controlled_text_preparation_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-human-corrected-transcription-execution`"
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-human-corrected-transcription-execution`"
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`"
         in quickstart
     )
 
@@ -4606,11 +4609,11 @@ def test_new_material_ocr_or_manual_transcription_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-human-corrected-transcription-execution`"
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-human-corrected-transcription-execution`"
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`"
         in quickstart
     )
 
@@ -4711,12 +4714,12 @@ def test_new_material_ocr_runtime_setup_markdown_and_docs_sync():
 
     assert (
         "`next-new-material-start="
-        "015-new-material-human-corrected-transcription-execution`"
+        "017-new-material-corrected-pilot-learning-entry-evaluation`"
         in handoff
     )
     assert (
         "`next-new-material-start="
-        "015-new-material-human-corrected-transcription-execution`"
+        "017-new-material-corrected-pilot-learning-entry-evaluation`"
         in quickstart
     )
 
@@ -4821,12 +4824,12 @@ def test_new_material_ocr_quality_remediation_markdown_and_docs_sync():
 
     assert (
         "`next-new-material-start="
-        "015-new-material-human-corrected-transcription-execution`"
+        "017-new-material-corrected-pilot-learning-entry-evaluation`"
         in handoff
     )
     assert (
         "`next-new-material-start="
-        "015-new-material-human-corrected-transcription-execution`"
+        "017-new-material-corrected-pilot-learning-entry-evaluation`"
         in quickstart
     )
 
@@ -4938,12 +4941,132 @@ def test_new_material_human_corrected_transcription_prep_markdown_and_docs_sync(
 
     assert (
         "`next-new-material-start="
-        "015-new-material-human-corrected-transcription-execution`"
+        "017-new-material-corrected-pilot-learning-entry-evaluation`"
         in handoff
     )
     assert (
         "`next-new-material-start="
-        "015-new-material-human-corrected-transcription-execution`"
+        "017-new-material-corrected-pilot-learning-entry-evaluation`"
+        in quickstart
+    )
+
+
+def test_new_material_human_corrected_transcription_execution_creates_pilot():
+    items = materials_audit.load_new_material_human_corrected_transcription_execution_items()
+    summary = (
+        materials_audit.build_new_material_human_corrected_transcription_execution_summary()
+    )
+    artifact = Path("docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md")
+
+    assert artifact.exists()
+    artifact_text = artifact.read_text(encoding="utf-8")
+    assert "corrected pilot excerpts only" in artifact_text
+    assert "卜卦無關乎神鬼" in artifact_text
+    assert "積善之家必有餘慶" in artifact_text
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.execution_id == "015-new-material-human-corrected-transcription-execution"
+    assert item.transcription_prep_item_id == (
+        "new_material_human_corrected_transcription_prep_xiahai_suanmingji_pdf"
+    )
+    assert item.execution_status == "pilot_prepared_text_created"
+    assert item.prepared_text_artifact == (
+        "docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md"
+    )
+    assert item.corrected_excerpt_count == 4
+    assert item.corrected_character_count == 35
+    assert item.page_locator_count == 4
+    assert item.uncorrected_ocr_committed is False
+    assert item.long_form_transcription_committed is False
+    assert item.prepared_text_artifact_created is True
+    assert item.human_corrected_text_available is True
+    assert item.learning_entry_ready is True
+    assert item.selected_next_material_entry == (
+        "017-new-material-corrected-pilot-learning-entry-evaluation"
+    )
+
+    assert summary.execution_status == "pilot_prepared_text_created"
+    assert summary.execution_item_count == 1
+    assert summary.prepared_text_artifact_count == 1
+    assert summary.corrected_excerpt_count == 4
+    assert summary.corrected_character_count == 35
+    assert summary.page_locator_count == 4
+    assert summary.learning_entry_ready_count == 1
+    assert summary.uncorrected_ocr_committed_count == 0
+    assert summary.long_form_transcription_committed_count == 0
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.next_material_entry == (
+        "017-new-material-corrected-pilot-learning-entry-evaluation"
+    )
+    assert summary.boundary_checks == {
+        "human_corrected_transcription_execution_items_loaded": "passed",
+        "previous_correction_packet_ready": "passed",
+        "prepared_text_artifact_created": "passed",
+        "uncorrected_ocr_not_committed": "passed",
+        "long_form_transcription_absent": "passed",
+        "learning_entry_ready": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_human_corrected_transcription_execution_markdown_and_docs_sync():
+    summary = (
+        materials_audit.build_new_material_human_corrected_transcription_execution_summary()
+    )
+    markdown = (
+        materials_audit.render_new_material_human_corrected_transcription_execution_markdown(
+            summary
+        )
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 New Material Human Corrected Transcription Execution",
+        (
+            "`new-material-human-corrected-transcription-execution-status="
+            "pilot_prepared_text_created`"
+        ),
+        "`human-corrected-transcription-execution-items=1`",
+        "`prepared-text-artifacts=1`",
+        "`corrected-excerpts=4`",
+        "`corrected-characters=35`",
+        "`page-locators=4`",
+        "`learning-entry-ready=1`",
+        "`uncorrected-ocr-committed=0`",
+        "`long-form-transcription-committed=0`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        (
+            "`next-material-entry="
+            "017-new-material-corrected-pilot-learning-entry-evaluation`"
+        ),
+        "`new_material_human_corrected_transcription_execution_xiahai_suanmingji_pdf`",
+        "`docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md`",
+        "`下海算命记.pdf`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start="
+        "017-new-material-corrected-pilot-learning-entry-evaluation`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start="
+        "017-new-material-corrected-pilot-learning-entry-evaluation`"
         in quickstart
     )
 

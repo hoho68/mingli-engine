@@ -811,8 +811,21 @@ Risk-review items:
   `new_material_human_corrected_transcription_prep_xiahai_suanmingji_pdf`.
 - Planned corrected prepared-text artifact:
   `docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md`.
+- 015 New Material Human Corrected Transcription Execution is completed as a
+  bounded pilot:
+  `new-material-human-corrected-transcription-execution-status=pilot_prepared_text_created`,
+  `human-corrected-transcription-execution-items=1`,
+  `prepared-text-artifacts=1`, `corrected-excerpts=4`,
+  `corrected-characters=35`, `page-locators=4`,
+  `learning-entry-ready=1`, `uncorrected-ocr-committed=0`,
+  `long-form-transcription-committed=0`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=017-new-material-corrected-pilot-learning-entry-evaluation`.
+- Human-corrected transcription execution item:
+  `new_material_human_corrected_transcription_execution_xiahai_suanmingji_pdf`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-new-material-human-corrected-transcription-execution`.
+  `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`.
 
 ## Remaining Optional Precision Work
 
@@ -829,11 +842,10 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-new-material-human-corrected-transcription-execution`.
-It should execute human correction using the prepared packet and only then
-create the bounded corrected prepared-text artifact for `下海算命记.pdf`.
-Learning notes and 013 candidate intake remain blocked until that artifact
-exists.
+`next-material-entry=017-new-material-corrected-pilot-learning-entry-evaluation`.
+It should evaluate the short corrected pilot artifact for learning-note
+eligibility, duplicate/overlap risk, and candidate-intake boundaries before any
+017 note or 013 candidate is created.
 
 ## Guardrails
 
@@ -845,6 +857,6 @@ exists.
 
 ## Next Target
 
-Next target: `015-new-material-human-corrected-transcription-execution`.
-Execute human correction from the prepared packet, then create the bounded
-corrected prepared-text artifact.
+Next target: `017-new-material-corrected-pilot-learning-entry-evaluation`.
+Evaluate the bounded corrected pilot artifact before creating learning notes or
+candidate intake.

@@ -3410,6 +3410,68 @@ class NewMaterialHumanCorrectedTranscriptionPrepSummary:
 
 
 @dataclass(frozen=True)
+class NewMaterialHumanCorrectedTranscriptionExecutionItem:
+    execution_item_id: str
+    execution_id: str
+    transcription_prep_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    execution_status: str
+    local_reference: str
+    prepared_text_artifact: str
+    corrected_excerpt_count: int
+    corrected_character_count: int
+    page_locator_count: int
+    selected_page_locators: list[str]
+    uncorrected_ocr_committed: bool
+    long_form_transcription_committed: bool
+    prepared_text_artifact_created: bool
+    human_corrected_text_available: bool
+    learning_entry_ready: bool
+    selected_next_material_entry: str
+    source_library_mutation_authorized: bool = False
+    downstream_mutation_authorized: bool = False
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialHumanCorrectedTranscriptionExecutionSummary:
+    execution_id: str
+    execution_status: str
+    execution_item_count: int
+    source_file_count: int
+    prepared_text_artifact_count: int
+    corrected_excerpt_count: int
+    corrected_character_count: int
+    page_locator_count: int
+    learning_entry_ready_count: int
+    uncorrected_ocr_committed_count: int
+    long_form_transcription_committed_count: int
+    execution_item_ids: list[str]
+    transcription_prep_item_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    prepared_text_artifacts: list[str]
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextMaterialTriageGroup:
     group_id: str
     source_root: str

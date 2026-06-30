@@ -2014,6 +2014,50 @@ Guardrails:
 - Do not commit uncorrected OCR passages, page images, or temporary crops.
 - Original external materials remain unmoved and unchanged.
 
+## 015 New Material Human Corrected Transcription Execution
+
+- Execution id: `015-new-material-human-corrected-transcription-execution`
+- `new-material-human-corrected-transcription-execution-status=pilot_prepared_text_created`
+- `human-corrected-transcription-execution-items=1`
+- `source-files=1`
+- `prepared-text-artifacts=1`
+- `corrected-excerpts=4`
+- `corrected-characters=35`
+- `page-locators=4`
+- `learning-entry-ready=1`
+- `uncorrected-ocr-committed=0`
+- `long-form-transcription-committed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-corrected-pilot-learning-entry-evaluation`
+
+Human-corrected transcription execution item ids:
+- `new_material_human_corrected_transcription_execution_xiahai_suanmingji_pdf`
+
+Prepared text artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `human_corrected_transcription_execution_items_loaded`: `passed`
+- `previous_correction_packet_ready`: `passed`
+- `prepared_text_artifact_created`: `passed`
+- `uncorrected_ocr_not_committed`: `passed`
+- `long_form_transcription_absent`: `passed`
+- `learning_entry_ready`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The prepared text artifact is a short pilot, not a full transcription.
+- Learning entry evaluation must happen before creating 017 notes.
+- No 013 candidate or 012 formal evidence is created by this stage.
+- Do not expand beyond bounded corrected excerpts without review.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

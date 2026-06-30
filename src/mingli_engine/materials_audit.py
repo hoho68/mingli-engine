@@ -42,6 +42,8 @@ from mingli_engine.models import (
     MaterialQueueRefreshSummary,
     MaterialAuditRecord,
     MaterialRepresentation,
+    NewMaterialHumanCorrectedTranscriptionExecutionItem,
+    NewMaterialHumanCorrectedTranscriptionExecutionSummary,
     NewMaterialHumanCorrectedTranscriptionPrepItem,
     NewMaterialHumanCorrectedTranscriptionPrepSummary,
     NewMaterialExtractionLearningLoopClosureItem,
@@ -347,6 +349,12 @@ NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_ID = (
 NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_NEXT_MATERIAL_ENTRY = (
     "015-new-material-human-corrected-transcription-execution"
 )
+NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_EXECUTION_ID = (
+    "015-new-material-human-corrected-transcription-execution"
+)
+NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_EXECUTION_NEXT_MATERIAL_ENTRY = (
+    "017-new-material-corrected-pilot-learning-entry-evaluation"
+)
 NEW_MATERIAL_SOURCE_LIBRARY_ENTRY_ID = "entry_new_material_xiahai_suanmingji_pdf"
 NEW_MATERIAL_SOURCE_MATERIAL_ID = "material_new_material_xiahai_suanmingji_pdf"
 NEW_MATERIAL_REGISTRATION_PREP_STATUSES = frozenset(
@@ -375,6 +383,9 @@ NEW_MATERIAL_OCR_QUALITY_REMEDIATION_STATUSES = frozenset(
 )
 NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_STATUSES = frozenset(
     {"blocked_ready_for_human_correction"}
+)
+NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_EXECUTION_STATUSES = frozenset(
+    {"pilot_prepared_text_created"}
 )
 RAW_TEXT_NEXT_CYCLE_SELECTED_CLUSTER_IDS = (
     "bazi_general_modern_method_series_cluster",
@@ -12023,6 +12034,289 @@ def render_new_material_human_corrected_transcription_prep_markdown(
     return "\n".join(lines) + "\n"
 
 
+def _new_material_human_corrected_transcription_execution_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialHumanCorrectedTranscriptionExecutionItem:
+    try:
+        item = NewMaterialHumanCorrectedTranscriptionExecutionItem(**data)
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid new material human corrected transcription execution item: {error}"
+        ) from error
+    owner_id = item.execution_item_id or "?"
+    for field_name in (
+        "execution_item_id",
+        "execution_id",
+        "transcription_prep_item_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "execution_status",
+        "local_reference",
+        "prepared_text_artifact",
+        "selected_next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    if item.execution_id != NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_EXECUTION_ID:
+        raise MaterialsAuditError(f"{owner_id} has invalid execution_id")
+    if item.selected_next_material_entry != (
+        NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_EXECUTION_NEXT_MATERIAL_ENTRY
+    ):
+        raise MaterialsAuditError(f"{owner_id} selected unexpected next entry")
+    _validate_enum(
+        item.execution_status,
+        NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_EXECUTION_STATUSES,
+        "execution_status",
+        owner_id,
+    )
+    _require_string_list(item.selected_page_locators, "selected_page_locators", owner_id)
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    for field_name in (
+        "corrected_excerpt_count",
+        "corrected_character_count",
+        "page_locator_count",
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+    if item.corrected_excerpt_count <= 0 or item.corrected_character_count <= 0:
+        raise MaterialsAuditError(f"{owner_id} must contain corrected pilot excerpts")
+    if item.page_locator_count != len(item.selected_page_locators):
+        raise MaterialsAuditError(f"{owner_id} page locator count mismatch")
+    if item.corrected_character_count > 120:
+        raise MaterialsAuditError(f"{owner_id} corrected pilot text is too long")
+    if item.uncorrected_ocr_committed or item.long_form_transcription_committed:
+        raise MaterialsAuditError(f"{owner_id} violates OCR text boundary")
+    if not item.prepared_text_artifact_created:
+        raise MaterialsAuditError(f"{owner_id} must create prepared text artifact")
+    if not item.human_corrected_text_available or not item.learning_entry_ready:
+        raise MaterialsAuditError(f"{owner_id} must be ready for learning entry review")
+    if item.source_library_mutation_authorized or item.downstream_mutation_authorized:
+        raise MaterialsAuditError(f"{owner_id} must not authorize mutation")
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(item, field_name) != 0:
+            raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
+
+    artifact_path = Path(item.prepared_text_artifact)
+    if artifact_path.is_absolute() or ".." in artifact_path.parts:
+        raise MaterialsAuditError(f"{owner_id} prepared text path must be relative")
+    if not (Path.cwd() / artifact_path).exists():
+        raise MaterialsAuditError(f"{owner_id} prepared text artifact is missing")
+
+    prep_items_by_id = {
+        prep.prep_item_id: prep
+        for prep in load_new_material_human_corrected_transcription_prep_items(
+            source_dir
+        )
+    }
+    prep = prep_items_by_id.get(item.transcription_prep_item_id)
+    if prep is None:
+        raise MaterialsAuditError(f"{owner_id} references unknown prep item")
+    if prep.prep_status != "blocked_ready_for_human_correction":
+        raise MaterialsAuditError(f"{owner_id} prep item not ready for correction")
+    if item.source_library_entry_id != prep.source_library_entry_id:
+        raise MaterialsAuditError(f"{owner_id} source entry mismatch")
+    if item.source_material_id != prep.source_material_id:
+        raise MaterialsAuditError(f"{owner_id} source material mismatch")
+    if item.local_reference != prep.local_reference:
+        raise MaterialsAuditError(f"{owner_id} local reference mismatch")
+    if item.prepared_text_artifact != prep.planned_output_artifact:
+        raise MaterialsAuditError(f"{owner_id} prepared text artifact mismatch")
+    return item
+
+
+def load_new_material_human_corrected_transcription_execution_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialHumanCorrectedTranscriptionExecutionItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = (
+        source_dir / "new_material_human_corrected_transcription_execution_items.json"
+    )
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_human_corrected_transcription_execution_item_from_dict(
+            item, source_dir
+        )
+        for item in _read_optional_json_list(items_path)
+    ]
+    _ensure_unique([item.execution_item_id for item in items], "execution_item_id")
+    return items
+
+
+def build_new_material_human_corrected_transcription_execution_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialHumanCorrectedTranscriptionExecutionSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_human_corrected_transcription_execution_items(source_dir)
+    prep_summary = build_new_material_human_corrected_transcription_prep_summary(
+        source_dir
+    )
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        and not item.source_library_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "human_corrected_transcription_execution_items_loaded": (
+            "passed" if items else "failed"
+        ),
+        "previous_correction_packet_ready": (
+            "passed"
+            if prep_summary.prep_status == "blocked_ready_for_human_correction"
+            else "failed"
+        ),
+        "prepared_text_artifact_created": (
+            "passed"
+            if all(item.prepared_text_artifact_created for item in items)
+            else "failed"
+        ),
+        "uncorrected_ocr_not_committed": (
+            "passed"
+            if all(not item.uncorrected_ocr_committed for item in items)
+            else "failed"
+        ),
+        "long_form_transcription_absent": (
+            "passed"
+            if all(not item.long_form_transcription_committed for item in items)
+            else "failed"
+        ),
+        "learning_entry_ready": (
+            "passed" if all(item.learning_entry_ready for item in items) else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    return NewMaterialHumanCorrectedTranscriptionExecutionSummary(
+        execution_id=NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_EXECUTION_ID,
+        execution_status=(
+            "pilot_prepared_text_created"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "human_corrected_transcription_execution_needs_attention"
+        ),
+        execution_item_count=len(items),
+        source_file_count=len(items),
+        prepared_text_artifact_count=sum(
+            1 for item in items if item.prepared_text_artifact_created
+        ),
+        corrected_excerpt_count=sum(item.corrected_excerpt_count for item in items),
+        corrected_character_count=sum(item.corrected_character_count for item in items),
+        page_locator_count=sum(item.page_locator_count for item in items),
+        learning_entry_ready_count=sum(1 for item in items if item.learning_entry_ready),
+        uncorrected_ocr_committed_count=sum(
+            1 for item in items if item.uncorrected_ocr_committed
+        ),
+        long_form_transcription_committed_count=sum(
+            1 for item in items if item.long_form_transcription_committed
+        ),
+        execution_item_ids=[item.execution_item_id for item in items],
+        transcription_prep_item_ids=[
+            item.transcription_prep_item_id for item in items
+        ],
+        source_entry_ids=[item.source_library_entry_id for item in items],
+        source_material_ids=[item.source_material_id for item in items],
+        local_references=[item.local_reference for item in items],
+        prepared_text_artifacts=[item.prepared_text_artifact for item in items],
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        source_library_mutation_authorized=any(
+            item.source_library_mutation_authorized for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=(
+            NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_EXECUTION_NEXT_MATERIAL_ENTRY
+        ),
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "The prepared text artifact is a short pilot, not a full transcription.",
+            "Learning entry evaluation must happen before creating 017 notes.",
+            "No 013 candidate or 012 formal evidence is created by this stage.",
+            "Do not expand beyond bounded corrected excerpts without review.",
+        ],
+    )
+
+
+def render_new_material_human_corrected_transcription_execution_markdown(
+    summary: NewMaterialHumanCorrectedTranscriptionExecutionSummary,
+) -> str:
+    source_library_mutation_authorized = (
+        "true" if summary.source_library_mutation_authorized else "false"
+    )
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 015 New Material Human Corrected Transcription Execution",
+        "",
+        f"- Execution id: `{summary.execution_id}`",
+        f"- `new-material-human-corrected-transcription-execution-status={summary.execution_status}`",
+        f"- `human-corrected-transcription-execution-items={summary.execution_item_count}`",
+        f"- `source-files={summary.source_file_count}`",
+        f"- `prepared-text-artifacts={summary.prepared_text_artifact_count}`",
+        f"- `corrected-excerpts={summary.corrected_excerpt_count}`",
+        f"- `corrected-characters={summary.corrected_character_count}`",
+        f"- `page-locators={summary.page_locator_count}`",
+        f"- `learning-entry-ready={summary.learning_entry_ready_count}`",
+        f"- `uncorrected-ocr-committed={summary.uncorrected_ocr_committed_count}`",
+        f"- `long-form-transcription-committed={summary.long_form_transcription_committed_count}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `source-library-mutation-authorized="
+            f"{source_library_mutation_authorized}`"
+        ),
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Human-corrected transcription execution item ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.execution_item_ids)
+    lines.extend(["", "Prepared text artifacts:"])
+    lines.extend(f"- `{artifact}`" for artifact in summary.prepared_text_artifacts)
+    lines.extend(["", "Local references:"])
+    lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_raw_text_cluster_source_selection_summary(
     data_dir: Path | str | None = None,
 ) -> RawTextClusterSourceSelectionSummary:
@@ -13544,6 +13838,11 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         new_material_human_corrected_transcription_prep_items = (
             load_new_material_human_corrected_transcription_prep_items(source_dir)
         )
+        new_material_human_corrected_transcription_execution_items = (
+            load_new_material_human_corrected_transcription_execution_items(
+                source_dir
+            )
+        )
         raw_text_cluster_source_selection_items = (
             load_raw_text_cluster_source_selection_items(source_dir)
         )
@@ -13596,6 +13895,7 @@ def validate_materials_audit_quality(data_dir: Path | str | None = None) -> list
         new_material_ocr_runtime_setup_items,
         new_material_ocr_quality_remediation_items,
         new_material_human_corrected_transcription_prep_items,
+        new_material_human_corrected_transcription_execution_items,
         raw_text_cluster_source_selection_items,
         raw_text_source_identity_review_items,
         raw_text_source_registration_prep_items,
@@ -13701,6 +14001,9 @@ def _iter_quality_text_fields(
     ],
     new_material_human_corrected_transcription_prep_items: list[
         NewMaterialHumanCorrectedTranscriptionPrepItem
+    ],
+    new_material_human_corrected_transcription_execution_items: list[
+        NewMaterialHumanCorrectedTranscriptionExecutionItem
     ],
     raw_text_cluster_source_selection_items: list[RawTextClusterSourceSelectionItem],
     raw_text_source_identity_review_items: list[RawTextSourceIdentityReviewItem],
@@ -14232,6 +14535,26 @@ def _iter_quality_text_fields(
         )
         fields.extend(
             (item.prep_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    for item in new_material_human_corrected_transcription_execution_items:
+        fields.extend(
+            (
+                (item.execution_item_id, "local_reference", item.local_reference),
+                (
+                    item.execution_item_id,
+                    "prepared_text_artifact",
+                    item.prepared_text_artifact,
+                ),
+                (item.execution_item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.execution_item_id, "selected_page_locators", locator)
+            for locator in item.selected_page_locators
+        )
+        fields.extend(
+            (item.execution_item_id, "guardrails", guardrail)
             for guardrail in item.guardrails
         )
     for item in raw_text_cluster_source_selection_items:

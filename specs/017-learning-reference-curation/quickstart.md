@@ -183,12 +183,20 @@ Explicit Downstream Authorization Receipt:
 - `uncorrected-ocr-committed=0`
 - `human-corrected-text-available=0`
 - `prepared-text-artifacts=0`
-- `next-material-entry=015-new-material-human-corrected-transcription-execution`
-- `next-new-material-start=015-new-material-human-corrected-transcription-execution`
+- `new-material-human-corrected-transcription-execution-status=pilot_prepared_text_created`
+- `prepared-text-artifacts=1`
+- `corrected-excerpts=4`
+- `corrected-characters=35`
+- `page-locators=4`
+- `learning-entry-ready=1`
+- `uncorrected-ocr-committed=0`
+- `long-form-transcription-committed=0`
+- `next-material-entry=017-new-material-corrected-pilot-learning-entry-evaluation`
+- `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`
 
-The next long goal should execute human correction using the prepared packet,
-create bounded corrected prepared text for `下海算命记.pdf`, and only then decide
-whether learning notes or 013 candidate intake can begin.
+The next long goal should evaluate the short corrected pilot artifact for
+learning-note eligibility, duplicate/overlap risk, and candidate-intake
+boundaries before any 017 note or 013 candidate is created.
 
 Run focused learning reference curation tests:
 
