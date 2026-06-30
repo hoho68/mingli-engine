@@ -767,6 +767,9 @@ def test_public_materials_audit_functions_exist():
         "load_new_material_controlled_text_preparation_items",
         "build_new_material_controlled_text_preparation_summary",
         "render_new_material_controlled_text_preparation_markdown",
+        "load_new_material_ocr_or_manual_transcription_items",
+        "build_new_material_ocr_or_manual_transcription_summary",
+        "render_new_material_ocr_or_manual_transcription_markdown",
         "build_bazi_general_source_preparation_reading_summary",
         "render_bazi_general_source_preparation_reading_markdown",
         "load_bazi_general_variant_deferred_review_items",
@@ -4090,11 +4093,11 @@ def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
+        "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
+        "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`"
         in quickstart
     )
 
@@ -4190,8 +4193,8 @@ def test_new_material_intake_markdown_and_docs_sync():
         assert marker in materials_doc
         assert marker in handoff
 
-    assert "`next-new-material-start=015-new-material-ocr-or-manual-transcription`" in handoff
-    assert "`next-new-material-start=015-new-material-ocr-or-manual-transcription`" in quickstart
+    assert "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`" in handoff
+    assert "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`" in quickstart
 
 
 def test_new_material_source_identity_review_item_prepares_registration():
@@ -4293,8 +4296,8 @@ def test_new_material_source_identity_review_markdown_and_docs_sync():
         assert marker in materials_doc
         assert marker in handoff
 
-    assert "`next-new-material-start=015-new-material-ocr-or-manual-transcription`" in handoff
-    assert "`next-new-material-start=015-new-material-ocr-or-manual-transcription`" in quickstart
+    assert "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`" in handoff
+    assert "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`" in quickstart
 
 
 def test_new_material_registration_prep_registers_xiahai_metadata():
@@ -4407,11 +4410,11 @@ def test_new_material_long_goal_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
+        "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
+        "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`"
         in quickstart
     )
 
@@ -4503,11 +4506,102 @@ def test_new_material_controlled_text_preparation_markdown_and_docs_sync():
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
+        "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-new-material-ocr-or-manual-transcription`"
+        "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`"
+        in quickstart
+    )
+
+
+def test_new_material_ocr_or_manual_transcription_blocks_on_missing_runtime():
+    items = materials_audit.load_new_material_ocr_or_manual_transcription_items()
+    summary = materials_audit.build_new_material_ocr_or_manual_transcription_summary()
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.transcription_id == "015-new-material-ocr-or-manual-transcription"
+    assert item.controlled_text_preparation_item_id == (
+        "new_material_controlled_text_prep_xiahai_suanmingji_pdf"
+    )
+    assert item.transcription_status == "blocked_ocr_runtime_unavailable"
+    assert item.selected_path == "ocr_runtime_setup"
+    assert item.local_reference == "下海算命记.pdf"
+    assert item.page_count == 84
+    assert item.pdftoppm_available is True
+    assert item.tesseract_available is False
+    assert item.ocrmypdf_available is False
+    assert item.python_ocr_package_available is False
+    assert item.prepared_text_artifact_created is False
+    assert item.selected_next_material_entry == (
+        "015-new-material-ocr-runtime-setup-or-human-transcription"
+    )
+
+    assert summary.transcription_status == "blocked_ocr_runtime_unavailable"
+    assert summary.transcription_item_count == 1
+    assert summary.page_count == 84
+    assert summary.pdftoppm_available_count == 1
+    assert summary.ocr_runtime_available_count == 0
+    assert summary.prepared_text_artifact_count == 0
+    assert summary.blocked_item_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.next_material_entry == (
+        "015-new-material-ocr-runtime-setup-or-human-transcription"
+    )
+    assert summary.boundary_checks == {
+        "ocr_or_manual_transcription_items_loaded": "passed",
+        "controlled_text_preparation_blocked": "passed",
+        "pdf_rendering_available": "passed",
+        "ocr_runtime_unavailable": "passed",
+        "prepared_text_artifact_absent": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_ocr_or_manual_transcription_markdown_and_docs_sync():
+    summary = materials_audit.build_new_material_ocr_or_manual_transcription_summary()
+    markdown = materials_audit.render_new_material_ocr_or_manual_transcription_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 New Material OCR Or Manual Transcription",
+        "`new-material-ocr-or-manual-transcription-status=blocked_ocr_runtime_unavailable`",
+        "`ocr-or-manual-transcription-items=1`",
+        "`pdf-pages=84`",
+        "`pdftoppm-available=1`",
+        "`ocr-runtime-available=0`",
+        "`prepared-text-artifacts=0`",
+        "`blocked-items=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`next-material-entry=015-new-material-ocr-runtime-setup-or-human-transcription`",
+        "`new_material_ocr_or_manual_xiahai_suanmingji_pdf`",
+        "`entry_new_material_xiahai_suanmingji_pdf`",
+        "`下海算命记.pdf`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`"
         in quickstart
     )
 

@@ -1829,6 +1829,47 @@ Guardrails:
 - Do not create learning notes, 013 candidates, or 012 units from watermark text.
 - External raw materials are not moved, converted, or rewritten.
 
+## 015 New Material OCR Or Manual Transcription
+
+- Transcription id: `015-new-material-ocr-or-manual-transcription`
+- `new-material-ocr-or-manual-transcription-status=blocked_ocr_runtime_unavailable`
+- `ocr-or-manual-transcription-items=1`
+- `source-files=1`
+- `pdf-pages=84`
+- `pdftoppm-available=1`
+- `ocr-runtime-available=0`
+- `prepared-text-artifacts=0`
+- `blocked-items=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-ocr-runtime-setup-or-human-transcription`
+
+OCR/manual transcription item ids:
+- `new_material_ocr_or_manual_xiahai_suanmingji_pdf`
+
+Source-library entry ids:
+- `entry_new_material_xiahai_suanmingji_pdf`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `ocr_or_manual_transcription_items_loaded`: `passed`
+- `controlled_text_preparation_blocked`: `passed`
+- `pdf_rendering_available`: `passed`
+- `ocr_runtime_unavailable`: `passed`
+- `prepared_text_artifact_absent`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- PDF page rendering is available, but OCR runtime is not available.
+- Install a local OCR runtime or perform human transcription before text artifacts.
+- Do not use network OCR services for this source without explicit approval.
+- Do not create learning notes, 013 candidates, or 012 units until prepared text exists.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

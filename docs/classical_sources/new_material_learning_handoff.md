@@ -760,8 +760,19 @@ Risk-review items:
   `next-material-entry=015-new-material-ocr-or-manual-transcription`.
 - Controlled text-preparation item:
   `new_material_controlled_text_prep_xiahai_suanmingji_pdf`.
+- 015 New Material OCR Or Manual Transcription is completed as a blocker audit:
+  `new-material-ocr-or-manual-transcription-status=blocked_ocr_runtime_unavailable`,
+  `ocr-or-manual-transcription-items=1`, `pdf-pages=84`,
+  `pdftoppm-available=1`, `ocr-runtime-available=0`,
+  `prepared-text-artifacts=0`, `blocked-items=1`,
+  `candidate-extract-delta=0`, `formal-evidence-delta=0`,
+  `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-new-material-ocr-runtime-setup-or-human-transcription`.
+- OCR/manual transcription item:
+  `new_material_ocr_or_manual_xiahai_suanmingji_pdf`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-new-material-ocr-or-manual-transcription`.
+  `next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`.
 
 ## Remaining Optional Precision Work
 
@@ -778,10 +789,10 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-new-material-ocr-or-manual-transcription`. It should
-explicitly choose OCR or human transcription for `下海算命记.pdf`, create a
-bounded prepared-text artifact, and only then decide whether learning notes or
-013 candidate intake can begin.
+`next-material-entry=015-new-material-ocr-runtime-setup-or-human-transcription`.
+It should either install/configure a local OCR runtime or perform human
+transcription for `下海算命记.pdf`, create a bounded prepared-text artifact, and
+only then decide whether learning notes or 013 candidate intake can begin.
 
 ## Guardrails
 
@@ -793,6 +804,6 @@ bounded prepared-text artifact, and only then decide whether learning notes or
 
 ## Next Target
 
-Next target: `015-new-material-ocr-or-manual-transcription`. Choose and run the
-allowed OCR/manual transcription path for `下海算命记.pdf`, then prepare learning
-notes from the resulting bounded text.
+Next target: `015-new-material-ocr-runtime-setup-or-human-transcription`.
+Install/configure local OCR or perform human transcription for
+`下海算命记.pdf`, then create a bounded prepared-text artifact.

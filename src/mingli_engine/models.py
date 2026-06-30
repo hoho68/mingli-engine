@@ -3158,6 +3158,63 @@ class NewMaterialControlledTextPreparationSummary:
 
 
 @dataclass(frozen=True)
+class NewMaterialOcrOrManualTranscriptionItem:
+    transcription_item_id: str
+    transcription_id: str
+    controlled_text_preparation_item_id: str
+    source_library_entry_id: str
+    source_material_id: str
+    transcription_status: str
+    selected_path: str
+    local_reference: str
+    page_count: int
+    pdftoppm_available: bool
+    tesseract_available: bool
+    ocrmypdf_available: bool
+    python_ocr_package_available: bool
+    prepared_text_artifact_created: bool
+    blocker_reason: str
+    selected_next_material_entry: str
+    source_library_mutation_authorized: bool = False
+    downstream_mutation_authorized: bool = False
+    candidate_extract_delta_count: int = 0
+    review_decision_delta_count: int = 0
+    promotion_batch_delta_count: int = 0
+    formal_evidence_delta_count: int = 0
+    rationale: str = ""
+    guardrails: list[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
+
+
+@dataclass(frozen=True)
+class NewMaterialOcrOrManualTranscriptionSummary:
+    transcription_id: str
+    transcription_status: str
+    transcription_item_count: int
+    source_file_count: int
+    page_count: int
+    pdftoppm_available_count: int
+    ocr_runtime_available_count: int
+    prepared_text_artifact_count: int
+    blocked_item_count: int
+    transcription_item_ids: list[str]
+    controlled_text_preparation_item_ids: list[str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RawTextMaterialTriageGroup:
     group_id: str
     source_root: str

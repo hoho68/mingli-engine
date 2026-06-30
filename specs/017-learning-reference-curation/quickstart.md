@@ -161,12 +161,16 @@ Explicit Downstream Authorization Receipt:
 - `text-layer-nonempty-pages=13`
 - `text-layer-chars=592`
 - `usable-text-layer=0`
-- `next-material-entry=015-new-material-ocr-or-manual-transcription`
-- `next-new-material-start=015-new-material-ocr-or-manual-transcription`
+- `new-material-ocr-or-manual-transcription-status=blocked_ocr_runtime_unavailable`
+- `pdftoppm-available=1`
+- `ocr-runtime-available=0`
+- `prepared-text-artifacts=0`
+- `next-material-entry=015-new-material-ocr-runtime-setup-or-human-transcription`
+- `next-new-material-start=015-new-material-ocr-runtime-setup-or-human-transcription`
 
-The next long goal should choose OCR or human transcription for
-`下海算命记.pdf`, create a bounded prepared-text artifact, and only then decide
-whether learning notes or 013 candidate intake can begin.
+The next long goal should install/configure local OCR or perform human
+transcription for `下海算命记.pdf`, create a bounded prepared-text artifact, and
+only then decide whether learning notes or 013 candidate intake can begin.
 
 Run focused learning reference curation tests:
 
