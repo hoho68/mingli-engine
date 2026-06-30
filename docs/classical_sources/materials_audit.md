@@ -1635,6 +1635,54 @@ Guardrails:
 - This stage does not create 013 candidates or 012 evidence.
 - External raw materials are not read, moved, converted, or rewritten.
 
+## 015 New Material Source Identity Review
+
+- Review id: `015-new-material-source-identity-review`
+- `new-material-source-identity-review-status=identity_review_completed`
+- `identity-review-items=1`
+- `identity-completed=1`
+- `registration-prep-ready=1`
+- `source-library-overlap-found=0`
+- `reviewed-source-files=1`
+- `reviewed-priority-candidates=1`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `source-library-mutation-authorized=false`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-registration-prep`
+
+Review item ids:
+- `new_material_identity_xiahai_suanmingji_pdf`
+
+Intake item ids:
+- `new_material_intake_xiahai_suanmingji_pdf`
+
+Canonical title labels:
+- `Xiahai Suanmingji`
+
+Relative paths:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `identity_review_items_loaded`: `passed`
+- `intake_references_valid`: `passed`
+- `intake_paths_match`: `passed`
+- `selected_paths_are_relative`: `passed`
+- `single_file_boundary`: `passed`
+- `source_library_overlap_references_valid`: `passed`
+- `no_registered_source_library_overlap`: `passed`
+- `source_library_not_mutated`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Identity review uses tracked intake metadata and registered-source overlap metadata only.
+- Registration prep is the next step; no source-library entry is written here.
+- This stage does not create 013 candidates or 012 units.
+- External raw materials are not read, moved, converted, or rewritten.
+
 ## Raw-File Boundary
 
 Root-level PDFs, the root `Markdown/` directory, `资料原文/`, and `资料整理/`

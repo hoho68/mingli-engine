@@ -1,4 +1,4 @@
-# New Material Learning Handoff
+﻿# New Material Learning Handoff
 
 Updated: 2026-06-29
 
@@ -715,8 +715,18 @@ Risk-review items:
   `next-material-entry=015-new-material-source-identity-review`.
 - Selected intake item: `new_material_intake_xiahai_suanmingji_pdf` from
   `bazi_general_misc_identity_review_cluster` at `下海算命记.pdf`.
+- 015 New Material Source Identity Review is completed:
+  `new-material-source-identity-review-status=identity_review_completed`,
+  `identity-review-items=1`, `identity-completed=1`,
+  `registration-prep-ready=1`, `source-library-overlap-found=0`,
+  `reviewed-source-files=1`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, `source-library-mutation-authorized=false`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-new-material-registration-prep`.
+- Identity review item: `new_material_identity_xiahai_suanmingji_pdf` for
+  `Xiahai Suanmingji` at `下海算命记.pdf`.
 - Current new-material continuation marker:
-  `next-new-material-start=015-new-material-source-identity-review`.
+  `next-new-material-start=015-new-material-registration-prep`.
 
 ## Remaining Optional Precision Work
 
@@ -733,9 +743,9 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=015-new-material-source-identity-review`. It should verify
-the selected single-file source identity before source-library registration or
-013/012 downstream writes.
+`next-material-entry=015-new-material-registration-prep`. It should prepare
+source-library registration metadata for the reviewed single-file source while
+keeping raw-file reading/conversion and 013/012 downstream writes blocked.
 
 ## Guardrails
 
@@ -747,5 +757,6 @@ the selected single-file source identity before source-library registration or
 
 ## Next Target
 
-Next target: `015-new-material-source-identity-review`. Verify the source
-identity for `下海算命记.pdf` before any registration or downstream write.
+Next target: `015-new-material-registration-prep`. Prepare registration
+metadata for `下海算命记.pdf` before any source-library write or downstream
+write.
