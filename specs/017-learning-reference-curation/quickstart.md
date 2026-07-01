@@ -331,11 +331,80 @@ Explicit Downstream Authorization Receipt:
 - `new_material_expanded_corrected_transcription_prep_xiahai_suanmingji_pdf`
 - `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
 - `下海算命记.pdf`
-- `next-new-material-start=017-new-material-expanded-corrected-learning-entry-evaluation`
+- Previous completed marker:
+  `next-new-material-start=017-new-material-expanded-corrected-learning-entry-evaluation`
 
-The next long goal should evaluate the expanded corrected artifact as a 017
-learning-entry candidate, keep candidate intake blocked, and only draft the next
-learning note after the evaluation passes.
+017 New Material Expanded Corrected Learning Entry Evaluation:
+
+- `new-material-expanded-corrected-learning-entry-evaluation-status=ready_for_expanded_learning_note_prep`
+- `expanded-learning-entry-evaluation-items=1`
+- `prepared-text-artifacts=1`
+- `corrected-excerpts=3`
+- `corrected-characters=27`
+- `page-locators=4`
+- `learning-note-allowed=1`
+- `candidate-intake-allowed=0`
+- `duplicate-overlap-review-required=1`
+- `risk-boundary-review-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-expanded-corrected-learning-note-prep`
+- `new_material_expanded_corrected_learning_entry_xiahai_suanmingji_pdf`
+- `new_material_expanded_corrected_transcription_execution_xiahai_suanmingji_pdf`
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+- `下海算命记.pdf`
+- Previous completed marker:
+  `next-new-material-start=017-new-material-expanded-corrected-learning-note-prep`
+
+017 New Material Expanded Corrected Learning Note Prep:
+
+- `new-material-expanded-corrected-learning-note-prep-status=ready_for_expanded_learning_note_draft`
+- `expanded-learning-note-prep-items=1`
+- `proposed-learning-notes=1`
+- `proposed-learning-points=1`
+- `prepared-text-artifacts=1`
+- `corrected-excerpts=3`
+- `corrected-characters=27`
+- `page-locators=4`
+- `learning-note-draft-allowed=1`
+- `candidate-intake-allowed=0`
+- `overlap-review-required=1`
+- `risk-boundary-review-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-expanded-corrected-learning-note-draft`
+- `new_material_expanded_corrected_learning_note_prep_xiahai_suanmingji_pdf`
+- `note_xiahai_suanmingji_expanded_corrected_001`
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+- `下海算命记.pdf`
+- Previous completed marker:
+  `next-new-material-start=017-new-material-expanded-corrected-learning-note-draft`
+
+017 New Material Expanded Corrected Learning Note Draft:
+
+- `new-material-expanded-corrected-learning-note-draft-status=ready_for_expanded_learning_completion_review`
+- `expanded-learning-note-draft-items=1`
+- `learning-notes=1`
+- `learning-points=1`
+- `candidate-intake-allowed=0`
+- `completion-review-allowed=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-expanded-corrected-learning-completion-review`
+- `new_material_expanded_corrected_learning_note_draft_xiahai_suanmingji_pdf`
+- `note_xiahai_suanmingji_expanded_corrected_001`
+- `lp_xiahai_suanmingji_expanded_boundary_001`
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+- `下海算命记.pdf`
+- `next-new-material-start=017-new-material-expanded-corrected-learning-completion-review`
+
+The next long goal should close or route the expanded corrected learning note
+after reviewing whether the three corrected anchors are sufficient for any next
+learning action. Candidate intake remains blocked unless a later explicitly
+authorized downstream workflow is opened.
 
 Run focused learning reference curation tests:
 

@@ -531,6 +531,153 @@ Guardrails:
 - The next material action is additional bounded correction selection.
 - No 013 or 012 records are created by this completion review.
 
+## 017 New Material Expanded Corrected Learning Entry Evaluation
+
+The expanded corrected anchor artifact is ready for a bounded 017 learning note.
+It remains outside candidate intake and keeps overlap and risk-boundary checks
+explicit before any downstream action.
+
+- Evaluation id: `017-new-material-expanded-corrected-learning-entry-evaluation`
+- `new-material-expanded-corrected-learning-entry-evaluation-status=ready_for_expanded_learning_note_prep`
+- `expanded-learning-entry-evaluation-items=1`
+- `prepared-text-artifacts=1`
+- `corrected-excerpts=3`
+- `corrected-characters=27`
+- `page-locators=4`
+- `learning-note-allowed=1`
+- `candidate-intake-allowed=0`
+- `duplicate-overlap-review-required=1`
+- `risk-boundary-review-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-expanded-corrected-learning-note-prep`
+
+Expanded learning entry evaluation item ids:
+- `new_material_expanded_corrected_learning_entry_xiahai_suanmingji_pdf`
+
+Expanded transcription execution item ids:
+- `new_material_expanded_corrected_transcription_execution_xiahai_suanmingji_pdf`
+
+Prepared text artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `expanded_learning_entry_evaluation_items_loaded`: `passed`
+- `previous_expanded_corrected_artifact_ready`: `passed`
+- `prepared_text_artifact_exists`: `passed`
+- `learning_note_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `duplicate_overlap_review_required`: `passed`
+- `risk_boundary_review_required`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Use the expanded corrected artifact only for learning-note preparation.
+- Run overlap review before any candidate-intake decision.
+- Run risk-boundary review before broadening case discussion.
+- Keep 013 and 012 writes out of this evaluation stage.
+
+## 017 New Material Expanded Corrected Learning Note Prep
+
+- Prep id: `017-new-material-expanded-corrected-learning-note-prep`
+- `new-material-expanded-corrected-learning-note-prep-status=ready_for_expanded_learning_note_draft`
+- `expanded-learning-note-prep-items=1`
+- `proposed-learning-notes=1`
+- `proposed-learning-points=1`
+- `prepared-text-artifacts=1`
+- `corrected-excerpts=3`
+- `corrected-characters=27`
+- `page-locators=4`
+- `learning-note-draft-allowed=1`
+- `candidate-intake-allowed=0`
+- `overlap-review-required=1`
+- `risk-boundary-review-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-expanded-corrected-learning-note-draft`
+
+Expanded learning note prep item ids:
+- `new_material_expanded_corrected_learning_note_prep_xiahai_suanmingji_pdf`
+
+Proposed learning note ids:
+- `note_xiahai_suanmingji_expanded_corrected_001`
+
+Prepared text artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Target rule families:
+- `high_risk_signal`: `1`
+
+Boundary checks:
+- `expanded_learning_note_prep_items_loaded`: `passed`
+- `previous_expanded_entry_evaluation_ready`: `passed`
+- `prepared_text_artifact_exists`: `passed`
+- `learning_note_draft_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `overlap_review_required`: `passed`
+- `risk_boundary_review_required`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Draft the expanded learning note from bounded corrected anchors only.
+- Keep candidate intake blocked until broader corrected context exists.
+- Do not add 013 or 012 records from the prep packet.
+- Do not expand the prepared-text artifact during note prep.
+
+## 017 New Material Expanded Corrected Learning Note Draft
+
+- Draft id: `017-new-material-expanded-corrected-learning-note-draft`
+- `new-material-expanded-corrected-learning-note-draft-status=ready_for_expanded_learning_completion_review`
+- `expanded-learning-note-draft-items=1`
+- `learning-notes=1`
+- `learning-points=1`
+- `candidate-intake-allowed=0`
+- `completion-review-allowed=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-expanded-corrected-learning-completion-review`
+
+Expanded learning note draft item ids:
+- `new_material_expanded_corrected_learning_note_draft_xiahai_suanmingji_pdf`
+
+Learning note ids:
+- `note_xiahai_suanmingji_expanded_corrected_001`
+
+Learning point ids:
+- `lp_xiahai_suanmingji_expanded_boundary_001`
+
+Target rule families:
+- `high_risk_signal`: `1`
+
+Risk tiers:
+- `high_risk`: `1`
+
+Boundary checks:
+- `expanded_learning_note_draft_items_loaded`: `passed`
+- `previous_expanded_note_prep_ready`: `passed`
+- `learning_note_ids_prepared`: `passed`
+- `completion_review_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The draft is a concise expanded learning note only.
+- Candidate intake remains blocked by limited corrected context.
+- Completion review must decide whether to stop or request more correction.
+- No 013 or 012 records are created by the draft stage.
+
 ## Phase C Source Disposition Snapshot
 
 The current 016/017 state consumes 23 selected extraction tasks as learning

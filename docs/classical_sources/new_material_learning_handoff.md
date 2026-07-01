@@ -912,6 +912,41 @@ Risk-review items:
   `new_material_expanded_corrected_transcription_execution_xiahai_suanmingji_pdf`.
 - Expanded corrected prepared artifact:
   `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`.
+- 017 New Material Expanded Corrected Learning Entry Evaluation is completed:
+  `new-material-expanded-corrected-learning-entry-evaluation-status=ready_for_expanded_learning_note_prep`,
+  `expanded-learning-entry-evaluation-items=1`,
+  `prepared-text-artifacts=1`, `corrected-excerpts=3`,
+  `corrected-characters=27`, `page-locators=4`,
+  `learning-note-allowed=1`, `candidate-intake-allowed=0`,
+  `duplicate-overlap-review-required=1`,
+  `risk-boundary-review-required=1`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, `downstream-mutation-authorized=false`, and
+  `next-material-entry=017-new-material-expanded-corrected-learning-note-prep`.
+- Expanded corrected learning entry item:
+  `new_material_expanded_corrected_learning_entry_xiahai_suanmingji_pdf`.
+- 017 New Material Expanded Corrected Learning Note Prep is completed:
+  `new-material-expanded-corrected-learning-note-prep-status=ready_for_expanded_learning_note_draft`,
+  `expanded-learning-note-prep-items=1`, `proposed-learning-notes=1`,
+  `proposed-learning-points=1`, `learning-note-draft-allowed=1`,
+  `candidate-intake-allowed=0`, `overlap-review-required=1`,
+  `risk-boundary-review-required=1`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, `downstream-mutation-authorized=false`, and
+  `next-material-entry=017-new-material-expanded-corrected-learning-note-draft`.
+- Expanded corrected learning note prep item:
+  `new_material_expanded_corrected_learning_note_prep_xiahai_suanmingji_pdf`.
+- Expanded corrected learning note id:
+  `note_xiahai_suanmingji_expanded_corrected_001`.
+- 017 New Material Expanded Corrected Learning Note Draft is completed:
+  `new-material-expanded-corrected-learning-note-draft-status=ready_for_expanded_learning_completion_review`,
+  `expanded-learning-note-draft-items=1`, `learning-notes=1`,
+  `learning-points=1`, `candidate-intake-allowed=0`,
+  `completion-review-allowed=1`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, `downstream-mutation-authorized=false`, and
+  `next-material-entry=017-new-material-expanded-corrected-learning-completion-review`.
+- Expanded corrected learning note draft item:
+  `new_material_expanded_corrected_learning_note_draft_xiahai_suanmingji_pdf`.
+- Expanded corrected learning point id:
+  `lp_xiahai_suanmingji_expanded_boundary_001`.
 - Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`.
 - Previous completed continuation marker:
@@ -922,8 +957,14 @@ Risk-review items:
   `next-new-material-start=015-new-material-expanded-corrected-transcription-selection`.
 - Previous completed continuation marker:
   `next-new-material-start=015-new-material-expanded-corrected-transcription-execution`.
-- Current new-material continuation marker:
+- Previous completed continuation marker:
   `next-new-material-start=017-new-material-expanded-corrected-learning-entry-evaluation`.
+- Previous completed continuation marker:
+  `next-new-material-start=017-new-material-expanded-corrected-learning-note-prep`.
+- Previous completed continuation marker:
+  `next-new-material-start=017-new-material-expanded-corrected-learning-note-draft`.
+- Current new-material continuation marker:
+  `next-new-material-start=017-new-material-expanded-corrected-learning-completion-review`.
 
 ## Remaining Optional Precision Work
 
@@ -940,10 +981,11 @@ Risk-review items:
 ## Next Long Goal
 
 When continuing new-material work, use a long goal that starts from
-`next-material-entry=017-new-material-expanded-corrected-learning-entry-evaluation`.
-It should evaluate the expanded corrected artifact as a 017 learning-entry
-candidate, keep candidate intake blocked, and only draft the next learning note
-after the evaluation passes.
+`next-material-entry=017-new-material-expanded-corrected-learning-completion-review`.
+It should close or route the expanded corrected learning note after reviewing
+whether the three corrected anchors are sufficient for any next learning action;
+candidate intake should remain blocked unless a later explicitly authorized
+013/012 workflow is opened.
 
 ## Guardrails
 
@@ -955,6 +997,6 @@ after the evaluation passes.
 
 ## Next Target
 
-Next target: `017-new-material-expanded-corrected-learning-entry-evaluation`.
-Evaluate `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
-before any candidate-intake step.
+Next target: `017-new-material-expanded-corrected-learning-completion-review`.
+Review `note_xiahai_suanmingji_expanded_corrected_001` and keep candidate intake
+blocked unless an explicit downstream workflow is opened.

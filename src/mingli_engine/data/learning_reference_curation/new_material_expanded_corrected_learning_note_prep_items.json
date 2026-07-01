@@ -1,0 +1,39 @@
+[
+  {
+    "prep_item_id": "new_material_expanded_corrected_learning_note_prep_xiahai_suanmingji_pdf",
+    "prep_id": "017-new-material-expanded-corrected-learning-note-prep",
+    "evaluation_item_id": "new_material_expanded_corrected_learning_entry_xiahai_suanmingji_pdf",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "prepared_text_artifact": "docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md",
+    "local_reference": "下海算命记.pdf",
+    "prep_status": "ready_for_expanded_learning_note_draft",
+    "proposed_note_id": "note_xiahai_suanmingji_expanded_corrected_001",
+    "proposed_learning_point_count": 1,
+    "corrected_excerpt_count": 3,
+    "corrected_character_count": 27,
+    "page_locator_count": 4,
+    "target_rule_families": [
+      "high_risk_signal"
+    ],
+    "learning_note_draft_allowed": true,
+    "candidate_intake_allowed": false,
+    "overlap_review_required": true,
+    "risk_boundary_review_required": true,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "selected_next_material_entry": "017-new-material-expanded-corrected-learning-note-draft",
+    "rationale": "The expanded artifact can produce one concise high-risk boundary learning note, but it is still too narrow for candidate intake.",
+    "guardrails": [
+      "Draft one concise learning note from the expanded anchor metadata.",
+      "Keep candidate intake blocked until broader corrected context exists.",
+      "Do not add 013 or 012 records from this prep packet.",
+      "Do not expand prepared text during note prep."
+    ],
+    "created_at": "2026-07-01",
+    "updated_at": "2026-07-01"
+  }
+]
