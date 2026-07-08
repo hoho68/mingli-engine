@@ -9468,7 +9468,9 @@ def build_new_material_intake_summary(
             "passed" if selected_paths_are_relative else "failed"
         ),
         "single_file_boundary": (
-            "passed" if sum(item.file_count for item in items) == 1 else "failed"
+            "passed"
+            if items and all(item.file_count == 1 for item in items)
+            else "failed"
         ),
         "source_library_not_mutated": (
             "passed"
@@ -9817,7 +9819,9 @@ def build_new_material_source_identity_review_summary(
             "passed" if selected_paths_are_relative else "failed"
         ),
         "single_file_boundary": (
-            "passed" if sum(item.file_count for item in items) == 1 else "failed"
+            "passed"
+            if items and all(item.file_count == 1 for item in items)
+            else "failed"
         ),
         "source_library_overlap_references_valid": (
             "passed" if source_library_overlap_references_valid else "failed"

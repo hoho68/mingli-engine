@@ -707,14 +707,17 @@ Risk-review items:
   `next-downstream-entry=015-new-material-intake`.
 - 015 New Material Intake is completed:
   `new-material-intake-status=new_material_intake_selected`,
-  `intake-items=1`, `selected-source-files=1`,
-  `selected-for-identity-review=1`,
+  `intake-items=2`, `selected-source-files=2`,
+  `selected-for-identity-review=2`,
   `authorization-status=downstream_authorization_consumed`,
   `source-library-mutation-authorized=false`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-new-material-source-identity-review`.
 - Selected intake item: `new_material_intake_xiahai_suanmingji_pdf` from
   `bazi_general_misc_identity_review_cluster` at `下海算命记.pdf`.
+- Selected intake item: `new_material_intake_bazi_suanming_cangjue_pdf` from
+  `bazi_general_misc_identity_review_cluster` at
+  `八字算命藏诀-黑白.pdf`.
 - 015 New Material Source Identity Review is completed:
   `new-material-source-identity-review-status=identity_review_completed`,
   `identity-review-items=1`, `identity-completed=1`,

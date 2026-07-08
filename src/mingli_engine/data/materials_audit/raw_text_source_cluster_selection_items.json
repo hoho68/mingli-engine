@@ -248,7 +248,8 @@
     "representative_paths": [
       "1_命理望斗经(1).pdf",
       "下海算命记.pdf",
-      "霍敏卿-星命说证正续合编上册.pdf"
+      "霍敏卿-星命说证正续合编上册.pdf",
+      "八字算命藏诀-黑白.pdf"
     ],
     "rationale": "Mixed labels remain useful inventory metadata but need identity review before source-level selection.",
     "guardrails": [
@@ -256,6 +257,6 @@
       "Keep mixed classical and miscellaneous files behind title review."
     ],
     "created_at": "2026-06-28",
-    "updated_at": "2026-06-28"
+    "updated_at": "2026-07-09"
   }
 ]

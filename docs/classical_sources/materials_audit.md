@@ -1593,10 +1593,10 @@ Guardrails:
 
 - Intake id: `015-new-material-intake`
 - `new-material-intake-status=new_material_intake_selected`
-- `intake-items=1`
-- `selected-source-files=1`
-- `selected-priority-candidates=1`
-- `selected-for-identity-review=1`
+- `intake-items=2`
+- `selected-source-files=2`
+- `selected-priority-candidates=2`
+- `selected-for-identity-review=2`
 - `authorization-status=downstream_authorization_consumed`
 - `candidate-extract-delta=0`
 - `review-decision-delta=0`
@@ -1608,15 +1608,19 @@ Guardrails:
 
 Intake item ids:
 - `new_material_intake_xiahai_suanmingji_pdf`
+- `new_material_intake_bazi_suanming_cangjue_pdf`
 
 Cluster ids:
+- `bazi_general_misc_identity_review_cluster`
 - `bazi_general_misc_identity_review_cluster`
 
 Source-selection ids:
 - `next_cycle_bazi_misc_identity_review`
+- `next_cycle_bazi_misc_identity_review`
 
 Relative paths:
 - `下海算命记.pdf`
+- `八字算命藏诀-黑白.pdf`
 
 Boundary checks:
 - `intake_items_loaded`: `passed`
