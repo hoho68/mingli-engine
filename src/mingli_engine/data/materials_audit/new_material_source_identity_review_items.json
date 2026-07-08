@@ -40,5 +40,48 @@
     ],
     "created_at": "2026-06-30",
     "updated_at": "2026-06-30"
+  },
+  {
+    "review_item_id": "new_material_identity_bazi_suanming_cangjue_pdf",
+    "review_id": "015-new-material-source-identity-review",
+    "intake_item_id": "new_material_intake_bazi_suanming_cangjue_pdf",
+    "source_selection_id": "next_cycle_bazi_misc_identity_review",
+    "cluster_id": "bazi_general_misc_identity_review_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "source_label": "Bazi Suanming Cangjue PDF",
+    "canonical_title_label": "Bazi Suanming Cangjue (Bazi Fortune-Telling Hidden Formulas)",
+    "identity_status": "identity_review_completed",
+    "source_library_overlap_status": "no_registered_overlap_found",
+    "registration_readiness": "ready_for_registration_prep",
+    "recommended_next_action": "register_source",
+    "risk_boundary": "ordinary",
+    "relative_paths": [
+      "八字算命藏诀-黑白.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "matched_source_library_entry_ids": [],
+    "selected_next_material_entry": "015-new-material-registration-prep",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "identity_review_note": "Tracked intake metadata identifies one ordinary single-file PDF with no registered-source overlap; the bazi fortune-telling hidden-formula title is a direct bazi fit for the branch-interaction rule family, so no star-fate or non-bazi boundary is needed.",
+    "rationale": "Confirm the bazi domain fit before registration: the hidden-formula title targets earthly-branch interaction framing directly and stays within bazi candidate scope.",
+    "guardrails": [
+      "Use tracked intake metadata and registered-source overlap metadata only.",
+      "Keep any formula text as paraphrase study metadata only.",
+      "Do not read, move, convert, or rewrite the external PDF.",
+      "Do not write source-library registration in this review stage.",
+      "Do not create 013 candidates or 012 units in this stage."
+    ],
+    "created_at": "2026-07-09",
+    "updated_at": "2026-07-09"
   }
 ]

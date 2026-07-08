@@ -4254,8 +4254,11 @@ def test_new_material_source_identity_review_item_prepares_registration():
     items = materials_audit.load_new_material_source_identity_review_items()
     items_by_id = {item.review_item_id: item for item in items}
 
-    assert len(items) == 1
-    assert set(items_by_id) == {"new_material_identity_xiahai_suanmingji_pdf"}
+    assert len(items) == 2
+    assert set(items_by_id) == {
+        "new_material_identity_xiahai_suanmingji_pdf",
+        "new_material_identity_bazi_suanming_cangjue_pdf",
+    }
     item = items_by_id["new_material_identity_xiahai_suanmingji_pdf"]
     assert item.review_id == "015-new-material-source-identity-review"
     assert item.intake_item_id == "new_material_intake_xiahai_suanmingji_pdf"
@@ -4275,18 +4278,37 @@ def test_new_material_source_identity_review_item_prepares_registration():
     assert item.downstream_mutation_authorized is False
     assert item.selected_next_material_entry == "015-new-material-registration-prep"
 
+    cangjue = items_by_id["new_material_identity_bazi_suanming_cangjue_pdf"]
+    assert cangjue.review_id == "015-new-material-source-identity-review"
+    assert cangjue.intake_item_id == "new_material_intake_bazi_suanming_cangjue_pdf"
+    assert cangjue.cluster_id == "bazi_general_misc_identity_review_cluster"
+    assert cangjue.source_selection_id == "next_cycle_bazi_misc_identity_review"
+    assert cangjue.identity_status == "identity_review_completed"
+    assert cangjue.source_library_overlap_status == "no_registered_overlap_found"
+    assert cangjue.registration_readiness == "ready_for_registration_prep"
+    assert cangjue.recommended_next_action == "register_source"
+    assert cangjue.risk_boundary == "ordinary"
+    assert cangjue.relative_paths == ["八字算命藏诀-黑白.pdf"]
+    assert cangjue.file_count == 1
+    assert cangjue.priority_text_candidate_count == 1
+    assert cangjue.target_rule_families == ["branch_interaction"]
+    assert cangjue.matched_source_library_entry_ids == []
+    assert cangjue.source_library_mutation_authorized is False
+    assert cangjue.downstream_mutation_authorized is False
+    assert cangjue.selected_next_material_entry == "015-new-material-registration-prep"
+
 
 def test_new_material_source_identity_review_summary_routes_to_registration_prep():
     summary = materials_audit.build_new_material_source_identity_review_summary()
 
     assert summary.review_id == "015-new-material-source-identity-review"
     assert summary.review_status == "identity_review_completed"
-    assert summary.review_item_count == 1
-    assert summary.identity_completed_count == 1
-    assert summary.registration_prep_ready_count == 1
+    assert summary.review_item_count == 2
+    assert summary.identity_completed_count == 2
+    assert summary.registration_prep_ready_count == 2
     assert summary.source_library_overlap_found_count == 0
-    assert summary.source_file_count == 1
-    assert summary.priority_text_candidate_count == 1
+    assert summary.source_file_count == 2
+    assert summary.priority_text_candidate_count == 2
     assert summary.candidate_extract_delta_count == 0
     assert summary.review_decision_delta_count == 0
     assert summary.promotion_batch_delta_count == 0
@@ -4294,10 +4316,22 @@ def test_new_material_source_identity_review_summary_routes_to_registration_prep
     assert summary.source_library_mutation_authorized is False
     assert summary.downstream_mutation_authorized is False
     assert summary.next_material_entry == "015-new-material-registration-prep"
-    assert summary.review_item_ids == ["new_material_identity_xiahai_suanmingji_pdf"]
-    assert summary.intake_item_ids == ["new_material_intake_xiahai_suanmingji_pdf"]
-    assert summary.cluster_ids == ["bazi_general_misc_identity_review_cluster"]
-    assert summary.relative_paths == ["下海算命记.pdf"]
+    assert summary.review_item_ids == [
+        "new_material_identity_xiahai_suanmingji_pdf",
+        "new_material_identity_bazi_suanming_cangjue_pdf",
+    ]
+    assert summary.intake_item_ids == [
+        "new_material_intake_xiahai_suanmingji_pdf",
+        "new_material_intake_bazi_suanming_cangjue_pdf",
+    ]
+    assert summary.cluster_ids == [
+        "bazi_general_misc_identity_review_cluster",
+        "bazi_general_misc_identity_review_cluster",
+    ]
+    assert summary.relative_paths == [
+        "下海算命记.pdf",
+        "八字算命藏诀-黑白.pdf",
+    ]
     assert summary.boundary_checks == {
         "identity_review_items_loaded": "passed",
         "intake_references_valid": "passed",
@@ -4330,20 +4364,24 @@ def test_new_material_source_identity_review_markdown_and_docs_sync():
     for marker in (
         "015 New Material Source Identity Review",
         "`new-material-source-identity-review-status=identity_review_completed`",
-        "`identity-review-items=1`",
-        "`identity-completed=1`",
-        "`registration-prep-ready=1`",
+        "`identity-review-items=2`",
+        "`identity-completed=2`",
+        "`registration-prep-ready=2`",
         "`source-library-overlap-found=0`",
-        "`reviewed-source-files=1`",
+        "`reviewed-source-files=2`",
         "`candidate-extract-delta=0`",
         "`formal-evidence-delta=0`",
         "`source-library-mutation-authorized=false`",
         "`downstream-mutation-authorized=false`",
         "`next-material-entry=015-new-material-registration-prep`",
         "`new_material_identity_xiahai_suanmingji_pdf`",
+        "`new_material_identity_bazi_suanming_cangjue_pdf`",
         "`new_material_intake_xiahai_suanmingji_pdf`",
+        "`new_material_intake_bazi_suanming_cangjue_pdf`",
         "`Xiahai Suanmingji`",
+        "`Bazi Suanming Cangjue (Bazi Fortune-Telling Hidden Formulas)`",
         "`下海算命记.pdf`",
+        "`八字算命藏诀-黑白.pdf`",
     ):
         assert marker in markdown
         assert marker in materials_doc

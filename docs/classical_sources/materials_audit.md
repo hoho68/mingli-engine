@@ -1643,12 +1643,12 @@ Guardrails:
 
 - Review id: `015-new-material-source-identity-review`
 - `new-material-source-identity-review-status=identity_review_completed`
-- `identity-review-items=1`
-- `identity-completed=1`
-- `registration-prep-ready=1`
+- `identity-review-items=2`
+- `identity-completed=2`
+- `registration-prep-ready=2`
 - `source-library-overlap-found=0`
-- `reviewed-source-files=1`
-- `reviewed-priority-candidates=1`
+- `reviewed-source-files=2`
+- `reviewed-priority-candidates=2`
 - `candidate-extract-delta=0`
 - `review-decision-delta=0`
 - `promotion-batch-delta=0`
@@ -1659,15 +1659,19 @@ Guardrails:
 
 Review item ids:
 - `new_material_identity_xiahai_suanmingji_pdf`
+- `new_material_identity_bazi_suanming_cangjue_pdf`
 
 Intake item ids:
 - `new_material_intake_xiahai_suanmingji_pdf`
+- `new_material_intake_bazi_suanming_cangjue_pdf`
 
 Canonical title labels:
 - `Xiahai Suanmingji`
+- `Bazi Suanming Cangjue (Bazi Fortune-Telling Hidden Formulas)`
 
 Relative paths:
 - `下海算命记.pdf`
+- `八字算命藏诀-黑白.pdf`
 
 Boundary checks:
 - `identity_review_items_loaded`: `passed`

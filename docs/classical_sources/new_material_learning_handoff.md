@@ -720,14 +720,17 @@ Risk-review items:
   `八字算命藏诀-黑白.pdf`.
 - 015 New Material Source Identity Review is completed:
   `new-material-source-identity-review-status=identity_review_completed`,
-  `identity-review-items=1`, `identity-completed=1`,
-  `registration-prep-ready=1`, `source-library-overlap-found=0`,
-  `reviewed-source-files=1`, `candidate-extract-delta=0`,
+  `identity-review-items=2`, `identity-completed=2`,
+  `registration-prep-ready=2`, `source-library-overlap-found=0`,
+  `reviewed-source-files=2`, `candidate-extract-delta=0`,
   `formal-evidence-delta=0`, `source-library-mutation-authorized=false`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-new-material-registration-prep`.
 - Identity review item: `new_material_identity_xiahai_suanmingji_pdf` for
   `Xiahai Suanmingji` at `下海算命记.pdf`.
+- Identity review item: `new_material_identity_bazi_suanming_cangjue_pdf` for
+  `Bazi Suanming Cangjue (Bazi Fortune-Telling Hidden Formulas)` at
+  `八字算命藏诀-黑白.pdf`.
 - 015 New Material Registration Prep is completed:
   `new-material-registration-prep-status=registration_prep_completed`,
   `registration-prep-items=1`, `registered-source-entries=1`,
