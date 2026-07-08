@@ -4395,8 +4395,9 @@ def test_new_material_registration_prep_registers_xiahai_metadata():
     prep_items = materials_audit.load_new_material_registration_prep_items()
     prep_summary = materials_audit.build_new_material_registration_prep_summary()
 
-    assert len(prep_items) == 1
-    item = prep_items[0]
+    assert len(prep_items) == 2
+    prep_by_id = {item.prep_item_id: item for item in prep_items}
+    item = prep_by_id["new_material_registration_prep_xiahai_suanmingji_pdf"]
     assert item.prep_id == "015-new-material-registration-prep"
     assert item.identity_review_item_id == "new_material_identity_xiahai_suanmingji_pdf"
     assert item.source_library_entry_id == "entry_new_material_xiahai_suanmingji_pdf"
@@ -4406,8 +4407,19 @@ def test_new_material_registration_prep_registers_xiahai_metadata():
     assert item.source_library_mutation_authorized is True
     assert item.downstream_mutation_authorized is False
     assert item.selected_next_material_entry == "015-new-material-source-registration"
+    cangjue = prep_by_id["new_material_registration_prep_bazi_suanming_cangjue_pdf"]
+    assert cangjue.identity_review_item_id == (
+        "new_material_identity_bazi_suanming_cangjue_pdf"
+    )
+    assert cangjue.source_library_entry_id == (
+        "entry_new_material_bazi_suanming_cangjue_pdf"
+    )
+    assert cangjue.source_material_id == (
+        "material_new_material_bazi_suanming_cangjue_pdf"
+    )
+    assert cangjue.proposed_local_reference == "八字算命藏诀-黑白.pdf"
     assert prep_summary.prep_status == "registration_prep_completed"
-    assert prep_summary.registered_source_entry_count == 1
+    assert prep_summary.registered_source_entry_count == 2
     assert prep_summary.next_material_entry == "015-new-material-source-registration"
     assert prep_summary.boundary_checks == {
         "registration_prep_items_loaded": "passed",
@@ -4425,12 +4437,17 @@ def test_new_material_source_registration_and_boundary_block_reading():
 
     assert registration_summary.registration_status == "source_registration_completed"
     assert registration_summary.registered_entry_ids == [
-        "entry_new_material_xiahai_suanmingji_pdf"
+        "entry_new_material_xiahai_suanmingji_pdf",
+        "entry_new_material_bazi_suanming_cangjue_pdf",
     ]
     assert registration_summary.registered_material_ids == [
-        "material_new_material_xiahai_suanmingji_pdf"
+        "material_new_material_xiahai_suanmingji_pdf",
+        "material_new_material_bazi_suanming_cangjue_pdf",
     ]
-    assert registration_summary.local_references == ["下海算命记.pdf"]
+    assert registration_summary.local_references == [
+        "下海算命记.pdf",
+        "八字算命藏诀-黑白.pdf",
+    ]
     assert registration_summary.candidate_extract_delta_count == 0
     assert registration_summary.formal_evidence_delta_count == 0
     assert registration_summary.source_library_mutation_authorized is True
@@ -4440,10 +4457,11 @@ def test_new_material_source_registration_and_boundary_block_reading():
     )
 
     assert boundary_summary.boundary_status == "preparation_boundary_completed"
-    assert boundary_summary.text_preparation_required_count == 1
-    assert boundary_summary.blocked_reading_count == 1
+    assert boundary_summary.text_preparation_required_count == 2
+    assert boundary_summary.blocked_reading_count == 2
     assert boundary_summary.source_entry_ids == [
-        "entry_new_material_xiahai_suanmingji_pdf"
+        "entry_new_material_xiahai_suanmingji_pdf",
+        "entry_new_material_bazi_suanming_cangjue_pdf",
     ]
     assert boundary_summary.candidate_extract_delta_count == 0
     assert boundary_summary.formal_evidence_delta_count == 0
@@ -4488,12 +4506,14 @@ def test_new_material_long_goal_markdown_and_docs_sync():
         "`new-material-source-registration-status=source_registration_completed`",
         "015 New Material Preparation Boundary",
         "`new-material-preparation-boundary-status=preparation_boundary_completed`",
-        "`text-preparation-required=1`",
-        "`reading-blocked=1`",
+        "`text-preparation-required=2`",
+        "`reading-blocked=2`",
         "`candidate-extract-delta=0`",
         "`formal-evidence-delta=0`",
         "`entry_new_material_xiahai_suanmingji_pdf`",
+        "`entry_new_material_bazi_suanming_cangjue_pdf`",
         "`下海算命记.pdf`",
+        "`八字算命藏诀-黑白.pdf`",
         "`next-material-entry=015-new-material-controlled-text-preparation`",
     ):
         assert marker in markdown

@@ -733,25 +733,29 @@ Risk-review items:
   `八字算命藏诀-黑白.pdf`.
 - 015 New Material Registration Prep is completed:
   `new-material-registration-prep-status=registration_prep_completed`,
-  `registration-prep-items=1`, `registered-source-entries=1`,
+  `registration-prep-items=2`, `registered-source-entries=2`,
   `source-library-mutation-authorized=true`,
   `downstream-mutation-authorized=false`, `candidate-extract-delta=0`,
   `formal-evidence-delta=0`, and
   `next-material-entry=015-new-material-source-registration`.
 - 015 New Material Source Registration is completed:
   `new-material-source-registration-status=source_registration_completed`,
-  `source-registration-items=1`, `registered-source-entries=1`,
-  `registered-source-files=1`, `source-library-mutation-authorized=true`,
+  `source-registration-items=2`, `registered-source-entries=2`,
+  `registered-source-files=2`, `source-library-mutation-authorized=true`,
   `downstream-mutation-authorized=false`, `candidate-extract-delta=0`,
   `formal-evidence-delta=0`, and
   `next-material-entry=015-new-material-preparation-boundary`.
 - Registered source-library entry:
   `entry_new_material_xiahai_suanmingji_pdf`,
   `material_new_material_xiahai_suanmingji_pdf`, `下海算命记.pdf`.
+- Registered source-library entry:
+  `entry_new_material_bazi_suanming_cangjue_pdf`,
+  `material_new_material_bazi_suanming_cangjue_pdf`,
+  `八字算命藏诀-黑白.pdf`.
 - 015 New Material Preparation Boundary is completed:
   `new-material-preparation-boundary-status=preparation_boundary_completed`,
-  `preparation-boundary-items=1`, `text-preparation-required=1`,
-  `reading-blocked=1`, `candidate-extract-delta=0`,
+  `preparation-boundary-items=2`, `text-preparation-required=2`,
+  `reading-blocked=2`, `candidate-extract-delta=0`,
   `formal-evidence-delta=0`, `source-library-mutation-authorized=false`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-new-material-controlled-text-preparation`.

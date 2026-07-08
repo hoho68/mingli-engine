@@ -891,5 +891,31 @@
     "outcome_reason": "New material source-library metadata registered under authorization while downstream candidate use remains gated.",
     "created_at": "2026-06-30",
     "updated_at": "2026-06-30"
+  },
+  {
+    "entry_id": "entry_new_material_bazi_suanming_cangjue_pdf",
+    "material_id": "material_new_material_bazi_suanming_cangjue_pdf",
+    "title": "Bazi Suanming Cangjue",
+    "material_type": "pdf",
+    "local_reference": "八字算命藏诀-黑白.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "needs_preparation",
+    "topic_tags": [
+      "misc-identity-review",
+      "bazi-suanming-cangjue",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registered from new-material registration prep; the bazi hidden-formula title is a direct bazi fit and source text remains unread.",
+    "rights_notes": "External PDF; do not copy long passages. Prepare controlled text before extraction.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "prepare_material",
+    "outcome_reason": "New material source-library metadata registered under authorization while downstream candidate use remains gated.",
+    "created_at": "2026-07-09",
+    "updated_at": "2026-07-09"
   }
 ]

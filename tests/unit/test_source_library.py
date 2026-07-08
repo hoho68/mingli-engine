@@ -400,7 +400,7 @@ def test_load_source_library_entries_loads_current_registered_sources():
     entries = source_library.load_source_library_entries()
     by_id = {entry.entry_id: entry for entry in entries}
 
-    assert len(entries) == 31
+    assert len(entries) == 32
     assert set(by_id) == {
         "entry_northeast_blind_peak_pdf",
         "entry_duan_plain_mingxue_outline_pdf",
@@ -428,6 +428,7 @@ def test_load_source_library_entries_loads_current_registered_sources():
         "entry_bazi_general_bazi_shizhan_mifa_pdf",
         "entry_bazi_general_bazi_psychology_pdf",
         "entry_new_material_xiahai_suanmingji_pdf",
+        "entry_new_material_bazi_suanming_cangjue_pdf",
         "entry_markdown_source_batch_001",
         "entry_markdown_source_batch_002_core",
         "entry_markdown_source_batch_004",
@@ -750,9 +751,13 @@ def test_load_source_priority_assessments_loads_default_assessments():
     assessments = source_library.load_source_priority_assessments()
     by_id = {assessment.assessment_id: assessment for assessment in assessments}
 
-    assert len(assessments) == 29
+    assert len(assessments) == 30
     assert "priority_blind_life_manual_001" in by_id
     assert "priority_bazi_general_lecture_textbook_001" in by_id
+    assert "priority_new_material_bazi_suanming_cangjue_001" in by_id
+    assert by_id["priority_new_material_bazi_suanming_cangjue_001"].entry_id == (
+        "entry_new_material_bazi_suanming_cangjue_pdf"
+    )
     assert "priority_bazi_general_ziping_orthodox_pair_001" in by_id
     assert by_id["priority_bazi_general_ditiansui_selected_001"].entry_id == (
         "entry_bazi_general_ditiansui_selected_pdf"

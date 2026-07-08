@@ -1695,9 +1695,9 @@ Guardrails:
 
 - Prep id: `015-new-material-registration-prep`
 - `new-material-registration-prep-status=registration_prep_completed`
-- `registration-prep-items=1`
-- `proposed-source-files=1`
-- `registered-source-entries=1`
+- `registration-prep-items=2`
+- `proposed-source-files=2`
+- `registered-source-entries=2`
 - `candidate-extract-delta=0`
 - `review-decision-delta=0`
 - `promotion-batch-delta=0`
@@ -1708,12 +1708,15 @@ Guardrails:
 
 Registration-prep item ids:
 - `new_material_registration_prep_xiahai_suanmingji_pdf`
+- `new_material_registration_prep_bazi_suanming_cangjue_pdf`
 
 Proposed source-library entry ids:
 - `entry_new_material_xiahai_suanmingji_pdf`
+- `entry_new_material_bazi_suanming_cangjue_pdf`
 
 Local references:
 - `下海算命记.pdf`
+- `八字算命藏诀-黑白.pdf`
 
 Boundary checks:
 - `registration_prep_items_loaded`: `passed`
@@ -1733,9 +1736,9 @@ Guardrails:
 
 - Registration id: `015-new-material-source-registration`
 - `new-material-source-registration-status=source_registration_completed`
-- `source-registration-items=1`
-- `registered-source-entries=1`
-- `registered-source-files=1`
+- `source-registration-items=2`
+- `registered-source-entries=2`
+- `registered-source-files=2`
 - `candidate-extract-delta=0`
 - `formal-evidence-delta=0`
 - `source-library-mutation-authorized=true`
@@ -1744,12 +1747,15 @@ Guardrails:
 
 Registered source-library entry ids:
 - `entry_new_material_xiahai_suanmingji_pdf`
+- `entry_new_material_bazi_suanming_cangjue_pdf`
 
 Registered material ids:
 - `material_new_material_xiahai_suanmingji_pdf`
+- `material_new_material_bazi_suanming_cangjue_pdf`
 
 Local references:
 - `下海算命记.pdf`
+- `八字算命藏诀-黑白.pdf`
 
 Boundary checks:
 - `source_registration_items_loaded`: `passed`
@@ -1767,10 +1773,10 @@ Guardrails:
 
 - Boundary id: `015-new-material-preparation-boundary`
 - `new-material-preparation-boundary-status=preparation_boundary_completed`
-- `preparation-boundary-items=1`
-- `source-files=1`
-- `text-preparation-required=1`
-- `reading-blocked=1`
+- `preparation-boundary-items=2`
+- `source-files=2`
+- `text-preparation-required=2`
+- `reading-blocked=2`
 - `candidate-extract-delta=0`
 - `formal-evidence-delta=0`
 - `source-library-mutation-authorized=false`
@@ -1779,9 +1785,11 @@ Guardrails:
 
 Source-library entry ids:
 - `entry_new_material_xiahai_suanmingji_pdf`
+- `entry_new_material_bazi_suanming_cangjue_pdf`
 
 Local references:
 - `下海算命记.pdf`
+- `八字算命藏诀-黑白.pdf`
 
 Boundary checks:
 - `preparation_boundary_items_loaded`: `passed`

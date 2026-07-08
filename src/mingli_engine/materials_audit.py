@@ -9739,7 +9739,7 @@ def _new_material_source_identity_review_item_from_dict(
         entry.entry_id
         for entry in source_entries_by_id.values()
         if entry.local_reference in item.relative_paths
-        and entry.entry_id != NEW_MATERIAL_SOURCE_LIBRARY_ENTRY_ID
+        and not entry.entry_id.startswith("entry_new_material_")
     ]
     if (
         item.source_library_overlap_status == "no_registered_overlap_found"
@@ -9792,7 +9792,7 @@ def build_new_material_source_identity_review_summary(
         not any(
             entry.local_reference in item.relative_paths
             for entry in source_entries_by_id.values()
-            if entry.entry_id != NEW_MATERIAL_SOURCE_LIBRARY_ENTRY_ID
+            if not entry.entry_id.startswith("entry_new_material_")
         )
         for item in items
     )
@@ -10023,9 +10023,9 @@ def _new_material_registration_prep_item_from_dict(
         raise MaterialsAuditError(f"{owner_id} has invalid prep_id")
     if item.review_id != NEW_MATERIAL_SOURCE_IDENTITY_REVIEW_ID:
         raise MaterialsAuditError(f"{owner_id} has invalid review_id")
-    if item.source_library_entry_id != NEW_MATERIAL_SOURCE_LIBRARY_ENTRY_ID:
+    if not item.source_library_entry_id.startswith("entry_new_material_"):
         raise MaterialsAuditError(f"{owner_id} has invalid source_library_entry_id")
-    if item.source_material_id != NEW_MATERIAL_SOURCE_MATERIAL_ID:
+    if not item.source_material_id.startswith("material_new_material_"):
         raise MaterialsAuditError(f"{owner_id} has invalid source_material_id")
     if item.selected_next_material_entry != (
         NEW_MATERIAL_REGISTRATION_PREP_NEXT_MATERIAL_ENTRY

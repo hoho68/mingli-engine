@@ -25,5 +25,32 @@
     ],
     "created_at": "2026-06-30",
     "updated_at": "2026-06-30"
+  },
+  {
+    "boundary_item_id": "new_material_preparation_boundary_bazi_suanming_cangjue_pdf",
+    "boundary_id": "015-new-material-preparation-boundary",
+    "registration_item_id": "new_material_source_registration_bazi_suanming_cangjue_pdf",
+    "source_library_entry_id": "entry_new_material_bazi_suanming_cangjue_pdf",
+    "source_material_id": "material_new_material_bazi_suanming_cangjue_pdf",
+    "boundary_status": "preparation_boundary_completed",
+    "reading_status": "blocked_until_controlled_text_preparation",
+    "local_reference": "八字算命藏诀-黑白.pdf",
+    "file_count": 1,
+    "text_preparation_required": true,
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "selected_next_material_entry": "015-new-material-controlled-text-preparation",
+    "rationale": "The source is registered, but actual learning requires a controlled text-preparation step before reading.",
+    "guardrails": [
+      "Do not parse, OCR, convert, or summarize the PDF in this boundary stage.",
+      "Controlled text preparation must be explicit before learning notes or candidates.",
+      "Keep 013 and 012 downstream records unchanged."
+    ],
+    "created_at": "2026-07-09",
+    "updated_at": "2026-07-09"
   }
 ]

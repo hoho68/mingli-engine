@@ -22,5 +22,29 @@
     ],
     "created_at": "2026-06-30",
     "updated_at": "2026-06-30"
+  },
+  {
+    "registration_item_id": "new_material_source_registration_bazi_suanming_cangjue_pdf",
+    "registration_id": "015-new-material-source-registration",
+    "prep_item_id": "new_material_registration_prep_bazi_suanming_cangjue_pdf",
+    "source_library_entry_id": "entry_new_material_bazi_suanming_cangjue_pdf",
+    "source_material_id": "material_new_material_bazi_suanming_cangjue_pdf",
+    "registration_status": "source_registration_completed",
+    "local_reference": "八字算命藏诀-黑白.pdf",
+    "source_library_mutation_authorized": true,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "selected_next_material_entry": "015-new-material-preparation-boundary",
+    "rationale": "Source-library metadata entry is registered and points to one external PDF path.",
+    "guardrails": [
+      "Registered metadata does not mean the PDF body has been read.",
+      "Keep downstream candidate and evidence records unchanged.",
+      "Move next to controlled preparation boundary."
+    ],
+    "created_at": "2026-07-09",
+    "updated_at": "2026-07-09"
   }
 ]
