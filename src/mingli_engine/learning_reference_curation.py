@@ -41,6 +41,8 @@ from mingli_engine.models import (
     NewMaterialCorrectedPilotLearningNotePrepSummary,
     NewMaterialExpandedCorrectedLearningEntryEvaluationItem,
     NewMaterialExpandedCorrectedLearningEntryEvaluationSummary,
+    NewMaterialExpandedCorrectedLearningCompletionReviewItem,
+    NewMaterialExpandedCorrectedLearningCompletionReviewSummary,
     NewMaterialExpandedCorrectedLearningNoteDraftItem,
     NewMaterialExpandedCorrectedLearningNoteDraftSummary,
     NewMaterialExpandedCorrectedLearningNotePrepItem,
@@ -176,6 +178,15 @@ NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_NOTE_DRAFT_NEXT_ENTRY = (
 )
 NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_NOTE_DRAFT_STATUSES = frozenset(
     {"ready_for_expanded_learning_completion_review"}
+)
+NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_COMPLETION_REVIEW_ID = (
+    "017-new-material-expanded-corrected-learning-completion-review"
+)
+NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_COMPLETION_REVIEW_NEXT_ENTRY = (
+    "015-queue-refresh-or-013-explicit-candidate-gate"
+)
+NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_COMPLETION_REVIEW_STATUSES = frozenset(
+    {"expanded_corrected_learning_loop_closed_candidate_intake_blocked"}
 )
 
 
@@ -3464,6 +3475,289 @@ def render_new_material_corrected_pilot_learning_completion_review_markdown(
     return "\n".join(lines) + "\n"
 
 
+def _new_material_expanded_corrected_learning_completion_review_item_from_dict(
+    data: dict[str, Any],
+    source_dir: Path,
+) -> NewMaterialExpandedCorrectedLearningCompletionReviewItem:
+    try:
+        item = NewMaterialExpandedCorrectedLearningCompletionReviewItem(**data)
+    except TypeError as error:
+        raise LearningReferenceCurationError(
+            "invalid new material expanded corrected learning completion review "
+            f"item: {error}"
+        ) from error
+
+    owner_id = item.completion_item_id or "?"
+    for field_name in (
+        "completion_item_id",
+        "completion_id",
+        "draft_item_id",
+        "note_id",
+        "learning_point_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "prepared_text_artifact",
+        "local_reference",
+        "completion_status",
+        "next_material_entry",
+        "rationale",
+    ):
+        _require_text(getattr(item, field_name), field_name, owner_id)
+    _require_string_list(item.guardrails, "guardrails", owner_id)
+    _validate_enum(
+        item.completion_status,
+        NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_COMPLETION_REVIEW_STATUSES,
+        "completion_status",
+        owner_id,
+    )
+    if item.completion_id != (
+        NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_COMPLETION_REVIEW_ID
+    ):
+        raise LearningReferenceCurationError(f"{owner_id} has invalid completion_id")
+    if item.next_material_entry != (
+        NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_COMPLETION_REVIEW_NEXT_ENTRY
+    ):
+        raise LearningReferenceCurationError(f"{owner_id} selected unexpected next entry")
+    for field_name in (
+        "learning_note_closed",
+        "candidate_intake_allowed",
+        "additional_correction_required",
+        "downstream_mutation_authorized",
+    ):
+        _require_bool(getattr(item, field_name), field_name, owner_id)
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        _require_non_negative_int(getattr(item, field_name), field_name, owner_id)
+    if not item.learning_note_closed:
+        raise LearningReferenceCurationError(f"{owner_id} must close learning note")
+    if item.candidate_intake_allowed:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must keep candidate intake blocked"
+        )
+    if item.additional_correction_required:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must close the loop without additional correction"
+        )
+    if item.downstream_mutation_authorized:
+        raise LearningReferenceCurationError(
+            f"{owner_id} must not authorize downstream mutation"
+        )
+    for field_name in (
+        "candidate_extract_delta_count",
+        "review_decision_delta_count",
+        "promotion_batch_delta_count",
+        "formal_evidence_delta_count",
+    ):
+        if getattr(item, field_name) != 0:
+            raise LearningReferenceCurationError(
+                f"{owner_id} has non-zero {field_name}"
+            )
+
+    draft_items_by_id = {
+        draft.draft_item_id: draft
+        for draft in load_new_material_expanded_corrected_learning_note_draft_items(
+            source_dir
+        )
+    }
+    draft = draft_items_by_id.get(item.draft_item_id)
+    if draft is None:
+        raise LearningReferenceCurationError(
+            f"{owner_id} references unknown learning note draft item"
+        )
+    if draft.draft_status != "ready_for_expanded_learning_completion_review":
+        raise LearningReferenceCurationError(
+            f"{owner_id} draft item is not ready for completion review"
+        )
+    matching_fields = (
+        "note_id",
+        "learning_point_id",
+        "source_library_entry_id",
+        "source_material_id",
+        "prepared_text_artifact",
+        "local_reference",
+    )
+    for field_name in matching_fields:
+        if getattr(item, field_name) != getattr(draft, field_name):
+            raise LearningReferenceCurationError(
+                f"{owner_id} {field_name} does not match draft item"
+            )
+    return item
+
+
+def load_new_material_expanded_corrected_learning_completion_review_items(
+    data_dir: Path | str | None = None,
+) -> list[NewMaterialExpandedCorrectedLearningCompletionReviewItem]:
+    source_dir = _data_dir(data_dir)
+    items_path = (
+        source_dir
+        / "new_material_expanded_corrected_learning_completion_review_items.json"
+    )
+    if not items_path.exists():
+        return []
+    items = [
+        _new_material_expanded_corrected_learning_completion_review_item_from_dict(
+            item,
+            source_dir,
+        )
+        for item in _read_json_list(items_path)
+    ]
+    _ensure_unique([item.completion_item_id for item in items], "completion_item_id")
+    return items
+
+
+def build_new_material_expanded_corrected_learning_completion_review_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialExpandedCorrectedLearningCompletionReviewSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_expanded_corrected_learning_completion_review_items(
+        source_dir
+    )
+    draft_summary = (
+        build_new_material_expanded_corrected_learning_note_draft_summary(source_dir)
+    )
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "completion_review_items_loaded": "passed" if items else "failed",
+        "previous_note_draft_ready": (
+            "passed"
+            if draft_summary.draft_status
+            == "ready_for_expanded_learning_completion_review"
+            else "failed"
+        ),
+        "learning_note_closed": (
+            "passed"
+            if items and all(item.learning_note_closed for item in items)
+            else "failed"
+        ),
+        "candidate_intake_blocked": (
+            "passed"
+            if items and all(not item.candidate_intake_allowed for item in items)
+            else "failed"
+        ),
+        "expanded_learning_loop_closed": (
+            "passed"
+            if items and all(not item.additional_correction_required for item in items)
+            else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    next_entries = {item.next_material_entry for item in items}
+    return NewMaterialExpandedCorrectedLearningCompletionReviewSummary(
+        completion_id=NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_COMPLETION_REVIEW_ID,
+        completion_status=(
+            "expanded_corrected_learning_loop_closed_candidate_intake_blocked"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "expanded_corrected_learning_completion_review_needs_attention"
+        ),
+        completion_item_count=len(items),
+        learning_note_closed_count=sum(1 for item in items if item.learning_note_closed),
+        candidate_intake_allowed_count=sum(
+            1 for item in items if item.candidate_intake_allowed
+        ),
+        additional_correction_required_count=sum(
+            1 for item in items if item.additional_correction_required
+        ),
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=(
+            next(iter(next_entries))
+            if len(next_entries) == 1
+            else NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_COMPLETION_REVIEW_NEXT_ENTRY
+        ),
+        completion_item_ids=[item.completion_item_id for item in items],
+        draft_item_ids=[item.draft_item_id for item in items],
+        note_ids=[item.note_id for item in items],
+        learning_point_ids=[item.learning_point_id for item in items],
+        source_entry_ids=[item.source_library_entry_id for item in items],
+        source_material_ids=[item.source_material_id for item in items],
+        local_references=[item.local_reference for item in items],
+        prepared_text_artifacts=[item.prepared_text_artifact for item in items],
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "The expanded corrected learning loop is closed at 017 only.",
+            "Candidate intake remains blocked unless an explicit 013/012 workflow opens.",
+            "The three corrected anchors are sufficient; the page-72 locator is optional precision work.",
+            "No 013 or 012 records are created by this completion review.",
+        ],
+    )
+
+
+def render_new_material_expanded_corrected_learning_completion_review_markdown(
+    summary: NewMaterialExpandedCorrectedLearningCompletionReviewSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 017 New Material Expanded Corrected Learning Completion Review",
+        "",
+        f"- Completion id: `{summary.completion_id}`",
+        (
+            "- `new-material-expanded-corrected-learning-completion-review-status="
+            f"{summary.completion_status}`"
+        ),
+        f"- `expanded-learning-completion-review-items={summary.completion_item_count}`",
+        f"- `learning-notes-closed={summary.learning_note_closed_count}`",
+        f"- `candidate-intake-allowed={summary.candidate_intake_allowed_count}`",
+        (
+            "- `additional-correction-required="
+            f"{summary.additional_correction_required_count}`"
+        ),
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Expanded learning completion review item ids:",
+    ]
+    lines.extend(f"- `{item_id}`" for item_id in summary.completion_item_ids)
+    lines.extend(["", "Learning note ids:"])
+    lines.extend(f"- `{note_id}`" for note_id in summary.note_ids)
+    lines.extend(["", "Learning point ids:"])
+    lines.extend(f"- `{point_id}`" for point_id in summary.learning_point_ids)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def _write_json_list(path: Path, payload: list[dict[str, Any]]) -> None:
     path.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
@@ -4364,6 +4658,33 @@ def _iter_expanded_corrected_learning_note_draft_quality_text_fields(
     return fields
 
 
+def _iter_expanded_corrected_learning_completion_review_quality_text_fields(
+    items: list[NewMaterialExpandedCorrectedLearningCompletionReviewItem],
+) -> list[tuple[str, str, str]]:
+    fields: list[tuple[str, str, str]] = []
+    for item in items:
+        fields.extend(
+            (
+                (item.completion_item_id, "note_id", item.note_id),
+                (item.completion_item_id, "learning_point_id", item.learning_point_id),
+                (
+                    item.completion_item_id,
+                    "prepared_text_artifact",
+                    item.prepared_text_artifact,
+                ),
+                (item.completion_item_id, "local_reference", item.local_reference),
+                (item.completion_item_id, "completion_status", item.completion_status),
+                (item.completion_item_id, "next_material_entry", item.next_material_entry),
+                (item.completion_item_id, "rationale", item.rationale),
+            )
+        )
+        fields.extend(
+            (item.completion_item_id, "guardrails", guardrail)
+            for guardrail in item.guardrails
+        )
+    return fields
+
+
 def _validate_quality_text(fields: list[tuple[str, str, str]]) -> list[str]:
     failures: list[str] = []
     for owner_id, field_name, value in fields:
@@ -4424,6 +4745,9 @@ def validate_learning_reference_quality(
     expanded_corrected_note_drafts = (
         load_new_material_expanded_corrected_learning_note_draft_items(source_dir)
     )
+    expanded_corrected_completion_reviews = (
+        load_new_material_expanded_corrected_learning_completion_review_items(source_dir)
+    )
     return _validate_quality_text(
         [
             *_iter_note_quality_text_fields(notes),
@@ -4451,6 +4775,9 @@ def validate_learning_reference_quality(
             ),
             *_iter_expanded_corrected_learning_note_draft_quality_text_fields(
                 expanded_corrected_note_drafts
+            ),
+            *_iter_expanded_corrected_learning_completion_review_quality_text_fields(
+                expanded_corrected_completion_reviews
             ),
         ]
     )

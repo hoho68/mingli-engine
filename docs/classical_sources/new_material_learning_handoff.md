@@ -947,6 +947,18 @@ Risk-review items:
   `new_material_expanded_corrected_learning_note_draft_xiahai_suanmingji_pdf`.
 - Expanded corrected learning point id:
   `lp_xiahai_suanmingji_expanded_boundary_001`.
+- 017 New Material Expanded Corrected Learning Completion Review is completed:
+  `new-material-expanded-corrected-learning-completion-review-status=expanded_corrected_learning_loop_closed_candidate_intake_blocked`,
+  `expanded-learning-completion-review-items=1`, `learning-notes-closed=1`,
+  `candidate-intake-allowed=0`, `additional-correction-required=0`,
+  `candidate-extract-delta=0`, `formal-evidence-delta=0`,
+  `downstream-mutation-authorized=false`, and
+  `next-material-entry=015-queue-refresh-or-013-explicit-candidate-gate`.
+- Expanded corrected learning completion review item:
+  `new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf`.
+- The expanded corrected learning loop is closed: the three corrected anchors
+  are sufficient, the page-72 continuity locator is optional precision work,
+  and candidate intake stays blocked unless an explicit 013/012 workflow opens.
 - Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`.
 - Previous completed continuation marker:
@@ -963,8 +975,10 @@ Risk-review items:
   `next-new-material-start=017-new-material-expanded-corrected-learning-note-prep`.
 - Previous completed continuation marker:
   `next-new-material-start=017-new-material-expanded-corrected-learning-note-draft`.
-- Current new-material continuation marker:
+- Previous completed continuation marker:
   `next-new-material-start=017-new-material-expanded-corrected-learning-completion-review`.
+- Current new-material continuation marker (corrected loop closed):
+  `next-new-material-start=015-queue-refresh-or-013-explicit-candidate-gate`.
 
 ## Remaining Optional Precision Work
 
@@ -980,12 +994,14 @@ Risk-review items:
 
 ## Next Long Goal
 
-When continuing new-material work, use a long goal that starts from
-`next-material-entry=017-new-material-expanded-corrected-learning-completion-review`.
-It should close or route the expanded corrected learning note after reviewing
-whether the three corrected anchors are sufficient for any next learning action;
-candidate intake should remain blocked unless a later explicitly authorized
-013/012 workflow is opened.
+The expanded corrected new-material learning loop is closed. The three corrected
+anchors are sufficient for the boundary learning note, and the page-72
+continuity locator remains optional precision work. When continuing new-material
+work, start from
+`next-material-entry=015-queue-refresh-or-013-explicit-candidate-gate`: either
+refresh the 015 queue for the next intake source or open an explicitly
+authorized 013 candidate-review gate. Candidate intake stays blocked unless a
+later explicitly authorized 013/012 workflow is opened.
 
 ## Guardrails
 
@@ -997,6 +1013,6 @@ candidate intake should remain blocked unless a later explicitly authorized
 
 ## Next Target
 
-Next target: `017-new-material-expanded-corrected-learning-completion-review`.
-Review `note_xiahai_suanmingji_expanded_corrected_001` and keep candidate intake
-blocked unless an explicit downstream workflow is opened.
+Next target: `015-queue-refresh-or-013-explicit-candidate-gate`. The expanded
+corrected learning loop is closed; candidate intake remains blocked unless an
+explicit 013/012 downstream workflow is opened.

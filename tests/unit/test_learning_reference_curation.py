@@ -3257,6 +3257,124 @@ def test_new_material_expanded_corrected_learning_note_draft_markdown_and_docs_s
     )
 
 
+def test_new_material_expanded_corrected_learning_completion_review_closes_corrected_loop():
+    items = (
+        learning_reference_curation
+        .load_new_material_expanded_corrected_learning_completion_review_items()
+    )
+    summary = (
+        learning_reference_curation
+        .build_new_material_expanded_corrected_learning_completion_review_summary()
+    )
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.completion_item_id == (
+        "new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf"
+    )
+    assert item.completion_id == (
+        "017-new-material-expanded-corrected-learning-completion-review"
+    )
+    assert item.draft_item_id == (
+        "new_material_expanded_corrected_learning_note_draft_xiahai_suanmingji_pdf"
+    )
+    assert item.note_id == "note_xiahai_suanmingji_expanded_corrected_001"
+    assert item.learning_point_id == "lp_xiahai_suanmingji_expanded_boundary_001"
+    assert item.completion_status == (
+        "expanded_corrected_learning_loop_closed_candidate_intake_blocked"
+    )
+    assert item.learning_note_closed is True
+    assert item.candidate_intake_allowed is False
+    assert item.additional_correction_required is False
+    assert item.downstream_mutation_authorized is False
+    assert item.next_material_entry == (
+        "015-queue-refresh-or-013-explicit-candidate-gate"
+    )
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+
+    assert summary.completion_id == (
+        "017-new-material-expanded-corrected-learning-completion-review"
+    )
+    assert summary.completion_status == (
+        "expanded_corrected_learning_loop_closed_candidate_intake_blocked"
+    )
+    assert summary.completion_item_count == 1
+    assert summary.learning_note_closed_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.additional_correction_required_count == 0
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "015-queue-refresh-or-013-explicit-candidate-gate"
+    )
+    assert summary.boundary_checks == {
+        "completion_review_items_loaded": "passed",
+        "previous_note_draft_ready": "passed",
+        "learning_note_closed": "passed",
+        "candidate_intake_blocked": "passed",
+        "expanded_learning_loop_closed": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_expanded_corrected_learning_completion_review_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_expanded_corrected_learning_completion_review_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_expanded_corrected_learning_completion_review_markdown(
+            summary
+        )
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Expanded Corrected Learning Completion Review",
+        "`new-material-expanded-corrected-learning-completion-review-status=expanded_corrected_learning_loop_closed_candidate_intake_blocked`",
+        "`expanded-learning-completion-review-items=1`",
+        "`learning-notes-closed=1`",
+        "`candidate-intake-allowed=0`",
+        "`additional-correction-required=0`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-queue-refresh-or-013-explicit-candidate-gate`",
+        "`new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf`",
+        "`note_xiahai_suanmingji_expanded_corrected_001`",
+        "`lp_xiahai_suanmingji_expanded_boundary_001`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=015-queue-refresh-or-013-explicit-candidate-gate`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=015-queue-refresh-or-013-explicit-candidate-gate`"
+        in quickstart
+    )
+
+
 def test_new_material_learning_handoff_tracks_final_state():
     closure_counts = _source_window_learning_closure_counts()
     summary = learning_reference_curation.build_learning_reference_progress_summary()

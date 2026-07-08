@@ -401,10 +401,28 @@ Explicit Downstream Authorization Receipt:
 - `下海算命记.pdf`
 - `next-new-material-start=017-new-material-expanded-corrected-learning-completion-review`
 
-The next long goal should close or route the expanded corrected learning note
-after reviewing whether the three corrected anchors are sufficient for any next
-learning action. Candidate intake remains blocked unless a later explicitly
-authorized downstream workflow is opened.
+017 New Material Expanded Corrected Learning Completion Review:
+
+- `new-material-expanded-corrected-learning-completion-review-status=expanded_corrected_learning_loop_closed_candidate_intake_blocked`
+- `expanded-learning-completion-review-items=1`
+- `learning-notes-closed=1`
+- `candidate-intake-allowed=0`
+- `additional-correction-required=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-queue-refresh-or-013-explicit-candidate-gate`
+- `new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf`
+- `note_xiahai_suanmingji_expanded_corrected_001`
+- `lp_xiahai_suanmingji_expanded_boundary_001`
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+- `下海算命记.pdf`
+- `next-new-material-start=015-queue-refresh-or-013-explicit-candidate-gate`
+
+The expanded corrected learning loop is closed: the three corrected anchors are
+sufficient for a boundary learning note, the page-72 continuity locator remains
+optional precision work, and candidate intake stays blocked unless a later
+explicitly authorized 013/012 workflow is opened.
 
 Run focused learning reference curation tests:
 

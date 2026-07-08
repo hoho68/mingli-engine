@@ -678,6 +678,43 @@ Guardrails:
 - Completion review must decide whether to stop or request more correction.
 - No 013 or 012 records are created by the draft stage.
 
+## 017 New Material Expanded Corrected Learning Completion Review
+
+- Completion id: `017-new-material-expanded-corrected-learning-completion-review`
+- `new-material-expanded-corrected-learning-completion-review-status=expanded_corrected_learning_loop_closed_candidate_intake_blocked`
+- `expanded-learning-completion-review-items=1`
+- `learning-notes-closed=1`
+- `candidate-intake-allowed=0`
+- `additional-correction-required=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-queue-refresh-or-013-explicit-candidate-gate`
+
+Expanded learning completion review item ids:
+- `new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf`
+
+Learning note ids:
+- `note_xiahai_suanmingji_expanded_corrected_001`
+
+Learning point ids:
+- `lp_xiahai_suanmingji_expanded_boundary_001`
+
+Boundary checks:
+- `completion_review_items_loaded`: `passed`
+- `previous_note_draft_ready`: `passed`
+- `learning_note_closed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `expanded_learning_loop_closed`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The expanded corrected learning loop is closed at 017 only.
+- Candidate intake remains blocked unless an explicit 013/012 workflow opens.
+- The three corrected anchors are sufficient; the page-72 locator is optional precision work.
+- No 013 or 012 records are created by this completion review.
+
 ## Phase C Source Disposition Snapshot
 
 The current 016/017 state consumes 23 selected extraction tasks as learning
