@@ -1,0 +1,80 @@
+[
+  {
+    "selection_id": "gated_ordinary_followup_source_bazi_baijue_case_collection",
+    "prior_selection_id": "gated_ordinary_source_mingzao_chunqiu_case_collection",
+    "prep_id": "gated_prep_case_collection_boundary_001",
+    "source_selection_id": "next_cycle_bazi_case_collection_deferred",
+    "cluster_id": "bazi_general_case_collection_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi Baijue Case Collection Volume 1",
+    "selection_status": "selected_for_registration",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "register_source",
+    "relative_paths": [
+      "八字18本/八字百诀 上册  214P.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "source_library_entry_id": "entry_bazi_general_bazi_baijue_case_pdf",
+    "source_material_id": "material_bazi_general_bazi_baijue_case_pdf",
+    "audit_id": "audit_bazi_general_bazi_baijue_case_pdf",
+    "queue_item_id": "queue_bazi_general_bazi_baijue_ten_god_extract",
+    "candidate_id": "candidate_bazi_general_bazi_baijue_ten_god_001",
+    "evidence_id": "bazi_general_bazi_baijue_ten_god_001",
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "source_library_mutation_authorized": true,
+    "downstream_mutation_authorized": true,
+    "priority_score": 23,
+    "selection_note": "Selected as the next bounded case-collection PDF from the prepared ordinary gated cluster.",
+    "rationale": "Bazi Baijue volume 1 gives a source-level case collection anchor for ten-god relation comparison while keeping exact pages as later transcription work.",
+    "guardrails": [
+      "Keep this as weak locator preparation metadata until page review.",
+      "Do not infer deterministic outcomes from case examples.",
+      "Do not copy long passages from the external PDF."
+    ],
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "selection_id": "gated_ordinary_followup_source_mingli_mijue_formula",
+    "prior_selection_id": "gated_ordinary_source_sizhu_yuce_yaojue_formula",
+    "prep_id": "gated_prep_practical_formula_boundary_001",
+    "source_selection_id": "next_cycle_bazi_practical_formula_deferred",
+    "cluster_id": "bazi_general_practical_formula_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Mingli Mijue Formula Reference",
+    "selection_status": "selected_for_registration",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "register_source",
+    "relative_paths": [
+      "命理秘诀(1).pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "source_library_entry_id": "entry_bazi_general_mingli_mijue_pdf",
+    "source_material_id": "material_bazi_general_mingli_mijue_pdf",
+    "audit_id": "audit_bazi_general_mingli_mijue_pdf",
+    "queue_item_id": "queue_bazi_general_mingli_mijue_branch_interaction_extract",
+    "candidate_id": "candidate_bazi_general_mingli_mijue_branch_interaction_001",
+    "evidence_id": "bazi_general_mingli_mijue_branch_interaction_001",
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_library_mutation_authorized": true,
+    "downstream_mutation_authorized": true,
+    "priority_score": 30,
+    "selection_note": "Selected as the next bounded practical-formula PDF from the prepared ordinary gated cluster.",
+    "rationale": "Mingli Mijue gives a source-level formula reference for branch-interaction comparison while keeping exact pages as later transcription work.",
+    "guardrails": [
+      "Keep this as weak locator preparation metadata until page review.",
+      "Treat formula framing as school-specific comparison context.",
+      "Do not copy long passages from the external PDF."
+    ],
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  }
+]

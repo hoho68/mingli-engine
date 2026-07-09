@@ -265,6 +265,55 @@ def _manual_application_candidate_ids() -> list[str]:
     ]
 
 
+PROMOTED_MARKDOWN_LEARNING_CANDIDATE_IDS = {
+    "candidate_markdown_batch_001_pattern_strength_001",
+    "candidate_markdown_batch_001_ten_god_relation_001",
+    "candidate_markdown_batch_001_branch_interaction_001",
+    "candidate_markdown_batch_001_blind_image_method_001",
+    "candidate_markdown_batch_002_useful_god_001",
+    "candidate_markdown_batch_002_pattern_strength_001",
+    "candidate_markdown_batch_002_luck_cycle_001",
+    "candidate_markdown_batch_002_ten_god_relation_001",
+    "candidate_markdown_batch_002_branch_route_001",
+    "candidate_markdown_batch_002_useful_god_types_001",
+    "candidate_markdown_batch_002_day_master_strength_basis_001",
+    "candidate_markdown_batch_004_useful_god_001",
+    "candidate_markdown_batch_004_pattern_strength_001",
+    "candidate_markdown_batch_004_branch_interaction_001",
+    "candidate_markdown_batch_004_luck_cycle_001",
+    "candidate_markdown_batch_005_ten_god_relation_001",
+    "candidate_markdown_batch_005_blind_image_method_001",
+    "candidate_markdown_batch_005_branch_interaction_001",
+}
+
+
+PROMOTED_KSKELETON_CANDIDATE_IDS = {
+    "candidate_kskeleton_q001_foundation_tables_001",
+    "candidate_kskeleton_q002_yushi_tiaohou_001",
+    "candidate_kskeleton_q002_shen_pattern_001",
+    "candidate_kskeleton_q002_yuanhai_bilateral_001",
+    "candidate_kskeleton_q003_geju_selection_001",
+    "candidate_kskeleton_q003_day_master_strength_001",
+    "candidate_kskeleton_q003_congwang_congshi_001",
+    "candidate_kskeleton_q006_interaction_structure_001",
+    "candidate_kskeleton_q004_mechanism_layer_001",
+    "candidate_kskeleton_q004_cross_dependency_001",
+    "candidate_kskeleton_q004_q006_dependency_001",
+}
+
+
+def _assert_markdown_line_locator(locator):
+    assert locator.startswith("review-note:Markdown/source_batch_")
+    assert "#L" in locator
+
+    source_path_text, line_text = locator.removeprefix("review-note:").rsplit("#L", 1)
+    line_number = int(line_text)
+    source_path = Path(source_path_text)
+
+    assert source_path.exists(), source_path
+    assert 1 <= line_number <= len(source_path.read_text(encoding="utf-8").splitlines())
+
+
 def _manual_application_candidate_payloads() -> list[dict[str, object]]:
     """Replicate the four 017 pending_review candidates as fixture seed data."""
     return [
@@ -12220,12 +12269,421 @@ def test_seeded_review_and_promotion_records_reference_existing_candidates():
     )
 
 
+def test_bazi_general_source_preparation_reading_intake_records_are_promoted():
+    materials = source_intake.load_source_materials()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    batches = source_intake.load_promotion_batches()
+
+    materials_by_id = {material.material_id: material for material in materials}
+    candidates_by_id = {candidate.candidate_id: candidate for candidate in candidates}
+    reviews_by_id = {review.decision_id: review for review in reviews}
+    batches_by_id = {batch.promotion_batch_id: batch for batch in batches}
+
+    expected_materials = {
+        "material_bazi_general_lecture_textbook_pdf": (
+            "source_bazi_general_lecture_textbook_pdf",
+            "reviewed",
+        ),
+        "material_bazi_general_beichen_intro_pdf": (
+            "source_bazi_general_beichen_intro_pdf",
+            "reviewed",
+        ),
+        "material_bazi_general_ziping_orthodox_pair_pdf": (
+            "source_bazi_general_ziping_orthodox_pair_pdf",
+            "reviewed",
+        ),
+    }
+    for material_id, (source_id, preparation_status) in expected_materials.items():
+        material = materials_by_id[material_id]
+        assert material.related_source_id == source_id
+        assert material.preparation_status == preparation_status
+
+    expected_candidates = {
+        "candidate_bazi_general_lecture_pattern_strength_001": (
+            "material_bazi_general_lecture_textbook_pdf",
+            "pattern_strength",
+            "bazi_general_lecture_pattern_strength_001",
+        ),
+        "candidate_bazi_general_beichen_branch_interaction_001": (
+            "material_bazi_general_beichen_intro_pdf",
+            "branch_interaction",
+            "bazi_general_beichen_branch_interaction_001",
+        ),
+        "candidate_bazi_general_ziping_useful_god_001": (
+            "material_bazi_general_ziping_orthodox_pair_pdf",
+            "useful_god_candidate",
+            "bazi_general_ziping_useful_god_001",
+        ),
+    }
+    for candidate_id, (material_id, rule_family, evidence_id) in expected_candidates.items():
+        candidate = candidates_by_id[candidate_id]
+        assert candidate.material_id == material_id
+        assert candidate.proposed_rule_family == rule_family
+        assert candidate.risk_tier == "ordinary"
+        assert candidate.status == "promoted"
+        assert candidate.related_evidence_ids == [evidence_id]
+        assert len(candidate.extracted_meaning) <= 280
+        assert len(candidate.short_quote) <= 80
+
+        review = reviews_by_id[f"review_{candidate_id.removeprefix('candidate_')}"]
+        assert review.candidate_id == candidate_id
+        assert review.decision == "approved"
+        assert review.confidence == "moderate"
+        assert review.approval_limitations
+
+    batch = batches_by_id["promotion_bazi_general_source_preparation_reading_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.candidate_ids == list(expected_candidates)
+    assert batch.target_evidence_ids == [
+        "bazi_general_lecture_pattern_strength_001",
+        "bazi_general_beichen_branch_interaction_001",
+        "bazi_general_ziping_useful_god_001",
+    ]
+    assert batch.unresolved_issues == []
+
+
+def test_bazi_general_selected_variant_intake_records_are_promoted():
+    materials = source_intake.load_source_materials()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    batches = source_intake.load_promotion_batches()
+
+    materials_by_id = {material.material_id: material for material in materials}
+    candidates_by_id = {candidate.candidate_id: candidate for candidate in candidates}
+    reviews_by_id = {review.decision_id: review for review in reviews}
+    batches_by_id = {batch.promotion_batch_id: batch for batch in batches}
+
+    expected_materials = {
+        "material_bazi_general_ditiansui_selected_pdf": (
+            "source_bazi_general_ditiansui_selected_pdf",
+            "reviewed",
+        ),
+        "material_bazi_general_qiongtong_selected_pdf": (
+            "source_bazi_general_qiongtong_selected_pdf",
+            "reviewed",
+        ),
+    }
+    for material_id, (source_id, preparation_status) in expected_materials.items():
+        material = materials_by_id[material_id]
+        assert material.related_source_id == source_id
+        assert material.preparation_status == preparation_status
+
+    expected_candidates = {
+        "candidate_bazi_general_ditiansui_pattern_strength_001": (
+            "material_bazi_general_ditiansui_selected_pdf",
+            "pattern_strength",
+            "bazi_general_ditiansui_pattern_strength_001",
+        ),
+        "candidate_bazi_general_qiongtong_useful_god_001": (
+            "material_bazi_general_qiongtong_selected_pdf",
+            "useful_god_candidate",
+            "bazi_general_qiongtong_useful_god_001",
+        ),
+    }
+    for candidate_id, (material_id, rule_family, evidence_id) in expected_candidates.items():
+        candidate = candidates_by_id[candidate_id]
+        assert candidate.material_id == material_id
+        assert candidate.source_locator.startswith("page:")
+        assert candidate.proposed_rule_family == rule_family
+        assert candidate.risk_tier == "ordinary"
+        assert candidate.status == "promoted"
+        assert candidate.related_evidence_ids == [evidence_id]
+        assert len(candidate.extracted_meaning) <= 280
+        assert len(candidate.short_quote) <= 80
+
+        review = reviews_by_id[f"review_{candidate_id.removeprefix('candidate_')}"]
+        assert review.candidate_id == candidate_id
+        assert review.decision == "approved"
+        assert review.source_quality == "review_note"
+        assert review.confidence == "weak"
+        assert review.approval_limitations
+
+    batch = batches_by_id["promotion_bazi_general_selected_variant_preparation_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.candidate_ids == list(expected_candidates)
+    assert batch.target_evidence_ids == [
+        "bazi_general_ditiansui_pattern_strength_001",
+        "bazi_general_qiongtong_useful_god_001",
+    ]
+    assert batch.unresolved_issues == []
+
+
+def test_bazi_general_next_cycle_cluster_source_intake_records_are_promoted():
+    materials = source_intake.load_source_materials()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    batches = source_intake.load_promotion_batches()
+
+    materials_by_id = {material.material_id: material for material in materials}
+    candidates_by_id = {candidate.candidate_id: candidate for candidate in candidates}
+    reviews_by_id = {review.decision_id: review for review in reviews}
+    batches_by_id = {batch.promotion_batch_id: batch for batch in batches}
+
+    expected_materials = {
+        "material_bazi_general_true_spirit_positioning_pdf": (
+            "source_bazi_general_true_spirit_positioning_pdf",
+            "reviewed",
+        ),
+        "material_bazi_general_mingli_wangdoujing_pdf": (
+            "source_bazi_general_mingli_wangdoujing_pdf",
+            "reviewed",
+        ),
+    }
+    for material_id, (source_id, preparation_status) in expected_materials.items():
+        material = materials_by_id[material_id]
+        assert material.related_source_id == source_id
+        assert material.preparation_status == preparation_status
+
+    expected_candidates = {
+        "candidate_bazi_general_true_spirit_useful_god_001": (
+            "material_bazi_general_true_spirit_positioning_pdf",
+            "useful_god_candidate",
+            "bazi_general_true_spirit_useful_god_001",
+        ),
+        "candidate_bazi_general_wangdoujing_branch_interaction_001": (
+            "material_bazi_general_mingli_wangdoujing_pdf",
+            "branch_interaction",
+            "bazi_general_wangdoujing_branch_interaction_001",
+        ),
+    }
+    for candidate_id, (material_id, rule_family, evidence_id) in expected_candidates.items():
+        candidate = candidates_by_id[candidate_id]
+        assert candidate.material_id == material_id
+        assert candidate.source_locator.startswith("page:")
+        assert candidate.proposed_rule_family == rule_family
+        assert candidate.risk_tier == "ordinary"
+        assert candidate.status == "promoted"
+        assert candidate.related_evidence_ids == [evidence_id]
+        assert len(candidate.extracted_meaning) <= 280
+        assert len(candidate.short_quote) <= 80
+
+        review = reviews_by_id[f"review_{candidate_id.removeprefix('candidate_')}"]
+        assert review.candidate_id == candidate_id
+        assert review.decision == "approved"
+        assert review.source_quality == "review_note"
+        assert review.confidence == "weak"
+        assert review.approval_limitations
+
+    batch = batches_by_id["promotion_bazi_general_next_cycle_cluster_source_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.candidate_ids == list(expected_candidates)
+    assert batch.target_evidence_ids == [
+        "bazi_general_true_spirit_useful_god_001",
+        "bazi_general_wangdoujing_branch_interaction_001",
+    ]
+    assert batch.unresolved_issues == []
+
+
+def test_bazi_general_next_cycle_followup_intake_records_are_promoted():
+    materials = source_intake.load_source_materials()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    batches = source_intake.load_promotion_batches()
+
+    materials_by_id = {material.material_id: material for material in materials}
+    candidates_by_id = {candidate.candidate_id: candidate for candidate in candidates}
+    reviews_by_id = {review.decision_id: review for review in reviews}
+    batches_by_id = {batch.promotion_batch_id: batch for batch in batches}
+
+    expected_materials = {
+        "material_bazi_general_xinpai_essence_part2_pdf": (
+            "source_bazi_general_xinpai_essence_part2_pdf",
+            "reviewed",
+        ),
+        "material_bazi_general_xingming_shuozheng_vol1_pdf": (
+            "source_bazi_general_xingming_shuozheng_vol1_pdf",
+            "reviewed",
+        ),
+    }
+    for material_id, (source_id, preparation_status) in expected_materials.items():
+        material = materials_by_id[material_id]
+        assert material.related_source_id == source_id
+        assert material.preparation_status == preparation_status
+
+    expected_candidates = {
+        "candidate_bazi_general_xinpai_essence_pattern_strength_001": (
+            "material_bazi_general_xinpai_essence_part2_pdf",
+            "pattern_strength",
+            "bazi_general_xinpai_essence_pattern_strength_001",
+        ),
+        "candidate_bazi_general_xingming_shuozheng_branch_interaction_001": (
+            "material_bazi_general_xingming_shuozheng_vol1_pdf",
+            "branch_interaction",
+            "bazi_general_xingming_shuozheng_branch_interaction_001",
+        ),
+    }
+    for candidate_id, (material_id, rule_family, evidence_id) in expected_candidates.items():
+        candidate = candidates_by_id[candidate_id]
+        assert candidate.material_id == material_id
+        assert candidate.source_locator.startswith("page:")
+        assert candidate.proposed_rule_family == rule_family
+        assert candidate.risk_tier == "ordinary"
+        assert candidate.status == "promoted"
+        assert candidate.related_evidence_ids == [evidence_id]
+        assert len(candidate.extracted_meaning) <= 280
+        assert len(candidate.short_quote) <= 80
+
+        review = reviews_by_id[f"review_{candidate_id.removeprefix('candidate_')}"]
+        assert review.candidate_id == candidate_id
+        assert review.decision == "approved"
+        assert review.source_quality == "review_note"
+        assert review.confidence == "weak"
+        assert review.approval_limitations
+
+    batch = batches_by_id["promotion_bazi_general_next_cycle_followup_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.candidate_ids == list(expected_candidates)
+    assert batch.target_evidence_ids == [
+        "bazi_general_xinpai_essence_pattern_strength_001",
+        "bazi_general_xingming_shuozheng_branch_interaction_001",
+    ]
+    assert batch.unresolved_issues == []
+
+
+def test_blind_life_manual_high_risk_boundary_candidate_is_promoted():
+    materials = source_intake.load_source_materials()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    batches = source_intake.load_promotion_batches()
+
+    materials_by_id = {material.material_id: material for material in materials}
+    candidates_by_id = {candidate.candidate_id: candidate for candidate in candidates}
+    reviews_by_id = {review.decision_id: review for review in reviews}
+    batches_by_id = {batch.promotion_batch_id: batch for batch in batches}
+
+    material = materials_by_id["material_blind_life_manual_pdf"]
+    assert material.preparation_status == "partially_reviewed"
+
+    candidate = candidates_by_id["candidate_blind_life_manual_gap_001"]
+    assert (
+        candidate.source_locator
+        == "review-note:blind_life_manual.md#source-window-high-risk-boundary"
+    )
+    assert candidate.proposed_rule_family == "high_risk_signal"
+    assert candidate.risk_tier == "high_risk"
+    assert candidate.status == "promoted"
+    assert candidate.related_evidence_ids == ["blind_life_manual_high_risk_boundary_001"]
+    assert candidate.related_conflict_ids == ["conflict_high_risk_scope_001"]
+    assert candidate.related_gap_ids == ["gap_blind_life_manual"]
+    assert any(
+        marker in limitation
+        for limitation in candidate.proposed_limitations
+        for marker in ("拒绝", "不得", "exact death")
+    )
+
+    review = reviews_by_id["review_candidate_blind_life_manual_gap_001"]
+    assert review.candidate_id == candidate.candidate_id
+    assert review.decision == "approved"
+    assert review.required_changes == []
+    assert review.rejection_reason == ""
+    assert review.source_quality == "review_note"
+    assert review.confidence == "moderate"
+    assert review.approval_limitations
+
+    batch = batches_by_id["promotion_blind_life_manual_high_risk_boundary_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.candidate_ids == ["candidate_blind_life_manual_gap_001"]
+    assert batch.target_evidence_ids == ["blind_life_manual_high_risk_boundary_001"]
+    assert batch.unresolved_issues
+
+
 def test_seeded_intake_progress_report_loads_after_batch_registration():
     report = source_intake.build_intake_progress_report()
 
     assert report.candidate_counts
     assert report.risk_tier_counts
     assert report.rule_family_counts
+
+
+def test_promoted_markdown_learning_candidates_use_source_file_locators():
+    candidates_by_id = {
+        candidate.candidate_id: candidate
+        for candidate in source_intake.load_candidate_extracts()
+    }
+
+    assert PROMOTED_MARKDOWN_LEARNING_CANDIDATE_IDS <= set(candidates_by_id)
+    for candidate_id in PROMOTED_MARKDOWN_LEARNING_CANDIDATE_IDS:
+        source_locator = candidates_by_id[candidate_id].source_locator
+
+        _assert_markdown_line_locator(source_locator)
+        assert "learning-reference:" not in source_locator
+        assert "note_markdown_batch_005_001" not in source_locator
+
+
+def test_markdown_batch_002_extension_candidates_are_promoted():
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    batches = source_intake.load_promotion_batches()
+
+    candidates_by_id = {candidate.candidate_id: candidate for candidate in candidates}
+    reviews_by_id = {review.decision_id: review for review in reviews}
+    batches_by_id = {batch.promotion_batch_id: batch for batch in batches}
+
+    expected_candidates = {
+        "candidate_markdown_batch_002_branch_route_001": (
+            "branch_interaction",
+            "batch002_branch_interaction_route_001",
+        ),
+        "candidate_markdown_batch_002_useful_god_types_001": (
+            "useful_god_candidate",
+            "batch002_useful_god_types_001",
+        ),
+        "candidate_markdown_batch_002_day_master_strength_basis_001": (
+            "pattern_strength",
+            "batch002_day_master_strength_basis_001",
+        ),
+    }
+    for candidate_id, (rule_family, evidence_id) in expected_candidates.items():
+        candidate = candidates_by_id[candidate_id]
+
+        assert candidate.material_id == "material_markdown_source_batch_002_core"
+        assert candidate.proposed_rule_family == rule_family
+        assert candidate.risk_tier == "ordinary"
+        assert candidate.status == "promoted"
+        assert candidate.related_evidence_ids == [evidence_id]
+        assert candidate.related_conflict_ids == []
+        assert candidate.related_gap_ids == []
+        _assert_markdown_line_locator(candidate.source_locator)
+        assert len(candidate.extracted_meaning) <= 280
+        assert len(candidate.short_quote) <= 80
+
+        review = reviews_by_id[f"review_{candidate_id.removeprefix('candidate_')}"]
+        assert review.candidate_id == candidate_id
+        assert review.decision == "approved"
+        assert review.required_changes == []
+        assert review.rejection_reason == ""
+        assert review.source_quality == "direct_extract"
+        assert review.confidence == "moderate"
+        assert review.approval_limitations
+
+    batch = batches_by_id["promotion_markdown_batch_002_extension_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.candidate_ids == list(expected_candidates)
+    assert batch.target_evidence_ids == [
+        "batch002_branch_interaction_route_001",
+        "batch002_useful_god_types_001",
+        "batch002_day_master_strength_basis_001",
+    ]
+    assert batch.unresolved_issues == []
+
+
+def test_promoted_kskeleton_candidates_use_review_note_locators():
+    candidates_by_id = {
+        candidate.candidate_id: candidate
+        for candidate in source_intake.load_candidate_extracts()
+    }
+
+    assert PROMOTED_KSKELETON_CANDIDATE_IDS <= set(candidates_by_id)
+    for candidate_id in PROMOTED_KSKELETON_CANDIDATE_IDS:
+        source_locator = candidates_by_id[candidate_id].source_locator
+
+        assert source_locator.startswith("review-note:knowledge_skeleton/"), (
+            candidate_id,
+            source_locator,
+        )
+        assert "learning-reference:" not in source_locator
+        assert (Path("资料整理") / source_locator.removeprefix("review-note:")).exists()
 
 
 def test_validate_intake_quality_reports_blocking_failures(tmp_path):

@@ -1,0 +1,113 @@
+[
+  {
+    "prep_item_id": "sensitive_risk_prep_bazi_psychology_pdf",
+    "prep_id": "gated_prep_sensitive_topic_boundary_001",
+    "source_selection_id": "next_cycle_bazi_sensitive_topic_risk_review",
+    "cluster_id": "bazi_general_sensitive_topic_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi Psychology Source-Level Risk Review Prep",
+    "prep_status": "prepared_for_source_level_risk_review",
+    "risk_boundary": "sensitive",
+    "recommended_next_action": "risk_review",
+    "relative_paths": [
+      "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "risk_review_topics": [
+      "psychology framing",
+      "relationship language",
+      "non-diagnostic boundary"
+    ],
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "priority_score": 21,
+    "boundary_decision": "Single bounded PDF may enter source-level risk review after sensitive-language checks.",
+    "rationale": "The psychology-labeled source is bounded to one PDF and can be reviewed for language risk before any learning or registration use.",
+    "guardrails": [
+      "Do not use psychology labels as assessment language.",
+      "Do not make fixed personality or relationship claims.",
+      "Keep any later extraction paraphrase-only until risk review closes."
+    ],
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "prep_item_id": "sensitive_risk_prep_erotic_fate_collection_pdf",
+    "prep_id": "gated_prep_sensitive_topic_boundary_001",
+    "source_selection_id": "next_cycle_bazi_sensitive_topic_risk_review",
+    "cluster_id": "bazi_general_sensitive_topic_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Erotic Fate Collection Blocked Risk Review Prep",
+    "prep_status": "blocked_after_sensitive_prep",
+    "risk_boundary": "sensitive",
+    "recommended_next_action": "block",
+    "relative_paths": [
+      "情色命理汇总.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "risk_review_topics": [
+      "sexual content label",
+      "relationship advice risk",
+      "consent and boundary language"
+    ],
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "priority_score": 8,
+    "boundary_decision": "Blocked until explicit safety review and source identity boundaries exist.",
+    "rationale": "The title label signals sensitive sexual and relationship content, so this path cannot proceed without a separate safety scope.",
+    "guardrails": [
+      "Do not register this source from path-label metadata.",
+      "Do not create candidate, review, promotion, or evidence records.",
+      "Require explicit safety review before any future source-level use."
+    ],
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "prep_item_id": "sensitive_risk_prep_bazi_comic_ppt",
+    "prep_id": "gated_prep_sensitive_topic_boundary_001",
+    "source_selection_id": "next_cycle_bazi_sensitive_topic_risk_review",
+    "cluster_id": "bazi_general_sensitive_topic_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi Comic Presentation Deferred Risk Review Prep",
+    "prep_status": "deferred_after_sensitive_prep",
+    "risk_boundary": "sensitive",
+    "recommended_next_action": "defer",
+    "relative_paths": [
+      "八字命理漫画.ppt"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "risk_review_topics": [
+      "presentation format",
+      "unknown source quality",
+      "illustrated advice framing"
+    ],
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "priority_score": 6,
+    "boundary_decision": "Deferred until PPT format, source identity, and source-quality review are explicitly scoped.",
+    "rationale": "The PPT label is bounded but not text-stable enough for this cycle, so it remains deferred before any conversion or reading work.",
+    "guardrails": [
+      "Do not convert or read the PPT during this prep step.",
+      "Do not infer source quality from the file label.",
+      "Require a future format-boundary task before use."
+    ],
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  }
+]

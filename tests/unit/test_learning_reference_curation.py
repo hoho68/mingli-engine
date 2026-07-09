@@ -1,12 +1,16 @@
-import json
+﻿import json
+from collections import Counter
+import re
 import shutil
 import time
 from pathlib import Path
 
 import pytest
 
+from mingli_engine import classical_sources
 from mingli_engine import learning_reference_curation
 from mingli_engine import models
+from mingli_engine import source_intake
 
 
 PROJECT_DATA_DIR = Path(__file__).resolve().parents[2] / "src" / "mingli_engine" / "data"
@@ -16,10 +20,25 @@ CONTEXT_DATA_DIRS = (
     "source_library",
     "source_intake",
 )
+SOURCE_WINDOW_CLOSURE_EXTRACTS = (
+    Path("docs/classical_sources/extracts/duan_plain_mingxue_outline.md"),
+    Path("docs/classical_sources/extracts/fortune_reading_hongfu_qitian.md"),
+    Path("docs/classical_sources/extracts/northeast_blind_peak.md"),
+)
 
 
 def _write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+
+def _source_window_learning_closure_counts() -> dict[str, int]:
+    closure_counts: Counter[str] = Counter()
+    for extract_path in SOURCE_WINDOW_CLOSURE_EXTRACTS:
+        extract = extract_path.read_text(encoding="utf-8")
+        closure_counts.update(
+            re.findall(r"Learning closure note: `learning-closure:([^;`]+)", extract)
+        )
+    return dict(closure_counts)
 
 
 def _write_learning_reference_fixture(
@@ -278,14 +297,15 @@ def _valid_prerequisite_action_notes() -> list[dict[str, object]]:
             "action_type": "risk_review",
             "missing_prerequisites": ["risk_review"],
             "durable_reason": (
-                "High-risk aphoristic material needs boundary review before "
-                "candidate extraction."
+                "Boundary screening completed: aphoristic high-risk material "
+                "stays prerequisite-only and no routine extraction task is "
+                "created."
             ),
             "recommended_action": "risk_review",
             "risk_boundary": "high_risk",
-            "status": "planned",
+            "status": "completed",
             "created_at": "2026-05-31",
-            "updated_at": "2026-05-31",
+            "updated_at": "2026-06-27",
         },
         {
             "action_note_id": "action_blind_school_secret_blocked_001",
@@ -492,6 +512,23 @@ def test_seeded_learning_reference_notes_load_for_current_ready_016_tasks():
         "task_kskeleton_q006_branch_interaction_001",
         "task_kskeleton_q004_luck_cycle_001",
         "task_kskeleton_q008_high_risk_boundary_001",
+        "task_markdown_batch_004_extract_001",
+        "task_markdown_batch_004_extract_001",
+        "task_bazi_general_lecture_pattern_strength_001",
+        "task_bazi_general_beichen_branch_interaction_001",
+        "task_bazi_general_ziping_useful_god_001",
+        "task_bazi_general_ditiansui_pattern_strength_001",
+        "task_bazi_general_qiongtong_useful_god_001",
+        "task_bazi_general_true_spirit_useful_god_001",
+        "task_bazi_general_wangdoujing_branch_interaction_001",
+        "task_bazi_general_xinpai_essence_pattern_strength_001",
+        "task_bazi_general_xingming_shuozheng_branch_interaction_001",
+        "task_bazi_general_mingzao_chunqiu_luck_cycle_001",
+        "task_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+        "task_bazi_general_bazi_baijue_ten_god_001",
+        "task_bazi_general_mingli_mijue_branch_interaction_001",
+        "task_bazi_general_choujin_bosi_branch_interaction_001",
+        "task_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
     ]
     assert [note.note_id for note in notes] == [
        "note_northeast_blind_peak_001",
@@ -508,15 +545,28 @@ def test_seeded_learning_reference_notes_load_for_current_ready_016_tasks():
        "note_kskeleton_q006_branch_interaction_001",
        "note_kskeleton_q004_luck_cycle_001",
        "note_kskeleton_q008_high_risk_boundary_001",
+       "note_liang_tianyuan_wuxian_individual_review_001",
+       "note_liang_yushi_yongshen_individual_review_001",
+       "note_bazi_general_lecture_pattern_strength_001",
+       "note_bazi_general_beichen_branch_interaction_001",
+       "note_bazi_general_ziping_useful_god_001",
+       "note_bazi_general_ditiansui_pattern_strength_001",
+       "note_bazi_general_qiongtong_useful_god_001",
+       "note_bazi_general_true_spirit_useful_god_001",
+       "note_bazi_general_wangdoujing_branch_interaction_001",
+       "note_bazi_general_xinpai_essence_pattern_strength_001",
+       "note_bazi_general_xingming_shuozheng_branch_interaction_001",
+       "note_bazi_general_mingzao_chunqiu_luck_cycle_001",
+       "note_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+       "note_bazi_general_bazi_baijue_ten_god_001",
+       "note_bazi_general_mingli_mijue_branch_interaction_001",
+       "note_bazi_general_choujin_bosi_branch_interaction_001",
+       "note_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
     ]
-    kskeleton_ids = {note.note_id for note in notes if 'kskeleton' in note.note_id}
-    for note in notes:
-        if note.note_id in kskeleton_ids:
-            assert note.status == 'candidate_intake_started', f'{note.note_id} status={note.status}'
-        elif "batch_004" in note.note_id:
-            assert note.status == 'candidate_intake_started', f'{note.note_id} status={note.status}'
-        else:
-            assert note.status == 'draft', f'{note.note_id} status={note.status}'
+    assert all(
+        note.status == "candidate_intake_started"
+        for note in notes
+    )
     assert all(note.learning_points for note in notes)
     assert all(note.learning_points for note in notes)
     assert notes[0].source_material_id == "material_northeast_blind_peak_pdf"
@@ -541,6 +591,194 @@ def test_seeded_learning_reference_notes_load_for_current_ready_016_tasks():
     )
     assert notes[5].overlap_candidate_ids == []
     assert learning_reference_curation.validate_learning_reference_quality() == []
+
+
+def test_bazi_general_source_preparation_reading_learning_notes_are_applied():
+    notes = learning_reference_curation.load_learning_reference_notes()
+    points = learning_reference_curation.load_learning_points()
+    decisions = learning_reference_curation.load_candidate_intake_decisions()
+
+    notes_by_id = {note.note_id: note for note in notes}
+    points_by_id = {point.learning_point_id: point for point in points}
+    decisions_by_id = {decision.decision_id: decision for decision in decisions}
+
+    expected = {
+        "note_bazi_general_lecture_pattern_strength_001": (
+            "lp_bazi_general_lecture_pattern_strength_001",
+            "decision_bazi_general_lecture_pattern_strength_001",
+            "candidate_bazi_general_lecture_pattern_strength_001",
+            "pattern_strength",
+        ),
+        "note_bazi_general_beichen_branch_interaction_001": (
+            "lp_bazi_general_beichen_branch_interaction_001",
+            "decision_bazi_general_beichen_branch_interaction_001",
+            "candidate_bazi_general_beichen_branch_interaction_001",
+            "branch_interaction",
+        ),
+        "note_bazi_general_ziping_useful_god_001": (
+            "lp_bazi_general_ziping_useful_god_001",
+            "decision_bazi_general_ziping_useful_god_001",
+            "candidate_bazi_general_ziping_useful_god_001",
+            "useful_god_candidate",
+        ),
+    }
+
+    for note_id, (point_id, decision_id, candidate_id, rule_family) in expected.items():
+        note = notes_by_id[note_id]
+        point = points_by_id[point_id]
+        decision = decisions_by_id[decision_id]
+
+        assert note.status == "candidate_intake_started"
+        assert note.learning_points == [point_id]
+        assert note.risk_boundary == "ordinary"
+        assert note.overlap_candidate_ids == []
+        assert point.note_id == note_id
+        assert point.proposed_rule_family == rule_family
+        assert point.risk_tier == "ordinary"
+        assert point.candidate_readiness == "ready"
+        assert point.candidate_decision_id == decision_id
+        assert decision.learning_point_id == point_id
+        assert decision.decision == "create_candidate"
+        assert decision.status == "applied"
+        assert decision.candidate_id == candidate_id
+
+
+def test_bazi_general_selected_variant_learning_notes_are_applied():
+    notes = learning_reference_curation.load_learning_reference_notes()
+    points = learning_reference_curation.load_learning_points()
+    decisions = learning_reference_curation.load_candidate_intake_decisions()
+
+    notes_by_id = {note.note_id: note for note in notes}
+    points_by_id = {point.learning_point_id: point for point in points}
+    decisions_by_id = {decision.decision_id: decision for decision in decisions}
+
+    expected = {
+        "note_bazi_general_ditiansui_pattern_strength_001": (
+            "lp_bazi_general_ditiansui_pattern_strength_001",
+            "decision_bazi_general_ditiansui_pattern_strength_001",
+            "candidate_bazi_general_ditiansui_pattern_strength_001",
+            "pattern_strength",
+        ),
+        "note_bazi_general_qiongtong_useful_god_001": (
+            "lp_bazi_general_qiongtong_useful_god_001",
+            "decision_bazi_general_qiongtong_useful_god_001",
+            "candidate_bazi_general_qiongtong_useful_god_001",
+            "useful_god_candidate",
+        ),
+    }
+
+    for note_id, (point_id, decision_id, candidate_id, rule_family) in expected.items():
+        note = notes_by_id[note_id]
+        point = points_by_id[point_id]
+        decision = decisions_by_id[decision_id]
+
+        assert note.status == "candidate_intake_started"
+        assert note.learning_points == [point_id]
+        assert note.risk_boundary == "ordinary"
+        assert note.locator_requirement == "page_or_section"
+        assert note.overlap_candidate_ids == []
+        assert point.note_id == note_id
+        assert point.source_locator.startswith("page:")
+        assert point.proposed_rule_family == rule_family
+        assert point.risk_tier == "ordinary"
+        assert point.candidate_readiness == "ready"
+        assert point.candidate_decision_id == decision_id
+        assert decision.learning_point_id == point_id
+        assert decision.decision == "create_candidate"
+        assert decision.status == "applied"
+        assert decision.candidate_id == candidate_id
+
+
+def test_bazi_general_next_cycle_cluster_source_learning_notes_are_applied():
+    notes = learning_reference_curation.load_learning_reference_notes()
+    points = learning_reference_curation.load_learning_points()
+    decisions = learning_reference_curation.load_candidate_intake_decisions()
+
+    notes_by_id = {note.note_id: note for note in notes}
+    points_by_id = {point.learning_point_id: point for point in points}
+    decisions_by_id = {decision.decision_id: decision for decision in decisions}
+
+    expected = {
+        "note_bazi_general_true_spirit_useful_god_001": (
+            "lp_bazi_general_true_spirit_useful_god_001",
+            "decision_bazi_general_true_spirit_useful_god_001",
+            "candidate_bazi_general_true_spirit_useful_god_001",
+            "useful_god_candidate",
+        ),
+        "note_bazi_general_wangdoujing_branch_interaction_001": (
+            "lp_bazi_general_wangdoujing_branch_interaction_001",
+            "decision_bazi_general_wangdoujing_branch_interaction_001",
+            "candidate_bazi_general_wangdoujing_branch_interaction_001",
+            "branch_interaction",
+        ),
+    }
+
+    for note_id, (point_id, decision_id, candidate_id, rule_family) in expected.items():
+        note = notes_by_id[note_id]
+        point = points_by_id[point_id]
+        decision = decisions_by_id[decision_id]
+
+        assert note.status == "candidate_intake_started"
+        assert note.learning_points == [point_id]
+        assert note.risk_boundary == "ordinary"
+        assert note.locator_requirement == "page_or_section"
+        assert note.overlap_candidate_ids == []
+        assert point.note_id == note_id
+        assert point.source_locator.startswith("page:")
+        assert point.proposed_rule_family == rule_family
+        assert point.risk_tier == "ordinary"
+        assert point.candidate_readiness == "ready"
+        assert point.candidate_decision_id == decision_id
+        assert decision.learning_point_id == point_id
+        assert decision.decision == "create_candidate"
+        assert decision.status == "applied"
+        assert decision.candidate_id == candidate_id
+
+
+def test_bazi_general_next_cycle_followup_learning_notes_are_applied():
+    notes = learning_reference_curation.load_learning_reference_notes()
+    points = learning_reference_curation.load_learning_points()
+    decisions = learning_reference_curation.load_candidate_intake_decisions()
+
+    notes_by_id = {note.note_id: note for note in notes}
+    points_by_id = {point.learning_point_id: point for point in points}
+    decisions_by_id = {decision.decision_id: decision for decision in decisions}
+
+    expected = {
+        "note_bazi_general_xinpai_essence_pattern_strength_001": (
+            "lp_bazi_general_xinpai_essence_pattern_strength_001",
+            "decision_bazi_general_xinpai_essence_pattern_strength_001",
+            "candidate_bazi_general_xinpai_essence_pattern_strength_001",
+            "pattern_strength",
+        ),
+        "note_bazi_general_xingming_shuozheng_branch_interaction_001": (
+            "lp_bazi_general_xingming_shuozheng_branch_interaction_001",
+            "decision_bazi_general_xingming_shuozheng_branch_interaction_001",
+            "candidate_bazi_general_xingming_shuozheng_branch_interaction_001",
+            "branch_interaction",
+        ),
+    }
+
+    for note_id, (point_id, decision_id, candidate_id, rule_family) in expected.items():
+        note = notes_by_id[note_id]
+        point = points_by_id[point_id]
+        decision = decisions_by_id[decision_id]
+
+        assert note.status == "candidate_intake_started"
+        assert note.learning_points == [point_id]
+        assert note.risk_boundary == "ordinary"
+        assert note.locator_requirement == "page_or_section"
+        assert note.overlap_candidate_ids == []
+        assert point.note_id == note_id
+        assert point.source_locator.startswith("page:")
+        assert point.proposed_rule_family == rule_family
+        assert point.risk_tier == "ordinary"
+        assert point.candidate_readiness == "ready"
+        assert point.candidate_decision_id == decision_id
+        assert decision.learning_point_id == point_id
+        assert decision.decision == "create_candidate"
+        assert decision.status == "applied"
+        assert decision.candidate_id == candidate_id
 
 
 def test_learning_reference_notes_reject_duplicate_note_ids(tmp_path):
@@ -722,19 +960,19 @@ def test_learning_reference_note_loading_does_not_mutate_upstream_data(tmp_path)
 def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.note_counts == {"draft": 7, "candidate_intake_started": 7}
+    assert summary.note_counts == {"candidate_intake_started": 31}
     assert summary.risk_tier_counts == {
-        "sensitive": 40,
-        "ordinary": 11,
-        "high_risk": 3,
+        "sensitive": 44,
+        "ordinary": 41,
+        "high_risk": 4,
     }
     assert summary.note_rule_family_counts == {
         "blind_image_method": 2,
-        "branch_interaction": 4,
-        "pattern_strength": 9,
-        "useful_god_candidate": 4,
-        "luck_cycle": 4,
-        "ten_god_relation": 4,
+        "branch_interaction": 9,
+        "pattern_strength": 14,
+        "useful_god_candidate": 8,
+        "luck_cycle": 6,
+        "ten_god_relation": 5,
         "five_element_balance": 1,
         "remedy_boundary": 1,
         "high_risk_signal": 1,
@@ -754,19 +992,25 @@ def test_learning_reference_summary_includes_seeded_note_counts_and_task_ids():
         "task_kskeleton_q006_branch_interaction_001",
         "task_kskeleton_q004_luck_cycle_001",
         "task_kskeleton_q008_high_risk_boundary_001",
+        "task_markdown_batch_004_extract_001",
+        "task_markdown_batch_004_extract_001",
+        "task_bazi_general_lecture_pattern_strength_001",
+        "task_bazi_general_beichen_branch_interaction_001",
+        "task_bazi_general_ziping_useful_god_001",
+        "task_bazi_general_ditiansui_pattern_strength_001",
+        "task_bazi_general_qiongtong_useful_god_001",
+        "task_bazi_general_true_spirit_useful_god_001",
+        "task_bazi_general_wangdoujing_branch_interaction_001",
+        "task_bazi_general_xinpai_essence_pattern_strength_001",
+        "task_bazi_general_xingming_shuozheng_branch_interaction_001",
+        "task_bazi_general_mingzao_chunqiu_luck_cycle_001",
+        "task_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+        "task_bazi_general_bazi_baijue_ten_god_001",
+        "task_bazi_general_mingli_mijue_branch_interaction_001",
+        "task_bazi_general_choujin_bosi_branch_interaction_001",
+        "task_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
     ]
-    assert summary.next_action_ids == [
-        "note_northeast_blind_peak_001",
-        "note_mingli_true_formula_teacher_001",
-        "note_duan_plain_mingxue_outline_001",
-        "note_mingxue_golden_voice_001",
-        "note_fortune_reading_hongfu_qitian_001",
-        "note_markdown_batch_002_useful_god_001",
-        "note_markdown_batch_001_pattern_strength_001",
-        "action_blind_life_manual_risk_review_001",
-        "action_immortal_fortune_jianghu_secret_risk_review_001",
-        "action_life_death_book_100_pages_risk_review_001",
-    ]
+    assert summary.next_action_ids == []
 
 
 @pytest.mark.parametrize(
@@ -862,6 +1106,23 @@ def test_seeded_learning_points_load_and_reference_learning_notes():
         "lp_kskeleton_q008_health_medical_boundary_001",
         "lp_kskeleton_q008_branch_interaction_safety_boundary_001",
         "lp_kskeleton_q008_relationship_family_boundary_001",
+        "lp_liang_tianyuan_wuxian_day_master_use_god_001",
+        "lp_liang_yushi_month_branch_use_god_taxonomy_001",
+        "lp_bazi_general_lecture_pattern_strength_001",
+        "lp_bazi_general_beichen_branch_interaction_001",
+        "lp_bazi_general_ziping_useful_god_001",
+        "lp_bazi_general_ditiansui_pattern_strength_001",
+        "lp_bazi_general_qiongtong_useful_god_001",
+        "lp_bazi_general_true_spirit_useful_god_001",
+        "lp_bazi_general_wangdoujing_branch_interaction_001",
+        "lp_bazi_general_xinpai_essence_pattern_strength_001",
+        "lp_bazi_general_xingming_shuozheng_branch_interaction_001",
+        "lp_bazi_general_mingzao_chunqiu_luck_cycle_001",
+        "lp_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+        "lp_bazi_general_bazi_baijue_ten_god_001",
+        "lp_bazi_general_mingli_mijue_branch_interaction_001",
+        "lp_bazi_general_choujin_bosi_branch_interaction_001",
+        "lp_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
     ]
     assert [point.note_id for point in points] == [
         "note_northeast_blind_peak_001",
@@ -898,7 +1159,24 @@ def test_seeded_learning_points_load_and_reference_learning_notes():
         "note_kskeleton_q008_high_risk_boundary_001",
         "note_kskeleton_q008_high_risk_boundary_001",
         "note_kskeleton_q008_high_risk_boundary_001",
-    ]
+        "note_liang_tianyuan_wuxian_individual_review_001",
+        "note_liang_yushi_yongshen_individual_review_001",
+        "note_bazi_general_lecture_pattern_strength_001",
+        "note_bazi_general_beichen_branch_interaction_001",
+            "note_bazi_general_ziping_useful_god_001",
+            "note_bazi_general_ditiansui_pattern_strength_001",
+            "note_bazi_general_qiongtong_useful_god_001",
+            "note_bazi_general_true_spirit_useful_god_001",
+            "note_bazi_general_wangdoujing_branch_interaction_001",
+            "note_bazi_general_xinpai_essence_pattern_strength_001",
+            "note_bazi_general_xingming_shuozheng_branch_interaction_001",
+            "note_bazi_general_mingzao_chunqiu_luck_cycle_001",
+            "note_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+            "note_bazi_general_bazi_baijue_ten_god_001",
+            "note_bazi_general_mingli_mijue_branch_interaction_001",
+            "note_bazi_general_choujin_bosi_branch_interaction_001",
+            "note_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+        ]
     assert points[0].candidate_readiness == "duplicate_review"
     assert points[1].candidate_readiness == "ready"
     assert points[2].candidate_readiness == "ready"
@@ -906,7 +1184,12 @@ def test_seeded_learning_points_load_and_reference_learning_notes():
     assert points[4].candidate_readiness == "ready"
     assert points[5].candidate_readiness == "ready"
     assert all(point.candidate_readiness == "ready" for point in points[6:28])
-    assert all(point.candidate_readiness == "deferred" for point in points[28:])
+    assert all(point.candidate_readiness == "deferred" for point in points[28:34])
+    assert all(
+        point.candidate_readiness == "duplicate_review"
+        for point in points[34:36]
+    )
+    assert all(point.candidate_readiness == "ready" for point in points[36:])
 
 
 def test_learning_points_reject_unknown_note_references(tmp_path):
@@ -1018,6 +1301,23 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "decision_kskeleton_q004_mechanism_layer_001",
         "decision_kskeleton_q004_cross_dependency_001",
         "decision_kskeleton_q004_q006_dependency_001",
+        "decision_liang_tianyuan_wuxian_reuse_batch004_pattern_001",
+        "decision_liang_yushi_yongshen_reuse_batch004_useful_god_001",
+        "decision_bazi_general_lecture_pattern_strength_001",
+        "decision_bazi_general_beichen_branch_interaction_001",
+        "decision_bazi_general_ziping_useful_god_001",
+        "decision_bazi_general_ditiansui_pattern_strength_001",
+        "decision_bazi_general_qiongtong_useful_god_001",
+        "decision_bazi_general_true_spirit_useful_god_001",
+        "decision_bazi_general_wangdoujing_branch_interaction_001",
+        "decision_bazi_general_xinpai_essence_pattern_strength_001",
+        "decision_bazi_general_xingming_shuozheng_branch_interaction_001",
+        "decision_bazi_general_mingzao_chunqiu_luck_cycle_001",
+        "decision_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+        "decision_bazi_general_bazi_baijue_ten_god_001",
+        "decision_bazi_general_mingli_mijue_branch_interaction_001",
+        "decision_bazi_general_choujin_bosi_branch_interaction_001",
+        "decision_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
     ]
     assert [decision.learning_point_id for decision in decisions] == [
         "lp_northeast_blind_image_001",
@@ -1048,7 +1348,24 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "lp_kskeleton_q004_mechanism_layer_001",
         "lp_kskeleton_q004_cross_dependency_001",
         "lp_kskeleton_q004_q006_dependency_001",
-    ]
+        "lp_liang_tianyuan_wuxian_day_master_use_god_001",
+        "lp_liang_yushi_month_branch_use_god_taxonomy_001",
+        "lp_bazi_general_lecture_pattern_strength_001",
+        "lp_bazi_general_beichen_branch_interaction_001",
+            "lp_bazi_general_ziping_useful_god_001",
+            "lp_bazi_general_ditiansui_pattern_strength_001",
+            "lp_bazi_general_qiongtong_useful_god_001",
+            "lp_bazi_general_true_spirit_useful_god_001",
+            "lp_bazi_general_wangdoujing_branch_interaction_001",
+            "lp_bazi_general_xinpai_essence_pattern_strength_001",
+            "lp_bazi_general_xingming_shuozheng_branch_interaction_001",
+            "lp_bazi_general_mingzao_chunqiu_luck_cycle_001",
+            "lp_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+            "lp_bazi_general_bazi_baijue_ten_god_001",
+            "lp_bazi_general_mingli_mijue_branch_interaction_001",
+            "lp_bazi_general_choujin_bosi_branch_interaction_001",
+            "lp_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+        ]
     assert decisions[0].decision == "reuse_existing"
     assert decisions[1].decision == "create_candidate"
     assert decisions[2].decision == "create_candidate"
@@ -1085,7 +1402,24 @@ def test_seeded_candidate_intake_decisions_load_and_reference_learning_points():
         "candidate_kskeleton_q004_mechanism_layer_001",
         "candidate_kskeleton_q004_cross_dependency_001",
         "candidate_kskeleton_q004_q006_dependency_001",
-    ]
+        "candidate_markdown_batch_004_pattern_strength_001",
+        "candidate_markdown_batch_004_useful_god_001",
+        "candidate_bazi_general_lecture_pattern_strength_001",
+        "candidate_bazi_general_beichen_branch_interaction_001",
+            "candidate_bazi_general_ziping_useful_god_001",
+            "candidate_bazi_general_ditiansui_pattern_strength_001",
+            "candidate_bazi_general_qiongtong_useful_god_001",
+            "candidate_bazi_general_true_spirit_useful_god_001",
+            "candidate_bazi_general_wangdoujing_branch_interaction_001",
+            "candidate_bazi_general_xinpai_essence_pattern_strength_001",
+            "candidate_bazi_general_xingming_shuozheng_branch_interaction_001",
+            "candidate_bazi_general_mingzao_chunqiu_luck_cycle_001",
+            "candidate_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+            "candidate_bazi_general_bazi_baijue_ten_god_001",
+            "candidate_bazi_general_mingli_mijue_branch_interaction_001",
+            "candidate_bazi_general_choujin_bosi_branch_interaction_001",
+            "candidate_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+        ]
 
 
 def test_apply_candidate_intake_decisions_creates_selected_candidate_and_marks_decision_applied(
@@ -1324,15 +1658,87 @@ def test_candidate_intake_decision_quality_rejects_boundary_leakage(
 def test_learning_reference_summary_includes_learning_points_and_decisions():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.learning_point_counts == {"duplicate_review": 1, "ready": 27, "deferred": 6}
+    assert summary.learning_point_counts == {"duplicate_review": 3, "ready": 42, "deferred": 6}
     assert summary.decision_counts == {
-        "reuse_existing": 1,
-        "create_candidate": 27,
-        "status:applied": 28,
+        "reuse_existing": 3,
+        "create_candidate": 42,
+        "status:applied": 45,
     }
-    assert summary.candidate_ready_count == 27
-    assert summary.candidate_decision_count == 28
-    assert summary.overlap_warning_count == 7
+    assert summary.candidate_ready_count == 42
+    assert summary.candidate_decision_count == 45
+    assert summary.overlap_warning_count == 9
+
+
+def test_liang_bazi_individual_review_notes_reuse_existing_batch_004_candidates():
+    notes = learning_reference_curation.load_learning_reference_notes()
+    points = learning_reference_curation.load_learning_points()
+    decisions = learning_reference_curation.load_candidate_intake_decisions()
+
+    notes_by_id = {note.note_id: note for note in notes}
+    points_by_id = {point.learning_point_id: point for point in points}
+    decisions_by_id = {decision.decision_id: decision for decision in decisions}
+
+    tianyuan_note = notes_by_id["note_liang_tianyuan_wuxian_individual_review_001"]
+    yushi_note = notes_by_id["note_liang_yushi_yongshen_individual_review_001"]
+
+    assert tianyuan_note.task_id == "task_markdown_batch_004_extract_001"
+    assert yushi_note.task_id == "task_markdown_batch_004_extract_001"
+    assert tianyuan_note.status == "candidate_intake_started"
+    assert yushi_note.status == "candidate_intake_started"
+    assert tianyuan_note.learning_points == [
+        "lp_liang_tianyuan_wuxian_day_master_use_god_001"
+    ]
+    assert yushi_note.learning_points == [
+        "lp_liang_yushi_month_branch_use_god_taxonomy_001"
+    ]
+    assert tianyuan_note.overlap_candidate_ids == [
+        "candidate_markdown_batch_004_pattern_strength_001"
+    ]
+    assert yushi_note.overlap_candidate_ids == [
+        "candidate_markdown_batch_004_useful_god_001"
+    ]
+
+    tianyuan_point = points_by_id[
+        "lp_liang_tianyuan_wuxian_day_master_use_god_001"
+    ]
+    yushi_point = points_by_id[
+        "lp_liang_yushi_month_branch_use_god_taxonomy_001"
+    ]
+
+    assert tianyuan_point.source_locator == (
+        "review-note:Markdown/source_batch_004_cleaned/"
+        "简体 梁湘润《天元巫咸经》注释.md#L34"
+    )
+    assert yushi_point.source_locator == (
+        "review-note:Markdown/source_batch_004_cleaned/"
+        "简体《余氏用神辞渊》梁湘润(1).md#L57"
+    )
+    assert tianyuan_point.candidate_readiness == "duplicate_review"
+    assert yushi_point.candidate_readiness == "duplicate_review"
+    assert tianyuan_point.candidate_decision_id == (
+        "decision_liang_tianyuan_wuxian_reuse_batch004_pattern_001"
+    )
+    assert yushi_point.candidate_decision_id == (
+        "decision_liang_yushi_yongshen_reuse_batch004_useful_god_001"
+    )
+
+    tianyuan_decision = decisions_by_id[
+        "decision_liang_tianyuan_wuxian_reuse_batch004_pattern_001"
+    ]
+    yushi_decision = decisions_by_id[
+        "decision_liang_yushi_yongshen_reuse_batch004_useful_god_001"
+    ]
+
+    assert tianyuan_decision.decision == "reuse_existing"
+    assert yushi_decision.decision == "reuse_existing"
+    assert tianyuan_decision.candidate_id == (
+        "candidate_markdown_batch_004_pattern_strength_001"
+    )
+    assert yushi_decision.candidate_id == (
+        "candidate_markdown_batch_004_useful_god_001"
+    )
+    assert tianyuan_decision.status == "applied"
+    assert yushi_decision.status == "applied"
 
 
 def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
@@ -1345,6 +1751,7 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "action_immortal_fortune_jianghu_secret_risk_review_001",
         "action_life_death_book_100_pages_risk_review_001",
         "action_source_processing_status_deferred_001",
+        "action_markdown_batch_005_risk_review_001",
     ]
     assert [action.backlog_id for action in action_notes] == [
         "backlog_blind_life_manual_risk_review_001",
@@ -1353,6 +1760,7 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "backlog_immortal_fortune_jianghu_secret_risk_review_001",
         "backlog_life_death_book_100_pages_risk_review_001",
         "backlog_source_processing_status_deferred_001",
+        "backlog_markdown_batch_005_risk_review_001",
     ]
     assert [action.package_id for action in action_notes] == [
         "package_next_candidates_001",
@@ -1361,6 +1769,7 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "package_next_candidates_003",
         "package_next_candidates_003",
         "package_next_candidates_003",
+        "package_next_candidates_004",
     ]
     assert [action.queue_item_id for action in action_notes] == [
         "queue_blind_life_manual_risk_review",
@@ -1369,6 +1778,7 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "queue_immortal_fortune_jianghu_secret_risk_review",
         "queue_life_death_book_100_pages_risk_review",
         "queue_source_processing_status_deferred",
+        "queue_markdown_source_batch_005_risk_review",
     ]
     assert [action.audit_id for action in action_notes] == [
         "audit_blind_life_manual",
@@ -1377,7 +1787,103 @@ def test_seeded_prerequisite_action_notes_load_and_reference_016_backlog():
         "audit_immortal_fortune_jianghu_secret",
         "audit_life_death_book_100_pages",
         "audit_source_processing_status",
+        "audit_markdown_source_batch_005",
     ]
+
+
+def test_learning_reference_routes_markdown_batch_005_risk_review_as_prerequisite_action():
+    action_notes = learning_reference_curation.load_prerequisite_action_notes()
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+
+    actions_by_id = {action.action_note_id: action for action in action_notes}
+    action = actions_by_id["action_markdown_batch_005_risk_review_001"]
+
+    assert action.backlog_id == "backlog_markdown_batch_005_risk_review_001"
+    assert action.package_id == "package_next_candidates_004"
+    assert action.queue_item_id == "queue_markdown_source_batch_005_risk_review"
+    assert action.audit_id == "audit_markdown_source_batch_005"
+    assert action.action_type == "risk_review"
+    assert action.missing_prerequisites == ["risk_boundary_review"]
+    assert action.recommended_action == "risk_review"
+    assert action.risk_boundary == "high_risk"
+    assert action.status == "completed"
+
+    assert action.action_note_id not in summary.next_action_ids
+    assert summary.prerequisite_action_counts["risk_review"] == 4
+    assert summary.prerequisite_action_counts["status:completed"] == 4
+    assert summary.risk_tier_counts["high_risk"] == 4
+    assert summary.formal_evidence_delta == 0
+
+
+def test_learning_reference_risk_review_sweep_closes_actions_without_evidence_changes():
+    action_notes = learning_reference_curation.load_prerequisite_action_notes()
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    promotion_batches = source_intake.load_promotion_batches()
+    evidence_units = classical_sources.load_evidence_units()
+
+    actions_by_id = {action.action_note_id: action for action in action_notes}
+    completed_action_ids = {
+        "action_blind_life_manual_risk_review_001",
+        "action_immortal_fortune_jianghu_secret_risk_review_001",
+        "action_life_death_book_100_pages_risk_review_001",
+        "action_markdown_batch_005_risk_review_001",
+    }
+
+    assert {
+        action_id
+        for action_id in completed_action_ids
+        if actions_by_id[action_id].status == "completed"
+    } == completed_action_ids
+    assert completed_action_ids.isdisjoint(summary.next_action_ids)
+    assert summary.next_action_ids == []
+    assert summary.prerequisite_action_counts == {
+        "risk_review": 4,
+        "deferred": 2,
+        "blocked": 1,
+        "status:completed": 4,
+        "status:deferred": 2,
+        "status:blocked": 1,
+    }
+    assert summary.formal_evidence_delta == 0
+    assert len(candidates) == 54
+    assert len(reviews) == 54
+    assert len(promotion_batches) == 34
+    assert len(evidence_units) == 111
+
+
+def test_learning_reference_closes_remaining_draft_notes_without_evidence_changes():
+    notes = learning_reference_curation.load_learning_reference_notes()
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    promotion_batches = source_intake.load_promotion_batches()
+    evidence_units = classical_sources.load_evidence_units()
+
+    closed_note_ids = {
+        "note_northeast_blind_peak_001",
+        "note_mingli_true_formula_teacher_001",
+        "note_duan_plain_mingxue_outline_001",
+        "note_mingxue_golden_voice_001",
+        "note_fortune_reading_hongfu_qitian_001",
+        "note_markdown_batch_002_useful_god_001",
+        "note_markdown_batch_001_pattern_strength_001",
+    }
+    notes_by_id = {note.note_id: note for note in notes}
+
+    assert {
+        note_id
+        for note_id in closed_note_ids
+        if notes_by_id[note_id].status == "candidate_intake_started"
+    } == closed_note_ids
+    assert summary.note_counts == {"candidate_intake_started": 31}
+    assert summary.next_action_ids == []
+    assert summary.formal_evidence_delta == 0
+    assert len(candidates) == 54
+    assert len(reviews) == 54
+    assert len(promotion_batches) == 34
+    assert len(evidence_units) == 111
 
 
 @pytest.mark.parametrize(
@@ -1546,39 +2052,1627 @@ def test_blocking_prerequisite_actions_cannot_become_learning_points_or_decision
 def test_learning_reference_summary_includes_prerequisite_action_counts():
     summary = learning_reference_curation.build_learning_reference_progress_summary()
 
-    assert summary.note_counts == {"draft": 7, "candidate_intake_started": 7}
-    assert summary.learning_point_counts == {"duplicate_review": 1, "ready": 27, "deferred": 6}
+    assert summary.note_counts == {"candidate_intake_started": 31}
+    assert summary.learning_point_counts == {"duplicate_review": 3, "ready": 42, "deferred": 6}
     assert summary.decision_counts == {
-        "reuse_existing": 1,
-        "create_candidate": 27,
-        "status:applied": 28,
+        "reuse_existing": 3,
+        "create_candidate": 42,
+        "status:applied": 45,
     }
     assert summary.prerequisite_action_counts == {
-        "risk_review": 3,
+        "risk_review": 4,
         "deferred": 2,
         "blocked": 1,
-        "status:planned": 3,
+        "status:completed": 4,
         "status:deferred": 2,
         "status:blocked": 1,
     }
     assert summary.risk_tier_counts == {
-        "sensitive": 40,
-        "ordinary": 11,
-        "high_risk": 3,
+        "sensitive": 44,
+        "ordinary": 41,
+        "high_risk": 4,
     }
-    assert summary.overlap_warning_count == 7
-    assert summary.candidate_ready_count == 27
-    assert summary.candidate_decision_count == 28
+    assert summary.overlap_warning_count == 9
+    assert summary.candidate_ready_count == 42
+    assert summary.candidate_decision_count == 45
     assert summary.formal_evidence_delta == 0
-    assert summary.next_action_ids == [
-        "note_northeast_blind_peak_001",
-        "note_mingli_true_formula_teacher_001",
-        "note_duan_plain_mingxue_outline_001",
-        "note_mingxue_golden_voice_001",
-        "note_fortune_reading_hongfu_qitian_001",
-        "note_markdown_batch_002_useful_god_001",
-        "note_markdown_batch_001_pattern_strength_001",
-        "action_blind_life_manual_risk_review_001",
-        "action_immortal_fortune_jianghu_secret_risk_review_001",
-        "action_life_death_book_100_pages_risk_review_001",
+    assert summary.next_action_ids == []
+
+
+def test_learning_reference_docs_track_source_window_learning_closure_sync():
+    closure_counts = _source_window_learning_closure_counts()
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+
+    assert closure_counts == {
+        "learning-paraphrase-ready": 4,
+        "policy-boundary-retained": 5,
+        "safety-boundary-retained": 2,
+    }
+    assert len(summary.selected_task_ids) == 31
+    assert summary.formal_evidence_delta == 0
+    assert summary.next_action_ids == []
+    assert "action_blind_school_secret_blocked_001" not in summary.next_action_ids
+    assert "action_markdown_batch_003_registration_001" not in summary.next_action_ids
+    assert "action_source_processing_status_deferred_001" not in summary.next_action_ids
+
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for document in (overview, quickstart):
+        assert "Source-Window Learning Closure Sync" in document
+        assert "`selected-ready-learning-notes=31`" in document
+        assert "`retained-chapter-learning-closed=11`" in document
+        assert "`learning-paraphrase-ready=4`" in document
+        assert "`policy-boundary-retained=5`" in document
+        assert "`safety-boundary-retained=2`" in document
+        assert "`closed-draft-learning-notes=7`" in document
+        assert "`next_action_ids=0`" in document
+        assert "`planned-risk-review-actions=0`" in document
+        assert "`completed-risk-review-actions=4`" in document
+        assert "`formal_evidence_delta=0`" in document
+        assert "No new candidate-intake decisions" in document
+        assert "no 013 candidate extracts" in document
+        assert "no promotion batches" in document
+
+
+def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+    decisions = learning_reference_curation.load_candidate_intake_decisions()
+    candidates = {
+        candidate.candidate_id: candidate
+        for candidate in source_intake.load_candidate_extracts()
+    }
+    reviews = source_intake.load_review_decisions()
+    promotion_batches = source_intake.load_promotion_batches()
+    evidence_units = classical_sources.load_evidence_units()
+
+    create_candidate_ids = [
+        decision.candidate_id
+        for decision in decisions
+        if decision.decision == "create_candidate"
     ]
+    reuse_candidate_ids = [
+        decision.candidate_id
+        for decision in decisions
+        if decision.decision == "reuse_existing"
+    ]
+
+    assert summary.decision_counts == {
+        "reuse_existing": 3,
+        "create_candidate": 42,
+        "status:applied": 45,
+    }
+    assert summary.formal_evidence_delta == 0
+    assert len(create_candidate_ids) == 42
+    assert reuse_candidate_ids == [
+        "candidate_northeast_blind_image_001",
+        "candidate_markdown_batch_004_pattern_strength_001",
+        "candidate_markdown_batch_004_useful_god_001",
+    ]
+    assert set(create_candidate_ids + reuse_candidate_ids) <= set(candidates)
+
+    assert len(candidates) == 54
+    assert Counter(candidate.status for candidate in candidates.values()) == {
+        "promoted": 51,
+        "rejected": 2,
+        "blocked": 1,
+    }
+    assert Counter(candidates[candidate_id].status for candidate_id in create_candidate_ids) == {
+        "promoted": 42
+    }
+    assert all(
+        candidates[candidate_id].source_locator.startswith(("review-note:", "page:"))
+        for candidate_id in create_candidate_ids
+    )
+    assert all(
+        "learning-reference:" not in candidates[candidate_id].source_locator
+        for candidate_id in create_candidate_ids
+    )
+
+    assert len(reviews) == 54
+    assert Counter(review.decision for review in reviews) == {
+        "approved": 51,
+        "rejected": 2,
+        "blocked": 1,
+    }
+    assert Counter(
+        review.decision
+        for review in reviews
+        if review.candidate_id in create_candidate_ids
+    ) == {"approved": 42}
+
+    assert len(promotion_batches) == 34
+    assert Counter(batch.review_status for batch in promotion_batches) == {
+        "reviewed": 34
+    }
+
+    assert len(evidence_units) == 111
+    assert Counter(unit.curation_batch_id for unit in evidence_units) == {
+        "batch_012_seed_001": 8,
+        "batch_012_taxonomy_001": 58,
+        "batch_markdown_registration_001": 15,
+        "batch_kskeleton_taxonomy_001": 11,
+        "batch_bazi_general_source_preparation_001": 3,
+        "batch_blind_life_manual_high_risk_boundary_001": 1,
+        "batch_markdown_batch_002_extension_001": 3,
+        "batch_bazi_general_selected_variant_001": 2,
+        "batch_bazi_general_next_cycle_cluster_source_001": 2,
+        "batch_bazi_general_next_cycle_followup_001": 2,
+        "batch_bazi_general_gated_ordinary_source_selection_001": 2,
+        "batch_bazi_general_gated_ordinary_followup_selection_001": 2,
+        "batch_bazi_general_gated_ordinary_final_selection_001": 2,
+    }
+    assert not any(
+        unit.source_ref.startswith("learning-reference:")
+        or "candidate_" in unit.source_ref
+        or "learning-closure:" in unit.source_ref
+        for unit in evidence_units
+    )
+
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    for marker in (
+        "Candidate/Formal Evidence Boundary Audit",
+        "`017-applied-decisions=45`",
+        "`017-create-candidate-decisions=42`",
+        "`013-candidate-extracts=54`",
+        "`013-review-decisions=54`",
+        "`013-promotion-batches=34`",
+        "`012-formal-evidence-units=111`",
+        "`formal_evidence_delta=0`",
+        "`learning-reference-source-refs-in-012=0`",
+        "`candidate-id-source-refs-in-012=0`",
+        "`learning-closure-source-refs-in-012=0`",
+    ):
+        assert marker in overview
+
+
+def test_learning_reference_authorization_audit_confirms_local_boundary_clearance():
+    audit = learning_reference_curation.build_learning_reference_authorization_audit()
+
+    assert audit.audit_id == "017-candidate-formal-evidence-authorization-audit"
+    assert (
+        audit.authorization_status
+        == "ready_for_explicit_downstream_authorization"
+    )
+    assert audit.downstream_mutation_authorized is False
+    assert audit.note_counts == {"candidate_intake_started": 31}
+    assert audit.next_action_ids == []
+    assert audit.decision_counts == {
+        "reuse_existing": 3,
+        "create_candidate": 42,
+        "status:applied": 45,
+    }
+    assert audit.candidate_status_counts == {
+        "promoted": 51,
+        "rejected": 2,
+        "blocked": 1,
+    }
+    assert audit.review_decision_counts == {
+        "approved": 51,
+        "rejected": 2,
+        "blocked": 1,
+    }
+    assert audit.promotion_review_status_counts == {"reviewed": 34}
+    assert audit.formal_evidence_unit_count == 111
+    assert audit.formal_evidence_delta == 0
+    assert audit.leakage_counts == {
+        "learning_reference_source_refs_in_012": 0,
+        "candidate_id_source_refs_in_012": 0,
+        "learning_closure_source_refs_in_012": 0,
+    }
+    assert audit.clearance_checks == {
+        "017_notes_closed": "passed",
+        "017_no_active_next_actions": "passed",
+        "017_decisions_applied": "passed",
+        "013_candidate_review_promotion_counts_aligned": "passed",
+        "012_formal_evidence_boundary_clean": "passed",
+        "downstream_mutation_requires_explicit_request": "passed",
+    }
+
+
+def test_learning_reference_authorization_audit_markdown_and_docs_are_in_sync():
+    audit = learning_reference_curation.build_learning_reference_authorization_audit()
+    markdown = (
+        learning_reference_curation
+        .render_learning_reference_authorization_audit_markdown(audit)
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "Authorization Audit Packet",
+        "`authorization-status=ready_for_explicit_downstream_authorization`",
+        "`downstream-mutation-authorized=false`",
+        "`017-notes-closed=31`",
+        "`017-next-action-ids=0`",
+        "`012-boundary-leakage=0`",
+        "`next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+
+def test_downstream_authorization_receipts_load_user_authorization():
+    receipts = learning_reference_curation.load_downstream_authorization_receipts()
+    receipts_by_id = {receipt.receipt_id: receipt for receipt in receipts}
+
+    assert len(receipts) == 1
+    assert set(receipts_by_id) == {"downstream_authorization_receipt_2026_06_30"}
+    receipt = receipts_by_id["downstream_authorization_receipt_2026_06_30"]
+    assert receipt.authorization_audit_id == (
+        "017-candidate-formal-evidence-authorization-audit"
+    )
+    assert receipt.authorization_status == "user_authorized_downstream"
+    assert receipt.authorization_scope == "013_012_downstream"
+    assert receipt.pending_decision_count == 0
+    assert receipt.candidate_extract_delta_count == 0
+    assert receipt.review_decision_delta_count == 0
+    assert receipt.promotion_batch_delta_count == 0
+    assert receipt.formal_evidence_delta_count == 0
+    assert receipt.selected_next_downstream_entry == "015-new-material-intake"
+    assert receipt.downstream_mutation_authorized is True
+
+
+def test_downstream_authorization_summary_consumes_authorization_without_duplicate_writes():
+    summary = learning_reference_curation.build_downstream_authorization_summary()
+
+    assert summary.authorization_id == "013-012-explicit-downstream-authorization"
+    assert summary.authorization_status == "downstream_authorization_consumed"
+    assert summary.authorization_receipt_count == 1
+    assert summary.authorization_scope == "013_012_downstream"
+    assert summary.audit_authorization_status == (
+        "ready_for_explicit_downstream_authorization"
+    )
+    assert summary.pending_decision_count == 0
+    assert summary.applied_decision_count == 45
+    assert summary.candidate_extract_count == 54
+    assert summary.review_decision_count == 54
+    assert summary.promotion_batch_count == 34
+    assert summary.formal_evidence_unit_count == 111
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is True
+    assert summary.next_downstream_entry == "015-new-material-intake"
+    assert summary.boundary_checks == {
+        "authorization_receipts_loaded": "passed",
+        "user_authorized_downstream": "passed",
+        "authorization_audit_ready": "passed",
+        "no_pending_017_decisions": "passed",
+        "013_candidate_review_counts_aligned": "passed",
+        "012_formal_evidence_boundary_clean": "passed",
+        "no_duplicate_downstream_delta": "passed",
+    }
+
+
+def test_downstream_authorization_markdown_and_docs_are_in_sync():
+    summary = learning_reference_curation.build_downstream_authorization_summary()
+    markdown = learning_reference_curation.render_downstream_authorization_markdown(
+        summary
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "Explicit Downstream Authorization Receipt",
+        "`downstream-authorization-status=downstream_authorization_consumed`",
+        "`authorization-scope=013_012_downstream`",
+        "`pending-017-decisions=0`",
+        "`017-applied-decisions=45`",
+        "`013-candidate-extracts=54`",
+        "`013-review-decisions=54`",
+        "`013-promotion-batches=34`",
+        "`012-formal-evidence-units=111`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=true`",
+        "`next-downstream-entry=015-new-material-intake`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`"
+        in quickstart
+    )
+
+
+def test_new_material_corrected_pilot_learning_entry_evaluation_ready_for_note_prep():
+    items = (
+        learning_reference_curation
+        .load_new_material_corrected_pilot_learning_entry_evaluation_items()
+    )
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_entry_evaluation_summary()
+    )
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.evaluation_item_id == (
+        "new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf"
+    )
+    assert item.transcription_execution_item_id == (
+        "new_material_human_corrected_transcription_execution_xiahai_suanmingji_pdf"
+    )
+    assert item.evaluation_status == "ready_for_learning_note_prep"
+    assert item.source_library_entry_id == "entry_new_material_xiahai_suanmingji_pdf"
+    assert item.source_material_id == "material_new_material_xiahai_suanmingji_pdf"
+    assert item.prepared_text_artifact == (
+        "docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md"
+    )
+    assert item.corrected_excerpt_count == 4
+    assert item.corrected_character_count == 35
+    assert item.page_locator_count == 4
+    assert item.learning_note_allowed is True
+    assert item.candidate_intake_allowed is False
+    assert item.duplicate_overlap_review_required is True
+    assert item.risk_boundary_review_required is True
+    assert item.downstream_mutation_authorized is False
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+    assert item.selected_next_material_entry == (
+        "017-new-material-corrected-pilot-learning-note-prep"
+    )
+
+    assert summary.evaluation_id == (
+        "017-new-material-corrected-pilot-learning-entry-evaluation"
+    )
+    assert summary.evaluation_status == "ready_for_learning_note_prep"
+    assert summary.evaluation_item_count == 1
+    assert summary.prepared_text_artifact_count == 1
+    assert summary.corrected_excerpt_count == 4
+    assert summary.corrected_character_count == 35
+    assert summary.page_locator_count == 4
+    assert summary.learning_note_allowed_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.duplicate_overlap_review_required_count == 1
+    assert summary.risk_boundary_review_required_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "017-new-material-corrected-pilot-learning-note-prep"
+    )
+    assert summary.boundary_checks == {
+        "evaluation_items_loaded": "passed",
+        "previous_corrected_pilot_ready": "passed",
+        "prepared_text_artifact_exists": "passed",
+        "learning_note_allowed": "passed",
+        "candidate_intake_blocked": "passed",
+        "duplicate_overlap_review_required": "passed",
+        "risk_boundary_review_required": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_corrected_pilot_learning_entry_evaluation_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_entry_evaluation_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_corrected_pilot_learning_entry_evaluation_markdown(
+            summary
+        )
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Corrected Pilot Learning Entry Evaluation",
+        "`new-material-corrected-pilot-learning-entry-evaluation-status=ready_for_learning_note_prep`",
+        "`learning-entry-evaluation-items=1`",
+        "`prepared-text-artifacts=1`",
+        "`corrected-excerpts=4`",
+        "`corrected-characters=35`",
+        "`page-locators=4`",
+        "`learning-note-allowed=1`",
+        "`candidate-intake-allowed=0`",
+        "`duplicate-overlap-review-required=1`",
+        "`risk-boundary-review-required=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=017-new-material-corrected-pilot-learning-note-prep`",
+        "`new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`"
+        in quickstart
+    )
+
+
+def test_new_material_machine_disposition_learning_gate_routes_usable_sources_only():
+    summary = (
+        learning_reference_curation
+        .build_new_material_machine_disposition_learning_gate_summary()
+    )
+
+    assert summary.gate_status == "machine_usable_sources_routed_to_017"
+    assert summary.machine_text_usable_count == 1
+    assert summary.machine_unusable_closed_count == 1
+    assert summary.learning_entry_source_count == 1
+    assert summary.learning_entry_machine_usable_count == 1
+    assert summary.closed_source_learning_entry_count == 0
+    assert summary.missing_learning_entry_count == 0
+    assert summary.machine_text_usable_source_entry_ids == [
+        "entry_new_material_xiahai_suanmingji_pdf"
+    ]
+    assert summary.machine_unusable_closed_source_entry_ids == [
+        "entry_new_material_bazi_suanming_cangjue_pdf"
+    ]
+    assert summary.learning_entry_source_entry_ids == [
+        "entry_new_material_xiahai_suanmingji_pdf"
+    ]
+    assert summary.excluded_closed_source_entry_ids == [
+        "entry_new_material_bazi_suanming_cangjue_pdf"
+    ]
+    assert summary.boundary_checks == {
+        "machine_disposition_completed": "passed",
+        "machine_text_usable_sources_have_017_entry": "passed",
+        "machine_unusable_closed_sources_excluded": "passed",
+        "candidate_intake_blocked": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_machine_disposition_learning_gate_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_machine_disposition_learning_gate_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_machine_disposition_learning_gate_markdown(summary)
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Machine Disposition Learning Gate",
+        "`new-material-machine-disposition-learning-gate-status=machine_usable_sources_routed_to_017`",
+        "`machine-text-usable=1`",
+        "`machine-unusable-closed=1`",
+        "`017-learning-entry-sources=1`",
+        "`017-machine-usable-entry-sources=1`",
+        "`017-closed-source-entry-count=0`",
+        "`missing-017-learning-entry-count=0`",
+        "`candidate-intake-allowed=0`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`entry_new_material_xiahai_suanmingji_pdf`",
+        "`entry_new_material_bazi_suanming_cangjue_pdf`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+
+def test_new_material_corrected_pilot_learning_note_prep_ready_for_draft():
+    items = (
+        learning_reference_curation
+        .load_new_material_corrected_pilot_learning_note_prep_items()
+    )
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_note_prep_summary()
+    )
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.prep_item_id == (
+        "new_material_corrected_pilot_learning_note_prep_xiahai_suanmingji_pdf"
+    )
+    assert item.prep_id == "017-new-material-corrected-pilot-learning-note-prep"
+    assert item.evaluation_item_id == (
+        "new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf"
+    )
+    assert item.prep_status == "ready_for_learning_note_draft"
+    assert item.proposed_note_id == "note_xiahai_suanmingji_corrected_pilot_001"
+    assert item.proposed_learning_point_count == 1
+    assert item.source_library_entry_id == "entry_new_material_xiahai_suanmingji_pdf"
+    assert item.source_material_id == "material_new_material_xiahai_suanmingji_pdf"
+    assert item.prepared_text_artifact == (
+        "docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md"
+    )
+    assert item.target_rule_families == ["high_risk_signal"]
+    assert item.corrected_excerpt_count == 4
+    assert item.corrected_character_count == 35
+    assert item.page_locator_count == 4
+    assert item.learning_note_draft_allowed is True
+    assert item.candidate_intake_allowed is False
+    assert item.overlap_review_required is True
+    assert item.risk_boundary_review_required is True
+    assert item.downstream_mutation_authorized is False
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+    assert item.selected_next_material_entry == (
+        "017-new-material-corrected-pilot-learning-note-draft"
+    )
+
+    assert summary.prep_id == "017-new-material-corrected-pilot-learning-note-prep"
+    assert summary.prep_status == "ready_for_learning_note_draft"
+    assert summary.prep_item_count == 1
+    assert summary.proposed_note_count == 1
+    assert summary.proposed_learning_point_count == 1
+    assert summary.prepared_text_artifact_count == 1
+    assert summary.corrected_excerpt_count == 4
+    assert summary.corrected_character_count == 35
+    assert summary.page_locator_count == 4
+    assert summary.learning_note_draft_allowed_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.overlap_review_required_count == 1
+    assert summary.risk_boundary_review_required_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "017-new-material-corrected-pilot-learning-note-draft"
+    )
+    assert summary.target_rule_family_counts == {"high_risk_signal": 1}
+    assert summary.boundary_checks == {
+        "learning_note_prep_items_loaded": "passed",
+        "previous_entry_evaluation_ready": "passed",
+        "prepared_text_artifact_exists": "passed",
+        "learning_note_draft_allowed": "passed",
+        "candidate_intake_blocked": "passed",
+        "overlap_review_required": "passed",
+        "risk_boundary_review_required": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_corrected_pilot_learning_note_prep_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_note_prep_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_corrected_pilot_learning_note_prep_markdown(summary)
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Corrected Pilot Learning Note Prep",
+        "`new-material-corrected-pilot-learning-note-prep-status=ready_for_learning_note_draft`",
+        "`learning-note-prep-items=1`",
+        "`proposed-learning-notes=1`",
+        "`proposed-learning-points=1`",
+        "`learning-note-draft-allowed=1`",
+        "`candidate-intake-allowed=0`",
+        "`overlap-review-required=1`",
+        "`risk-boundary-review-required=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=017-new-material-corrected-pilot-learning-note-draft`",
+        "`new_material_corrected_pilot_learning_note_prep_xiahai_suanmingji_pdf`",
+        "`note_xiahai_suanmingji_corrected_pilot_001`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-note-draft`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=017-new-material-corrected-pilot-learning-note-draft`"
+        in quickstart
+    )
+
+
+def test_new_material_corrected_pilot_learning_note_draft_ready_for_completion_review():
+    items = (
+        learning_reference_curation
+        .load_new_material_corrected_pilot_learning_note_draft_items()
+    )
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_note_draft_summary()
+    )
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.draft_item_id == (
+        "new_material_corrected_pilot_learning_note_draft_xiahai_suanmingji_pdf"
+    )
+    assert item.draft_id == "017-new-material-corrected-pilot-learning-note-draft"
+    assert item.prep_item_id == (
+        "new_material_corrected_pilot_learning_note_prep_xiahai_suanmingji_pdf"
+    )
+    assert item.note_id == "note_xiahai_suanmingji_corrected_pilot_001"
+    assert item.learning_point_id == "lp_xiahai_suanmingji_pilot_boundary_001"
+    assert item.draft_status == "ready_for_learning_completion_review"
+    assert item.target_rule_family == "high_risk_signal"
+    assert item.risk_tier == "high_risk"
+    assert item.candidate_intake_allowed is False
+    assert item.completion_review_allowed is True
+    assert item.downstream_mutation_authorized is False
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+    assert item.selected_next_material_entry == (
+        "017-new-material-corrected-pilot-learning-completion-review"
+    )
+
+    assert summary.draft_id == "017-new-material-corrected-pilot-learning-note-draft"
+    assert summary.draft_status == "ready_for_learning_completion_review"
+    assert summary.draft_item_count == 1
+    assert summary.learning_note_count == 1
+    assert summary.learning_point_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.completion_review_allowed_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "017-new-material-corrected-pilot-learning-completion-review"
+    )
+    assert summary.target_rule_family_counts == {"high_risk_signal": 1}
+    assert summary.risk_tier_counts == {"high_risk": 1}
+    assert summary.boundary_checks == {
+        "learning_note_draft_items_loaded": "passed",
+        "previous_note_prep_ready": "passed",
+        "learning_note_ids_prepared": "passed",
+        "completion_review_allowed": "passed",
+        "candidate_intake_blocked": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_corrected_pilot_learning_note_draft_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_note_draft_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_corrected_pilot_learning_note_draft_markdown(summary)
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Corrected Pilot Learning Note Draft",
+        "`new-material-corrected-pilot-learning-note-draft-status=ready_for_learning_completion_review`",
+        "`learning-note-draft-items=1`",
+        "`learning-notes=1`",
+        "`learning-points=1`",
+        "`candidate-intake-allowed=0`",
+        "`completion-review-allowed=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=017-new-material-corrected-pilot-learning-completion-review`",
+        "`new_material_corrected_pilot_learning_note_draft_xiahai_suanmingji_pdf`",
+        "`note_xiahai_suanmingji_corrected_pilot_001`",
+        "`lp_xiahai_suanmingji_pilot_boundary_001`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+
+def test_new_material_corrected_pilot_learning_completion_review_closes_current_pilot():
+    items = (
+        learning_reference_curation
+        .load_new_material_corrected_pilot_learning_completion_review_items()
+    )
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_completion_review_summary()
+    )
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.completion_item_id == (
+        "new_material_corrected_pilot_learning_completion_review_xiahai_suanmingji_pdf"
+    )
+    assert item.completion_id == (
+        "017-new-material-corrected-pilot-learning-completion-review"
+    )
+    assert item.draft_item_id == (
+        "new_material_corrected_pilot_learning_note_draft_xiahai_suanmingji_pdf"
+    )
+    assert item.note_id == "note_xiahai_suanmingji_corrected_pilot_001"
+    assert item.learning_point_id == "lp_xiahai_suanmingji_pilot_boundary_001"
+    assert item.completion_status == (
+        "current_pilot_learning_completed_candidate_intake_blocked"
+    )
+    assert item.learning_note_closed is True
+    assert item.candidate_intake_allowed is False
+    assert item.additional_correction_required is True
+    assert item.downstream_mutation_authorized is False
+    assert item.next_material_entry == (
+        "015-new-material-expanded-corrected-transcription-selection"
+    )
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+
+    assert summary.completion_id == (
+        "017-new-material-corrected-pilot-learning-completion-review"
+    )
+    assert summary.completion_status == (
+        "current_pilot_learning_completed_candidate_intake_blocked"
+    )
+    assert summary.completion_item_count == 1
+    assert summary.learning_note_closed_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.additional_correction_required_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "015-new-material-expanded-corrected-transcription-selection"
+    )
+    assert summary.boundary_checks == {
+        "completion_review_items_loaded": "passed",
+        "previous_note_draft_ready": "passed",
+        "learning_note_closed": "passed",
+        "candidate_intake_blocked": "passed",
+        "additional_correction_routed": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_corrected_pilot_learning_completion_review_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_corrected_pilot_learning_completion_review_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_corrected_pilot_learning_completion_review_markdown(
+            summary
+        )
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Corrected Pilot Learning Completion Review",
+        "`new-material-corrected-pilot-learning-completion-review-status=current_pilot_learning_completed_candidate_intake_blocked`",
+        "`learning-completion-review-items=1`",
+        "`learning-notes-closed=1`",
+        "`candidate-intake-allowed=0`",
+        "`additional-correction-required=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-new-material-expanded-corrected-transcription-selection`",
+        "`new_material_corrected_pilot_learning_completion_review_xiahai_suanmingji_pdf`",
+        "`note_xiahai_suanmingji_corrected_pilot_001`",
+        "`lp_xiahai_suanmingji_pilot_boundary_001`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=015-new-material-expanded-corrected-transcription-selection`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=015-new-material-expanded-corrected-transcription-selection`"
+        in quickstart
+    )
+
+
+def test_new_material_expanded_corrected_learning_entry_evaluation_ready_for_note_prep():
+    items = (
+        learning_reference_curation
+        .load_new_material_expanded_corrected_learning_entry_evaluation_items()
+    )
+    summary = (
+        learning_reference_curation
+        .build_new_material_expanded_corrected_learning_entry_evaluation_summary()
+    )
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.evaluation_item_id == (
+        "new_material_expanded_corrected_learning_entry_xiahai_suanmingji_pdf"
+    )
+    assert item.evaluation_id == (
+        "017-new-material-expanded-corrected-learning-entry-evaluation"
+    )
+    assert item.expanded_transcription_execution_item_id == (
+        "new_material_expanded_corrected_transcription_execution_xiahai_suanmingji_pdf"
+    )
+    assert item.evaluation_status == "ready_for_expanded_learning_note_prep"
+    assert item.source_library_entry_id == "entry_new_material_xiahai_suanmingji_pdf"
+    assert item.source_material_id == "material_new_material_xiahai_suanmingji_pdf"
+    assert item.prepared_text_artifact == (
+        "docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md"
+    )
+    assert item.local_reference == "下海算命记.pdf"
+    assert item.corrected_excerpt_count == 3
+    assert item.corrected_character_count == 27
+    assert item.page_locator_count == 4
+    assert item.learning_note_allowed is True
+    assert item.candidate_intake_allowed is False
+    assert item.duplicate_overlap_review_required is True
+    assert item.risk_boundary_review_required is True
+    assert item.downstream_mutation_authorized is False
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+    assert item.selected_next_material_entry == (
+        "017-new-material-expanded-corrected-learning-note-prep"
+    )
+
+    assert summary.evaluation_status == "ready_for_expanded_learning_note_prep"
+    assert summary.evaluation_item_count == 1
+    assert summary.prepared_text_artifact_count == 1
+    assert summary.corrected_excerpt_count == 3
+    assert summary.corrected_character_count == 27
+    assert summary.page_locator_count == 4
+    assert summary.learning_note_allowed_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.duplicate_overlap_review_required_count == 1
+    assert summary.risk_boundary_review_required_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "017-new-material-expanded-corrected-learning-note-prep"
+    )
+    assert summary.boundary_checks == {
+        "expanded_learning_entry_evaluation_items_loaded": "passed",
+        "previous_expanded_corrected_artifact_ready": "passed",
+        "prepared_text_artifact_exists": "passed",
+        "learning_note_allowed": "passed",
+        "candidate_intake_blocked": "passed",
+        "duplicate_overlap_review_required": "passed",
+        "risk_boundary_review_required": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_expanded_corrected_learning_entry_evaluation_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_expanded_corrected_learning_entry_evaluation_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_expanded_corrected_learning_entry_evaluation_markdown(
+            summary
+        )
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Expanded Corrected Learning Entry Evaluation",
+        "`new-material-expanded-corrected-learning-entry-evaluation-status=ready_for_expanded_learning_note_prep`",
+        "`expanded-learning-entry-evaluation-items=1`",
+        "`prepared-text-artifacts=1`",
+        "`corrected-excerpts=3`",
+        "`corrected-characters=27`",
+        "`page-locators=4`",
+        "`learning-note-allowed=1`",
+        "`candidate-intake-allowed=0`",
+        "`duplicate-overlap-review-required=1`",
+        "`risk-boundary-review-required=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=017-new-material-expanded-corrected-learning-note-prep`",
+        "`new_material_expanded_corrected_learning_entry_xiahai_suanmingji_pdf`",
+        "`new_material_expanded_corrected_transcription_execution_xiahai_suanmingji_pdf`",
+        "`docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`",
+        "`下海算命记.pdf`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=017-new-material-expanded-corrected-learning-note-prep`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=017-new-material-expanded-corrected-learning-note-prep`"
+        in quickstart
+    )
+
+
+def test_new_material_expanded_corrected_learning_note_prep_ready_for_draft():
+    items = (
+        learning_reference_curation
+        .load_new_material_expanded_corrected_learning_note_prep_items()
+    )
+    summary = (
+        learning_reference_curation
+        .build_new_material_expanded_corrected_learning_note_prep_summary()
+    )
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.prep_item_id == (
+        "new_material_expanded_corrected_learning_note_prep_xiahai_suanmingji_pdf"
+    )
+    assert item.prep_id == "017-new-material-expanded-corrected-learning-note-prep"
+    assert item.evaluation_item_id == (
+        "new_material_expanded_corrected_learning_entry_xiahai_suanmingji_pdf"
+    )
+    assert item.prep_status == "ready_for_expanded_learning_note_draft"
+    assert item.proposed_note_id == "note_xiahai_suanmingji_expanded_corrected_001"
+    assert item.proposed_learning_point_count == 1
+    assert item.prepared_text_artifact == (
+        "docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md"
+    )
+    assert item.target_rule_families == ["high_risk_signal"]
+    assert item.corrected_excerpt_count == 3
+    assert item.corrected_character_count == 27
+    assert item.page_locator_count == 4
+    assert item.learning_note_draft_allowed is True
+    assert item.candidate_intake_allowed is False
+    assert item.overlap_review_required is True
+    assert item.risk_boundary_review_required is True
+    assert item.downstream_mutation_authorized is False
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+    assert item.selected_next_material_entry == (
+        "017-new-material-expanded-corrected-learning-note-draft"
+    )
+
+    assert summary.prep_status == "ready_for_expanded_learning_note_draft"
+    assert summary.prep_item_count == 1
+    assert summary.proposed_note_count == 1
+    assert summary.proposed_learning_point_count == 1
+    assert summary.prepared_text_artifact_count == 1
+    assert summary.corrected_excerpt_count == 3
+    assert summary.corrected_character_count == 27
+    assert summary.page_locator_count == 4
+    assert summary.learning_note_draft_allowed_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.overlap_review_required_count == 1
+    assert summary.risk_boundary_review_required_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "017-new-material-expanded-corrected-learning-note-draft"
+    )
+    assert summary.target_rule_family_counts == {"high_risk_signal": 1}
+    assert summary.boundary_checks == {
+        "expanded_learning_note_prep_items_loaded": "passed",
+        "previous_expanded_entry_evaluation_ready": "passed",
+        "prepared_text_artifact_exists": "passed",
+        "learning_note_draft_allowed": "passed",
+        "candidate_intake_blocked": "passed",
+        "overlap_review_required": "passed",
+        "risk_boundary_review_required": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_expanded_corrected_learning_note_prep_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_expanded_corrected_learning_note_prep_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_expanded_corrected_learning_note_prep_markdown(summary)
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Expanded Corrected Learning Note Prep",
+        "`new-material-expanded-corrected-learning-note-prep-status=ready_for_expanded_learning_note_draft`",
+        "`expanded-learning-note-prep-items=1`",
+        "`proposed-learning-notes=1`",
+        "`proposed-learning-points=1`",
+        "`learning-note-draft-allowed=1`",
+        "`candidate-intake-allowed=0`",
+        "`overlap-review-required=1`",
+        "`risk-boundary-review-required=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=017-new-material-expanded-corrected-learning-note-draft`",
+        "`new_material_expanded_corrected_learning_note_prep_xiahai_suanmingji_pdf`",
+        "`note_xiahai_suanmingji_expanded_corrected_001`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=017-new-material-expanded-corrected-learning-note-draft`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=017-new-material-expanded-corrected-learning-note-draft`"
+        in quickstart
+    )
+
+
+def test_new_material_expanded_corrected_learning_note_draft_ready_for_completion_review():
+    items = (
+        learning_reference_curation
+        .load_new_material_expanded_corrected_learning_note_draft_items()
+    )
+    summary = (
+        learning_reference_curation
+        .build_new_material_expanded_corrected_learning_note_draft_summary()
+    )
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.draft_item_id == (
+        "new_material_expanded_corrected_learning_note_draft_xiahai_suanmingji_pdf"
+    )
+    assert item.draft_id == "017-new-material-expanded-corrected-learning-note-draft"
+    assert item.prep_item_id == (
+        "new_material_expanded_corrected_learning_note_prep_xiahai_suanmingji_pdf"
+    )
+    assert item.note_id == "note_xiahai_suanmingji_expanded_corrected_001"
+    assert item.learning_point_id == "lp_xiahai_suanmingji_expanded_boundary_001"
+    assert item.draft_status == "ready_for_expanded_learning_completion_review"
+    assert item.target_rule_family == "high_risk_signal"
+    assert item.risk_tier == "high_risk"
+    assert item.candidate_intake_allowed is False
+    assert item.completion_review_allowed is True
+    assert item.downstream_mutation_authorized is False
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+    assert item.selected_next_material_entry == (
+        "017-new-material-expanded-corrected-learning-completion-review"
+    )
+
+    assert summary.draft_status == "ready_for_expanded_learning_completion_review"
+    assert summary.draft_item_count == 1
+    assert summary.learning_note_count == 1
+    assert summary.learning_point_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.completion_review_allowed_count == 1
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "017-new-material-expanded-corrected-learning-completion-review"
+    )
+    assert summary.target_rule_family_counts == {"high_risk_signal": 1}
+    assert summary.risk_tier_counts == {"high_risk": 1}
+    assert summary.boundary_checks == {
+        "expanded_learning_note_draft_items_loaded": "passed",
+        "previous_expanded_note_prep_ready": "passed",
+        "learning_note_ids_prepared": "passed",
+        "completion_review_allowed": "passed",
+        "candidate_intake_blocked": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_expanded_corrected_learning_note_draft_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_expanded_corrected_learning_note_draft_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_expanded_corrected_learning_note_draft_markdown(summary)
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Expanded Corrected Learning Note Draft",
+        "`new-material-expanded-corrected-learning-note-draft-status=ready_for_expanded_learning_completion_review`",
+        "`expanded-learning-note-draft-items=1`",
+        "`learning-notes=1`",
+        "`learning-points=1`",
+        "`candidate-intake-allowed=0`",
+        "`completion-review-allowed=1`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=017-new-material-expanded-corrected-learning-completion-review`",
+        "`new_material_expanded_corrected_learning_note_draft_xiahai_suanmingji_pdf`",
+        "`note_xiahai_suanmingji_expanded_corrected_001`",
+        "`lp_xiahai_suanmingji_expanded_boundary_001`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=017-new-material-expanded-corrected-learning-completion-review`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=017-new-material-expanded-corrected-learning-completion-review`"
+        in quickstart
+    )
+
+
+def test_new_material_expanded_corrected_learning_completion_review_closes_corrected_loop():
+    items = (
+        learning_reference_curation
+        .load_new_material_expanded_corrected_learning_completion_review_items()
+    )
+    summary = (
+        learning_reference_curation
+        .build_new_material_expanded_corrected_learning_completion_review_summary()
+    )
+
+    assert len(items) == 1
+    item = items[0]
+    assert item.completion_item_id == (
+        "new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf"
+    )
+    assert item.completion_id == (
+        "017-new-material-expanded-corrected-learning-completion-review"
+    )
+    assert item.draft_item_id == (
+        "new_material_expanded_corrected_learning_note_draft_xiahai_suanmingji_pdf"
+    )
+    assert item.note_id == "note_xiahai_suanmingji_expanded_corrected_001"
+    assert item.learning_point_id == "lp_xiahai_suanmingji_expanded_boundary_001"
+    assert item.completion_status == (
+        "expanded_corrected_learning_loop_closed_candidate_intake_blocked"
+    )
+    assert item.learning_note_closed is True
+    assert item.candidate_intake_allowed is False
+    assert item.additional_correction_required is False
+    assert item.downstream_mutation_authorized is False
+    assert item.next_material_entry == (
+        "015-external-material-inventory-refresh"
+    )
+    assert item.candidate_extract_delta_count == 0
+    assert item.review_decision_delta_count == 0
+    assert item.promotion_batch_delta_count == 0
+    assert item.formal_evidence_delta_count == 0
+
+    assert summary.completion_id == (
+        "017-new-material-expanded-corrected-learning-completion-review"
+    )
+    assert summary.completion_status == (
+        "expanded_corrected_learning_loop_closed_candidate_intake_blocked"
+    )
+    assert summary.completion_item_count == 1
+    assert summary.learning_note_closed_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.additional_correction_required_count == 0
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.review_decision_delta_count == 0
+    assert summary.promotion_batch_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.downstream_mutation_authorized is False
+    assert summary.next_material_entry == (
+        "015-external-material-inventory-refresh"
+    )
+    assert summary.boundary_checks == {
+        "completion_review_items_loaded": "passed",
+        "previous_note_draft_ready": "passed",
+        "learning_note_closed": "passed",
+        "candidate_intake_blocked": "passed",
+        "expanded_learning_loop_closed": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_expanded_corrected_learning_completion_review_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_expanded_corrected_learning_completion_review_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_expanded_corrected_learning_completion_review_markdown(
+            summary
+        )
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Expanded Corrected Learning Completion Review",
+        "`new-material-expanded-corrected-learning-completion-review-status=expanded_corrected_learning_loop_closed_candidate_intake_blocked`",
+        "`expanded-learning-completion-review-items=1`",
+        "`learning-notes-closed=1`",
+        "`candidate-intake-allowed=0`",
+        "`additional-correction-required=0`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`downstream-mutation-authorized=false`",
+        "`next-material-entry=015-external-material-inventory-refresh`",
+        "`new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf`",
+        "`note_xiahai_suanmingji_expanded_corrected_001`",
+        "`lp_xiahai_suanmingji_expanded_boundary_001`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+    assert (
+        "`next-new-material-start=final-archive-ready`"
+        in handoff
+    )
+    assert (
+        "`next-new-material-start=final-archive-ready`"
+        in quickstart
+    )
+
+
+def test_new_material_learning_handoff_tracks_final_state():
+    closure_counts = _source_window_learning_closure_counts()
+    summary = learning_reference_curation.build_learning_reference_progress_summary()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    promotion_batches = source_intake.load_promotion_batches()
+    evidence_units = classical_sources.load_evidence_units()
+
+    handoff_path = Path("docs/classical_sources/new_material_learning_handoff.md")
+    assert handoff_path.exists()
+    handoff = handoff_path.read_text(encoding="utf-8")
+    readme = Path("docs/classical_sources/README.md").read_text(encoding="utf-8")
+
+    assert "[new_material_learning_handoff.md](new_material_learning_handoff.md)" in readme
+    for marker in (
+        "New Material Learning Handoff",
+        "Completed Checkpoints",
+        "Current Frozen Snapshot",
+        "Continuation Entry Points",
+        "Remaining Optional Precision Work",
+        "Next Long Goal",
+        "Guardrails",
+        "`source-window-review-note-items=57`",
+        "`page-locators=44`",
+        "`chapter-locators=11`",
+        f"`selected-ready-learning-notes={len(summary.selected_task_ids)}`",
+        "`closed-draft-learning-notes=7`",
+        f"`next_action_ids={len(summary.next_action_ids)}`",
+        f"`retained-chapter-learning-closed={sum(closure_counts.values())}`",
+        f"`learning-paraphrase-ready={closure_counts['learning-paraphrase-ready']}`",
+        f"`policy-boundary-retained={closure_counts['policy-boundary-retained']}`",
+        f"`safety-boundary-retained={closure_counts['safety-boundary-retained']}`",
+        f"`017-applied-decisions={summary.decision_counts['status:applied']}`",
+        f"`017-create-candidate-decisions={summary.decision_counts['create_candidate']}`",
+        "`authorization-status=ready_for_explicit_downstream_authorization`",
+        "`downstream-mutation-authorized=false`",
+            "`017-notes-closed=31`",
+        "`017-next-action-ids=0`",
+        "`012-boundary-leakage=0`",
+        "`next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`",
+        f"`013-candidate-extracts={len(candidates)}`",
+        f"`013-review-decisions={len(reviews)}`",
+        f"`013-promotion-batches={len(promotion_batches)}`",
+        f"`012-formal-evidence-units={len(evidence_units)}`",
+        f"`formal_evidence_delta={summary.formal_evidence_delta}`",
+        "`downstream-authorization-status=downstream_authorization_consumed`",
+        "`authorization-scope=013_012_downstream`",
+        "`pending-017-decisions=0`",
+        "`downstream-mutation-authorized=true`",
+        "`next-downstream-entry=015-new-material-intake`",
+        (
+            "`next-new-material-start="
+            "015-new-material-expanded-corrected-transcription-selection`"
+        ),
+        "Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`",
+        "Do not duplicate existing 013/012 downstream records",
+        "Do not push remote work from this handoff",
+    ):
+        assert marker in handoff
+
+
+def test_new_material_goal_completion_state_is_summarized_without_stale_next_steps():
+    docs = [
+        Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("docs/classical_sources/learning_reference_curation.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("docs/classical_sources/materials_audit.md").read_text(
+            encoding="utf-8"
+        ),
+    ]
+
+    for text in docs:
+        for marker in (
+            "New Material Goal Completion State",
+            "`new-material-goal-status=completed_no_new_external_materials_pending_final_archive`",
+            "`new-material-sources-registered=2`",
+            "`machine-text-usable=1`",
+            "`machine-unusable-closed=1`",
+            "`017-learning-entry-sources=1`",
+            "`closed-source-learning-entry-count=0`",
+            "`external-inventory-status=scoped_metadata_registered`",
+            "`untracked-material-entries=0`",
+            "`new-material-pending-sources=0`",
+            "`candidate-intake-allowed=0`",
+            "`candidate-extract-delta=0`",
+            "`formal-evidence-delta=0`",
+            "`next-new-material-start=final-archive-ready`",
+            "`entry_new_material_xiahai_suanmingji_pdf`",
+            "`entry_new_material_bazi_suanming_cangjue_pdf`",
+        ):
+            assert marker in text
+        assert "completed_waiting_for_external_inventory_refresh" not in text
+        assert "015-queue-refresh-or-013-explicit-candidate-gate" not in text
+        assert "next-new-material-start=015-external-material-inventory-refresh" not in text
+
+
+def test_new_material_final_archive_readiness_packet_is_documented():
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for text in (handoff, quickstart):
+        for marker in (
+            "Final Archive Readiness Packet",
+            "`archive-readiness-status=ready_for_final_review`",
+            "`new-material-goal-status=completed_no_new_external_materials_pending_final_archive`",
+            "`new-material-pending-sources=0`",
+            "`candidate-intake-allowed=0`",
+            "`candidate-extract-delta=0`",
+            "`formal-evidence-delta=0`",
+            "`013-candidate-extracts=54`",
+            "`013-review-decisions=54`",
+            "`013-promotion-batches=34`",
+            "`012-formal-evidence-units=111`",
+            "`validation-learning-reference-quality=[]`",
+            "`validation-materials-audit-quality=[]`",
+            "`archive-local-commit-created=1`",
+            "`post-archive-resume-status=waiting_for_new_material_or_push_request`",
+            "`push-authorized=false`",
+            "`next-target=await-new-material-or-push-on-request`",
+            "uv run --with pytest python -m pytest tests/unit/test_learning_reference_curation.py",
+            "uv run --with pytest python -m pytest tests/unit/test_materials_audit.py",
+            "git diff --check",
+        ):
+            assert marker in text
+        assert "`next-target=final-review-or-commit-on-request`" not in text
+
+
+def test_new_material_remote_publication_decision_packet_is_documented():
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for text in (handoff, quickstart):
+        for marker in (
+            "Remote Publication Decision Packet",
+            "`remote-publication-status=not_pushed_user_authorization_required`",
+            "`publication-branch=codex/complete-new-material-learning`",
+            "`publication-remote=origin`",
+            "`publication-upstream-branch=none`",
+            "`remote-contains-head=0`",
+            "`push-authorized=false`",
+            "`merge-authorized=false`",
+            "`discard-authorized=false`",
+            "`next-target=push-pr-or-keep-only-after-user-choice`",
+        ):
+            assert marker in text
+        assert "`push-authorized=true`" not in text
+
+
+def test_new_material_intake_monitor_packet_is_documented():
+    docs = [
+        Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("docs/classical_sources/materials_audit.md").read_text(
+            encoding="utf-8"
+        ),
+    ]
+
+    for text in docs:
+        for marker in (
+            "New Material Intake Monitor Packet",
+            "`intake-monitor-status=no_new_material_detected`",
+            "`monitor-source=local_filesystem_and_tracked_metadata`",
+            "`external-inventory-status=scoped_metadata_registered`",
+            "`external-inventory-confirmation-status=external_inventory_refresh_confirmed`",
+            "`external-entries=31`",
+            "`untracked-material-entries=0`",
+            "`new-material-pending-sources=0`",
+            "`registered-new-material-sources=2`",
+            "`machine-text-usable=1`",
+            "`machine-unusable-closed=1`",
+            "`candidate-intake-allowed=0`",
+            "`formal-evidence-delta=0`",
+            "`push-authorized=false`",
+            "`next-target=keep-archive-branch-and-wait-for-new-material`",
+        ):
+            assert marker in text
+
+
+def test_new_material_publication_handoff_package_is_documented():
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for text in (handoff, quickstart):
+        for marker in (
+            "Publication Handoff Package",
+            "`publication-package-status=prepared_not_pushed`",
+            "`publication-target-branch=codex/complete-new-material-learning`",
+            "`publication-base-branch=origin/main`",
+            "`publication-ahead-commits=97`",
+            "`publication-behind-commits=0`",
+            "`suggested-pr-title=Archive new material learning intake`",
+            "`suggested-pr-summary-material-routing=completed`",
+            "`suggested-pr-summary-archive-state=completed`",
+            "`suggested-pr-summary-publication-guard=prepared`",
+            "`test-plan-learning-reference=109 passed`",
+            "`test-plan-materials-audit=150 passed`",
+            "`test-plan-validators=[]`",
+            "`boundary-counts=54/54/34/111`",
+            "`publication-risk-large-branch=97 commits ahead of origin/main`",
+            "`publication-action-required=explicit_user_authorization_before_push`",
+            "`next-target=await-user-publication-choice-or-new-material`",
+        ):
+            assert marker in text
+        assert "`publication-package-status=pushed`" not in text

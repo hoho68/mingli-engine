@@ -1,0 +1,88 @@
+[
+  {
+    "prep_item_id": "new_material_registration_prep_xiahai_suanmingji_pdf",
+    "prep_id": "015-new-material-registration-prep",
+    "identity_review_item_id": "new_material_identity_xiahai_suanmingji_pdf",
+    "review_id": "015-new-material-source-identity-review",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "registration_status": "ready_for_source_registration",
+    "proposed_title": "Xiahai Suanmingji",
+    "proposed_material_type": "pdf",
+    "proposed_local_reference": "下海算命记.pdf",
+    "proposed_tracking_status": "external_untracked",
+    "proposed_readiness_status": "needs_preparation",
+    "proposed_priority_level": "high",
+    "proposed_next_action": "prepare_material",
+    "risk_tier": "ordinary",
+    "topic_tags": [
+      "misc-identity-review",
+      "xiahai-suanmingji",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registration metadata prepared from tracked intake and identity-review labels only.",
+    "rights_notes": "External PDF; do not copy long passages. Prepare controlled text before extraction.",
+    "source_library_overlap_policy": "new_entry_registered_under_user_authorization",
+    "selected_next_material_entry": "015-new-material-source-registration",
+    "source_library_mutation_authorized": true,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "Single ordinary source-level record is ready for source-library metadata registration.",
+    "guardrails": [
+      "Do not open or parse the raw PDF in registration prep.",
+      "Do not create 013 candidates or 012 units from registration metadata.",
+      "Keep actual reading behind controlled text preparation."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  },
+  {
+    "prep_item_id": "new_material_registration_prep_bazi_suanming_cangjue_pdf",
+    "prep_id": "015-new-material-registration-prep",
+    "identity_review_item_id": "new_material_identity_bazi_suanming_cangjue_pdf",
+    "review_id": "015-new-material-source-identity-review",
+    "source_library_entry_id": "entry_new_material_bazi_suanming_cangjue_pdf",
+    "source_material_id": "material_new_material_bazi_suanming_cangjue_pdf",
+    "registration_status": "ready_for_source_registration",
+    "proposed_title": "Bazi Suanming Cangjue",
+    "proposed_material_type": "pdf",
+    "proposed_local_reference": "八字算命藏诀-黑白.pdf",
+    "proposed_tracking_status": "external_untracked",
+    "proposed_readiness_status": "needs_preparation",
+    "proposed_priority_level": "high",
+    "proposed_next_action": "prepare_material",
+    "risk_tier": "ordinary",
+    "topic_tags": [
+      "misc-identity-review",
+      "bazi-suanming-cangjue",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registration metadata prepared from tracked intake and identity-review labels only; the bazi hidden-formula title is a direct bazi fit.",
+    "rights_notes": "External PDF; do not copy long passages. Prepare controlled text before extraction.",
+    "source_library_overlap_policy": "new_entry_registered_under_user_authorization",
+    "selected_next_material_entry": "015-new-material-source-registration",
+    "source_library_mutation_authorized": true,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "Single ordinary source-level record is ready for source-library metadata registration.",
+    "guardrails": [
+      "Do not open or parse the raw PDF in registration prep.",
+      "Do not create 013 candidates or 012 units from registration metadata.",
+      "Keep actual reading behind controlled text preparation."
+    ],
+    "created_at": "2026-07-09",
+    "updated_at": "2026-07-09"
+  }
+]

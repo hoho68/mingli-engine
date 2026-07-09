@@ -328,5 +328,303 @@
     "recommended_next_action": "review_cleaned_text",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-23"
+  },
+  {
+    "readiness_id": "ready_raw_text_materials_folder_triage",
+    "audit_id": "audit_raw_text_materials_folder",
+    "readiness_state": "needs_risk_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "none",
+    "source_quality": "needs_recheck",
+    "risk_boundary": "high_risk",
+    "missing_prerequisites": [
+      "coarse_inventory_triage",
+      "source_scope_selection",
+      "risk_boundary_review"
+    ],
+    "ready_reasons": [],
+    "blockers": [
+      "External raw text corpus includes mixed high-risk material and must be triaged before extraction."
+    ],
+    "recommended_next_action": "risk_review",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-27"
+  },
+  {
+    "readiness_id": "ready_bazi_general_lecture_textbook_pdf",
+    "audit_id": "audit_bazi_general_lecture_textbook_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "prepared",
+    "locator_confidence": "strong",
+    "source_quality": "strong",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Source-library entry is registered and lifecycle advanced after reading.",
+      "Page-level locator and concise paraphrase are available.",
+      "User authorized 013 candidate intake and 012 evidence advancement for this stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_beichen_intro_pdf",
+    "audit_id": "audit_bazi_general_beichen_intro_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "summary_only",
+    "locator_confidence": "moderate",
+    "source_quality": "moderate",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Source-library entry is registered and lifecycle advanced after reading.",
+      "Page-level locator and concise paraphrase are available.",
+      "User authorized 013 candidate intake and 012 evidence advancement for this stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_ziping_orthodox_pair_pdf",
+    "audit_id": "audit_bazi_general_ziping_orthodox_pair_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "summary_only",
+    "locator_confidence": "moderate",
+    "source_quality": "moderate",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Source-library entry is registered and lifecycle advanced after reading.",
+      "Page-level locator and concise paraphrase are available.",
+      "User authorized 013 candidate intake and 012 evidence advancement for this stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_ditiansui_selected_pdf",
+    "audit_id": "audit_bazi_general_ditiansui_selected_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "summary_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Canonical local PDF was selected from the Bazi general variant-review set.",
+      "Weak page anchor is available for source-preparation metadata.",
+      "User authorized 013 candidate intake and 012 evidence advancement for this selected variant stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_qiongtong_selected_pdf",
+    "audit_id": "audit_bazi_general_qiongtong_selected_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "summary_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Canonical local PDF was selected from the Bazi general variant-review set.",
+      "Weak page anchor is available for source-preparation metadata.",
+      "User authorized 013 candidate intake and 012 evidence advancement for this selected variant stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_true_spirit_positioning_pdf",
+    "audit_id": "audit_bazi_general_true_spirit_positioning_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "summary_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Single PDF source was selected from the next-cycle modern-method cluster.",
+      "Weak page anchor is available for source-preparation metadata.",
+      "User authorized source-library, 013, and 012 advancement for this stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_mingli_wangdoujing_pdf",
+    "audit_id": "audit_bazi_general_mingli_wangdoujing_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "summary_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "Single PDF source was selected from the next-cycle miscellaneous cluster.",
+      "Weak page anchor is available for source-preparation metadata.",
+      "User authorized source-library, 013, and 012 advancement for this stage."
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_xinpai_essence_part2_pdf",
+    "audit_id": "audit_bazi_general_xinpai_essence_part2_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary risk cluster was already selected"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_xingming_shuozheng_vol1_pdf",
+    "audit_id": "audit_bazi_general_xingming_shuozheng_vol1_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary risk cluster was already selected"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "readiness_id": "ready_bazi_general_mingzao_chunqiu_case_pdf",
+    "audit_id": "audit_bazi_general_mingzao_chunqiu_case_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary gated cluster was prepared for bounded source selection"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "readiness_id": "ready_bazi_general_sizhu_yuce_yaojue_pdf",
+    "audit_id": "audit_bazi_general_sizhu_yuce_yaojue_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary gated cluster was prepared for bounded source selection"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "readiness_id": "ready_bazi_general_bazi_baijue_case_pdf",
+    "audit_id": "audit_bazi_general_bazi_baijue_case_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary gated cluster was already selected once and remains open for followup selection"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "readiness_id": "ready_bazi_general_mingli_mijue_pdf",
+    "audit_id": "audit_bazi_general_mingli_mijue_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary gated cluster was already selected once and remains open for followup selection"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "readiness_id": "ready_bazi_general_choujin_bosi_case_pdf",
+    "audit_id": "audit_bazi_general_choujin_bosi_case_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary gated cluster representative path is final-covered in this selection"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "readiness_id": "ready_bazi_general_bazi_shizhan_mifa_pdf",
+    "audit_id": "audit_bazi_general_bazi_shizhan_mifa_pdf",
+    "readiness_state": "ready_for_extraction_review",
+    "text_preparation_status": "raw_only",
+    "locator_confidence": "moderate",
+    "source_quality": "weak",
+    "risk_boundary": "ordinary",
+    "missing_prerequisites": [],
+    "ready_reasons": [
+      "source-level boundary is a single PDF",
+      "ordinary gated cluster representative path is final-covered in this selection"
+    ],
+    "blockers": [],
+    "recommended_next_action": "extract_candidates",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
   }
 ]

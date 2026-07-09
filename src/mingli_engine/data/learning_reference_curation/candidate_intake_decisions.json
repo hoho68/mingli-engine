@@ -339,5 +339,213 @@
     "status": "applied",
     "created_at": "2026-06-23",
     "updated_at": "2026-06-23"
+  },
+  {
+    "decision_id": "decision_liang_tianyuan_wuxian_reuse_batch004_pattern_001",
+    "learning_point_id": "lp_liang_tianyuan_wuxian_day_master_use_god_001",
+    "decision": "reuse_existing",
+    "source_material_id": "material_markdown_source_batch_004",
+    "candidate_id": "candidate_markdown_batch_004_pattern_strength_001",
+    "overlap_candidate_ids": [
+      "candidate_markdown_batch_004_pattern_strength_001"
+    ],
+    "rationale": "Individual Tianyuan Wuxian review refines the existing batch 004 pattern_strength candidate; reuse avoids duplicate 013 candidate creation.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_liang_yushi_yongshen_reuse_batch004_useful_god_001",
+    "learning_point_id": "lp_liang_yushi_month_branch_use_god_taxonomy_001",
+    "decision": "reuse_existing",
+    "source_material_id": "material_markdown_source_batch_004",
+    "candidate_id": "candidate_markdown_batch_004_useful_god_001",
+    "overlap_candidate_ids": [
+      "candidate_markdown_batch_004_useful_god_001"
+    ],
+    "rationale": "Individual Yushi Yongshen review refines the existing batch 004 useful_god_candidate; reuse avoids duplicate 013 candidate creation.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_lecture_pattern_strength_001",
+    "learning_point_id": "lp_bazi_general_lecture_pattern_strength_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_lecture_textbook_pdf",
+    "candidate_id": "candidate_bazi_general_lecture_pattern_strength_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized this preparation-reading stage to create a bounded candidate from the page-level learning point.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_beichen_branch_interaction_001",
+    "learning_point_id": "lp_bazi_general_beichen_branch_interaction_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_beichen_intro_pdf",
+    "candidate_id": "candidate_bazi_general_beichen_branch_interaction_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized this preparation-reading stage to create a bounded candidate from the page-level learning point.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_ziping_useful_god_001",
+    "learning_point_id": "lp_bazi_general_ziping_useful_god_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_ziping_orthodox_pair_pdf",
+    "candidate_id": "candidate_bazi_general_ziping_useful_god_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized this preparation-reading stage to create a bounded candidate from the page-level learning point.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_ditiansui_pattern_strength_001",
+    "learning_point_id": "lp_bazi_general_ditiansui_pattern_strength_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_ditiansui_selected_pdf",
+    "candidate_id": "candidate_bazi_general_ditiansui_pattern_strength_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized selected-variant registration-prep to create a bounded weak candidate from the Ditiansui source-preparation learning point.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_qiongtong_useful_god_001",
+    "learning_point_id": "lp_bazi_general_qiongtong_useful_god_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_qiongtong_selected_pdf",
+    "candidate_id": "candidate_bazi_general_qiongtong_useful_god_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized selected-variant registration-prep to create a bounded weak candidate from the Qiongtong source-preparation learning point.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_true_spirit_useful_god_001",
+    "learning_point_id": "lp_bazi_general_true_spirit_useful_god_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_true_spirit_positioning_pdf",
+    "candidate_id": "candidate_bazi_general_true_spirit_useful_god_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized next-cycle cluster-source selection to create a bounded weak candidate from the true-spirit learning point.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_wangdoujing_branch_interaction_001",
+    "learning_point_id": "lp_bazi_general_wangdoujing_branch_interaction_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_mingli_wangdoujing_pdf",
+    "candidate_id": "candidate_bazi_general_wangdoujing_branch_interaction_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized next-cycle cluster-source selection to create a bounded weak candidate from the Wangdoujing learning point.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_xinpai_essence_pattern_strength_001",
+    "learning_point_id": "lp_bazi_general_xinpai_essence_pattern_strength_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_xinpai_essence_part2_pdf",
+    "candidate_id": "candidate_bazi_general_xinpai_essence_pattern_strength_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized next-cycle followup selection to create a bounded weak candidate from the Xin Pai essence learning point.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "learning_point_id": "lp_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_xingming_shuozheng_vol1_pdf",
+    "candidate_id": "candidate_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized next-cycle followup selection to create a bounded weak candidate from the Xingming Shuozheng learning point.",
+    "status": "applied",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "decision_id": "decision_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "learning_point_id": "lp_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_mingzao_chunqiu_case_pdf",
+    "candidate_id": "candidate_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized gated ordinary source selection to create a bounded weak candidate from the Mingzao Chunqiu Case Collection learning point.",
+    "status": "applied",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "decision_id": "decision_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "learning_point_id": "lp_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_sizhu_yuce_yaojue_pdf",
+    "candidate_id": "candidate_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized gated ordinary source selection to create a bounded weak candidate from the Sizhu Yuce Yaojue Formula Reference learning point.",
+    "status": "applied",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "decision_id": "decision_bazi_general_bazi_baijue_ten_god_001",
+    "learning_point_id": "lp_bazi_general_bazi_baijue_ten_god_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_bazi_baijue_case_pdf",
+    "candidate_id": "candidate_bazi_general_bazi_baijue_ten_god_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized gated ordinary followup selection to create a bounded weak candidate from the Bazi Baijue Case Collection Volume 1 learning point.",
+    "status": "applied",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "decision_id": "decision_bazi_general_mingli_mijue_branch_interaction_001",
+    "learning_point_id": "lp_bazi_general_mingli_mijue_branch_interaction_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_mingli_mijue_pdf",
+    "candidate_id": "candidate_bazi_general_mingli_mijue_branch_interaction_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized gated ordinary followup selection to create a bounded weak candidate from the Mingli Mijue Formula Reference learning point.",
+    "status": "applied",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "decision_id": "decision_bazi_general_choujin_bosi_branch_interaction_001",
+    "learning_point_id": "lp_bazi_general_choujin_bosi_branch_interaction_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_choujin_bosi_case_pdf",
+    "candidate_id": "candidate_bazi_general_choujin_bosi_branch_interaction_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized gated ordinary final selection to create a bounded weak candidate from the Choujin Bosi Bazi Case Method learning point.",
+    "status": "applied",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "decision_id": "decision_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "learning_point_id": "lp_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "decision": "create_candidate",
+    "source_material_id": "material_bazi_general_bazi_shizhan_mifa_pdf",
+    "candidate_id": "candidate_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "overlap_candidate_ids": [],
+    "rationale": "User authorized gated ordinary final selection to create a bounded weak candidate from the Bazi Shizhan Mifa Practical Formula learning point.",
+    "status": "applied",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
   }
 ]

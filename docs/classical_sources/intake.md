@@ -42,29 +42,33 @@ Related maintainer references:
 
 ## Current Computed Snapshot
 
-Computed with `build_intake_progress_report()` after batch005 candidate repair:
+Computed with `build_intake_progress_report()` after the selected Bazi general
+variant registration-prep promotion:
 
-- Source material preparation: `partially_reviewed=10`, `indexed=1`,
-  `not_started=1`, `reviewed=2`.
-- Candidate status: `promoted=32`, `returned=1`, `rejected=2`,
-  `blocked=1`.
-- Risk tiers: `sensitive=27`, `high_risk=2`, `ordinary=7`.
-- Rule families: `blind_image_method=6`, `high_risk_signal=1`,
-  `pattern_strength=9`, `ten_god_relation=4`, `five_element_balance=1`,
-  `remedy_boundary=1`, `useful_god_candidate=5`, `branch_interaction=4`,
-  `luck_cycle=5`.
+- Source material preparation: `partially_reviewed=11`, `not_started=1`,
+  `reviewed=7`.
+- Candidate status: `promoted=49`, `rejected=2`, `blocked=1`.
+- Risk tiers: `sensitive=27`, `ordinary=23`, `high_risk=2`.
+- Rule families: `pattern_strength=12`, `useful_god_candidate=8`,
+  `blind_image_method=5`, `branch_interaction=6`, `luck_cycle=5`,
+  `ten_god_relation=4`, `high_risk_signal=2`,
+  `five_element_balance=1`, and `remedy_boundary=1`.
 - Promotion readiness: `approved_not_promoted=0`.
-- Audit links: `duplicate_candidates=1`, `conflict_link_count=1`,
+- Audit links: `duplicate_candidates=1`, `conflict_link_count=2`,
   `gap_link_count=1`.
 - Intake quality failures: none.
 
 ## Next Review Queues
 
 - Pending review: none.
-- Returned for revision: `candidate_blind_life_manual_gap_001`.
+- Returned for revision: none.
 - Approved-not-promoted: none.
-- Promoted: 32 candidates, including the original 017 applied candidates,
-  markdown source batches 001/002/004/005, and knowledge skeleton candidates.
+- Promoted: 49 candidates, including the original 017 applied candidates,
+  markdown source batches 001/002/004/005, knowledge skeleton candidates,
+  Bazi general source-preparation candidates, the Markdown Batch 002 extension
+  candidates, selected Bazi general variant candidates for `滴天髓.pdf` and
+  `穷通宝鉴/窮通寶鑒.pdf`, and
+  `candidate_blind_life_manual_gap_001` as boundary-only high-risk evidence.
 - Rejected or blocked audit records:
   `candidate_mingxue_golden_voice_scope_001`,
   `candidate_blind_school_secret_blocked_001`, and
@@ -695,6 +699,40 @@ item for `candidate_duan_ten_god_relation_017_001` and four
 closed, the starter omits it and only carries the four follow-up candidates
 into the next session. Applied review-decision, candidate-status, and
 formal-evidence deltas remain zero.
+
+## Bazi General Next-Cycle Cluster-Source Intake
+
+
+The 2026-06-28 `015-raw-text-next-cycle-followup-selection` stage added
+two more ordinary-risk weak-locator candidates under explicit user authorization:
+
+- `candidate_bazi_general_xinpai_essence_pattern_strength_001` from
+  `material_bazi_general_xinpai_essence_part2_pdf`, approved by
+  `review_bazi_general_xinpai_essence_pattern_strength_001` and promoted to
+  `bazi_general_xinpai_essence_pattern_strength_001`.
+- `candidate_bazi_general_xingming_shuozheng_branch_interaction_001` from
+  `material_bazi_general_xingming_shuozheng_vol1_pdf`, approved by
+  `review_bazi_general_xingming_shuozheng_branch_interaction_001` and promoted
+  to `bazi_general_xingming_shuozheng_branch_interaction_001`.
+
+These records keep weak page anchors and concise paraphrases only; raw PDFs
+remain external and unchanged.
+
+The 2026-06-28 `015-raw-text-next-cycle-cluster-source-selection` stage added
+two authorized weak-locator 013 candidates:
+
+- `candidate_bazi_general_true_spirit_useful_god_001` from
+  `material_bazi_general_true_spirit_positioning_pdf`, approved by
+  `review_bazi_general_true_spirit_useful_god_001` and promoted to
+  `bazi_general_true_spirit_useful_god_001`.
+- `candidate_bazi_general_wangdoujing_branch_interaction_001` from
+  `material_bazi_general_mingli_wangdoujing_pdf`, approved by
+  `review_bazi_general_wangdoujing_branch_interaction_001` and promoted to
+  `bazi_general_wangdoujing_branch_interaction_001`.
+
+Both records use `source_quality=review_note`, `confidence=weak`, and empty
+short quotes. They are metadata links only; raw PDFs remain external and
+unchanged.
 
 ## Review Manual Application Next-Session Packet
 
@@ -2204,3 +2242,18 @@ session items are waiting, the seal preserves
 step remains `execute_apply_correction_queue_first`. The seal remains a
 planning artifact only; applied review-decision, candidate-status, and
 formal-evidence deltas remain zero.
+
+## Gated Ordinary Source Selection Promotions
+
+- `candidate_bazi_general_mingzao_chunqiu_luck_cycle_001` and `candidate_bazi_general_sizhu_yuce_yaojue_pattern_strength_001` are promoted weak-locator 013 candidates from the 015 gated ordinary source-selection pass.
+- `promotion_bazi_general_gated_ordinary_source_selection_001` links them to `bazi_general_mingzao_chunqiu_luck_cycle_001` and `bazi_general_sizhu_yuce_yaojue_pattern_strength_001` formal evidence units.
+
+## Gated Ordinary Followup Selection Promotions
+
+- `candidate_bazi_general_bazi_baijue_ten_god_001` and `candidate_bazi_general_mingli_mijue_branch_interaction_001` are promoted weak-locator 013 candidates from the 015 gated ordinary followup selection pass.
+- `promotion_bazi_general_gated_ordinary_followup_selection_001` links them to `bazi_general_bazi_baijue_ten_god_001` and `bazi_general_mingli_mijue_branch_interaction_001` formal evidence units.
+
+## Gated Ordinary Final Selection Promotions
+
+- `candidate_bazi_general_choujin_bosi_branch_interaction_001` and `candidate_bazi_general_bazi_shizhan_mifa_luck_cycle_001` are promoted weak-locator 013 candidates from the 015 gated ordinary final selection pass.
+- `promotion_bazi_general_gated_ordinary_final_selection_001` links them to `bazi_general_choujin_bosi_branch_interaction_001` and `bazi_general_bazi_shizhan_mifa_luck_cycle_001` formal evidence units.

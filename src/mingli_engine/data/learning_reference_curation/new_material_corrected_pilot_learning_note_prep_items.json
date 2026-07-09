@@ -1,0 +1,39 @@
+[
+  {
+    "prep_item_id": "new_material_corrected_pilot_learning_note_prep_xiahai_suanmingji_pdf",
+    "prep_id": "017-new-material-corrected-pilot-learning-note-prep",
+    "evaluation_item_id": "new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "prepared_text_artifact": "docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md",
+    "local_reference": "下海算命记.pdf",
+    "prep_status": "ready_for_learning_note_draft",
+    "proposed_note_id": "note_xiahai_suanmingji_corrected_pilot_001",
+    "proposed_learning_point_count": 1,
+    "corrected_excerpt_count": 4,
+    "corrected_character_count": 35,
+    "page_locator_count": 4,
+    "target_rule_families": [
+      "high_risk_signal"
+    ],
+    "learning_note_draft_allowed": true,
+    "candidate_intake_allowed": false,
+    "overlap_review_required": true,
+    "risk_boundary_review_required": true,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "selected_next_material_entry": "017-new-material-corrected-pilot-learning-note-draft",
+    "rationale": "The pilot is short, page-located, and suitable only for drafting one bounded learning note before any candidate step.",
+    "guardrails": [
+      "Draft one concise learning note from the pilot metadata.",
+      "Keep candidate intake blocked until overlap and risk checks are resolved.",
+      "Do not add 013 or 012 records from this prep packet.",
+      "Do not expand prepared text during note prep."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  }
+]

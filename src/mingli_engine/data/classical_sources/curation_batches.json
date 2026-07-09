@@ -135,6 +135,20 @@
     ]
   },
   {
+    "batch_id": "batch_markdown_batch_002_extension_001",
+    "source_ids": [
+      "markdown_source_batch_002_core"
+    ],
+    "evidence_ids": [
+      "batch002_branch_interaction_route_001",
+      "batch002_useful_god_types_001",
+      "batch002_day_master_strength_basis_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Reviewed three ordinary-risk Markdown Batch 002 line-located extension evidence units.",
+    "unresolved_issues": []
+  },
+  {
     "batch_id": "batch_kskeleton_taxonomy_001",
     "source_ids": [
       "knowledge_skeleton"
@@ -159,5 +173,119 @@
       "Q007 source material directory does not exist.",
       "Q008 high-risk boundary has source material but no candidate extract yet."
     ]
+  },
+  {
+    "batch_id": "batch_bazi_general_source_preparation_001",
+    "source_ids": [
+      "source_bazi_general_lecture_textbook_pdf",
+      "source_bazi_general_beichen_intro_pdf",
+      "source_bazi_general_ziping_orthodox_pair_pdf"
+    ],
+    "evidence_ids": [
+      "bazi_general_lecture_pattern_strength_001",
+      "bazi_general_beichen_branch_interaction_001",
+      "bazi_general_ziping_useful_god_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Reviewed preparation-reading evidence for three registered Bazi general PDF sources; no source passages are tracked.",
+    "unresolved_issues": []
+  },
+  {
+    "batch_id": "batch_blind_life_manual_high_risk_boundary_001",
+    "source_ids": [
+      "blind_life_manual"
+    ],
+    "evidence_ids": [
+      "blind_life_manual_high_risk_boundary_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Reviewed the returned Blind Life Manual candidate as boundary-only high-risk evidence; no aphoristic source claims are promoted.",
+    "unresolved_issues": [
+      "Narrow page or quote-level Blind Life Manual evidence remains unapproved until separate locator review."
+    ]
+  },
+  {
+    "batch_id": "batch_bazi_general_selected_variant_001",
+    "source_ids": [
+      "source_bazi_general_ditiansui_selected_pdf",
+      "source_bazi_general_qiongtong_selected_pdf"
+    ],
+    "evidence_ids": [
+      "bazi_general_ditiansui_pattern_strength_001",
+      "bazi_general_qiongtong_useful_god_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Reviewed two selected-variant Bazi general weak locator evidence units; no source passages are tracked.",
+    "unresolved_issues": []
+  },
+  {
+    "batch_id": "batch_bazi_general_next_cycle_cluster_source_001",
+    "source_ids": [
+      "source_bazi_general_true_spirit_positioning_pdf",
+      "source_bazi_general_mingli_wangdoujing_pdf"
+    ],
+    "evidence_ids": [
+      "bazi_general_true_spirit_useful_god_001",
+      "bazi_general_wangdoujing_branch_interaction_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Reviewed two next-cycle cluster-source weak locator evidence units; no source passages are tracked.",
+    "unresolved_issues": []
+  },
+  {
+    "batch_id": "batch_bazi_general_next_cycle_followup_001",
+    "source_ids": [
+      "source_bazi_general_xinpai_essence_part2_pdf",
+      "source_bazi_general_xingming_shuozheng_vol1_pdf"
+    ],
+    "evidence_ids": [
+      "bazi_general_xinpai_essence_pattern_strength_001",
+      "bazi_general_xingming_shuozheng_branch_interaction_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Next-cycle followup sources promoted as weak locator-based ordinary-risk comparison evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "batch_id": "batch_bazi_general_gated_ordinary_source_selection_001",
+    "source_ids": [
+      "source_bazi_general_mingzao_chunqiu_case_pdf",
+      "source_bazi_general_sizhu_yuce_yaojue_pdf"
+    ],
+    "evidence_ids": [
+      "bazi_general_mingzao_chunqiu_luck_cycle_001",
+      "bazi_general_sizhu_yuce_yaojue_pattern_strength_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Gated ordinary sources promoted as weak locator-based ordinary-risk comparison evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "batch_id": "batch_bazi_general_gated_ordinary_followup_selection_001",
+    "source_ids": [
+      "source_bazi_general_bazi_baijue_case_pdf",
+      "source_bazi_general_mingli_mijue_pdf"
+    ],
+    "evidence_ids": [
+      "bazi_general_bazi_baijue_ten_god_001",
+      "bazi_general_mingli_mijue_branch_interaction_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Gated ordinary followup sources promoted as weak locator-based ordinary-risk comparison evidence.",
+    "unresolved_issues": []
+  },
+  {
+    "batch_id": "batch_bazi_general_gated_ordinary_final_selection_001",
+    "source_ids": [
+      "source_bazi_general_choujin_bosi_case_pdf",
+      "source_bazi_general_bazi_shizhan_mifa_pdf"
+    ],
+    "evidence_ids": [
+      "bazi_general_choujin_bosi_branch_interaction_001",
+      "bazi_general_bazi_shizhan_mifa_luck_cycle_001"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Gated ordinary final sources promoted as weak locator-based ordinary-risk comparison evidence.",
+    "unresolved_issues": []
   }
 ]

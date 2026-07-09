@@ -1,0 +1,100 @@
+[
+  {
+    "item_id": "bazi_general_variant_review_ditiansui_variant_set",
+    "identity_review_id": "bazi_general_identity_ditiansui_variant_set",
+    "source_selection_id": "bazi_general_classical_ditiansui_variant_set",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "review_kind": "variant_choice",
+    "review_status": "canonical_variant_selected",
+    "decision": "select_canonical_variant",
+    "canonical_choice_status": "selected_for_registration_prep",
+    "local_references": [
+      "滴天髓.pdf",
+      "滴天髓-刘伯温注.pdf",
+      "滴天髓白话浅释  164P.pdf"
+    ],
+    "candidate_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "selected_local_reference": "滴天髓.pdf",
+    "selected_source_library_entry_id": "",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "review_note": "Ditiansui has three title/commentary variants; select the base title file as the canonical local reference for the next registration-prep step.",
+    "rationale": "Use the shortest base-title copy for identity continuity and keep Liu Bowen/commentary and plain-language variants as non-canonical comparison surfaces.",
+    "guardrails": [
+      "Do not register any Ditiansui source-library entry from this variant-choice record.",
+      "Do not read, extract, or create 013 candidates until a later registration-prep step is explicit.",
+      "Treat commentary labels as comparison evidence only, not as formal rule authority."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "item_id": "bazi_general_variant_review_qiongtong_variant_set",
+    "identity_review_id": "bazi_general_identity_qiongtong_variant_set",
+    "source_selection_id": "bazi_general_classical_qiongtong_variant_set",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "review_kind": "variant_choice",
+    "review_status": "canonical_variant_selected",
+    "decision": "select_canonical_variant",
+    "canonical_choice_status": "selected_for_registration_prep",
+    "local_references": [
+      "穷通宝鉴+评注.pdf",
+      "穷通宝鉴/窮通寶鑒.pdf",
+      "春秋古籍/穷通宝鉴/窮通寶鑒.pdf"
+    ],
+    "candidate_rule_families": [
+      "useful_god_candidate"
+    ],
+    "selected_local_reference": "穷通宝鉴/窮通寶鑒.pdf",
+    "selected_source_library_entry_id": "",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "review_note": "Qiongtong has commentary and folder-duplicate labels; select the shorter standard-title path as the canonical local reference for next registration prep.",
+    "rationale": "Use the direct Qiongtong traditional-title path as the canonical copy, leave the annotated file as commentary surface, and treat the nested 春秋古籍 path as a duplicate candidate.",
+    "guardrails": [
+      "Do not count folder duplicates as independent source identities.",
+      "Do not register the annotated file as canonical from this variant-choice record.",
+      "Keep useful-god learning extraction outside this grouped record."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "item_id": "bazi_general_deferred_review_huntian_baolan_ziping",
+    "identity_review_id": "bazi_general_identity_huntian_baolan_ziping",
+    "source_selection_id": "bazi_general_classical_huntian_baolan_ziping",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "review_kind": "deferred_large_source",
+    "review_status": "deferred_large_source_reviewed",
+    "decision": "keep_large_source_deferred",
+    "canonical_choice_status": "not_applicable",
+    "local_references": [
+      "浑天宝览20（子平口诀）.pdf"
+    ],
+    "candidate_rule_families": [
+      "pattern_strength"
+    ],
+    "selected_local_reference": "",
+    "selected_source_library_entry_id": "",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "review_note": "Huntian Baolan remains a large 373MB source and is not suitable for the immediate variant-choice or reading path.",
+    "rationale": "Keep the file deferred until a later large-source pass can budget rendering, locator review, and preparation boundaries separately.",
+    "guardrails": [
+      "Do not open, convert, or parse this large PDF in the current stage.",
+      "Do not create source-library, 013 candidate, or 012 evidence records from this deferred review.",
+      "Revisit only after the next smaller source batch is prepared."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  }
+]

@@ -1,0 +1,221 @@
+[
+  {
+    "review_id": "bazi_general_identity_youran_notes",
+    "source_selection_id": "bazi_general_foundation_youran_notes",
+    "cluster_id": "bazi_general_foundation_textbook_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "canonical_title_label": "Bazi General Foundation Youran Notes",
+    "identity_status": "existing_batch_overlap",
+    "source_library_overlap_status": "existing_markdown_batch_overlap",
+    "registration_readiness": "no_registration_needed_existing_batch",
+    "recommended_next_action": "no_action",
+    "next_review_target": "existing_batch_learning_reference",
+    "risk_boundary": "ordinary",
+    "matched_source_library_entry_ids": [
+      "entry_markdown_source_batch_001"
+    ],
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation"
+    ],
+    "identity_review_note": "Path label overlaps Markdown Source Batch 001, which already includes Youran foundation notes.",
+    "rationale": "Use the existing cleaned batch rather than registering a duplicate raw PDF source.",
+    "guardrails": [
+      "Do not create a duplicate source-library entry for this raw file.",
+      "Any future learning work should cite the existing Batch 001 boundary first."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "review_id": "bazi_general_identity_tianma_notes",
+    "source_selection_id": "bazi_general_foundation_tianma_notes",
+    "cluster_id": "bazi_general_foundation_textbook_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "canonical_title_label": "Bazi General Foundation Tianma Notes",
+    "identity_status": "existing_batch_overlap",
+    "source_library_overlap_status": "existing_markdown_batch_overlap",
+    "registration_readiness": "no_registration_needed_existing_batch",
+    "recommended_next_action": "no_action",
+    "next_review_target": "existing_batch_learning_reference",
+    "risk_boundary": "ordinary",
+    "matched_source_library_entry_ids": [
+      "entry_markdown_source_batch_001"
+    ],
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "identity_review_note": "Path label overlaps Markdown Source Batch 001, which already includes Tianma applied notes.",
+    "rationale": "Reuse existing cleaned source coverage and keep applied claims behind existing review boundaries.",
+    "guardrails": [
+      "Do not create duplicate registration for the raw Tianma PDF.",
+      "Keep any applied outcome wording conditional in later learning work."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "review_id": "bazi_general_identity_lecture_textbook",
+    "source_selection_id": "bazi_general_foundation_lecture_textbook",
+    "cluster_id": "bazi_general_foundation_textbook_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "canonical_title_label": "Bazi General Foundation Lecture Textbook",
+    "identity_status": "registration_prep_ready",
+    "source_library_overlap_status": "no_registered_overlap_found",
+    "registration_readiness": "ready_for_registration_prep",
+    "recommended_next_action": "register_source",
+    "next_review_target": "registration_prep",
+    "risk_boundary": "ordinary",
+    "matched_source_library_entry_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "useful_god_candidate"
+    ],
+    "identity_review_note": "No existing source-library entry directly covers the lecture textbook path label.",
+    "rationale": "Small textbook-labeled PDF is suitable for registration-prep metadata before controlled reading.",
+    "guardrails": [
+      "Registration prep must still avoid opening or parsing the raw PDF body.",
+      "Do not create 013 candidates from this identity record."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "review_id": "bazi_general_identity_beichen_intro",
+    "source_selection_id": "bazi_general_foundation_beichen_intro",
+    "cluster_id": "bazi_general_foundation_textbook_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "canonical_title_label": "Bazi General Foundation Beichen Intro",
+    "identity_status": "registration_prep_ready",
+    "source_library_overlap_status": "no_registered_overlap_found",
+    "registration_readiness": "ready_for_registration_prep",
+    "recommended_next_action": "register_source",
+    "next_review_target": "registration_prep",
+    "risk_boundary": "ordinary",
+    "matched_source_library_entry_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "branch_interaction"
+    ],
+    "identity_review_note": "No existing source-library entry directly covers the Beichen intro path label.",
+    "rationale": "Introductory school-labeled source can enter registration prep after identity metadata review.",
+    "guardrails": [
+      "Do not infer source authority from the school label alone.",
+      "Reading or extraction remains blocked until registration prep is explicit."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "review_id": "bazi_general_identity_ziping_orthodox_pair",
+    "source_selection_id": "bazi_general_classical_ziping_orthodox_pair",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "canonical_title_label": "Bazi General Classical Ziping Orthodox Pair",
+    "identity_status": "registration_prep_ready",
+    "source_library_overlap_status": "no_registered_overlap_found",
+    "registration_readiness": "ready_for_registration_prep",
+    "recommended_next_action": "register_source",
+    "next_review_target": "registration_prep",
+    "risk_boundary": "ordinary",
+    "matched_source_library_entry_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "identity_review_note": "No existing source-library entry directly covers the paired Ziping upper and lower volumes.",
+    "rationale": "Treat the two files as one registration-prep source identity before controlled reading.",
+    "guardrails": [
+      "Keep paired volumes together during registration prep.",
+      "Do not treat title markers as formal rule authority before review."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "review_id": "bazi_general_identity_ditiansui_variant_set",
+    "source_selection_id": "bazi_general_classical_ditiansui_variant_set",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "canonical_title_label": "Bazi General Classical Ditiansui Variant Set",
+    "identity_status": "variant_choice_required",
+    "source_library_overlap_status": "variant_set_requires_choice",
+    "registration_readiness": "needs_variant_choice",
+    "recommended_next_action": "clarify_identity",
+    "next_review_target": "variant_choice",
+    "risk_boundary": "ordinary",
+    "matched_source_library_entry_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "identity_review_note": "Multiple Ditiansui variants need edition and commentary choice before registration prep.",
+    "rationale": "Variant grouping is useful, but registration should wait for a selected reading copy.",
+    "guardrails": [
+      "Do not merge editions or commentaries without a variant-choice step.",
+      "No reading or candidate intake is authorized from this grouped record."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "review_id": "bazi_general_identity_qiongtong_variant_set",
+    "source_selection_id": "bazi_general_classical_qiongtong_variant_set",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "canonical_title_label": "Bazi General Classical Qiongtong Variant Set",
+    "identity_status": "variant_choice_required",
+    "source_library_overlap_status": "variant_set_requires_choice",
+    "registration_readiness": "needs_variant_choice",
+    "recommended_next_action": "clarify_identity",
+    "next_review_target": "variant_choice",
+    "risk_boundary": "ordinary",
+    "matched_source_library_entry_ids": [],
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "identity_review_note": "Multiple Qiongtong labels need duplicate and commentary choice before registration prep.",
+    "rationale": "Resolve simplified, traditional, folder-duplicate, and commentary status before reading selection.",
+    "guardrails": [
+      "Do not count folder duplicates as independent source identities.",
+      "Keep variant choice separate from learning extraction."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "review_id": "bazi_general_identity_huntian_baolan_ziping",
+    "source_selection_id": "bazi_general_classical_huntian_baolan_ziping",
+    "cluster_id": "bazi_general_classical_reference_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "canonical_title_label": "Bazi General Classical Huntian Baolan Ziping",
+    "identity_status": "deferred_large_source",
+    "source_library_overlap_status": "deferred_large_source",
+    "registration_readiness": "deferred",
+    "recommended_next_action": "defer",
+    "next_review_target": "later_large_source_review",
+    "risk_boundary": "ordinary",
+    "matched_source_library_entry_ids": [],
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "identity_review_note": "Large file remains deferred until smaller registration-prep sources are resolved.",
+    "rationale": "High-score title is too large for the immediate identity-to-registration prep path.",
+    "guardrails": [
+      "Do not open or parse this large PDF during current new-material work.",
+      "Revisit after smaller foundation and classical sources are registered."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  }
+]

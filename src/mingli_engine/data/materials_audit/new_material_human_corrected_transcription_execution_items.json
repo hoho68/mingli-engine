@@ -1,0 +1,42 @@
+[
+  {
+    "execution_item_id": "new_material_human_corrected_transcription_execution_xiahai_suanmingji_pdf",
+    "execution_id": "015-new-material-human-corrected-transcription-execution",
+    "transcription_prep_item_id": "new_material_human_corrected_transcription_prep_xiahai_suanmingji_pdf",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "execution_status": "pilot_prepared_text_created",
+    "local_reference": "下海算命记.pdf",
+    "prepared_text_artifact": "docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md",
+    "corrected_excerpt_count": 4,
+    "corrected_character_count": 35,
+    "page_locator_count": 4,
+    "selected_page_locators": [
+      "page_20_center_title",
+      "page_20_right_topic",
+      "page_35_left_title",
+      "page_70_left_opening"
+    ],
+    "uncorrected_ocr_committed": false,
+    "long_form_transcription_committed": false,
+    "prepared_text_artifact_created": true,
+    "human_corrected_text_available": true,
+    "learning_entry_ready": true,
+    "selected_next_material_entry": "017-new-material-corrected-pilot-learning-entry-evaluation",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "A short corrected pilot artifact now exists for learning-entry evaluation without committing uncorrected OCR or long-form source text.",
+    "guardrails": [
+      "Treat the artifact as a short pilot, not a full transcription.",
+      "Run learning-entry evaluation before creating 017 learning notes.",
+      "Do not create 013 candidates or 012 units from this stage.",
+      "Do not expand source text without a bounded review stage."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  }
+]

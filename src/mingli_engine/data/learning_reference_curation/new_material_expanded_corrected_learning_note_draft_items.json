@@ -1,0 +1,40 @@
+[
+  {
+    "draft_item_id": "new_material_expanded_corrected_learning_note_draft_xiahai_suanmingji_pdf",
+    "draft_id": "017-new-material-expanded-corrected-learning-note-draft",
+    "prep_item_id": "new_material_expanded_corrected_learning_note_prep_xiahai_suanmingji_pdf",
+    "note_id": "note_xiahai_suanmingji_expanded_corrected_001",
+    "learning_point_id": "lp_xiahai_suanmingji_expanded_boundary_001",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "prepared_text_artifact": "docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md",
+    "local_reference": "下海算命记.pdf",
+    "draft_status": "ready_for_expanded_learning_completion_review",
+    "target_rule_family": "high_risk_signal",
+    "risk_tier": "high_risk",
+    "locator_summary": "Three corrected anchors across two expanded page windows, with one continuity locator pending additional correction.",
+    "learning_summary": "The expanded anchors support a conservative boundary note: method framing and case openings must stay procedural, non-deterministic, and separated from spiritual certainty.",
+    "limitations": [
+      "Only three short corrected anchors are committed in this expanded artifact.",
+      "The page 72 continuity locator has no additional corrected text yet.",
+      "Candidate intake requires broader corrected context and overlap checks."
+    ],
+    "candidate_intake_allowed": false,
+    "completion_review_allowed": true,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "selected_next_material_entry": "017-new-material-expanded-corrected-learning-completion-review",
+    "rationale": "The draft captures one expanded boundary learning point and keeps candidate intake blocked.",
+    "guardrails": [
+      "Treat this as an expanded learning note only.",
+      "Do not use it as a standalone rule.",
+      "Do not add 013 or 012 records from the draft.",
+      "Route further work to completion review before any downstream step."
+    ],
+    "created_at": "2026-07-01",
+    "updated_at": "2026-07-01"
+  }
+]

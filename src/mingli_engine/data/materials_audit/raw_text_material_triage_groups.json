@@ -1,0 +1,418 @@
+[
+  {
+    "group_id": "raw_text_triage_ritual_remedy_high_risk",
+    "source_root": "资料原文/文本类/",
+    "group_label": "Ritual Remedy And Occult High-Risk Corpus",
+    "triage_status": "risk_review_required",
+    "risk_boundary": "high_risk",
+    "file_count": 428,
+    "priority_text_candidate_count": 426,
+    "extension_counts": {
+      ".pdf": 409,
+      ".txt": 14,
+      ".doc": 3,
+      ".zip": 1,
+      ".ppt": 1
+    },
+    "recommended_next_action": "risk_review",
+    "target_rule_families": [
+      "remedy_boundary",
+      "high_risk_signal"
+    ],
+    "filename_markers": [
+      "符",
+      "咒",
+      "祝由",
+      "改运",
+      "治病"
+    ],
+    "representative_paths": [
+      "06.秘传改运转运详解大法汇编上册66页.pdf",
+      "fs003088=龙德居士-实用灵符秘典.pdf",
+      "祝由科治病奇书.pdf"
+    ],
+    "next_material_entry": "",
+    "rationale": "Filename markers show ritual-remedy and occult content; keep behind risk boundary review.",
+    "guardrails": [
+      "Do not extract operational remedy instructions.",
+      "Reject fear-based or absolute outcome claims.",
+      "Use only bounded safety metadata until reviewed."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "group_id": "raw_text_triage_blind_school_sensitive",
+    "source_root": "资料原文/文本类/",
+    "group_label": "Blind School Sensitive Text Candidates",
+    "triage_status": "risk_review_required",
+    "risk_boundary": "sensitive",
+    "file_count": 8,
+    "priority_text_candidate_count": 8,
+    "extension_counts": {
+      ".pdf": 5,
+      ".txt": 3
+    },
+    "recommended_next_action": "risk_review",
+    "target_rule_families": [
+      "blind_image_method",
+      "branch_interaction",
+      "luck_cycle"
+    ],
+    "filename_markers": [
+      "盲派",
+      "盲师",
+      "铁口直断",
+      "断命"
+    ],
+    "representative_paths": [
+      "中原盲派命理秘典.pdf",
+      "姚亚峰 《盲派绝学断流年》ce.pdf",
+      "民间秘传盲师六亲定位弟子提高专题课程.pdf"
+    ],
+    "next_material_entry": "",
+    "rationale": "Blind-school text candidates need boundary review before any source selection or learning use.",
+    "guardrails": [
+      "Keep deterministic outcome language out of learning notes.",
+      "Separate text candidates from video-course material.",
+      "Do not promote without source-specific review."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "group_id": "raw_text_triage_life_death_high_risk",
+    "source_root": "资料原文/文本类/",
+    "group_label": "Life Death High-Risk Corpus",
+    "triage_status": "risk_review_required",
+    "risk_boundary": "high_risk",
+    "file_count": 3,
+    "priority_text_candidate_count": 3,
+    "extension_counts": {
+      ".pdf": 2,
+      ".txt": 1
+    },
+    "recommended_next_action": "risk_review",
+    "target_rule_families": [
+      "luck_cycle",
+      "high_risk_signal"
+    ],
+    "filename_markers": [
+      "生死",
+      "寿终",
+      "绝命"
+    ],
+    "representative_paths": [
+      "江湖残绝命籍辑逸（八册合集全）.pdf",
+      "5.八字口诀 寿终取象/八字口诀 寿终取象.pdf",
+      "5.八字口诀 寿终取象/0.（重点）学前必看.txt"
+    ],
+    "next_material_entry": "",
+    "rationale": "Life-death file labels require high-risk boundary review and cannot enter ordinary learning.",
+    "guardrails": [
+      "No lifespan timing use.",
+      "Keep only safety boundary metadata before review.",
+      "Do not create candidates from this group in this stage."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "group_id": "raw_text_triage_liang_bazi_core",
+    "source_root": "资料原文/文本类/",
+    "group_label": "Liang Xiangrun Bazi Core Text Candidates",
+    "triage_status": "source_selection_ready",
+    "risk_boundary": "ordinary",
+    "file_count": 12,
+    "priority_text_candidate_count": 12,
+    "extension_counts": {
+      ".pdf": 12
+    },
+    "recommended_next_action": "register_source",
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate",
+      "branch_interaction",
+      "luck_cycle"
+    ],
+    "filename_markers": [
+      "梁湘润",
+      "子平教材",
+      "沈氏用神",
+      "渊海",
+      "流年法典"
+    ],
+    "representative_paths": [
+      "梁湘润简体/简体 梁湘润《子平教材讲义第一级次》ce.pdf",
+      "梁湘润简体/简体《沈氏用神例解》梁湘润(精校)(1).pdf",
+      "梁湘润简体/简体《流年法典》梁湘润_(1).pdf"
+    ],
+    "next_material_entry": "015-liang-bazi-core-source-selection",
+    "rationale": "Bounded Bazi textbook group has clear author labels and all files are priority text candidates.",
+    "guardrails": [
+      "Select specific source records before extraction.",
+      "Keep prepared text outside formal evidence.",
+      "Review edition and locator quality before learning notes."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "group_label": "General Bazi Text Candidate Backlog",
+    "triage_status": "source_selection_backlog",
+    "risk_boundary": "ordinary",
+    "file_count": 184,
+    "priority_text_candidate_count": 183,
+    "extension_counts": {
+      ".pdf": 148,
+      ".doc": 27,
+      ".txt": 5,
+      ".docx": 3,
+      ".ppt": 1
+    },
+    "recommended_next_action": "clarify_identity",
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "branch_interaction",
+      "luck_cycle"
+    ],
+    "filename_markers": [
+      "八字",
+      "四柱",
+      "子平",
+      "命理",
+      "滴天髓"
+    ],
+    "representative_paths": [
+      "八字命学精典.pdf",
+      "八字命理学  348P.pdf",
+      "滴天髓.pdf"
+    ],
+    "next_material_entry": "",
+    "rationale": "Large ordinary Bazi backlog needs identity clustering before source-library registration.",
+    "guardrails": [
+      "Do not bulk-register all files.",
+      "Prefer small author or title clusters.",
+      "Keep document formats as external preparation material."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "group_id": "raw_text_triage_media_course_deferred",
+    "source_root": "资料原文/文本类/",
+    "group_label": "Media Course Files Deferred",
+    "triage_status": "deferred_non_text",
+    "risk_boundary": "sensitive",
+    "file_count": 246,
+    "priority_text_candidate_count": 0,
+    "extension_counts": {
+      ".mp4": 218,
+      ".flv": 28
+    },
+    "recommended_next_action": "defer",
+    "target_rule_families": [],
+    "filename_markers": [
+      ".mp4",
+      ".flv"
+    ],
+    "representative_paths": [
+      "052.白静羽《梅花易数》23集/【道教】道家经典文化 白静羽道长讲授 修仙打卡 第一期_9403.flv",
+      "3.午阳风水+八字 高级班65节/午阳八字高级班视频/01.mp4",
+      "盲派命理5套/盲派课程视频/001.mp4"
+    ],
+    "next_material_entry": "",
+    "rationale": "Video files are not text candidates and require a separate media review workflow.",
+    "guardrails": [
+      "Do not transcribe or summarize media in this stage.",
+      "Do not infer source content from filenames alone.",
+      "Keep media outside candidate extraction."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "group_id": "raw_text_triage_image_assets_deferred",
+    "source_root": "资料原文/文本类/",
+    "group_label": "Image Assets Deferred",
+    "triage_status": "deferred_non_text",
+    "risk_boundary": "sensitive",
+    "file_count": 52,
+    "priority_text_candidate_count": 0,
+    "extension_counts": {
+      ".jpg": 51,
+      ".png": 1
+    },
+    "recommended_next_action": "defer",
+    "target_rule_families": [],
+    "filename_markers": [
+      ".jpg",
+      ".png",
+      "图片"
+    ],
+    "representative_paths": [
+      "【图片】怎样画符/怎样画符1.jpg",
+      "【图片】怎样画符/怎样画符10.jpg",
+      "3.午阳风水+八字 高级班65节/午阳八字高级班课件/图片.png"
+    ],
+    "next_material_entry": "",
+    "rationale": "Images may contain operational or visual material and need separate image review.",
+    "guardrails": [
+      "Do not OCR images in this stage.",
+      "Keep visual ritual content behind review.",
+      "Do not treat images as text evidence."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "group_id": "raw_text_triage_fengshui_geo",
+    "source_root": "资料原文/文本类/",
+    "group_label": "Feng Shui And Geography Domain Review",
+    "triage_status": "deferred_domain_review",
+    "risk_boundary": "sensitive",
+    "file_count": 34,
+    "priority_text_candidate_count": 33,
+    "extension_counts": {
+      ".pdf": 31,
+      ".txt": 2,
+      ".djvu": 1
+    },
+    "recommended_next_action": "defer",
+    "target_rule_families": [
+      "remedy_boundary"
+    ],
+    "filename_markers": [
+      "风水",
+      "三僚",
+      "地理",
+      "阳宅",
+      "罗盘"
+    ],
+    "representative_paths": [
+      "风水罗盘应用精解-现代-377页.pdf",
+      "2.三僚风水地理秘本上中下合集/1 三僚风水地理秘本上册　55页.pdf",
+      "01博主家传免费古籍/21无名风水.清代手抄.pdf"
+    ],
+    "next_material_entry": "",
+    "rationale": "Feng shui domain is outside the immediate Bazi learning path and needs scope review.",
+    "guardrails": [
+      "Do not blend domain rules into Bazi evidence.",
+      "Keep remedy implications bounded.",
+      "Defer until a domain-specific plan exists."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "group_id": "raw_text_triage_qimen_dunjia",
+    "source_root": "资料原文/文本类/",
+    "group_label": "Qimen Dunjia Domain Review",
+    "triage_status": "deferred_domain_review",
+    "risk_boundary": "sensitive",
+    "file_count": 13,
+    "priority_text_candidate_count": 13,
+    "extension_counts": {
+      ".pdf": 13
+    },
+    "recommended_next_action": "defer",
+    "target_rule_families": [],
+    "filename_markers": [
+      "奇门",
+      "遁甲",
+      "金口诀"
+    ],
+    "representative_paths": [
+      "《遁甲奇门要诀》，奇门遁甲抄本，共47个双页.pdf",
+      "奇门要略.pdf",
+      "金口诀资料汇集本--某民间高人收集整理_无往生心.pdf"
+    ],
+    "next_material_entry": "",
+    "rationale": "Qimen and related materials need a separate domain scope before learning use.",
+    "guardrails": [
+      "Do not map Qimen rules into Bazi reports.",
+      "Defer candidate extraction until domain ownership is defined.",
+      "Keep as inventory metadata only."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "group_id": "raw_text_triage_ziwei_astrology",
+    "source_root": "资料原文/文本类/",
+    "group_label": "Ziwei And Astrology Domain Review",
+    "triage_status": "deferred_domain_review",
+    "risk_boundary": "sensitive",
+    "file_count": 9,
+    "priority_text_candidate_count": 9,
+    "extension_counts": {
+      ".pdf": 9
+    },
+    "recommended_next_action": "defer",
+    "target_rule_families": [],
+    "filename_markers": [
+      "紫微",
+      "七政",
+      "天星",
+      "斗数",
+      "占星"
+    ],
+    "representative_paths": [
+      "七政四余天星赋.pdf",
+      "凌逸居士：紫微斗数纵横断诀 .pdf",
+      "阿部泰山-天文紫微斗数 352P.pdf"
+    ],
+    "next_material_entry": "",
+    "rationale": "Ziwei and astrology materials are separate domains and stay deferred from Bazi learning.",
+    "guardrails": [
+      "Do not merge non-Bazi domains into current evidence.",
+      "Require a separate domain plan before extraction.",
+      "Keep current stage to inventory triage only."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "group_id": "raw_text_triage_unclassified_deferred",
+    "source_root": "资料原文/文本类/",
+    "group_label": "Unclassified Filename Bucket",
+    "triage_status": "deferred_unclassified",
+    "risk_boundary": "sensitive",
+    "file_count": 150,
+    "priority_text_candidate_count": 145,
+    "extension_counts": {
+      ".pdf": 138,
+      ".txt": 5,
+      ".docx": 1,
+      ".zip": 1,
+      ".灵柩十二卷。": 1,
+      ".djvu": 1,
+      ".rar": 1,
+      ".doc": 1,
+      ".醫宗說約六卷半。  清代。pdf": 1
+    },
+    "recommended_next_action": "defer",
+    "target_rule_families": [],
+    "filename_markers": [
+      "unclassified",
+      "insufficient filename signal"
+    ],
+    "representative_paths": [
+      "万法归宗04.pdf",
+      "下海算命记.pdf",
+      "六亲总论.pdf"
+    ],
+    "next_material_entry": "",
+    "rationale": "Filename signals are insufficient for safe grouping; needs manual title review.",
+    "guardrails": [
+      "Do not infer content from weak labels.",
+      "Manual title review must precede registration.",
+      "Keep as deferred inventory metadata."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  }
+]

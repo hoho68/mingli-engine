@@ -566,5 +566,276 @@
     ],
     "candidate_readiness": "deferred",
     "candidate_decision_id": ""
+  },
+  {
+    "learning_point_id": "lp_liang_tianyuan_wuxian_day_master_use_god_001",
+    "note_id": "note_liang_tianyuan_wuxian_individual_review_001",
+    "point_label": "Tianyuan Wuxian day-master and seasonal use-god separation",
+    "source_locator": "review-note:Markdown/source_batch_004_cleaned/简体 梁湘润《天元巫咸经》注释.md#L34",
+    "summary": "Individual review identifies a dispersed distinction between day-master preference and seasonal use-god thinking, with extra detail for weaker-covered stems. This refines the existing batch 004 pattern-strength candidate instead of creating a new candidate.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Keep as structural taxonomy, not a standalone classifier.",
+      "Source uses outcome and health metaphors; paraphrase with uncertainty.",
+      "Reuse existing batch 004 pattern candidate until separate downstream authorization.",
+      "Limitation: no 013 or 012 mutation is authorized by this individual review."
+    ],
+    "candidate_readiness": "duplicate_review",
+    "candidate_decision_id": "decision_liang_tianyuan_wuxian_reuse_batch004_pattern_001"
+  },
+  {
+    "learning_point_id": "lp_liang_yushi_month_branch_use_god_taxonomy_001",
+    "note_id": "note_liang_yushi_yongshen_individual_review_001",
+    "point_label": "Yushi month-branch use-god taxonomy and interference hierarchy",
+    "source_locator": "review-note:Markdown/source_batch_004_cleaned/简体《余氏用神辞渊》梁湘润(1).md#L57",
+    "summary": "Individual review identifies month-branch inherent versus absent use-god classes, helper-god dependency, and a hierarchy of use-god interference. This refines the existing batch 004 useful-god candidate instead of creating a new candidate.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "sensitive",
+    "limitations": [
+      "Keep system dependency explicit with uncertainty; different use-god systems may disagree.",
+      "Treat interference categories as candidate taxonomy, not final selection.",
+      "Reuse existing batch 004 useful-god candidate until separate downstream authorization.",
+      "Limitation: no 013 or 012 mutation is authorized by this individual review."
+    ],
+    "candidate_readiness": "duplicate_review",
+    "candidate_decision_id": "decision_liang_yushi_yongshen_reuse_batch004_useful_god_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_lecture_pattern_strength_001",
+    "note_id": "note_bazi_general_lecture_pattern_strength_001",
+    "point_label": "Day-master strength and balancing candidate order",
+    "source_locator": "page:八字命理讲义教材（299页）.pdf#p77",
+    "summary": "The lecture frames strong day-master assessment through excessive peer/support force or seasonal rooting, then treats control and draining elements as conditional balancing candidates.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Use only as conditional structure support; chart context and school assumptions can change the selected balancing element.",
+      "Do not turn strength labels into deterministic outcomes."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_lecture_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_beichen_branch_interaction_001",
+    "note_id": "note_bazi_general_beichen_branch_interaction_001",
+    "point_label": "Earthly-branch combination and punishment table",
+    "source_locator": "page:北宸学派《命理入门》韩雨墨 258页.pdf#p30",
+    "summary": "Beichen presents earthly-branch combination, meeting, punishment, and clash categories as a compact branch-interaction taxonomy for later chart-context review.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Use as branch-interaction taxonomy only; the table does not decide outcomes by itself.",
+      "Rendered-page source should be rechecked before adding narrower sub-rules."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_beichen_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_ziping_useful_god_001",
+    "note_id": "note_bazi_general_ziping_useful_god_001",
+    "point_label": "Classical five-element balancing language",
+    "source_locator": "page:子平命理正宗电子版上.pdf#p9",
+    "summary": "The Ziping manuscript uses seasonal five-element prosperity and deficiency language to frame balancing tendencies; treat it as a useful-god candidate needing later narrow transcription.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Image-page reading is suitable for taxonomy seeding, not final classical wording.",
+      "Different useful-god systems may classify the same balancing relation differently."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_ziping_useful_god_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_ditiansui_pattern_strength_001",
+    "note_id": "note_bazi_general_ditiansui_pattern_strength_001",
+    "point_label": "Ditiansui selected variant pattern-strength seed",
+    "source_locator": "page:滴天髓.pdf#p1",
+    "summary": "Selected Ditiansui base PDF is registered as a classical pattern-strength comparison source; use as a weak preparation seed until page-level transcription is completed.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact classical wording.",
+      "Use only as conditional comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_ditiansui_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_qiongtong_useful_god_001",
+    "note_id": "note_bazi_general_qiongtong_useful_god_001",
+    "point_label": "Qiongtong selected variant useful-god seed",
+    "source_locator": "page:穷通宝鉴/窮通寶鑒.pdf#p1",
+    "summary": "Selected Qiongtong Baojian PDF is registered as a classical seasonal useful-god comparison source; use as a weak preparation seed until page review is completed.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact classical wording.",
+      "Different seasonal use-god systems may classify the same relation differently."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_qiongtong_useful_god_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_true_spirit_useful_god_001",
+    "note_id": "note_bazi_general_true_spirit_useful_god_001",
+    "point_label": "True-spirit positioning useful-god seed",
+    "source_locator": "page:八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf#p1",
+    "summary": "True-spirit positioning PDF is registered as a modern useful-god comparison source; use as a weak preparation seed until page review is completed.",
+    "proposed_rule_family": "useful_god_candidate",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Treat true-spirit positioning as school-specific comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_true_spirit_useful_god_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_wangdoujing_branch_interaction_001",
+    "note_id": "note_bazi_general_wangdoujing_branch_interaction_001",
+    "point_label": "Wangdoujing branch-interaction seed",
+    "source_locator": "page:1_命理望斗经(1).pdf#p1",
+    "summary": "Mingli Wangdoujing is registered as a weak branch-interaction comparison source; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as branch-interaction comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_wangdoujing_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_xinpai_essence_pattern_strength_001",
+    "note_id": "note_bazi_general_xinpai_essence_pattern_strength_001",
+    "point_label": "Xin Pai essence pattern-strength seed",
+    "source_locator": "page:佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf#p1",
+    "summary": "Xin Pai Mingli Essence part 2 PDF is registered as a modern pattern-strength comparison source; use as a weak preparation seed until page review is completed.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Treat Xin Pai framing as school-specific comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_xinpai_essence_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "note_id": "note_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "point_label": "Xingming Shuozheng branch-interaction seed",
+    "source_locator": "page:霍敏卿-星命说证正续合编上册.pdf#p1",
+    "summary": "Xingming Shuozheng volume 1 is registered as a weak branch-interaction comparison source; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as branch-interaction comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_xingming_shuozheng_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "note_id": "note_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "point_label": "Mingzao Chunqiu luck-cycle case seed",
+    "source_locator": "page:八字18本/命造春秋  188P.pdf#p1",
+    "summary": "Mingzao Chunqiu is registered as a weak case-collection source for luck-cycle comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "luck_cycle",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_mingzao_chunqiu_luck_cycle_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "note_id": "note_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "point_label": "Sizhu Yuce Yaojue pattern-strength formula seed",
+    "source_locator": "page:四柱预测要诀.pdf#p1",
+    "summary": "Sizhu Yuce Yaojue is registered as a weak practical-formula source for pattern-strength comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "pattern_strength",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_sizhu_yuce_yaojue_pattern_strength_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_bazi_baijue_ten_god_001",
+    "note_id": "note_bazi_general_bazi_baijue_ten_god_001",
+    "point_label": "Bazi Baijue ten-god case seed",
+    "source_locator": "page:八字18本/八字百诀 上册  214P.pdf#p1",
+    "summary": "Bazi Baijue volume 1 is registered as a weak case-collection source for ten-god relation comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "ten_god_relation",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_bazi_baijue_ten_god_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_mingli_mijue_branch_interaction_001",
+    "note_id": "note_bazi_general_mingli_mijue_branch_interaction_001",
+    "point_label": "Mingli Mijue branch-interaction formula seed",
+    "source_locator": "page:命理秘诀(1).pdf#p1",
+    "summary": "Mingli Mijue is registered as a weak practical-formula source for branch-interaction comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_mingli_mijue_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_choujin_bosi_branch_interaction_001",
+    "note_id": "note_bazi_general_choujin_bosi_branch_interaction_001",
+    "point_label": "Choujin Bosi branch-interaction case seed",
+    "source_locator": "page:八字18本/抽筋剥丝讲八字  274P.pdf#p1",
+    "summary": "Choujin Bosi Bazi is registered as a weak case-method source for branch-interaction comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "branch_interaction",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_choujin_bosi_branch_interaction_001"
+  },
+  {
+    "learning_point_id": "lp_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "note_id": "note_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "point_label": "Bazi Shizhan Mifa luck-cycle formula seed",
+    "source_locator": "page:八字实战秘法公开.pdf#p1",
+    "summary": "Bazi Shizhan Mifa is registered as a weak practical-formula source for luck-cycle comparison; use as a preparation seed until page review is completed.",
+    "proposed_rule_family": "luck_cycle",
+    "risk_tier": "ordinary",
+    "limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as bounded comparison context."
+    ],
+    "candidate_readiness": "ready",
+    "candidate_decision_id": "decision_bazi_general_bazi_shizhan_mifa_luck_cycle_001"
   }
 ]

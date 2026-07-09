@@ -119,8 +119,8 @@ Candidate-intake decision records include these first-wave examples:
 - `decision_hongfu_remedy_boundary_001`: applied as `create_candidate`,
   creating `candidate_hongfu_remedy_boundary_017_001`.
 
-The full seeded 017 decision set now contains `reuse_existing=1`,
-`create_candidate=27`, and `status:applied=28`. Applied decisions are no
+The full seeded 017 decision set now contains `reuse_existing=3`,
+`create_candidate=40`, and `status:applied=43`. Applied decisions are no
 longer themselves evidence; any report-usable value comes only after the
 ordinary 013 review/promotion path creates matching formal evidence units.
 
@@ -133,20 +133,22 @@ missing prerequisites, recommended action, risk boundary, and status.
 
 Current prerequisite action notes:
 
-- `action_blind_life_manual_risk_review_001`: planned risk-review action for
+- `action_blind_life_manual_risk_review_001`: completed risk-review action for
   `backlog_blind_life_manual_risk_review_001`.
 - `action_blind_school_secret_blocked_001`: blocked action for
   `backlog_blind_school_secret_blocked_001`, requiring source-access and
   quotation-boundary clarification before any extraction work.
 - `action_markdown_batch_003_registration_001`: deferred registration action
   for `backlog_markdown_batch_003_registration_001`.
-- `action_immortal_fortune_jianghu_secret_risk_review_001`: planned
+- `action_immortal_fortune_jianghu_secret_risk_review_001`: completed
   risk-review action for
   `backlog_immortal_fortune_jianghu_secret_risk_review_001`.
-- `action_life_death_book_100_pages_risk_review_001`: planned risk-review
+- `action_life_death_book_100_pages_risk_review_001`: completed risk-review
   action for `backlog_life_death_book_100_pages_risk_review_001`.
 - `action_source_processing_status_deferred_001`: deferred action for workflow
   metadata that is not source text.
+- `action_markdown_batch_005_risk_review_001`: completed risk-review action for
+  `backlog_markdown_batch_005_risk_review_001`.
 
 Risk-review, deferred, and blocked action notes cannot become learning points,
 candidate extracts, review decisions, promotion batches, approved evidence
@@ -155,40 +157,642 @@ workflow resolves the missing prerequisite and creates a new ready queue item.
 
 ## Current Incremental Snapshot
 
-- Learning reference notes: `draft=7`, `candidate_intake_started=7`.
-- Learning points: `duplicate_review=1`, `ready=27`, `deferred=6`.
-- Candidate decisions: `reuse_existing=1`, `create_candidate=27`,
-  `status:applied=28`.
-- Prerequisite actions: `risk_review=3`, `blocked=1`, `deferred=2`,
-  `status:planned=3`, `status:deferred=2`, `status:blocked=1`.
-- Candidate-ready count: `27`.
-- Candidate decision count: `28`.
-- Risk tier counts: `ordinary=11`, `sensitive=40`, `high_risk=3` across notes,
+- Learning reference notes: `candidate_intake_started=31`.
+- Learning points: `duplicate_review=3`, `ready=42`, `deferred=6`.
+- Candidate decisions: `reuse_existing=3`, `create_candidate=42`,
+  `status:applied=45`.
+- Prerequisite actions: `risk_review=4`, `blocked=1`, `deferred=2`,
+  `status:completed=4`, `status:deferred=2`, `status:blocked=1`.
+- Candidate-ready count: `42`.
+- Candidate decision count: `45`.
+- Risk tier counts: `ordinary=41`, `sensitive=44`, `high_risk=4` across notes,
   learning points, and prerequisite actions.
 - Target rule family counts: `blind_image_method=2`,
-  `branch_interaction=4`, `pattern_strength=9`,
-  `useful_god_candidate=4`, `luck_cycle=4`, `ten_god_relation=4`,
+  `branch_interaction=9`, `pattern_strength=13`,
+  `useful_god_candidate=7`, `luck_cycle=6`, `ten_god_relation=4`,
   `five_element_balance=1`, `remedy_boundary=1`, and
   `high_risk_signal=1`.
-- Overlap warnings: `7`.
+- Overlap warnings: `9`.
 - Formal evidence delta: `0`.
-- Next action ids: seven draft notes plus planned risk-review actions for
-  Blind Life Manual, Immortal Fortune Jianghu Secret, and Life Death Book.
+- Next action ids: none. The seven former draft notes are closed as
+  `candidate_intake_started`, and the four risk-review prerequisite actions are
+  completed outside the active action list.
+
+## Source-Window Learning Closure Sync
+
+The 2026-06-27 source-window learning-closure pass is now reflected in the
+017 maintainer snapshot without changing 017 data schemas or promotion state.
+
+- `selected-ready-learning-notes=31`: the 31 ready items remain selected 016
+  extraction tasks and 017 learning reference notes. Here "ready" means ready
+  as learning-reference input, not automatically ready for formal evidence.
+- `retained-chapter-learning-closed=11`: retained chapter-level source windows
+  now have explicit learning-closure notes in the extract Markdown.
+- `learning-paraphrase-ready=4`: Duan retained chapter windows can be used as
+  short paraphrase learning notes; targeted transcription is only needed before
+  exact quotation, page-level proof, or future promotion.
+- `policy-boundary-retained=5`: Hongfu remedy-boundary windows stay as policy
+  paraphrase material and must not be promoted without human transcription.
+- `safety-boundary-retained=2`: Northeast risk-boundary windows stay as safety
+  paraphrase material unless a source-specific boundary page is identified.
+- `closed-draft-learning-notes=7`: the remaining draft learning-note handles
+  are closed as `candidate_intake_started` after their learning points and
+  candidate-intake decisions were already applied.
+- `next_action_ids=0`: no 017 learning note, candidate-intake decision, or
+  prerequisite action currently needs active local handling.
+- `planned-risk-review-actions=0`: no risk-review prerequisite action remains
+  planned after the sweep.
+- `completed-risk-review-actions=4`: Blind Life Manual, Immortal Fortune
+  Jianghu Secret, Life Death Book, and Markdown Batch 005 have completed
+  prerequisite boundary screening.
+- `formal_evidence_delta=0`: No new candidate-intake decisions, no 013 candidate extracts, no review decisions, no promotion batches, and no formal evidence are created by this source-window sync; later authorized Bazi general preparation-reading records are counted separately in 013/012 snapshots.
+
+Completed, blocked, or deferred prerequisite records remain outside
+`next_action_ids`.
+The retained source-window closures only clarify learning/reference use and
+future optional transcription boundaries.
+
+## Liang Bazi Core Individual Review
+
+The 2026-06-28 individual-review pass completed the two selected Liang cleaned
+Markdown surfaces from the source-selection packet:
+
+- `liang_tianyuan_wuxian_commentary`: recorded as
+  `note_liang_tianyuan_wuxian_individual_review_001`, with a duplicate-review
+  learning point for day-master and seasonal use-god separation. It reuses
+  `candidate_markdown_batch_004_pattern_strength_001`.
+- `liang_yushi_yongshen_ciyuan`: recorded as
+  `note_liang_yushi_yongshen_individual_review_001`, with a duplicate-review
+  learning point for month-branch use-god taxonomy and interference hierarchy.
+  It reuses `candidate_markdown_batch_004_useful_god_001`.
+
+Both records are bounded 017 learning/reference metadata. They do not create
+013 candidates, 013 reviews, 013 promotion batches, or 012 formal evidence.
+
+## Candidate/Formal Evidence Boundary Audit
+
+The candidate/formal evidence boundary audit confirms that 017 learning
+records remain provenance metadata while explicitly authorized downstream work
+is represented in 013 and 012.
+
+- `017-applied-decisions=45`: 017 candidate-intake decisions remain provenance
+  and planning metadata after application.
+- `017-create-candidate-decisions=42`: applied create-candidate decisions map
+  to existing 013 candidate extracts; the reuse decisions continue to point to
+  `candidate_northeast_blind_image_001`,
+  `candidate_markdown_batch_004_pattern_strength_001`, and
+  `candidate_markdown_batch_004_useful_god_001`.
+- `013-candidate-extracts=54`: current 013 candidate status counts are
+  `promoted=51`, `rejected=2`, and `blocked=1`.
+- `013-review-decisions=54`: current review decisions are `approved=51`,
+  `rejected=2`, and `blocked=1`.
+- `013-promotion-batches=34`: all current promotion batches are `reviewed`.
+- `012-formal-evidence-units=111`: formal evidence coverage remains in the
+  approved classical evidence corpus only.
+- `formal_evidence_delta=0`: the 017 summary itself does not add or remove
+  formal evidence.
+- `learning-reference-source-refs-in-012=0`: 012 evidence does not cite
+  `learning-reference:` locators.
+- `candidate-id-source-refs-in-012=0`: 012 evidence source refs do not cite
+  candidate ids.
+- `learning-closure-source-refs-in-012=0`: 012 evidence source refs do not cite
+  `learning-closure:` notes.
+
+Maintained boundary: 017 records describe learning/provenance decisions; 013
+records carry candidate, review, and promotion pipeline state; 012 evidence
+units are the only formal report evidence surface.
+
+Authorized downstream update on 2026-06-28: the returned
+`candidate_blind_life_manual_gap_001` record was promoted through 013 as
+`promotion_blind_life_manual_high_risk_boundary_001` and added to 012 as
+`blind_life_manual_high_risk_boundary_001`. This is boundary-only high-risk
+evidence; individual aphoristic claims from the source still require separate
+page or heading locators before use.
+
+Authorized downstream update on 2026-06-28: three ordinary-risk Markdown Batch
+002 extension records were promoted through 013 as
+`promotion_markdown_batch_002_extension_001` and added to 012 as
+`batch002_branch_interaction_route_001`, `batch002_useful_god_types_001`, and
+`batch002_day_master_strength_basis_001`. These are line-located structural
+taxonomy items; they do not authorize deterministic outcomes without chart
+context.
+
+Authorized downstream update on 2026-06-28: the selected Bazi general variants
+`滴天髓.pdf` and `穷通宝鉴/窮通寶鑒.pdf` were registered as source-library
+metadata, promoted through 013 as weak locator-backed candidates, and added to
+012 as `bazi_general_ditiansui_pattern_strength_001` and
+`bazi_general_qiongtong_useful_god_001`. These are review-note-quality source
+preparation anchors; later page-level transcription is required before exact
+classical wording or quotation.
+
+## Authorization Audit Packet
+
+The 2026-06-27 authorization audit packet is a read-only local clearance check
+for choosing the next explicit downstream action. It does not authorize any
+candidate, review, promotion, or formal-evidence mutation by itself.
+
+- `authorization-status=ready_for_explicit_downstream_authorization`
+- `downstream-mutation-authorized=false`
+- `017-notes-closed=31`
+- `017-next-action-ids=0`
+- `017-applied-decisions=45`
+- `013-candidate-extracts=54`
+- `013-review-decisions=54`
+- `013-promotion-batches=34`
+- `012-formal-evidence-units=111`
+- `formal_evidence_delta=0`
+- `012-boundary-leakage=0`
+- `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
+
+Clearance checks are all passed: 017 notes are closed, 017 has no active
+`next_action_ids`, all 017 decisions are applied, 013 candidate/review/promotion
+counts are aligned, 012 formal evidence has no boundary leakage, and any
+downstream mutation still requires an explicit user request.
+
+## Explicit Downstream Authorization Receipt
+
+The 2026-06-30 user authorization for 013/012 downstream work has been recorded.
+All 017 candidate-intake decisions were already applied before this receipt, so
+the authorization is consumed without duplicate downstream writes.
+
+- Authorization id: `013-012-explicit-downstream-authorization`
+- `downstream-authorization-status=downstream_authorization_consumed`
+- `authorization-receipts=1`
+- `authorization-scope=013_012_downstream`
+- `audit-authorization-status=ready_for_explicit_downstream_authorization`
+- `pending-017-decisions=0`
+- `017-applied-decisions=45`
+- `013-candidate-extracts=54`
+- `013-review-decisions=54`
+- `013-promotion-batches=34`
+- `012-formal-evidence-units=111`
+- `candidate-extract-delta=0`
+- `review-decision-delta=0`
+- `promotion-batch-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=true`
+- `next-downstream-entry=015-new-material-intake`
+
+Boundary checks are all passed: the explicit authorization receipt is loaded,
+the 017 authorization audit is ready, no 017 decisions remain pending, current
+013 candidate/review counts are aligned, 012 boundary leakage is zero, and no
+duplicate downstream delta is recorded.
+
+## 017 New Material Corrected Pilot Learning Entry Evaluation
+
+The 2026-06-30 corrected pilot for `下海算命记.pdf` is now registered as a
+learning-entry evaluation item. It is eligible for a 017 learning-note prep
+stage, but it is not candidate intake and does not write 013/012 records.
+
+- Evaluation id: `017-new-material-corrected-pilot-learning-entry-evaluation`
+- `new-material-corrected-pilot-learning-entry-evaluation-status=ready_for_learning_note_prep`
+- `learning-entry-evaluation-items=1`
+- `prepared-text-artifacts=1`
+- `corrected-excerpts=4`
+- `corrected-characters=35`
+- `page-locators=4`
+- `learning-note-allowed=1`
+- `candidate-intake-allowed=0`
+- `duplicate-overlap-review-required=1`
+- `risk-boundary-review-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-corrected-pilot-learning-note-prep`
+
+Learning entry evaluation item ids:
+- `new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf`
+
+Prepared text artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `evaluation_items_loaded`: `passed`
+- `previous_corrected_pilot_ready`: `passed`
+- `prepared_text_artifact_exists`: `passed`
+- `learning_note_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `duplicate_overlap_review_required`: `passed`
+- `risk_boundary_review_required`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Use the corrected pilot only for learning-note preparation.
+- Run overlap review before any candidate-intake decision.
+- Run risk-boundary review before expanding the prepared-text artifact.
+- Keep 013 and 012 writes out of this evaluation stage.
+
+## 017 New Material Machine Disposition Learning Gate
+
+- Gate id: `017-new-material-machine-disposition-learning-gate`
+- `new-material-machine-disposition-learning-gate-status=machine_usable_sources_routed_to_017`
+- `machine-text-usable=1`
+- `machine-unusable-closed=1`
+- `017-learning-entry-sources=1`
+- `017-machine-usable-entry-sources=1`
+- `017-closed-source-entry-count=0`
+- `missing-017-learning-entry-count=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-corrected-pilot-learning-note-prep`
+
+Machine-text-usable source entry ids:
+- `entry_new_material_xiahai_suanmingji_pdf`
+
+Machine-unusable closed source entry ids:
+- `entry_new_material_bazi_suanming_cangjue_pdf`
+
+017 learning entry source entry ids:
+- `entry_new_material_xiahai_suanmingji_pdf`
+
+Excluded closed source entry ids:
+- `entry_new_material_bazi_suanming_cangjue_pdf`
+
+Boundary checks:
+- `machine_disposition_completed`: `passed`
+- `machine_text_usable_sources_have_017_entry`: `passed`
+- `machine_unusable_closed_sources_excluded`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Only machine-text-usable new material may continue into 017 learning entry evaluation.
+- Machine-unusable closed sources stay outside learning notes, candidate intake, and formal evidence.
+- Candidate intake remains blocked until a later explicit downstream gate opens it.
+- No human-correction work is requested by this gate.
+
+## 017 New Material Corrected Pilot Learning Note Prep
+
+The corrected pilot now has a bounded 017 learning-note prep packet. The packet
+proposes one learning-note draft surface for `下海算命记.pdf`, keeps candidate
+intake blocked, and does not add 013/012 records.
+
+- Prep id: `017-new-material-corrected-pilot-learning-note-prep`
+- `new-material-corrected-pilot-learning-note-prep-status=ready_for_learning_note_draft`
+- `learning-note-prep-items=1`
+- `proposed-learning-notes=1`
+- `proposed-learning-points=1`
+- `prepared-text-artifacts=1`
+- `corrected-excerpts=4`
+- `corrected-characters=35`
+- `page-locators=4`
+- `learning-note-draft-allowed=1`
+- `candidate-intake-allowed=0`
+- `overlap-review-required=1`
+- `risk-boundary-review-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-corrected-pilot-learning-note-draft`
+
+Learning note prep item ids:
+- `new_material_corrected_pilot_learning_note_prep_xiahai_suanmingji_pdf`
+
+Proposed learning note ids:
+- `note_xiahai_suanmingji_corrected_pilot_001`
+
+Prepared text artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Target rule families:
+- `high_risk_signal`: `1`
+
+Boundary checks:
+- `learning_note_prep_items_loaded`: `passed`
+- `previous_entry_evaluation_ready`: `passed`
+- `prepared_text_artifact_exists`: `passed`
+- `learning_note_draft_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `overlap_review_required`: `passed`
+- `risk_boundary_review_required`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Draft the learning note from bounded pilot metadata only.
+- Keep candidate intake blocked until overlap and risk checks are resolved.
+- Do not add 013 or 012 records from the prep packet.
+- Do not expand the prepared-text artifact during note prep.
+
+## 017 New Material Corrected Pilot Learning Note Draft
+
+The corrected pilot now has one concise 017 learning-note draft. It captures one
+pilot-level boundary learning point, keeps candidate intake blocked, and routes
+the item to a completion review rather than downstream records.
+
+- Draft id: `017-new-material-corrected-pilot-learning-note-draft`
+- `new-material-corrected-pilot-learning-note-draft-status=ready_for_learning_completion_review`
+- `learning-note-draft-items=1`
+- `learning-notes=1`
+- `learning-points=1`
+- `candidate-intake-allowed=0`
+- `completion-review-allowed=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-corrected-pilot-learning-completion-review`
+
+Learning note draft item ids:
+- `new_material_corrected_pilot_learning_note_draft_xiahai_suanmingji_pdf`
+
+Learning note ids:
+- `note_xiahai_suanmingji_corrected_pilot_001`
+
+Learning point ids:
+- `lp_xiahai_suanmingji_pilot_boundary_001`
+
+Target rule families:
+- `high_risk_signal`: `1`
+
+Risk tiers:
+- `high_risk`: `1`
+
+Boundary checks:
+- `learning_note_draft_items_loaded`: `passed`
+- `previous_note_prep_ready`: `passed`
+- `learning_note_ids_prepared`: `passed`
+- `completion_review_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The draft is a concise pilot learning note only.
+- Candidate intake remains blocked by limited corrected context.
+- Completion review must decide whether to stop or request more correction.
+- No 013 or 012 records are created by the draft stage.
+
+## 017 New Material Corrected Pilot Learning Completion Review
+
+The current pilot learning task is closed at 017. The corrected pilot is useful
+as a learning boundary note, but it is too small for candidate intake or 012
+work. The next material action is bounded additional correction selection.
+
+- Completion id: `017-new-material-corrected-pilot-learning-completion-review`
+- `new-material-corrected-pilot-learning-completion-review-status=current_pilot_learning_completed_candidate_intake_blocked`
+- `learning-completion-review-items=1`
+- `learning-notes-closed=1`
+- `candidate-intake-allowed=0`
+- `additional-correction-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-new-material-expanded-corrected-transcription-selection`
+
+Learning completion review item ids:
+- `new_material_corrected_pilot_learning_completion_review_xiahai_suanmingji_pdf`
+
+Learning note ids:
+- `note_xiahai_suanmingji_corrected_pilot_001`
+
+Learning point ids:
+- `lp_xiahai_suanmingji_pilot_boundary_001`
+
+Boundary checks:
+- `completion_review_items_loaded`: `passed`
+- `previous_note_draft_ready`: `passed`
+- `learning_note_closed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `additional_correction_routed`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The current pilot learning task is closed at 017 only.
+- Candidate intake remains blocked until more corrected context exists.
+- The next material action is additional bounded correction selection.
+- No 013 or 012 records are created by this completion review.
+
+## 017 New Material Expanded Corrected Learning Entry Evaluation
+
+The expanded corrected anchor artifact is ready for a bounded 017 learning note.
+It remains outside candidate intake and keeps overlap and risk-boundary checks
+explicit before any downstream action.
+
+- Evaluation id: `017-new-material-expanded-corrected-learning-entry-evaluation`
+- `new-material-expanded-corrected-learning-entry-evaluation-status=ready_for_expanded_learning_note_prep`
+- `expanded-learning-entry-evaluation-items=1`
+- `prepared-text-artifacts=1`
+- `corrected-excerpts=3`
+- `corrected-characters=27`
+- `page-locators=4`
+- `learning-note-allowed=1`
+- `candidate-intake-allowed=0`
+- `duplicate-overlap-review-required=1`
+- `risk-boundary-review-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-expanded-corrected-learning-note-prep`
+
+Expanded learning entry evaluation item ids:
+- `new_material_expanded_corrected_learning_entry_xiahai_suanmingji_pdf`
+
+Expanded transcription execution item ids:
+- `new_material_expanded_corrected_transcription_execution_xiahai_suanmingji_pdf`
+
+Prepared text artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Boundary checks:
+- `expanded_learning_entry_evaluation_items_loaded`: `passed`
+- `previous_expanded_corrected_artifact_ready`: `passed`
+- `prepared_text_artifact_exists`: `passed`
+- `learning_note_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `duplicate_overlap_review_required`: `passed`
+- `risk_boundary_review_required`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Use the expanded corrected artifact only for learning-note preparation.
+- Run overlap review before any candidate-intake decision.
+- Run risk-boundary review before broadening case discussion.
+- Keep 013 and 012 writes out of this evaluation stage.
+
+## 017 New Material Expanded Corrected Learning Note Prep
+
+- Prep id: `017-new-material-expanded-corrected-learning-note-prep`
+- `new-material-expanded-corrected-learning-note-prep-status=ready_for_expanded_learning_note_draft`
+- `expanded-learning-note-prep-items=1`
+- `proposed-learning-notes=1`
+- `proposed-learning-points=1`
+- `prepared-text-artifacts=1`
+- `corrected-excerpts=3`
+- `corrected-characters=27`
+- `page-locators=4`
+- `learning-note-draft-allowed=1`
+- `candidate-intake-allowed=0`
+- `overlap-review-required=1`
+- `risk-boundary-review-required=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-expanded-corrected-learning-note-draft`
+
+Expanded learning note prep item ids:
+- `new_material_expanded_corrected_learning_note_prep_xiahai_suanmingji_pdf`
+
+Proposed learning note ids:
+- `note_xiahai_suanmingji_expanded_corrected_001`
+
+Prepared text artifacts:
+- `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
+
+Local references:
+- `下海算命记.pdf`
+
+Target rule families:
+- `high_risk_signal`: `1`
+
+Boundary checks:
+- `expanded_learning_note_prep_items_loaded`: `passed`
+- `previous_expanded_entry_evaluation_ready`: `passed`
+- `prepared_text_artifact_exists`: `passed`
+- `learning_note_draft_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `overlap_review_required`: `passed`
+- `risk_boundary_review_required`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Draft the expanded learning note from bounded corrected anchors only.
+- Keep candidate intake blocked until broader corrected context exists.
+- Do not add 013 or 012 records from the prep packet.
+- Do not expand the prepared-text artifact during note prep.
+
+## 017 New Material Expanded Corrected Learning Note Draft
+
+- Draft id: `017-new-material-expanded-corrected-learning-note-draft`
+- `new-material-expanded-corrected-learning-note-draft-status=ready_for_expanded_learning_completion_review`
+- `expanded-learning-note-draft-items=1`
+- `learning-notes=1`
+- `learning-points=1`
+- `candidate-intake-allowed=0`
+- `completion-review-allowed=1`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-expanded-corrected-learning-completion-review`
+
+Expanded learning note draft item ids:
+- `new_material_expanded_corrected_learning_note_draft_xiahai_suanmingji_pdf`
+
+Learning note ids:
+- `note_xiahai_suanmingji_expanded_corrected_001`
+
+Learning point ids:
+- `lp_xiahai_suanmingji_expanded_boundary_001`
+
+Target rule families:
+- `high_risk_signal`: `1`
+
+Risk tiers:
+- `high_risk`: `1`
+
+Boundary checks:
+- `expanded_learning_note_draft_items_loaded`: `passed`
+- `previous_expanded_note_prep_ready`: `passed`
+- `learning_note_ids_prepared`: `passed`
+- `completion_review_allowed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The draft is a concise expanded learning note only.
+- Candidate intake remains blocked by limited corrected context.
+- Completion review must decide whether to stop or request more correction.
+- No 013 or 012 records are created by the draft stage.
+
+## 017 New Material Expanded Corrected Learning Completion Review
+
+- Completion id: `017-new-material-expanded-corrected-learning-completion-review`
+- `new-material-expanded-corrected-learning-completion-review-status=expanded_corrected_learning_loop_closed_candidate_intake_blocked`
+- `expanded-learning-completion-review-items=1`
+- `learning-notes-closed=1`
+- `candidate-intake-allowed=0`
+- `additional-correction-required=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=015-external-material-inventory-refresh`
+
+Expanded learning completion review item ids:
+- `new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf`
+
+Learning note ids:
+- `note_xiahai_suanmingji_expanded_corrected_001`
+
+Learning point ids:
+- `lp_xiahai_suanmingji_expanded_boundary_001`
+
+Boundary checks:
+- `completion_review_items_loaded`: `passed`
+- `previous_note_draft_ready`: `passed`
+- `learning_note_closed`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `expanded_learning_loop_closed`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- The expanded corrected learning loop is closed at 017 only.
+- Candidate intake remains blocked after this new-material loop.
+- The three corrected anchors are sufficient; the page-72 locator is optional precision work.
+- The next new-material entry waits for external inventory refresh.
+- No 013 or 012 records are created by this completion review.
+
+## New Material Goal Completion State
+
+- `new-material-goal-status=completed_no_new_external_materials_pending_final_archive`
+- `new-material-sources-registered=2`
+- `machine-text-usable=1`
+- `machine-unusable-closed=1`
+- `017-learning-entry-sources=1`
+- `closed-source-learning-entry-count=0`
+- `external-inventory-status=scoped_metadata_registered`
+- `untracked-material-entries=0`
+- `new-material-pending-sources=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `next-new-material-start=final-archive-ready`
+- Completed machine-usable source: `entry_new_material_xiahai_suanmingji_pdf`.
+- Closed machine-unusable source: `entry_new_material_bazi_suanming_cangjue_pdf`.
+- Archive state: `final-archive-ready`.
 
 ## Phase C Source Disposition Snapshot
 
-The current 016/017 package consumes 14 selected extraction tasks as learning
-reference notes and preserves 6 prerequisite backlog records as action notes.
+The current 016/017 state consumes 23 selected extraction tasks as learning
+reference notes and preserves 7 prerequisite backlog records as action notes.
 
-- 14 ready items are 016 extraction tasks and 017 learning reference notes:
-  five root-PDF learning notes, three Markdown batch learning notes, and six
-  knowledge-skeleton learning notes.
-- Those notes contain 34 learning points and 28 candidate-intake decisions.
-  One decision reuses an existing candidate, 27 are create-candidate decisions,
-  and 28 decisions have `status=applied`.
-- 6 non-ready items remain prerequisite action notes: Blind Life Manual,
+- 23 ready items are 016 extraction tasks and 017 learning reference notes:
+  five root-PDF learning notes, three Markdown batch learning notes, six
+  knowledge-skeleton learning notes, three Bazi general preparation-reading
+  notes, two Liang individual-review duplicate notes, two selected Bazi
+  general variant notes, and two gated ordinary final notes.
+- Those notes contain 51 learning points and 45 candidate-intake decisions.
+  Three decisions reuse existing candidates, 42 are create-candidate decisions,
+  and all 45 decisions have `status=applied`.
+- 7 non-ready items remain prerequisite action notes: Blind Life Manual,
   Blind School Secret, Markdown Batch 003, Immortal Fortune Jianghu Secret,
-  Life Death Book 100 Pages, and Source Processing Status.
+  Life Death Book 100 Pages, Source Processing Status, and Markdown Batch 005.
 
 Ready materials are learning-reference inputs, and non-ready materials remain
 prerequisite work until a future workflow resolves their blockers.
@@ -198,3 +802,18 @@ Quick validation command:
 ```powershell
 $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.learning_reference_curation import build_learning_reference_progress_summary, validate_learning_reference_quality; print(build_learning_reference_progress_summary()); print(validate_learning_reference_quality())"
 ```
+
+## Gated Ordinary Source Selection Notes
+
+- `note_bazi_general_mingzao_chunqiu_luck_cycle_001` and `note_bazi_general_sizhu_yuce_yaojue_pattern_strength_001` are applied weak-locator learning notes from the 015 gated ordinary source-selection pass.
+- `decision_bazi_general_mingzao_chunqiu_luck_cycle_001` and `decision_bazi_general_sizhu_yuce_yaojue_pattern_strength_001` were applied into promoted 013 candidates and matching 012 evidence units under explicit user authorization.
+
+## Gated Ordinary Followup Selection Notes
+
+- `note_bazi_general_bazi_baijue_ten_god_001` and `note_bazi_general_mingli_mijue_branch_interaction_001` are applied weak-locator learning notes from the 015 gated ordinary followup selection pass.
+- `decision_bazi_general_bazi_baijue_ten_god_001` and `decision_bazi_general_mingli_mijue_branch_interaction_001` were applied into promoted 013 candidates and matching 012 evidence units under explicit user authorization.
+
+## Gated Ordinary Final Selection Notes
+
+- `note_bazi_general_choujin_bosi_branch_interaction_001` and `note_bazi_general_bazi_shizhan_mifa_luck_cycle_001` are applied weak-locator learning notes from the 015 gated ordinary final selection pass.
+- `decision_bazi_general_choujin_bosi_branch_interaction_001` and `decision_bazi_general_bazi_shizhan_mifa_luck_cycle_001` were applied into promoted 013 candidates and matching 012 evidence units under explicit user authorization.

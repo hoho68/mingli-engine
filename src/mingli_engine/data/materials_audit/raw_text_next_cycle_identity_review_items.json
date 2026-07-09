@@ -1,0 +1,59 @@
+[
+  {
+    "review_id": "next_cycle_identity_bazi_modern_method_series",
+    "source_selection_id": "next_cycle_bazi_modern_method_series",
+    "cluster_id": "bazi_general_modern_method_series_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "canonical_cluster_label": "Bazi General Modern Method Series Cluster",
+    "identity_status": "cluster_source_selection_required",
+    "source_library_overlap_status": "no_registered_cluster_overlap_found",
+    "registration_readiness": "needs_cluster_source_selection",
+    "recommended_next_action": "clarify_identity",
+    "next_review_target": "015-raw-text-next-cycle-cluster-source-selection",
+    "risk_boundary": "ordinary",
+    "file_count": 39,
+    "priority_text_candidate_count": 39,
+    "matched_source_library_entry_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "identity_review_note": "Modern method series labels are too fragmented for direct source registration.",
+    "rationale": "Cluster-level identity is ordinary but still requires source-level selection before registration prep.",
+    "guardrails": [
+      "Use only inventory labels and prior source-selection metadata.",
+      "Do not register or read files until source-level selection exists."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "review_id": "next_cycle_identity_bazi_misc_review",
+    "source_selection_id": "next_cycle_bazi_misc_identity_review",
+    "cluster_id": "bazi_general_misc_identity_review_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "canonical_cluster_label": "Bazi General Miscellaneous Identity Review Cluster",
+    "identity_status": "cluster_source_selection_required",
+    "source_library_overlap_status": "no_registered_cluster_overlap_found",
+    "registration_readiness": "needs_cluster_source_selection",
+    "recommended_next_action": "clarify_identity",
+    "next_review_target": "015-raw-text-next-cycle-cluster-source-selection",
+    "risk_boundary": "ordinary",
+    "file_count": 36,
+    "priority_text_candidate_count": 36,
+    "matched_source_library_entry_ids": [],
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "identity_review_note": "Miscellaneous weak-title labels need source-level selection before registration prep.",
+    "rationale": "The cluster is ordinary but mixed, so no single source identity is ready for registration.",
+    "guardrails": [
+      "Do not infer domain fit from weak or mixed titles.",
+      "Keep case, formula, and sensitive clusters outside this review."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  }
+]

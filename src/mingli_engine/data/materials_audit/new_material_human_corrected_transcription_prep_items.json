@@ -1,0 +1,47 @@
+[
+  {
+    "prep_item_id": "new_material_human_corrected_transcription_prep_xiahai_suanmingji_pdf",
+    "prep_id": "015-new-material-human-corrected-transcription-prep",
+    "ocr_quality_remediation_item_id": "new_material_ocr_quality_remediation_xiahai_suanmingji_pdf",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "prep_status": "blocked_ready_for_human_correction",
+    "local_reference": "下海算命记.pdf",
+    "page_count": 84,
+    "correction_packet_ready": true,
+    "selected_page_ranges": [
+      "full_source_pages_1_84",
+      "pilot_vertical_ocr_pages_20_35_50_70"
+    ],
+    "layout_profile": "traditional_chinese_vertical_two_page_scan",
+    "assistive_ocr_method": "400dpi_split_pages_remove_watermark_chi_tra_vert_psm5",
+    "draft_source_policy": "Temporary OCR drafts may aid correction but must not be committed before review.",
+    "planned_output_artifact": "docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md",
+    "validation_requirements": [
+      "Corrected text must be checked against page images before commit.",
+      "Each corrected segment must keep page or page-range locator metadata.",
+      "Uncorrected OCR drafts and temporary crops must remain outside the repository.",
+      "Learning notes and candidate intake wait until corrected prepared text exists."
+    ],
+    "uncorrected_ocr_committed": false,
+    "prepared_text_artifact_created": false,
+    "human_corrected_text_available": false,
+    "blocker_reason": "Correction packet is ready, but human-corrected prepared text has not been produced yet.",
+    "selected_next_material_entry": "015-new-material-human-corrected-transcription-execution",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "The verified vertical OCR route can support correction, but only reviewed text can become prepared material.",
+    "guardrails": [
+      "Do not commit uncorrected OCR drafts or temporary page crops.",
+      "Do not create learning notes, 013 candidates, or 012 units from the correction packet.",
+      "Create the planned prepared-text artifact only after human correction.",
+      "Keep the original PDF unmoved and unchanged."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  }
+]

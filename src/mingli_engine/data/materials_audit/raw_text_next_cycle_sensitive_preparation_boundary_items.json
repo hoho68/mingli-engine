@@ -1,0 +1,40 @@
+[
+  {
+    "boundary_item_id": "sensitive_preparation_boundary_bazi_psychology_pdf",
+    "source_registration_item_id": "sensitive_source_registration_bazi_psychology_pdf",
+    "source_library_entry_id": "entry_bazi_general_bazi_psychology_pdf",
+    "source_material_id": "material_bazi_general_bazi_psychology_pdf",
+    "boundary_status": "cleared_for_sensitive_preparation",
+    "risk_boundary": "sensitive",
+    "recommended_next_action": "prepare_material",
+    "local_references": [
+      "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf"
+    ],
+    "file_count": 1,
+    "preparation_allowed": true,
+    "reading_allowed": false,
+    "downstream_mutation_authorized": false,
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "preparation_topics": [
+      "metadata-only preparation",
+      "non-deterministic personality framing",
+      "sensitive reading boundary"
+    ],
+    "risk_controls": [
+      "Avoid clinical or therapeutic claims.",
+      "Avoid fixed personality or relationship claims.",
+      "Do not create candidate or evidence records before later authorization."
+    ],
+    "boundary_decision": "Cleared for a later sensitive preparation stage only; reading, candidate intake, and evidence use remain gated.",
+    "rationale": "The registered source-library entry is sensitive and needs a preparation boundary before any reading or extraction work.",
+    "guardrails": [
+      "Do not read or parse the raw PDF in this boundary stage.",
+      "Prepare only metadata and later safe-reading constraints.",
+      "Keep 013 candidates and 012 evidence out of scope."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  }
+]

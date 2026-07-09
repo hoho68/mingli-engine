@@ -1,0 +1,27 @@
+[
+  {
+    "routing_item_id": "explicit_candidate_review_or_queue_refresh_001",
+    "routing_entry_id": "013-explicit-candidate-review-or-015-queue-refresh",
+    "sensitive_reading_item_id": "sensitive_preparation_reading_bazi_psychology_pdf",
+    "authorization_audit_id": "017-candidate-formal-evidence-authorization-audit",
+    "queue_refresh_id": "015-materials-audit-next-action-queue-refresh",
+    "routing_status": "routed_to_015_queue_refresh",
+    "authorization_status": "ready_for_explicit_downstream_authorization",
+    "queue_refresh_status": "covered_or_completed_queue_exhausted",
+    "selected_next_material_entry": "015-external-material-inventory-refresh",
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "Authorization audit is ready, but this routing stage does not authorize downstream mutation; continue with 015 queue refresh output.",
+    "guardrails": [
+      "Do not create 013 candidates in this routing stage.",
+      "Do not create review decisions or promotion batches in this routing stage.",
+      "Do not create 012 formal evidence in this routing stage.",
+      "Continue from the selected 015 material entry unless explicit downstream authorization is requested."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  }
+]

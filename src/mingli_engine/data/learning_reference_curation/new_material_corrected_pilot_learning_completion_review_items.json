@@ -1,0 +1,32 @@
+[
+  {
+    "completion_item_id": "new_material_corrected_pilot_learning_completion_review_xiahai_suanmingji_pdf",
+    "completion_id": "017-new-material-corrected-pilot-learning-completion-review",
+    "draft_item_id": "new_material_corrected_pilot_learning_note_draft_xiahai_suanmingji_pdf",
+    "note_id": "note_xiahai_suanmingji_corrected_pilot_001",
+    "learning_point_id": "lp_xiahai_suanmingji_pilot_boundary_001",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "prepared_text_artifact": "docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md",
+    "local_reference": "下海算命记.pdf",
+    "completion_status": "current_pilot_learning_completed_candidate_intake_blocked",
+    "learning_note_closed": true,
+    "candidate_intake_allowed": false,
+    "additional_correction_required": true,
+    "downstream_mutation_authorized": false,
+    "next_material_entry": "015-new-material-expanded-corrected-transcription-selection",
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "The current pilot learning task is closed, but candidate intake remains blocked until broader corrected context is selected.",
+    "guardrails": [
+      "Keep this closure at the 017 learning layer.",
+      "Do not add 013 or 012 records from the pilot closure.",
+      "Select bounded additional correction before candidate intake.",
+      "Keep external materials unchanged."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  }
+]

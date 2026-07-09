@@ -400,7 +400,7 @@ def test_load_source_library_entries_loads_current_registered_sources():
     entries = source_library.load_source_library_entries()
     by_id = {entry.entry_id: entry for entry in entries}
 
-    assert len(entries) == 14
+    assert len(entries) == 32
     assert set(by_id) == {
         "entry_northeast_blind_peak_pdf",
         "entry_duan_plain_mingxue_outline_pdf",
@@ -411,6 +411,24 @@ def test_load_source_library_entries_loads_current_registered_sources():
         "entry_fortune_reading_hongfu_qitian_pdf",
         "entry_immortal_fortune_jianghu_secret_pdf",
         "entry_life_death_book_100_pages_pdf",
+        "entry_bazi_general_lecture_textbook_pdf",
+        "entry_bazi_general_beichen_intro_pdf",
+        "entry_bazi_general_ziping_orthodox_pair_pdf",
+        "entry_bazi_general_ditiansui_selected_pdf",
+        "entry_bazi_general_qiongtong_selected_pdf",
+        "entry_bazi_general_true_spirit_positioning_pdf",
+        "entry_bazi_general_mingli_wangdoujing_pdf",
+        "entry_bazi_general_xinpai_essence_part2_pdf",
+        "entry_bazi_general_xingming_shuozheng_vol1_pdf",
+        "entry_bazi_general_mingzao_chunqiu_case_pdf",
+        "entry_bazi_general_sizhu_yuce_yaojue_pdf",
+        "entry_bazi_general_bazi_baijue_case_pdf",
+        "entry_bazi_general_mingli_mijue_pdf",
+        "entry_bazi_general_choujin_bosi_case_pdf",
+        "entry_bazi_general_bazi_shizhan_mifa_pdf",
+        "entry_bazi_general_bazi_psychology_pdf",
+        "entry_new_material_xiahai_suanmingji_pdf",
+        "entry_new_material_bazi_suanming_cangjue_pdf",
         "entry_markdown_source_batch_001",
         "entry_markdown_source_batch_002_core",
         "entry_markdown_source_batch_004",
@@ -428,6 +446,182 @@ def test_load_source_library_entries_loads_current_registered_sources():
     )
     assert "blind_image_method" in by_id["entry_blind_life_manual_pdf"].rule_families
     assert by_id["entry_life_death_book_100_pages_pdf"].risk_tier == "high_risk"
+    assert by_id["entry_bazi_general_lecture_textbook_pdf"].material_id == (
+        "material_bazi_general_lecture_textbook_pdf"
+    )
+    assert by_id["entry_bazi_general_lecture_textbook_pdf"].readiness_status == (
+        "review_completed"
+    )
+    assert by_id["entry_bazi_general_ziping_orthodox_pair_pdf"].local_reference == (
+        "子平命理正宗电子版上.pdf; 子平命理正宗电子版下.pdf"
+    )
+    assert by_id["entry_bazi_general_ditiansui_selected_pdf"].material_id == (
+        "material_bazi_general_ditiansui_selected_pdf"
+    )
+    assert by_id["entry_bazi_general_ditiansui_selected_pdf"].local_reference == (
+        "滴天髓.pdf"
+    )
+    assert by_id["entry_bazi_general_ditiansui_selected_pdf"].readiness_status == (
+        "review_completed"
+    )
+    assert by_id["entry_bazi_general_ditiansui_selected_pdf"].next_action == (
+        "no_action"
+    )
+    assert by_id["entry_bazi_general_mingzao_chunqiu_case_pdf"].rule_families == [
+        "luck_cycle"
+    ]
+    assert by_id["entry_bazi_general_sizhu_yuce_yaojue_pdf"].rule_families == [
+        "pattern_strength"
+    ]
+    assert by_id["entry_bazi_general_bazi_baijue_case_pdf"].rule_families == [
+        "ten_god_relation"
+    ]
+    assert by_id["entry_bazi_general_mingli_mijue_pdf"].rule_families == [
+        "branch_interaction"
+    ]
+    assert by_id["entry_bazi_general_choujin_bosi_case_pdf"].rule_families == [
+        "branch_interaction"
+    ]
+    assert by_id["entry_bazi_general_bazi_shizhan_mifa_pdf"].rule_families == [
+        "luck_cycle"
+    ]
+    assert by_id["entry_bazi_general_bazi_psychology_pdf"].material_id == (
+        "material_bazi_general_bazi_psychology_pdf"
+    )
+    assert by_id["entry_bazi_general_bazi_psychology_pdf"].local_reference == (
+        "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf"
+    )
+    assert by_id["entry_bazi_general_bazi_psychology_pdf"].risk_tier == "sensitive"
+    assert by_id["entry_bazi_general_bazi_psychology_pdf"].readiness_status == (
+        "needs_preparation"
+    )
+    assert by_id["entry_bazi_general_bazi_psychology_pdf"].next_action == (
+        "prepare_material"
+    )
+    assert by_id["entry_bazi_general_bazi_psychology_pdf"].rule_families == [
+        "ten_god_relation"
+    ]
+    assert by_id["entry_new_material_xiahai_suanmingji_pdf"].material_id == (
+        "material_new_material_xiahai_suanmingji_pdf"
+    )
+    assert by_id["entry_new_material_xiahai_suanmingji_pdf"].local_reference == (
+        "下海算命记.pdf"
+    )
+    assert by_id["entry_new_material_xiahai_suanmingji_pdf"].readiness_status == (
+        "needs_preparation"
+    )
+    assert by_id["entry_new_material_xiahai_suanmingji_pdf"].next_action == (
+        "prepare_material"
+    )
+    assert by_id["entry_new_material_xiahai_suanmingji_pdf"].rule_families == [
+        "branch_interaction"
+    ]
+    assert by_id["entry_bazi_general_qiongtong_selected_pdf"].material_id == (
+        "material_bazi_general_qiongtong_selected_pdf"
+    )
+    assert by_id["entry_bazi_general_qiongtong_selected_pdf"].local_reference == (
+        "穷通宝鉴/窮通寶鑒.pdf"
+    )
+    assert by_id["entry_bazi_general_qiongtong_selected_pdf"].readiness_status == (
+        "review_completed"
+    )
+    assert by_id["entry_bazi_general_qiongtong_selected_pdf"].next_action == (
+        "no_action"
+    )
+    assert by_id["entry_bazi_general_true_spirit_positioning_pdf"].material_id == (
+        "material_bazi_general_true_spirit_positioning_pdf"
+    )
+    assert by_id["entry_bazi_general_true_spirit_positioning_pdf"].local_reference == (
+        "八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf"
+    )
+    assert by_id["entry_bazi_general_true_spirit_positioning_pdf"].readiness_status == (
+        "review_completed"
+    )
+    assert by_id["entry_bazi_general_true_spirit_positioning_pdf"].next_action == (
+        "no_action"
+    )
+    assert by_id["entry_bazi_general_mingli_wangdoujing_pdf"].material_id == (
+        "material_bazi_general_mingli_wangdoujing_pdf"
+    )
+    assert by_id["entry_bazi_general_mingli_wangdoujing_pdf"].local_reference == (
+        "1_命理望斗经(1).pdf"
+    )
+    assert by_id["entry_bazi_general_mingli_wangdoujing_pdf"].readiness_status == (
+        "review_completed"
+    )
+    assert by_id["entry_bazi_general_mingli_wangdoujing_pdf"].next_action == (
+        "no_action"
+    )
+    assert by_id["entry_bazi_general_xinpai_essence_part2_pdf"].material_id == (
+        "material_bazi_general_xinpai_essence_part2_pdf"
+    )
+    assert by_id["entry_bazi_general_xinpai_essence_part2_pdf"].local_reference == (
+        "佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf"
+    )
+    assert by_id["entry_bazi_general_xinpai_essence_part2_pdf"].readiness_status == (
+        "review_completed"
+    )
+    assert by_id["entry_bazi_general_xingming_shuozheng_vol1_pdf"].material_id == (
+        "material_bazi_general_xingming_shuozheng_vol1_pdf"
+    )
+    assert by_id["entry_bazi_general_xingming_shuozheng_vol1_pdf"].local_reference == (
+        "霍敏卿-星命说证正续合编上册.pdf"
+    )
+    assert by_id["entry_bazi_general_xingming_shuozheng_vol1_pdf"].readiness_status == (
+        "review_completed"
+    )
+
+
+def test_bazi_general_registered_entries_match_registration_prep_metadata():
+    from mingli_engine import materials_audit
+
+    prep_items = materials_audit.load_raw_text_source_registration_prep_items()
+    entries_by_id = {
+        entry.entry_id: entry for entry in source_library.load_source_library_entries()
+    }
+
+    for item in prep_items:
+        entry = entries_by_id[item.proposed_entry_id]
+        assert entry.material_id == item.proposed_material_id
+        assert entry.title == item.proposed_title
+        assert entry.material_type == item.proposed_material_type
+        assert entry.local_reference == "; ".join(item.proposed_local_references)
+        assert entry.tracking_status == item.proposed_tracking_status
+        assert entry.topic_tags == item.topic_tags
+        assert entry.rule_families == item.rule_families
+        assert entry.rights_notes == item.rights_notes
+        assert entry.risk_tier == item.risk_tier
+        assert entry.risk_notes == item.risk_notes
+        assert entry.priority_level in {"high", "medium"}
+        assert entry.readiness_status in {
+            item.proposed_readiness_status,
+            "ready_for_extraction",
+            "review_completed",
+        }
+        assert entry.next_action in {
+            item.proposed_next_action,
+            "extract_candidates",
+            "review_candidates",
+            "promote_approved",
+            "no_action",
+        }
+
+
+def test_bazi_general_registration_does_not_duplicate_gated_identity_records():
+    entries = source_library.load_source_library_entries()
+    entry_ids = [entry.entry_id for entry in entries]
+
+    assert entry_ids.count("entry_markdown_source_batch_001") == 1
+    for gated_fragment in (
+        "youran",
+        "tianma",
+        "huntian",
+    ):
+        assert not any(
+            entry_id.startswith("entry_bazi_general_")
+            and gated_fragment in entry_id
+            for entry_id in entry_ids
+        )
 
 
 def test_load_source_library_entries_rejects_duplicate_and_invalid_enums(tmp_path):
@@ -557,8 +751,93 @@ def test_load_source_priority_assessments_loads_default_assessments():
     assessments = source_library.load_source_priority_assessments()
     by_id = {assessment.assessment_id: assessment for assessment in assessments}
 
-    assert len(assessments) == 13
+    assert len(assessments) == 30
     assert "priority_blind_life_manual_001" in by_id
+    assert "priority_bazi_general_lecture_textbook_001" in by_id
+    assert "priority_new_material_bazi_suanming_cangjue_001" in by_id
+    assert by_id["priority_new_material_bazi_suanming_cangjue_001"].entry_id == (
+        "entry_new_material_bazi_suanming_cangjue_pdf"
+    )
+    assert "priority_bazi_general_ziping_orthodox_pair_001" in by_id
+    assert by_id["priority_bazi_general_ditiansui_selected_001"].entry_id == (
+        "entry_bazi_general_ditiansui_selected_pdf"
+    )
+    assert by_id["priority_bazi_general_qiongtong_selected_001"].entry_id == (
+        "entry_bazi_general_qiongtong_selected_pdf"
+    )
+    assert by_id["priority_bazi_general_true_spirit_positioning_001"].entry_id == (
+        "entry_bazi_general_true_spirit_positioning_pdf"
+    )
+    assert by_id["priority_bazi_general_true_spirit_positioning_001"].expected_value == (
+        "broadens_school_coverage"
+    )
+    assert by_id["priority_bazi_general_mingli_wangdoujing_001"].entry_id == (
+        "entry_bazi_general_mingli_wangdoujing_pdf"
+    )
+    assert by_id["priority_bazi_general_mingli_wangdoujing_001"].target_rule_families == [
+        "branch_interaction"
+    ]
+    assert by_id["priority_bazi_general_xinpai_essence_part2_001"].entry_id == (
+        "entry_bazi_general_xinpai_essence_part2_pdf"
+    )
+    assert by_id["priority_bazi_general_xinpai_essence_part2_001"].target_rule_families == [
+        "pattern_strength"
+    ]
+    assert by_id["priority_bazi_general_xingming_shuozheng_vol1_001"].entry_id == (
+        "entry_bazi_general_xingming_shuozheng_vol1_pdf"
+    )
+    assert by_id["priority_bazi_general_xingming_shuozheng_vol1_001"].target_rule_families == [
+        "branch_interaction"
+    ]
+    assert by_id["priority_bazi_general_mingzao_chunqiu_case_001"].entry_id == (
+        "entry_bazi_general_mingzao_chunqiu_case_pdf"
+    )
+    assert by_id["priority_bazi_general_mingzao_chunqiu_case_001"].target_rule_families == [
+        "luck_cycle"
+    ]
+    assert by_id["priority_bazi_general_sizhu_yuce_yaojue_001"].entry_id == (
+        "entry_bazi_general_sizhu_yuce_yaojue_pdf"
+    )
+    assert by_id["priority_bazi_general_sizhu_yuce_yaojue_001"].target_rule_families == [
+        "pattern_strength"
+    ]
+    assert by_id["priority_bazi_general_bazi_baijue_case_001"].entry_id == (
+        "entry_bazi_general_bazi_baijue_case_pdf"
+    )
+    assert by_id["priority_bazi_general_bazi_baijue_case_001"].target_rule_families == [
+        "ten_god_relation"
+    ]
+    assert by_id["priority_bazi_general_mingli_mijue_001"].entry_id == (
+        "entry_bazi_general_mingli_mijue_pdf"
+    )
+    assert by_id["priority_bazi_general_mingli_mijue_001"].target_rule_families == [
+        "branch_interaction"
+    ]
+    assert by_id["priority_bazi_general_choujin_bosi_case_001"].entry_id == (
+        "entry_bazi_general_choujin_bosi_case_pdf"
+    )
+    assert by_id["priority_bazi_general_choujin_bosi_case_001"].target_rule_families == [
+        "branch_interaction"
+    ]
+    assert by_id["priority_bazi_general_bazi_shizhan_mifa_001"].entry_id == (
+        "entry_bazi_general_bazi_shizhan_mifa_pdf"
+    )
+    assert by_id["priority_bazi_general_bazi_shizhan_mifa_001"].target_rule_families == [
+        "luck_cycle"
+    ]
+    assert by_id["priority_bazi_general_bazi_psychology_001"].entry_id == (
+        "entry_bazi_general_bazi_psychology_pdf"
+    )
+    assert by_id["priority_bazi_general_bazi_psychology_001"].target_rule_families == [
+        "ten_god_relation"
+    ]
+    assert by_id["priority_bazi_general_bazi_psychology_001"].risk_tier == "sensitive"
+    assert by_id["priority_new_material_xiahai_suanmingji_001"].entry_id == (
+        "entry_new_material_xiahai_suanmingji_pdf"
+    )
+    assert by_id[
+        "priority_new_material_xiahai_suanmingji_001"
+    ].target_rule_families == ["branch_interaction"]
     assert by_id["priority_blind_life_manual_001"].entry_id == (
         "entry_blind_life_manual_pdf"
     )

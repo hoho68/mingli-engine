@@ -74,23 +74,22 @@ $env:PYTHONPATH='src'; uv run python -c "from mingli_engine.source_library impor
 
 ## Current Registered Snapshot
 
-Computed with `build_source_library_progress_report()` after batch005 candidate
-repair:
+Computed with `build_source_library_progress_report()` after sensitive source registration:
 
-- Registered source entries: 14.
+- Registered source entries: 30.
 - Readiness: `ready_for_extraction=11`, `blocked=1`,
-  `needs_preparation=2`.
-- Priority: `high=7`, `medium=5`, `deferred=1`, `low=1`.
-- Risk tiers: `sensitive=8`, `ordinary=3`, `high_risk=3`.
+  `needs_preparation=3`, `review_completed=15`.
+- Priority: `high=22`, `medium=6`, `deferred=1`, `low=1`.
+- Risk tiers: `sensitive=9`, `ordinary=18`, `high_risk=3`.
 - High-risk entries:
   `entry_blind_life_manual_pdf`,
   `entry_immortal_fortune_jianghu_secret_pdf`, and
   `entry_life_death_book_100_pages_pdf`.
 - Rule-family coverage:
-  `pattern_strength=8`, `blind_image_method=6`,
-  `high_risk_signal=7`, `branch_interaction=6`,
-  `ten_god_relation=7`, `remedy_boundary=2`,
-  `useful_god_candidate=4`, `luck_cycle=5`, and
+  `pattern_strength=14`, `blind_image_method=6`,
+  `high_risk_signal=7`, `branch_interaction=11`,
+  `ten_god_relation=10`, `remedy_boundary=2`,
+  `useful_god_candidate=9`, `luck_cycle=7`, and
   `five_element_balance=1`.
 - Next source candidates:
   `entry_northeast_blind_peak_pdf`,
@@ -126,17 +125,17 @@ effort, and risk tier before they can guide extraction planning.
 ## Source Value Snapshot
 
 Computed with `build_source_library_progress_report()`,
-`build_source_value_summary()`, and `build_batch_value_summary()` after 017
-candidate application:
+`build_source_value_summary()`, and `build_batch_value_summary()` after selected
+variant registration prep:
 
 - Value status counts:
-  `value_produced=11`, `blocked=1`, `in_progress=1`, and `not_started=1`.
+  `value_produced=17`, `blocked=1`, and `not_started=1`.
 - `entry_life_death_book_100_pages_pdf`: `candidate_count=1`,
   `approved_candidate_count=1`, `conflict_count=1`, `gap_count=0`,
   `promoted_evidence_count=1`, `value_status=value_produced`.
 - `entry_blind_life_manual_pdf`: `candidate_count=1`,
-  `approved_candidate_count=0`, `conflict_count=0`, `gap_count=1`,
-  `promoted_evidence_count=0`, `value_status=in_progress`.
+  `approved_candidate_count=1`, `conflict_count=1`, `gap_count=1`,
+  `promoted_evidence_count=1`, `value_status=value_produced`.
 - `entry_northeast_blind_peak_pdf`: `candidate_count=2`,
   `approved_candidate_count=1`, `rejected_or_blocked_count=1`,
   `promoted_evidence_count=1`, `value_status=value_produced`.
@@ -170,6 +169,24 @@ candidate application:
   `value_status=value_produced`.
 - `entry_knowledge_skeleton`: `candidate_count=11`,
   `approved_candidate_count=11`, `promoted_evidence_count=0`,
+  `value_status=value_produced`.
+- `entry_bazi_general_ditiansui_selected_pdf`: `candidate_count=1`,
+  `approved_candidate_count=1`, `promoted_evidence_count=2`,
+  `value_status=value_produced`.
+- `entry_bazi_general_qiongtong_selected_pdf`: `candidate_count=1`,
+  `approved_candidate_count=1`, `promoted_evidence_count=2`,
+  `value_status=value_produced`.
+- `entry_bazi_general_true_spirit_positioning_pdf`: `candidate_count=1`,
+  `approved_candidate_count=1`, `promoted_evidence_count=1`,
+  `value_status=value_produced`.
+- `entry_bazi_general_mingli_wangdoujing_pdf`: `candidate_count=1`,
+  `approved_candidate_count=1`, `promoted_evidence_count=1`,
+  `value_status=value_produced`.
+- `entry_bazi_general_xinpai_essence_part2_pdf`: `candidate_count=1`,
+  `approved_candidate_count=1`, `promoted_evidence_count=1`,
+  `value_status=value_produced`.
+- `entry_bazi_general_xingming_shuozheng_vol1_pdf`: `candidate_count=1`,
+  `approved_candidate_count=1`, `promoted_evidence_count=1`,
   `value_status=value_produced`.
 - `batch_plan_high_risk_boundaries_001`: `candidate_count=2`,
   `approved_candidate_count=1`, `conflict_count=1`, `gap_count=1`,
@@ -211,6 +228,23 @@ level, so the next queue remains reviewable and stable.
   Jianghu-style material requiring safety review.
 - `entry_life_death_book_100_pages_pdf`: ready for extraction; high-risk
   life-death material usable only as bounded traditional signal input.
+- `entry_bazi_general_ditiansui_selected_pdf`: review completed; selected
+  Ditiansui canonical variant stored as weak locator-backed source metadata.
+- `entry_bazi_general_qiongtong_selected_pdf`: review completed; selected
+  Qiongtong Baojian canonical variant stored as weak locator-backed source
+  metadata.
+- `entry_bazi_general_true_spirit_positioning_pdf`: review completed; bounded
+  next-cycle modern-method source stored as weak locator-backed source
+  metadata.
+- `entry_bazi_general_mingli_wangdoujing_pdf`: review completed; bounded
+  next-cycle miscellaneous source stored as weak locator-backed source
+  metadata.
+- `entry_bazi_general_xinpai_essence_part2_pdf`: review completed; bounded
+  next-cycle followup modern-method source stored as weak locator-backed
+  source metadata.
+- `entry_bazi_general_xingming_shuozheng_vol1_pdf`: review completed;
+  bounded next-cycle followup miscellaneous source stored as weak
+  locator-backed source metadata.
 
 ## US1 Review Notes
 
@@ -220,3 +254,7 @@ level, so the next queue remains reviewable and stable.
   notes, priority, risk tier, and next action.
 - Blocked or deferred source outcomes must keep durable reasons so maintainers
   do not repeat unsafe or unclear work.
+
+- `entry_bazi_general_choujin_bosi_case_pdf`: review completed; bounded final case-method source stored as weak locator-backed source metadata.
+- `entry_bazi_general_bazi_shizhan_mifa_pdf`: review completed; bounded final practical-formula source stored as weak locator-backed source metadata.
+- `entry_bazi_general_bazi_psychology_pdf`: needs preparation; sensitive psychology-labeled source registered with non-diagnostic guardrails.

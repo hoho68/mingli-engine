@@ -653,6 +653,304 @@ def test_seeded_extraction_queue_includes_duan_ready_learning_package():
     assert extraction_queue_intake.validate_extraction_package_quality() == []
 
 
+def test_bazi_general_source_preparation_reading_has_completed_extraction_package():
+    packages = extraction_queue_intake.load_extraction_work_packages()
+    tasks = extraction_queue_intake.load_extraction_tasks()
+    slots = extraction_queue_intake.load_candidate_draft_slots()
+
+    packages_by_id = {package.package_id: package for package in packages}
+    tasks_by_id = {task.task_id: task for task in tasks}
+    slots_by_id = {slot.draft_slot_id: slot for slot in slots}
+
+    package = packages_by_id["package_bazi_general_source_preparation_reading_001"]
+    expected_tasks = [
+        "task_bazi_general_lecture_pattern_strength_001",
+        "task_bazi_general_beichen_branch_interaction_001",
+        "task_bazi_general_ziping_useful_god_001",
+    ]
+    assert package.status == "completed"
+    assert package.source_queue_snapshot_ids == [
+        "queue_bazi_general_lecture_textbook_extract",
+        "queue_bazi_general_beichen_intro_extract",
+        "queue_bazi_general_ziping_orthodox_pair_extract",
+    ]
+    assert package.selected_task_ids == expected_tasks
+    assert package.backlog_record_ids == []
+
+    for task_id in expected_tasks:
+        task = tasks_by_id[task_id]
+        assert task.package_id == package.package_id
+        assert task.status == "completed"
+        assert task.risk_boundary == "ordinary"
+        assert task.locator_requirement == "page_or_section"
+        assert task.overlap_warnings == []
+
+    assert tasks_by_id["task_bazi_general_lecture_pattern_strength_001"].queue_item_id == (
+        "queue_bazi_general_lecture_textbook_extract"
+    )
+    assert tasks_by_id[
+        "task_bazi_general_beichen_branch_interaction_001"
+    ].intended_source_material_id == "material_bazi_general_beichen_intro_pdf"
+    assert tasks_by_id[
+        "task_bazi_general_ziping_useful_god_001"
+    ].source_library_entry_id == "entry_bazi_general_ziping_orthodox_pair_pdf"
+
+    assert slots_by_id[
+        "slot_bazi_general_lecture_pattern_strength_001"
+    ].target_rule_family == "pattern_strength"
+    assert slots_by_id[
+        "slot_bazi_general_beichen_branch_interaction_001"
+    ].target_rule_family == "branch_interaction"
+    assert slots_by_id[
+        "slot_bazi_general_ziping_useful_god_001"
+    ].target_rule_family == "useful_god_candidate"
+
+
+def test_bazi_general_selected_variant_preparation_has_completed_package():
+    packages = extraction_queue_intake.load_extraction_work_packages()
+    tasks = extraction_queue_intake.load_extraction_tasks()
+    slots = extraction_queue_intake.load_candidate_draft_slots()
+
+    packages_by_id = {package.package_id: package for package in packages}
+    tasks_by_id = {task.task_id: task for task in tasks}
+    slots_by_id = {slot.draft_slot_id: slot for slot in slots}
+
+    package = packages_by_id[
+        "package_bazi_general_selected_variant_preparation_reading_001"
+    ]
+    expected_tasks = [
+        "task_bazi_general_ditiansui_pattern_strength_001",
+        "task_bazi_general_qiongtong_useful_god_001",
+    ]
+    assert package.status == "completed"
+    assert package.source_queue_snapshot_ids == [
+        "queue_bazi_general_ditiansui_pattern_strength_extract",
+        "queue_bazi_general_qiongtong_useful_god_extract",
+    ]
+    assert package.selected_task_ids == expected_tasks
+    assert package.backlog_record_ids == []
+
+    expected = {
+        "task_bazi_general_ditiansui_pattern_strength_001": (
+            "entry_bazi_general_ditiansui_selected_pdf",
+            "material_bazi_general_ditiansui_selected_pdf",
+            "queue_bazi_general_ditiansui_pattern_strength_extract",
+            "pattern_strength",
+        ),
+        "task_bazi_general_qiongtong_useful_god_001": (
+            "entry_bazi_general_qiongtong_selected_pdf",
+            "material_bazi_general_qiongtong_selected_pdf",
+            "queue_bazi_general_qiongtong_useful_god_extract",
+            "useful_god_candidate",
+        ),
+    }
+
+    for task_id, (entry_id, material_id, queue_id, rule_family) in expected.items():
+        task = tasks_by_id[task_id]
+        assert task.package_id == package.package_id
+        assert task.queue_item_id == queue_id
+        assert task.source_library_entry_id == entry_id
+        assert task.intended_source_material_id == material_id
+        assert task.status == "completed"
+        assert task.risk_boundary == "ordinary"
+        assert task.locator_requirement == "page_or_section"
+        assert task.overlap_warnings == []
+
+        slot = slots_by_id[f"slot_{task_id.removeprefix('task_')}"]
+        assert slot.task_id == task_id
+        assert slot.target_rule_family == rule_family
+        assert slot.risk_boundary == "ordinary"
+
+
+def test_bazi_general_next_cycle_cluster_source_selection_has_completed_package():
+    packages = extraction_queue_intake.load_extraction_work_packages()
+    tasks = extraction_queue_intake.load_extraction_tasks()
+    slots = extraction_queue_intake.load_candidate_draft_slots()
+
+    packages_by_id = {package.package_id: package for package in packages}
+    tasks_by_id = {task.task_id: task for task in tasks}
+    slots_by_id = {slot.draft_slot_id: slot for slot in slots}
+
+    package = packages_by_id["package_bazi_general_next_cycle_cluster_source_001"]
+    expected_tasks = [
+        "task_bazi_general_true_spirit_useful_god_001",
+        "task_bazi_general_wangdoujing_branch_interaction_001",
+    ]
+    assert package.status == "completed"
+    assert package.source_queue_snapshot_ids == [
+        "queue_bazi_general_true_spirit_useful_god_extract",
+        "queue_bazi_general_wangdoujing_branch_interaction_extract",
+    ]
+    assert package.selected_task_ids == expected_tasks
+    assert package.backlog_record_ids == []
+
+    expected = {
+        "task_bazi_general_true_spirit_useful_god_001": (
+            "entry_bazi_general_true_spirit_positioning_pdf",
+            "material_bazi_general_true_spirit_positioning_pdf",
+            "queue_bazi_general_true_spirit_useful_god_extract",
+            "useful_god_candidate",
+        ),
+        "task_bazi_general_wangdoujing_branch_interaction_001": (
+            "entry_bazi_general_mingli_wangdoujing_pdf",
+            "material_bazi_general_mingli_wangdoujing_pdf",
+            "queue_bazi_general_wangdoujing_branch_interaction_extract",
+            "branch_interaction",
+        ),
+    }
+
+    for task_id, (entry_id, material_id, queue_id, rule_family) in expected.items():
+        task = tasks_by_id[task_id]
+        assert task.package_id == package.package_id
+        assert task.queue_item_id == queue_id
+        assert task.source_library_entry_id == entry_id
+        assert task.intended_source_material_id == material_id
+        assert task.status == "completed"
+        assert task.risk_boundary == "ordinary"
+        assert task.locator_requirement == "page_or_section"
+        assert task.overlap_warnings == []
+
+        slot = slots_by_id[f"slot_{task_id.removeprefix('task_')}"]
+        assert slot.task_id == task_id
+        assert slot.target_rule_family == rule_family
+        assert slot.risk_boundary == "ordinary"
+
+
+def test_bazi_general_next_cycle_followup_selection_has_completed_package():
+    packages = extraction_queue_intake.load_extraction_work_packages()
+    tasks = extraction_queue_intake.load_extraction_tasks()
+    slots = extraction_queue_intake.load_candidate_draft_slots()
+
+    packages_by_id = {package.package_id: package for package in packages}
+    tasks_by_id = {task.task_id: task for task in tasks}
+    slots_by_id = {slot.draft_slot_id: slot for slot in slots}
+
+    package = packages_by_id["package_bazi_general_next_cycle_followup_001"]
+    expected_tasks = [
+        "task_bazi_general_xinpai_essence_pattern_strength_001",
+        "task_bazi_general_xingming_shuozheng_branch_interaction_001",
+    ]
+    assert package.status == "completed"
+    assert package.source_queue_snapshot_ids == [
+        "queue_bazi_general_xinpai_essence_pattern_strength_extract",
+        "queue_bazi_general_xingming_shuozheng_branch_interaction_extract",
+    ]
+    assert package.selected_task_ids == expected_tasks
+    assert package.backlog_record_ids == []
+
+    expected = {
+        "task_bazi_general_xinpai_essence_pattern_strength_001": (
+            "entry_bazi_general_xinpai_essence_part2_pdf",
+            "material_bazi_general_xinpai_essence_part2_pdf",
+            "queue_bazi_general_xinpai_essence_pattern_strength_extract",
+            "pattern_strength",
+        ),
+        "task_bazi_general_xingming_shuozheng_branch_interaction_001": (
+            "entry_bazi_general_xingming_shuozheng_vol1_pdf",
+            "material_bazi_general_xingming_shuozheng_vol1_pdf",
+            "queue_bazi_general_xingming_shuozheng_branch_interaction_extract",
+            "branch_interaction",
+        ),
+    }
+
+    for task_id, (entry_id, material_id, queue_id, rule_family) in expected.items():
+        task = tasks_by_id[task_id]
+        assert task.package_id == package.package_id
+        assert task.queue_item_id == queue_id
+        assert task.source_library_entry_id == entry_id
+        assert task.intended_source_material_id == material_id
+        assert task.status == "completed"
+        assert task.risk_boundary == "ordinary"
+        assert task.locator_requirement == "page_or_section"
+        assert task.overlap_warnings == []
+
+        slot = slots_by_id[f"slot_{task_id.removeprefix('task_')}"]
+        assert slot.task_id == task_id
+        assert slot.target_rule_family == rule_family
+        assert slot.risk_boundary == "ordinary"
+
+
+def test_post_external_inventory_refresh_closes_applied_manual_actions():
+    summary = extraction_queue_intake.build_package_progress_summary()
+
+    assert summary.task_counts == {"completed": 29}
+    assert summary.extraction_task_count == 29
+    assert summary.next_manual_action_ids == []
+
+
+def test_seeded_extraction_queue_tracks_markdown_batch_005_completed_risk_review_backlog():
+    packages = extraction_queue_intake.load_extraction_work_packages()
+    tasks = extraction_queue_intake.load_extraction_tasks()
+    backlog_records = extraction_queue_intake.load_prerequisite_backlog_records()
+    summary = extraction_queue_intake.build_package_progress_summary()
+
+    packages_by_id = {package.package_id: package for package in packages}
+    backlog_by_id = {record.backlog_id: record for record in backlog_records}
+
+    package = packages_by_id["package_next_candidates_004"]
+    assert package.source_queue_snapshot_ids == [
+        "queue_markdown_source_batch_005_risk_review"
+    ]
+    assert package.selected_task_ids == []
+    assert package.backlog_record_ids == [
+        "backlog_markdown_batch_005_risk_review_001"
+    ]
+    assert package.status == "completed"
+
+    record = backlog_by_id["backlog_markdown_batch_005_risk_review_001"]
+    assert record.package_id == package.package_id
+    assert record.queue_item_id == "queue_markdown_source_batch_005_risk_review"
+    assert record.audit_id == "audit_markdown_source_batch_005"
+    assert record.backlog_type == "risk_review"
+    assert record.missing_prerequisites == ["risk_boundary_review"]
+    assert record.recommended_action == "risk_review"
+    assert record.risk_boundary == "high_risk"
+    assert record.status == "completed"
+
+    assert record.backlog_id not in summary.next_manual_action_ids
+    assert (
+        "queue_markdown_source_batch_005_risk_review"
+        in summary.selected_source_queue_ids
+    )
+    assert not any(
+        task.queue_item_id == "queue_markdown_source_batch_005_risk_review"
+        for task in tasks
+    )
+
+
+def test_seeded_risk_review_sweep_closes_backlog_records_without_tasks():
+    packages = extraction_queue_intake.load_extraction_work_packages()
+    tasks = extraction_queue_intake.load_extraction_tasks()
+    backlog_records = extraction_queue_intake.load_prerequisite_backlog_records()
+    summary = extraction_queue_intake.build_package_progress_summary()
+
+    packages_by_id = {package.package_id: package for package in packages}
+    backlog_by_id = {record.backlog_id: record for record in backlog_records}
+    completed_backlog_ids = {
+        "backlog_blind_life_manual_risk_review_001",
+        "backlog_immortal_fortune_jianghu_secret_risk_review_001",
+        "backlog_life_death_book_100_pages_risk_review_001",
+        "backlog_markdown_batch_005_risk_review_001",
+    }
+    completed_queue_ids = {
+        "queue_blind_life_manual_risk_review",
+        "queue_immortal_fortune_jianghu_secret_risk_review",
+        "queue_life_death_book_100_pages_risk_review",
+        "queue_markdown_source_batch_005_risk_review",
+    }
+
+    assert packages_by_id["package_next_candidates_004"].status == "completed"
+    assert {
+        backlog_id
+        for backlog_id in completed_backlog_ids
+        if backlog_by_id[backlog_id].status == "completed"
+    } == completed_backlog_ids
+    assert completed_backlog_ids.isdisjoint(summary.next_manual_action_ids)
+    assert summary.backlog_counts["risk_review"] == 4
+    assert summary.backlog_counts["status:completed"] == 4
+    assert not any(task.queue_item_id in completed_queue_ids for task in tasks)
+
+
 @pytest.mark.parametrize(
     ("packages", "tasks", "expected"),
     [

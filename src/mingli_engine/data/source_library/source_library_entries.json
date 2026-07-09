@@ -258,6 +258,92 @@
     "updated_at": "2026-05-28"
   },
   {
+    "entry_id": "entry_bazi_general_lecture_textbook_pdf",
+    "material_id": "material_bazi_general_lecture_textbook_pdf",
+    "title": "Bazi General Lecture Textbook",
+    "material_type": "pdf",
+    "local_reference": "八字命理讲义教材（299页）.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "foundation",
+      "textbook",
+      "pattern-strength",
+      "ten-god",
+      "useful-god"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "useful_god_candidate"
+    ],
+    "source_quality_notes": "Preparation-reading completed on 2026-06-28 with concise derived notes, 013 candidate intake, and linked 012 evidence metadata; raw PDFs remain unchanged.",
+    "rights_notes": "Do not copy long passages; prepare text before extraction.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_beichen_intro_pdf",
+    "material_id": "material_bazi_general_beichen_intro_pdf",
+    "title": "Beichen Mingli Intro Han Yumo",
+    "material_type": "pdf",
+    "local_reference": "北宸学派《命理入门》韩雨墨 258页.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "foundation",
+      "school-intro",
+      "pattern-strength",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Preparation-reading completed on 2026-06-28 with concise derived notes, 013 candidate intake, and linked 012 evidence metadata; raw PDFs remain unchanged.",
+    "rights_notes": "Do not copy long passages; prepare text before extraction.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "medium",
+    "next_action": "no_action",
+    "outcome_reason": "",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_ziping_orthodox_pair_pdf",
+    "material_id": "material_bazi_general_ziping_orthodox_pair_pdf",
+    "title": "Ziping Mingli Zhengzong Upper Lower Volumes",
+    "material_type": "pdf",
+    "local_reference": "子平命理正宗电子版上.pdf; 子平命理正宗电子版下.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "classical-reference",
+      "ziping",
+      "pattern-strength",
+      "useful-god"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "source_quality_notes": "Preparation-reading completed on 2026-06-28 with concise derived notes, 013 candidate intake, and linked 012 evidence metadata; raw PDFs remain unchanged.",
+    "rights_notes": "Do not copy long passages; prepare text before extraction.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
     "entry_id": "entry_markdown_source_batch_002_core",
     "material_id": "material_markdown_source_batch_002_core",
     "title": "Markdown Source Batch 002 Core (梁湘润子平教材系列 + 阴阳五行预知学 + 命理讲义)",
@@ -435,5 +521,401 @@
     "outcome_reason": "",
     "created_at": "2026-06-23",
     "updated_at": "2026-06-23"
+  },
+  {
+    "entry_id": "entry_bazi_general_ditiansui_selected_pdf",
+    "material_id": "material_bazi_general_ditiansui_selected_pdf",
+    "title": "Ditiansui Selected Base",
+    "material_type": "pdf",
+    "local_reference": "滴天髓.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "classical-reference",
+      "ditiansui",
+      "pattern-strength",
+      "useful-god"
+    ],
+    "rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "source_quality_notes": "Selected canonical local PDF registered from Bazi general variant review; current locator is a weak review anchor pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Canonical variant selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_qiongtong_selected_pdf",
+    "material_id": "material_bazi_general_qiongtong_selected_pdf",
+    "title": "Qiongtong Baojian Selected Standard",
+    "material_type": "pdf",
+    "local_reference": "穷通宝鉴/窮通寶鑒.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "classical-reference",
+      "qiongtong-baojian",
+      "useful-god",
+      "seasonal-adjustment"
+    ],
+    "rule_families": [
+      "useful_god_candidate"
+    ],
+    "source_quality_notes": "Selected canonical local PDF registered from Bazi general variant review; current locator is a weak review anchor pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Canonical variant selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_true_spirit_positioning_pdf",
+    "material_id": "material_bazi_general_true_spirit_positioning_pdf",
+    "title": "True Spirit Positioning Bazi Modern Method",
+    "material_type": "pdf",
+    "local_reference": "八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "modern-method",
+      "true-spirit",
+      "useful-god"
+    ],
+    "rule_families": [
+      "useful_god_candidate"
+    ],
+    "source_quality_notes": "Registered from next-cycle cluster-source selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_mingli_wangdoujing_pdf",
+    "material_id": "material_bazi_general_mingli_wangdoujing_pdf",
+    "title": "Mingli Wangdoujing",
+    "material_type": "pdf",
+    "local_reference": "1_命理望斗经(1).pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "misc-reference",
+      "wangdoujing",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registered from next-cycle cluster-source selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_xinpai_essence_part2_pdf",
+    "material_id": "material_bazi_general_xinpai_essence_part2_pdf",
+    "title": "Xin Pai Mingli Essence Explanation Part 2",
+    "material_type": "pdf",
+    "local_reference": "佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "modern-method",
+      "xinpai",
+      "pattern-strength"
+    ],
+    "rule_families": [
+      "pattern_strength"
+    ],
+    "source_quality_notes": "Registered from next-cycle followup selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Followup source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_xingming_shuozheng_vol1_pdf",
+    "material_id": "material_bazi_general_xingming_shuozheng_vol1_pdf",
+    "title": "Xingming Shuozheng Continuation Combined Volume 1",
+    "material_type": "pdf",
+    "local_reference": "霍敏卿-星命说证正续合编上册.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "misc-reference",
+      "xingming-shuozheng",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registered from next-cycle followup selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Followup source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "entry_id": "entry_bazi_general_mingzao_chunqiu_case_pdf",
+    "material_id": "material_bazi_general_mingzao_chunqiu_case_pdf",
+    "title": "Mingzao Chunqiu Case Collection",
+    "material_type": "pdf",
+    "local_reference": "八字18本/命造春秋  188P.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "case-collection",
+      "mingzao-chunqiu",
+      "luck-cycle"
+    ],
+    "rule_families": [
+      "luck_cycle"
+    ],
+    "source_quality_notes": "Registered from gated ordinary source selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Gated ordinary source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "entry_id": "entry_bazi_general_sizhu_yuce_yaojue_pdf",
+    "material_id": "material_bazi_general_sizhu_yuce_yaojue_pdf",
+    "title": "Sizhu Yuce Yaojue Formula Reference",
+    "material_type": "pdf",
+    "local_reference": "四柱预测要诀.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "practical-formula",
+      "sizhu-yuce-yaojue",
+      "pattern-strength"
+    ],
+    "rule_families": [
+      "pattern_strength"
+    ],
+    "source_quality_notes": "Registered from gated ordinary source selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Gated ordinary source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "entry_id": "entry_bazi_general_bazi_baijue_case_pdf",
+    "material_id": "material_bazi_general_bazi_baijue_case_pdf",
+    "title": "Bazi Baijue Case Collection Volume 1",
+    "material_type": "pdf",
+    "local_reference": "八字18本/八字百诀 上册  214P.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "case-collection",
+      "bazi-baijue",
+      "ten-god-relation"
+    ],
+    "rule_families": [
+      "ten_god_relation"
+    ],
+    "source_quality_notes": "Registered from gated ordinary followup selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Gated ordinary followup source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "entry_id": "entry_bazi_general_mingli_mijue_pdf",
+    "material_id": "material_bazi_general_mingli_mijue_pdf",
+    "title": "Mingli Mijue Formula Reference",
+    "material_type": "pdf",
+    "local_reference": "命理秘诀(1).pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "practical-formula",
+      "mingli-mijue",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registered from gated ordinary followup selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Gated ordinary followup source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "entry_id": "entry_bazi_general_choujin_bosi_case_pdf",
+    "material_id": "material_bazi_general_choujin_bosi_case_pdf",
+    "title": "Choujin Bosi Bazi Case Method",
+    "material_type": "pdf",
+    "local_reference": "八字18本/抽筋剥丝讲八字  274P.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "case-collection",
+      "choujin-bosi",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registered from gated ordinary final selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Gated ordinary final source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "entry_id": "entry_bazi_general_bazi_shizhan_mifa_pdf",
+    "material_id": "material_bazi_general_bazi_shizhan_mifa_pdf",
+    "title": "Bazi Shizhan Mifa Practical Formula",
+    "material_type": "pdf",
+    "local_reference": "八字实战秘法公开.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "review_completed",
+    "topic_tags": [
+      "practical-formula",
+      "bazi-shizhan-mifa",
+      "luck-cycle"
+    ],
+    "rule_families": [
+      "luck_cycle"
+    ],
+    "source_quality_notes": "Registered from gated ordinary final selection; current locator is weak metadata pending page transcription.",
+    "rights_notes": "External PDF; do not copy long passages. Store concise paraphrases and locator notes only.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "no_action",
+    "outcome_reason": "Gated ordinary final source-level record selected and downstream metadata prepared under user authorization.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "entry_id": "entry_bazi_general_bazi_psychology_pdf",
+    "material_id": "material_bazi_general_bazi_psychology_pdf",
+    "title": "Bazi Psychology Lu Wang Source",
+    "material_type": "pdf",
+    "local_reference": "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "needs_preparation",
+    "topic_tags": [
+      "sensitive-boundary",
+      "bazi-psychology",
+      "ten-god-relation"
+    ],
+    "rule_families": [
+      "ten_god_relation"
+    ],
+    "source_quality_notes": "Registered from sensitive source-registration prep; source text remains unread.",
+    "rights_notes": "External PDF; do not copy long passages. Use concise metadata only until preparation closes.",
+    "risk_tier": "sensitive",
+    "risk_notes": [
+      "Keep non-diagnostic framing during registration and later preparation.",
+      "Do not use this source for fixed personality or relationship claims."
+    ],
+    "priority_level": "high",
+    "next_action": "prepare_material",
+    "outcome_reason": "Sensitive source-library metadata registered under authorization while downstream candidate use remains gated.",
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  },
+  {
+    "entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "title": "Xiahai Suanmingji",
+    "material_type": "pdf",
+    "local_reference": "下海算命记.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "needs_preparation",
+    "topic_tags": [
+      "misc-identity-review",
+      "xiahai-suanmingji",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registered from new-material registration prep; source text remains unread.",
+    "rights_notes": "External PDF; do not copy long passages. Prepare controlled text before extraction.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "prepare_material",
+    "outcome_reason": "New material source-library metadata registered under authorization while downstream candidate use remains gated.",
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  },
+  {
+    "entry_id": "entry_new_material_bazi_suanming_cangjue_pdf",
+    "material_id": "material_new_material_bazi_suanming_cangjue_pdf",
+    "title": "Bazi Suanming Cangjue",
+    "material_type": "pdf",
+    "local_reference": "八字算命藏诀-黑白.pdf",
+    "tracking_status": "external_untracked",
+    "readiness_status": "needs_preparation",
+    "topic_tags": [
+      "misc-identity-review",
+      "bazi-suanming-cangjue",
+      "branch-interaction"
+    ],
+    "rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality_notes": "Registered from new-material registration prep; the bazi hidden-formula title is a direct bazi fit and source text remains unread.",
+    "rights_notes": "External PDF; do not copy long passages. Prepare controlled text before extraction.",
+    "risk_tier": "ordinary",
+    "risk_notes": [],
+    "priority_level": "high",
+    "next_action": "prepare_material",
+    "outcome_reason": "New material source-library metadata registered under authorization while downstream candidate use remains gated.",
+    "created_at": "2026-07-09",
+    "updated_at": "2026-07-09"
   }
 ]

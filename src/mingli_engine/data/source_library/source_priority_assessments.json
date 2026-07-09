@@ -155,6 +155,41 @@
     "assessed_at": "2026-05-28"
   },
   {
+    "assessment_id": "priority_bazi_general_lecture_textbook_001",
+    "entry_id": "entry_bazi_general_lecture_textbook_pdf",
+    "priority_level": "high",
+    "expected_value": "fills_gap",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "ten_god_relation",
+      "useful_god_candidate"
+    ],
+    "source_quality": "moderate",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Foundation textbook metadata can fill structure, ten-god, and useful-god preparation gaps.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_ziping_orthodox_pair_001",
+    "entry_id": "entry_bazi_general_ziping_orthodox_pair_pdf",
+    "priority_level": "high",
+    "expected_value": "fills_gap",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "source_quality": "moderate",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Paired Ziping source metadata can fill classical pattern and useful-god preparation gaps.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
     "assessment_id": "priority_markdown_batch_002_core_001",
     "entry_id": "entry_markdown_source_batch_002_core",
     "priority_level": "high",
@@ -230,5 +265,246 @@
     "rationale": "Liang Xiangrun advanced series provides strongest use-god and branch-interaction material; boundary sources require conditional rewrite.",
     "assessed_by": "maintainer",
     "assessed_at": "2026-06-23"
+  },
+  {
+    "assessment_id": "priority_bazi_general_ditiansui_selected_001",
+    "entry_id": "entry_bazi_general_ditiansui_selected_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Selected Ditiansui local reference broadens classical pattern-strength comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_qiongtong_selected_001",
+    "entry_id": "entry_bazi_general_qiongtong_selected_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Selected Qiongtong local reference broadens classical seasonal useful-god comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_true_spirit_positioning_001",
+    "entry_id": "entry_bazi_general_true_spirit_positioning_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "useful_god_candidate"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "True-spirit positioning source broadens modern useful-god comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_mingli_wangdoujing_001",
+    "entry_id": "entry_bazi_general_mingli_wangdoujing_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Mingli Wangdoujing broadens branch-interaction comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_xinpai_essence_part2_001",
+    "entry_id": "entry_bazi_general_xinpai_essence_part2_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Xin Pai essence part 2 broadens modern pattern-strength comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_xingming_shuozheng_vol1_001",
+    "entry_id": "entry_bazi_general_xingming_shuozheng_vol1_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Xingming Shuozheng volume 1 broadens branch-interaction comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-28"
+  },
+  {
+    "assessment_id": "priority_bazi_general_mingzao_chunqiu_case_001",
+    "entry_id": "entry_bazi_general_mingzao_chunqiu_case_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "luck_cycle"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Mingzao Chunqiu broadens case-collection luck-cycle comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_sizhu_yuce_yaojue_001",
+    "entry_id": "entry_bazi_general_sizhu_yuce_yaojue_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "pattern_strength"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Sizhu Yuce Yaojue broadens practical-formula pattern-strength comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_bazi_baijue_case_001",
+    "entry_id": "entry_bazi_general_bazi_baijue_case_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Bazi Baijue volume 1 broadens case-collection ten-god relation coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_mingli_mijue_001",
+    "entry_id": "entry_bazi_general_mingli_mijue_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Mingli Mijue broadens practical-formula branch-interaction comparison coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_choujin_bosi_case_001",
+    "entry_id": "entry_bazi_general_choujin_bosi_case_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Choujin Bosi Bazi broadens case-collection branch-interaction coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_bazi_shizhan_mifa_001",
+    "entry_id": "entry_bazi_general_bazi_shizhan_mifa_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "luck_cycle"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Bazi Shizhan Mifa broadens practical-formula luck-cycle coverage; page transcription remains later work.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_bazi_general_bazi_psychology_001",
+    "entry_id": "entry_bazi_general_bazi_psychology_pdf",
+    "priority_level": "high",
+    "expected_value": "improves_high_risk_boundary",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "sensitive",
+    "rationale": "Bazi Psychology source can improve sensitive ten-god boundary handling after preparation; text remains unread.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-29"
+  },
+  {
+    "assessment_id": "priority_new_material_xiahai_suanmingji_001",
+    "entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Xiahai Suanmingji can broaden ordinary branch-interaction comparison coverage after controlled text preparation; text remains unread.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-06-30"
+  },
+  {
+    "assessment_id": "priority_new_material_bazi_suanming_cangjue_001",
+    "entry_id": "entry_new_material_bazi_suanming_cangjue_pdf",
+    "priority_level": "high",
+    "expected_value": "broadens_school_coverage",
+    "target_gap_ids": [],
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "source_quality": "weak",
+    "effort_level": "medium",
+    "risk_tier": "ordinary",
+    "rationale": "Bazi Suanming Cangjue is a direct bazi fit that can broaden ordinary branch-interaction comparison coverage after controlled text preparation; text remains unread.",
+    "assessed_by": "maintainer",
+    "assessed_at": "2026-07-09"
   }
 ]

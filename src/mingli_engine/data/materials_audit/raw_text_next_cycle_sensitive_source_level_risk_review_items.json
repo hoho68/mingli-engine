@@ -1,0 +1,46 @@
+[
+  {
+    "review_item_id": "sensitive_source_review_bazi_psychology_pdf",
+    "prep_item_id": "sensitive_risk_prep_bazi_psychology_pdf",
+    "prep_id": "gated_prep_sensitive_topic_boundary_001",
+    "source_selection_id": "next_cycle_bazi_sensitive_topic_risk_review",
+    "cluster_id": "bazi_general_sensitive_topic_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "title_label": "Bazi Psychology Source-Level Risk Review",
+    "review_status": "cleared_for_sensitive_registration_prep",
+    "risk_boundary": "sensitive",
+    "recommended_next_action": "register_source",
+    "relative_paths": [
+      "陆致极王明谦-《八字心理学》东方心理哲学智慧214页.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "registration_prep_allowed": true,
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "risk_review_topics": [
+      "psychology framing",
+      "relationship language",
+      "non-diagnostic boundary"
+    ],
+    "risk_findings": [
+      "Bounded single PDF label can be prepared only with non-diagnostic framing.",
+      "Future notes must avoid fixed personality or relationship outcome language.",
+      "Registration prep may proceed only as metadata, not learning use."
+    ],
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "priority_score": 18,
+    "boundary_decision": "Cleared only for later sensitive registration prep; no learning, candidate, or evidence use is authorized.",
+    "rationale": "The path is a single bounded source-level record and can move to registration prep if psychology framing stays non-diagnostic and non-deterministic.",
+    "guardrails": [
+      "Do not use the source for learning or report evidence in this step.",
+      "Do not make diagnostic or fixed relationship claims.",
+      "Keep registration prep separate from source-library and downstream mutation."
+    ],
+    "created_at": "2026-06-29",
+    "updated_at": "2026-06-29"
+  }
+]

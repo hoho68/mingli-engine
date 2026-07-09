@@ -150,5 +150,275 @@
       "Keep as structural taxonomy, not deterministic outcome predictions."
     ],
     "status": "planned"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_lecture_pattern_strength_001",
+    "task_id": "task_bazi_general_lecture_pattern_strength_001",
+    "intended_candidate_label": "Day-master strength and balancing candidate order",
+    "target_rule_family": "pattern_strength",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain source locator.",
+      "Record system limits before candidate application."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and chart-context dependent.",
+      "Do not use source wording as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_beichen_branch_interaction_001",
+    "task_id": "task_bazi_general_beichen_branch_interaction_001",
+    "intended_candidate_label": "Earthly-branch combination and punishment table",
+    "target_rule_family": "branch_interaction",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain source locator.",
+      "Record system limits before candidate application."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and chart-context dependent.",
+      "Do not use source wording as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_ziping_useful_god_001",
+    "task_id": "task_bazi_general_ziping_useful_god_001",
+    "intended_candidate_label": "Classical five-element balancing language",
+    "target_rule_family": "useful_god_candidate",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain source locator.",
+      "Record system limits before candidate application."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and chart-context dependent.",
+      "Do not use source wording as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_ditiansui_pattern_strength_001",
+    "task_id": "task_bazi_general_ditiansui_pattern_strength_001",
+    "intended_candidate_label": "Ditiansui selected variant pattern-strength comparison seed",
+    "target_rule_family": "pattern_strength",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and school-dependent.",
+      "Do not use source wording as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_qiongtong_useful_god_001",
+    "task_id": "task_bazi_general_qiongtong_useful_god_001",
+    "intended_candidate_label": "Qiongtong selected variant useful-god comparison seed",
+    "target_rule_family": "useful_god_candidate",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and seasonal-system dependent.",
+      "Do not use source wording as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_true_spirit_useful_god_001",
+    "task_id": "task_bazi_general_true_spirit_useful_god_001",
+    "intended_candidate_label": "True-spirit positioning useful-god comparison seed",
+    "target_rule_family": "useful_god_candidate",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and school-dependent.",
+      "Do not use source wording as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_wangdoujing_branch_interaction_001",
+    "task_id": "task_bazi_general_wangdoujing_branch_interaction_001",
+    "intended_candidate_label": "Wangdoujing branch-interaction comparison seed",
+    "target_rule_family": "branch_interaction",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and chart-context dependent.",
+      "Do not use source wording as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_xinpai_essence_pattern_strength_001",
+    "task_id": "task_bazi_general_xinpai_essence_pattern_strength_001",
+    "intended_candidate_label": "Xin Pai essence pattern-strength comparison seed",
+    "target_rule_family": "pattern_strength",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and school-dependent.",
+      "Do not use source wording as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "task_id": "task_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "intended_candidate_label": "Xingming Shuozheng branch-interaction comparison seed",
+    "target_rule_family": "branch_interaction",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and chart-context dependent.",
+      "Do not use source wording as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "task_id": "task_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "intended_candidate_label": "Mingzao Chunqiu luck-cycle case seed",
+    "target_rule_family": "luck_cycle",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and chart-context dependent.",
+      "Do not use case examples as deterministic verdicts."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "task_id": "task_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "intended_candidate_label": "Sizhu Yuce Yaojue pattern-strength formula seed",
+    "target_rule_family": "pattern_strength",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and school-dependent.",
+      "Do not use formula framing as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_bazi_baijue_ten_god_001",
+    "task_id": "task_bazi_general_bazi_baijue_ten_god_001",
+    "intended_candidate_label": "Bazi Baijue ten-god case seed",
+    "target_rule_family": "ten_god_relation",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and chart-context dependent.",
+      "Do not use case examples as deterministic verdicts."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_mingli_mijue_branch_interaction_001",
+    "task_id": "task_bazi_general_mingli_mijue_branch_interaction_001",
+    "intended_candidate_label": "Mingli Mijue branch-interaction formula seed",
+    "target_rule_family": "branch_interaction",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and school-dependent.",
+      "Do not use formula framing as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_choujin_bosi_branch_interaction_001",
+    "task_id": "task_bazi_general_choujin_bosi_branch_interaction_001",
+    "intended_candidate_label": "Choujin Bosi branch-interaction case seed",
+    "target_rule_family": "branch_interaction",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and chart-context dependent.",
+      "Do not use case examples as deterministic verdicts."
+    ],
+    "status": "ready_for_manual_extraction"
+  },
+  {
+    "draft_slot_id": "slot_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "task_id": "task_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "intended_candidate_label": "Bazi Shizhan Mifa luck-cycle formula seed",
+    "target_rule_family": "luck_cycle",
+    "target_gap_id": "",
+    "locator_requirement": "page_or_section",
+    "expected_review_notes": [
+      "Use concise paraphrase and retain weak page anchor.",
+      "Record that page transcription remains future work."
+    ],
+    "risk_boundary": "ordinary",
+    "safety_requirements": [
+      "Keep interpretation conditional and school-dependent.",
+      "Do not use formula framing as deterministic verdict."
+    ],
+    "status": "ready_for_manual_extraction"
   }
 ]

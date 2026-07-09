@@ -1,0 +1,88 @@
+[
+  {
+    "prep_id": "gated_prep_case_collection_boundary_001",
+    "source_selection_id": "next_cycle_bazi_case_collection_deferred",
+    "cluster_id": "bazi_general_case_collection_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "prep_label": "Bazi case collection bounded source-selection prep",
+    "prep_status": "prepared_for_bounded_source_selection",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "select_bounded_source",
+    "file_count": 24,
+    "priority_text_candidate_count": 24,
+    "target_rule_families": [
+      "branch_interaction",
+      "luck_cycle",
+      "pattern_strength",
+      "ten_god_relation"
+    ],
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "boundary_note": "Case titles can proceed only to later single-source selection; no operational claim is inferred from case labels.",
+    "rationale": "The case collection cluster is ordinary risk but too broad for direct registration, so this prep step limits it to bounded source selection later.",
+    "guardrails": [
+      "Do not infer conclusions from case-title labels.",
+      "Select one bounded source-level record before registration.",
+      "Keep concise paraphrase and weak locator policy for any later candidate."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "prep_id": "gated_prep_practical_formula_boundary_001",
+    "source_selection_id": "next_cycle_bazi_practical_formula_deferred",
+    "cluster_id": "bazi_general_practical_formula_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "prep_label": "Bazi practical formula bounded source-selection prep",
+    "prep_status": "prepared_for_bounded_source_selection",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "select_bounded_source",
+    "file_count": 31,
+    "priority_text_candidate_count": 31,
+    "target_rule_families": [
+      "pattern_strength",
+      "branch_interaction",
+      "luck_cycle"
+    ],
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "boundary_note": "Formula-style labels can proceed only to later single-source selection; formula labels are not treated as verified rules.",
+    "rationale": "The practical formula cluster is ordinary risk but needs source-specific boundary review before registration or learning use.",
+    "guardrails": [
+      "Do not treat formula labels as verified content.",
+      "Select one bounded source-level record before registration.",
+      "Keep conditional language until source-specific review exists."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "prep_id": "gated_prep_sensitive_topic_boundary_001",
+    "source_selection_id": "next_cycle_bazi_sensitive_topic_risk_review",
+    "cluster_id": "bazi_general_sensitive_topic_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "prep_label": "Bazi sensitive topic risk-review prep",
+    "prep_status": "risk_review_required",
+    "risk_boundary": "sensitive",
+    "recommended_next_action": "risk_review",
+    "file_count": 10,
+    "priority_text_candidate_count": 9,
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "boundary_note": "Sensitive relationship, psychology, and advice labels remain behind risk review before any source selection or learning use.",
+    "rationale": "The sensitive topic cluster needs explicit boundary wording and safety review; no source-level record is eligible in this prep step.",
+    "guardrails": [
+      "Do not use relationship or psychology labels for deterministic claims.",
+      "Do not create source-library, candidate, review, promotion, or evidence records.",
+      "Require a separate risk-review step before any source selection."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  }
+]

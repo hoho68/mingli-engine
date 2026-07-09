@@ -1,0 +1,92 @@
+[
+  {
+    "setup_item_id": "new_material_ocr_runtime_setup_xiahai_suanmingji_pdf",
+    "setup_id": "015-new-material-ocr-runtime-setup-or-human-transcription",
+    "ocr_or_manual_transcription_item_id": "new_material_ocr_or_manual_xiahai_suanmingji_pdf",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "setup_status": "blocked_ocr_quality_insufficient",
+    "selected_path": "local_tesseract_quality_probe",
+    "local_reference": "下海算命记.pdf",
+    "page_count": 84,
+    "probe_page_count": 4,
+    "probe_dpi": 300,
+    "pdftoppm_available": true,
+    "tesseract_available": true,
+    "tesseract_version": "5.5.0.20241111",
+    "tessdata_language_codes": [
+      "chi_sim",
+      "eng",
+      "osd"
+    ],
+    "chi_sim_available": true,
+    "probe_psm_values": [
+      "4",
+      "6",
+      "11"
+    ],
+    "prepared_text_artifact_created": false,
+    "blocker_reason": "Local OCR runtime is configured, but sampled page output remains too noisy for controlled prepared text.",
+    "selected_next_material_entry": "015-new-material-ocr-quality-remediation-or-human-transcription",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "300 DPI probes across pages 2-5 and PSM 4, 6, and 11 produced unstable mixed OCR, so learning and candidate intake remain blocked.",
+    "guardrails": [
+      "Do not commit temporary OCR probe files as source material.",
+      "Do not create learning notes, 013 candidates, or 012 units from noisy OCR.",
+      "Improve page preprocessing or use human transcription before prepared text.",
+      "Keep the original PDF unmoved and unchanged."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  },
+  {
+    "setup_item_id": "new_material_ocr_runtime_setup_bazi_suanming_cangjue_pdf",
+    "setup_id": "015-new-material-ocr-runtime-setup-or-human-transcription",
+    "ocr_or_manual_transcription_item_id": "new_material_ocr_or_manual_bazi_suanming_cangjue_pdf",
+    "source_library_entry_id": "entry_new_material_bazi_suanming_cangjue_pdf",
+    "source_material_id": "material_new_material_bazi_suanming_cangjue_pdf",
+    "setup_status": "blocked_ocr_quality_insufficient",
+    "selected_path": "local_tesseract_quality_probe",
+    "local_reference": "八字算命藏诀-黑白.pdf",
+    "page_count": 50,
+    "probe_page_count": 4,
+    "probe_dpi": 300,
+    "pdftoppm_available": true,
+    "tesseract_available": true,
+    "tesseract_version": "5.5.0.20241111",
+    "tessdata_language_codes": [
+      "chi_sim",
+      "eng",
+      "osd"
+    ],
+    "chi_sim_available": true,
+    "probe_psm_values": [
+      "3",
+      "4",
+      "6"
+    ],
+    "prepared_text_artifact_created": false,
+    "blocker_reason": "Local OCR runtime is configured via pdfplumber rendering and a chi_sim tessdata path, but sampled page output remains too noisy for controlled prepared text.",
+    "selected_next_material_entry": "015-new-material-ocr-quality-remediation-or-human-transcription",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "300 DPI probes across pages 1, 11, 25, and 41 with PSM 3, 4, and 6 produced unstable mixed OCR; PSM 6 returned the most Han characters but recognition errors remain too high for controlled prepared text.",
+    "guardrails": [
+      "Do not commit temporary OCR probe files as source material.",
+      "Do not create learning notes, 013 candidates, or 012 units from noisy OCR.",
+      "Improve page preprocessing or use human transcription before prepared text.",
+      "Keep the original PDF unmoved and unchanged."
+    ],
+    "created_at": "2026-07-09",
+    "updated_at": "2026-07-09"
+  }
+]

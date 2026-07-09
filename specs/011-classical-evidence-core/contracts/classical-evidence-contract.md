@@ -31,7 +31,7 @@ Each curated evidence unit must be source-backed and tagged.
 {
   "evidence_id": "duan_ten_god_relation_001",
   "source_id": "duan_plain_mingxue_outline",
-  "source_ref": "review-note:ten-god-relationships",
+  "source_ref": "review-note:duan_plain_mingxue_outline.md#source-window-ten-god-relationships",
   "theme": "十神关系",
   "rule_family": "ten_god_relation",
   "risk_tier": "ordinary",

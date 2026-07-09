@@ -188,12 +188,119 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
 
     report = build_coverage_report(sources, evidence_units, conflicts)
 
-    assert report.approved_evidence_count == 92
+    evidence_by_id = {unit.evidence_id: unit for unit in evidence_units}
+    blind_life_boundary = evidence_by_id["blind_life_manual_high_risk_boundary_001"]
+
+    expected_extension_ids = {
+        "batch002_branch_interaction_route_001",
+        "batch002_useful_god_types_001",
+        "batch002_day_master_strength_basis_001",
+    }
+    expected_selected_variant_ids = {
+        "bazi_general_ditiansui_pattern_strength_001",
+        "bazi_general_qiongtong_useful_god_001",
+    }
+    expected_next_cycle_ids = {
+        "bazi_general_true_spirit_useful_god_001",
+        "bazi_general_wangdoujing_branch_interaction_001",
+    }
+    expected_followup_ids = {
+        "bazi_general_xinpai_essence_pattern_strength_001",
+        "bazi_general_xingming_shuozheng_branch_interaction_001",
+    }
+    expected_gated_ordinary_ids = {
+        "bazi_general_mingzao_chunqiu_luck_cycle_001",
+        "bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    }
+    expected_gated_ordinary_followup_ids = {
+        "bazi_general_bazi_baijue_ten_god_001",
+        "bazi_general_mingli_mijue_branch_interaction_001",
+    }
+    expected_gated_ordinary_final_ids = {
+        "bazi_general_choujin_bosi_branch_interaction_001",
+        "bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    }
+
+    assert report.approved_evidence_count == 111
     assert report.open_conflicts == ["conflict_high_risk_scope_001"]
     assert set(report.sources_with_gaps) == {
         "blind_life_manual",
         "immortal_fortune_jianghu_secret",
     }
+    assert blind_life_boundary.source_id == "blind_life_manual"
+    assert (
+        blind_life_boundary.source_ref
+        == "review-note:blind_life_manual.md#source-window-high-risk-boundary"
+    )
+    assert blind_life_boundary.rule_family == "high_risk_signal"
+    assert blind_life_boundary.risk_tier == "high_risk"
+    assert (
+        blind_life_boundary.curation_batch_id
+        == "batch_blind_life_manual_high_risk_boundary_001"
+    )
+    assert blind_life_boundary.conflict_ids == ["conflict_high_risk_scope_001"]
+    assert any(
+        marker in limitation
+        for limitation in blind_life_boundary.limitations
+        for marker in ("拒绝", "不得", "exact death")
+    )
+    assert expected_extension_ids <= set(evidence_by_id)
+    for evidence_id in expected_extension_ids:
+        unit = evidence_by_id[evidence_id]
+        assert unit.source_id == "markdown_source_batch_002_core"
+        assert unit.curation_batch_id == "batch_markdown_batch_002_extension_001"
+        assert unit.source_ref.startswith("review-note:Markdown/source_batch_002_cleaned/")
+    assert expected_selected_variant_ids <= set(evidence_by_id)
+    for evidence_id in expected_selected_variant_ids:
+        unit = evidence_by_id[evidence_id]
+        assert unit.curation_batch_id == "batch_bazi_general_selected_variant_001"
+        assert unit.source_ref.startswith("page:")
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
+    assert expected_next_cycle_ids <= set(evidence_by_id)
+    for evidence_id in expected_next_cycle_ids:
+        unit = evidence_by_id[evidence_id]
+        assert unit.curation_batch_id == "batch_bazi_general_next_cycle_cluster_source_001"
+        assert unit.source_ref.startswith("page:")
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
+    assert expected_followup_ids <= set(evidence_by_id)
+    for evidence_id in expected_followup_ids:
+        unit = evidence_by_id[evidence_id]
+        assert unit.curation_batch_id == "batch_bazi_general_next_cycle_followup_001"
+        assert unit.source_ref.startswith("page:")
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
+    assert expected_gated_ordinary_ids <= set(evidence_by_id)
+    for evidence_id in expected_gated_ordinary_ids:
+        unit = evidence_by_id[evidence_id]
+        assert (
+            unit.curation_batch_id
+            == "batch_bazi_general_gated_ordinary_source_selection_001"
+        )
+        assert unit.source_ref.startswith("page:")
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
+    assert expected_gated_ordinary_followup_ids <= set(evidence_by_id)
+    for evidence_id in expected_gated_ordinary_followup_ids:
+        unit = evidence_by_id[evidence_id]
+        assert (
+            unit.curation_batch_id
+            == "batch_bazi_general_gated_ordinary_followup_selection_001"
+        )
+        assert unit.source_ref.startswith("page:")
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
+    assert expected_gated_ordinary_final_ids <= set(evidence_by_id)
+    for evidence_id in expected_gated_ordinary_final_ids:
+        unit = evidence_by_id[evidence_id]
+        assert (
+            unit.curation_batch_id
+            == "batch_bazi_general_gated_ordinary_final_selection_001"
+        )
+        assert unit.source_ref.startswith("page:")
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
     assert validate_curation_quality(sources, evidence_units, conflicts) == []
 
 

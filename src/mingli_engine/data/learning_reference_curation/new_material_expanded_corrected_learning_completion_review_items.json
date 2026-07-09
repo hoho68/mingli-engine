@@ -1,0 +1,33 @@
+[
+  {
+    "completion_item_id": "new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf",
+    "completion_id": "017-new-material-expanded-corrected-learning-completion-review",
+    "draft_item_id": "new_material_expanded_corrected_learning_note_draft_xiahai_suanmingji_pdf",
+    "note_id": "note_xiahai_suanmingji_expanded_corrected_001",
+    "learning_point_id": "lp_xiahai_suanmingji_expanded_boundary_001",
+    "source_library_entry_id": "entry_new_material_xiahai_suanmingji_pdf",
+    "source_material_id": "material_new_material_xiahai_suanmingji_pdf",
+    "prepared_text_artifact": "docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md",
+    "local_reference": "下海算命记.pdf",
+    "completion_status": "expanded_corrected_learning_loop_closed_candidate_intake_blocked",
+    "learning_note_closed": true,
+    "candidate_intake_allowed": false,
+    "additional_correction_required": false,
+    "downstream_mutation_authorized": false,
+    "next_material_entry": "015-external-material-inventory-refresh",
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "The expanded corrected learning loop is closed: the three corrected anchors are sufficient for a boundary learning note, the page-72 continuity locator remains optional precision work, and the next new-material entry returns to external inventory refresh.",
+    "guardrails": [
+      "Keep this closure at the 017 learning layer.",
+      "Do not add 013 or 012 records from the expanded closure.",
+      "Do not treat the page-72 locator as a blocker for the current loop.",
+      "Wait for a new external inventory refresh before opening another new-material intake.",
+      "Keep external materials unchanged."
+    ],
+    "created_at": "2026-07-08",
+    "updated_at": "2026-07-08"
+  }
+]

@@ -17,17 +17,18 @@
   {
     "decision_id": "review_candidate_blind_life_manual_gap_001",
     "candidate_id": "candidate_blind_life_manual_gap_001",
-    "decision": "returned",
+    "decision": "approved",
     "reviewer": "maintainer",
-    "reviewed_at": "2026-05-28",
-    "rationale": "The summary needs a narrower locator and safer conditional rewrite before approval.",
-    "required_changes": [
-      "Add a page or heading-level locator and rewrite as conditional evidence."
-    ],
+    "reviewed_at": "2026-06-28",
+    "rationale": "Returned gap candidate was revised with a heading-level review-note locator and conditional high-risk boundary wording.",
+    "required_changes": [],
     "rejection_reason": "",
-    "approval_limitations": [],
-    "source_quality": "needs_recheck",
-    "confidence": "weak"
+    "approval_limitations": [
+      "拒绝精确寿命、死亡时间与诊断结论。",
+      "Use only as boundary context; individual aphoristic source claims still require separate locator review."
+    ],
+    "source_quality": "review_note",
+    "confidence": "moderate"
   },
   {
     "decision_id": "review_candidate_mingxue_golden_voice_scope_001",
@@ -273,6 +274,54 @@
       "Advanced relation patterns require separate extraction."
     ],
     "source_quality": "review_note",
+    "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_markdown_batch_002_branch_route_001",
+    "candidate_id": "candidate_markdown_batch_002_branch_route_001",
+    "decision": "approved",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Branch interaction route constraints from Batch 002 lecture material are line-located and bounded as structural interaction-route evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Use only when a route, column relation, or branch interaction condition is explicit.",
+      "Do not turn interaction-route evidence into deterministic outcome claims."
+    ],
+    "source_quality": "direct_extract",
+    "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_markdown_batch_002_useful_god_types_001",
+    "candidate_id": "candidate_markdown_batch_002_useful_god_types_001",
+    "decision": "approved",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Useful-god category taxonomy from Batch 002 lecture material is line-located and can be promoted as ordinary structural taxonomy with chart-context limitations.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Use as taxonomy, not a unique useful-god decision.",
+      "Seasonal and pass-through categories remain auxiliary unless chart structure supports them."
+    ],
+    "source_quality": "direct_extract",
+    "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_markdown_batch_002_day_master_strength_basis_001",
+    "candidate_id": "candidate_markdown_batch_002_day_master_strength_basis_001",
+    "decision": "approved",
+    "reviewer": "maintainer",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Day-master strength basis from Liang Batch 002 material is line-located and suitable as an ordinary pattern-strength review entry point.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Treat strength as an entry basis, not a chart-quality verdict.",
+      "Require root, support, season, and chart-context review before application."
+    ],
+    "source_quality": "direct_extract",
     "confidence": "moderate"
   },
   {
@@ -590,5 +639,249 @@
     ],
     "source_quality": "review_note",
     "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_bazi_general_lecture_pattern_strength_001",
+    "candidate_id": "candidate_bazi_general_lecture_pattern_strength_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Preparation-reading candidate accepted for pattern_strength metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Use only as conditional structure support; chart context and school assumptions can change the selected balancing element.",
+      "Do not turn strength labels into deterministic outcomes."
+    ],
+    "source_quality": "direct_extract",
+    "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_bazi_general_beichen_branch_interaction_001",
+    "candidate_id": "candidate_bazi_general_beichen_branch_interaction_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Preparation-reading candidate accepted for branch_interaction metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Use as branch-interaction taxonomy only; the table does not decide outcomes by itself.",
+      "Rendered-page source should be rechecked before adding narrower sub-rules."
+    ],
+    "source_quality": "review_note",
+    "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_bazi_general_ziping_useful_god_001",
+    "candidate_id": "candidate_bazi_general_ziping_useful_god_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Preparation-reading candidate accepted for useful_god_candidate metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Image-page reading is suitable for taxonomy seeding, not final classical wording.",
+      "Different useful-god systems may classify the same balancing relation differently."
+    ],
+    "source_quality": "review_note",
+    "confidence": "moderate"
+  },
+  {
+    "decision_id": "review_bazi_general_ditiansui_pattern_strength_001",
+    "candidate_id": "candidate_bazi_general_ditiansui_pattern_strength_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Selected-variant candidate accepted as weak pattern_strength metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact classical wording.",
+      "Use only as conditional comparison context."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_qiongtong_useful_god_001",
+    "candidate_id": "candidate_bazi_general_qiongtong_useful_god_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Selected-variant candidate accepted as weak useful_god_candidate metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact classical wording.",
+      "Different seasonal use-god systems may classify the same relation differently."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_true_spirit_useful_god_001",
+    "candidate_id": "candidate_bazi_general_true_spirit_useful_god_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Next-cycle cluster-source candidate accepted as weak useful_god_candidate metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Treat true-spirit positioning as school-specific comparison context."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_wangdoujing_branch_interaction_001",
+    "candidate_id": "candidate_bazi_general_wangdoujing_branch_interaction_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Next-cycle cluster-source candidate accepted as weak branch_interaction metadata linkage.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator metadata only; no direct quotation is approved.",
+      "Requires later page-level transcription before exact wording.",
+      "Use only as branch-interaction comparison context."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_xinpai_essence_pattern_strength_001",
+    "candidate_id": "candidate_bazi_general_xinpai_essence_pattern_strength_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Candidate is bounded to a weak page anchor and concise paraphrase; approved only as weak comparison evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator only; do not use as exact quoted authority.",
+      "Requires later page transcription for stronger evidence."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "candidate_id": "candidate_bazi_general_xingming_shuozheng_branch_interaction_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-28",
+    "rationale": "Candidate is bounded to a weak page anchor and concise paraphrase; approved only as weak comparison evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator only; do not use as exact quoted authority.",
+      "Requires later page transcription for stronger evidence."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "candidate_id": "candidate_bazi_general_mingzao_chunqiu_luck_cycle_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-29",
+    "rationale": "Candidate is bounded to a weak page anchor and concise paraphrase; approved only as weak comparison evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator only; do not use as exact quoted authority.",
+      "Requires later page transcription for stronger evidence."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "candidate_id": "candidate_bazi_general_sizhu_yuce_yaojue_pattern_strength_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-29",
+    "rationale": "Candidate is bounded to a weak page anchor and concise paraphrase; approved only as weak comparison evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator only; do not use as exact quoted authority.",
+      "Requires later page transcription for stronger evidence."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_bazi_baijue_ten_god_001",
+    "candidate_id": "candidate_bazi_general_bazi_baijue_ten_god_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-29",
+    "rationale": "Candidate is bounded to a weak page anchor and concise paraphrase; approved only as weak comparison evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator only; do not use as exact quoted authority.",
+      "Requires later page transcription for stronger evidence."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_mingli_mijue_branch_interaction_001",
+    "candidate_id": "candidate_bazi_general_mingli_mijue_branch_interaction_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-29",
+    "rationale": "Candidate is bounded to a weak page anchor and concise paraphrase; approved only as weak comparison evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator only; do not use as exact quoted authority.",
+      "Requires later page transcription for stronger evidence."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_choujin_bosi_branch_interaction_001",
+    "candidate_id": "candidate_bazi_general_choujin_bosi_branch_interaction_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-29",
+    "rationale": "Candidate is bounded to a weak page anchor and concise paraphrase; approved only as weak comparison evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator only; do not use as exact quoted authority.",
+      "Requires later page transcription for stronger evidence."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
+  },
+  {
+    "decision_id": "review_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "candidate_id": "candidate_bazi_general_bazi_shizhan_mifa_luck_cycle_001",
+    "decision": "approved",
+    "reviewer": "learning_reference_curation",
+    "reviewed_at": "2026-06-29",
+    "rationale": "Candidate is bounded to a weak page anchor and concise paraphrase; approved only as weak comparison evidence.",
+    "required_changes": [],
+    "rejection_reason": "",
+    "approval_limitations": [
+      "Weak locator only; do not use as exact quoted authority.",
+      "Requires later page transcription for stronger evidence."
+    ],
+    "source_quality": "review_note",
+    "confidence": "weak"
   }
 ]

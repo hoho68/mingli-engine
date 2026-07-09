@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 
@@ -23,6 +24,240 @@ EXPECTED_INITIAL_SOURCE_FILES = {
     "life_death_book_100_pages": "2800.《命理生死之书》100页.pdf",
 }
 
+EXPECTED_BAZI_GENERAL_SOURCE_FILES = {
+    "source_bazi_general_lecture_textbook_pdf": "八字命理讲义教材（299页）.pdf",
+    "source_bazi_general_beichen_intro_pdf": "北宸学派《命理入门》韩雨墨 258页.pdf",
+    "source_bazi_general_ziping_orthodox_pair_pdf": (
+        "子平命理正宗电子版上.pdf; 子平命理正宗电子版下.pdf"
+    ),
+}
+
+EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES = {
+    "source_bazi_general_ditiansui_selected_pdf": "滴天髓.pdf",
+    "source_bazi_general_qiongtong_selected_pdf": "穷通宝鉴/窮通寶鑒.pdf",
+}
+
+EXPECTED_BAZI_GENERAL_NEXT_CYCLE_SOURCE_FILES = {
+    "source_bazi_general_true_spirit_positioning_pdf": (
+        "八字/07、真神在哪里？定位八字真神【万千周易网zhouyi666.com，9米每套 】.pdf"
+    ),
+    "source_bazi_general_mingli_wangdoujing_pdf": "1_命理望斗经(1).pdf",
+}
+
+EXPECTED_BAZI_GENERAL_FOLLOWUP_SOURCE_FILES = {
+    "source_bazi_general_xinpai_essence_part2_pdf": (
+        "佚名 - 新派命理精髓详解34份/新派命理精髓详解之二.pdf"
+    ),
+    "source_bazi_general_xingming_shuozheng_vol1_pdf": (
+        "霍敏卿-星命说证正续合编上册.pdf"
+    ),
+}
+
+EXPECTED_BAZI_GENERAL_GATED_ORDINARY_SOURCE_FILES = {
+    "source_bazi_general_mingzao_chunqiu_case_pdf": (
+        "八字18本/命造春秋  188P.pdf"
+    ),
+    "source_bazi_general_sizhu_yuce_yaojue_pdf": "四柱预测要诀.pdf",
+}
+
+EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FOLLOWUP_SOURCE_FILES = {
+    "source_bazi_general_bazi_baijue_case_pdf": (
+        "八字18本/八字百诀 上册  214P.pdf"
+    ),
+    "source_bazi_general_mingli_mijue_pdf": "命理秘诀(1).pdf",
+}
+
+EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FINAL_SOURCE_FILES = {
+    "source_bazi_general_choujin_bosi_case_pdf": (
+        "八字18本/抽筋剥丝讲八字  274P.pdf"
+    ),
+    "source_bazi_general_bazi_shizhan_mifa_pdf": "八字实战秘法公开.pdf",
+}
+
+PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS = {
+    "batch001_pattern_strength_001",
+    "batch001_ten_god_relation_001",
+    "batch001_branch_interaction_001",
+    "batch001_blind_image_method_001",
+    "batch002_useful_god_comparison_001",
+    "batch002_pattern_strength_001",
+    "batch002_luck_cycle_001",
+    "batch002_ten_god_relation_001",
+    "batch002_branch_interaction_route_001",
+    "batch002_useful_god_types_001",
+    "batch002_day_master_strength_basis_001",
+    "batch004_useful_god_001",
+    "batch004_pattern_strength_001",
+    "batch004_branch_interaction_001",
+    "batch004_luck_cycle_001",
+    "batch005_ten_god_relation_001",
+    "batch005_blind_image_method_001",
+    "batch005_branch_interaction_001",
+}
+
+
+REVIEW_NOTE_TOPIC_EVIDENCE_IDS = {
+    "blind_branch_interaction_001",
+    "blind_branch_interaction_002",
+    "blind_branch_interaction_003",
+    "blind_branch_interaction_004",
+    "blind_high_risk_signal_001",
+    "blind_remedy_boundary_001",
+    "blind_school_image_001",
+    "blind_school_image_002",
+    "duan_pattern_strength_001",
+    "duan_taboo_god_candidate_001",
+    "duan_taboo_god_candidate_002",
+    "duan_ten_god_relation_001",
+    "duan_ten_god_relation_002",
+    "duan_ten_god_relation_003",
+    "duan_useful_god_candidate_001",
+    "duan_useful_god_candidate_002",
+    "fortune_luck_cycle_001",
+    "fortune_remedy_boundary_001",
+    "fortune_remedy_boundary_002",
+    "fortune_remedy_boundary_003",
+    "fortune_remedy_boundary_004",
+    "fortune_taboo_god_candidate_001",
+    "fortune_ten_god_relation_001",
+    "fortune_useful_god_candidate_001",
+    "life_death_high_risk_signal_001",
+    "mingxue_five_element_balance_001",
+    "mingxue_five_element_balance_002",
+    "mingxue_five_element_balance_003",
+    "mingxue_pattern_strength_001",
+    "mingxue_taboo_god_candidate_001",
+    "mingxue_ten_god_relation_001",
+    "mingxue_ten_god_relation_002",
+    "mingxue_useful_god_candidate_001",
+    "northeast_blind_image_001",
+    "northeast_blind_image_002",
+    "northeast_blind_image_003",
+    "northeast_blind_image_004",
+    "northeast_blind_image_005",
+    "northeast_blind_image_006",
+    "northeast_branch_interaction_001",
+    "northeast_high_risk_signal_001",
+    "teacher_luck_cycle_trigger_001",
+    "teacher_luck_cycle_trigger_002",
+    "teacher_pattern_strength_001",
+    "teacher_pattern_strength_002",
+    "teacher_pattern_strength_003",
+    "teacher_taboo_god_candidate_001",
+    "teacher_taboo_god_candidate_002",
+    "teacher_ten_god_relation_001",
+    "teacher_useful_god_candidate_001",
+    "teacher_useful_god_candidate_002",
+}
+
+
+FILE_SECTION_EVIDENCE_IDS = {
+    "duan_ten_god_relation_004",
+    "fortune_remedy_boundary_005",
+    "life_death_book_boundary_signal_001",
+    "mingxue_five_element_balance_004",
+    "northeast_blind_image_007",
+    "teacher_pattern_strength_004",
+}
+
+
+REVIEW_NOTE_SOURCE_WINDOW_EVIDENCE_IDS = (
+    REVIEW_NOTE_TOPIC_EVIDENCE_IDS
+    | FILE_SECTION_EVIDENCE_IDS
+    | {"blind_life_manual_high_risk_boundary_001"}
+)
+
+
+def _assert_markdown_line_locator(locator):
+    assert locator.startswith("review-note:Markdown/source_batch_")
+    assert "#L" in locator
+
+    source_path_text, line_text = locator.removeprefix("review-note:").rsplit("#L", 1)
+    line_number = int(line_text)
+    source_path = Path(source_path_text)
+
+    assert source_path.exists(), source_path
+    assert 1 <= line_number <= len(source_path.read_text(encoding="utf-8").splitlines())
+
+
+def _assert_review_note_source_window_locator(locator):
+    _review_note_source_window_source_locator(locator)
+
+
+def _review_note_source_window_source_locator(locator):
+    assert locator.startswith("review-note:")
+    assert ".md#source-window-" in locator
+
+    file_name, anchor = locator.removeprefix("review-note:").split("#", 1)
+    note_path = Path("docs/classical_sources/extracts") / file_name
+    heading = f"### {anchor}"
+
+    assert note_path.exists(), note_path
+    note_text = note_path.read_text(encoding="utf-8")
+    assert heading in note_text
+
+    section = _extract_markdown_section(note_text, heading)
+    source_locator = _extract_bulleted_field(section, "Source locator")
+    _assert_source_locator_is_precise(source_locator)
+    _assert_chapter_locator_has_note(section, source_locator)
+    return source_locator
+
+
+def _extract_markdown_section(markdown, heading):
+    heading_line = f"{heading}\n"
+    start = markdown.index(heading_line)
+    rest = markdown[start + len(heading_line) :]
+    next_heading = rest.find("\n### ")
+    next_major_heading = rest.find("\n## ")
+    ends = [idx for idx in (next_heading, next_major_heading) if idx != -1]
+    end = min(ends) if ends else len(rest)
+    return rest[:end]
+
+
+def _extract_bulleted_field(section, field_name):
+    prefix = f"- {field_name}: `"
+    for line in section.splitlines():
+        if line.startswith(prefix) and line.endswith("`"):
+            return line.removeprefix(prefix).removesuffix("`")
+    raise AssertionError(f"missing {field_name}: {section}")
+
+
+def _assert_chapter_locator_has_note(section, source_locator):
+    if not source_locator.startswith("chapter:"):
+        return
+
+    locator_note = _extract_bulleted_field(section, "Locator note")
+    assert locator_note.startswith("blocked:"), locator_note
+    manual_review_note = _extract_bulleted_field(section, "Manual review note")
+    assert manual_review_note.startswith("manual-review:"), manual_review_note
+    learning_closure_note = _extract_bulleted_field(section, "Learning closure note")
+    assert learning_closure_note.startswith("learning-closure:"), learning_closure_note
+
+
+def _assert_source_locator_is_precise(locator):
+    if locator.startswith("page:"):
+        assert "source=" in locator
+        assert "heading:" in locator or "section:" in locator
+        return
+
+    if locator.startswith("chapter:"):
+        assert "source=" in locator
+        assert "section=" in locator or "heading:" in locator
+        return
+
+    if locator.startswith("Markdown/") and "#L" in locator:
+        source_path_text, line_text = locator.rsplit("#L", 1)
+        line_number = int(line_text)
+        source_path = Path(source_path_text)
+
+        assert source_path.exists(), source_path
+        assert 1 <= line_number <= len(
+            source_path.read_text(encoding="utf-8").splitlines()
+        )
+        return
+
+    raise AssertionError(locator)
+
 
 def _write_json(path, payload):
     path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
@@ -32,8 +267,22 @@ def test_source_registry_includes_all_initial_pdfs():
     sources = load_classical_sources()
     by_id = {source.source_id: source for source in sources}
 
-    assert len(sources) == 14
-    assert set(by_id) == set(EXPECTED_INITIAL_SOURCE_FILES) | {
+    assert len(sources) == 29
+    assert set(by_id) == set(EXPECTED_INITIAL_SOURCE_FILES) | set(
+        EXPECTED_BAZI_GENERAL_SOURCE_FILES
+    ) | set(
+        EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES
+    ) | set(
+        EXPECTED_BAZI_GENERAL_NEXT_CYCLE_SOURCE_FILES
+    ) | set(
+        EXPECTED_BAZI_GENERAL_FOLLOWUP_SOURCE_FILES
+    ) | set(
+        EXPECTED_BAZI_GENERAL_GATED_ORDINARY_SOURCE_FILES
+    ) | set(
+        EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FOLLOWUP_SOURCE_FILES
+    ) | set(
+        EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FINAL_SOURCE_FILES
+    ) | {
         "markdown_source_batch_001",
         "markdown_source_batch_002_core",
         "markdown_source_batch_004",
@@ -57,6 +306,53 @@ def test_source_registry_includes_all_initial_pdfs():
             "approved",
             "blocked",
         }
+        assert source.scope_notes
+    for source_id, file_name in EXPECTED_BAZI_GENERAL_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
+        assert source.scope_notes
+    for source_id, file_name in EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
+    for source_id, file_name in EXPECTED_BAZI_GENERAL_GATED_ORDINARY_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
+    for source_id, file_name in EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FOLLOWUP_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
+        assert source.scope_notes
+    for source_id, file_name in EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FINAL_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
+        assert source.scope_notes
+    for source_id, file_name in EXPECTED_BAZI_GENERAL_NEXT_CYCLE_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
+        assert source.scope_notes
+    for source_id, file_name in EXPECTED_BAZI_GENERAL_FOLLOWUP_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
         assert source.scope_notes
 
 
@@ -108,6 +404,297 @@ def test_seeded_curation_batches_reference_existing_sources_and_evidence():
         for batch in batches
         for evidence_id in batch.evidence_ids
     )
+
+
+def test_bazi_general_source_preparation_reading_evidence_is_formalized():
+    sources_by_id = {source.source_id: source for source in load_classical_sources()}
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+    batches_by_id = {batch.batch_id: batch for batch in load_curation_batches()}
+
+    expected_evidence = {
+        "bazi_general_lecture_pattern_strength_001": (
+            "source_bazi_general_lecture_textbook_pdf",
+            "pattern_strength",
+        ),
+        "bazi_general_beichen_branch_interaction_001": (
+            "source_bazi_general_beichen_intro_pdf",
+            "branch_interaction",
+        ),
+        "bazi_general_ziping_useful_god_001": (
+            "source_bazi_general_ziping_orthodox_pair_pdf",
+            "useful_god_candidate",
+        ),
+    }
+    for evidence_id, (source_id, rule_family) in expected_evidence.items():
+        source = sources_by_id[source_id]
+        unit = evidence_by_id[evidence_id]
+
+        assert source.review_status == "approved"
+        assert unit.source_id == source_id
+        assert unit.source_ref.startswith(("page:", "heading:"))
+        assert unit.rule_family == rule_family
+        assert unit.risk_tier == "ordinary"
+        assert unit.curation_batch_id == "batch_bazi_general_source_preparation_001"
+        assert len(unit.summary) <= 280
+        assert unit.applicability
+        assert unit.limitations
+
+    batch = batches_by_id["batch_bazi_general_source_preparation_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.source_ids == list(EXPECTED_BAZI_GENERAL_SOURCE_FILES)
+    assert batch.evidence_ids == list(expected_evidence)
+    assert batch.unresolved_issues == []
+
+
+def test_bazi_general_selected_variant_evidence_is_formalized():
+    sources_by_id = {source.source_id: source for source in load_classical_sources()}
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+    batches_by_id = {batch.batch_id: batch for batch in load_curation_batches()}
+
+    expected_evidence = {
+        "bazi_general_ditiansui_pattern_strength_001": (
+            "source_bazi_general_ditiansui_selected_pdf",
+            "pattern_strength",
+        ),
+        "bazi_general_qiongtong_useful_god_001": (
+            "source_bazi_general_qiongtong_selected_pdf",
+            "useful_god_candidate",
+        ),
+    }
+    for evidence_id, (source_id, rule_family) in expected_evidence.items():
+        source = sources_by_id[source_id]
+        unit = evidence_by_id[evidence_id]
+
+        assert source.review_status == "approved"
+        assert unit.source_id == source_id
+        assert unit.source_ref.startswith("page:")
+        assert unit.rule_family == rule_family
+        assert unit.risk_tier == "ordinary"
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
+        assert unit.curation_batch_id == "batch_bazi_general_selected_variant_001"
+        assert len(unit.summary) <= 280
+        assert unit.applicability
+        assert unit.limitations
+
+    batch = batches_by_id["batch_bazi_general_selected_variant_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.source_ids == list(EXPECTED_BAZI_GENERAL_SELECTED_SOURCE_FILES)
+    assert batch.evidence_ids == list(expected_evidence)
+    assert batch.unresolved_issues == []
+
+
+def test_bazi_general_next_cycle_cluster_source_evidence_is_formalized():
+    sources_by_id = {source.source_id: source for source in load_classical_sources()}
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+    batches_by_id = {batch.batch_id: batch for batch in load_curation_batches()}
+
+    expected_evidence = {
+        "bazi_general_true_spirit_useful_god_001": (
+            "source_bazi_general_true_spirit_positioning_pdf",
+            "useful_god_candidate",
+        ),
+        "bazi_general_wangdoujing_branch_interaction_001": (
+            "source_bazi_general_mingli_wangdoujing_pdf",
+            "branch_interaction",
+        ),
+    }
+    for evidence_id, (source_id, rule_family) in expected_evidence.items():
+        source = sources_by_id[source_id]
+        unit = evidence_by_id[evidence_id]
+
+        assert source.review_status == "approved"
+        assert unit.source_id == source_id
+        assert unit.source_ref.startswith("page:")
+        assert unit.rule_family == rule_family
+        assert unit.risk_tier == "ordinary"
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
+        assert (
+            unit.curation_batch_id
+            == "batch_bazi_general_next_cycle_cluster_source_001"
+        )
+        assert len(unit.summary) <= 280
+        assert unit.applicability
+        assert unit.limitations
+
+    batch = batches_by_id["batch_bazi_general_next_cycle_cluster_source_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.source_ids == list(EXPECTED_BAZI_GENERAL_NEXT_CYCLE_SOURCE_FILES)
+    assert batch.evidence_ids == list(expected_evidence)
+    assert batch.unresolved_issues == []
+
+
+def test_bazi_general_next_cycle_followup_evidence_is_formalized():
+    sources_by_id = {source.source_id: source for source in load_classical_sources()}
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+    batches_by_id = {batch.batch_id: batch for batch in load_curation_batches()}
+
+    expected_evidence = {
+        "bazi_general_xinpai_essence_pattern_strength_001": (
+            "source_bazi_general_xinpai_essence_part2_pdf",
+            "pattern_strength",
+        ),
+        "bazi_general_xingming_shuozheng_branch_interaction_001": (
+            "source_bazi_general_xingming_shuozheng_vol1_pdf",
+            "branch_interaction",
+        ),
+    }
+    for evidence_id, (source_id, rule_family) in expected_evidence.items():
+        source = sources_by_id[source_id]
+        unit = evidence_by_id[evidence_id]
+
+        assert source.review_status == "approved"
+        assert unit.source_id == source_id
+        assert unit.source_ref.startswith("page:")
+        assert unit.rule_family == rule_family
+        assert unit.risk_tier == "ordinary"
+        assert unit.source_quality == "review_note"
+        assert unit.confidence == "weak"
+        assert unit.curation_batch_id == "batch_bazi_general_next_cycle_followup_001"
+        assert len(unit.summary) <= 280
+        assert unit.applicability
+        assert unit.limitations
+
+    batch = batches_by_id["batch_bazi_general_next_cycle_followup_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.source_ids == list(EXPECTED_BAZI_GENERAL_FOLLOWUP_SOURCE_FILES)
+    assert batch.evidence_ids == list(expected_evidence)
+    assert batch.unresolved_issues == []
+
+
+def test_markdown_batch_002_extension_evidence_is_formalized():
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+    batches_by_id = {batch.batch_id: batch for batch in load_curation_batches()}
+
+    expected_evidence = {
+        "batch002_branch_interaction_route_001": "branch_interaction",
+        "batch002_useful_god_types_001": "useful_god_candidate",
+        "batch002_day_master_strength_basis_001": "pattern_strength",
+    }
+    for evidence_id, rule_family in expected_evidence.items():
+        unit = evidence_by_id[evidence_id]
+
+        assert unit.source_id == "markdown_source_batch_002_core"
+        _assert_markdown_line_locator(unit.source_ref)
+        assert unit.rule_family == rule_family
+        assert unit.risk_tier == "ordinary"
+        assert unit.curation_batch_id == "batch_markdown_batch_002_extension_001"
+        assert unit.confidence == "moderate"
+        assert unit.source_quality == "direct_extract"
+        assert unit.applicability
+        assert unit.limitations
+        assert len(unit.summary) <= 280
+
+    batch = batches_by_id["batch_markdown_batch_002_extension_001"]
+    assert batch.review_status == "reviewed"
+    assert batch.source_ids == ["markdown_source_batch_002_core"]
+    assert batch.evidence_ids == list(expected_evidence)
+    assert batch.unresolved_issues == []
+
+
+def test_promoted_markdown_learning_evidence_uses_source_file_locators():
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+
+    assert PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS <= set(evidence_by_id)
+    for evidence_id in PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS:
+        source_ref = evidence_by_id[evidence_id].source_ref
+
+        _assert_markdown_line_locator(source_ref)
+        assert "learning-reference:" not in source_ref
+        assert "note_markdown_batch_005_001" not in source_ref
+
+
+def test_review_note_evidence_uses_precise_source_window_locators():
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
+
+    assert REVIEW_NOTE_SOURCE_WINDOW_EVIDENCE_IDS <= set(evidence_by_id)
+    for evidence_id in REVIEW_NOTE_SOURCE_WINDOW_EVIDENCE_IDS:
+        source_ref = evidence_by_id[evidence_id].source_ref
+
+        _assert_review_note_source_window_locator(source_ref)
+
+
+def test_formal_evidence_has_no_legacy_file_section_locators():
+    evidence_units = load_evidence_units()
+    legacy_file_section_refs = [
+        (unit.evidence_id, unit.source_ref)
+        for unit in evidence_units
+        if unit.source_ref.startswith("review-note:")
+        and ".md#" in unit.source_ref
+        and "#source-window-" not in unit.source_ref
+        and not unit.source_ref.startswith("review-note:Markdown/")
+    ]
+
+    assert legacy_file_section_refs == []
+
+
+def test_source_ref_quality_audit_tracks_source_window_references():
+    report = Path("docs/classical_sources/source_ref_quality_audit.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "REVIEW_NOTE_TOPIC" not in report
+    assert "FILE_SECTION" not in report
+    assert "| REVIEW_NOTE_SOURCE_WINDOW | 58 | 57.4% |" in report
+    assert "| MARKDOWN_SOURCE_LINE | 18 | 17.8% |" in report
+    assert "| PAGE_EXACT | 14 | 13.9% |" in report
+    assert "| PAGE_LOCATOR | 44 |" in report
+    assert "| CHAPTER_LOCATOR | 12 |" in report
+    assert "| MARKDOWN_LINE_LOCATOR | 2 |" in report
+    assert "| blocked:rendered-review-no-topic-page-match | 4 |" in report
+    assert "| blocked:rendered-review-no-remedy-boundary-page-match | 5 |" in report
+    assert "| blocked:rendered-review-no-risk-boundary-page-match | 2 |" in report
+    assert "| blocked:blind-life-boundary-only-no-page-review | 1 |" in report
+    assert "## OCR/Page Review Pass" in report
+    assert "| blind_school_secret_pdf | prior-page-reviewed | 1 |" in report
+    assert "| duan_plain_mingxue_outline_pdf | page-reviewed | 5 |" in report
+    assert "| duan_plain_mingxue_outline_pdf | rendered-review-blocked | 4 |" in report
+    assert "| mingxue_golden_voice_pdf | page-reviewed | 9 |" in report
+    assert "| fortune_reading_hongfu_qitian_pdf | page-reviewed | 4 |" in report
+    assert "| fortune_reading_hongfu_qitian_pdf | rendered-review-blocked | 5 |" in report
+    assert "| northeast_blind_peak_pdf | page-reviewed | 7 |" in report
+    assert "| northeast_blind_peak_pdf | rendered-review-blocked | 2 |" in report
+    assert "## Manual Review Closure Pass" in report
+    assert "| duan_plain_mingxue_outline_pdf | no-single-topic-page | 4 |" in report
+    assert (
+        "| fortune_reading_hongfu_qitian_pdf | no-remedy-boundary-page | 5 |"
+        in report
+    )
+    assert "| northeast_blind_peak_pdf | page-reviewed | 1 |" in report
+    assert "| northeast_blind_peak_pdf | no-risk-boundary-page | 2 |" in report
+    assert "## Learning Closure Pass" in report
+    assert "| duan_plain_mingxue_outline_pdf | learning-paraphrase-ready | 4 |" in report
+    assert (
+        "| fortune_reading_hongfu_qitian_pdf | policy-boundary-retained | 5 |"
+        in report
+    )
+    assert "| northeast_blind_peak_pdf | safety-boundary-retained | 2 |" in report
+    assert "| blind_life_manual_pdf | boundary-only-retained | 1 |" in report
+    assert "| Total | retained-chapter-learning-closed | 12 |" in report
+    assert "Converted 51 legacy topic-only review-note references" in report
+    assert "Converted 6 legacy file-section review-note references" in report
+
+    inventory = report.split("## Detailed Inventory", 1)[1].split(
+        "## Recommendations", 1
+    )[0]
+    for line in inventory.splitlines():
+        if not line.startswith("| ") or line.startswith("| Evidence ID"):
+            continue
+        if set(line.replace("|", "").strip()) == {"-"}:
+            continue
+
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        evidence_id = cells[0]
+        source_ref = cells[5].strip("`")
+        source_locator = cells[6].strip("`")
+        precision = cells[7]
+
+        if precision != "REVIEW_NOTE_SOURCE_WINDOW":
+            continue
+
+        expected_locator = _review_note_source_window_source_locator(source_ref)
+        assert source_locator == expected_locator, evidence_id
 
 
 def test_loader_rejects_duplicate_source_ids(tmp_path):

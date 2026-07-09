@@ -1,0 +1,76 @@
+[
+  {
+    "intake_item_id": "new_material_intake_xiahai_suanmingji_pdf",
+    "intake_id": "015-new-material-intake",
+    "authorization_id": "013-012-explicit-downstream-authorization",
+    "source_selection_id": "next_cycle_bazi_misc_identity_review",
+    "cluster_id": "bazi_general_misc_identity_review_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "source_label": "Xiahai Suanmingji PDF",
+    "intake_status": "selected_for_source_identity_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "clarify_identity",
+    "relative_paths": [
+      "下海算命记.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "selected_next_material_entry": "015-new-material-source-identity-review",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "Selected as a single ordinary PDF from the miscellaneous identity-review cluster after explicit downstream authorization was consumed without duplicate writes.",
+    "guardrails": [
+      "Use tracked inventory path labels only.",
+      "Do not read, move, convert, or rewrite the external PDF.",
+      "Confirm source identity before source-library registration.",
+      "Do not create duplicate 013 or 012 downstream records in this stage."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  },
+  {
+    "intake_item_id": "new_material_intake_bazi_suanming_cangjue_pdf",
+    "intake_id": "015-new-material-intake",
+    "authorization_id": "013-012-explicit-downstream-authorization",
+    "source_selection_id": "next_cycle_bazi_misc_identity_review",
+    "cluster_id": "bazi_general_misc_identity_review_cluster",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "source_root": "资料原文/文本类/",
+    "source_label": "Bazi Suanming Cangjue PDF",
+    "intake_status": "selected_for_source_identity_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "clarify_identity",
+    "relative_paths": [
+      "八字算命藏诀-黑白.pdf"
+    ],
+    "file_count": 1,
+    "priority_text_candidate_count": 1,
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "selected_next_material_entry": "015-new-material-source-identity-review",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "Selected as a second single ordinary PDF from the miscellaneous identity-review cluster; the bazi fortune-telling hidden-formula title is a direct bazi fit for the branch-interaction rule family, and identity review must confirm scope before source-library registration.",
+    "guardrails": [
+      "Use tracked inventory path labels only.",
+      "Do not read, move, convert, or rewrite the external PDF.",
+      "Confirm source identity before source-library registration.",
+      "Do not create duplicate 013 or 012 downstream records in this stage."
+    ],
+    "created_at": "2026-07-09",
+    "updated_at": "2026-07-09"
+  }
+]

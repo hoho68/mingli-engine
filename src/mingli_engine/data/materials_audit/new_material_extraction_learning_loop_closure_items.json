@@ -1,0 +1,33 @@
+[
+  {
+    "closure_item_id": "new_material_loop_closure_001",
+    "closure_id": "017-new-material-extraction-learning-loop-closure",
+    "source_selection_id": "015-raw-text-next-cycle-source-selection",
+    "sensitive_reading_id": "015-raw-text-next-cycle-sensitive-preparation-reading",
+    "authorization_audit_id": "017-candidate-formal-evidence-authorization-audit",
+    "routing_id": "013-explicit-candidate-review-or-015-queue-refresh",
+    "inventory_confirmation_id": "015-external-material-inventory-refresh",
+    "closure_status": "new_material_learning_loop_closed",
+    "selected_next_material_entry": "013-explicit-candidate-review-or-new-material-intake",
+    "completed_stage_count": 16,
+    "source_selection_item_count": 5,
+    "registered_source_entry_count": 11,
+    "preparation_reading_item_count": 1,
+    "candidate_intake_ready_count": 0,
+    "formal_evidence_ready_count": 0,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "downstream_mutation_authorized": false,
+    "rationale": "The refreshed inventory routes back to source selection, but the selected raw-text next-cycle surfaces are already closed through preparation reading and 017 authorization audit.",
+    "guardrails": [
+      "Use tracked metadata only for loop closure.",
+      "Do not reopen external raw materials during this checkpoint.",
+      "Do not create new 013 candidate, review, promotion, or 012 evidence records without explicit authorization.",
+      "Restart 015 source selection only after a genuinely new material intake surface exists."
+    ],
+    "created_at": "2026-06-30",
+    "updated_at": "2026-06-30"
+  }
+]

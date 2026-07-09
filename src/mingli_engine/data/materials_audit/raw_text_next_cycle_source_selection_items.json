@@ -1,0 +1,120 @@
+[
+  {
+    "selection_id": "next_cycle_bazi_modern_method_series",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "cluster_id": "bazi_general_modern_method_series_cluster",
+    "source_root": "资料原文/文本类/",
+    "selection_label": "Bazi General Modern Method Series Identity Review",
+    "selection_status": "selected_for_identity_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "clarify_identity",
+    "file_count": 39,
+    "priority_text_candidate_count": 39,
+    "target_rule_families": [
+      "pattern_strength",
+      "useful_god_candidate"
+    ],
+    "next_material_entry": "015-raw-text-next-cycle-identity-review",
+    "rationale": "Ordinary-risk modern method labels need identity review before any source registration or reading work.",
+    "guardrails": [
+      "Use cluster metadata only until source identity is resolved.",
+      "Do not treat marketing-series labels as verified rule evidence."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "next_cycle_bazi_misc_identity_review",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "cluster_id": "bazi_general_misc_identity_review_cluster",
+    "source_root": "资料原文/文本类/",
+    "selection_label": "Bazi General Miscellaneous Identity Review",
+    "selection_status": "selected_for_identity_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "clarify_identity",
+    "file_count": 36,
+    "priority_text_candidate_count": 36,
+    "target_rule_families": [
+      "branch_interaction"
+    ],
+    "next_material_entry": "015-raw-text-next-cycle-identity-review",
+    "rationale": "Mixed ordinary labels can be narrowed through identity review before choosing any individual source.",
+    "guardrails": [
+      "Do not infer domain fit from weak or mixed title labels.",
+      "Keep miscellaneous files outside source-library registration until reviewed."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "next_cycle_bazi_case_collection_deferred",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "cluster_id": "bazi_general_case_collection_cluster",
+    "source_root": "资料原文/文本类/",
+    "selection_label": "Bazi General Case Collection Deferred",
+    "selection_status": "deferred_case_collection",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "defer",
+    "file_count": 24,
+    "priority_text_candidate_count": 24,
+    "target_rule_families": [
+      "branch_interaction",
+      "luck_cycle",
+      "pattern_strength",
+      "ten_god_relation"
+    ],
+    "rationale": "Case collections remain useful after identity anchors but should not lead the next source cycle.",
+    "guardrails": [
+      "Do not infer operational conclusions from case-title labels.",
+      "Pick a narrower case source only after ordinary identity clusters are resolved."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "next_cycle_bazi_practical_formula_deferred",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "cluster_id": "bazi_general_practical_formula_cluster",
+    "source_root": "资料原文/文本类/",
+    "selection_label": "Bazi General Practical Formula Deferred",
+    "selection_status": "deferred_formula_review",
+    "risk_boundary": "ordinary",
+    "recommended_next_action": "defer",
+    "file_count": 31,
+    "priority_text_candidate_count": 31,
+    "target_rule_families": [
+      "pattern_strength",
+      "branch_interaction",
+      "luck_cycle"
+    ],
+    "rationale": "Formula-style labels need later boundary review before learning or extraction planning.",
+    "guardrails": [
+      "Avoid treating formula labels as verified source content.",
+      "Keep conditional language until source-specific review exists."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  },
+  {
+    "selection_id": "next_cycle_bazi_sensitive_topic_risk_review",
+    "triage_group_id": "raw_text_triage_bazi_general",
+    "cluster_id": "bazi_general_sensitive_topic_cluster",
+    "source_root": "资料原文/文本类/",
+    "selection_label": "Bazi General Sensitive Topic Risk Review",
+    "selection_status": "risk_review_required",
+    "risk_boundary": "sensitive",
+    "recommended_next_action": "risk_review",
+    "file_count": 10,
+    "priority_text_candidate_count": 9,
+    "target_rule_families": [
+      "ten_god_relation"
+    ],
+    "rationale": "Sensitive topic labels need risk boundary review before any reading or learning use.",
+    "guardrails": [
+      "Do not use relationship or psychology labels for deterministic claims.",
+      "Keep this cluster outside source selection until boundary wording is prepared."
+    ],
+    "created_at": "2026-06-28",
+    "updated_at": "2026-06-28"
+  }
+]
