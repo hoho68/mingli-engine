@@ -3676,3 +3676,42 @@ def test_new_material_publication_handoff_package_is_documented():
         ):
             assert marker in text
         assert "`publication-package-status=pushed`" not in text
+
+
+def test_extraction_completion_closure_packet_is_documented_after_local_merge():
+    docs = [
+        Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("docs/classical_sources/materials_audit.md").read_text(
+            encoding="utf-8"
+        ),
+    ]
+
+    for text in docs:
+        for marker in (
+            "Extraction Completion Closure Packet",
+            "`extraction-completion-status=closed_no_uncovered_materials`",
+            "`local-merge-status=merged_to_main`",
+            "`local-main-ahead-origin=99`",
+            "`015-queue-items=32`",
+            "`016-covered-queue-items=31`",
+            "`015-local-completed-queue-items=1`",
+            "`uncovered-queue-items=0`",
+            "`refreshed-next-action-ids=0`",
+            "`016-extraction-tasks=29`",
+            "`016-extraction-tasks-completed=29`",
+            "`new-material-pending-sources=0`",
+            "`untracked-material-entries=0`",
+            "`candidate-intake-allowed=0`",
+            "`github-push-required=false`",
+            "`next-work-entry=013-candidate-review-or-wait-new-material`",
+            "`test-plan-full-pytest=880 passed`",
+            "`test-plan-learning-reference=111 passed`",
+            "`test-plan-materials-audit=150 passed`",
+        ):
+            assert marker in text
+        assert "`extraction-completion-status=open`" not in text

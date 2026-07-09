@@ -575,6 +575,31 @@ uv run --with pytest python -m pytest tests/unit/test_learning_reference_curatio
 uv run --with pytest python -m pytest tests/unit/test_materials_audit.py
 ```
 
+Extraction Completion Closure Packet:
+
+- `extraction-completion-status=closed_no_uncovered_materials`
+- `local-merge-status=merged_to_main`
+- `local-main-ahead-origin=99`
+- `015-queue-items=32`
+- `016-covered-queue-items=31`
+- `015-local-completed-queue-items=1`
+- `uncovered-queue-items=0`
+- `refreshed-next-action-ids=0`
+- `016-extraction-tasks=29`
+- `016-extraction-tasks-completed=29`
+- `new-material-pending-sources=0`
+- `untracked-material-entries=0`
+- `candidate-intake-allowed=0`
+- `github-push-required=false`
+- `next-work-entry=013-candidate-review-or-wait-new-material`
+- `test-plan-full-pytest=880 passed`
+- `test-plan-learning-reference=111 passed`
+- `test-plan-materials-audit=150 passed`
+
+Closure rule: material extraction is closed at the local `main` level. Do not
+open another extraction cycle unless a new source is registered or a maintainer
+chooses to resume 013 candidate review work.
+
 Run focused learning reference curation tests:
 
 ```powershell
