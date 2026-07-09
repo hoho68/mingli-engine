@@ -2,6 +2,7 @@
 
 from collections import Counter
 import csv
+from functools import lru_cache
 import json
 from pathlib import Path
 from typing import Any
@@ -57,6 +58,7 @@ from mingli_engine.models import (
     NewMaterialControlledTextPreparationItem,
     NewMaterialControlledTextPreparationSummary,
     NewMaterialIntakeItem,
+    NewMaterialMachineDispositionSummary,
     NewMaterialOcrOrManualTranscriptionItem,
     NewMaterialOcrOrManualTranscriptionSummary,
     NewMaterialOcrQualityRemediationItem,
@@ -349,6 +351,24 @@ NEW_MATERIAL_OCR_QUALITY_REMEDIATION_ID = (
 NEW_MATERIAL_OCR_QUALITY_REMEDIATION_NEXT_MATERIAL_ENTRY = (
     "015-new-material-human-corrected-transcription-prep"
 )
+NEW_MATERIAL_MACHINE_UNUSABLE_CLOSURE_NEXT_MATERIAL_ENTRY = (
+    "015-new-material-machine-unusable-closure"
+)
+NEW_MATERIAL_OCR_QUALITY_REMEDIATION_MIXED_NEXT_MATERIAL_ENTRY = (
+    "015-new-material-human-corrected-transcription-prep-or-machine-unusable-closure"
+)
+NEW_MATERIAL_MACHINE_DISPOSITION_ID = "015-new-material-machine-disposition"
+NEW_MATERIAL_MACHINE_DISPOSITION_NEXT_MATERIAL_ENTRY = (
+    "015-new-material-machine-disposition-completed"
+)
+NEW_MATERIAL_MACHINE_DISPOSITIONS = frozenset(
+    {
+        "machine_text_usable",
+        "machine_structure_only",
+        "machine_unusable_closed",
+        "deferred_requires_better_source",
+    }
+)
 NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_ID = (
     "015-new-material-human-corrected-transcription-prep"
 )
@@ -403,7 +423,7 @@ NEW_MATERIAL_OCR_RUNTIME_SETUP_STATUSES = frozenset(
     {"blocked_ocr_quality_insufficient"}
 )
 NEW_MATERIAL_OCR_QUALITY_REMEDIATION_STATUSES = frozenset(
-    {"blocked_requires_human_correction"}
+    {"blocked_requires_human_correction", "machine_unusable_closed"}
 )
 NEW_MATERIAL_HUMAN_CORRECTED_TRANSCRIPTION_PREP_STATUSES = frozenset(
     {"blocked_ready_for_human_correction"}
@@ -9987,6 +10007,7 @@ def _new_material_source_entry_matches_prep(
 def _new_material_registration_prep_item_from_dict(
     data: dict[str, Any],
     source_dir: Path,
+    review_items_by_id: dict[str, Any] | None = None,
 ) -> NewMaterialRegistrationPrepItem:
     try:
         item = NewMaterialRegistrationPrepItem(**data)
@@ -10094,10 +10115,11 @@ def _new_material_registration_prep_item_from_dict(
     if item.downstream_mutation_authorized:
         raise MaterialsAuditError(f"{owner_id} must not authorize downstream mutation")
 
-    review_items_by_id = {
-        review.review_item_id: review
-        for review in load_new_material_source_identity_review_items(source_dir)
-    }
+    if review_items_by_id is None:
+        review_items_by_id = {
+            review.review_item_id: review
+            for review in load_new_material_source_identity_review_items(source_dir)
+        }
     review = review_items_by_id.get(item.identity_review_item_id)
     if review is None:
         raise MaterialsAuditError(
@@ -10121,8 +10143,16 @@ def load_new_material_registration_prep_items(
     items_path = source_dir / "new_material_registration_prep_items.json"
     if not items_path.exists():
         return []
+    review_items_by_id = {
+        review.review_item_id: review
+        for review in load_new_material_source_identity_review_items(source_dir)
+    }
     items = [
-        _new_material_registration_prep_item_from_dict(item, source_dir)
+        _new_material_registration_prep_item_from_dict(
+            item,
+            source_dir,
+            review_items_by_id,
+        )
         for item in _read_optional_json_list(items_path)
     ]
     _ensure_unique([item.prep_item_id for item in items], "prep_item_id")
@@ -10265,6 +10295,8 @@ def render_new_material_registration_prep_markdown(
 def _new_material_source_registration_item_from_dict(
     data: dict[str, Any],
     source_dir: Path,
+    prep_items_by_id: dict[str, Any] | None = None,
+    source_entries_by_id: dict[str, Any] | None = None,
 ) -> NewMaterialSourceRegistrationItem:
     try:
         item = NewMaterialSourceRegistrationItem(**data)
@@ -10298,13 +10330,16 @@ def _new_material_source_registration_item_from_dict(
         owner_id,
     )
     _require_string_list(item.guardrails, "guardrails", owner_id)
-    prep_items_by_id = {
-        prep.prep_item_id: prep for prep in load_new_material_registration_prep_items(source_dir)
-    }
+    if prep_items_by_id is None:
+        prep_items_by_id = {
+            prep.prep_item_id: prep
+            for prep in load_new_material_registration_prep_items(source_dir)
+        }
     prep = prep_items_by_id.get(item.prep_item_id)
     if prep is None:
         raise MaterialsAuditError(f"{owner_id} references unknown prep_item_id")
-    source_entries_by_id = _load_source_library_entries(source_dir)
+    if source_entries_by_id is None:
+        source_entries_by_id = _load_source_library_entries(source_dir)
     entry = source_entries_by_id.get(item.source_library_entry_id)
     if entry is None:
         raise MaterialsAuditError(f"{owner_id} references unknown source-library entry")
@@ -10335,8 +10370,18 @@ def load_new_material_source_registration_items(
     items_path = source_dir / "new_material_source_registration_items.json"
     if not items_path.exists():
         return []
+    prep_items_by_id = {
+        prep.prep_item_id: prep
+        for prep in load_new_material_registration_prep_items(source_dir)
+    }
+    source_entries_by_id = _load_source_library_entries(source_dir)
     items = [
-        _new_material_source_registration_item_from_dict(item, source_dir)
+        _new_material_source_registration_item_from_dict(
+            item,
+            source_dir,
+            prep_items_by_id,
+            source_entries_by_id,
+        )
         for item in _read_optional_json_list(items_path)
     ]
     _ensure_unique([item.registration_item_id for item in items], "registration_item_id")
@@ -10460,6 +10505,7 @@ def render_new_material_source_registration_markdown(
 def _new_material_preparation_boundary_item_from_dict(
     data: dict[str, Any],
     source_dir: Path,
+    registration_items_by_id: dict[str, Any] | None = None,
 ) -> NewMaterialPreparationBoundaryItem:
     try:
         item = NewMaterialPreparationBoundaryItem(**data)
@@ -10501,10 +10547,11 @@ def _new_material_preparation_boundary_item_from_dict(
     )
     _require_non_negative_int(item.file_count, "file_count", owner_id)
     _require_string_list(item.guardrails, "guardrails", owner_id)
-    registration_items_by_id = {
-        registration.registration_item_id: registration
-        for registration in load_new_material_source_registration_items(source_dir)
-    }
+    if registration_items_by_id is None:
+        registration_items_by_id = {
+            registration.registration_item_id: registration
+            for registration in load_new_material_source_registration_items(source_dir)
+        }
     registration = registration_items_by_id.get(item.registration_item_id)
     if registration is None:
         raise MaterialsAuditError(
@@ -10539,8 +10586,16 @@ def load_new_material_preparation_boundary_items(
     items_path = source_dir / "new_material_preparation_boundary_items.json"
     if not items_path.exists():
         return []
+    registration_items_by_id = {
+        registration.registration_item_id: registration
+        for registration in load_new_material_source_registration_items(source_dir)
+    }
     items = [
-        _new_material_preparation_boundary_item_from_dict(item, source_dir)
+        _new_material_preparation_boundary_item_from_dict(
+            item,
+            source_dir,
+            registration_items_by_id,
+        )
         for item in _read_optional_json_list(items_path)
     ]
     _ensure_unique([item.boundary_item_id for item in items], "boundary_item_id")
@@ -10683,6 +10738,7 @@ def render_new_material_preparation_boundary_markdown(
 def _new_material_controlled_text_preparation_item_from_dict(
     data: dict[str, Any],
     source_dir: Path,
+    boundary_items_by_id: dict[str, Any] | None = None,
 ) -> NewMaterialControlledTextPreparationItem:
     try:
         item = NewMaterialControlledTextPreparationItem(**data)
@@ -10745,10 +10801,11 @@ def _new_material_controlled_text_preparation_item_from_dict(
         if getattr(item, field_name) != 0:
             raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
 
-    boundary_items_by_id = {
-        boundary.boundary_item_id: boundary
-        for boundary in load_new_material_preparation_boundary_items(source_dir)
-    }
+    if boundary_items_by_id is None:
+        boundary_items_by_id = {
+            boundary.boundary_item_id: boundary
+            for boundary in load_new_material_preparation_boundary_items(source_dir)
+        }
     boundary = boundary_items_by_id.get(item.boundary_item_id)
     if boundary is None:
         raise MaterialsAuditError(f"{owner_id} references unknown boundary_item_id")
@@ -10767,23 +10824,45 @@ def load_new_material_controlled_text_preparation_items(
     data_dir: Path | str | None = None,
 ) -> list[NewMaterialControlledTextPreparationItem]:
     source_dir = _data_dir(data_dir)
+    items, _boundary_items = _new_material_controlled_text_preparation_context(
+        source_dir
+    )
+    return items
+
+
+@lru_cache(maxsize=None)
+def _new_material_controlled_text_preparation_context(
+    source_dir: Path,
+) -> tuple[
+    list[NewMaterialControlledTextPreparationItem],
+    list[NewMaterialPreparationBoundaryItem],
+]:
     items_path = source_dir / "new_material_controlled_text_preparation_items.json"
     if not items_path.exists():
-        return []
+        return [], []
+    boundary_items_by_id = {
+        boundary.boundary_item_id: boundary
+        for boundary in load_new_material_preparation_boundary_items(source_dir)
+    }
     items = [
-        _new_material_controlled_text_preparation_item_from_dict(item, source_dir)
+        _new_material_controlled_text_preparation_item_from_dict(
+            item,
+            source_dir,
+            boundary_items_by_id,
+        )
         for item in _read_optional_json_list(items_path)
     ]
     _ensure_unique([item.preparation_item_id for item in items], "preparation_item_id")
-    return items
+    return items, list(boundary_items_by_id.values())
 
 
 def build_new_material_controlled_text_preparation_summary(
     data_dir: Path | str | None = None,
 ) -> NewMaterialControlledTextPreparationSummary:
     source_dir = _data_dir(data_dir)
-    items = load_new_material_controlled_text_preparation_items(source_dir)
-    boundary_summary = build_new_material_preparation_boundary_summary(source_dir)
+    items, boundary_items = _new_material_controlled_text_preparation_context(
+        source_dir
+    )
     no_downstream_delta = all(
         item.candidate_extract_delta_count == 0
         and item.review_decision_delta_count == 0
@@ -10799,7 +10878,11 @@ def build_new_material_controlled_text_preparation_summary(
         ),
         "preparation_boundary_completed": (
             "passed"
-            if boundary_summary.boundary_status == "preparation_boundary_completed"
+            if boundary_items
+            and all(
+                item.boundary_status == "preparation_boundary_completed"
+                for item in boundary_items
+            )
             else "failed"
         ),
         "text_layer_probe_completed": (
@@ -10938,6 +11021,7 @@ def render_new_material_controlled_text_preparation_markdown(
 def _new_material_ocr_or_manual_transcription_item_from_dict(
     data: dict[str, Any],
     source_dir: Path,
+    prep_items_by_id: dict[str, Any] | None = None,
 ) -> NewMaterialOcrOrManualTranscriptionItem:
     try:
         item = NewMaterialOcrOrManualTranscriptionItem(**data)
@@ -11000,10 +11084,11 @@ def _new_material_ocr_or_manual_transcription_item_from_dict(
         if getattr(item, field_name) != 0:
             raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
 
-    prep_items_by_id = {
-        prep.preparation_item_id: prep
-        for prep in load_new_material_controlled_text_preparation_items(source_dir)
-    }
+    if prep_items_by_id is None:
+        prep_items_by_id = {
+            prep.preparation_item_id: prep
+            for prep in load_new_material_controlled_text_preparation_items(source_dir)
+        }
     prep = prep_items_by_id.get(item.controlled_text_preparation_item_id)
     if prep is None:
         raise MaterialsAuditError(
@@ -11026,25 +11111,41 @@ def load_new_material_ocr_or_manual_transcription_items(
     data_dir: Path | str | None = None,
 ) -> list[NewMaterialOcrOrManualTranscriptionItem]:
     source_dir = _data_dir(data_dir)
+    items, _prep_items = _new_material_ocr_or_manual_transcription_context(source_dir)
+    return items
+
+
+@lru_cache(maxsize=None)
+def _new_material_ocr_or_manual_transcription_context(
+    source_dir: Path,
+) -> tuple[
+    list[NewMaterialOcrOrManualTranscriptionItem],
+    list[NewMaterialControlledTextPreparationItem],
+]:
     items_path = source_dir / "new_material_ocr_or_manual_transcription_items.json"
     if not items_path.exists():
-        return []
+        return [], []
+    prep_items_by_id = {
+        prep.preparation_item_id: prep
+        for prep in load_new_material_controlled_text_preparation_items(source_dir)
+    }
     items = [
-        _new_material_ocr_or_manual_transcription_item_from_dict(item, source_dir)
+        _new_material_ocr_or_manual_transcription_item_from_dict(
+            item,
+            source_dir,
+            prep_items_by_id,
+        )
         for item in _read_optional_json_list(items_path)
     ]
     _ensure_unique([item.transcription_item_id for item in items], "transcription_item_id")
-    return items
+    return items, list(prep_items_by_id.values())
 
 
 def build_new_material_ocr_or_manual_transcription_summary(
     data_dir: Path | str | None = None,
 ) -> NewMaterialOcrOrManualTranscriptionSummary:
     source_dir = _data_dir(data_dir)
-    items = load_new_material_ocr_or_manual_transcription_items(source_dir)
-    controlled_summary = build_new_material_controlled_text_preparation_summary(
-        source_dir
-    )
+    items, prep_items = _new_material_ocr_or_manual_transcription_context(source_dir)
     no_downstream_delta = all(
         item.candidate_extract_delta_count == 0
         and item.review_decision_delta_count == 0
@@ -11066,8 +11167,11 @@ def build_new_material_ocr_or_manual_transcription_summary(
         ),
         "controlled_text_preparation_blocked": (
             "passed"
-            if controlled_summary.preparation_status
-            == "blocked_requires_ocr_or_manual_transcription"
+            if prep_items
+            and all(
+                item.preparation_status == "blocked_requires_ocr_or_manual_transcription"
+                for item in prep_items
+            )
             else "failed"
         ),
         "pdf_rendering_available": (
@@ -11207,6 +11311,7 @@ def render_new_material_ocr_or_manual_transcription_markdown(
 def _new_material_ocr_runtime_setup_item_from_dict(
     data: dict[str, Any],
     source_dir: Path,
+    previous_items_by_id: dict[str, Any] | None = None,
 ) -> NewMaterialOcrRuntimeSetupItem:
     try:
         item = NewMaterialOcrRuntimeSetupItem(**data)
@@ -11278,10 +11383,13 @@ def _new_material_ocr_runtime_setup_item_from_dict(
         if getattr(item, field_name) != 0:
             raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
 
-    previous_items_by_id = {
-        previous.transcription_item_id: previous
-        for previous in load_new_material_ocr_or_manual_transcription_items(source_dir)
-    }
+    if previous_items_by_id is None:
+        previous_items_by_id = {
+            previous.transcription_item_id: previous
+            for previous in load_new_material_ocr_or_manual_transcription_items(
+                source_dir
+            )
+        }
     previous = previous_items_by_id.get(item.ocr_or_manual_transcription_item_id)
     if previous is None:
         raise MaterialsAuditError(
@@ -11304,25 +11412,41 @@ def load_new_material_ocr_runtime_setup_items(
     data_dir: Path | str | None = None,
 ) -> list[NewMaterialOcrRuntimeSetupItem]:
     source_dir = _data_dir(data_dir)
+    items, _previous_items = _new_material_ocr_runtime_setup_context(source_dir)
+    return items
+
+
+@lru_cache(maxsize=None)
+def _new_material_ocr_runtime_setup_context(
+    source_dir: Path,
+) -> tuple[
+    list[NewMaterialOcrRuntimeSetupItem],
+    list[NewMaterialOcrOrManualTranscriptionItem],
+]:
     items_path = source_dir / "new_material_ocr_runtime_setup_items.json"
     if not items_path.exists():
-        return []
+        return [], []
+    previous_items_by_id = {
+        previous.transcription_item_id: previous
+        for previous in load_new_material_ocr_or_manual_transcription_items(source_dir)
+    }
     items = [
-        _new_material_ocr_runtime_setup_item_from_dict(item, source_dir)
+        _new_material_ocr_runtime_setup_item_from_dict(
+            item,
+            source_dir,
+            previous_items_by_id,
+        )
         for item in _read_optional_json_list(items_path)
     ]
     _ensure_unique([item.setup_item_id for item in items], "setup_item_id")
-    return items
+    return items, list(previous_items_by_id.values())
 
 
 def build_new_material_ocr_runtime_setup_summary(
     data_dir: Path | str | None = None,
 ) -> NewMaterialOcrRuntimeSetupSummary:
     source_dir = _data_dir(data_dir)
-    items = load_new_material_ocr_runtime_setup_items(source_dir)
-    previous_summary = build_new_material_ocr_or_manual_transcription_summary(
-        source_dir
-    )
+    items, previous_items = _new_material_ocr_runtime_setup_context(source_dir)
     no_downstream_delta = all(
         item.candidate_extract_delta_count == 0
         and item.review_decision_delta_count == 0
@@ -11336,8 +11460,11 @@ def build_new_material_ocr_runtime_setup_summary(
         "ocr_runtime_setup_items_loaded": "passed" if items else "failed",
         "previous_ocr_runtime_blocker_recorded": (
             "passed"
-            if previous_summary.transcription_status
-            == "blocked_ocr_runtime_unavailable"
+            if previous_items
+            and all(
+                item.transcription_status == "blocked_ocr_runtime_unavailable"
+                for item in previous_items
+            )
             else "failed"
         ),
         "pdf_rendering_available": (
@@ -11490,6 +11617,7 @@ def render_new_material_ocr_runtime_setup_markdown(
 def _new_material_ocr_quality_remediation_item_from_dict(
     data: dict[str, Any],
     source_dir: Path,
+    setup_items_by_id: dict[str, Any] | None = None,
 ) -> NewMaterialOcrQualityRemediationItem:
     try:
         item = NewMaterialOcrQualityRemediationItem(**data)
@@ -11514,8 +11642,14 @@ def _new_material_ocr_quality_remediation_item_from_dict(
         _require_text(getattr(item, field_name), field_name, owner_id)
     if item.remediation_id != NEW_MATERIAL_OCR_QUALITY_REMEDIATION_ID:
         raise MaterialsAuditError(f"{owner_id} has invalid remediation_id")
-    if item.selected_next_material_entry != (
-        NEW_MATERIAL_OCR_QUALITY_REMEDIATION_NEXT_MATERIAL_ENTRY
+    allowed_next_entries = {
+        "blocked_requires_human_correction": (
+            NEW_MATERIAL_OCR_QUALITY_REMEDIATION_NEXT_MATERIAL_ENTRY
+        ),
+        "machine_unusable_closed": NEW_MATERIAL_MACHINE_UNUSABLE_CLOSURE_NEXT_MATERIAL_ENTRY,
+    }
+    if item.selected_next_material_entry != allowed_next_entries.get(
+        item.remediation_status
     ):
         raise MaterialsAuditError(f"{owner_id} selected unexpected next entry")
     _validate_enum(
@@ -11548,16 +11682,24 @@ def _new_material_ocr_quality_remediation_item_from_dict(
         _require_non_negative_int(page_number, "probe_page_numbers", owner_id)
         if page_number <= 0:
             raise MaterialsAuditError(f"{owner_id} has invalid probe page number")
-    if not item.vertical_tessdata_available:
-        raise MaterialsAuditError(f"{owner_id} must have vertical tessdata available")
-    if "chi_tra_vert" not in item.tessdata_language_codes:
-        raise MaterialsAuditError(f"{owner_id} missing chi_tra_vert tessdata")
-    if not item.assistive_ocr_route_available:
-        raise MaterialsAuditError(f"{owner_id} must record assistive OCR route")
     if item.prepared_text_artifact_created:
         raise MaterialsAuditError(f"{owner_id} must not create prepared text")
-    if not item.human_correction_required:
-        raise MaterialsAuditError(f"{owner_id} must require human correction")
+    if item.remediation_status == "blocked_requires_human_correction":
+        if not item.vertical_tessdata_available:
+            raise MaterialsAuditError(
+                f"{owner_id} must have vertical tessdata available"
+            )
+        if "chi_tra_vert" not in item.tessdata_language_codes:
+            raise MaterialsAuditError(f"{owner_id} missing chi_tra_vert tessdata")
+        if not item.assistive_ocr_route_available:
+            raise MaterialsAuditError(f"{owner_id} must record assistive OCR route")
+        if not item.human_correction_required:
+            raise MaterialsAuditError(f"{owner_id} must require human correction")
+    if item.remediation_status == "machine_unusable_closed":
+        if item.assistive_ocr_route_available or item.human_correction_required:
+            raise MaterialsAuditError(
+                f"{owner_id} must close without assistive OCR or human correction"
+            )
     if item.source_library_mutation_authorized or item.downstream_mutation_authorized:
         raise MaterialsAuditError(f"{owner_id} must not authorize mutation")
     for field_name in (
@@ -11569,10 +11711,11 @@ def _new_material_ocr_quality_remediation_item_from_dict(
         if getattr(item, field_name) != 0:
             raise MaterialsAuditError(f"{owner_id} has non-zero {field_name}")
 
-    setup_items_by_id = {
-        setup.setup_item_id: setup
-        for setup in load_new_material_ocr_runtime_setup_items(source_dir)
-    }
+    if setup_items_by_id is None:
+        setup_items_by_id = {
+            setup.setup_item_id: setup
+            for setup in load_new_material_ocr_runtime_setup_items(source_dir)
+        }
     setup = setup_items_by_id.get(item.ocr_runtime_setup_item_id)
     if setup is None:
         raise MaterialsAuditError(f"{owner_id} references unknown OCR setup item")
@@ -11593,23 +11736,41 @@ def load_new_material_ocr_quality_remediation_items(
     data_dir: Path | str | None = None,
 ) -> list[NewMaterialOcrQualityRemediationItem]:
     source_dir = _data_dir(data_dir)
+    items, _setup_items = _new_material_ocr_quality_remediation_context(source_dir)
+    return items
+
+
+@lru_cache(maxsize=None)
+def _new_material_ocr_quality_remediation_context(
+    source_dir: Path,
+) -> tuple[
+    list[NewMaterialOcrQualityRemediationItem],
+    list[NewMaterialOcrRuntimeSetupItem],
+]:
     items_path = source_dir / "new_material_ocr_quality_remediation_items.json"
     if not items_path.exists():
-        return []
+        return [], []
+    setup_items_by_id = {
+        setup.setup_item_id: setup
+        for setup in load_new_material_ocr_runtime_setup_items(source_dir)
+    }
     items = [
-        _new_material_ocr_quality_remediation_item_from_dict(item, source_dir)
+        _new_material_ocr_quality_remediation_item_from_dict(
+            item,
+            source_dir,
+            setup_items_by_id,
+        )
         for item in _read_optional_json_list(items_path)
     ]
     _ensure_unique([item.remediation_item_id for item in items], "remediation_item_id")
-    return items
+    return items, list(setup_items_by_id.values())
 
 
 def build_new_material_ocr_quality_remediation_summary(
     data_dir: Path | str | None = None,
 ) -> NewMaterialOcrQualityRemediationSummary:
     source_dir = _data_dir(data_dir)
-    items = load_new_material_ocr_quality_remediation_items(source_dir)
-    setup_summary = build_new_material_ocr_runtime_setup_summary(source_dir)
+    items, setup_items = _new_material_ocr_quality_remediation_context(source_dir)
     no_downstream_delta = all(
         item.candidate_extract_delta_count == 0
         and item.review_decision_delta_count == 0
@@ -11619,32 +11780,47 @@ def build_new_material_ocr_quality_remediation_summary(
         and not item.source_library_mutation_authorized
         for item in items
     )
+    machine_resolution_recorded = bool(items) and all(
+        (
+            item.remediation_status == "blocked_requires_human_correction"
+            and item.human_correction_required
+            and item.assistive_ocr_route_available
+        )
+        or (
+            item.remediation_status == "machine_unusable_closed"
+            and not item.human_correction_required
+            and not item.assistive_ocr_route_available
+        )
+        for item in items
+    )
+    mixed_next_material_entry = (
+        NEW_MATERIAL_OCR_QUALITY_REMEDIATION_MIXED_NEXT_MATERIAL_ENTRY
+        if any(
+            item.remediation_status == "machine_unusable_closed" for item in items
+        )
+        else NEW_MATERIAL_OCR_QUALITY_REMEDIATION_NEXT_MATERIAL_ENTRY
+    )
     boundary_checks = {
         "ocr_quality_remediation_items_loaded": "passed" if items else "failed",
         "previous_ocr_quality_blocker_recorded": (
             "passed"
-            if setup_summary.setup_status == "blocked_ocr_quality_insufficient"
+            if setup_items
+            and all(
+                item.setup_status == "blocked_ocr_quality_insufficient"
+                for item in setup_items
+            )
             else "failed"
         ),
-        "vertical_tessdata_available": (
-            "passed"
-            if all(item.vertical_tessdata_available for item in items)
-            else "failed"
-        ),
-        "assistive_ocr_route_identified": (
-            "passed"
-            if all(item.assistive_ocr_route_available for item in items)
-            else "failed"
+        "machine_resolution_recorded": (
+            "passed" if machine_resolution_recorded else "failed"
         ),
         "prepared_text_artifact_absent": (
             "passed"
             if all(not item.prepared_text_artifact_created for item in items)
             else "failed"
         ),
-        "human_correction_required": (
-            "passed"
-            if all(item.human_correction_required for item in items)
-            else "failed"
+        "human_correction_or_machine_closure_recorded": (
+            "passed" if machine_resolution_recorded else "failed"
         ),
         "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
         "raw_materials_not_mutated": "passed",
@@ -11652,7 +11828,7 @@ def build_new_material_ocr_quality_remediation_summary(
     return NewMaterialOcrQualityRemediationSummary(
         remediation_id=NEW_MATERIAL_OCR_QUALITY_REMEDIATION_ID,
         remediation_status=(
-            "blocked_requires_human_correction"
+            "ocr_quality_remediation_completed"
             if all(status == "passed" for status in boundary_checks.values())
             else "ocr_quality_remediation_needs_attention"
         ),
@@ -11673,10 +11849,16 @@ def build_new_material_ocr_quality_remediation_summary(
         human_correction_required_count=sum(
             1 for item in items if item.human_correction_required
         ),
+        machine_unusable_closed_count=sum(
+            1
+            for item in items
+            if item.remediation_status == "machine_unusable_closed"
+        ),
         blocked_item_count=sum(
             1
             for item in items
-            if item.remediation_status == "blocked_requires_human_correction"
+            if item.remediation_status
+            in {"blocked_requires_human_correction", "machine_unusable_closed"}
         ),
         remediation_item_ids=[item.remediation_item_id for item in items],
         ocr_runtime_setup_item_ids=[
@@ -11703,11 +11885,11 @@ def build_new_material_ocr_quality_remediation_summary(
         downstream_mutation_authorized=any(
             item.downstream_mutation_authorized for item in items
         ),
-        next_material_entry=NEW_MATERIAL_OCR_QUALITY_REMEDIATION_NEXT_MATERIAL_ENTRY,
+        next_material_entry=mixed_next_material_entry,
         boundary_checks=boundary_checks,
         guardrails=[
             "Vertical OCR is an assistive draft route, not controlled source text.",
-            "Human correction is required before prepared text, learning notes, or candidate intake.",
+            "Machine-unusable sources are closed without prepared text, learning notes, or candidate intake.",
             "Do not commit OCR probe images or uncorrected OCR passages.",
             "Original external materials remain unmoved and unchanged.",
         ],
@@ -11744,6 +11926,7 @@ def render_new_material_ocr_quality_remediation_markdown(
             "- `human-correction-required="
             f"{summary.human_correction_required_count}`"
         ),
+        f"- `machine-unusable-closed={summary.machine_unusable_closed_count}`",
         f"- `blocked-items={summary.blocked_item_count}`",
         f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
         f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
@@ -11779,6 +11962,256 @@ def render_new_material_ocr_quality_remediation_markdown(
         ]
     )
     return "\n".join(lines) + "\n"
+
+
+def _new_material_machine_disposition_for_source(
+    registration: NewMaterialSourceRegistrationItem,
+    remediation_by_entry_id: dict[str, NewMaterialOcrQualityRemediationItem],
+    execution_by_entry_id: dict[str, NewMaterialHumanCorrectedTranscriptionExecutionItem],
+) -> str:
+    if registration.source_library_entry_id in execution_by_entry_id:
+        return "machine_text_usable"
+    remediation = remediation_by_entry_id.get(registration.source_library_entry_id)
+    if remediation is not None:
+        if remediation.remediation_status == "machine_unusable_closed":
+            return "machine_unusable_closed"
+        if remediation.remediation_status == "blocked_requires_human_correction":
+            return "deferred_requires_better_source"
+    return "machine_structure_only"
+
+
+def _new_material_machine_disposition_context(
+    source_dir: Path,
+) -> tuple[
+    list[NewMaterialSourceRegistrationItem],
+    list[NewMaterialOcrQualityRemediationItem],
+    list[NewMaterialHumanCorrectedTranscriptionExecutionItem],
+]:
+    registration_path = source_dir / "new_material_source_registration_items.json"
+    remediation_path = source_dir / "new_material_ocr_quality_remediation_items.json"
+    execution_path = (
+        source_dir / "new_material_human_corrected_transcription_execution_items.json"
+    )
+    try:
+        registrations = [
+            NewMaterialSourceRegistrationItem(**item)
+            for item in _read_optional_json_list(registration_path)
+        ]
+        remediations = [
+            NewMaterialOcrQualityRemediationItem(**item)
+            for item in _read_optional_json_list(remediation_path)
+        ]
+        executions = [
+            NewMaterialHumanCorrectedTranscriptionExecutionItem(**item)
+            for item in _read_optional_json_list(execution_path)
+        ]
+    except TypeError as error:
+        raise MaterialsAuditError(
+            f"invalid new material machine disposition context: {error}"
+        ) from error
+    _ensure_unique(
+        [item.registration_item_id for item in registrations],
+        "registration_item_id",
+    )
+    _ensure_unique(
+        [item.remediation_item_id for item in remediations],
+        "remediation_item_id",
+    )
+    _ensure_unique(
+        [item.execution_item_id for item in executions],
+        "execution_item_id",
+    )
+    return registrations, remediations, executions
+
+
+def build_new_material_machine_disposition_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialMachineDispositionSummary:
+    source_dir = _data_dir(data_dir)
+    registrations, remediations, executions = _new_material_machine_disposition_context(
+        source_dir
+    )
+    remediation_by_entry_id = {
+        item.source_library_entry_id: item for item in remediations
+    }
+    execution_by_entry_id = {
+        item.source_library_entry_id: item
+        for item in executions
+        if item.prepared_text_artifact_created and item.human_corrected_text_available
+    }
+    source_dispositions = {
+        item.source_library_entry_id: _new_material_machine_disposition_for_source(
+            item,
+            remediation_by_entry_id,
+            execution_by_entry_id,
+        )
+        for item in registrations
+    }
+    disposition_counts = {
+        disposition: sum(
+            1
+            for source_disposition in source_dispositions.values()
+            if source_disposition == disposition
+        )
+        for disposition in sorted(NEW_MATERIAL_MACHINE_DISPOSITIONS)
+    }
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        for item in [*registrations, *remediations, *executions]
+    )
+    all_sources_dispositioned = bool(registrations) and len(source_dispositions) == len(
+        registrations
+    )
+    machine_unusable_sources_closed = all(
+        entry_id in remediation_by_entry_id
+        and remediation_by_entry_id[entry_id].remediation_status
+        == "machine_unusable_closed"
+        for entry_id, disposition in source_dispositions.items()
+        if disposition == "machine_unusable_closed"
+    )
+    boundary_checks = {
+        "registered_new_material_sources_loaded": (
+            "passed" if registrations else "failed"
+        ),
+        "all_sources_dispositioned": (
+            "passed" if all_sources_dispositioned else "failed"
+        ),
+        "machine_unusable_sources_closed": (
+            "passed" if machine_unusable_sources_closed else "failed"
+        ),
+        "unverified_body_text_abandoned": (
+            "passed"
+            if disposition_counts["machine_unusable_closed"]
+            == sum(
+                1
+                for item in remediations
+                if item.remediation_status == "machine_unusable_closed"
+            )
+            else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    return NewMaterialMachineDispositionSummary(
+        disposition_id=NEW_MATERIAL_MACHINE_DISPOSITION_ID,
+        disposition_status=(
+            "machine_disposition_completed"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "machine_disposition_needs_attention"
+        ),
+        source_file_count=len(registrations),
+        disposition_counts=disposition_counts,
+        source_dispositions=source_dispositions,
+        source_entry_ids=[item.source_library_entry_id for item in registrations],
+        source_material_ids=[item.source_material_id for item in registrations],
+        local_references=[item.local_reference for item in registrations],
+        prepared_text_artifact_count=len(execution_by_entry_id),
+        machine_unusable_closed_count=disposition_counts["machine_unusable_closed"],
+        learning_note_allowed_count=disposition_counts["machine_text_usable"],
+        candidate_intake_allowed_count=0,
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count
+            for item in [*registrations, *remediations, *executions]
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count
+            for item in [*registrations, *remediations, *executions]
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count
+            for item in [*registrations, *remediations, *executions]
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count
+            for item in [*registrations, *remediations, *executions]
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized
+            for item in [*registrations, *remediations, *executions]
+        ),
+        next_material_entry=NEW_MATERIAL_MACHINE_DISPOSITION_NEXT_MATERIAL_ENTRY,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Each newly registered source receives exactly one machine disposition.",
+            "Unverified body text is abandoned instead of becoming learning or candidate data.",
+            "Candidate intake remains blocked unless a later explicit downstream authorization opens it.",
+            "External raw materials remain unmoved and unchanged.",
+        ],
+    )
+
+
+def render_new_material_machine_disposition_markdown(
+    summary: NewMaterialMachineDispositionSummary,
+) -> str:
+    lines = [
+        "## 015 New Material Machine Disposition",
+        "",
+        f"- Disposition id: `{summary.disposition_id}`",
+        (
+            "- `new-material-machine-disposition-status="
+            f"{summary.disposition_status}`"
+        ),
+        f"- `machine-disposition-sources={summary.source_file_count}`",
+        (
+            "- `machine-text-usable="
+            f"{summary.disposition_counts['machine_text_usable']}`"
+        ),
+        (
+            "- `machine-structure-only="
+            f"{summary.disposition_counts['machine_structure_only']}`"
+        ),
+        (
+            "- `machine-unusable-closed="
+            f"{summary.disposition_counts['machine_unusable_closed']}`"
+        ),
+        (
+            "- `deferred-requires-better-source="
+            f"{summary.disposition_counts['deferred_requires_better_source']}`"
+        ),
+        f"- `prepared-text-artifacts={summary.prepared_text_artifact_count}`",
+        f"- `learning-note-allowed={summary.learning_note_allowed_count}`",
+        f"- `candidate-intake-allowed={summary.candidate_intake_allowed_count}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Source dispositions:",
+    ]
+    lines.extend(
+        f"- `{entry_id}`: `{disposition}`"
+        for entry_id, disposition in summary.source_dispositions.items()
+    )
+    lines.extend(["", "Local references:"])
+    lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(["", "Guardrails:", *[f"- {guardrail}" for guardrail in summary.guardrails]])
+    return "\n".join(lines) + "\n"
+
+
+@lru_cache(maxsize=None)
+def _new_material_corrected_pilot_completion_review_items(
+    source_dir: Path,
+) -> list[dict[str, Any]]:
+    learning_dir = _sibling_data_dir(source_dir, "learning_reference_curation")
+    if learning_dir is None:
+        return []
+    items = _read_optional_json_list(
+        learning_dir
+        / "new_material_corrected_pilot_learning_completion_review_items.json"
+    )
+    _ensure_unique(
+        [str(item.get("completion_item_id", "")) for item in items],
+        "completion_item_id",
+    )
+    return items
 
 
 def _new_material_human_corrected_transcription_prep_item_from_dict(
@@ -11897,7 +12330,7 @@ def build_new_material_human_corrected_transcription_prep_summary(
 ) -> NewMaterialHumanCorrectedTranscriptionPrepSummary:
     source_dir = _data_dir(data_dir)
     items = load_new_material_human_corrected_transcription_prep_items(source_dir)
-    remediation_summary = build_new_material_ocr_quality_remediation_summary(
+    remediation_items = load_new_material_ocr_quality_remediation_items(
         source_dir
     )
     no_downstream_delta = all(
@@ -11915,8 +12348,12 @@ def build_new_material_human_corrected_transcription_prep_summary(
         ),
         "previous_human_correction_blocker_recorded": (
             "passed"
-            if remediation_summary.remediation_status
-            == "blocked_requires_human_correction"
+            if sum(
+                1
+                for item in remediation_items
+                if item.remediation_status == "blocked_requires_human_correction"
+            )
+            >= len(items)
             else "failed"
         ),
         "correction_packet_ready": (
@@ -12194,7 +12631,7 @@ def build_new_material_human_corrected_transcription_execution_summary(
 ) -> NewMaterialHumanCorrectedTranscriptionExecutionSummary:
     source_dir = _data_dir(data_dir)
     items = load_new_material_human_corrected_transcription_execution_items(source_dir)
-    prep_summary = build_new_material_human_corrected_transcription_prep_summary(
+    prep_items = load_new_material_human_corrected_transcription_prep_items(
         source_dir
     )
     no_downstream_delta = all(
@@ -12212,7 +12649,11 @@ def build_new_material_human_corrected_transcription_execution_summary(
         ),
         "previous_correction_packet_ready": (
             "passed"
-            if prep_summary.prep_status == "blocked_ready_for_human_correction"
+            if prep_items
+            and all(
+                item.prep_status == "blocked_ready_for_human_correction"
+                for item in prep_items
+            )
             else "failed"
         ),
         "prepared_text_artifact_created": (
@@ -12429,10 +12870,9 @@ def _new_material_expanded_corrected_transcription_selection_item_from_dict(
         raise MaterialsAuditError(f"{owner_id} planned output path must be relative")
 
     completion_items_by_id = {
-        completion.completion_item_id: completion
-        for completion in (
-            learning_reference_curation
-            .load_new_material_corrected_pilot_learning_completion_review_items()
+        str(completion.get("completion_item_id", "")): completion
+        for completion in _new_material_corrected_pilot_completion_review_items(
+            source_dir
         )
     }
     completion = completion_items_by_id.get(item.completion_review_item_id)
@@ -12440,21 +12880,21 @@ def _new_material_expanded_corrected_transcription_selection_item_from_dict(
         raise MaterialsAuditError(
             f"{owner_id} references unknown completion review item"
         )
-    if completion.completion_status != (
+    if completion.get("completion_status") != (
         "current_pilot_learning_completed_candidate_intake_blocked"
     ):
         raise MaterialsAuditError(f"{owner_id} completion review not closed")
-    if not completion.additional_correction_required:
+    if not completion.get("additional_correction_required"):
         raise MaterialsAuditError(f"{owner_id} completion review does not route prep")
-    if completion.next_material_entry != (
+    if completion.get("next_material_entry") != (
         NEW_MATERIAL_EXPANDED_CORRECTED_TRANSCRIPTION_SELECTION_ID
     ):
         raise MaterialsAuditError(f"{owner_id} completion review next entry mismatch")
-    if item.source_library_entry_id != completion.source_library_entry_id:
+    if item.source_library_entry_id != completion.get("source_library_entry_id"):
         raise MaterialsAuditError(f"{owner_id} source entry mismatch")
-    if item.source_material_id != completion.source_material_id:
+    if item.source_material_id != completion.get("source_material_id"):
         raise MaterialsAuditError(f"{owner_id} source material mismatch")
-    if item.local_reference != completion.local_reference:
+    if item.local_reference != completion.get("local_reference"):
         raise MaterialsAuditError(f"{owner_id} local reference mismatch")
     return item
 
@@ -12487,9 +12927,8 @@ def build_new_material_expanded_corrected_transcription_selection_summary(
     items = load_new_material_expanded_corrected_transcription_selection_items(
         source_dir
     )
-    completion_summary = (
-        learning_reference_curation
-        .build_new_material_corrected_pilot_learning_completion_review_summary()
+    completion_items = _new_material_corrected_pilot_completion_review_items(
+        source_dir
     )
     no_downstream_delta = all(
         item.candidate_extract_delta_count == 0
@@ -12505,13 +12944,20 @@ def build_new_material_expanded_corrected_transcription_selection_summary(
         ),
         "previous_pilot_learning_closed": (
             "passed"
-            if completion_summary.completion_status
-            == "current_pilot_learning_completed_candidate_intake_blocked"
+            if completion_items
+            and all(
+                item.get("completion_status")
+                == "current_pilot_learning_completed_candidate_intake_blocked"
+                for item in completion_items
+            )
             else "failed"
         ),
         "additional_correction_required": (
             "passed"
-            if completion_summary.additional_correction_required_count > 0
+            if any(
+                item.get("additional_correction_required")
+                for item in completion_items
+            )
             else "failed"
         ),
         "bounded_page_windows_selected": (
@@ -12772,10 +13218,8 @@ def build_new_material_expanded_corrected_transcription_prep_summary(
 ) -> NewMaterialExpandedCorrectedTranscriptionPrepSummary:
     source_dir = _data_dir(data_dir)
     items = load_new_material_expanded_corrected_transcription_prep_items(source_dir)
-    selection_summary = (
-        build_new_material_expanded_corrected_transcription_selection_summary(
-            source_dir
-        )
+    selection_items = load_new_material_expanded_corrected_transcription_selection_items(
+        source_dir
     )
     no_downstream_delta = all(
         item.candidate_extract_delta_count == 0
@@ -12789,8 +13233,11 @@ def build_new_material_expanded_corrected_transcription_prep_summary(
         "expanded_correction_prep_items_loaded": "passed" if items else "failed",
         "previous_selection_ready": (
             "passed"
-            if selection_summary.selection_status
-            == "selected_for_expanded_correction_prep"
+            if selection_items
+            and all(
+                item.selection_status == "selected_for_expanded_correction_prep"
+                for item in selection_items
+            )
             else "failed"
         ),
         "correction_packet_ready": (
@@ -13077,7 +13524,7 @@ def build_new_material_expanded_corrected_transcription_execution_summary(
     items = load_new_material_expanded_corrected_transcription_execution_items(
         source_dir
     )
-    prep_summary = build_new_material_expanded_corrected_transcription_prep_summary(
+    prep_items = load_new_material_expanded_corrected_transcription_prep_items(
         source_dir
     )
     no_downstream_delta = all(
@@ -13094,7 +13541,11 @@ def build_new_material_expanded_corrected_transcription_execution_summary(
         ),
         "previous_expanded_correction_packet_ready": (
             "passed"
-            if prep_summary.prep_status == "ready_for_expanded_correction_execution"
+            if prep_items
+            and all(
+                item.prep_status == "ready_for_expanded_correction_execution"
+                for item in prep_items
+            )
             else "failed"
         ),
         "prepared_text_artifact_created": (

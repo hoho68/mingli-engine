@@ -107,6 +107,25 @@ promotion batches, or formal evidence.
 
 ## Current New-Material Continuation
 
+New Material Goal Completion State:
+
+- `new-material-goal-status=completed_no_new_external_materials_pending_final_archive`
+- `new-material-sources-registered=2`
+- `machine-text-usable=1`
+- `machine-unusable-closed=1`
+- `017-learning-entry-sources=1`
+- `closed-source-learning-entry-count=0`
+- `external-inventory-status=scoped_metadata_registered`
+- `untracked-material-entries=0`
+- `new-material-pending-sources=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `next-new-material-start=final-archive-ready`
+- Completed machine-usable source: `entry_new_material_xiahai_suanmingji_pdf`.
+- Closed machine-unusable source: `entry_new_material_bazi_suanming_cangjue_pdf`.
+- Archive state: `final-archive-ready`.
+
 The 015 raw text next-cycle sensitive preparation reading is complete:
 
 - `sensitive-preparation-reading-status=sensitive_preparation_reading_completed`
@@ -171,12 +190,25 @@ Explicit Downstream Authorization Receipt:
 - `tesseract-available=1`
 - `chi-sim-available=1`
 - `prepared-text-artifacts=0`
-- `new-material-ocr-quality-remediation-status=blocked_requires_human_correction`
-- `probe-dpi-values=400`
+- `new-material-ocr-quality-remediation-status=ocr_quality_remediation_completed`
+- `ocr-quality-remediation-items=2`
+- `probe-dpi-values=300,400`
 - `vertical-tessdata-available=1`
 - `assistive-ocr-route=1`
 - `human-correction-required=1`
+- `machine-unusable-closed=1`
 - `prepared-text-artifacts=0`
+- `next-material-entry=015-new-material-human-corrected-transcription-prep-or-machine-unusable-closure`
+- `new-material-machine-disposition-status=machine_disposition_completed`
+- `machine-disposition-sources=2`
+- `machine-text-usable=1`
+- `machine-structure-only=0`
+- `machine-unusable-closed=1`
+- `deferred-requires-better-source=0`
+- `prepared-text-artifacts=1`
+- `learning-note-allowed=1`
+- `candidate-intake-allowed=0`
+- `next-material-entry=015-new-material-machine-disposition-completed`
 - `new-material-human-corrected-transcription-prep-status=blocked_ready_for_human_correction`
 - `correction-packet-ready=1`
 - `selected-page-ranges=2`
@@ -210,6 +242,21 @@ Explicit Downstream Authorization Receipt:
   `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`
 - Previous completed marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-note-prep`
+
+017 New Material Machine Disposition Learning Gate:
+
+- `new-material-machine-disposition-learning-gate-status=machine_usable_sources_routed_to_017`
+- `machine-text-usable=1`
+- `machine-unusable-closed=1`
+- `017-learning-entry-sources=1`
+- `017-machine-usable-entry-sources=1`
+- `017-closed-source-entry-count=0`
+- `missing-017-learning-entry-count=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `entry_new_material_xiahai_suanmingji_pdf`
+- `entry_new_material_bazi_suanming_cangjue_pdf`
 
 017 New Material Corrected Pilot Learning Note Prep:
 
@@ -411,18 +458,42 @@ Explicit Downstream Authorization Receipt:
 - `candidate-extract-delta=0`
 - `formal-evidence-delta=0`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-queue-refresh-or-013-explicit-candidate-gate`
+- `next-material-entry=015-external-material-inventory-refresh`
 - `new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf`
 - `note_xiahai_suanmingji_expanded_corrected_001`
 - `lp_xiahai_suanmingji_expanded_boundary_001`
 - `docs/classical_sources/prepared_text/xiahai_suanmingji_expanded_corrected.md`
 - `下海算命记.pdf`
-- `next-new-material-start=015-queue-refresh-or-013-explicit-candidate-gate`
+- `next-new-material-start=final-archive-ready`
 
 The expanded corrected learning loop is closed: the three corrected anchors are
 sufficient for a boundary learning note, the page-72 continuity locator remains
 optional precision work, and candidate intake stays blocked unless a later
 explicitly authorized 013/012 workflow is opened.
+
+Final Archive Readiness Packet:
+
+- `archive-readiness-status=ready_for_final_review`
+- `new-material-goal-status=completed_no_new_external_materials_pending_final_archive`
+- `new-material-pending-sources=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `013-candidate-extracts=54`
+- `013-review-decisions=54`
+- `013-promotion-batches=34`
+- `012-formal-evidence-units=111`
+- `validation-learning-reference-quality=[]`
+- `validation-materials-audit-quality=[]`
+- `next-target=final-review-or-commit-on-request`
+
+Verification commands for the final review packet:
+
+```powershell
+uv run --with pytest python -m pytest tests/unit/test_learning_reference_curation.py
+uv run --with pytest python -m pytest tests/unit/test_materials_audit.py
+git diff --check
+```
 
 Run focused learning reference curation tests:
 

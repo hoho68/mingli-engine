@@ -412,6 +412,25 @@ Risk-review items:
 - `012-formal-evidence-units=111`
 - `formal_evidence_delta=0`
 
+## New Material Goal Completion State
+
+- `new-material-goal-status=completed_no_new_external_materials_pending_final_archive`
+- `new-material-sources-registered=2`
+- `machine-text-usable=1`
+- `machine-unusable-closed=1`
+- `017-learning-entry-sources=1`
+- `closed-source-learning-entry-count=0`
+- `external-inventory-status=scoped_metadata_registered`
+- `untracked-material-entries=0`
+- `new-material-pending-sources=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `next-new-material-start=final-archive-ready`
+- Completed machine-usable source: `entry_new_material_xiahai_suanmingji_pdf`.
+- Closed machine-unusable source: `entry_new_material_bazi_suanming_cangjue_pdf`.
+- Archive state: `final-archive-ready`.
+
 ## Continuation Entry Points
 
 - Start from this file for orientation.
@@ -422,7 +441,7 @@ Risk-review items:
 - Use [extraction_queue_intake.md](extraction_queue_intake.md) and
   [materials_audit.md](materials_audit.md) when choosing the next ready source
   or prerequisite queue item.
-- `next-new-material-start=015-external-material-inventory-refresh`.
+- `next-new-material-start=final-archive-ready`.
 - Current 015 queue coverage has no uncovered action after excluding 30
   016-covered/completed ids and the locally completed
   `queue_raw_text_materials_folder_triage`. The 4 formerly planned risk-review
@@ -761,51 +780,76 @@ Risk-review items:
   `next-material-entry=015-new-material-controlled-text-preparation`.
 - 015 New Material Controlled Text Preparation is completed as a blocker audit:
   `new-material-controlled-text-preparation-status=blocked_requires_ocr_or_manual_transcription`,
-  `controlled-text-preparation-items=1`, `pdf-pages=84`,
+  `controlled-text-preparation-items=2`, `pdf-pages=134`,
   `text-layer-nonempty-pages=13`, `text-layer-chars=592`,
-  `usable-text-layer=0`, `blocked-items=1`,
+  `usable-text-layer=0`, `blocked-items=2`,
   `candidate-extract-delta=0`, `formal-evidence-delta=0`,
   `source-library-mutation-authorized=false`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-new-material-ocr-or-manual-transcription`.
 - Controlled text-preparation item:
   `new_material_controlled_text_prep_xiahai_suanmingji_pdf`.
+- Controlled text-preparation item:
+  `new_material_controlled_text_prep_bazi_suanming_cangjue_pdf`.
 - 015 New Material OCR Or Manual Transcription is completed as a blocker audit:
   `new-material-ocr-or-manual-transcription-status=blocked_ocr_runtime_unavailable`,
-  `ocr-or-manual-transcription-items=1`, `pdf-pages=84`,
+  `ocr-or-manual-transcription-items=2`, `pdf-pages=134`,
   `pdftoppm-available=1`, `ocr-runtime-available=0`,
-  `prepared-text-artifacts=0`, `blocked-items=1`,
+  `prepared-text-artifacts=0`, `blocked-items=2`,
   `candidate-extract-delta=0`, `formal-evidence-delta=0`,
   `source-library-mutation-authorized=false`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-new-material-ocr-runtime-setup-or-human-transcription`.
 - OCR/manual transcription item:
   `new_material_ocr_or_manual_xiahai_suanmingji_pdf`.
+- OCR/manual transcription item:
+  `new_material_ocr_or_manual_bazi_suanming_cangjue_pdf`.
 - 015 New Material OCR Runtime Setup Or Human Transcription is completed as a
   quality blocker audit:
   `new-material-ocr-runtime-setup-status=blocked_ocr_quality_insufficient`,
-  `ocr-runtime-setup-items=1`, `pdf-pages=84`, `probe-pages=4`,
-  `probe-dpi-values=300`, `tesseract-available=1`,
-  `chi-sim-available=1`, `prepared-text-artifacts=0`, `blocked-items=1`,
+  `ocr-runtime-setup-items=2`, `pdf-pages=134`, `probe-pages=8`,
+  `probe-dpi-values=300`, `tesseract-available=2`,
+  `chi-sim-available=2`, `prepared-text-artifacts=0`, `blocked-items=2`,
   `candidate-extract-delta=0`, `formal-evidence-delta=0`,
   `source-library-mutation-authorized=false`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-new-material-ocr-quality-remediation-or-human-transcription`.
 - OCR runtime setup item:
   `new_material_ocr_runtime_setup_xiahai_suanmingji_pdf`.
+- OCR runtime setup item:
+  `new_material_ocr_runtime_setup_bazi_suanming_cangjue_pdf`.
 - 015 New Material OCR Quality Remediation Or Human Transcription is completed
-  as a human-correction blocker audit:
-  `new-material-ocr-quality-remediation-status=blocked_requires_human_correction`,
-  `ocr-quality-remediation-items=1`, `pdf-pages=84`, `probe-pages=4`,
-  `probe-dpi-values=400`, `vertical-tessdata-available=1`,
+  as a mixed human-correction and machine-unusable closure audit:
+  `new-material-ocr-quality-remediation-status=ocr_quality_remediation_completed`,
+  `ocr-quality-remediation-items=2`, `pdf-pages=134`, `probe-pages=8`,
+  `probe-dpi-values=300,400`, `vertical-tessdata-available=1`,
   `assistive-ocr-route=1`, `prepared-text-artifacts=0`,
-  `human-correction-required=1`, `blocked-items=1`,
+  `human-correction-required=1`, `machine-unusable-closed=1`,
+  `blocked-items=2`,
   `candidate-extract-delta=0`, `formal-evidence-delta=0`,
   `source-library-mutation-authorized=false`,
   `downstream-mutation-authorized=false`, and
-  `next-material-entry=015-new-material-human-corrected-transcription-prep`.
+  `next-material-entry=015-new-material-human-corrected-transcription-prep-or-machine-unusable-closure`.
 - OCR quality remediation item:
   `new_material_ocr_quality_remediation_xiahai_suanmingji_pdf`.
+- OCR quality remediation item:
+  `new_material_ocr_quality_remediation_bazi_suanming_cangjue_pdf`.
+- Machine-unusable closure:
+  `八字算命藏诀-黑白.pdf` has no stable machine-readable body text under the
+  current no-human-correction rule; unstable OCR body text is abandoned and no
+  learning note, 013 candidate, or 012 formal evidence is created.
+- 015 New Material Machine Disposition is completed as the unified future
+  routing view:
+  `new-material-machine-disposition-status=machine_disposition_completed`,
+  `machine-disposition-sources=2`, `machine-text-usable=1`,
+  `machine-structure-only=0`, `machine-unusable-closed=1`,
+  `deferred-requires-better-source=0`, `prepared-text-artifacts=1`,
+  `learning-note-allowed=1`, `candidate-intake-allowed=0`,
+  `candidate-extract-delta=0`, `formal-evidence-delta=0`, and
+  `next-material-entry=015-new-material-machine-disposition-completed`.
+- Machine dispositions:
+  `entry_new_material_xiahai_suanmingji_pdf`: `machine_text_usable`;
+  `entry_new_material_bazi_suanming_cangjue_pdf`: `machine_unusable_closed`.
 - 015 New Material Human Corrected Transcription Prep is completed as a
   ready-for-correction blocker:
   `new-material-human-corrected-transcription-prep-status=blocked_ready_for_human_correction`,
@@ -846,6 +890,18 @@ Risk-review items:
   `next-material-entry=017-new-material-corrected-pilot-learning-note-prep`.
 - Corrected pilot learning entry evaluation item:
   `new_material_corrected_pilot_learning_entry_xiahai_suanmingji_pdf`.
+- 017 New Material Machine Disposition Learning Gate is completed:
+  `new-material-machine-disposition-learning-gate-status=machine_usable_sources_routed_to_017`,
+  `machine-text-usable=1`, `machine-unusable-closed=1`,
+  `017-learning-entry-sources=1`, `017-machine-usable-entry-sources=1`,
+  `017-closed-source-entry-count=0`, `missing-017-learning-entry-count=0`,
+  `candidate-intake-allowed=0`, `candidate-extract-delta=0`,
+  `formal-evidence-delta=0`, and
+  `next-material-entry=017-new-material-corrected-pilot-learning-note-prep`.
+- Machine-text-usable 017 source:
+  `entry_new_material_xiahai_suanmingji_pdf`.
+- Machine-unusable closed source excluded from 017:
+  `entry_new_material_bazi_suanming_cangjue_pdf`.
 - 017 New Material Corrected Pilot Learning Note Prep is completed as a
   bounded draft-prep packet:
   `new-material-corrected-pilot-learning-note-prep-status=ready_for_learning_note_draft`,
@@ -963,12 +1019,12 @@ Risk-review items:
   `candidate-intake-allowed=0`, `additional-correction-required=0`,
   `candidate-extract-delta=0`, `formal-evidence-delta=0`,
   `downstream-mutation-authorized=false`, and
-  `next-material-entry=015-queue-refresh-or-013-explicit-candidate-gate`.
+  `next-material-entry=015-external-material-inventory-refresh`.
 - Expanded corrected learning completion review item:
   `new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf`.
 - The expanded corrected learning loop is closed: the three corrected anchors
   are sufficient, the page-72 continuity locator is optional precision work,
-  and candidate intake stays blocked unless an explicit 013/012 workflow opens.
+  and the next new-material entry waits for external inventory refresh.
 - Previous completed continuation marker:
   `next-new-material-start=017-new-material-corrected-pilot-learning-entry-evaluation`.
 - Previous completed continuation marker:
@@ -988,7 +1044,7 @@ Risk-review items:
 - Previous completed continuation marker:
   `next-new-material-start=017-new-material-expanded-corrected-learning-completion-review`.
 - Current new-material continuation marker (corrected loop closed):
-  `next-new-material-start=015-queue-refresh-or-013-explicit-candidate-gate`.
+  `next-new-material-start=final-archive-ready`.
 
 ## Remaining Optional Precision Work
 
@@ -1007,11 +1063,37 @@ Risk-review items:
 The expanded corrected new-material learning loop is closed. The three corrected
 anchors are sufficient for the boundary learning note, and the page-72
 continuity locator remains optional precision work. When continuing new-material
-work, start from
-`next-material-entry=015-queue-refresh-or-013-explicit-candidate-gate`: either
-refresh the 015 queue for the next intake source or open an explicitly
-authorized 013 candidate-review gate. Candidate intake stays blocked unless a
-later explicitly authorized 013/012 workflow is opened.
+work, keep the current goal at `next-new-material-start=final-archive-ready`.
+The external inventory refresh has no untracked material entries, so wait for a
+future source before opening another machine-disposition pipeline. Candidate
+intake stays blocked for the current new-material loop.
+
+## Final Archive Readiness Packet
+
+- `archive-readiness-status=ready_for_final_review`
+- `new-material-goal-status=completed_no_new_external_materials_pending_final_archive`
+- `new-material-pending-sources=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `013-candidate-extracts=54`
+- `013-review-decisions=54`
+- `013-promotion-batches=34`
+- `012-formal-evidence-units=111`
+- `validation-learning-reference-quality=[]`
+- `validation-materials-audit-quality=[]`
+- `next-target=final-review-or-commit-on-request`
+
+Verification commands for the final review packet:
+
+```powershell
+uv run --with pytest python -m pytest tests/unit/test_learning_reference_curation.py
+uv run --with pytest python -m pytest tests/unit/test_materials_audit.py
+git diff --check
+```
+
+Archive rule: do not reopen candidate intake for the current new-material loop.
+The next action is final review or commit only after explicit user request.
 
 ## Guardrails
 
@@ -1023,6 +1105,6 @@ later explicitly authorized 013/012 workflow is opened.
 
 ## Next Target
 
-Next target: `015-queue-refresh-or-013-explicit-candidate-gate`. The expanded
-corrected learning loop is closed; candidate intake remains blocked unless an
-explicit 013/012 downstream workflow is opened.
+Next target: `final-archive-ready`. The expanded corrected learning loop is
+closed, external inventory refresh found no new pending source, and candidate
+intake remains blocked for the current new-material loop.

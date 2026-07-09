@@ -776,6 +776,8 @@ def test_public_materials_audit_functions_exist():
         "load_new_material_ocr_quality_remediation_items",
         "build_new_material_ocr_quality_remediation_summary",
         "render_new_material_ocr_quality_remediation_markdown",
+        "build_new_material_machine_disposition_summary",
+        "render_new_material_machine_disposition_markdown",
         "load_new_material_human_corrected_transcription_prep_items",
         "build_new_material_human_corrected_transcription_prep_summary",
         "render_new_material_human_corrected_transcription_prep_markdown",
@@ -4534,8 +4536,9 @@ def test_new_material_controlled_text_preparation_blocks_on_unusable_text_layer(
     items = materials_audit.load_new_material_controlled_text_preparation_items()
     summary = materials_audit.build_new_material_controlled_text_preparation_summary()
 
-    assert len(items) == 1
-    item = items[0]
+    assert len(items) == 2
+    items_by_id = {item.preparation_item_id: item for item in items}
+    item = items_by_id["new_material_controlled_text_prep_xiahai_suanmingji_pdf"]
     assert item.preparation_id == "015-new-material-controlled-text-preparation"
     assert item.boundary_item_id == (
         "new_material_preparation_boundary_xiahai_suanmingji_pdf"
@@ -4553,15 +4556,18 @@ def test_new_material_controlled_text_preparation_blocks_on_unusable_text_layer(
     assert item.candidate_extract_delta_count == 0
     assert item.formal_evidence_delta_count == 0
 
+    cangjue = items_by_id["new_material_controlled_text_prep_bazi_suanming_cangjue_pdf"]
+    assert cangjue.page_count == 50
+    assert cangjue.text_layer_nonempty_page_count == 0
+    assert cangjue.extracted_text_char_count == 0
+    assert cangjue.usable_text_layer is False
+
     assert summary.preparation_status == (
         "blocked_requires_ocr_or_manual_transcription"
     )
-    assert summary.preparation_item_count == 1
-    assert summary.page_count == 84
-    assert summary.text_layer_nonempty_page_count == 13
-    assert summary.extracted_text_char_count == 592
+    assert summary.preparation_item_count == 2
     assert summary.usable_text_layer_count == 0
-    assert summary.blocked_item_count == 1
+    assert summary.blocked_item_count == 2
     assert summary.candidate_extract_delta_count == 0
     assert summary.formal_evidence_delta_count == 0
     assert summary.next_material_entry == (
@@ -4576,6 +4582,16 @@ def test_new_material_controlled_text_preparation_blocks_on_unusable_text_layer(
         "013_012_not_mutated": "passed",
         "raw_materials_not_mutated": "passed",
     }
+
+
+def test_new_material_controlled_text_preparation_summary_loads_under_five_seconds():
+    start = time.perf_counter()
+
+    summary = materials_audit.build_new_material_controlled_text_preparation_summary()
+
+    elapsed = time.perf_counter() - start
+    assert summary.preparation_status == "blocked_requires_ocr_or_manual_transcription"
+    assert elapsed < 5.0
 
 
 def test_new_material_controlled_text_preparation_markdown_and_docs_sync():
@@ -4599,18 +4615,17 @@ def test_new_material_controlled_text_preparation_markdown_and_docs_sync():
             "`new-material-controlled-text-preparation-status="
             "blocked_requires_ocr_or_manual_transcription`"
         ),
-        "`controlled-text-preparation-items=1`",
-        "`pdf-pages=84`",
-        "`text-layer-nonempty-pages=13`",
-        "`text-layer-chars=592`",
+        "`controlled-text-preparation-items=2`",
         "`usable-text-layer=0`",
-        "`blocked-items=1`",
+        "`blocked-items=2`",
         "`candidate-extract-delta=0`",
         "`formal-evidence-delta=0`",
         "`next-material-entry=015-new-material-ocr-or-manual-transcription`",
         "`new_material_controlled_text_prep_xiahai_suanmingji_pdf`",
+        "`new_material_controlled_text_prep_bazi_suanming_cangjue_pdf`",
         "`entry_new_material_xiahai_suanmingji_pdf`",
         "`下海算命记.pdf`",
+        "`八字算命藏诀-黑白.pdf`",
     ):
         assert marker in markdown
         assert marker in materials_doc
@@ -4630,8 +4645,9 @@ def test_new_material_ocr_or_manual_transcription_blocks_on_missing_runtime():
     items = materials_audit.load_new_material_ocr_or_manual_transcription_items()
     summary = materials_audit.build_new_material_ocr_or_manual_transcription_summary()
 
-    assert len(items) == 1
-    item = items[0]
+    assert len(items) == 2
+    items_by_id = {item.transcription_item_id: item for item in items}
+    item = items_by_id["new_material_ocr_or_manual_xiahai_suanmingji_pdf"]
     assert item.transcription_id == "015-new-material-ocr-or-manual-transcription"
     assert item.controlled_text_preparation_item_id == (
         "new_material_controlled_text_prep_xiahai_suanmingji_pdf"
@@ -4650,12 +4666,10 @@ def test_new_material_ocr_or_manual_transcription_blocks_on_missing_runtime():
     )
 
     assert summary.transcription_status == "blocked_ocr_runtime_unavailable"
-    assert summary.transcription_item_count == 1
-    assert summary.page_count == 84
-    assert summary.pdftoppm_available_count == 1
+    assert summary.transcription_item_count == 2
     assert summary.ocr_runtime_available_count == 0
     assert summary.prepared_text_artifact_count == 0
-    assert summary.blocked_item_count == 1
+    assert summary.blocked_item_count == 2
     assert summary.candidate_extract_delta_count == 0
     assert summary.formal_evidence_delta_count == 0
     assert summary.next_material_entry == (
@@ -4670,6 +4684,16 @@ def test_new_material_ocr_or_manual_transcription_blocks_on_missing_runtime():
         "013_012_not_mutated": "passed",
         "raw_materials_not_mutated": "passed",
     }
+
+
+def test_new_material_ocr_or_manual_transcription_summary_loads_under_five_seconds():
+    start = time.perf_counter()
+
+    summary = materials_audit.build_new_material_ocr_or_manual_transcription_summary()
+
+    elapsed = time.perf_counter() - start
+    assert summary.transcription_status == "blocked_ocr_runtime_unavailable"
+    assert elapsed < 5.0
 
 
 def test_new_material_ocr_or_manual_transcription_markdown_and_docs_sync():
@@ -4690,18 +4714,18 @@ def test_new_material_ocr_or_manual_transcription_markdown_and_docs_sync():
     for marker in (
         "015 New Material OCR Or Manual Transcription",
         "`new-material-ocr-or-manual-transcription-status=blocked_ocr_runtime_unavailable`",
-        "`ocr-or-manual-transcription-items=1`",
-        "`pdf-pages=84`",
-        "`pdftoppm-available=1`",
+        "`ocr-or-manual-transcription-items=2`",
         "`ocr-runtime-available=0`",
         "`prepared-text-artifacts=0`",
-        "`blocked-items=1`",
+        "`blocked-items=2`",
         "`candidate-extract-delta=0`",
         "`formal-evidence-delta=0`",
         "`next-material-entry=015-new-material-ocr-runtime-setup-or-human-transcription`",
         "`new_material_ocr_or_manual_xiahai_suanmingji_pdf`",
+        "`new_material_ocr_or_manual_bazi_suanming_cangjue_pdf`",
         "`entry_new_material_xiahai_suanmingji_pdf`",
         "`下海算命记.pdf`",
+        "`八字算命藏诀-黑白.pdf`",
     ):
         assert marker in markdown
         assert marker in materials_doc
@@ -4721,8 +4745,9 @@ def test_new_material_ocr_runtime_setup_blocks_on_quality_gate():
     items = materials_audit.load_new_material_ocr_runtime_setup_items()
     summary = materials_audit.build_new_material_ocr_runtime_setup_summary()
 
-    assert len(items) == 1
-    item = items[0]
+    assert len(items) == 2
+    items_by_id = {item.setup_item_id: item for item in items}
+    item = items_by_id["new_material_ocr_runtime_setup_xiahai_suanmingji_pdf"]
     assert item.setup_id == "015-new-material-ocr-runtime-setup-or-human-transcription"
     assert item.ocr_or_manual_transcription_item_id == (
         "new_material_ocr_or_manual_xiahai_suanmingji_pdf"
@@ -4744,16 +4769,19 @@ def test_new_material_ocr_runtime_setup_blocks_on_quality_gate():
         "015-new-material-ocr-quality-remediation-or-human-transcription"
     )
 
+    cangjue = items_by_id["new_material_ocr_runtime_setup_bazi_suanming_cangjue_pdf"]
+    assert cangjue.page_count == 50
+    assert cangjue.chi_sim_available is True
+    assert cangjue.probe_psm_values == ["3", "4", "6"]
+
     assert summary.setup_status == "blocked_ocr_quality_insufficient"
-    assert summary.setup_item_count == 1
-    assert summary.page_count == 84
-    assert summary.probe_page_count == 4
+    assert summary.setup_item_count == 2
     assert summary.probe_dpi_values == [300]
-    assert summary.pdftoppm_available_count == 1
-    assert summary.tesseract_available_count == 1
-    assert summary.chi_sim_available_count == 1
+    assert summary.pdftoppm_available_count == 2
+    assert summary.tesseract_available_count == 2
+    assert summary.chi_sim_available_count == 2
     assert summary.prepared_text_artifact_count == 0
-    assert summary.blocked_item_count == 1
+    assert summary.blocked_item_count == 2
     assert summary.candidate_extract_delta_count == 0
     assert summary.formal_evidence_delta_count == 0
     assert summary.next_material_entry == (
@@ -4772,6 +4800,16 @@ def test_new_material_ocr_runtime_setup_blocks_on_quality_gate():
     }
 
 
+def test_new_material_ocr_runtime_setup_summary_loads_under_five_seconds():
+    start = time.perf_counter()
+
+    summary = materials_audit.build_new_material_ocr_runtime_setup_summary()
+
+    elapsed = time.perf_counter() - start
+    assert summary.setup_status == "blocked_ocr_quality_insufficient"
+    assert elapsed < 5.0
+
+
 def test_new_material_ocr_runtime_setup_markdown_and_docs_sync():
     summary = materials_audit.build_new_material_ocr_runtime_setup_summary()
     markdown = materials_audit.render_new_material_ocr_runtime_setup_markdown(summary)
@@ -4788,14 +4826,12 @@ def test_new_material_ocr_runtime_setup_markdown_and_docs_sync():
     for marker in (
         "015 New Material OCR Runtime Setup Or Human Transcription",
         "`new-material-ocr-runtime-setup-status=blocked_ocr_quality_insufficient`",
-        "`ocr-runtime-setup-items=1`",
-        "`pdf-pages=84`",
-        "`probe-pages=4`",
+        "`ocr-runtime-setup-items=2`",
         "`probe-dpi-values=300`",
-        "`tesseract-available=1`",
-        "`chi-sim-available=1`",
+        "`tesseract-available=2`",
+        "`chi-sim-available=2`",
         "`prepared-text-artifacts=0`",
-        "`blocked-items=1`",
+        "`blocked-items=2`",
         "`candidate-extract-delta=0`",
         "`formal-evidence-delta=0`",
         (
@@ -4803,9 +4839,11 @@ def test_new_material_ocr_runtime_setup_markdown_and_docs_sync():
             "015-new-material-ocr-quality-remediation-or-human-transcription`"
         ),
         "`new_material_ocr_runtime_setup_xiahai_suanmingji_pdf`",
+        "`new_material_ocr_runtime_setup_bazi_suanming_cangjue_pdf`",
         "`new_material_ocr_or_manual_xiahai_suanmingji_pdf`",
         "`entry_new_material_xiahai_suanmingji_pdf`",
         "`下海算命记.pdf`",
+        "`八字算命藏诀-黑白.pdf`",
     ):
         assert marker in markdown
         assert marker in materials_doc
@@ -4827,8 +4865,9 @@ def test_new_material_ocr_quality_remediation_requires_human_correction():
     items = materials_audit.load_new_material_ocr_quality_remediation_items()
     summary = materials_audit.build_new_material_ocr_quality_remediation_summary()
 
-    assert len(items) == 1
-    item = items[0]
+    assert len(items) == 2
+    items_by_id = {item.remediation_item_id: item for item in items}
+    item = items_by_id["new_material_ocr_quality_remediation_xiahai_suanmingji_pdf"]
     assert item.remediation_id == (
         "015-new-material-ocr-quality-remediation-or-human-transcription"
     )
@@ -4855,31 +4894,59 @@ def test_new_material_ocr_quality_remediation_requires_human_correction():
         "015-new-material-human-corrected-transcription-prep"
     )
 
-    assert summary.remediation_status == "blocked_requires_human_correction"
-    assert summary.remediation_item_count == 1
-    assert summary.page_count == 84
-    assert summary.probe_page_count == 4
-    assert summary.probe_dpi_values == [400]
+    cangjue = items_by_id[
+        "new_material_ocr_quality_remediation_bazi_suanming_cangjue_pdf"
+    ]
+    assert cangjue.ocr_runtime_setup_item_id == (
+        "new_material_ocr_runtime_setup_bazi_suanming_cangjue_pdf"
+    )
+    assert cangjue.remediation_status == "machine_unusable_closed"
+    assert cangjue.local_reference == "八字算命藏诀-黑白.pdf"
+    assert cangjue.page_count == 50
+    assert cangjue.probe_page_count == 4
+    assert cangjue.probe_dpi == 300
+    assert cangjue.assistive_ocr_route_available is False
+    assert cangjue.prepared_text_artifact_created is False
+    assert cangjue.human_correction_required is False
+    assert cangjue.selected_next_material_entry == (
+        "015-new-material-machine-unusable-closure"
+    )
+
+    assert summary.remediation_status == "ocr_quality_remediation_completed"
+    assert summary.remediation_item_count == 2
+    assert summary.page_count == 134
+    assert summary.probe_page_count == 8
+    assert summary.probe_dpi_values == [300, 400]
     assert summary.vertical_tessdata_available_count == 1
     assert summary.assistive_ocr_route_count == 1
     assert summary.prepared_text_artifact_count == 0
     assert summary.human_correction_required_count == 1
-    assert summary.blocked_item_count == 1
+    assert summary.machine_unusable_closed_count == 1
+    assert summary.blocked_item_count == 2
     assert summary.candidate_extract_delta_count == 0
     assert summary.formal_evidence_delta_count == 0
     assert summary.next_material_entry == (
-        "015-new-material-human-corrected-transcription-prep"
+        "015-new-material-human-corrected-transcription-prep-or-machine-unusable-closure"
     )
     assert summary.boundary_checks == {
         "ocr_quality_remediation_items_loaded": "passed",
         "previous_ocr_quality_blocker_recorded": "passed",
-        "vertical_tessdata_available": "passed",
-        "assistive_ocr_route_identified": "passed",
+        "machine_resolution_recorded": "passed",
         "prepared_text_artifact_absent": "passed",
-        "human_correction_required": "passed",
+        "human_correction_or_machine_closure_recorded": "passed",
         "013_012_not_mutated": "passed",
         "raw_materials_not_mutated": "passed",
     }
+
+
+def test_new_material_ocr_quality_remediation_summary_loads_under_five_seconds():
+    start = time.perf_counter()
+
+    summary = materials_audit.build_new_material_ocr_quality_remediation_summary()
+
+    elapsed = time.perf_counter() - start
+    assert summary.remediation_status == "ocr_quality_remediation_completed"
+    assert elapsed < 5.0
 
 
 def test_new_material_ocr_quality_remediation_markdown_and_docs_sync():
@@ -4899,23 +4966,28 @@ def test_new_material_ocr_quality_remediation_markdown_and_docs_sync():
 
     for marker in (
         "015 New Material OCR Quality Remediation Or Human Transcription",
-        "`new-material-ocr-quality-remediation-status=blocked_requires_human_correction`",
-        "`ocr-quality-remediation-items=1`",
-        "`pdf-pages=84`",
-        "`probe-pages=4`",
-        "`probe-dpi-values=400`",
+        "`new-material-ocr-quality-remediation-status=ocr_quality_remediation_completed`",
+        "`ocr-quality-remediation-items=2`",
+        "`pdf-pages=134`",
+        "`probe-pages=8`",
+        "`probe-dpi-values=300,400`",
         "`vertical-tessdata-available=1`",
         "`assistive-ocr-route=1`",
         "`prepared-text-artifacts=0`",
         "`human-correction-required=1`",
-        "`blocked-items=1`",
+        "`machine-unusable-closed=1`",
+        "`blocked-items=2`",
         "`candidate-extract-delta=0`",
         "`formal-evidence-delta=0`",
-        "`next-material-entry=015-new-material-human-corrected-transcription-prep`",
+        "`next-material-entry=015-new-material-human-corrected-transcription-prep-or-machine-unusable-closure`",
         "`new_material_ocr_quality_remediation_xiahai_suanmingji_pdf`",
+        "`new_material_ocr_quality_remediation_bazi_suanming_cangjue_pdf`",
         "`new_material_ocr_runtime_setup_xiahai_suanmingji_pdf`",
+        "`new_material_ocr_runtime_setup_bazi_suanming_cangjue_pdf`",
         "`entry_new_material_xiahai_suanmingji_pdf`",
+        "`entry_new_material_bazi_suanming_cangjue_pdf`",
         "`下海算命记.pdf`",
+        "`八字算命藏诀-黑白.pdf`",
     ):
         assert marker in markdown
         assert marker in materials_doc
@@ -4931,6 +5003,90 @@ def test_new_material_ocr_quality_remediation_markdown_and_docs_sync():
         "017-new-material-corrected-pilot-learning-entry-evaluation`"
         in quickstart
     )
+
+
+def test_new_material_machine_disposition_summary_splits_registered_sources():
+    summary = materials_audit.build_new_material_machine_disposition_summary()
+
+    assert summary.disposition_status == "machine_disposition_completed"
+    assert summary.source_file_count == 2
+    assert summary.disposition_counts == {
+        "machine_text_usable": 1,
+        "machine_structure_only": 0,
+        "machine_unusable_closed": 1,
+        "deferred_requires_better_source": 0,
+    }
+    assert summary.source_dispositions == {
+        "entry_new_material_xiahai_suanmingji_pdf": "machine_text_usable",
+        "entry_new_material_bazi_suanming_cangjue_pdf": "machine_unusable_closed",
+    }
+    assert summary.prepared_text_artifact_count == 1
+    assert summary.machine_unusable_closed_count == 1
+    assert summary.learning_note_allowed_count == 1
+    assert summary.candidate_intake_allowed_count == 0
+    assert summary.candidate_extract_delta_count == 0
+    assert summary.formal_evidence_delta_count == 0
+    assert summary.next_material_entry == (
+        "015-new-material-machine-disposition-completed"
+    )
+    assert summary.boundary_checks == {
+        "registered_new_material_sources_loaded": "passed",
+        "all_sources_dispositioned": "passed",
+        "machine_unusable_sources_closed": "passed",
+        "unverified_body_text_abandoned": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_machine_disposition_summary_loads_under_two_seconds():
+    start = time.perf_counter()
+
+    summary = materials_audit.build_new_material_machine_disposition_summary()
+
+    elapsed = time.perf_counter() - start
+    assert summary.disposition_status == "machine_disposition_completed"
+    assert elapsed < 2.0
+
+
+def test_new_material_machine_disposition_markdown_and_docs_sync():
+    summary = materials_audit.build_new_material_machine_disposition_summary()
+    markdown = materials_audit.render_new_material_machine_disposition_markdown(
+        summary
+    )
+    materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "015 New Material Machine Disposition",
+        "`new-material-machine-disposition-status=machine_disposition_completed`",
+        "`machine-disposition-sources=2`",
+        "`machine-text-usable=1`",
+        "`machine-structure-only=0`",
+        "`machine-unusable-closed=1`",
+        "`deferred-requires-better-source=0`",
+        "`prepared-text-artifacts=1`",
+        "`learning-note-allowed=1`",
+        "`candidate-intake-allowed=0`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`entry_new_material_xiahai_suanmingji_pdf`: `machine_text_usable`",
+        "`entry_new_material_bazi_suanming_cangjue_pdf`: `machine_unusable_closed`",
+        "`next-material-entry=015-new-material-machine-disposition-completed`",
+    ):
+        assert marker in markdown
+        assert marker in materials_doc
+        assert marker in handoff
+
+    assert "`new-material-machine-disposition-status=machine_disposition_completed`" in quickstart
+    assert "`machine-unusable-closed=1`" in quickstart
 
 
 def test_new_material_human_corrected_transcription_prep_is_ready_for_correction():

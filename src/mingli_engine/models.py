@@ -3328,6 +3328,7 @@ class NewMaterialOcrQualityRemediationSummary:
     assistive_ocr_route_count: int
     prepared_text_artifact_count: int
     human_correction_required_count: int
+    machine_unusable_closed_count: int
     blocked_item_count: int
     remediation_item_ids: list[str]
     ocr_runtime_setup_item_ids: list[str]
@@ -3339,6 +3340,30 @@ class NewMaterialOcrQualityRemediationSummary:
     promotion_batch_delta_count: int
     formal_evidence_delta_count: int
     source_library_mutation_authorized: bool
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class NewMaterialMachineDispositionSummary:
+    disposition_id: str
+    disposition_status: str
+    source_file_count: int
+    disposition_counts: dict[str, int]
+    source_dispositions: dict[str, str]
+    source_entry_ids: list[str]
+    source_material_ids: list[str]
+    local_references: list[str]
+    prepared_text_artifact_count: int
+    machine_unusable_closed_count: int
+    learning_note_allowed_count: int
+    candidate_intake_allowed_count: int
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
     downstream_mutation_authorized: bool
     next_material_entry: str
     boundary_checks: dict[str, str]
@@ -3711,6 +3736,32 @@ class NewMaterialCorrectedPilotLearningEntryEvaluationSummary:
     source_material_ids: list[str]
     local_references: list[str]
     prepared_text_artifacts: list[str]
+    boundary_checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class NewMaterialMachineDispositionLearningGateSummary:
+    gate_id: str
+    gate_status: str
+    machine_text_usable_count: int
+    machine_unusable_closed_count: int
+    learning_entry_source_count: int
+    learning_entry_machine_usable_count: int
+    closed_source_learning_entry_count: int
+    missing_learning_entry_count: int
+    candidate_intake_allowed_count: int
+    candidate_extract_delta_count: int
+    review_decision_delta_count: int
+    promotion_batch_delta_count: int
+    formal_evidence_delta_count: int
+    downstream_mutation_authorized: bool
+    next_material_entry: str
+    machine_text_usable_source_entry_ids: list[str]
+    machine_unusable_closed_source_entry_ids: list[str]
+    learning_entry_source_entry_ids: list[str]
+    excluded_closed_source_entry_ids: list[str]
+    missing_learning_entry_source_entry_ids: list[str]
     boundary_checks: dict[str, str]
     guardrails: list[str] = field(default_factory=list)
 

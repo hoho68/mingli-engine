@@ -58,5 +58,59 @@
     ],
     "created_at": "2026-06-30",
     "updated_at": "2026-06-30"
+  },
+  {
+    "remediation_item_id": "new_material_ocr_quality_remediation_bazi_suanming_cangjue_pdf",
+    "remediation_id": "015-new-material-ocr-quality-remediation-or-human-transcription",
+    "ocr_runtime_setup_item_id": "new_material_ocr_runtime_setup_bazi_suanming_cangjue_pdf",
+    "source_library_entry_id": "entry_new_material_bazi_suanming_cangjue_pdf",
+    "source_material_id": "material_new_material_bazi_suanming_cangjue_pdf",
+    "remediation_status": "machine_unusable_closed",
+    "local_reference": "八字算命藏诀-黑白.pdf",
+    "page_count": 50,
+    "probe_page_count": 4,
+    "probe_dpi": 300,
+    "vertical_tessdata_available": false,
+    "tessdata_language_codes": [
+      "chi_sim",
+      "eng",
+      "osd"
+    ],
+    "preprocessing_methods": [
+      "render_300_dpi",
+      "psm3_probe",
+      "psm4_probe",
+      "psm6_probe"
+    ],
+    "probe_page_numbers": [
+      1,
+      11,
+      25,
+      41
+    ],
+    "best_probe_region": "none_stable_machine_reading",
+    "best_probe_han_count": 0,
+    "best_probe_ascii_count": 0,
+    "best_probe_noise_count": 0,
+    "assistive_ocr_route_available": false,
+    "prepared_text_artifact_created": false,
+    "human_correction_required": false,
+    "blocker_reason": "Sampled OCR remained too noisy for controlled prepared text; under the no-human-correction rule, unstable body text is abandoned.",
+    "selected_next_material_entry": "015-new-material-machine-unusable-closure",
+    "source_library_mutation_authorized": false,
+    "downstream_mutation_authorized": false,
+    "candidate_extract_delta_count": 0,
+    "review_decision_delta_count": 0,
+    "promotion_batch_delta_count": 0,
+    "formal_evidence_delta_count": 0,
+    "rationale": "The source identity and page-level machine probe are recorded, but no readable source passage is stable enough for 017 learning notes, 013 candidates, or 012 formal evidence.",
+    "guardrails": [
+      "Do not create learning notes, 013 candidates, or 012 units from unstable OCR.",
+      "Do not request or assume manual correction for this source in the current goal.",
+      "Treat unverifiable body text as abandoned unless a better source is supplied later.",
+      "Keep the original PDF unmoved and unchanged."
+    ],
+    "created_at": "2026-07-09",
+    "updated_at": "2026-07-09"
   }
 ]

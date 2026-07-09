@@ -2534,6 +2534,81 @@ def test_new_material_corrected_pilot_learning_entry_evaluation_markdown_and_doc
     )
 
 
+def test_new_material_machine_disposition_learning_gate_routes_usable_sources_only():
+    summary = (
+        learning_reference_curation
+        .build_new_material_machine_disposition_learning_gate_summary()
+    )
+
+    assert summary.gate_status == "machine_usable_sources_routed_to_017"
+    assert summary.machine_text_usable_count == 1
+    assert summary.machine_unusable_closed_count == 1
+    assert summary.learning_entry_source_count == 1
+    assert summary.learning_entry_machine_usable_count == 1
+    assert summary.closed_source_learning_entry_count == 0
+    assert summary.missing_learning_entry_count == 0
+    assert summary.machine_text_usable_source_entry_ids == [
+        "entry_new_material_xiahai_suanmingji_pdf"
+    ]
+    assert summary.machine_unusable_closed_source_entry_ids == [
+        "entry_new_material_bazi_suanming_cangjue_pdf"
+    ]
+    assert summary.learning_entry_source_entry_ids == [
+        "entry_new_material_xiahai_suanmingji_pdf"
+    ]
+    assert summary.excluded_closed_source_entry_ids == [
+        "entry_new_material_bazi_suanming_cangjue_pdf"
+    ]
+    assert summary.boundary_checks == {
+        "machine_disposition_completed": "passed",
+        "machine_text_usable_sources_have_017_entry": "passed",
+        "machine_unusable_closed_sources_excluded": "passed",
+        "candidate_intake_blocked": "passed",
+        "013_012_not_mutated": "passed",
+        "raw_materials_not_mutated": "passed",
+    }
+
+
+def test_new_material_machine_disposition_learning_gate_markdown_and_docs_sync():
+    summary = (
+        learning_reference_curation
+        .build_new_material_machine_disposition_learning_gate_summary()
+    )
+    markdown = (
+        learning_reference_curation
+        .render_new_material_machine_disposition_learning_gate_markdown(summary)
+    )
+    overview = Path("docs/classical_sources/learning_reference_curation.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    for marker in (
+        "017 New Material Machine Disposition Learning Gate",
+        "`new-material-machine-disposition-learning-gate-status=machine_usable_sources_routed_to_017`",
+        "`machine-text-usable=1`",
+        "`machine-unusable-closed=1`",
+        "`017-learning-entry-sources=1`",
+        "`017-machine-usable-entry-sources=1`",
+        "`017-closed-source-entry-count=0`",
+        "`missing-017-learning-entry-count=0`",
+        "`candidate-intake-allowed=0`",
+        "`candidate-extract-delta=0`",
+        "`formal-evidence-delta=0`",
+        "`entry_new_material_xiahai_suanmingji_pdf`",
+        "`entry_new_material_bazi_suanming_cangjue_pdf`",
+    ):
+        assert marker in markdown
+        assert marker in overview
+        assert marker in quickstart
+        assert marker in handoff
+
+
 def test_new_material_corrected_pilot_learning_note_prep_ready_for_draft():
     items = (
         learning_reference_curation
@@ -3288,7 +3363,7 @@ def test_new_material_expanded_corrected_learning_completion_review_closes_corre
     assert item.additional_correction_required is False
     assert item.downstream_mutation_authorized is False
     assert item.next_material_entry == (
-        "015-queue-refresh-or-013-explicit-candidate-gate"
+        "015-external-material-inventory-refresh"
     )
     assert item.candidate_extract_delta_count == 0
     assert item.review_decision_delta_count == 0
@@ -3311,7 +3386,7 @@ def test_new_material_expanded_corrected_learning_completion_review_closes_corre
     assert summary.formal_evidence_delta_count == 0
     assert summary.downstream_mutation_authorized is False
     assert summary.next_material_entry == (
-        "015-queue-refresh-or-013-explicit-candidate-gate"
+        "015-external-material-inventory-refresh"
     )
     assert summary.boundary_checks == {
         "completion_review_items_loaded": "passed",
@@ -3355,7 +3430,7 @@ def test_new_material_expanded_corrected_learning_completion_review_markdown_and
         "`candidate-extract-delta=0`",
         "`formal-evidence-delta=0`",
         "`downstream-mutation-authorized=false`",
-        "`next-material-entry=015-queue-refresh-or-013-explicit-candidate-gate`",
+        "`next-material-entry=015-external-material-inventory-refresh`",
         "`new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf`",
         "`note_xiahai_suanmingji_expanded_corrected_001`",
         "`lp_xiahai_suanmingji_expanded_boundary_001`",
@@ -3366,11 +3441,11 @@ def test_new_material_expanded_corrected_learning_completion_review_markdown_and
         assert marker in handoff
 
     assert (
-        "`next-new-material-start=015-queue-refresh-or-013-explicit-candidate-gate`"
+        "`next-new-material-start=final-archive-ready`"
         in handoff
     )
     assert (
-        "`next-new-material-start=015-queue-refresh-or-013-explicit-candidate-gate`"
+        "`next-new-material-start=final-archive-ready`"
         in quickstart
     )
 
@@ -3434,3 +3509,75 @@ def test_new_material_learning_handoff_tracks_final_state():
         "Do not push remote work from this handoff",
     ):
         assert marker in handoff
+
+
+def test_new_material_goal_completion_state_is_summarized_without_stale_next_steps():
+    docs = [
+        Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("docs/classical_sources/learning_reference_curation.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("docs/classical_sources/materials_audit.md").read_text(
+            encoding="utf-8"
+        ),
+    ]
+
+    for text in docs:
+        for marker in (
+            "New Material Goal Completion State",
+            "`new-material-goal-status=completed_no_new_external_materials_pending_final_archive`",
+            "`new-material-sources-registered=2`",
+            "`machine-text-usable=1`",
+            "`machine-unusable-closed=1`",
+            "`017-learning-entry-sources=1`",
+            "`closed-source-learning-entry-count=0`",
+            "`external-inventory-status=scoped_metadata_registered`",
+            "`untracked-material-entries=0`",
+            "`new-material-pending-sources=0`",
+            "`candidate-intake-allowed=0`",
+            "`candidate-extract-delta=0`",
+            "`formal-evidence-delta=0`",
+            "`next-new-material-start=final-archive-ready`",
+            "`entry_new_material_xiahai_suanmingji_pdf`",
+            "`entry_new_material_bazi_suanming_cangjue_pdf`",
+        ):
+            assert marker in text
+        assert "completed_waiting_for_external_inventory_refresh" not in text
+        assert "015-queue-refresh-or-013-explicit-candidate-gate" not in text
+        assert "next-new-material-start=015-external-material-inventory-refresh" not in text
+
+
+def test_new_material_final_archive_readiness_packet_is_documented():
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for text in (handoff, quickstart):
+        for marker in (
+            "Final Archive Readiness Packet",
+            "`archive-readiness-status=ready_for_final_review`",
+            "`new-material-goal-status=completed_no_new_external_materials_pending_final_archive`",
+            "`new-material-pending-sources=0`",
+            "`candidate-intake-allowed=0`",
+            "`candidate-extract-delta=0`",
+            "`formal-evidence-delta=0`",
+            "`013-candidate-extracts=54`",
+            "`013-review-decisions=54`",
+            "`013-promotion-batches=34`",
+            "`012-formal-evidence-units=111`",
+            "`validation-learning-reference-quality=[]`",
+            "`validation-materials-audit-quality=[]`",
+            "`next-target=final-review-or-commit-on-request`",
+            "uv run --with pytest python -m pytest tests/unit/test_learning_reference_curation.py",
+            "uv run --with pytest python -m pytest tests/unit/test_materials_audit.py",
+            "git diff --check",
+        ):
+            assert marker in text

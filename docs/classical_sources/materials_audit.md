@@ -240,6 +240,27 @@ queue surface is covered or locally completed. The next material entry is
 therefore a next-cycle raw-text source selection pass, not a return to the
 already completed raw-text folder triage.
 
+### New Material Goal Completion State
+
+- `new-material-goal-status=completed_no_new_external_materials_pending_final_archive`
+- `new-material-sources-registered=2`
+- `external-inventory-status=scoped_metadata_registered`
+- `untracked-material-entries=0`
+- `new-material-pending-sources=0`
+- `machine-text-usable=1`
+- `machine-unusable-closed=1`
+- `017-learning-entry-sources=1`
+- `closed-source-learning-entry-count=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `next-new-material-start=final-archive-ready`
+- Completed machine-usable source: `entry_new_material_xiahai_suanmingji_pdf`.
+- Closed machine-unusable source: `entry_new_material_bazi_suanming_cangjue_pdf`.
+
+No new external material is currently waiting for the new-material machine
+disposition pipeline.
+
 Registered 015 metadata:
 
 - `repr_life_death_book_100_pages_markdown_extract` links the existing Life
@@ -1715,6 +1736,7 @@ Proposed source-library entry ids:
 - `entry_new_material_bazi_suanming_cangjue_pdf`
 
 Local references:
+- `八字算命藏诀-黑白.pdf`
 - `下海算命记.pdf`
 - `八字算命藏诀-黑白.pdf`
 
@@ -1808,13 +1830,13 @@ Guardrails:
 
 - Preparation id: `015-new-material-controlled-text-preparation`
 - `new-material-controlled-text-preparation-status=blocked_requires_ocr_or_manual_transcription`
-- `controlled-text-preparation-items=1`
-- `source-files=1`
-- `pdf-pages=84`
+- `controlled-text-preparation-items=2`
+- `source-files=2`
+- `pdf-pages=134`
 - `text-layer-nonempty-pages=13`
 - `text-layer-chars=592`
 - `usable-text-layer=0`
-- `blocked-items=1`
+- `blocked-items=2`
 - `candidate-extract-delta=0`
 - `formal-evidence-delta=0`
 - `source-library-mutation-authorized=false`
@@ -1823,12 +1845,15 @@ Guardrails:
 
 Controlled text-preparation item ids:
 - `new_material_controlled_text_prep_xiahai_suanmingji_pdf`
+- `new_material_controlled_text_prep_bazi_suanming_cangjue_pdf`
 
 Source-library entry ids:
 - `entry_new_material_xiahai_suanmingji_pdf`
+- `entry_new_material_bazi_suanming_cangjue_pdf`
 
 Local references:
 - `下海算命记.pdf`
+- `八字算命藏诀-黑白.pdf`
 
 Boundary checks:
 - `controlled_text_preparation_items_loaded`: `passed`
@@ -1849,13 +1874,13 @@ Guardrails:
 
 - Transcription id: `015-new-material-ocr-or-manual-transcription`
 - `new-material-ocr-or-manual-transcription-status=blocked_ocr_runtime_unavailable`
-- `ocr-or-manual-transcription-items=1`
-- `source-files=1`
-- `pdf-pages=84`
+- `ocr-or-manual-transcription-items=2`
+- `source-files=2`
+- `pdf-pages=134`
 - `pdftoppm-available=1`
 - `ocr-runtime-available=0`
 - `prepared-text-artifacts=0`
-- `blocked-items=1`
+- `blocked-items=2`
 - `candidate-extract-delta=0`
 - `formal-evidence-delta=0`
 - `source-library-mutation-authorized=false`
@@ -1864,12 +1889,15 @@ Guardrails:
 
 OCR/manual transcription item ids:
 - `new_material_ocr_or_manual_xiahai_suanmingji_pdf`
+- `new_material_ocr_or_manual_bazi_suanming_cangjue_pdf`
 
 Source-library entry ids:
 - `entry_new_material_xiahai_suanmingji_pdf`
+- `entry_new_material_bazi_suanming_cangjue_pdf`
 
 Local references:
 - `下海算命记.pdf`
+- `八字算命藏诀-黑白.pdf`
 
 Boundary checks:
 - `ocr_or_manual_transcription_items_loaded`: `passed`
@@ -1890,16 +1918,16 @@ Guardrails:
 
 - Setup id: `015-new-material-ocr-runtime-setup-or-human-transcription`
 - `new-material-ocr-runtime-setup-status=blocked_ocr_quality_insufficient`
-- `ocr-runtime-setup-items=1`
-- `source-files=1`
-- `pdf-pages=84`
-- `probe-pages=4`
+- `ocr-runtime-setup-items=2`
+- `source-files=2`
+- `pdf-pages=134`
+- `probe-pages=8`
 - `probe-dpi-values=300`
-- `pdftoppm-available=1`
-- `tesseract-available=1`
-- `chi-sim-available=1`
+- `pdftoppm-available=2`
+- `tesseract-available=2`
+- `chi-sim-available=2`
 - `prepared-text-artifacts=0`
-- `blocked-items=1`
+- `blocked-items=2`
 - `candidate-extract-delta=0`
 - `formal-evidence-delta=0`
 - `source-library-mutation-authorized=false`
@@ -1908,15 +1936,19 @@ Guardrails:
 
 OCR runtime setup item ids:
 - `new_material_ocr_runtime_setup_xiahai_suanmingji_pdf`
+- `new_material_ocr_runtime_setup_bazi_suanming_cangjue_pdf`
 
 Previous OCR/manual transcription item ids:
 - `new_material_ocr_or_manual_xiahai_suanmingji_pdf`
+- `new_material_ocr_or_manual_bazi_suanming_cangjue_pdf`
 
 Source-library entry ids:
 - `entry_new_material_xiahai_suanmingji_pdf`
+- `entry_new_material_bazi_suanming_cangjue_pdf`
 
 Local references:
 - `下海算命记.pdf`
+- `八字算命藏诀-黑白.pdf`
 
 Boundary checks:
 - `ocr_runtime_setup_items_loaded`: `passed`
@@ -1938,31 +1970,35 @@ Guardrails:
 ## 015 New Material OCR Quality Remediation Or Human Transcription
 
 - Remediation id: `015-new-material-ocr-quality-remediation-or-human-transcription`
-- `new-material-ocr-quality-remediation-status=blocked_requires_human_correction`
-- `ocr-quality-remediation-items=1`
-- `source-files=1`
-- `pdf-pages=84`
-- `probe-pages=4`
-- `probe-dpi-values=400`
+- `new-material-ocr-quality-remediation-status=ocr_quality_remediation_completed`
+- `ocr-quality-remediation-items=2`
+- `source-files=2`
+- `pdf-pages=134`
+- `probe-pages=8`
+- `probe-dpi-values=300,400`
 - `vertical-tessdata-available=1`
 - `assistive-ocr-route=1`
 - `prepared-text-artifacts=0`
 - `human-correction-required=1`
-- `blocked-items=1`
+- `machine-unusable-closed=1`
+- `blocked-items=2`
 - `candidate-extract-delta=0`
 - `formal-evidence-delta=0`
 - `source-library-mutation-authorized=false`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-new-material-human-corrected-transcription-prep`
+- `next-material-entry=015-new-material-human-corrected-transcription-prep-or-machine-unusable-closure`
 
 OCR quality remediation item ids:
 - `new_material_ocr_quality_remediation_xiahai_suanmingji_pdf`
+- `new_material_ocr_quality_remediation_bazi_suanming_cangjue_pdf`
 
 OCR runtime setup item ids:
 - `new_material_ocr_runtime_setup_xiahai_suanmingji_pdf`
+- `new_material_ocr_runtime_setup_bazi_suanming_cangjue_pdf`
 
 Source-library entry ids:
 - `entry_new_material_xiahai_suanmingji_pdf`
+- `entry_new_material_bazi_suanming_cangjue_pdf`
 
 Local references:
 - `下海算命记.pdf`
@@ -1970,18 +2006,55 @@ Local references:
 Boundary checks:
 - `ocr_quality_remediation_items_loaded`: `passed`
 - `previous_ocr_quality_blocker_recorded`: `passed`
-- `vertical_tessdata_available`: `passed`
-- `assistive_ocr_route_identified`: `passed`
+- `machine_resolution_recorded`: `passed`
 - `prepared_text_artifact_absent`: `passed`
-- `human_correction_required`: `passed`
+- `human_correction_or_machine_closure_recorded`: `passed`
 - `013_012_not_mutated`: `passed`
 - `raw_materials_not_mutated`: `passed`
 
 Guardrails:
 - Vertical OCR is an assistive draft route, not controlled source text.
-- Human correction is required before prepared text, learning notes, or candidate intake.
+- Machine-unusable sources are closed without prepared text, learning notes, or candidate intake.
 - Do not commit OCR probe images or uncorrected OCR passages.
 - Original external materials remain unmoved and unchanged.
+
+## 015 New Material Machine Disposition
+
+- Disposition id: `015-new-material-machine-disposition`
+- `new-material-machine-disposition-status=machine_disposition_completed`
+- `machine-disposition-sources=2`
+- `machine-text-usable=1`
+- `machine-structure-only=0`
+- `machine-unusable-closed=1`
+- `deferred-requires-better-source=0`
+- `prepared-text-artifacts=1`
+- `learning-note-allowed=1`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `next-material-entry=015-new-material-machine-disposition-completed`
+
+Source dispositions:
+- `entry_new_material_xiahai_suanmingji_pdf`: `machine_text_usable`
+- `entry_new_material_bazi_suanming_cangjue_pdf`: `machine_unusable_closed`
+
+Local references:
+- `下海算命记.pdf`
+- `八字算命藏诀-黑白.pdf`
+
+Boundary checks:
+- `registered_new_material_sources_loaded`: `passed`
+- `all_sources_dispositioned`: `passed`
+- `machine_unusable_sources_closed`: `passed`
+- `unverified_body_text_abandoned`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Each newly registered source receives exactly one machine disposition.
+- Unverified body text is abandoned instead of becoming learning or candidate data.
+- Candidate intake remains blocked unless a later explicit downstream authorization opens it.
+- External raw materials remain unmoved and unchanged.
 
 ## 015 New Material Human Corrected Transcription Prep
 

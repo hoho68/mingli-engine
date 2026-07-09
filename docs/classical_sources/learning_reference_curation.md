@@ -386,6 +386,48 @@ Guardrails:
 - Run risk-boundary review before expanding the prepared-text artifact.
 - Keep 013 and 012 writes out of this evaluation stage.
 
+## 017 New Material Machine Disposition Learning Gate
+
+- Gate id: `017-new-material-machine-disposition-learning-gate`
+- `new-material-machine-disposition-learning-gate-status=machine_usable_sources_routed_to_017`
+- `machine-text-usable=1`
+- `machine-unusable-closed=1`
+- `017-learning-entry-sources=1`
+- `017-machine-usable-entry-sources=1`
+- `017-closed-source-entry-count=0`
+- `missing-017-learning-entry-count=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `downstream-mutation-authorized=false`
+- `next-material-entry=017-new-material-corrected-pilot-learning-note-prep`
+
+Machine-text-usable source entry ids:
+- `entry_new_material_xiahai_suanmingji_pdf`
+
+Machine-unusable closed source entry ids:
+- `entry_new_material_bazi_suanming_cangjue_pdf`
+
+017 learning entry source entry ids:
+- `entry_new_material_xiahai_suanmingji_pdf`
+
+Excluded closed source entry ids:
+- `entry_new_material_bazi_suanming_cangjue_pdf`
+
+Boundary checks:
+- `machine_disposition_completed`: `passed`
+- `machine_text_usable_sources_have_017_entry`: `passed`
+- `machine_unusable_closed_sources_excluded`: `passed`
+- `candidate_intake_blocked`: `passed`
+- `013_012_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `passed`
+
+Guardrails:
+- Only machine-text-usable new material may continue into 017 learning entry evaluation.
+- Machine-unusable closed sources stay outside learning notes, candidate intake, and formal evidence.
+- Candidate intake remains blocked until a later explicit downstream gate opens it.
+- No human-correction work is requested by this gate.
+
 ## 017 New Material Corrected Pilot Learning Note Prep
 
 The corrected pilot now has a bounded 017 learning-note prep packet. The packet
@@ -689,7 +731,7 @@ Guardrails:
 - `candidate-extract-delta=0`
 - `formal-evidence-delta=0`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-queue-refresh-or-013-explicit-candidate-gate`
+- `next-material-entry=015-external-material-inventory-refresh`
 
 Expanded learning completion review item ids:
 - `new_material_expanded_corrected_learning_completion_review_xiahai_suanmingji_pdf`
@@ -711,9 +753,29 @@ Boundary checks:
 
 Guardrails:
 - The expanded corrected learning loop is closed at 017 only.
-- Candidate intake remains blocked unless an explicit 013/012 workflow opens.
+- Candidate intake remains blocked after this new-material loop.
 - The three corrected anchors are sufficient; the page-72 locator is optional precision work.
+- The next new-material entry waits for external inventory refresh.
 - No 013 or 012 records are created by this completion review.
+
+## New Material Goal Completion State
+
+- `new-material-goal-status=completed_no_new_external_materials_pending_final_archive`
+- `new-material-sources-registered=2`
+- `machine-text-usable=1`
+- `machine-unusable-closed=1`
+- `017-learning-entry-sources=1`
+- `closed-source-learning-entry-count=0`
+- `external-inventory-status=scoped_metadata_registered`
+- `untracked-material-entries=0`
+- `new-material-pending-sources=0`
+- `candidate-intake-allowed=0`
+- `candidate-extract-delta=0`
+- `formal-evidence-delta=0`
+- `next-new-material-start=final-archive-ready`
+- Completed machine-usable source: `entry_new_material_xiahai_suanmingji_pdf`.
+- Closed machine-unusable source: `entry_new_material_bazi_suanming_cangjue_pdf`.
+- Archive state: `final-archive-ready`.
 
 ## Phase C Source Disposition Snapshot
 

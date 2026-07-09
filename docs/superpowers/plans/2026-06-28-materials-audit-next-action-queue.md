@@ -54,8 +54,11 @@ Change queue refresh markdown sync to require:
 Change the handoff final-state test to require:
 
 ```text
-`next-new-material-start=015-external-material-inventory-refresh`
+`next-new-material-start` points to the external inventory refresh stage
 ```
+
+Superseded note: the later final archive packet replaces this continuation
+with `next-new-material-start=final-archive-ready`.
 
 - [x] **Step 3: Run RED**
 
@@ -132,8 +135,11 @@ Update the 015 Queue Refresh section to say the post-selected-variant queue is e
 Update handoff:
 
 ```text
-`next-new-material-start=015-external-material-inventory-refresh`
+`next-new-material-start` points to the external inventory refresh stage
 ```
+
+Superseded note: the later final archive packet replaces this continuation
+with `next-new-material-start=final-archive-ready`.
 
 The next long goal should be an external inventory refresh / new material selection cycle, with Huntian Baolan still separate.
 

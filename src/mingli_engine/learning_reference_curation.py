@@ -39,6 +39,7 @@ from mingli_engine.models import (
     NewMaterialCorrectedPilotLearningNoteDraftSummary,
     NewMaterialCorrectedPilotLearningNotePrepItem,
     NewMaterialCorrectedPilotLearningNotePrepSummary,
+    NewMaterialMachineDispositionLearningGateSummary,
     NewMaterialExpandedCorrectedLearningEntryEvaluationItem,
     NewMaterialExpandedCorrectedLearningEntryEvaluationSummary,
     NewMaterialExpandedCorrectedLearningCompletionReviewItem,
@@ -152,6 +153,12 @@ NEW_MATERIAL_CORRECTED_PILOT_LEARNING_COMPLETION_REVIEW_NEXT_ENTRY = (
 NEW_MATERIAL_CORRECTED_PILOT_LEARNING_COMPLETION_REVIEW_STATUSES = frozenset(
     {"current_pilot_learning_completed_candidate_intake_blocked"}
 )
+NEW_MATERIAL_MACHINE_DISPOSITION_LEARNING_GATE_ID = (
+    "017-new-material-machine-disposition-learning-gate"
+)
+NEW_MATERIAL_MACHINE_DISPOSITION_LEARNING_GATE_NEXT_ENTRY = (
+    "017-new-material-corrected-pilot-learning-note-prep"
+)
 NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_ENTRY_EVALUATION_ID = (
     "017-new-material-expanded-corrected-learning-entry-evaluation"
 )
@@ -183,7 +190,7 @@ NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_COMPLETION_REVIEW_ID = (
     "017-new-material-expanded-corrected-learning-completion-review"
 )
 NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_COMPLETION_REVIEW_NEXT_ENTRY = (
-    "015-queue-refresh-or-013-explicit-candidate-gate"
+    "015-external-material-inventory-refresh"
 )
 NEW_MATERIAL_EXPANDED_CORRECTED_LEARNING_COMPLETION_REVIEW_STATUSES = frozenset(
     {"expanded_corrected_learning_loop_closed_candidate_intake_blocked"}
@@ -1497,6 +1504,209 @@ def render_new_material_corrected_pilot_learning_entry_evaluation_markdown(
     lines.extend(f"- `{artifact}`" for artifact in summary.prepared_text_artifacts)
     lines.extend(["", "Local references:"])
     lines.extend(f"- `{reference}`" for reference in summary.local_references)
+    lines.extend(["", "Boundary checks:"])
+    lines.extend(
+        f"- `{check_id}`: `{status}`"
+        for check_id, status in summary.boundary_checks.items()
+    )
+    lines.extend(
+        [
+            "",
+            "Guardrails:",
+            *[f"- {guardrail}" for guardrail in summary.guardrails],
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def build_new_material_machine_disposition_learning_gate_summary(
+    data_dir: Path | str | None = None,
+) -> NewMaterialMachineDispositionLearningGateSummary:
+    source_dir = _data_dir(data_dir)
+    items = load_new_material_corrected_pilot_learning_entry_evaluation_items(
+        source_dir
+    )
+    materials_dir = _sibling_data_dir(source_dir, "materials_audit")
+    machine_disposition = (
+        materials_audit.build_new_material_machine_disposition_summary(materials_dir)
+        if materials_dir is not None
+        else None
+    )
+    source_dispositions = (
+        machine_disposition.source_dispositions
+        if machine_disposition is not None
+        else {}
+    )
+    machine_text_usable_entry_ids = [
+        entry_id
+        for entry_id, disposition in source_dispositions.items()
+        if disposition == "machine_text_usable"
+    ]
+    machine_unusable_closed_entry_ids = [
+        entry_id
+        for entry_id, disposition in source_dispositions.items()
+        if disposition == "machine_unusable_closed"
+    ]
+    learning_entry_source_entry_ids = [
+        item.source_library_entry_id for item in items
+    ]
+    learning_entry_source_entry_id_set = set(learning_entry_source_entry_ids)
+    machine_text_usable_entry_id_set = set(machine_text_usable_entry_ids)
+    machine_unusable_closed_entry_id_set = set(machine_unusable_closed_entry_ids)
+    closed_source_learning_entry_ids = sorted(
+        learning_entry_source_entry_id_set & machine_unusable_closed_entry_id_set
+    )
+    missing_learning_entry_source_entry_ids = [
+        entry_id
+        for entry_id in machine_text_usable_entry_ids
+        if entry_id not in learning_entry_source_entry_id_set
+    ]
+    excluded_closed_source_entry_ids = [
+        entry_id
+        for entry_id in machine_unusable_closed_entry_ids
+        if entry_id not in learning_entry_source_entry_id_set
+    ]
+    no_downstream_delta = all(
+        item.candidate_extract_delta_count == 0
+        and item.review_decision_delta_count == 0
+        and item.promotion_batch_delta_count == 0
+        and item.formal_evidence_delta_count == 0
+        and not item.downstream_mutation_authorized
+        for item in items
+    )
+    boundary_checks = {
+        "machine_disposition_completed": (
+            "passed"
+            if machine_disposition is not None
+            and machine_disposition.disposition_status
+            == "machine_disposition_completed"
+            else "failed"
+        ),
+        "machine_text_usable_sources_have_017_entry": (
+            "passed"
+            if machine_text_usable_entry_ids
+            and not missing_learning_entry_source_entry_ids
+            else "failed"
+        ),
+        "machine_unusable_closed_sources_excluded": (
+            "passed" if not closed_source_learning_entry_ids else "failed"
+        ),
+        "candidate_intake_blocked": (
+            "passed"
+            if items and all(not item.candidate_intake_allowed for item in items)
+            else "failed"
+        ),
+        "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
+        "raw_materials_not_mutated": "passed",
+    }
+    return NewMaterialMachineDispositionLearningGateSummary(
+        gate_id=NEW_MATERIAL_MACHINE_DISPOSITION_LEARNING_GATE_ID,
+        gate_status=(
+            "machine_usable_sources_routed_to_017"
+            if all(status == "passed" for status in boundary_checks.values())
+            else "machine_disposition_learning_gate_needs_attention"
+        ),
+        machine_text_usable_count=len(machine_text_usable_entry_ids),
+        machine_unusable_closed_count=len(machine_unusable_closed_entry_ids),
+        learning_entry_source_count=len(set(learning_entry_source_entry_ids)),
+        learning_entry_machine_usable_count=len(
+            learning_entry_source_entry_id_set & machine_text_usable_entry_id_set
+        ),
+        closed_source_learning_entry_count=len(closed_source_learning_entry_ids),
+        missing_learning_entry_count=len(missing_learning_entry_source_entry_ids),
+        candidate_intake_allowed_count=sum(
+            1 for item in items if item.candidate_intake_allowed
+        ),
+        candidate_extract_delta_count=sum(
+            item.candidate_extract_delta_count for item in items
+        ),
+        review_decision_delta_count=sum(
+            item.review_decision_delta_count for item in items
+        ),
+        promotion_batch_delta_count=sum(
+            item.promotion_batch_delta_count for item in items
+        ),
+        formal_evidence_delta_count=sum(
+            item.formal_evidence_delta_count for item in items
+        ),
+        downstream_mutation_authorized=any(
+            item.downstream_mutation_authorized for item in items
+        ),
+        next_material_entry=(
+            NEW_MATERIAL_MACHINE_DISPOSITION_LEARNING_GATE_NEXT_ENTRY
+        ),
+        machine_text_usable_source_entry_ids=machine_text_usable_entry_ids,
+        machine_unusable_closed_source_entry_ids=machine_unusable_closed_entry_ids,
+        learning_entry_source_entry_ids=learning_entry_source_entry_ids,
+        excluded_closed_source_entry_ids=excluded_closed_source_entry_ids,
+        missing_learning_entry_source_entry_ids=missing_learning_entry_source_entry_ids,
+        boundary_checks=boundary_checks,
+        guardrails=[
+            "Only machine-text-usable new material may continue into 017 learning entry evaluation.",
+            "Machine-unusable closed sources stay outside learning notes, candidate intake, and formal evidence.",
+            "Candidate intake remains blocked until a later explicit downstream gate opens it.",
+            "No human-correction work is requested by this gate.",
+        ],
+    )
+
+
+def render_new_material_machine_disposition_learning_gate_markdown(
+    summary: NewMaterialMachineDispositionLearningGateSummary,
+) -> str:
+    downstream_mutation_authorized = (
+        "true" if summary.downstream_mutation_authorized else "false"
+    )
+    lines = [
+        "## 017 New Material Machine Disposition Learning Gate",
+        "",
+        f"- Gate id: `{summary.gate_id}`",
+        (
+            "- `new-material-machine-disposition-learning-gate-status="
+            f"{summary.gate_status}`"
+        ),
+        f"- `machine-text-usable={summary.machine_text_usable_count}`",
+        f"- `machine-unusable-closed={summary.machine_unusable_closed_count}`",
+        f"- `017-learning-entry-sources={summary.learning_entry_source_count}`",
+        (
+            "- `017-machine-usable-entry-sources="
+            f"{summary.learning_entry_machine_usable_count}`"
+        ),
+        (
+            "- `017-closed-source-entry-count="
+            f"{summary.closed_source_learning_entry_count}`"
+        ),
+        (
+            "- `missing-017-learning-entry-count="
+            f"{summary.missing_learning_entry_count}`"
+        ),
+        f"- `candidate-intake-allowed={summary.candidate_intake_allowed_count}`",
+        f"- `candidate-extract-delta={summary.candidate_extract_delta_count}`",
+        f"- `formal-evidence-delta={summary.formal_evidence_delta_count}`",
+        (
+            "- `downstream-mutation-authorized="
+            f"{downstream_mutation_authorized}`"
+        ),
+        f"- `next-material-entry={summary.next_material_entry}`",
+        "",
+        "Machine-text-usable source entry ids:",
+    ]
+    lines.extend(
+        f"- `{entry_id}`"
+        for entry_id in summary.machine_text_usable_source_entry_ids
+    )
+    lines.extend(["", "Machine-unusable closed source entry ids:"])
+    lines.extend(
+        f"- `{entry_id}`"
+        for entry_id in summary.machine_unusable_closed_source_entry_ids
+    )
+    lines.extend(["", "017 learning entry source entry ids:"])
+    lines.extend(
+        f"- `{entry_id}`" for entry_id in summary.learning_entry_source_entry_ids
+    )
+    lines.extend(["", "Excluded closed source entry ids:"])
+    lines.extend(
+        f"- `{entry_id}`" for entry_id in summary.excluded_closed_source_entry_ids
+    )
     lines.extend(["", "Boundary checks:"])
     lines.extend(
         f"- `{check_id}`: `{status}`"
@@ -3700,8 +3910,9 @@ def build_new_material_expanded_corrected_learning_completion_review_summary(
         boundary_checks=boundary_checks,
         guardrails=[
             "The expanded corrected learning loop is closed at 017 only.",
-            "Candidate intake remains blocked unless an explicit 013/012 workflow opens.",
+            "Candidate intake remains blocked after this new-material loop.",
             "The three corrected anchors are sufficient; the page-72 locator is optional precision work.",
+            "The next new-material entry waits for external inventory refresh.",
             "No 013 or 012 records are created by this completion review.",
         ],
     )
