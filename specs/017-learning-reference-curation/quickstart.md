@@ -542,6 +542,39 @@ The current monitor pass finds no new pending source for the machine
 disposition pipeline. Keep the archive branch local unless a later explicit
 publication request authorizes push or PR work.
 
+Publication Handoff Package:
+
+- `publication-package-status=prepared_not_pushed`
+- `publication-target-branch=codex/complete-new-material-learning`
+- `publication-base-branch=origin/main`
+- `publication-ahead-commits=97`
+- `publication-behind-commits=0`
+- `suggested-pr-title=Archive new material learning intake`
+- `suggested-pr-summary-material-routing=completed`
+- `suggested-pr-summary-archive-state=completed`
+- `suggested-pr-summary-publication-guard=prepared`
+- `test-plan-learning-reference=109 passed`
+- `test-plan-materials-audit=150 passed`
+- `test-plan-validators=[]`
+- `boundary-counts=54/54/34/111`
+- `publication-risk-large-branch=97 commits ahead of origin/main`
+- `publication-action-required=explicit_user_authorization_before_push`
+- `next-target=await-user-publication-choice-or-new-material`
+
+Suggested PR summary:
+
+- Archived the new-material learning intake and machine-disposition flow.
+- Closed the current new-material goal with no pending external sources.
+- Preserved publication guards: no push, merge, discard, or candidate intake
+  without explicit authorization.
+
+Suggested PR test plan:
+
+```powershell
+uv run --with pytest python -m pytest tests/unit/test_learning_reference_curation.py
+uv run --with pytest python -m pytest tests/unit/test_materials_audit.py
+```
+
 Run focused learning reference curation tests:
 
 ```powershell

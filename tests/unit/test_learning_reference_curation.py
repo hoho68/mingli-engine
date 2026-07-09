@@ -3644,3 +3644,35 @@ def test_new_material_intake_monitor_packet_is_documented():
             "`next-target=keep-archive-branch-and-wait-for-new-material`",
         ):
             assert marker in text
+
+
+def test_new_material_publication_handoff_package_is_documented():
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for text in (handoff, quickstart):
+        for marker in (
+            "Publication Handoff Package",
+            "`publication-package-status=prepared_not_pushed`",
+            "`publication-target-branch=codex/complete-new-material-learning`",
+            "`publication-base-branch=origin/main`",
+            "`publication-ahead-commits=97`",
+            "`publication-behind-commits=0`",
+            "`suggested-pr-title=Archive new material learning intake`",
+            "`suggested-pr-summary-material-routing=completed`",
+            "`suggested-pr-summary-archive-state=completed`",
+            "`suggested-pr-summary-publication-guard=prepared`",
+            "`test-plan-learning-reference=109 passed`",
+            "`test-plan-materials-audit=150 passed`",
+            "`test-plan-validators=[]`",
+            "`boundary-counts=54/54/34/111`",
+            "`publication-risk-large-branch=97 commits ahead of origin/main`",
+            "`publication-action-required=explicit_user_authorization_before_push`",
+            "`next-target=await-user-publication-choice-or-new-material`",
+        ):
+            assert marker in text
+        assert "`publication-package-status=pushed`" not in text
