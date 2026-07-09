@@ -485,7 +485,10 @@ Final Archive Readiness Packet:
 - `012-formal-evidence-units=111`
 - `validation-learning-reference-quality=[]`
 - `validation-materials-audit-quality=[]`
-- `next-target=final-review-or-commit-on-request`
+- `archive-local-commit-created=1`
+- `post-archive-resume-status=waiting_for_new_material_or_push_request`
+- `push-authorized=false`
+- `next-target=await-new-material-or-push-on-request`
 
 Verification commands for the final review packet:
 
@@ -494,6 +497,9 @@ uv run --with pytest python -m pytest tests/unit/test_learning_reference_curatio
 uv run --with pytest python -m pytest tests/unit/test_materials_audit.py
 git diff --check
 ```
+
+After the local archive commit, keep candidate intake blocked. Resume only when
+a new source arrives, or push the archived branch after explicit user request.
 
 Run focused learning reference curation tests:
 

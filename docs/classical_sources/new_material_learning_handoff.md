@@ -1082,7 +1082,10 @@ intake stays blocked for the current new-material loop.
 - `012-formal-evidence-units=111`
 - `validation-learning-reference-quality=[]`
 - `validation-materials-audit-quality=[]`
-- `next-target=final-review-or-commit-on-request`
+- `archive-local-commit-created=1`
+- `post-archive-resume-status=waiting_for_new_material_or_push_request`
+- `push-authorized=false`
+- `next-target=await-new-material-or-push-on-request`
 
 Verification commands for the final review packet:
 
@@ -1093,7 +1096,8 @@ git diff --check
 ```
 
 Archive rule: do not reopen candidate intake for the current new-material loop.
-The next action is final review or commit only after explicit user request.
+The next action is either wait for a future source or push the archived branch
+only after explicit user request.
 
 ## Guardrails
 
@@ -1105,6 +1109,7 @@ The next action is final review or commit only after explicit user request.
 
 ## Next Target
 
-Next target: `final-archive-ready`. The expanded corrected learning loop is
-closed, external inventory refresh found no new pending source, and candidate
-intake remains blocked for the current new-material loop.
+Next target: `await-new-material-or-push-on-request`. The expanded corrected
+learning loop is closed, external inventory refresh found no new pending source,
+candidate intake remains blocked for the current new-material loop, and remote
+push remains unauthorized from this handoff.

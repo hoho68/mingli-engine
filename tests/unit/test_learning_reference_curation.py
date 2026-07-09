@@ -3575,9 +3575,13 @@ def test_new_material_final_archive_readiness_packet_is_documented():
             "`012-formal-evidence-units=111`",
             "`validation-learning-reference-quality=[]`",
             "`validation-materials-audit-quality=[]`",
-            "`next-target=final-review-or-commit-on-request`",
+            "`archive-local-commit-created=1`",
+            "`post-archive-resume-status=waiting_for_new_material_or_push_request`",
+            "`push-authorized=false`",
+            "`next-target=await-new-material-or-push-on-request`",
             "uv run --with pytest python -m pytest tests/unit/test_learning_reference_curation.py",
             "uv run --with pytest python -m pytest tests/unit/test_materials_audit.py",
             "git diff --check",
         ):
             assert marker in text
+        assert "`next-target=final-review-or-commit-on-request`" not in text
