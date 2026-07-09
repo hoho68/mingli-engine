@@ -1119,6 +1119,27 @@ Publication options:
    test run.
 4. Discard only after explicit typed confirmation.
 
+## New Material Intake Monitor Packet
+
+- `intake-monitor-status=no_new_material_detected`
+- `monitor-source=local_filesystem_and_tracked_metadata`
+- `external-inventory-status=scoped_metadata_registered`
+- `external-inventory-confirmation-status=external_inventory_refresh_confirmed`
+- `external-entries=31`
+- `untracked-material-entries=0`
+- `new-material-pending-sources=0`
+- `registered-new-material-sources=2`
+- `machine-text-usable=1`
+- `machine-unusable-closed=1`
+- `candidate-intake-allowed=0`
+- `formal-evidence-delta=0`
+- `push-authorized=false`
+- `next-target=keep-archive-branch-and-wait-for-new-material`
+
+The current monitor pass finds no new pending source for the machine
+disposition pipeline. Keep the archive branch local unless a later explicit
+publication request authorizes push or PR work.
+
 ## Guardrails
 
 - Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`.
@@ -1129,7 +1150,7 @@ Publication options:
 
 ## Next Target
 
-Next target: `push-pr-or-keep-only-after-user-choice`. The expanded corrected
-learning loop is closed, external inventory refresh found no new pending source,
-candidate intake remains blocked for the current new-material loop, and remote
-push remains unauthorized from this handoff.
+Next target: `keep-archive-branch-and-wait-for-new-material`. The expanded
+corrected learning loop is closed, external inventory refresh found no new
+pending source, candidate intake remains blocked for the current new-material
+loop, and remote push remains unauthorized from this handoff.

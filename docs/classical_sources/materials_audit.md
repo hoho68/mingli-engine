@@ -261,6 +261,27 @@ already completed raw-text folder triage.
 No new external material is currently waiting for the new-material machine
 disposition pipeline.
 
+### New Material Intake Monitor Packet
+
+- `intake-monitor-status=no_new_material_detected`
+- `monitor-source=local_filesystem_and_tracked_metadata`
+- `external-inventory-status=scoped_metadata_registered`
+- `external-inventory-confirmation-status=external_inventory_refresh_confirmed`
+- `external-entries=31`
+- `untracked-material-entries=0`
+- `new-material-pending-sources=0`
+- `registered-new-material-sources=2`
+- `machine-text-usable=1`
+- `machine-unusable-closed=1`
+- `candidate-intake-allowed=0`
+- `formal-evidence-delta=0`
+- `push-authorized=false`
+- `next-target=keep-archive-branch-and-wait-for-new-material`
+
+The current monitor pass finds no new pending source for the machine
+disposition pipeline. Keep the archive branch local unless a later explicit
+publication request authorizes push or PR work.
+
 Registered 015 metadata:
 
 - `repr_life_death_book_100_pages_markdown_extract` links the existing Life

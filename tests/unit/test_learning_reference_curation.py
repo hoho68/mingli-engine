@@ -3610,3 +3610,37 @@ def test_new_material_remote_publication_decision_packet_is_documented():
         ):
             assert marker in text
         assert "`push-authorized=true`" not in text
+
+
+def test_new_material_intake_monitor_packet_is_documented():
+    docs = [
+        Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+            encoding="utf-8"
+        ),
+        Path("docs/classical_sources/materials_audit.md").read_text(
+            encoding="utf-8"
+        ),
+    ]
+
+    for text in docs:
+        for marker in (
+            "New Material Intake Monitor Packet",
+            "`intake-monitor-status=no_new_material_detected`",
+            "`monitor-source=local_filesystem_and_tracked_metadata`",
+            "`external-inventory-status=scoped_metadata_registered`",
+            "`external-inventory-confirmation-status=external_inventory_refresh_confirmed`",
+            "`external-entries=31`",
+            "`untracked-material-entries=0`",
+            "`new-material-pending-sources=0`",
+            "`registered-new-material-sources=2`",
+            "`machine-text-usable=1`",
+            "`machine-unusable-closed=1`",
+            "`candidate-intake-allowed=0`",
+            "`formal-evidence-delta=0`",
+            "`push-authorized=false`",
+            "`next-target=keep-archive-branch-and-wait-for-new-material`",
+        ):
+            assert marker in text
