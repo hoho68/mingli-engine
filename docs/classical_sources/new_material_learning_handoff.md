@@ -1099,6 +1099,26 @@ Archive rule: do not reopen candidate intake for the current new-material loop.
 The next action is either wait for a future source or push the archived branch
 only after explicit user request.
 
+## Remote Publication Decision Packet
+
+- `remote-publication-status=not_pushed_user_authorization_required`
+- `publication-branch=codex/complete-new-material-learning`
+- `publication-remote=origin`
+- `publication-upstream-branch=none`
+- `remote-contains-head=0`
+- `push-authorized=false`
+- `merge-authorized=false`
+- `discard-authorized=false`
+- `next-target=push-pr-or-keep-only-after-user-choice`
+
+Publication options:
+
+1. Keep the local branch as the archive branch.
+2. Push the branch and open a pull request after explicit user authorization.
+3. Merge locally only after explicit user authorization and a fresh merged-state
+   test run.
+4. Discard only after explicit typed confirmation.
+
 ## Guardrails
 
 - Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`.
@@ -1109,7 +1129,7 @@ only after explicit user request.
 
 ## Next Target
 
-Next target: `await-new-material-or-push-on-request`. The expanded corrected
+Next target: `push-pr-or-keep-only-after-user-choice`. The expanded corrected
 learning loop is closed, external inventory refresh found no new pending source,
 candidate intake remains blocked for the current new-material loop, and remote
 push remains unauthorized from this handoff.

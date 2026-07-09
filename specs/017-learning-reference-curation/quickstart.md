@@ -501,6 +501,26 @@ git diff --check
 After the local archive commit, keep candidate intake blocked. Resume only when
 a new source arrives, or push the archived branch after explicit user request.
 
+Remote Publication Decision Packet:
+
+- `remote-publication-status=not_pushed_user_authorization_required`
+- `publication-branch=codex/complete-new-material-learning`
+- `publication-remote=origin`
+- `publication-upstream-branch=none`
+- `remote-contains-head=0`
+- `push-authorized=false`
+- `merge-authorized=false`
+- `discard-authorized=false`
+- `next-target=push-pr-or-keep-only-after-user-choice`
+
+Publication options:
+
+1. Keep the local branch as the archive branch.
+2. Push the branch and open a pull request after explicit user authorization.
+3. Merge locally only after explicit user authorization and a fresh merged-state
+   test run.
+4. Discard only after explicit typed confirmation.
+
 Run focused learning reference curation tests:
 
 ```powershell

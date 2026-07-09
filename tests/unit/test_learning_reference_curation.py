@@ -3585,3 +3585,28 @@ def test_new_material_final_archive_readiness_packet_is_documented():
         ):
             assert marker in text
         assert "`next-target=final-review-or-commit-on-request`" not in text
+
+
+def test_new_material_remote_publication_decision_packet_is_documented():
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    quickstart = Path("specs/017-learning-reference-curation/quickstart.md").read_text(
+        encoding="utf-8"
+    )
+
+    for text in (handoff, quickstart):
+        for marker in (
+            "Remote Publication Decision Packet",
+            "`remote-publication-status=not_pushed_user_authorization_required`",
+            "`publication-branch=codex/complete-new-material-learning`",
+            "`publication-remote=origin`",
+            "`publication-upstream-branch=none`",
+            "`remote-contains-head=0`",
+            "`push-authorized=false`",
+            "`merge-authorized=false`",
+            "`discard-authorized=false`",
+            "`next-target=push-pr-or-keep-only-after-user-choice`",
+        ):
+            assert marker in text
+        assert "`push-authorized=true`" not in text
