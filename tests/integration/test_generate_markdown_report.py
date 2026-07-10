@@ -100,6 +100,9 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     assert "不做格局定论" in markdown
     assert "不做用神定论" in markdown
     assert "不做大运流年判断" in markdown
+    assert "Knowledge activation: status=enabled_with_guardrails" in markdown
+    assert "missing_rule_families=0" in markdown
+    assert "conflict_high_risk_scope_001" in markdown
     for old_phrase in (
         "五行信号观察：明面信号为",
         "这些数量用于观察结构分布",
@@ -128,6 +131,8 @@ def test_generate_report_outputs_complete_html_from_external_verified_chart():
     assert html.count("<main") == 1
     assert html.rstrip().endswith("</html>")
     assert "# " not in html
+    assert "Knowledge activation: status=enabled_with_guardrails" in html
+    assert "missing_rule_families=0" in html
     _assert_plain_language_report(html)
     assert "<script" not in html.lower()
     assert "onclick=" not in html.lower()

@@ -5675,5 +5675,6 @@ class Report:
     interpretation_boundaries: str
     glossary: str
     ethics_reminder: str
+    knowledge_activation: KnowledgeActivationSummary
     expanded_evidence: ExpandedReportEvidence
     safety_review: SafetyReviewResult

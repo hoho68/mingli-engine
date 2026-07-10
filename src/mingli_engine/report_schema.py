@@ -2,14 +2,17 @@ from dataclasses import replace
 
 from mingli_engine.classical_sources import (
     load_approved_evidence_units,
+    load_classical_sources,
     load_source_conflicts,
 )
+from mingli_engine.evidence_curation import build_knowledge_activation_summary
 from mingli_engine.formal_interpretation import build_formal_interpretation
 from mingli_engine.high_risk import classify_high_risk_request
 from mingli_engine.interpretation import build_basic_interpretation
 from mingli_engine.models import (
     BaziChart,
     ExpandedReportEvidence,
+    KnowledgeActivationSummary,
     Report,
     SafetyReviewResult,
 )
@@ -56,6 +59,11 @@ BOUNDARY_ACTION_TRANSITION = (
 ACTION_REFLECTION_TRANSITION = (
     "行动反思只作为复盘提示，用来整理可观察的线索，不替代现实判断。"
 )
+REPORT_ENABLED_ACTIVATION_STATUSES = frozenset({"enabled", "enabled_with_guardrails"})
+
+
+class KnowledgeActivationError(ValueError):
+    pass
 
 
 def _reader_label(value: str | None, labels: dict[str, str]) -> str:
@@ -199,10 +207,43 @@ def _build_quick_guide(chart: BaziChart, interpretation) -> str:
     )
 
 
-def _format_expanded_evidence_notes(expanded_evidence: ExpandedReportEvidence) -> str:
+def _format_knowledge_activation_notes(
+    knowledge_activation: KnowledgeActivationSummary,
+) -> str:
+    lines = [
+        f"- Knowledge activation: status={knowledge_activation.activation_status}",
+        (
+            "- Knowledge activation coverage: "
+            f"sources={knowledge_activation.source_count}, "
+            f"report_usable_sources={knowledge_activation.report_usable_source_count}, "
+            f"approved_evidence_units={knowledge_activation.approved_evidence_count}, "
+            f"enabled_rule_families={len(knowledge_activation.enabled_rule_families)}, "
+            f"missing_rule_families={len(knowledge_activation.missing_rule_families)}, "
+            f"unavailable_conclusions={knowledge_activation.unavailable_conclusion_count}"
+        ),
+    ]
+    if knowledge_activation.open_conflicts:
+        lines.append(
+            "- Knowledge activation open conflicts: "
+            + "銆?".join(knowledge_activation.open_conflicts)
+        )
+    if knowledge_activation.guardrails:
+        lines.append(
+            "- Knowledge activation guardrails: "
+            + " / ".join(knowledge_activation.guardrails)
+        )
+    return "\n".join(lines)
+
+
+def _format_expanded_evidence_notes(
+    expanded_evidence: ExpandedReportEvidence,
+    knowledge_activation: KnowledgeActivationSummary | None = None,
+) -> str:
     lines = [
         "- 命理依据：正式判断来自已审核的经典证据单元，并保留规则家族、结论强度和盘面信号。",
     ]
+    if knowledge_activation is not None:
+        lines.append(_format_knowledge_activation_notes(knowledge_activation))
     if expanded_evidence.source_summary:
         lines.append("- 来源摘要：" + "；".join(expanded_evidence.source_summary))
 
@@ -228,7 +269,10 @@ def _format_expanded_evidence_notes(expanded_evidence: ExpandedReportEvidence) -
     return "\n".join(lines)
 
 
-def _build_evidence_notes(expanded_evidence: ExpandedReportEvidence) -> str:
+def _build_evidence_notes(
+    expanded_evidence: ExpandedReportEvidence,
+    knowledge_activation: KnowledgeActivationSummary,
+) -> str:
     return "\n".join(
         [
             "- 来源依据：先看排盘来源与历法、时区、节气等假设，避免把前提当成结论。",
@@ -236,8 +280,20 @@ def _build_evidence_notes(expanded_evidence: ExpandedReportEvidence) -> str:
             "- 五行依据：明面信号、藏干信号和合计信号用于观察分布，不用于给人生下定论。",
             "- 十神依据：十神关系按柱位理解为关系线索，需要结合解读边界一起阅读。",
             "- 行动依据：行动反思只把可观察线索转成复盘问题，不预测具体结果。",
-            _format_expanded_evidence_notes(expanded_evidence),
+            _format_expanded_evidence_notes(expanded_evidence, knowledge_activation),
         ]
+    )
+
+
+def _ensure_knowledge_activation_ready(
+    knowledge_activation: KnowledgeActivationSummary,
+) -> None:
+    if knowledge_activation.activation_status in REPORT_ENABLED_ACTIVATION_STATUSES:
+        return
+    raise KnowledgeActivationError(
+        "knowledge activation is not enabled: "
+        f"{knowledge_activation.activation_status}; "
+        f"next_action={knowledge_activation.next_action}"
     )
 
 
@@ -280,12 +336,21 @@ def build_report(chart: BaziChart) -> Report:
     quick_guide = _build_quick_guide(chart, interpretation)
     five_elements_summary = interpretation.five_elements_summary
     ten_gods_summary = interpretation.ten_gods_summary
+    sources = load_classical_sources()
+    evidence_units = load_approved_evidence_units()
+    source_conflicts = load_source_conflicts()
+    knowledge_activation = build_knowledge_activation_summary(
+        sources,
+        evidence_units,
+        source_conflicts,
+    )
+    _ensure_knowledge_activation_ready(knowledge_activation)
     expanded_evidence = build_formal_interpretation(
         chart,
-        load_approved_evidence_units(),
-        load_source_conflicts(),
+        evidence_units,
+        source_conflicts,
     )
-    evidence_notes = _build_evidence_notes(expanded_evidence)
+    evidence_notes = _build_evidence_notes(expanded_evidence, knowledge_activation)
     structure_analysis = (
         f"{interpretation.structure_observations}\n{STRUCTURE_BOUNDARY_TRANSITION}"
     )
@@ -347,6 +412,7 @@ def build_report(chart: BaziChart) -> Report:
         interpretation_boundaries=interpretation_boundaries,
         glossary=glossary,
         ethics_reminder=ethics_reminder,
+        knowledge_activation=knowledge_activation,
         expanded_evidence=expanded_evidence,
         safety_review=safety_check(
             "\n\n".join(

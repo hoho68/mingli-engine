@@ -18,7 +18,7 @@ from mingli_engine.models import (
     Pillar,
     SafetyReviewResult,
 )
-from mingli_engine.report_schema import build_report
+from mingli_engine.report_schema import KnowledgeActivationError, build_report
 from mingli_engine.safety import safety_check
 from mingli_engine.validation import validate_birth_profile
 from mingli_engine import promotion
@@ -334,6 +334,9 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     except classical_sources.ClassicalEvidenceError as error:
         print(f"Classical evidence error: {error}", file=sys.stderr)
+        return 1
+    except KnowledgeActivationError as error:
+        print(f"Knowledge activation error: {error}", file=sys.stderr)
         return 1
     except (KeyError, TypeError, AttributeError) as error:
         print(f"Invalid input: {error}", file=sys.stderr)

@@ -4,8 +4,9 @@ from dataclasses import fields
 import pytest
 
 from mingli_engine.report_schema import build_report
+from mingli_engine.report_schema import KnowledgeActivationError
 from mingli_engine.report_schema import _format_expanded_evidence_notes
-from mingli_engine.models import Report
+from mingli_engine.models import KnowledgeActivationSummary, Report
 from mingli_engine.models import ExpandedReportEvidence, EvidenceTrace, FormalConclusion
 
 
@@ -164,6 +165,12 @@ def test_build_report_attaches_expanded_source_backed_evidence(sample_bazi_chart
 
     expanded = report.expanded_evidence
 
+    assert report.knowledge_activation.activation_status == "enabled_with_guardrails"
+    assert report.knowledge_activation.missing_rule_families == []
+    assert report.knowledge_activation.unavailable_conclusion_count == 0
+    assert "Knowledge activation: status=enabled_with_guardrails" in report.evidence_notes
+    assert "missing_rule_families=0" in report.evidence_notes
+    assert "conflict_high_risk_scope_001" in report.evidence_notes
     assert expanded.source_summary
     assert expanded.formal_conclusions
     assert {item.rule_family for item in expanded.formal_conclusions}.issuperset(
@@ -188,6 +195,37 @@ def test_build_report_attaches_expanded_source_backed_evidence(sample_bazi_chart
         assert conclusion.trace.chart_signals
         assert conclusion.trace.evidence_ids
         assert conclusion.trace.assumptions
+
+
+def test_build_report_blocks_when_knowledge_activation_is_not_enabled(
+    sample_bazi_chart,
+    monkeypatch,
+):
+    blocked_summary = KnowledgeActivationSummary(
+        activation_status="blocked_missing_rule_family",
+        source_count=1,
+        report_usable_source_count=1,
+        approved_evidence_count=1,
+        required_rule_families=["pattern_strength", "high_risk_signal"],
+        enabled_rule_families=["pattern_strength"],
+        missing_rule_families=["high_risk_signal"],
+        rule_family_counts={"pattern_strength": 1},
+        risk_tier_counts={"ordinary": 1},
+        sources_with_gaps=[],
+        open_conflicts=[],
+        quality_failures=[],
+        formal_conclusion_count=2,
+        unavailable_conclusion_count=1,
+        next_action="curate_missing_rule_family_evidence",
+        guardrails=[],
+    )
+    monkeypatch.setattr(
+        "mingli_engine.report_schema.build_knowledge_activation_summary",
+        lambda sources, evidence_units, source_conflicts: blocked_summary,
+    )
+
+    with pytest.raises(KnowledgeActivationError, match="blocked_missing_rule_family"):
+        build_report(sample_bazi_chart)
 
 
 def test_build_report_prepares_quick_guide_and_boundary_layer(sample_bazi_chart):
@@ -333,12 +371,13 @@ def test_report_public_contract_fields_remain_stable_for_012():
         "interpretation_boundaries",
         "glossary",
         "ethics_reminder",
+        "knowledge_activation",
         "expanded_evidence",
         "safety_review",
     ]
 
 
-def test_expanded_evidence_notes_include_conflict_notes_without_new_report_fields():
+def test_expanded_evidence_notes_include_conflict_notes_and_activation_contract():
     expanded = ExpandedReportEvidence(
         source_summary=["source / useful_god_candidate / ordinary"],
         formal_conclusions=[
@@ -382,6 +421,7 @@ def test_expanded_evidence_notes_include_conflict_notes_without_new_report_field
         "interpretation_boundaries",
         "glossary",
         "ethics_reminder",
+        "knowledge_activation",
         "expanded_evidence",
         "safety_review",
     ]
