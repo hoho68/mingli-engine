@@ -12596,6 +12596,43 @@ def test_seeded_intake_progress_report_loads_after_batch_registration():
     assert report.rule_family_counts
 
 
+def test_seeded_intake_candidate_review_closure_packet_is_documented():
+    report = source_intake.build_intake_progress_report()
+    candidates = source_intake.load_candidate_extracts()
+    reviews = source_intake.load_review_decisions()
+    batches = source_intake.load_promotion_batches()
+    intake_doc = Path("docs/classical_sources/intake.md").read_text(encoding="utf-8")
+    handoff = Path("docs/classical_sources/new_material_learning_handoff.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert report.pending_review_count == 0
+    assert source_intake.list_pending_candidate_review_worklist() == []
+    assert source_intake.build_pending_candidate_review_action_queue() == []
+
+    for text in (intake_doc, handoff):
+        for marker in (
+            "013 Candidate Review Closure Packet",
+            "`candidate-review-status=closed_no_pending_review_candidates`",
+            f"`013-candidate-extracts={len(candidates)}`",
+            f"`013-review-decisions={len(reviews)}`",
+            f"`013-promotion-batches={len(batches)}`",
+            "`013-pending-review-candidates=0`",
+            "`013-approved-not-promoted=0`",
+            "`013-promoted-candidates=51`",
+            "`013-rejected-candidates=2`",
+            "`013-blocked-candidates=1`",
+            "`pending-review-worklist-items=0`",
+            "`pending-review-action-items=0`",
+            "`review-decision-delta=0`",
+            "`formal-evidence-delta=0`",
+            "`next-work-entry=wait-new-material-or-maintain-promoted-evidence`",
+        ):
+            assert marker in text
+        assert "Current worklist:\n\n- `candidate_" not in text
+        assert "Packet count: `5`" not in text
+
+
 def test_promoted_markdown_learning_candidates_use_source_file_locators():
     candidates_by_id = {
         candidate.candidate_id: candidate

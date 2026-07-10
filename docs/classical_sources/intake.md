@@ -78,13 +78,36 @@ The pending-review workflow sections below remain as maintainer scaffolding for
 future candidate sessions. The current seeded data has no active
 `pending_review` candidates.
 
+## 013 Candidate Review Closure Packet
+
+- `candidate-review-status=closed_no_pending_review_candidates`
+- `013-candidate-extracts=54`
+- `013-review-decisions=54`
+- `013-promotion-batches=34`
+- `013-pending-review-candidates=0`
+- `013-approved-not-promoted=0`
+- `013-promoted-candidates=51`
+- `013-rejected-candidates=2`
+- `013-blocked-candidates=1`
+- `pending-review-worklist-items=0`
+- `pending-review-action-items=0`
+- `review-decision-delta=0`
+- `formal-evidence-delta=0`
+- `next-work-entry=wait-new-material-or-maintain-promoted-evidence`
+
+Closure rule: the current 013 seeded candidate-review queue is closed. Do not
+create, approve, return, reject, block, promote, or alter formal evidence from
+the historical scaffolding below unless a new candidate session is explicitly
+opened.
+
 ## Pending Candidate Review Worklist
 
 `list_pending_candidate_review_worklist()` turns the current pending queue into
 review-planning items. It does not create review decisions, promotion batches,
 or formal evidence.
 
-Current worklist:
+Current worklist: none. Historical scaffold from the earlier pending-review
+session is retained below for operator reference only:
 
 - `candidate_northeast_blind_image_001`: verify locator, review meaning,
   decide outcome, confirm uncertainty/limitation language, and review
@@ -109,7 +132,8 @@ review-decision packet metadata. The packets show which review inputs are still
 needed before a maintainer writes `review_decisions.json`; they do not approve,
 return, reject, block, promote, or create formal evidence.
 
-Current packet blockers:
+Current packet blockers: none. Historical packet blockers from the earlier
+pending-review session are retained below for operator reference only:
 
 - `candidate_northeast_blind_image_001`: source locator verification,
   candidate-meaning verification, selected review outcome,
@@ -135,9 +159,11 @@ Current packet blockers:
 `build_pending_candidate_review_packet_summary()` rolls up the packet dashboard
 without writing review decisions or formal evidence.
 
-Current summary:
+Current summary: packet count is `0`; no active pending candidate review packet
+is open. Historical packet-shape example from the earlier pending-review
+session:
 
-- Packet count: `5`.
+- Historical packet count: `5`.
 - Candidate ids:
   `candidate_northeast_blind_image_001`,
   `candidate_mingli_pattern_strength_017_001`,

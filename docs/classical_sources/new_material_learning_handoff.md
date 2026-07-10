@@ -1198,6 +1198,27 @@ Closure rule: material extraction is closed at the local `main` level. Do not
 open another extraction cycle unless a new source is registered or a maintainer
 chooses to resume 013 candidate review work.
 
+## 013 Candidate Review Closure Packet
+
+- `candidate-review-status=closed_no_pending_review_candidates`
+- `013-candidate-extracts=54`
+- `013-review-decisions=54`
+- `013-promotion-batches=34`
+- `013-pending-review-candidates=0`
+- `013-approved-not-promoted=0`
+- `013-promoted-candidates=51`
+- `013-rejected-candidates=2`
+- `013-blocked-candidates=1`
+- `pending-review-worklist-items=0`
+- `pending-review-action-items=0`
+- `review-decision-delta=0`
+- `formal-evidence-delta=0`
+- `next-work-entry=wait-new-material-or-maintain-promoted-evidence`
+
+Closure rule: the current 013 seeded candidate-review queue is closed. Continue
+with evidence maintenance only if needed, or wait for a new material/candidate
+session before reopening 013 review.
+
 ## Guardrails
 
 - Do not mutate root PDFs, root `Markdown/`, `资料原文/`, or `资料整理/`.
@@ -1208,7 +1229,7 @@ chooses to resume 013 candidate review work.
 
 ## Next Target
 
-Next target: `013-candidate-review-or-wait-new-material`. Material extraction
-is closed on local `main`, external inventory refresh found no new pending
-source, candidate intake remains blocked for the current new-material loop, and
-remote push is not required for local use.
+Next target: `wait-new-material-or-maintain-promoted-evidence`. Material
+extraction is closed on local `main`, the 013 seeded candidate-review queue has
+no pending candidates, external inventory refresh found no new pending source,
+and remote push is not required for local use.
