@@ -1,5 +1,8 @@
 from mingli_engine.classical_sources import load_approved_evidence_units
-from mingli_engine.formal_interpretation import build_formal_interpretation
+from mingli_engine.formal_interpretation import (
+    build_formal_interpretation,
+    get_formal_interpretation_rule_families,
+)
 from mingli_engine.models import SourceConflict
 
 
@@ -44,6 +47,10 @@ def test_formal_interpretation_builds_source_backed_conclusions(sample_bazi_char
         assert conclusion.trace.evidence_ids
         assert set(conclusion.trace.evidence_ids).issubset(evidence_ids)
         assert conclusion.trace.assumptions
+
+
+def test_formal_interpretation_exposes_enabled_rule_families():
+    assert set(get_formal_interpretation_rule_families()) == EXPECTED_FORMAL_FAMILIES
 
 
 def test_formal_interpretation_downgrades_when_evidence_is_missing(

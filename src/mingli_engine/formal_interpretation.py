@@ -150,6 +150,10 @@ _FAMILY_SPECS = (
 )
 
 
+def get_formal_interpretation_rule_families() -> tuple[str, ...]:
+    return tuple(spec.rule_family for spec in _FAMILY_SPECS)
+
+
 def _group_evidence_by_family(
     evidence_units: list[EvidenceUnit],
 ) -> dict[str, list[EvidenceUnit]]:

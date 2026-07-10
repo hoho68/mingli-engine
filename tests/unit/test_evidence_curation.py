@@ -1,4 +1,6 @@
-﻿from mingli_engine.models import ClassicalSource, EvidenceUnit, SourceConflict
+﻿from pathlib import Path
+
+from mingli_engine.models import ClassicalSource, EvidenceUnit, SourceConflict
 
 
 def test_project_corpus_coverage_exposes_per_source_counts_and_gaps():
@@ -178,8 +180,8 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
         load_source_conflicts,
     )
     from mingli_engine.evidence_curation import (
-    build_coverage_report,
-    validate_curation_quality,
+        build_coverage_report,
+        validate_curation_quality,
     )
 
     sources = load_classical_sources()
@@ -302,6 +304,107 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
         assert unit.source_quality == "review_note"
         assert unit.confidence == "weak"
     assert validate_curation_quality(sources, evidence_units, conflicts) == []
+
+
+def test_project_knowledge_activation_summary_enables_formal_interpretation(
+    sample_bazi_chart,
+):
+    from mingli_engine.classical_sources import (
+        load_approved_evidence_units,
+        load_classical_sources,
+        load_source_conflicts,
+    )
+    from mingli_engine.evidence_curation import build_knowledge_activation_summary
+    from mingli_engine.formal_interpretation import build_formal_interpretation
+
+    sources = load_classical_sources()
+    evidence_units = load_approved_evidence_units()
+    conflicts = load_source_conflicts()
+    summary = build_knowledge_activation_summary(sources, evidence_units, conflicts)
+    expanded = build_formal_interpretation(sample_bazi_chart, evidence_units, conflicts)
+
+    assert summary.activation_status == "enabled_with_guardrails"
+    assert summary.source_count == 29
+    assert summary.report_usable_source_count == 28
+    assert summary.approved_evidence_count == 111
+    assert summary.missing_rule_families == []
+    assert summary.unavailable_conclusion_count == 0
+    assert summary.formal_conclusion_count == 10
+    assert set(summary.enabled_rule_families) == {
+        "pattern_strength",
+        "five_element_balance",
+        "useful_god_candidate",
+        "taboo_god_candidate",
+        "ten_god_relation",
+        "branch_interaction",
+        "blind_image_method",
+        "luck_cycle",
+        "remedy_boundary",
+        "high_risk_signal",
+    }
+    assert summary.open_conflicts == ["conflict_high_risk_scope_001"]
+    assert summary.quality_failures == []
+    assert summary.next_action == "enable_for_reports_with_high_risk_guardrails"
+    assert expanded.unavailable_conclusions == []
+
+
+def test_knowledge_activation_packet_is_documented():
+    coverage = Path("docs/classical_sources/coverage.md").read_text(encoding="utf-8")
+
+    for marker in (
+        "Knowledge Activation Packet",
+        "`knowledge-activation-status=enabled_with_guardrails`",
+        "`classical-sources=29`",
+        "`report-usable-sources=28`",
+        "`approved-evidence-units=111`",
+        "`formal-interpretation-rule-families=10`",
+        "`missing-rule-families=0`",
+        "`formal-unavailable-conclusions=0`",
+        "`open-conflicts=1`",
+        "`quality-failures=0`",
+        "`next-action=enable_for_reports_with_high_risk_guardrails`",
+        "`high_risk_signal`",
+        "formal_interpretation",
+    ):
+        assert marker in coverage
+
+
+def test_knowledge_activation_summary_blocks_missing_rule_family():
+    from mingli_engine.evidence_curation import build_knowledge_activation_summary
+
+    sources = [
+        ClassicalSource(
+            source_id="approved_source",
+            title="Approved Source",
+            file_name="approved.pdf",
+            source_type="pdf",
+            extraction_status="converted",
+            review_status="approved",
+            scope_notes="Reviewed source.",
+            risk_notes=[],
+        )
+    ]
+    evidence_units = [
+        EvidenceUnit(
+            evidence_id="pattern_only",
+            source_id="approved_source",
+            source_ref="review-note:pattern",
+            theme="鏍煎眬",
+            rule_family="pattern_strength",
+            risk_tier="ordinary",
+            summary="A concise pattern-strength signal.",
+            applicability=["four_pillars_complete"],
+            limitations=["Use as candidate."],
+        )
+    ]
+
+    summary = build_knowledge_activation_summary(sources, evidence_units)
+
+    assert summary.activation_status == "blocked_missing_rule_family"
+    assert summary.enabled_rule_families == ["pattern_strength"]
+    assert "high_risk_signal" in summary.missing_rule_families
+    assert summary.unavailable_conclusion_count == 9
+    assert summary.next_action == "curate_missing_rule_family_evidence"
 
 
 def test_validate_curation_quality_reports_unusable_source_failures():

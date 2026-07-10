@@ -9,10 +9,12 @@ from the current JSON corpus instead of maintained by hand.
 
 ## Current Status
 
-Snapshot date: 2026-06-29
+Snapshot date: 2026-07-10
 
 - Approved evidence units: 111
-- Registered sources: 27
+- Registered sources: 29
+- Sources with approved evidence: 28
+- Formal interpretation rule families enabled: 10 / 10
 - Sources with explicit gaps:
   - `blind_life_manual`: high-risk boundary evidence is promoted; page-level single-claim support still requires later review.
   - `immortal_fortune_jianghu_secret`: extraction and safety rewrite have not started, so it does not support formal conclusions.
@@ -20,6 +22,40 @@ Snapshot date: 2026-06-29
   - `conflict_high_risk_scope_001`: severe/open scope mismatch between blind-school risk imagery and life-death material.
 - Documented conflicts:
   - `conflict_useful_god_school_001`: moderate/documented school difference for useful-god candidate priority.
+
+## Knowledge Activation Packet
+
+- `knowledge-activation-status=enabled_with_guardrails`
+- `classical-sources=29`
+- `report-usable-sources=28`
+- `approved-evidence-units=111`
+- `formal-interpretation-rule-families=10`
+- `missing-rule-families=0`
+- `formal-unavailable-conclusions=0`
+- `open-conflicts=1`
+- `quality-failures=0`
+- `next-action=enable_for_reports_with_high_risk_guardrails`
+
+Enabled rule families:
+
+- `pattern_strength`
+- `five_element_balance`
+- `useful_god_candidate`
+- `taboo_god_candidate`
+- `ten_god_relation`
+- `branch_interaction`
+- `blind_image_method`
+- `luck_cycle`
+- `remedy_boundary`
+- `high_risk_signal`
+
+Activation rule: the current extracted and promoted corpus is usable by
+`formal_interpretation` for all supported rule families. It is enabled with
+guardrails because high-risk evidence remains conditional and one severe
+high-risk scope conflict is intentionally visible to report traces.
+
+Machine-readable check: run `mingli-engine knowledge-activation-summary` to
+return the same activation packet as JSON before enabling report workflows.
 
 ## Evidence Counts By Source
 
@@ -53,10 +89,10 @@ Snapshot date: 2026-06-29
 ## Evidence Counts By Rule Family
 
 - `blind_image_method`: 11
-- `branch_interaction`: 15
+- `branch_interaction`: 16
 - `five_element_balance`: 4
 - `high_risk_signal`: 8
-- `luck_cycle`: 11
+- `luck_cycle`: 12
 - `pattern_strength`: 18
 - `remedy_boundary`: 8
 - `taboo_god_candidate`: 6
@@ -66,7 +102,7 @@ Snapshot date: 2026-06-29
 ## Evidence Counts By Risk Tier
 
 - `high_risk`: 12
-- `ordinary`: 58
+- `ordinary`: 60
 - `sensitive`: 39
 
 ## Quality Check Result

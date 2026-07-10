@@ -4,9 +4,11 @@ from mingli_engine.models import (
     CoverageReport,
     ClassicalSource,
     EvidenceUnit,
+    KnowledgeActivationSummary,
     REPORT_USABLE_REVIEW_STATUS,
     SourceConflict,
 )
+from mingli_engine.formal_interpretation import get_formal_interpretation_rule_families
 
 
 SUMMARY_LIMIT = 280
@@ -85,3 +87,63 @@ def validate_curation_quality(
                 f"{unit.source_id}"
             )
     return failures
+
+
+def build_knowledge_activation_summary(
+    sources: list[ClassicalSource],
+    evidence_units: list[EvidenceUnit],
+    source_conflicts: list[SourceConflict] | None = None,
+) -> KnowledgeActivationSummary:
+    conflicts = source_conflicts or []
+    report = build_coverage_report(sources, evidence_units, conflicts)
+    quality_failures = validate_curation_quality(sources, evidence_units, conflicts)
+    required_rule_families = list(get_formal_interpretation_rule_families())
+    enabled_rule_families = [
+        rule_family
+        for rule_family in required_rule_families
+        if report.rule_family_counts.get(rule_family, 0) > 0
+    ]
+    missing_rule_families = [
+        rule_family
+        for rule_family in required_rule_families
+        if rule_family not in enabled_rule_families
+    ]
+
+    if quality_failures:
+        activation_status = "blocked_by_quality_failures"
+        next_action = "resolve_curation_quality_failures"
+    elif missing_rule_families:
+        activation_status = "blocked_missing_rule_family"
+        next_action = "curate_missing_rule_family_evidence"
+    elif report.open_conflicts or report.risk_tier_counts.get("high_risk", 0) > 0:
+        activation_status = "enabled_with_guardrails"
+        next_action = "enable_for_reports_with_high_risk_guardrails"
+    else:
+        activation_status = "enabled"
+        next_action = "enable_for_reports"
+
+    return KnowledgeActivationSummary(
+        activation_status=activation_status,
+        source_count=len(sources),
+        report_usable_source_count=sum(
+            1 for count in report.source_counts.values() if count > 0
+        ),
+        approved_evidence_count=report.approved_evidence_count,
+        required_rule_families=required_rule_families,
+        enabled_rule_families=enabled_rule_families,
+        missing_rule_families=missing_rule_families,
+        rule_family_counts=report.rule_family_counts,
+        risk_tier_counts=report.risk_tier_counts,
+        sources_with_gaps=report.sources_with_gaps,
+        open_conflicts=report.open_conflicts,
+        quality_failures=quality_failures,
+        formal_conclusion_count=len(required_rule_families),
+        unavailable_conclusion_count=len(missing_rule_families),
+        next_action=next_action,
+        guardrails=[
+            "Use only approved classical evidence units for report conclusions.",
+            "Keep open conflicts visible as disagreement notes.",
+            "Keep high-risk families conditional and non-exact.",
+            "Do not promote learning metadata directly into report evidence.",
+        ],
+    )

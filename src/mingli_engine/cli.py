@@ -5,7 +5,9 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+from mingli_engine import classical_sources
 from mingli_engine.chart_calculator import ChartCalculationError, calculate_bazi_chart
+from mingli_engine.evidence_curation import build_knowledge_activation_summary
 from mingli_engine.high_risk import classify_high_risk_request
 from mingli_engine.html import render_html_report
 from mingli_engine.markdown import render_markdown_report
@@ -257,6 +259,14 @@ def _promote(args: argparse.Namespace) -> int:
     return 0
 
 
+def _knowledge_activation_summary(args: argparse.Namespace) -> int:
+    sources = classical_sources.load_classical_sources(args.corpus_dir)
+    evidence_units = classical_sources.load_approved_evidence_units(args.corpus_dir)
+    conflicts = classical_sources.load_source_conflicts(args.corpus_dir)
+    _write_json(build_knowledge_activation_summary(sources, evidence_units, conflicts))
+    return 0
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mingli-engine")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -295,6 +305,10 @@ def _build_parser() -> argparse.ArgumentParser:
     promote_parser.add_argument("--apply", action="store_true")
     promote_parser.set_defaults(handler=_promote)
 
+    activation_parser = subparsers.add_parser("knowledge-activation-summary")
+    activation_parser.add_argument("--corpus-dir", default=None)
+    activation_parser.set_defaults(handler=_knowledge_activation_summary)
+
     return parser
 
 
@@ -317,6 +331,9 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     except promotion.PromotionError as error:
         print(f"Promotion error: {error}", file=sys.stderr)
+        return 1
+    except classical_sources.ClassicalEvidenceError as error:
+        print(f"Classical evidence error: {error}", file=sys.stderr)
         return 1
     except (KeyError, TypeError, AttributeError) as error:
         print(f"Invalid input: {error}", file=sys.stderr)

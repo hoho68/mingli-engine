@@ -405,6 +405,26 @@ class CoverageReport:
 
 
 @dataclass(frozen=True)
+class KnowledgeActivationSummary:
+    activation_status: str
+    source_count: int
+    report_usable_source_count: int
+    approved_evidence_count: int
+    required_rule_families: list[str]
+    enabled_rule_families: list[str]
+    missing_rule_families: list[str]
+    rule_family_counts: dict[str, int]
+    risk_tier_counts: dict[str, int]
+    sources_with_gaps: list[str]
+    open_conflicts: list[str]
+    quality_failures: list[str]
+    formal_conclusion_count: int
+    unavailable_conclusion_count: int
+    next_action: str
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class SourceMaterial:
     material_id: str
     title: str
