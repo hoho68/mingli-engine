@@ -5622,6 +5622,20 @@ class ExpandedReportEvidence:
 
 
 @dataclass(frozen=True)
+class ReportEvidenceAudit:
+    audit_status: str
+    rule_family_count: int
+    formal_conclusion_count: int
+    traced_evidence_unit_count: int
+    enabled_rule_families: list[str]
+    conclusion_rule_families: list[str]
+    missing_rule_families: list[str]
+    open_conflicts: list[str]
+    guardrail_count: int
+    unavailable_conclusion_count: int
+
+
+@dataclass(frozen=True)
 class ChartSource:
     source_type: str
     source_note: str
@@ -5675,6 +5689,7 @@ class Report:
     interpretation_boundaries: str
     glossary: str
     ethics_reminder: str
+    report_evidence_audit: ReportEvidenceAudit
     knowledge_activation: KnowledgeActivationSummary
     expanded_evidence: ExpandedReportEvidence
     safety_review: SafetyReviewResult

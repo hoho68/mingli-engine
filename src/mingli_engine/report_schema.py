@@ -14,6 +14,7 @@ from mingli_engine.models import (
     ExpandedReportEvidence,
     KnowledgeActivationSummary,
     Report,
+    ReportEvidenceAudit,
     SafetyReviewResult,
 )
 from mingli_engine.safety import safety_check
@@ -235,15 +236,107 @@ def _format_knowledge_activation_notes(
     return "\n".join(lines)
 
 
+def _unique_preserving_order(values: list[str]) -> list[str]:
+    unique: list[str] = []
+    for value in values:
+        if value not in unique:
+            unique.append(value)
+    return unique
+
+
+def _build_report_evidence_audit(
+    expanded_evidence: ExpandedReportEvidence,
+    knowledge_activation: KnowledgeActivationSummary,
+) -> ReportEvidenceAudit:
+    conclusion_rule_families = [
+        conclusion.rule_family
+        for conclusion in expanded_evidence.formal_conclusions
+        if conclusion.strength != "unavailable"
+    ]
+    traced_evidence_ids = _unique_preserving_order(
+        [
+            evidence_id
+            for conclusion in expanded_evidence.formal_conclusions
+            for evidence_id in conclusion.trace.evidence_ids
+        ]
+    )
+    missing_rule_families = [
+        rule_family
+        for rule_family in knowledge_activation.enabled_rule_families
+        if rule_family not in conclusion_rule_families
+    ]
+    missing_rule_families.extend(
+        rule_family
+        for rule_family in knowledge_activation.missing_rule_families
+        if rule_family not in missing_rule_families
+    )
+    if missing_rule_families or expanded_evidence.unavailable_conclusions:
+        audit_status = "incomplete"
+    elif knowledge_activation.activation_status == "enabled_with_guardrails":
+        audit_status = "complete_with_guardrails"
+    else:
+        audit_status = "complete"
+
+    return ReportEvidenceAudit(
+        audit_status=audit_status,
+        rule_family_count=len(knowledge_activation.enabled_rule_families),
+        formal_conclusion_count=len(expanded_evidence.formal_conclusions),
+        traced_evidence_unit_count=len(traced_evidence_ids),
+        enabled_rule_families=knowledge_activation.enabled_rule_families,
+        conclusion_rule_families=conclusion_rule_families,
+        missing_rule_families=missing_rule_families,
+        open_conflicts=knowledge_activation.open_conflicts,
+        guardrail_count=len(knowledge_activation.guardrails)
+        + len(knowledge_activation.open_conflicts),
+        unavailable_conclusion_count=len(expanded_evidence.unavailable_conclusions),
+    )
+
+
+def _format_report_evidence_audit_notes(
+    report_evidence_audit: ReportEvidenceAudit,
+    expanded_evidence: ExpandedReportEvidence,
+) -> str:
+    lines = [
+        (
+            "- Report evidence audit: "
+            f"status={report_evidence_audit.audit_status}, "
+            f"rule_families={report_evidence_audit.rule_family_count}, "
+            f"formal_conclusions={report_evidence_audit.formal_conclusion_count}, "
+            f"traced_evidence_units={report_evidence_audit.traced_evidence_unit_count}, "
+            f"unavailable_conclusions={report_evidence_audit.unavailable_conclusion_count}"
+        )
+    ]
+    for conclusion in expanded_evidence.formal_conclusions:
+        sample_ids = conclusion.trace.evidence_ids[:3]
+        sample_text = ",".join(sample_ids) if sample_ids else "none"
+        lines.append(
+            "- Report rule-family trace: "
+            f"rule_family={conclusion.rule_family}, "
+            f"strength={conclusion.strength}, "
+            f"risk_tier={conclusion.risk_tier}, "
+            f"evidence_count={len(conclusion.trace.evidence_ids)}, "
+            f"sample_evidence_ids={sample_text}"
+        )
+    return "\n".join(lines)
+
+
 def _format_expanded_evidence_notes(
     expanded_evidence: ExpandedReportEvidence,
     knowledge_activation: KnowledgeActivationSummary | None = None,
+    report_evidence_audit: ReportEvidenceAudit | None = None,
 ) -> str:
     lines = [
         "- 命理依据：正式判断来自已审核的经典证据单元，并保留规则家族、结论强度和盘面信号。",
     ]
     if knowledge_activation is not None:
         lines.append(_format_knowledge_activation_notes(knowledge_activation))
+    if report_evidence_audit is not None:
+        lines.append(
+            _format_report_evidence_audit_notes(
+                report_evidence_audit,
+                expanded_evidence,
+            )
+        )
     if expanded_evidence.source_summary:
         lines.append("- 来源摘要：" + "；".join(expanded_evidence.source_summary))
 
@@ -272,6 +365,7 @@ def _format_expanded_evidence_notes(
 def _build_evidence_notes(
     expanded_evidence: ExpandedReportEvidence,
     knowledge_activation: KnowledgeActivationSummary,
+    report_evidence_audit: ReportEvidenceAudit,
 ) -> str:
     return "\n".join(
         [
@@ -280,7 +374,11 @@ def _build_evidence_notes(
             "- 五行依据：明面信号、藏干信号和合计信号用于观察分布，不用于给人生下定论。",
             "- 十神依据：十神关系按柱位理解为关系线索，需要结合解读边界一起阅读。",
             "- 行动依据：行动反思只把可观察线索转成复盘问题，不预测具体结果。",
-            _format_expanded_evidence_notes(expanded_evidence, knowledge_activation),
+            _format_expanded_evidence_notes(
+                expanded_evidence,
+                knowledge_activation,
+                report_evidence_audit,
+            ),
         ]
     )
 
@@ -350,7 +448,15 @@ def build_report(chart: BaziChart) -> Report:
         evidence_units,
         source_conflicts,
     )
-    evidence_notes = _build_evidence_notes(expanded_evidence, knowledge_activation)
+    report_evidence_audit = _build_report_evidence_audit(
+        expanded_evidence,
+        knowledge_activation,
+    )
+    evidence_notes = _build_evidence_notes(
+        expanded_evidence,
+        knowledge_activation,
+        report_evidence_audit,
+    )
     structure_analysis = (
         f"{interpretation.structure_observations}\n{STRUCTURE_BOUNDARY_TRANSITION}"
     )
@@ -412,6 +518,7 @@ def build_report(chart: BaziChart) -> Report:
         interpretation_boundaries=interpretation_boundaries,
         glossary=glossary,
         ethics_reminder=ethics_reminder,
+        report_evidence_audit=report_evidence_audit,
         knowledge_activation=knowledge_activation,
         expanded_evidence=expanded_evidence,
         safety_review=safety_check(

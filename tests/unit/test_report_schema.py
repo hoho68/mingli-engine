@@ -171,6 +171,17 @@ def test_build_report_attaches_expanded_source_backed_evidence(sample_bazi_chart
     assert "Knowledge activation: status=enabled_with_guardrails" in report.evidence_notes
     assert "missing_rule_families=0" in report.evidence_notes
     assert "conflict_high_risk_scope_001" in report.evidence_notes
+    assert report.report_evidence_audit.audit_status == "complete_with_guardrails"
+    assert report.report_evidence_audit.rule_family_count == 10
+    assert report.report_evidence_audit.formal_conclusion_count == 10
+    assert report.report_evidence_audit.traced_evidence_unit_count == 111
+    assert report.report_evidence_audit.unavailable_conclusion_count == 0
+    assert report.report_evidence_audit.missing_rule_families == []
+    assert "Report evidence audit: status=complete_with_guardrails" in report.evidence_notes
+    assert "traced_evidence_units=111" in report.evidence_notes
+    for rule_family in report.knowledge_activation.enabled_rule_families:
+        assert rule_family in report.report_evidence_audit.conclusion_rule_families
+        assert f"rule_family={rule_family}" in report.evidence_notes
     assert expanded.source_summary
     assert expanded.formal_conclusions
     assert {item.rule_family for item in expanded.formal_conclusions}.issuperset(
@@ -371,6 +382,7 @@ def test_report_public_contract_fields_remain_stable_for_012():
         "interpretation_boundaries",
         "glossary",
         "ethics_reminder",
+        "report_evidence_audit",
         "knowledge_activation",
         "expanded_evidence",
         "safety_review",
@@ -421,6 +433,7 @@ def test_expanded_evidence_notes_include_conflict_notes_and_activation_contract(
         "interpretation_boundaries",
         "glossary",
         "ethics_reminder",
+        "report_evidence_audit",
         "knowledge_activation",
         "expanded_evidence",
         "safety_review",

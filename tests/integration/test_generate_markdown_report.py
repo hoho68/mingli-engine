@@ -103,6 +103,9 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     assert "Knowledge activation: status=enabled_with_guardrails" in markdown
     assert "missing_rule_families=0" in markdown
     assert "conflict_high_risk_scope_001" in markdown
+    assert "Report evidence audit: status=complete_with_guardrails" in markdown
+    assert "traced_evidence_units=111" in markdown
+    assert "rule_family=high_risk_signal" in markdown
     for old_phrase in (
         "五行信号观察：明面信号为",
         "这些数量用于观察结构分布",
@@ -133,6 +136,8 @@ def test_generate_report_outputs_complete_html_from_external_verified_chart():
     assert "# " not in html
     assert "Knowledge activation: status=enabled_with_guardrails" in html
     assert "missing_rule_families=0" in html
+    assert "Report evidence audit: status=complete_with_guardrails" in html
+    assert "traced_evidence_units=111" in html
     _assert_plain_language_report(html)
     assert "<script" not in html.lower()
     assert "onclick=" not in html.lower()
