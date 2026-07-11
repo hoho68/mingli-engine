@@ -1,4 +1,5 @@
-from dataclasses import FrozenInstanceError, fields
+from dataclasses import FrozenInstanceError, fields, is_dataclass
+from typing import get_origin
 
 import pytest
 
@@ -174,3 +175,104 @@ def test_luck_cycle_selected_year_relations_has_immutable_empty_default():
     assert second.selected_year_relations == ()
     with pytest.raises(FrozenInstanceError):
         first.pillars = ()
+
+
+def test_result_models_recursively_normalize_sequence_inputs():
+    supporting_signals = ["month_command:resource"]
+    growth_pair = ["year", "growth"]
+    growth_rows = [growth_pair]
+    reasoning = ReasonedResult(
+        status="computed",
+        conclusion="string conclusions stay strings",
+        confidence="high",
+        supporting_signals=supporting_signals,
+        opposing_signals=[],
+        assumptions=[],
+        missing_inputs=[],
+        rule_ids=["strength.month_command.resource"],
+    )
+    stem = StemFact("year", "stem", "wood", "yang", "companion")
+    hidden_stem = HiddenStemFact(
+        "year", "branch", "stem", "main", "wood", "yang", "companion"
+    )
+    root = RootFact("stem", "year", "branch", "year", "main", True)
+    facts = ChartFacts(
+        "stem",
+        "branch",
+        [stem],
+        [hidden_stem],
+        [root],
+        growth_rows,
+        ["timezone:local"],
+    )
+    relation = BranchRelationResult(
+        "combination",
+        ["branch", "other"],
+        ["year", "month"],
+        "present",
+        "",
+        ["both-present"],
+        [],
+        "branch.combination",
+    )
+    contribution = StrengthContribution(
+        "month_command", "resource", 24.0, "strength.month_command.resource"
+    )
+    strength = StrengthResult(reasoning, 24.0, 21.6, 26.4, "strong", [contribution])
+    pattern = PatternCandidateResult(
+        "pattern",
+        "Pattern",
+        1,
+        reasoning,
+        ["formed"],
+        [],
+        [],
+    )
+    useful_god = UsefulGodCandidateResult("balancing", "water", 1, reasoning)
+    pillar = LuckPillar(1, "stem-branch", 2030, 2039, 10, 19)
+    luck_cycles = LuckCycleResult(
+        reasoning,
+        True,
+        1,
+        2,
+        3,
+        "2030-01-01",
+        [pillar],
+        [relation],
+    )
+    school = SchoolInterpretation(
+        "ziping", "v1", reasoning, ["pattern"], ["water"]
+    )
+    bundle = CalculationBundle(
+        "1.0",
+        "rules-v1",
+        facts,
+        [relation],
+        strength,
+        [pattern],
+        [useful_god],
+        luck_cycles,
+        [school],
+    )
+
+    def assert_tuple_annotations_are_normalized(value):
+        if not is_dataclass(value):
+            return
+        for model_field in fields(value):
+            field_value = getattr(value, model_field.name)
+            if get_origin(model_field.type) is tuple:
+                assert isinstance(field_value, tuple)
+                for item in field_value:
+                    assert_tuple_annotations_are_normalized(item)
+            else:
+                assert_tuple_annotations_are_normalized(field_value)
+
+    assert_tuple_annotations_are_normalized(bundle)
+    supporting_signals.append("root:main")
+    growth_pair.append("mutated")
+    growth_rows.append(["month", "growth"])
+
+    assert reasoning.supporting_signals == ("month_command:resource",)
+    assert facts.twelve_growth_by_pillar == (("year", "growth"),)
+    assert reasoning.conclusion == "string conclusions stay strings"
+    assert isinstance(hash(bundle), int)

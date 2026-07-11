@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
-from typing import Literal
+from dataclasses import dataclass, field, fields
+from typing import Literal, get_args, get_origin
 
 
 ComputationStatus = Literal[
@@ -11,8 +11,35 @@ _STATUSES = frozenset({"not_computed", "computed", "indeterminate", "disputed"})
 _CONFIDENCES = frozenset({"high", "medium", "low"})
 
 
+def _normalize_tuple_value(value: object, annotation: object) -> object:
+    if get_origin(annotation) is not tuple or not isinstance(value, (list, tuple)):
+        return value
+
+    item_annotations = get_args(annotation)
+    if len(item_annotations) == 2 and item_annotations[1] is Ellipsis:
+        return tuple(
+            _normalize_tuple_value(item, item_annotations[0]) for item in value
+        )
+    return tuple(
+        _normalize_tuple_value(
+            item,
+            item_annotations[index] if index < len(item_annotations) else object,
+        )
+        for index, item in enumerate(value)
+    )
+
+
+class _ImmutableSequences:
+    def __post_init__(self) -> None:
+        for model_field in fields(self):
+            value = getattr(self, model_field.name)
+            normalized = _normalize_tuple_value(value, model_field.type)
+            if normalized is not value:
+                object.__setattr__(self, model_field.name, normalized)
+
+
 @dataclass(frozen=True)
-class ReasonedResult:
+class ReasonedResult(_ImmutableSequences):
     status: ComputationStatus
     conclusion: str
     confidence: Confidence
@@ -23,6 +50,7 @@ class ReasonedResult:
     rule_ids: tuple[str, ...] = field(default_factory=tuple)
 
     def __post_init__(self) -> None:
+        super().__post_init__()
         if self.status not in _STATUSES:
             raise ValueError(f"unsupported computation status: {self.status}")
         if self.confidence not in _CONFIDENCES:
@@ -30,7 +58,7 @@ class ReasonedResult:
 
 
 @dataclass(frozen=True)
-class StemFact:
+class StemFact(_ImmutableSequences):
     pillar_name: str
     stem: str
     element: str
@@ -39,7 +67,7 @@ class StemFact:
 
 
 @dataclass(frozen=True)
-class HiddenStemFact:
+class HiddenStemFact(_ImmutableSequences):
     pillar_name: str
     branch: str
     stem: str
@@ -50,7 +78,7 @@ class HiddenStemFact:
 
 
 @dataclass(frozen=True)
-class RootFact:
+class RootFact(_ImmutableSequences):
     stem: str
     stem_pillar: str
     branch: str
@@ -60,7 +88,7 @@ class RootFact:
 
 
 @dataclass(frozen=True)
-class ChartFacts:
+class ChartFacts(_ImmutableSequences):
     day_master: str
     month_branch: str
     exposed_stems: tuple[StemFact, ...]
@@ -71,7 +99,7 @@ class ChartFacts:
 
 
 @dataclass(frozen=True)
-class BranchRelationResult:
+class BranchRelationResult(_ImmutableSequences):
     relation_type: str
     branches: tuple[str, ...]
     pillar_names: tuple[str, ...]
@@ -83,7 +111,7 @@ class BranchRelationResult:
 
 
 @dataclass(frozen=True)
-class StrengthContribution:
+class StrengthContribution(_ImmutableSequences):
     category: str
     signal: str
     value: float
@@ -91,7 +119,7 @@ class StrengthContribution:
 
 
 @dataclass(frozen=True)
-class StrengthResult:
+class StrengthResult(_ImmutableSequences):
     reasoning: ReasonedResult
     score: float
     lower_bound: float
@@ -101,7 +129,7 @@ class StrengthResult:
 
 
 @dataclass(frozen=True)
-class PatternCandidateResult:
+class PatternCandidateResult(_ImmutableSequences):
     pattern_id: str
     name: str
     rank: int
@@ -112,7 +140,7 @@ class PatternCandidateResult:
 
 
 @dataclass(frozen=True)
-class UsefulGodCandidateResult:
+class UsefulGodCandidateResult(_ImmutableSequences):
     method: str
     element: str
     rank: int
@@ -120,7 +148,7 @@ class UsefulGodCandidateResult:
 
 
 @dataclass(frozen=True)
-class LuckPillar:
+class LuckPillar(_ImmutableSequences):
     index: int
     gan_zhi: str
     start_year: int
@@ -130,7 +158,7 @@ class LuckPillar:
 
 
 @dataclass(frozen=True)
-class LuckCycleResult:
+class LuckCycleResult(_ImmutableSequences):
     reasoning: ReasonedResult
     forward: bool
     start_years: int
@@ -144,7 +172,7 @@ class LuckCycleResult:
 
 
 @dataclass(frozen=True)
-class SchoolInterpretation:
+class SchoolInterpretation(_ImmutableSequences):
     school_id: str
     profile_version: str
     reasoning: ReasonedResult
@@ -153,7 +181,7 @@ class SchoolInterpretation:
 
 
 @dataclass(frozen=True)
-class CalculationBundle:
+class CalculationBundle(_ImmutableSequences):
     engine_version: str
     ruleset_version: str
     facts: ChartFacts
