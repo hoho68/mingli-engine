@@ -107,6 +107,8 @@ def test_calculate_report_outputs_markdown_from_birth_profile():
     assert "Report evidence audit: status=complete_with_guardrails" in markdown
     assert "traced_evidence_units=111" in markdown
     assert "rule_family=high_risk_signal" in markdown
+    assert markdown.count("盘面信号：") == 10
+    assert "traditional_high_risk_signal_boundary" not in markdown
     for old_phrase in (
         "五行信号观察：明面信号为",
         "这些数量用于观察结构分布",
@@ -141,6 +143,8 @@ def test_calculate_report_outputs_complete_html_from_birth_profile():
     assert "missing_rule_families=0" in html
     assert "Report evidence audit: status=complete_with_guardrails" in html
     assert "traced_evidence_units=111" in html
+    assert html.count("盘面信号：") == 10
+    assert "traditional_high_risk_signal_boundary" not in html
     assert html.count("<h3>正式知识综合</h3>") == 1
     assert "rule_family=high_risk_signal" in html
     _assert_plain_language_report(html)

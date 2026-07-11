@@ -50,6 +50,12 @@ def test_report_acceptance_summary_cli_outputs_release_baseline():
         "unavailable_degradation",
     ]
     assert all(case["status"] == "passed" for case in payload["cases"])
+    ordinary_case = next(
+        case
+        for case in payload["cases"]
+        if case["case_id"] == "ordinary_production_report"
+    )
+    assert ordinary_case["checks"]["personalized_chart_signals"] == "passed"
     assert payload["next_action"] == "release_reports_with_guardrails"
 
     serialized = json.dumps(payload, ensure_ascii=False)

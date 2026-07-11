@@ -75,6 +75,12 @@ def _ordinary_production_case(report: Report) -> ReportAcceptanceCaseResult:
             for family in enabled_families
         )
     )
+    personalized_signals = (
+        report.formal_synthesis.count("盘面信号：") == len(enabled_families)
+        and "traditional_high_risk_signal_boundary"
+        not in report.formal_synthesis
+        and "traditional_high_risk_signal_boundary" not in report.evidence_notes
+    )
     markdown_ordered = (
         markdown.count(report.formal_synthesis) == 1
         and markdown.find(report.evidence_notes)
@@ -109,6 +115,7 @@ def _ordinary_production_case(report: Report) -> ReportAcceptanceCaseResult:
             and not report.report_evidence_audit.missing_rule_families
         ),
         "formal_synthesis_coverage": _check(synthesis_complete),
+        "personalized_chart_signals": _check(personalized_signals),
         "markdown_rendering": _check(markdown_ordered),
         "html_rendering": _check(html_ordered),
     }

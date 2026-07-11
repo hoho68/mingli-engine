@@ -79,8 +79,12 @@ def _high_risk_signals(chart: BaziChart) -> list[str]:
         focus_topic = ""
     return _compact(
         [
-            focus_topic,
-            chart.luck_cycle_summary,
+            f"focus_topic:{focus_topic}" if focus_topic else "",
+            (
+                f"stage_signal:{chart.luck_cycle_summary}"
+                if chart.luck_cycle_summary.strip()
+                else ""
+            ),
             "traditional_high_risk_signal_boundary",
         ]
     )

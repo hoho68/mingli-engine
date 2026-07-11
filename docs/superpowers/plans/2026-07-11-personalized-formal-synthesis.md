@@ -4,7 +4,7 @@
 
 **Goal:** Add sanitized chart-specific signals to all ten formal rule-family explanations and prove that formal synthesis varies across charts without weakening evidence or safety contracts.
 
-**Architecture:** `report_schema.py` owns one pure reader-signal formatter over existing `EvidenceTrace.chart_signals`. Formal synthesis and expanded observation evidence reuse it, while formal interpretation and 012 evidence remain unchanged.
+**Architecture:** `report_schema.py` owns one pure reader-signal formatter over `EvidenceTrace.chart_signals`. Formal synthesis and expanded observation evidence reuse it. `formal_interpretation.py` adds internal `focus_topic` and `stage_signal` prefixes only for high-risk trace values so presentation can enforce privacy; interpretation rules and 012 evidence remain unchanged.
 
 **Tech Stack:** Python 3.12+, dataclasses, pytest, existing report schema, Markdown/HTML renderers, CLI, and report acceptance baseline.
 
@@ -22,9 +22,12 @@
 ### Task 2: Implement Shared Reader Signal Formatting
 
 **Files:**
+- Modify: `src/mingli_engine/formal_interpretation.py`
 - Modify: `src/mingli_engine/report_schema.py`
+- Modify: `tests/unit/test_formal_interpretation.py`
 
 - [ ] Implement `format_reader_chart_signals(rule_family, signals)` with stable deduplication, pillar translation, placeholder removal, high-risk allowlisting, marker translation, and five-item limit.
+- [ ] Type high-risk focus and stage trace values so focus text can never be mistaken for reader-facing stage language.
 - [ ] Add the formatted segment to every available formal synthesis conclusion.
 - [ ] Replace raw chart-signal joining in expanded evidence notes with the same formatter.
 - [ ] Run schema and safety tests and confirm they pass.

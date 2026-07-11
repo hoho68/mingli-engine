@@ -4,6 +4,8 @@ The report acceptance baseline is the final read-only gate between knowledge
 activation and release use. It evaluates production report construction,
 formal synthesis, evidence tracing, Markdown and HTML rendering, conflict
 guardrails, high-risk rejection, and unavailable-evidence degradation.
+The ordinary production case also requires all ten rule families to expose
+sanitized chart-specific signals without raw internal markers.
 
 It does not parse source material, create interpretation rules, mutate the
 source library, write 013 candidate or review records, promote evidence, or
@@ -40,7 +42,8 @@ Any failed case changes the aggregate acceptance status to `blocked`.
 
 Builds a report from an in-memory synthetic profile. The case verifies report
 safety, knowledge activation, evidence audit, the 111-unit trace count, all ten
-formal-synthesis markers, and consistent Markdown and HTML reading order.
+formal-synthesis markers, ten reader-facing chart-signal segments, removal of
+raw high-risk machine markers, and consistent Markdown and HTML reading order.
 
 ### Conflict Guardrail
 

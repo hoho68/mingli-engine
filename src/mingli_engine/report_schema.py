@@ -342,7 +342,10 @@ def _format_expanded_evidence_notes(
 
     for conclusion in expanded_evidence.formal_conclusions:
         evidence_ids = "、".join(conclusion.trace.evidence_ids) or "暂无可用证据"
-        chart_signals = "；".join(conclusion.trace.chart_signals[:3]) or "暂无盘面信号"
+        chart_signals = format_reader_chart_signals(
+            conclusion.rule_family,
+            conclusion.trace.chart_signals,
+        )
         lines.append(
             "- 正式判断："
             f"{conclusion.title}｜{conclusion.rule_family}｜{conclusion.strength}｜"
@@ -432,6 +435,73 @@ FORMAL_SYNTHESIS_AUDIT_STATUS_LABELS = {
     "incomplete": "不完整",
 }
 
+READER_SIGNAL_PLACEHOLDERS = frozenset(
+    {"", "unknown", "unspecified", "none", "null"}
+)
+READER_SIGNAL_PILLAR_LABELS = {
+    "year": "年柱",
+    "month": "月柱",
+    "day": "日柱",
+    "hour": "时柱",
+    "年柱": "年柱",
+    "月柱": "月柱",
+    "日柱": "日柱",
+    "时柱": "时柱",
+}
+READER_SIGNAL_SPECIAL_LABELS = {
+    "traditional_high_risk_signal_boundary": (
+        "传统高风险信号边界（仅作条件观察）"
+    ),
+}
+def _reader_signal_text(signal: str) -> str:
+    text = signal.strip()
+    if text.lower() in READER_SIGNAL_PLACEHOLDERS:
+        return ""
+    if text in READER_SIGNAL_SPECIAL_LABELS:
+        return READER_SIGNAL_SPECIAL_LABELS[text]
+
+    separator = ":" if ":" in text else "：" if "：" in text else ""
+    if separator:
+        prefix, value = text.split(separator, 1)
+        normalized_prefix = prefix.strip()
+        normalized_value = value.strip()
+        if normalized_value.lower() in READER_SIGNAL_PLACEHOLDERS:
+            return ""
+        if normalized_prefix == "focus_topic":
+            return ""
+        if normalized_prefix == "stage_signal":
+            return normalized_value
+        pillar_label = READER_SIGNAL_PILLAR_LABELS.get(normalized_prefix)
+        if pillar_label and normalized_value:
+            return f"{pillar_label}：{normalized_value}"
+    return text
+
+
+def format_reader_chart_signals(
+    rule_family: str,
+    signals: list[str],
+) -> str:
+    candidates = signals
+    if rule_family == "high_risk_signal":
+        candidates = [
+            signal
+            for signal in signals
+            if signal == "traditional_high_risk_signal_boundary"
+            or signal.startswith("stage_signal:")
+        ]
+
+    formatted: list[str] = []
+    for signal in candidates:
+        text = _reader_signal_text(signal)
+        if text and text not in formatted:
+            formatted.append(text)
+        if len(formatted) == 5:
+            break
+
+    if not formatted:
+        return "当前未形成可用盘面信号"
+    return "、".join(formatted)
+
 
 def build_formal_synthesis(
     expanded_evidence: ExpandedReportEvidence,
@@ -481,10 +551,15 @@ def build_formal_synthesis(
                 conclusion.strength,
                 conclusion.strength,
             )
+            chart_signals = format_reader_chart_signals(
+                conclusion.rule_family,
+                conclusion.trace.chart_signals,
+            )
             lines.append(
                 f"- rule_family={rule_family}｜{conclusion.title}｜"
                 f"强度：{strength_label}｜"
-                f"证据数：{len(conclusion.trace.evidence_ids)}｜{conclusion.body}"
+                f"证据数：{len(conclusion.trace.evidence_ids)}｜"
+                f"盘面信号：{chart_signals}｜{conclusion.body}"
             )
             if conclusion.trace.disagreement_note:
                 lines.append(f"  分歧说明：{conclusion.trace.disagreement_note}")

@@ -53,6 +53,24 @@ def test_formal_interpretation_exposes_enabled_rule_families():
     assert set(get_formal_interpretation_rule_families()) == EXPECTED_FORMAL_FAMILIES
 
 
+def test_high_risk_trace_types_focus_and_stage_signals(sample_bazi_chart):
+    expanded = build_formal_interpretation(
+        sample_bazi_chart,
+        load_approved_evidence_units(),
+    )
+    high_risk = next(
+        item
+        for item in expanded.formal_conclusions
+        if item.rule_family == "high_risk_signal"
+    )
+
+    assert high_risk.trace.chart_signals == [
+        f"focus_topic:{sample_bazi_chart.birth_profile.focus_topic}",
+        f"stage_signal:{sample_bazi_chart.luck_cycle_summary}",
+        "traditional_high_risk_signal_boundary",
+    ]
+
+
 def test_formal_interpretation_downgrades_when_evidence_is_missing(
     sample_bazi_chart,
 ):

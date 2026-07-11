@@ -21,9 +21,11 @@ Each available formal conclusion receives one `盘面信号` segment. The format
 - removes empty values and placeholders such as `unknown`, `unspecified`, `none`, and `null`;
 - limits each conclusion to five visible signals;
 - reports `当前未形成可用盘面信号` when no safe signal remains;
-- for `high_risk_signal`, exposes only the stage statement and translated boundary marker, never the user's focus topic.
+- tags high-risk trace inputs as `focus_topic` and `stage_signal`, then exposes only the stage statement and translated boundary marker, never the user's focus topic.
 
-The underlying `EvidenceTrace` remains unchanged for audit use.
+Ordinary trace signals remain unchanged. High-risk trace values gain the two
+internal type prefixes so presentation can enforce the privacy boundary without
+guessing from user wording.
 
 ## Report Integration
 

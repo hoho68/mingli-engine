@@ -274,6 +274,136 @@ def test_build_report_exposes_complete_formal_synthesis(sample_bazi_chart):
         assert synthesis.count(f"rule_family={rule_family}") == 1
     assert "完整（含护栏）" in synthesis
     assert report.report_evidence_audit.traced_evidence_unit_count == 111
+    assert synthesis.count("盘面信号：") == 10
+    assert "traditional_high_risk_signal_boundary" not in synthesis
+    assert "traditional_high_risk_signal_boundary" not in report.evidence_notes
+    for raw_pillar_prefix in ("year:", "month:", "day:", "hour:"):
+        assert raw_pillar_prefix not in synthesis
+        assert raw_pillar_prefix not in report.evidence_notes
+
+
+def test_format_reader_chart_signals_translates_filters_deduplicates_and_limits():
+    formatted = report_schema.format_reader_chart_signals(
+        "blind_image_method",
+        [
+            "year:甲子",
+            "month:乙丑",
+            "unknown",
+            "year:甲子",
+            "traditional_high_risk_signal_boundary",
+            "day:丙寅",
+            "hour:丁卯",
+            "超出上限",
+        ],
+    )
+
+    assert formatted == (
+        "年柱：甲子、月柱：乙丑、传统高风险信号边界（仅作条件观察）、"
+        "日柱：丙寅、时柱：丁卯"
+    )
+
+
+def test_format_reader_chart_signals_uses_fallback_when_no_signal_is_safe():
+    assert report_schema.format_reader_chart_signals(
+        "pattern_strength",
+        [
+            "",
+            "unknown",
+            "unspecified",
+            "none",
+            "null",
+            "year:unknown",
+            "month:unspecified",
+        ],
+    ) == "当前未形成可用盘面信号"
+
+
+def test_format_reader_chart_signals_hides_high_risk_focus_topic():
+    formatted = report_schema.format_reader_chart_signals(
+        "high_risk_signal",
+        [
+            "focus_topic:career trend planning",
+            "stage_signal:阶段变化宜以趋势观察，不作确定性预测。",
+            "traditional_high_risk_signal_boundary",
+        ],
+    )
+
+    assert "career trend planning" not in formatted
+    assert "focus_topic" not in formatted
+    assert "stage_signal" not in formatted
+    assert "阶段变化宜以趋势观察，不作确定性预测。" in formatted
+    assert "传统高风险信号边界（仅作条件观察）" in formatted
+    assert "traditional_high_risk_signal_boundary" not in formatted
+
+
+def test_formal_synthesis_changes_with_chart_signals_without_changing_evidence(
+    sample_bazi_chart,
+):
+    first_report = build_report(sample_bazi_chart)
+    alternate_pillars = [
+        replace(
+            pillar,
+            heavenly_stem=stem,
+            earthly_branch=branch,
+            ten_god=ten_god,
+        )
+        for pillar, stem, branch, ten_god in zip(
+            sample_bazi_chart.pillars,
+            ("甲", "乙", "丙", "丁"),
+            ("寅", "卯", "辰", "巳"),
+            ("比肩", "劫财", "食神", "正财"),
+            strict=True,
+        )
+    ]
+    alternate_chart = replace(
+        sample_bazi_chart,
+        pillars=alternate_pillars,
+        strength_assessment="日主偏弱候选，宜先观察支持条件。",
+        pattern_candidates=["财星配印候选", "食神制杀线索"],
+        useful_god_candidates=["水", "木"],
+        five_elements_summary={
+            "木": "偏旺",
+            "火": "偏弱",
+            "土": "平",
+            "金": "偏弱",
+            "水": "偏旺",
+        },
+        luck_cycle_summary="阶段主题转向协作与稳定积累，只作趋势观察。",
+    )
+    second_report = build_report(alternate_chart)
+
+    def family_line(report, rule_family: str) -> str:
+        return next(
+            line
+            for line in report.formal_synthesis.splitlines()
+            if f"rule_family={rule_family}" in line
+        )
+
+    for signal in (
+        "日主偏弱候选，宜先观察支持条件。",
+        "财星配印候选",
+        "盘面信号：水、木",
+        "年柱：甲寅",
+        "阶段主题转向协作与稳定积累，只作趋势观察。",
+    ):
+        assert signal in second_report.formal_synthesis
+
+    for rule_family in (
+        "pattern_strength",
+        "useful_god_candidate",
+        "blind_image_method",
+        "luck_cycle",
+    ):
+        assert family_line(first_report, rule_family) != family_line(
+            second_report,
+            rule_family,
+        )
+
+    assert first_report.report_evidence_audit.traced_evidence_unit_count == 111
+    assert second_report.report_evidence_audit.traced_evidence_unit_count == 111
+    assert first_report.report_evidence_audit.open_conflicts == (
+        second_report.report_evidence_audit.open_conflicts
+    )
 
 
 def test_build_formal_synthesis_exposes_disputed_and_unavailable_boundaries():
