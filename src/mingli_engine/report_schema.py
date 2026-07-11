@@ -10,6 +10,7 @@ from mingli_engine.formal_interpretation import build_formal_interpretation
 from mingli_engine.high_risk import classify_high_risk_request
 from mingli_engine.interpretation import build_basic_interpretation
 from mingli_engine.models import (
+    ActionReflectionItem,
     BaziChart,
     ExpandedReportEvidence,
     FormalConclusion,
@@ -724,6 +725,196 @@ def build_integrated_synthesis(
     return "\n".join(lines)
 
 
+ACTION_REFLECTION_TRACKS = (
+    (
+        "structure_calibration",
+        "结构校准",
+        ("pattern_strength", "five_element_balance"),
+        "把当前结构信号放回一个可观察场景，记录哪些表现吻合、哪些不吻合。",
+        "记录场景、原先预期、实际结果和一条反例，下一次复盘时比较变化。",
+        "若盘面前提或现实场景无法核对，就停止据此延伸判断。",
+        False,
+    ),
+    (
+        "relationship_process_review",
+        "关系过程复盘",
+        ("ten_god_relation", "branch_interaction", "blind_image_method"),
+        "选择一次真实互动，只记录沟通顺序、角色分工和可见反应，不评价他人本质。",
+        "记录一次具体互动、自己的做法、对方可见回应和可调整的一步。",
+        "若只能依靠猜测他人动机或给关系定性，就停止使用本项。",
+        False,
+    ),
+    (
+        "selection_experiment",
+        "取用小实验",
+        ("useful_god_candidate", "taboo_god_candidate", "remedy_boundary"),
+        "只选择一个低成本、可逆的小调整，先写清观察期限，不把候选五行当成唯一答案。",
+        "记录调整前基线、执行频率、现实反馈和无效或相反反馈。",
+        "不购买或依赖所谓改运方案；出现成本、压力或效果承诺时立即停止。",
+        True,
+    ),
+    (
+        "stage_review",
+        "阶段复盘",
+        ("luck_cycle", "high_risk_signal"),
+        "把阶段主题写成待核问题，只核对已经发生的趋势，不预测精确事件或寿命。",
+        "按固定周期记录现实事件、影响程度、其他可能原因和仍不确定之处。",
+        "涉及医疗、法律、心理、财务或寿命问题时停止命理解读并寻求专业支持。",
+        True,
+    ),
+)
+
+
+def build_action_reflection_items(
+    expanded_evidence: ExpandedReportEvidence,
+) -> list[ActionReflectionItem]:
+    conclusions = {
+        conclusion.rule_family: conclusion
+        for conclusion in expanded_evidence.formal_conclusions
+    }
+    explicitly_unavailable = set(expanded_evidence.unavailable_conclusions)
+
+    def is_unavailable(conclusion: FormalConclusion | None) -> bool:
+        return conclusion is None or bool(
+            {conclusion.rule_family, conclusion.title} & explicitly_unavailable
+        )
+
+    items: list[ActionReflectionItem] = []
+
+    for (
+        action_id,
+        title,
+        rule_families,
+        observation_prompt,
+        feedback_metric,
+        stop_boundary,
+        guarded,
+    ) in ACTION_REFLECTION_TRACKS:
+        track_conclusions = [conclusions.get(family) for family in rule_families]
+        available = all(
+            not is_unavailable(conclusion)
+            and conclusion is not None
+            and conclusion.strength != "unavailable"
+            and bool(conclusion.trace.evidence_ids)
+            for conclusion in track_conclusions
+        )
+        if not available:
+            missing = [
+                FORMAL_SYNTHESIS_RULE_TITLES[family]
+                for family, conclusion in zip(
+                    rule_families,
+                    track_conclusions,
+                    strict=True,
+                )
+                if is_unavailable(conclusion)
+                or conclusion is None
+                or conclusion.strength == "unavailable"
+                or not conclusion.trace.evidence_ids
+            ]
+            items.append(
+                ActionReflectionItem(
+                    action_id=action_id,
+                    title=title,
+                    status="unavailable",
+                    rule_families=list(rule_families),
+                    evidence_ids=[],
+                    conditions=["缺少可用结论或证据：" + "、".join(missing)],
+                    observation_prompt="当前证据不足，暂不执行本项行动反思。",
+                    feedback_metric="等待证据恢复后重新生成，再开始记录反馈。",
+                    stop_boundary="证据不足时不开始行动实验，也不根据缺口补作推断。",
+                )
+            )
+            continue
+
+        typed_conclusions = [
+            conclusion
+            for conclusion in track_conclusions
+            if conclusion is not None
+        ]
+        evidence_ids: list[str] = []
+        conditions: list[str] = []
+        for conclusion in typed_conclusions:
+            for evidence_id in conclusion.trace.evidence_ids:
+                if evidence_id not in evidence_ids:
+                    evidence_ids.append(evidence_id)
+            conditions.append(
+                f"{FORMAL_SYNTHESIS_RULE_TITLES[conclusion.rule_family]}："
+                f"{format_reader_chart_signals(conclusion.rule_family, conclusion.trace.chart_signals)}"
+            )
+            if conclusion.trace.disagreement_note:
+                conditions.append(
+                    f"分歧说明：{conclusion.trace.disagreement_note}"
+                )
+
+        has_guarded_strength = any(
+            conclusion.strength in {"weakly_supported", "disputed"}
+            for conclusion in typed_conclusions
+        )
+        items.append(
+            ActionReflectionItem(
+                action_id=action_id,
+                title=title,
+                status=(
+                    "ready_with_guardrails"
+                    if guarded or has_guarded_strength
+                    else "ready"
+                ),
+                rule_families=list(rule_families),
+                evidence_ids=evidence_ids,
+                conditions=conditions,
+                observation_prompt=observation_prompt,
+                feedback_metric=feedback_metric,
+                stop_boundary=stop_boundary,
+            )
+        )
+
+    return items
+
+
+ACTION_REFLECTION_STATUS_LABELS = {
+    "ready": "可复盘",
+    "ready_with_guardrails": "可复盘（含护栏）",
+    "unavailable": "不可用",
+}
+
+
+def render_action_reflection_items(
+    items: list[ActionReflectionItem],
+    focus_topic: str,
+) -> str:
+    lines = [
+        f"围绕{focus_topic}，以下行动反思仅用于整理可观察线索和现实反馈。"
+    ]
+    for item in items:
+        status = ACTION_REFLECTION_STATUS_LABELS.get(item.status, item.status)
+        lines.extend(
+            [
+                "",
+                (
+                    f"{item.title}｜状态：{status}｜"
+                    "规则族："
+                    + "、".join(
+                        FORMAL_SYNTHESIS_RULE_TITLES[family]
+                        for family in item.rule_families
+                    )
+                    + "｜"
+                    f"证据数：{len(item.evidence_ids)}"
+                ),
+                "适用条件：" + "；".join(item.conditions),
+                f"观察问题：{item.observation_prompt}",
+                f"反馈记录：{item.feedback_metric}",
+                f"停止边界：{item.stop_boundary}",
+            ]
+        )
+    lines.extend(
+        [
+            "",
+            "这些内容是观察和整理方向，不替代现实判断，也不是对结果的承诺。",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def _ensure_knowledge_activation_ready(
     knowledge_activation: KnowledgeActivationSummary,
 ) -> None:
@@ -826,21 +1017,14 @@ def build_report(chart: BaziChart) -> Report:
         else "当前基础结构解读层保留阶段判断边界。"
     )
     focus_topic = _focus_topic_label(chart.birth_profile.focus_topic)
-    dominant_elements = interpretation.element_distribution.dominant_elements
-    missing_elements = interpretation.element_distribution.missing_elements
-    if dominant_elements:
-        action_focus = f"{'、'.join(dominant_elements)}等较集中的结构信号"
-    elif missing_elements:
-        action_focus = "暂未形成可计数信号的结构边界"
-    else:
-        action_focus = "当前结构观察"
     phase_overview = (
         f"{chart.luck_cycle_summary} 阶段概览只描述可反思的主题变化，"
         f"不推断具体事件结果。{phase_boundary}"
     )
-    action_suggestions = (
-        f"围绕{focus_topic}，可以先承接{action_focus}，整理成一两个可记录的小步骤，"
-        "再用现实反馈慢慢复盘。这里给的是观察和整理方向，不是对结果的承诺。"
+    action_reflection_items = build_action_reflection_items(expanded_evidence)
+    action_suggestions = render_action_reflection_items(
+        action_reflection_items,
+        focus_topic,
     )
     glossary = (
         "日主：以出生日天干作为观察中心。十神：传统命理中描述关系与功能的术语。"
@@ -867,6 +1051,7 @@ def build_report(chart: BaziChart) -> Report:
         personality_tendencies=personality_tendencies,
         strengths_and_issues=strengths_and_issues,
         phase_overview=phase_overview,
+        action_reflection_items=action_reflection_items,
         action_suggestions=action_suggestions,
         interpretation_boundaries=interpretation_boundaries,
         glossary=glossary,

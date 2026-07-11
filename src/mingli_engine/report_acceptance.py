@@ -1,3 +1,5 @@
+from collections import Counter
+
 from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.classical_sources import (
     load_approved_evidence_units,
@@ -20,8 +22,10 @@ from mingli_engine.models import (
 )
 from mingli_engine.report_schema import (
     KnowledgeActivationError,
+    build_action_reflection_items,
     build_formal_synthesis,
     build_report,
+    render_action_reflection_items,
 )
 
 
@@ -106,6 +110,48 @@ def _ordinary_production_case(report: Report) -> ReportAcceptanceCaseResult:
         and "focus_topic:" not in report.integrated_synthesis
         and "stage_signal:" not in report.integrated_synthesis
     )
+    action_items = report.action_reflection_items
+    action_family_counts = Counter(
+        family
+        for item in action_items
+        for family in item.rule_families
+    )
+    action_text_safe = all(
+        marker not in report.action_suggestions
+        for marker in (
+            "traditional_high_risk_signal_boundary",
+            "focus_topic:",
+            "stage_signal:",
+        )
+    )
+    action_reflection_complete = (
+        [item.action_id for item in action_items]
+        == [
+            "structure_calibration",
+            "relationship_process_review",
+            "selection_experiment",
+            "stage_review",
+        ]
+        and action_family_counts == Counter({family: 1 for family in enabled_families})
+        and all(
+            item.status in {"ready", "ready_with_guardrails"}
+            and item.evidence_ids
+            and item.conditions
+            and item.observation_prompt
+            and item.feedback_metric
+            and item.stop_boundary
+            for item in action_items
+        )
+        and all(
+            report.action_suggestions.count(f"{item.title}｜状态：") == 1
+            for item in action_items
+        )
+        and "医疗、法律、心理、财务或寿命问题" in report.action_suggestions
+        and "不是对结果的承诺" in report.action_suggestions
+        and action_text_safe
+        and markdown.count(report.action_suggestions) == 1
+        and html.count(report.action_suggestions) == 1
+    )
     markdown_ordered = (
         markdown.count(report.formal_synthesis) == 1
         and markdown.count(report.integrated_synthesis) == 1
@@ -146,6 +192,9 @@ def _ordinary_production_case(report: Report) -> ReportAcceptanceCaseResult:
         "formal_synthesis_coverage": _check(synthesis_complete),
         "personalized_chart_signals": _check(personalized_signals),
         "integrated_cross_family_synthesis": _check(integrated_complete),
+        "evidence_backed_action_reflection": _check(
+            action_reflection_complete
+        ),
         "markdown_rendering": _check(markdown_ordered),
         "html_rendering": _check(html_ordered),
     }
@@ -259,6 +308,14 @@ def _unavailable_degradation_case() -> ReportAcceptanceCaseResult:
         unavailable_conclusion_count=1,
     )
     synthesis = build_formal_synthesis(expanded, audit)
+    action_items = build_action_reflection_items(expanded)
+    action_text = render_action_reflection_items(
+        action_items,
+        "当前关注主题",
+    )
+    high_risk_action = next(
+        item for item in action_items if item.action_id == "stage_review"
+    )
     checks = {
         "incomplete_status_exposed": _check("不完整" in synthesis),
         "unavailable_family_exposed": _check(
@@ -268,6 +325,13 @@ def _unavailable_degradation_case() -> ReportAcceptanceCaseResult:
         "professional_boundary_preserved": _check(
             "不预测精确事件或寿命" in synthesis
             and "不替代医疗、法律、心理、投资等专业建议" in synthesis
+        ),
+        "action_reflection_degraded": _check(
+            high_risk_action.status == "unavailable"
+            and not high_risk_action.evidence_ids
+            and "暂不执行" in high_risk_action.observation_prompt
+            and "证据不足时不开始行动实验" in action_text
+            and "traditional_high_risk_signal_boundary" not in action_text
         ),
     }
     return ReportAcceptanceCaseResult(

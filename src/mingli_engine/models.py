@@ -5641,6 +5641,19 @@ class FormalConclusion:
 
 
 @dataclass(frozen=True)
+class ActionReflectionItem:
+    action_id: str
+    title: str
+    status: str
+    rule_families: list[str]
+    evidence_ids: list[str]
+    conditions: list[str]
+    observation_prompt: str
+    feedback_metric: str
+    stop_boundary: str
+
+
+@dataclass(frozen=True)
 class ExpandedReportEvidence:
     source_summary: list[str]
     formal_conclusions: list[FormalConclusion]
@@ -5714,6 +5727,7 @@ class Report:
     personality_tendencies: str
     strengths_and_issues: str
     phase_overview: str
+    action_reflection_items: list[ActionReflectionItem]
     action_suggestions: str
     interpretation_boundaries: str
     glossary: str

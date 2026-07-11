@@ -39,7 +39,8 @@ Each `ActionReflectionItem` contains:
 - an `observation_prompt` and `feedback_metric`;
 - an explicit `stop_boundary`.
 
-An item is unavailable when any required family is missing or unavailable. It is guarded when a contributing conclusion is disputed or the track is intrinsically sensitive. Unavailable items expose the gap and do not issue an action imperative.
+An item is unavailable when any required family is missing, explicitly listed as unavailable, or has an unavailable conclusion. It is guarded when a contributing conclusion is disputed or the track is intrinsically sensitive. Unavailable items expose the gap and do not issue an action imperative.
+An available conclusion without evidence ids is treated as unavailable for action purposes. Disputed conclusions append their disagreement note to the reader-facing conditions so the guardrail reason remains auditable.
 
 ## Report And Acceptance Integration
 

@@ -84,6 +84,11 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     assert markdown.count("### 综合脉络") == 1
     assert "综合状态：完整（含护栏）" in markdown
     assert "高风险与趋避只构成护栏关系" in markdown
+    for title in ("结构校准", "关系过程复盘", "取用小实验", "阶段复盘"):
+        assert markdown.count(f"{title}｜状态：") == 1
+    assert markdown.count("观察问题：") == 4
+    assert markdown.count("反馈记录：") == 4
+    assert markdown.count("停止边界：") == 4
     assert "示例排盘由外部工具核对，仅用于 CLI 合约测试" in markdown
     _assert_plain_language_report(markdown)
     assert "外部排盘已核对" in markdown
@@ -150,6 +155,8 @@ def test_generate_report_outputs_complete_html_from_external_verified_chart():
     assert html.count("<h3>综合脉络</h3>") == 1
     assert "综合状态：完整（含护栏）" in html
     assert "高风险与趋避只构成护栏关系" in html
+    for title in ("结构校准", "关系过程复盘", "取用小实验", "阶段复盘"):
+        assert html.count(f"{title}｜状态：") == 1
     assert "rule_family=high_risk_signal" in html
     _assert_plain_language_report(html)
     assert "<script" not in html.lower()

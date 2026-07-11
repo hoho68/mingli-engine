@@ -68,6 +68,7 @@ return the same activation packet as JSON before enabling report workflows.
 - `formal-rule-families=10`
 - `personalized-chart-signal-segments=10`
 - `integrated-cross-family-synthesis=passed`
+- `evidence-backed-action-reflection=passed`
 - `missing-rule-families=0`
 - `open-conflicts=1`
 - `next-action=release_reports_with_guardrails`
@@ -75,7 +76,8 @@ return the same activation packet as JSON before enabling report workflows.
 The four cases cover an ordinary production report, the current conflict
 guardrail, exact-lifespan rejection, and unavailable-evidence degradation.
 The ordinary case additionally verifies one sanitized chart-signal segment per
-rule family plus one integrated structural/selection/timing/disagreement layer.
+rule family, one integrated structural/selection/timing/disagreement layer, and
+four evidence-backed action-reflection tracks with feedback and stop boundaries.
 All cases use in-memory fixtures and do not write source-library, 013, or 012
 data.
 

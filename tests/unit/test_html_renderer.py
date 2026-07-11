@@ -77,6 +77,21 @@ def test_render_html_report_preserves_markdown_reading_order(sample_bazi_chart):
     )
 
 
+def test_render_html_report_includes_evidence_backed_action_tracks_once(
+    sample_bazi_chart,
+):
+    report = build_report(sample_bazi_chart)
+
+    html = render_html_report(report)
+
+    assert html.count(report.action_suggestions) == 1
+    for item in report.action_reflection_items:
+        assert html.count(f"{item.title}｜状态：") == 1
+    assert html.count("观察问题：") == 4
+    assert html.count("反馈记录：") == 4
+    assert html.count("停止边界：") == 4
+
+
 def test_render_html_report_escapes_text_and_uses_no_external_resources(
     sample_bazi_chart,
 ):

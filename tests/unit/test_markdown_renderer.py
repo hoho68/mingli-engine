@@ -107,6 +107,21 @@ def test_render_markdown_report_includes_integrated_synthesis_once(
     assert markdown.count(report.integrated_synthesis) == 1
 
 
+def test_render_markdown_report_includes_evidence_backed_action_tracks_once(
+    sample_bazi_chart,
+):
+    report = build_report(sample_bazi_chart)
+
+    markdown = render_markdown_report(report)
+
+    assert markdown.count(report.action_suggestions) == 1
+    for item in report.action_reflection_items:
+        assert markdown.count(f"{item.title}｜状态：") == 1
+    assert markdown.count("观察问题：") == 4
+    assert markdown.count("反馈记录：") == 4
+    assert markdown.count("停止边界：") == 4
+
+
 def test_render_markdown_report_keeps_chart_source_transparent(sample_bazi_chart):
     report = build_report(sample_bazi_chart)
 

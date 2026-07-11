@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 from dataclasses import replace
 from dataclasses import fields
 
@@ -376,6 +377,169 @@ def test_build_integrated_synthesis_degrades_when_required_families_are_missing(
         assert title in unavailable_line
 
 
+def test_build_report_exposes_four_evidence_backed_action_reflection_tracks(
+    sample_bazi_chart,
+):
+    report = build_report(sample_bazi_chart)
+    items = report.action_reflection_items
+
+    assert [item.action_id for item in items] == [
+        "structure_calibration",
+        "relationship_process_review",
+        "selection_experiment",
+        "stage_review",
+    ]
+    assert [item.rule_families for item in items] == [
+        ["pattern_strength", "five_element_balance"],
+        ["ten_god_relation", "branch_interaction", "blind_image_method"],
+        ["useful_god_candidate", "taboo_god_candidate", "remedy_boundary"],
+        ["luck_cycle", "high_risk_signal"],
+    ]
+    assert {family for item in items for family in item.rule_families} == set(
+        report.knowledge_activation.required_rule_families
+    )
+    assert Counter(
+        family for item in items for family in item.rule_families
+    ) == Counter({family: 1 for family in report.knowledge_activation.required_rule_families})
+    assert [item.status for item in items] == [
+        "ready",
+        "ready",
+        "ready_with_guardrails",
+        "ready_with_guardrails",
+    ]
+    for item in items:
+        assert item.evidence_ids
+        assert item.conditions
+        assert item.observation_prompt
+        assert item.feedback_metric
+        assert item.stop_boundary
+        assert item.title in report.action_suggestions
+        assert f"证据数：{len(item.evidence_ids)}" in report.action_suggestions
+
+    assert sample_bazi_chart.birth_profile.focus_topic in report.action_suggestions
+    assert "观察问题：" in report.action_suggestions
+    assert "反馈记录：" in report.action_suggestions
+    assert "停止边界：" in report.action_suggestions
+    assert "不是对结果的承诺" in report.action_suggestions
+    assert "traditional_high_risk_signal_boundary" not in report.action_suggestions
+    assert "focus_topic:" not in report.action_suggestions
+    assert "stage_signal:" not in report.action_suggestions
+    for family in report.knowledge_activation.required_rule_families:
+        assert family not in report.action_suggestions
+
+
+def test_action_reflection_degrades_tracks_with_missing_or_unavailable_families():
+    unavailable = FormalConclusion(
+        conclusion_id="formal_high_risk_signal",
+        title="高风险信号边界",
+        body="当前证据不足，不输出高风险判断。",
+        rule_family="high_risk_signal",
+        strength="unavailable",
+        risk_tier="high_risk",
+        trace=EvidenceTrace(
+            trace_id="trace_high_risk_signal",
+            conclusion_id="formal_high_risk_signal",
+            chart_signals=["traditional_high_risk_signal_boundary"],
+            evidence_ids=[],
+            assumptions=["rule_family:high_risk_signal"],
+        ),
+    )
+    expanded = ExpandedReportEvidence(
+        source_summary=[],
+        formal_conclusions=[unavailable],
+        unavailable_conclusions=[unavailable.title],
+    )
+
+    items = report_schema.build_action_reflection_items(expanded)
+    rendered = report_schema.render_action_reflection_items(
+        items,
+        "当前关注主题",
+    )
+
+    assert len(items) == 4
+    assert all(item.status == "unavailable" for item in items)
+    assert all(not item.evidence_ids for item in items)
+    assert all("暂不执行" in item.observation_prompt for item in items)
+    assert all("证据恢复" in item.feedback_metric for item in items)
+    assert "当前关注主题" in rendered
+    assert rendered.count("状态：不可用") == 4
+    assert "证据不足时不开始行动实验" in rendered
+    assert "traditional_high_risk_signal_boundary" not in rendered
+
+
+def test_action_reflection_degrades_only_track_with_empty_evidence(
+    sample_bazi_chart,
+):
+    report = build_report(sample_bazi_chart)
+    conclusions = []
+    for conclusion in report.expanded_evidence.formal_conclusions:
+        if conclusion.rule_family == "pattern_strength":
+            conclusion = replace(
+                conclusion,
+                trace=replace(conclusion.trace, evidence_ids=[]),
+            )
+        conclusions.append(conclusion)
+    expanded = replace(report.expanded_evidence, formal_conclusions=conclusions)
+
+    items = report_schema.build_action_reflection_items(expanded)
+    statuses = {item.action_id: item.status for item in items}
+
+    assert statuses == {
+        "structure_calibration": "unavailable",
+        "relationship_process_review": "ready",
+        "selection_experiment": "ready_with_guardrails",
+        "stage_review": "ready_with_guardrails",
+    }
+    structure = items[0]
+    assert "格局与旺衰候选" in structure.conditions[0]
+    assert "证据" in structure.conditions[0]
+
+
+def test_action_reflection_exposes_disagreement_reason_and_adds_guardrail(
+    sample_bazi_chart,
+):
+    report = build_report(sample_bazi_chart)
+    conclusions = []
+    for conclusion in report.expanded_evidence.formal_conclusions:
+        if conclusion.rule_family == "pattern_strength":
+            conclusion = replace(
+                conclusion,
+                strength="disputed",
+                trace=replace(
+                    conclusion.trace,
+                    disagreement_note="结构判断存在两个保留候选。",
+                ),
+            )
+        conclusions.append(conclusion)
+    expanded = replace(report.expanded_evidence, formal_conclusions=conclusions)
+
+    items = report_schema.build_action_reflection_items(expanded)
+    structure = items[0]
+    rendered = report_schema.render_action_reflection_items(items, "学习规划")
+
+    assert structure.status == "ready_with_guardrails"
+    assert "分歧说明：结构判断存在两个保留候选。" in structure.conditions
+    assert "分歧说明：结构判断存在两个保留候选。" in rendered
+
+
+def test_action_reflection_honors_explicit_unavailable_title_over_stale_conclusion(
+    sample_bazi_chart,
+):
+    report = build_report(sample_bazi_chart)
+    expanded = replace(
+        report.expanded_evidence,
+        unavailable_conclusions=["格局与旺衰候选"],
+    )
+
+    items = report_schema.build_action_reflection_items(expanded)
+
+    assert items[0].action_id == "structure_calibration"
+    assert items[0].status == "unavailable"
+    assert items[0].evidence_ids == []
+    assert "格局与旺衰候选" in items[0].conditions[0]
+    assert all(item.status != "unavailable" for item in items[1:])
+
+
 def test_format_reader_chart_signals_translates_filters_deduplicates_and_limits():
     formatted = report_schema.format_reader_chart_signals(
         "blind_image_method",
@@ -500,6 +664,23 @@ def test_formal_synthesis_changes_with_chart_signals_without_changing_evidence(
         "大运流年主题（候选；阶段主题转向协作与稳定积累，只作趋势观察。）",
     ):
         assert signal in second_report.integrated_synthesis
+
+    assert first_report.action_suggestions != second_report.action_suggestions
+    assert [item.action_id for item in first_report.action_reflection_items] == [
+        item.action_id for item in second_report.action_reflection_items
+    ]
+    for action_id in ("structure_calibration", "selection_experiment", "stage_review"):
+        first_item = next(
+            item
+            for item in first_report.action_reflection_items
+            if item.action_id == action_id
+        )
+        second_item = next(
+            item
+            for item in second_report.action_reflection_items
+            if item.action_id == action_id
+        )
+        assert first_item.conditions != second_item.conditions
 
     assert first_report.report_evidence_audit.traced_evidence_unit_count == 111
     assert second_report.report_evidence_audit.traced_evidence_unit_count == 111
@@ -801,6 +982,7 @@ def test_report_public_contract_fields_remain_stable_for_012():
         "personality_tendencies",
         "strengths_and_issues",
         "phase_overview",
+        "action_reflection_items",
         "action_suggestions",
         "interpretation_boundaries",
         "glossary",

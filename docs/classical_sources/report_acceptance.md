@@ -9,6 +9,9 @@ sanitized chart-specific signals without raw internal markers.
 It also requires one cross-family synthesis layer that coordinates structural,
 selection, timing, disagreement, and unavailable threads without adding new
 formal conclusions.
+Finally, it requires four evidence-backed action-reflection tracks that carry
+their rule families, evidence ids, chart-specific conditions, observation
+prompts, feedback records, and explicit stop boundaries into reader output.
 
 It does not parse source material, create interpretation rules, mutate the
 source library, write 013 candidate or review records, promote evidence, or
@@ -53,6 +56,12 @@ The cross-family check requires `结构主线`, `取用衔接`, `阶段衔接`, 
 and `不可用边界`. Current disputed notes must remain visible, and the section
 must render exactly once after formal knowledge synthesis.
 
+The action-reflection check requires `结构校准`, `关系过程复盘`, `取用小实验`,
+and `阶段复盘`. Together they must cover all ten enabled rule families, retain
+non-empty evidence provenance, expose observable feedback and stop boundaries,
+remove internal signal markers, and render exactly once. Selection and stage
+tracks remain guarded; unavailable inputs suppress the corresponding experiment.
+
 ### Conflict Guardrail
 
 Confirms that the current open high-risk scope conflict remains visible, at
@@ -69,7 +78,9 @@ rejects the request with `lifespan_or_death_timing` and rendering is withheld.
 Uses a controlled in-memory formal-evidence fixture. The case verifies that an
 unavailable high-risk conclusion produces an incomplete synthesis, remains
 marked unavailable, preserves its boundary body, and does not lose the
-professional-advice limitation.
+professional-advice limitation. It also verifies that the corresponding action
+track is unavailable, carries no actionable evidence, tells the reader not to
+start the experiment, and exposes no internal signal marker.
 
 ## Privacy And Mutation Boundary
 

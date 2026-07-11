@@ -52,6 +52,7 @@ def test_ordinary_report_case_covers_content_renderers_and_safety():
         "formal_synthesis_coverage": "passed",
         "personalized_chart_signals": "passed",
         "integrated_cross_family_synthesis": "passed",
+        "evidence_backed_action_reflection": "passed",
         "markdown_rendering": "passed",
         "html_rendering": "passed",
     }
@@ -100,6 +101,7 @@ def test_unavailable_case_keeps_incomplete_and_professional_boundaries():
         "unavailable_family_exposed": "passed",
         "source_body_preserved": "passed",
         "professional_boundary_preserved": "passed",
+        "action_reflection_degraded": "passed",
     }
 
 
