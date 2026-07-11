@@ -22,6 +22,14 @@ report content, 111-unit evidence tracing, all ten rule families, Markdown/HTML
 rendering, current conflict guardrails, high-risk rejection, and unavailable
 degradation without mutating source-library, 013, or 012 data.
 
+## Report Release Readiness
+
+After acceptance passes, use [report_release.md](report_release.md) to run the
+fixed five-scenario end-to-end release matrix. The release packet verifies
+automatic and externally verified reports, Markdown/HTML consistency, four
+evidence-backed action tracks, guarded high-risk output, exact-risk rejection,
+and privacy-safe summary serialization before enabling the report CLI.
+
 ## Preparation Materials
 
 Root-level PDF files and the root `Markdown/` directory are user-provided

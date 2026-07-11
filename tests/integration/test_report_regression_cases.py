@@ -7,6 +7,8 @@ from typing import Any
 
 import pytest
 
+from mingli_engine.report_release import load_report_release_manifest
+
 
 _MANUAL_APPLICATION_FIXTURE_CANDIDATES = [
     {
@@ -174,6 +176,17 @@ EXPANDED_RULE_FAMILIES = (
     "remedy_boundary",
     "high_risk_signal",
 )
+ACTION_REFLECTION_TITLES = (
+    "结构校准",
+    "关系过程复盘",
+    "取用小实验",
+    "阶段复盘",
+)
+INTERNAL_REPORT_MARKERS = (
+    "traditional_high_risk_signal_boundary",
+    "focus_topic:",
+    "stage_signal:",
+)
 
 
 def _run_cli(*args: str) -> subprocess.CompletedProcess[str]:
@@ -196,11 +209,7 @@ def _run_cli(*args: str) -> subprocess.CompletedProcess[str]:
 
 
 def _load_cases() -> list[dict[str, Any]]:
-    assert MANIFEST_PATH.exists(), "Missing report regression manifest"
-    cases = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    assert isinstance(cases, list)
-    assert cases
-    return cases
+    return load_report_release_manifest(MANIFEST_PATH)
 
 
 def _assert_in_order(text: str, headings: tuple[str, ...]) -> None:
@@ -292,6 +301,13 @@ def _assert_safe_markdown(
     assert "### 排盘来源与假设" in markdown.splitlines()
     assert "### 四柱与五行摘要" in markdown.splitlines()
     assert "### 行动建议" in markdown.splitlines()
+    assert markdown.count("### 正式知识综合") == 1
+    assert markdown.count("### 综合脉络") == 1
+    for title in ACTION_REFLECTION_TITLES:
+        assert markdown.count(f"{title}｜状态：") == 1
+    assert markdown.count("观察问题：") == 4
+    assert markdown.count("反馈记录：") == 4
+    assert markdown.count("停止边界：") == 4
     assert "公历" in markdown
     for pillar_name in ("年柱", "月柱", "日柱", "时柱"):
         assert f"- {pillar_name}：" in markdown
@@ -306,6 +322,8 @@ def _assert_safe_markdown(
         assert raw_label not in markdown
     for phrase in ABSOLUTE_DESTINY_PHRASES:
         assert phrase not in markdown
+    for marker in INTERNAL_REPORT_MARKERS:
+        assert marker not in markdown
     if case["source_type"] == "auto_calculated":
         assert "系统自动排盘" in markdown
         assert "中等可信度" in markdown
@@ -330,6 +348,14 @@ def _assert_safe_html(
     assert "# " not in html
     assert "<script" not in html.lower()
     assert "onclick=" not in html.lower()
+    assert html.count("<h3>正式知识综合</h3>") == 1
+    assert html.count("<h3>综合脉络</h3>") == 1
+    assert html.count("<h3>行动建议</h3>") == 1
+    for title in ACTION_REFLECTION_TITLES:
+        assert html.count(f"{title}｜状态：") == 1
+    assert html.count("观察问题：") == 4
+    assert html.count("反馈记录：") == 4
+    assert html.count("停止边界：") == 4
     html_layer_headings = tuple(
         heading.removeprefix("## ") for heading in LAYER_HEADINGS
     )
@@ -349,6 +375,8 @@ def _assert_safe_html(
         assert raw_label not in html
     for phrase in ABSOLUTE_DESTINY_PHRASES:
         assert phrase not in html
+    for marker in INTERNAL_REPORT_MARKERS:
+        assert marker not in html
     if case["source_type"] == "auto_calculated":
         assert "external_verified" not in html
     if case["source_type"] == "external_verified":
@@ -363,6 +391,17 @@ def _assert_high_risk_markdown(
     assert "高风险材料边界" in markdown
     assert "传统风险信号" in markdown
     assert "不输出精确结果" in markdown
+
+
+def _assert_high_risk_html(
+    case: dict[str, Any], result: subprocess.CompletedProcess[str]
+) -> None:
+    _assert_safe_html(case, result)
+    html = result.stdout
+    assert "高风险材料边界" in html
+    assert "传统风险信号" in html
+    assert "不输出精确结果" in html
+    assert "不预测精确事件或寿命" in html
 
 
 def _assert_safety_json(
@@ -480,6 +519,18 @@ def test_high_risk_markdown_regression_cases_keep_narrowed_contracts():
             "markdown",
         )
         _assert_high_risk_markdown(case, result)
+
+
+def test_high_risk_html_regression_cases_keep_narrowed_contracts():
+    for case in _high_risk_markdown_cases():
+        result = _run_cli(
+            case["command"],
+            "--input",
+            str(REPO_ROOT / case["input"]),
+            "--format",
+            "html",
+        )
+        _assert_high_risk_html(case, result)
 
 
 def test_pending_source_intake_candidates_are_not_formal_report_evidence(tmp_path):

@@ -452,6 +452,37 @@ class ReportAcceptanceSummary:
 
 
 @dataclass(frozen=True)
+class ReportReleaseCaseResult:
+    case_id: str
+    scenario_type: str
+    status: str
+    output_formats: list[str]
+    checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class ReportReleaseSummary:
+    release_id: str
+    release_status: str
+    manifest_case_count: int
+    passed_case_count: int
+    failed_case_count: int
+    safe_report_case_count: int
+    guarded_report_case_count: int
+    rejected_request_case_count: int
+    distinct_report_output_count: int
+    acceptance_baseline_id: str
+    acceptance_status: str
+    approved_evidence_count: int
+    rule_family_count: int
+    action_track_count: int
+    cases: list[ReportReleaseCaseResult]
+    guardrails: list[str]
+    next_action: str
+
+
+@dataclass(frozen=True)
 class SourceMaterial:
     material_id: str
     title: str

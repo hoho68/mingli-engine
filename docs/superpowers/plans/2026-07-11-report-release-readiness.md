@@ -39,7 +39,7 @@
 - Create: `tests/contract/test_report_release_cli_contract.py`
 - Modify: `tests/integration/test_report_regression_cases.py`
 
-- [ ] Add `report-release-summary` with an optional manifest path for controlled testing.
+- [ ] Add `report-release-summary` for the fixed tracked manifest; inject alternate manifests only through Python tests.
 - [ ] Verify JSON status, counts, checks, guardrails, and absence of private profile fields and values.
 - [ ] Extend existing safe/high-risk regression assertions for formal synthesis, integrated synthesis, four action tracks, and cross-format output.
 

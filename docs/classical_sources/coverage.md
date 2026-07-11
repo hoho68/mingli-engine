@@ -84,6 +84,30 @@ data.
 Machine-readable check: run `mingli-engine report-acceptance-summary`. See
 [report_acceptance.md](report_acceptance.md) for scenario and boundary details.
 
+## Report Release Packet
+
+- `release-id=report_release_v1`
+- `release-status=ready_with_guardrails`
+- `release-cases=5`
+- `passed-release-cases=5`
+- `failed-release-cases=0`
+- `safe-report-cases=2`
+- `guarded-report-cases=1`
+- `rejected-request-cases=2`
+- `distinct-report-outputs=3`
+- `acceptance-baseline-id=report_acceptance_v1`
+- `action-reflection-tracks=4`
+- `next-action=enable_report_cli_with_guardrails`
+
+The fixed release matrix covers automatic and externally verified report
+sources, guarded general high-risk output, two exact-lifespan rejections, full
+Markdown/HTML reader-section consistency, and privacy-safe summary output. It
+executes in memory and does not write fixture, report, source-library, 013, or
+012 data.
+
+Machine-readable check: run `mingli-engine report-release-summary`. See
+[report_release.md](report_release.md) for enablement and failure handling.
+
 ## Evidence Counts By Source
 
 - `blind_life_manual`: 1

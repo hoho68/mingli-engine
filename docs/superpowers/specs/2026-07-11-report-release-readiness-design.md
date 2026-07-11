@@ -46,7 +46,13 @@ Require classifier rejection with the manifest's expected category and withhold 
 - action-track count, privacy guardrails, and next action;
 - one result per manifest case containing only case id, scenario type, status, output formats, checks, and guardrails.
 
+`report_inputs.py` owns the shared JSON-to-profile/chart contract used by both
+the production CLI and release service. The release layer therefore does not
+copy or import CLI-private parsing functions.
+
 Any invalid manifest, failed case, duplicate id, path escape, blocked report acceptance, missing evidence/action contract, unsafe output, or format mismatch must fail closed. A fully passing matrix inherits `ready_with_guardrails` while the known high-risk scope conflict remains open.
+
+The production CLI always uses the fixed tracked manifest. Alternate manifest paths are accepted only by the Python service for controlled tests, so the CLI cannot be used as an arbitrary local-file reader.
 
 ## Boundaries
 
