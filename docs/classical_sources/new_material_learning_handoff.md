@@ -22,6 +22,23 @@ source-level records from the prepared case/formula gated clusters, registered
 weak-locator source-library metadata, and promoted matching 013/012 records.
 The sensitive-topic cluster remains risk-gated and raw files remain unchanged.
 
+## Current Local Completion Status
+
+As of 2026-07-12, the later local archive receipt and project completion audit
+supersede earlier `pending_final_archive` checkpoint wording without deleting
+that historical record. Current state:
+
+- `archive-local-commit-created=1`
+- `new-material-pending-sources=0`
+- `post-archive-resume-status=waiting_for_new_material_or_push_request`
+- `project-completion-status=complete_with_guardrails`
+- `remaining-local-blockers=0`
+- `next-action=local_delivery_complete_wait_for_new_material_or_explicit_remote_request`
+
+See [project_completion.md](project_completion.md). Resume only for new material,
+a blocked completion gate, an explicit remote request, or a newly scoped product
+extension.
+
 ## Completed Checkpoints
 
 - Source-window locator review closed the current review-note evidence surface:

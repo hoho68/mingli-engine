@@ -108,6 +108,30 @@ executes in memory and does not write fixture, report, source-library, 013, or
 Machine-readable check: run `mingli-engine report-release-summary`. See
 [report_release.md](report_release.md) for enablement and failure handling.
 
+## Project Completion Packet
+
+- `completion-baseline-id=project_completion_v1`
+- `completion-status=complete_with_guardrails`
+- `feature-specs=17`
+- `feature-plans=17`
+- `task-tracked-features=12`
+- `legacy-implemented-features=5`
+- `checked-tasks=1081`
+- `unchecked-tasks=0`
+- `checked-requirements-checklist-items=272`
+- `unchecked-requirements-checklist-items=0`
+- `remaining-local-blockers=0`
+- `next-action=local_delivery_complete_wait_for_new_material_or_explicit_remote_request`
+
+The completion packet distinguishes the historical 001-005 no-task baseline
+from 006-017 task closure, confirms the new-material archive receipt supersedes
+older pending-final-archive checkpoints, runs all three data quality gates, and
+requires both report acceptance and release readiness.
+
+Machine-readable check: run `mingli-engine project-completion-summary`. See
+[project_completion.md](project_completion.md) for scope, guarded boundaries,
+and restart conditions.
+
 ## Evidence Counts By Source
 
 - `blind_life_manual`: 1

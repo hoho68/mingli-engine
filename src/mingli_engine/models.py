@@ -483,6 +483,55 @@ class ReportReleaseSummary:
 
 
 @dataclass(frozen=True)
+class ProjectCompletionFeatureResult:
+    feature_id: str
+    artifact_status: str
+    spec_present: bool
+    plan_present: bool
+    functional_requirement_count: int
+    success_criteria_count: int
+    task_tracking_status: str
+    checked_task_count: int
+    unchecked_task_count: int
+    checklist_status: str
+    checked_checklist_item_count: int
+    unchecked_checklist_item_count: int
+
+
+@dataclass(frozen=True)
+class ProjectCompletionSummary:
+    baseline_id: str
+    completion_status: str
+    feature_count: int
+    spec_count: int
+    plan_count: int
+    task_tracked_feature_count: int
+    legacy_feature_count: int
+    functional_requirement_count: int
+    success_criteria_count: int
+    checked_task_count: int
+    unchecked_task_count: int
+    checklist_file_count: int
+    checked_checklist_item_count: int
+    unchecked_checklist_item_count: int
+    quality_checks: dict[str, str]
+    completion_checks: dict[str, str]
+    release_id: str
+    release_status: str
+    acceptance_baseline_id: str
+    acceptance_status: str
+    approved_evidence_count: int
+    rule_family_count: int
+    action_track_count: int
+    open_conflicts: list[str]
+    legacy_feature_ids: list[str]
+    features: list[ProjectCompletionFeatureResult]
+    controlled_boundaries: list[str]
+    remaining_local_blockers: list[str]
+    next_action: str
+
+
+@dataclass(frozen=True)
 class SourceMaterial:
     material_id: str
     title: str

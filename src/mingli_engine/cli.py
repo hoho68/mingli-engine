@@ -28,6 +28,10 @@ from mingli_engine.report_release import (
     ReportReleaseError,
     build_report_release_summary,
 )
+from mingli_engine.project_completion import (
+    ProjectCompletionError,
+    build_project_completion_summary,
+)
 from mingli_engine.safety import safety_check
 from mingli_engine.validation import validate_birth_profile
 from mingli_engine import promotion
@@ -194,6 +198,12 @@ def _report_release_summary(args: argparse.Namespace) -> int:
     return 4 if summary.release_status == "blocked" else 0
 
 
+def _project_completion_summary(args: argparse.Namespace) -> int:
+    summary = build_project_completion_summary()
+    _write_json(summary)
+    return 4 if summary.completion_status == "blocked" else 0
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mingli-engine")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -242,6 +252,9 @@ def _build_parser() -> argparse.ArgumentParser:
     release_parser = subparsers.add_parser("report-release-summary")
     release_parser.set_defaults(handler=_report_release_summary)
 
+    completion_parser = subparsers.add_parser("project-completion-summary")
+    completion_parser.set_defaults(handler=_project_completion_summary)
+
     return parser
 
 
@@ -273,6 +286,9 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     except ReportReleaseError as error:
         print(f"Report release error: {error}", file=sys.stderr)
+        return 1
+    except ProjectCompletionError as error:
+        print(f"Project completion error: {error}", file=sys.stderr)
         return 1
     except (KeyError, TypeError, AttributeError) as error:
         print(f"Invalid input: {error}", file=sys.stderr)

@@ -30,6 +30,13 @@ automatic and externally verified reports, Markdown/HTML consistency, four
 evidence-backed action tracks, guarded high-risk output, exact-risk rejection,
 and privacy-safe summary serialization before enabling the report CLI.
 
+## Final Project Completion
+
+Use [project_completion.md](project_completion.md) as the final local delivery
+entrypoint. It combines the 001-017 artifact audit, task and checklist closure,
+learning/archive handoff, three quality validators, report acceptance, and the
+fixed release matrix into one privacy-safe `project_completion_v1` packet.
+
 ## Preparation Materials
 
 Root-level PDF files and the root `Markdown/` directory are user-provided
