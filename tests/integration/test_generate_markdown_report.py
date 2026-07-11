@@ -80,6 +80,7 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     assert "### 排盘来源与假设" in markdown.splitlines()
     assert "### 四柱与五行摘要" in markdown.splitlines()
     assert "### 行动建议" in markdown.splitlines()
+    assert markdown.count("### 正式知识综合") == 1
     assert "示例排盘由外部工具核对，仅用于 CLI 合约测试" in markdown
     _assert_plain_language_report(markdown)
     assert "外部排盘已核对" in markdown
@@ -138,6 +139,8 @@ def test_generate_report_outputs_complete_html_from_external_verified_chart():
     assert "missing_rule_families=0" in html
     assert "Report evidence audit: status=complete_with_guardrails" in html
     assert "traced_evidence_units=111" in html
+    assert html.count("<h3>正式知识综合</h3>") == 1
+    assert "rule_family=high_risk_signal" in html
     _assert_plain_language_report(html)
     assert "<script" not in html.lower()
     assert "onclick=" not in html.lower()

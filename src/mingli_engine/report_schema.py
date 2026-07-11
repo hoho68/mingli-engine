@@ -383,6 +383,121 @@ def _build_evidence_notes(
     )
 
 
+FORMAL_SYNTHESIS_RULE_GROUPS = (
+    (
+        "结构与关系",
+        (
+            "pattern_strength",
+            "five_element_balance",
+            "ten_god_relation",
+            "branch_interaction",
+            "blind_image_method",
+        ),
+    ),
+    (
+        "取用与调节",
+        (
+            "useful_god_candidate",
+            "taboo_god_candidate",
+            "remedy_boundary",
+        ),
+    ),
+    ("时机与风险", ("luck_cycle", "high_risk_signal")),
+)
+
+FORMAL_SYNTHESIS_RULE_TITLES = {
+    "pattern_strength": "格局与旺衰候选",
+    "five_element_balance": "五行强弱倾向",
+    "ten_god_relation": "十神组合关系",
+    "branch_interaction": "刑冲合害线索",
+    "blind_image_method": "盲派象法取象",
+    "useful_god_candidate": "用神候选边界",
+    "taboo_god_candidate": "忌神候选边界",
+    "remedy_boundary": "趋避调整边界",
+    "luck_cycle": "大运流年主题",
+    "high_risk_signal": "高风险信号边界",
+}
+
+FORMAL_SYNTHESIS_STRENGTH_LABELS = {
+    "decided": "已定",
+    "candidate": "候选",
+    "weakly_supported": "弱支持",
+    "disputed": "有分歧",
+    "unavailable": "不可用",
+}
+
+FORMAL_SYNTHESIS_AUDIT_STATUS_LABELS = {
+    "complete": "完整",
+    "complete_with_guardrails": "完整（含护栏）",
+    "incomplete": "不完整",
+}
+
+
+def _build_formal_synthesis(
+    expanded_evidence: ExpandedReportEvidence,
+    report_evidence_audit: ReportEvidenceAudit,
+) -> str:
+    conclusions_by_family = {
+        conclusion.rule_family: conclusion
+        for conclusion in expanded_evidence.formal_conclusions
+    }
+    unavailable = set(expanded_evidence.unavailable_conclusions)
+    audit_label = FORMAL_SYNTHESIS_AUDIT_STATUS_LABELS.get(
+        report_evidence_audit.audit_status,
+        report_evidence_audit.audit_status,
+    )
+    lines = [
+        "正式综合",
+        (
+            f"证据审计：{audit_label}；规则家族数："
+            f"{report_evidence_audit.rule_family_count}；正式结论数："
+            f"{report_evidence_audit.formal_conclusion_count}；追溯证据数："
+            f"{report_evidence_audit.traced_evidence_unit_count}。"
+        ),
+    ]
+
+    for group_title, rule_families in FORMAL_SYNTHESIS_RULE_GROUPS:
+        lines.extend(["", group_title])
+        for rule_family in rule_families:
+            conclusion = conclusions_by_family.get(rule_family)
+            if conclusion is None:
+                unavailable_tokens = {
+                    rule_family,
+                    FORMAL_SYNTHESIS_RULE_TITLES[rule_family],
+                }
+                state = (
+                    "不可用"
+                    if unavailable_tokens & unavailable
+                    else "缺失"
+                )
+                lines.append(
+                    f"- rule_family={rule_family}｜"
+                    f"{FORMAL_SYNTHESIS_RULE_TITLES[rule_family]}｜强度：不可用｜"
+                    f"证据数：0｜{state}：当前没有可用的正式结论。"
+                )
+                continue
+
+            strength_label = FORMAL_SYNTHESIS_STRENGTH_LABELS.get(
+                conclusion.strength,
+                conclusion.strength,
+            )
+            lines.append(
+                f"- rule_family={rule_family}｜{conclusion.title}｜"
+                f"强度：{strength_label}｜"
+                f"证据数：{len(conclusion.trace.evidence_ids)}｜{conclusion.body}"
+            )
+            if conclusion.trace.disagreement_note:
+                lines.append(f"  分歧说明：{conclusion.trace.disagreement_note}")
+
+        if group_title == "时机与风险":
+            lines.append(
+                "边界：本组内容只表示非确定性的传统观察，不预测精确事件或寿命，"
+                "也不替代医疗、法律、心理、投资等专业建议。"
+            )
+
+    return "\n".join(lines)
+
+
 def _ensure_knowledge_activation_ready(
     knowledge_activation: KnowledgeActivationSummary,
 ) -> None:
@@ -406,6 +521,7 @@ def _major_body_sections(report: Report) -> str:
             report.five_elements_summary,
             report.ten_gods_summary,
             report.evidence_notes,
+            report.formal_synthesis,
             report.structure_analysis,
             report.personality_tendencies,
             report.strengths_and_issues,
@@ -455,6 +571,10 @@ def build_report(chart: BaziChart) -> Report:
     evidence_notes = _build_evidence_notes(
         expanded_evidence,
         knowledge_activation,
+        report_evidence_audit,
+    )
+    formal_synthesis = _build_formal_synthesis(
+        expanded_evidence,
         report_evidence_audit,
     )
     structure_analysis = (
@@ -510,6 +630,7 @@ def build_report(chart: BaziChart) -> Report:
         five_elements_summary=five_elements_summary,
         ten_gods_summary=ten_gods_summary,
         evidence_notes=evidence_notes,
+        formal_synthesis=formal_synthesis,
         structure_analysis=structure_analysis,
         personality_tendencies=personality_tendencies,
         strengths_and_issues=strengths_and_issues,
@@ -532,6 +653,7 @@ def build_report(chart: BaziChart) -> Report:
                     five_elements_summary,
                     ten_gods_summary,
                     evidence_notes,
+                    formal_synthesis,
                     structure_analysis,
                     personality_tendencies,
                     strengths_and_issues,

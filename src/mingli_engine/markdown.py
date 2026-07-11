@@ -21,6 +21,8 @@ def render_markdown_report(report: Report) -> str:
         report.ten_gods_summary,
         "### 观察依据",
         report.evidence_notes,
+        "### 正式知识综合",
+        report.formal_synthesis,
         "### 结构分析",
         report.structure_analysis,
         "### 性格倾向",

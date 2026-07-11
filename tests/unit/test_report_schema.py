@@ -1,13 +1,16 @@
+import re
 from dataclasses import replace
 from dataclasses import fields
 
 import pytest
 
+from mingli_engine import report_schema
 from mingli_engine.report_schema import build_report
 from mingli_engine.report_schema import KnowledgeActivationError
 from mingli_engine.report_schema import _format_expanded_evidence_notes
 from mingli_engine.models import KnowledgeActivationSummary, Report
 from mingli_engine.models import ExpandedReportEvidence, EvidenceTrace, FormalConclusion
+from mingli_engine.models import ReportEvidenceAudit
 
 
 RAW_READER_LABELS = (
@@ -208,6 +211,184 @@ def test_build_report_attaches_expanded_source_backed_evidence(sample_bazi_chart
         assert conclusion.trace.assumptions
 
 
+def test_build_report_exposes_complete_formal_synthesis(sample_bazi_chart):
+    report = build_report(sample_bazi_chart)
+
+    synthesis = report.formal_synthesis
+    expected_groups = (
+        (
+            "结构与关系",
+            (
+                "pattern_strength",
+                "five_element_balance",
+                "ten_god_relation",
+                "branch_interaction",
+                "blind_image_method",
+            ),
+        ),
+        (
+            "取用与调节",
+            (
+                "useful_god_candidate",
+                "taboo_god_candidate",
+                "remedy_boundary",
+            ),
+        ),
+        (
+            "时机与风险",
+            ("luck_cycle", "high_risk_signal"),
+        ),
+    )
+    expected_rule_families = {
+        rule_family
+        for _, rule_families in expected_groups
+        for rule_family in rule_families
+    }
+
+    assert synthesis.strip()
+    assert len(expected_rule_families) == 10
+    assert set(report.knowledge_activation.enabled_rule_families) == (
+        expected_rule_families
+    )
+    assert report.report_evidence_audit.rule_family_count == 10
+    for title, _ in expected_groups:
+        assert synthesis.count(title) == 1
+    group_positions = [synthesis.index(title) for title, _ in expected_groups]
+    assert group_positions == sorted(group_positions)
+    for group_index, (_, rule_families) in enumerate(expected_groups):
+        group_end = (
+            group_positions[group_index + 1]
+            if group_index + 1 < len(group_positions)
+            else len(synthesis)
+        )
+        group_text = synthesis[group_positions[group_index] : group_end]
+        assert re.findall(r"rule_family=([a-z_]+)", group_text) == list(
+            rule_families
+        )
+    synthesis_rule_families = re.findall(
+        r"rule_family=([a-z_]+)", synthesis
+    )
+    assert len(synthesis_rule_families) == 10
+    assert set(synthesis_rule_families) == expected_rule_families
+    for rule_family in expected_rule_families:
+        assert synthesis.count(f"rule_family={rule_family}") == 1
+    assert "完整（含护栏）" in synthesis
+    assert report.report_evidence_audit.traced_evidence_unit_count == 111
+
+
+def test_build_formal_synthesis_exposes_disputed_and_unavailable_boundaries():
+    expanded = ExpandedReportEvidence(
+        source_summary=["focused formatter fixture"],
+        formal_conclusions=[
+            FormalConclusion(
+                conclusion_id="formal_useful_god_candidate",
+                title="用神候选边界",
+                body="用神候选存在不同口径。",
+                rule_family="useful_god_candidate",
+                strength="disputed",
+                risk_tier="ordinary",
+                trace=EvidenceTrace(
+                    trace_id="trace_useful_god_candidate",
+                    conclusion_id="formal_useful_god_candidate",
+                    chart_signals=["木:偏弱"],
+                    evidence_ids=["duan_useful_god_candidate_001"],
+                    assumptions=["rule_family:useful_god_candidate"],
+                    disagreement_note="用神候选存在流派优先级差异。",
+                ),
+            ),
+            FormalConclusion(
+                conclusion_id="formal_high_risk_signal",
+                title="高风险信号边界",
+                body="当前证据不足，不输出高风险判断。",
+                rule_family="high_risk_signal",
+                strength="unavailable",
+                risk_tier="high",
+                trace=EvidenceTrace(
+                    trace_id="trace_high_risk_signal",
+                    conclusion_id="formal_high_risk_signal",
+                    chart_signals=["高风险信号:待核"],
+                    evidence_ids=[],
+                    assumptions=["rule_family:high_risk_signal"],
+                ),
+            ),
+        ],
+        unavailable_conclusions=["high_risk_signal"],
+    )
+    audit = ReportEvidenceAudit(
+        audit_status="incomplete",
+        rule_family_count=2,
+        formal_conclusion_count=2,
+        traced_evidence_unit_count=1,
+        enabled_rule_families=["useful_god_candidate", "high_risk_signal"],
+        conclusion_rule_families=["useful_god_candidate"],
+        missing_rule_families=["high_risk_signal"],
+        open_conflicts=["conflict_useful_god_001"],
+        guardrail_count=2,
+        unavailable_conclusion_count=1,
+    )
+
+    synthesis = report_schema._build_formal_synthesis(expanded, audit)
+
+    assert "不完整" in synthesis
+    assert "有分歧" in synthesis
+    assert "分歧说明：用神候选存在流派优先级差异。" in synthesis
+    assert "high_risk_signal" in synthesis
+    assert "不可用" in synthesis
+    assert "当前证据不足，不输出高风险判断。" in synthesis
+
+
+def test_build_formal_synthesis_translates_complete_audit_status():
+    synthesis = report_schema._build_formal_synthesis(
+        ExpandedReportEvidence(source_summary=[], formal_conclusions=[]),
+        ReportEvidenceAudit(
+            audit_status="complete",
+            rule_family_count=0,
+            formal_conclusion_count=0,
+            traced_evidence_unit_count=0,
+            enabled_rule_families=[],
+            conclusion_rule_families=[],
+            missing_rule_families=[],
+            open_conflicts=[],
+            guardrail_count=0,
+            unavailable_conclusion_count=0,
+        ),
+    )
+
+    audit_line = synthesis.splitlines()[1]
+    assert "证据审计：完整；" in audit_line
+    assert "complete" not in audit_line
+
+
+def test_build_formal_synthesis_recognizes_unavailable_conclusion_title():
+    synthesis = report_schema._build_formal_synthesis(
+        ExpandedReportEvidence(
+            source_summary=[],
+            formal_conclusions=[],
+            unavailable_conclusions=["高风险信号边界"],
+        ),
+        ReportEvidenceAudit(
+            audit_status="incomplete",
+            rule_family_count=1,
+            formal_conclusion_count=0,
+            traced_evidence_unit_count=0,
+            enabled_rule_families=[],
+            conclusion_rule_families=[],
+            missing_rule_families=["high_risk_signal"],
+            open_conflicts=[],
+            guardrail_count=1,
+            unavailable_conclusion_count=1,
+        ),
+    )
+
+    high_risk_line = next(
+        line
+        for line in synthesis.splitlines()
+        if "rule_family=high_risk_signal" in line
+    )
+    assert "不可用：" in high_risk_line
+    assert "缺失：" not in high_risk_line
+
+
 def test_build_report_blocks_when_knowledge_activation_is_not_enabled(
     sample_bazi_chart,
     monkeypatch,
@@ -363,6 +544,13 @@ def test_build_report_rejects_chart_without_four_pillars(sample_bazi_chart):
         build_report(chart)
 
 
+def test_report_formal_synthesis_follows_evidence_notes():
+    report_field_names = [field.name for field in fields(Report)]
+    evidence_notes_index = report_field_names.index("evidence_notes")
+
+    assert report_field_names[evidence_notes_index + 1] == "formal_synthesis"
+
+
 def test_report_public_contract_fields_remain_stable_for_012():
     assert [field.name for field in fields(Report)] == [
         "title",
@@ -374,6 +562,7 @@ def test_report_public_contract_fields_remain_stable_for_012():
         "five_elements_summary",
         "ten_gods_summary",
         "evidence_notes",
+        "formal_synthesis",
         "structure_analysis",
         "personality_tendencies",
         "strengths_and_issues",
@@ -415,26 +604,3 @@ def test_expanded_evidence_notes_include_conflict_notes_and_activation_contract(
     notes = _format_expanded_evidence_notes(expanded)
 
     assert "分歧说明：用神候选存在流派优先级差异。" in notes
-    assert [field.name for field in fields(Report)] == [
-        "title",
-        "disclaimer",
-        "quick_guide",
-        "chart_card",
-        "assumptions",
-        "four_pillars_summary",
-        "five_elements_summary",
-        "ten_gods_summary",
-        "evidence_notes",
-        "structure_analysis",
-        "personality_tendencies",
-        "strengths_and_issues",
-        "phase_overview",
-        "action_suggestions",
-        "interpretation_boundaries",
-        "glossary",
-        "ethics_reminder",
-        "report_evidence_audit",
-        "knowledge_activation",
-        "expanded_evidence",
-        "safety_review",
-    ]

@@ -5681,6 +5681,7 @@ class Report:
     five_elements_summary: str
     ten_gods_summary: str
     evidence_notes: str
+    formal_synthesis: str
     structure_analysis: str
     personality_tendencies: str
     strengths_and_issues: str
