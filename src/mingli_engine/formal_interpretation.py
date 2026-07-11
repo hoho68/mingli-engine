@@ -11,6 +11,41 @@ from mingli_engine.models import (
 )
 
 
+_NOT_COMPUTED_MARKERS = (
+    "暂未",
+    "未计算",
+    "未展开评估",
+    "not calculated",
+    "not computed",
+)
+
+
+def _is_computed_signal(value: str) -> bool:
+    normalized = value.strip().casefold()
+    return bool(normalized) and not any(
+        marker in normalized for marker in _NOT_COMPUTED_MARKERS
+    )
+
+
+def classify_chart_calculation_states(chart: BaziChart) -> dict[str, str]:
+    return {
+        "pattern_strength": (
+            "computed"
+            if _is_computed_signal(chart.strength_assessment)
+            else "not_computed"
+        ),
+        "useful_god_candidate": (
+            "computed" if chart.useful_god_candidates else "not_computed"
+        ),
+        "taboo_god_candidate": "not_computed",
+        "luck_cycle": (
+            "computed"
+            if _is_computed_signal(chart.luck_cycle_summary)
+            else "not_computed"
+        ),
+    }
+
+
 @dataclass(frozen=True)
 class _FamilySpec:
     rule_family: str
@@ -258,6 +293,11 @@ def _build_conclusion(
     )
     if has_open_severe_conflict:
         strength = "disputed"
+    elif (
+        classify_chart_calculation_states(chart).get(spec.rule_family)
+        == "not_computed"
+    ):
+        strength = "weakly_supported"
     else:
         strength = "candidate" if chart_signals else "weakly_supported"
     return FormalConclusion(
