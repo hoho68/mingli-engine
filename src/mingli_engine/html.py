@@ -98,6 +98,7 @@ def render_html_report(report: Report) -> str:
             _subsection("十神摘要", report.ten_gods_summary),
             _subsection("观察依据", report.evidence_notes),
             _subsection("正式知识综合", report.formal_synthesis),
+            _subsection("综合脉络", report.integrated_synthesis),
             _subsection("结构分析", report.structure_analysis),
             _subsection("性格倾向", report.personality_tendencies),
         ]

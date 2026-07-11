@@ -81,17 +81,46 @@ def _ordinary_production_case(report: Report) -> ReportAcceptanceCaseResult:
         not in report.formal_synthesis
         and "traditional_high_risk_signal_boundary" not in report.evidence_notes
     )
+    disputed_notes = [
+        conclusion.trace.disagreement_note
+        for conclusion in report.expanded_evidence.formal_conclusions
+        if conclusion.strength == "disputed"
+        and conclusion.trace.disagreement_note
+    ]
+    integrated_complete = (
+        all(
+            label in report.integrated_synthesis
+            for label in (
+                "综合状态：完整（含护栏）",
+                "结构主线（支持关系）",
+                "取用衔接（条件制约）",
+                "阶段衔接（条件制约）",
+                "分歧协调",
+                "不可用边界：无",
+            )
+        )
+        and bool(disputed_notes)
+        and all(note in report.integrated_synthesis for note in disputed_notes)
+        and "traditional_high_risk_signal_boundary"
+        not in report.integrated_synthesis
+        and "focus_topic:" not in report.integrated_synthesis
+        and "stage_signal:" not in report.integrated_synthesis
+    )
     markdown_ordered = (
         markdown.count(report.formal_synthesis) == 1
+        and markdown.count(report.integrated_synthesis) == 1
         and markdown.find(report.evidence_notes)
         < markdown.find(report.formal_synthesis)
+        < markdown.find(report.integrated_synthesis)
         < markdown.find(report.structure_analysis)
     )
     html_lower = html.lower()
     html_ordered = (
         html.count(report.formal_synthesis) == 1
+        and html.count(report.integrated_synthesis) == 1
         and html.find(report.evidence_notes)
         < html.find(report.formal_synthesis)
+        < html.find(report.integrated_synthesis)
         < html.find(report.structure_analysis)
         and "http://" not in html_lower
         and "https://" not in html_lower
@@ -116,6 +145,7 @@ def _ordinary_production_case(report: Report) -> ReportAcceptanceCaseResult:
         ),
         "formal_synthesis_coverage": _check(synthesis_complete),
         "personalized_chart_signals": _check(personalized_signals),
+        "integrated_cross_family_synthesis": _check(integrated_complete),
         "markdown_rendering": _check(markdown_ordered),
         "html_rendering": _check(html_ordered),
     }

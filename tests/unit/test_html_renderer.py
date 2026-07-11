@@ -50,6 +50,7 @@ def test_render_html_report_preserves_markdown_reading_order(sample_bazi_chart):
             report.ten_gods_summary,
             report.evidence_notes,
             report.formal_synthesis,
+            report.integrated_synthesis,
             report.structure_analysis,
             report.personality_tendencies,
             report.interpretation_boundaries,
@@ -63,9 +64,16 @@ def test_render_html_report_preserves_markdown_reading_order(sample_bazi_chart):
     assert html.count(report.evidence_notes) == 1
     assert html.count("<h3>正式知识综合</h3>") == 1
     assert html.count(report.formal_synthesis) == 1
+    assert html.count("<h3>综合脉络</h3>") == 1
+    assert html.count(report.integrated_synthesis) == 1
     _assert_in_order(
         html,
-        ("<h3>观察依据</h3>", "<h3>正式知识综合</h3>", "<h3>结构分析</h3>"),
+        (
+            "<h3>观察依据</h3>",
+            "<h3>正式知识综合</h3>",
+            "<h3>综合脉络</h3>",
+            "<h3>结构分析</h3>",
+        ),
     )
 
 

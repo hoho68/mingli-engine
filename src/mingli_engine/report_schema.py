@@ -12,6 +12,7 @@ from mingli_engine.interpretation import build_basic_interpretation
 from mingli_engine.models import (
     BaziChart,
     ExpandedReportEvidence,
+    FormalConclusion,
     KnowledgeActivationSummary,
     Report,
     ReportEvidenceAudit,
@@ -576,6 +577,153 @@ def build_formal_synthesis(
 _build_formal_synthesis = build_formal_synthesis
 
 
+INTEGRATED_SYNTHESIS_FAMILY_ORDER = (
+    "pattern_strength",
+    "five_element_balance",
+    "ten_god_relation",
+    "branch_interaction",
+    "blind_image_method",
+    "useful_god_candidate",
+    "taboo_god_candidate",
+    "remedy_boundary",
+    "luck_cycle",
+    "high_risk_signal",
+)
+
+
+def _integrated_conclusion_text(
+    conclusion: FormalConclusion | None,
+    rule_family: str,
+) -> str:
+    title = FORMAL_SYNTHESIS_RULE_TITLES[rule_family]
+    if conclusion is None:
+        return f"{title}（不可用）"
+    strength = FORMAL_SYNTHESIS_STRENGTH_LABELS.get(
+        conclusion.strength,
+        conclusion.strength,
+    )
+    signals = format_reader_chart_signals(
+        conclusion.rule_family,
+        conclusion.trace.chart_signals,
+    )
+    signal_excerpt = signals.split("、", 1)[0]
+    return f"{conclusion.title}（{strength}；{signal_excerpt}）"
+
+
+def build_integrated_synthesis(
+    expanded_evidence: ExpandedReportEvidence,
+    report_evidence_audit: ReportEvidenceAudit,
+) -> str:
+    conclusions = {
+        conclusion.rule_family: conclusion
+        for conclusion in expanded_evidence.formal_conclusions
+    }
+
+    def item(rule_family: str) -> str:
+        return _integrated_conclusion_text(
+            conclusions.get(rule_family),
+            rule_family,
+        )
+
+    status_label = FORMAL_SYNTHESIS_AUDIT_STATUS_LABELS.get(
+        report_evidence_audit.audit_status,
+        report_evidence_audit.audit_status,
+    )
+    structure_items = "、".join(
+        item(rule_family)
+        for rule_family in (
+            "pattern_strength",
+            "five_element_balance",
+            "ten_god_relation",
+            "branch_interaction",
+            "blind_image_method",
+        )
+    )
+    selection_items = "、".join(
+        item(rule_family)
+        for rule_family in (
+            "five_element_balance",
+            "useful_god_candidate",
+            "taboo_god_candidate",
+            "remedy_boundary",
+        )
+    )
+    timing_items = "、".join(
+        item(rule_family)
+        for rule_family in (
+            "pattern_strength",
+            "branch_interaction",
+            "luck_cycle",
+            "high_risk_signal",
+        )
+    )
+    disputed = [
+        conclusion
+        for conclusion in expanded_evidence.formal_conclusions
+        if conclusion.strength == "disputed"
+    ]
+    if disputed:
+        disagreement_text = "；".join(
+            (
+                f"{conclusion.title}："
+                f"{conclusion.trace.disagreement_note or '保留分歧候选，不作唯一裁决。'}"
+            )
+            for conclusion in disputed
+        )
+    else:
+        disagreement_text = "当前没有标记为有分歧的正式结论。"
+
+    missing_families = set(report_evidence_audit.missing_rule_families)
+    missing_families.update(
+        rule_family
+        for rule_family in INTEGRATED_SYNTHESIS_FAMILY_ORDER
+        if rule_family not in conclusions
+    )
+    missing_families.update(
+        conclusion.rule_family
+        for conclusion in expanded_evidence.formal_conclusions
+        if conclusion.strength == "unavailable"
+    )
+    unavailable_titles = set(expanded_evidence.unavailable_conclusions)
+    unavailable_labels = [
+        FORMAL_SYNTHESIS_RULE_TITLES[rule_family]
+        for rule_family in INTEGRATED_SYNTHESIS_FAMILY_ORDER
+        if rule_family in missing_families
+        or FORMAL_SYNTHESIS_RULE_TITLES[rule_family] in unavailable_titles
+    ]
+    if unavailable_labels:
+        unavailable_text = (
+            "不可用边界："
+            + "、".join(unavailable_labels)
+            + "。完整综合链暂不成立，相关部分保持不可用或待核。"
+        )
+    else:
+        unavailable_text = "不可用边界：无。当前十类正式结论均可进入综合阅读。"
+
+    lines = [
+        (
+            f"综合状态：{status_label}。本层只协调已审核结论的阅读关系，"
+            "不新增命理判断。"
+        ),
+        (
+            f"结构主线（支持关系）：{structure_items}。"
+            "这些结论共同提供当前结构阅读上下文，不单独决定现实结果。"
+        ),
+        (
+            f"取用衔接（条件制约）：{selection_items}。"
+            "取用与调整必须回到结构和平衡条件，保留候选，不指定唯一五行或承诺效果。"
+        ),
+        (
+            f"阶段衔接（条件制约）：{timing_items}。"
+            "阶段主题必须结合原局结构与地支条件复核；高风险与趋避只构成护栏关系，"
+            "不预测精确事件或寿命，也不替代专业建议。"
+        ),
+        f"分歧协调：{disagreement_text}",
+        unavailable_text,
+    ]
+    return "\n".join(lines)
+
+
 def _ensure_knowledge_activation_ready(
     knowledge_activation: KnowledgeActivationSummary,
 ) -> None:
@@ -600,6 +748,7 @@ def _major_body_sections(report: Report) -> str:
             report.ten_gods_summary,
             report.evidence_notes,
             report.formal_synthesis,
+            report.integrated_synthesis,
             report.structure_analysis,
             report.personality_tendencies,
             report.strengths_and_issues,
@@ -652,6 +801,10 @@ def build_report(chart: BaziChart) -> Report:
         report_evidence_audit,
     )
     formal_synthesis = build_formal_synthesis(
+        expanded_evidence,
+        report_evidence_audit,
+    )
+    integrated_synthesis = build_integrated_synthesis(
         expanded_evidence,
         report_evidence_audit,
     )
@@ -709,6 +862,7 @@ def build_report(chart: BaziChart) -> Report:
         ten_gods_summary=ten_gods_summary,
         evidence_notes=evidence_notes,
         formal_synthesis=formal_synthesis,
+        integrated_synthesis=integrated_synthesis,
         structure_analysis=structure_analysis,
         personality_tendencies=personality_tendencies,
         strengths_and_issues=strengths_and_issues,
@@ -732,6 +886,7 @@ def build_report(chart: BaziChart) -> Report:
                     ten_gods_summary,
                     evidence_notes,
                     formal_synthesis,
+                    integrated_synthesis,
                     structure_analysis,
                     personality_tendencies,
                     strengths_and_issues,

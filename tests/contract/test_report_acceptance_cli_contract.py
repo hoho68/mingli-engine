@@ -56,6 +56,9 @@ def test_report_acceptance_summary_cli_outputs_release_baseline():
         if case["case_id"] == "ordinary_production_report"
     )
     assert ordinary_case["checks"]["personalized_chart_signals"] == "passed"
+    assert ordinary_case["checks"]["integrated_cross_family_synthesis"] == (
+        "passed"
+    )
     assert payload["next_action"] == "release_reports_with_guardrails"
 
     serialized = json.dumps(payload, ensure_ascii=False)

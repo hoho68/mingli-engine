@@ -5709,6 +5709,7 @@ class Report:
     ten_gods_summary: str
     evidence_notes: str
     formal_synthesis: str
+    integrated_synthesis: str
     structure_analysis: str
     personality_tendencies: str
     strengths_and_issues: str

@@ -282,6 +282,100 @@ def test_build_report_exposes_complete_formal_synthesis(sample_bazi_chart):
         assert raw_pillar_prefix not in report.evidence_notes
 
 
+def test_build_report_exposes_guarded_cross_family_synthesis(sample_bazi_chart):
+    report = build_report(sample_bazi_chart)
+    integrated = report.integrated_synthesis
+
+    for section_label in (
+        "综合状态：完整（含护栏）",
+        "结构主线（支持关系）",
+        "取用衔接（条件制约）",
+        "阶段衔接（条件制约）",
+        "分歧协调",
+        "不可用边界",
+    ):
+        assert integrated.count(section_label) == 1
+
+    for title in (
+        "格局与旺衰候选",
+        "五行强弱倾向",
+        "十神组合关系",
+        "刑冲合害线索",
+        "盲派象法取象",
+        "用神候选边界",
+        "忌神候选边界",
+        "趋避调整边界",
+        "大运流年主题",
+        "高风险信号边界",
+    ):
+        assert title in integrated
+
+    disputed = [
+        conclusion
+        for conclusion in report.expanded_evidence.formal_conclusions
+        if conclusion.strength == "disputed"
+    ]
+    assert disputed
+    for conclusion in disputed:
+        assert conclusion.title in integrated
+        assert conclusion.trace.disagreement_note in integrated
+
+    assert "不可用边界：无" in integrated
+    assert "不预测精确事件或寿命" in integrated
+    assert "traditional_high_risk_signal_boundary" not in integrated
+
+
+def test_build_integrated_synthesis_degrades_when_required_families_are_missing():
+    unavailable = FormalConclusion(
+        conclusion_id="formal_high_risk_signal",
+        title="高风险信号边界",
+        body="当前证据不足，不输出高风险判断。",
+        rule_family="high_risk_signal",
+        strength="unavailable",
+        risk_tier="high_risk",
+        trace=EvidenceTrace(
+            trace_id="trace_high_risk_signal",
+            conclusion_id="formal_high_risk_signal",
+            chart_signals=["traditional_high_risk_signal_boundary"],
+            evidence_ids=[],
+            assumptions=["rule_family:high_risk_signal"],
+        ),
+    )
+    expanded = ExpandedReportEvidence(
+        source_summary=[],
+        formal_conclusions=[unavailable],
+        unavailable_conclusions=[unavailable.title],
+    )
+    audit = ReportEvidenceAudit(
+        audit_status="incomplete",
+        rule_family_count=1,
+        formal_conclusion_count=1,
+        traced_evidence_unit_count=0,
+        enabled_rule_families=["high_risk_signal"],
+        conclusion_rule_families=[],
+        missing_rule_families=["pattern_strength", "useful_god_candidate"],
+        open_conflicts=[],
+        guardrail_count=1,
+        unavailable_conclusion_count=1,
+    )
+
+    integrated = report_schema.build_integrated_synthesis(expanded, audit)
+
+    assert "综合状态：不完整" in integrated
+    assert "完整综合链暂不成立" in integrated
+    assert "格局与旺衰候选" in integrated
+    assert "用神候选边界" in integrated
+    assert "高风险信号边界" in integrated
+    assert "不可用边界：" in integrated
+    unavailable_line = next(
+        line
+        for line in integrated.splitlines()
+        if line.startswith("不可用边界：")
+    )
+    for title in report_schema.FORMAL_SYNTHESIS_RULE_TITLES.values():
+        assert title in unavailable_line
+
+
 def test_format_reader_chart_signals_translates_filters_deduplicates_and_limits():
     formatted = report_schema.format_reader_chart_signals(
         "blind_image_method",
@@ -398,6 +492,14 @@ def test_formal_synthesis_changes_with_chart_signals_without_changing_evidence(
             second_report,
             rule_family,
         )
+
+    assert first_report.integrated_synthesis != second_report.integrated_synthesis
+    for signal in (
+        "日主偏弱候选，宜先观察支持条件。",
+        "用神候选边界（候选；水）",
+        "大运流年主题（候选；阶段主题转向协作与稳定积累，只作趋势观察。）",
+    ):
+        assert signal in second_report.integrated_synthesis
 
     assert first_report.report_evidence_audit.traced_evidence_unit_count == 111
     assert second_report.report_evidence_audit.traced_evidence_unit_count == 111
@@ -679,6 +781,7 @@ def test_report_formal_synthesis_follows_evidence_notes():
     evidence_notes_index = report_field_names.index("evidence_notes")
 
     assert report_field_names[evidence_notes_index + 1] == "formal_synthesis"
+    assert report_field_names[evidence_notes_index + 2] == "integrated_synthesis"
 
 
 def test_report_public_contract_fields_remain_stable_for_012():
@@ -693,6 +796,7 @@ def test_report_public_contract_fields_remain_stable_for_012():
         "ten_gods_summary",
         "evidence_notes",
         "formal_synthesis",
+        "integrated_synthesis",
         "structure_analysis",
         "personality_tendencies",
         "strengths_and_issues",

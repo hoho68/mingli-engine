@@ -47,6 +47,7 @@ def test_render_markdown_report_uses_layered_reading_order(sample_bazi_chart):
             "### 十神摘要",
             "### 观察依据",
             "### 正式知识综合",
+            "### 综合脉络",
             "### 结构分析",
             "### 性格倾向",
             "## 第三层：解读边界",
@@ -86,8 +87,24 @@ def test_render_markdown_report_includes_formal_synthesis_once(sample_bazi_chart
     assert markdown.count(report.formal_synthesis) == 1
     _assert_in_order(
         markdown,
-        ("### 观察依据", "### 正式知识综合", "### 结构分析"),
+        (
+            "### 观察依据",
+            "### 正式知识综合",
+            "### 综合脉络",
+            "### 结构分析",
+        ),
     )
+
+
+def test_render_markdown_report_includes_integrated_synthesis_once(
+    sample_bazi_chart,
+):
+    report = build_report(sample_bazi_chart)
+
+    markdown = render_markdown_report(report)
+
+    assert markdown.count("### 综合脉络") == 1
+    assert markdown.count(report.integrated_synthesis) == 1
 
 
 def test_render_markdown_report_keeps_chart_source_transparent(sample_bazi_chart):

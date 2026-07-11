@@ -81,6 +81,9 @@ def test_generate_report_outputs_expected_markdown_sections_and_source_note():
     assert "### 四柱与五行摘要" in markdown.splitlines()
     assert "### 行动建议" in markdown.splitlines()
     assert markdown.count("### 正式知识综合") == 1
+    assert markdown.count("### 综合脉络") == 1
+    assert "综合状态：完整（含护栏）" in markdown
+    assert "高风险与趋避只构成护栏关系" in markdown
     assert "示例排盘由外部工具核对，仅用于 CLI 合约测试" in markdown
     _assert_plain_language_report(markdown)
     assert "外部排盘已核对" in markdown
@@ -144,6 +147,9 @@ def test_generate_report_outputs_complete_html_from_external_verified_chart():
     assert html.count("盘面信号：") == 10
     assert "traditional_high_risk_signal_boundary" not in html
     assert html.count("<h3>正式知识综合</h3>") == 1
+    assert html.count("<h3>综合脉络</h3>") == 1
+    assert "综合状态：完整（含护栏）" in html
+    assert "高风险与趋避只构成护栏关系" in html
     assert "rule_family=high_risk_signal" in html
     _assert_plain_language_report(html)
     assert "<script" not in html.lower()

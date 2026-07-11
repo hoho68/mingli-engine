@@ -6,6 +6,9 @@ formal synthesis, evidence tracing, Markdown and HTML rendering, conflict
 guardrails, high-risk rejection, and unavailable-evidence degradation.
 The ordinary production case also requires all ten rule families to expose
 sanitized chart-specific signals without raw internal markers.
+It also requires one cross-family synthesis layer that coordinates structural,
+selection, timing, disagreement, and unavailable threads without adding new
+formal conclusions.
 
 It does not parse source material, create interpretation rules, mutate the
 source library, write 013 candidate or review records, promote evidence, or
@@ -43,7 +46,12 @@ Any failed case changes the aggregate acceptance status to `blocked`.
 Builds a report from an in-memory synthetic profile. The case verifies report
 safety, knowledge activation, evidence audit, the 111-unit trace count, all ten
 formal-synthesis markers, ten reader-facing chart-signal segments, removal of
-raw high-risk machine markers, and consistent Markdown and HTML reading order.
+raw high-risk machine markers, a complete guarded cross-family synthesis, and
+consistent Markdown and HTML reading order.
+
+The cross-family check requires `结构主线`, `取用衔接`, `阶段衔接`, `分歧协调`,
+and `不可用边界`. Current disputed notes must remain visible, and the section
+must render exactly once after formal knowledge synthesis.
 
 ### Conflict Guardrail
 

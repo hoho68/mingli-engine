@@ -51,6 +51,7 @@ def test_ordinary_report_case_covers_content_renderers_and_safety():
         "rule_family_coverage": "passed",
         "formal_synthesis_coverage": "passed",
         "personalized_chart_signals": "passed",
+        "integrated_cross_family_synthesis": "passed",
         "markdown_rendering": "passed",
         "html_rendering": "passed",
     }

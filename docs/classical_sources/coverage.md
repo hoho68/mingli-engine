@@ -67,6 +67,7 @@ return the same activation packet as JSON before enabling report workflows.
 - `traced-evidence-units=111`
 - `formal-rule-families=10`
 - `personalized-chart-signal-segments=10`
+- `integrated-cross-family-synthesis=passed`
 - `missing-rule-families=0`
 - `open-conflicts=1`
 - `next-action=release_reports_with_guardrails`
@@ -74,8 +75,9 @@ return the same activation packet as JSON before enabling report workflows.
 The four cases cover an ordinary production report, the current conflict
 guardrail, exact-lifespan rejection, and unavailable-evidence degradation.
 The ordinary case additionally verifies one sanitized chart-signal segment per
-rule family. All cases use in-memory fixtures and do not write source-library,
-013, or 012 data.
+rule family plus one integrated structural/selection/timing/disagreement layer.
+All cases use in-memory fixtures and do not write source-library, 013, or 012
+data.
 
 Machine-readable check: run `mingli-engine report-acceptance-summary`. See
 [report_acceptance.md](report_acceptance.md) for scenario and boundary details.
