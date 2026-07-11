@@ -18,16 +18,16 @@ STEM_ELEMENT = {
     "癸": "水",
 }
 STEM_POLARITY = {
-    "甲": "阳",
-    "乙": "阴",
-    "丙": "阳",
-    "丁": "阴",
-    "戊": "阳",
-    "己": "阴",
-    "庚": "阳",
-    "辛": "阴",
-    "壬": "阳",
-    "癸": "阴",
+    "甲": "yang",
+    "乙": "yin",
+    "丙": "yang",
+    "丁": "yin",
+    "戊": "yang",
+    "己": "yin",
+    "庚": "yang",
+    "辛": "yin",
+    "壬": "yang",
+    "癸": "yin",
 }
 BRANCH_ELEMENT = {
     "子": "水",
@@ -94,7 +94,7 @@ def growth_phase(stem: str, branch: str) -> str:
 
     start_index = BRANCHES.index(GROWTH_START[stem])
     branch_index = BRANCHES.index(branch)
-    if STEM_POLARITY[stem] == "阳":
+    if STEM_POLARITY[stem] == "yang":
         phase_index = (branch_index - start_index) % len(BRANCHES)
     else:
         phase_index = (start_index - branch_index) % len(BRANCHES)

@@ -28,16 +28,16 @@ def test_canonical_sequences_and_element_cycles() -> None:
 @pytest.mark.parametrize(
     ("stem", "element", "polarity", "growth_start"),
     [
-        ("甲", "木", "阳", "亥"),
-        ("乙", "木", "阴", "午"),
-        ("丙", "火", "阳", "寅"),
-        ("丁", "火", "阴", "酉"),
-        ("戊", "土", "阳", "寅"),
-        ("己", "土", "阴", "酉"),
-        ("庚", "金", "阳", "巳"),
-        ("辛", "金", "阴", "子"),
-        ("壬", "水", "阳", "申"),
-        ("癸", "水", "阴", "卯"),
+        ("甲", "木", "yang", "亥"),
+        ("乙", "木", "yin", "午"),
+        ("丙", "火", "yang", "寅"),
+        ("丁", "火", "yin", "酉"),
+        ("戊", "土", "yang", "寅"),
+        ("己", "土", "yin", "酉"),
+        ("庚", "金", "yang", "巳"),
+        ("辛", "金", "yin", "子"),
+        ("壬", "水", "yang", "申"),
+        ("癸", "水", "yin", "卯"),
     ],
 )
 def test_stem_facts(stem: str, element: str, polarity: str, growth_start: str) -> None:
