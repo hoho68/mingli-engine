@@ -49,7 +49,15 @@ def test_classifies_current_calculator_placeholders_as_not_computed(
     assert states["luck_cycle"] == "not_computed"
 
 
-@pytest.mark.parametrize("marker", ["  NOT CALCULATED  ", "  NoT CoMpUtEd  "])
+@pytest.mark.parametrize(
+    "marker",
+    [
+        "  NOT CALCULATED  ",
+        "  NoT CoMpUtEd  ",
+        "NOT CALCULATED: pending strength review.",
+        "not computed; pending strength review.",
+    ],
+)
 def test_classifies_english_markers_case_insensitively(
     sample_bazi_chart,
     marker,
@@ -64,6 +72,49 @@ def test_classifies_english_markers_case_insensitively(
 
     assert states["pattern_strength"] == "not_computed"
     assert states["luck_cycle"] == "not_computed"
+
+
+@pytest.mark.parametrize("marker", ["", "   ", "暂未", "未计算", "未展开评估"])
+def test_classifies_empty_and_exact_chinese_markers_as_not_computed(
+    sample_bazi_chart,
+    marker,
+):
+    chart = replace(
+        sample_bazi_chart,
+        strength_assessment=marker,
+        luck_cycle_summary=marker,
+    )
+
+    states = classify_chart_calculation_states(chart)
+
+    assert states["pattern_strength"] == "not_computed"
+    assert states["luck_cycle"] == "not_computed"
+
+
+def test_chinese_computed_signal_may_rule_out_an_unmet_condition(
+    sample_bazi_chart,
+):
+    chart = replace(
+        sample_bazi_chart,
+        strength_assessment="日主偏强，暂未见从格条件。",
+    )
+
+    states = classify_chart_calculation_states(chart)
+
+    assert states["pattern_strength"] == "computed"
+
+
+def test_english_computed_signal_may_note_an_uncomputed_secondary_item(
+    sample_bazi_chart,
+):
+    chart = replace(
+        sample_bazi_chart,
+        strength_assessment="Strength computed; auxiliary stars not computed.",
+    )
+
+    states = classify_chart_calculation_states(chart)
+
+    assert states["pattern_strength"] == "computed"
 
 
 def test_formal_interpretation_builds_source_backed_conclusions(sample_bazi_chart):

@@ -19,12 +19,23 @@ _NOT_COMPUTED_MARKERS = (
     "not computed",
 )
 
+_KNOWN_NOT_COMPUTED_PLACEHOLDERS = (
+    "日主强弱暂未展开评估，建议结合后续规则与人工复核。",
+    "大运流年暂未计算，当前结果仅覆盖本命四柱。",
+)
+
+_LEADING_NOT_COMPUTED_MARKERS = ("not calculated", "not computed")
+
 
 def _is_computed_signal(value: str) -> bool:
     normalized = value.strip().casefold()
-    return bool(normalized) and not any(
-        marker in normalized for marker in _NOT_COMPUTED_MARKERS
-    )
+    if not normalized:
+        return False
+    if normalized in _NOT_COMPUTED_MARKERS:
+        return False
+    if normalized in _KNOWN_NOT_COMPUTED_PLACEHOLDERS:
+        return False
+    return not normalized.startswith(_LEADING_NOT_COMPUTED_MARKERS)
 
 
 def classify_chart_calculation_states(chart: BaziChart) -> dict[str, str]:
