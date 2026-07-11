@@ -425,6 +425,33 @@ class KnowledgeActivationSummary:
 
 
 @dataclass(frozen=True)
+class ReportAcceptanceCaseResult:
+    case_id: str
+    scenario_type: str
+    status: str
+    checks: dict[str, str]
+    guardrails: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class ReportAcceptanceSummary:
+    baseline_id: str
+    acceptance_status: str
+    case_count: int
+    passed_case_count: int
+    activation_status: str
+    report_audit_status: str
+    approved_evidence_count: int
+    rule_family_count: int
+    traced_evidence_unit_count: int
+    missing_rule_families: list[str]
+    open_conflicts: list[str]
+    cases: list[ReportAcceptanceCaseResult]
+    guardrails: list[str]
+    next_action: str
+
+
+@dataclass(frozen=True)
 class SourceMaterial:
     material_id: str
     title: str

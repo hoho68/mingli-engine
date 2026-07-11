@@ -14,6 +14,14 @@ For the current new-material reading and learning closure state, start with
 the completed source-window learning closure, 017 learning-reference sync, and
 candidate/formal evidence boundary audit, and gated ordinary source-selection and followup checkpoints into one continuation entrypoint.
 
+## Report Acceptance Baseline
+
+Use [report_acceptance.md](report_acceptance.md) after knowledge activation to
+run the four-scenario release gate. The acceptance summary verifies production
+report content, 111-unit evidence tracing, all ten rule families, Markdown/HTML
+rendering, current conflict guardrails, high-risk rejection, and unavailable
+degradation without mutating source-library, 013, or 012 data.
+
 ## Preparation Materials
 
 Root-level PDF files and the root `Markdown/` directory are user-provided

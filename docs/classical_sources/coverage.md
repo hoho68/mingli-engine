@@ -9,7 +9,7 @@ from the current JSON corpus instead of maintained by hand.
 
 ## Current Status
 
-Snapshot date: 2026-07-10
+Snapshot date: 2026-07-11
 
 - Approved evidence units: 111
 - Registered sources: 29
@@ -56,6 +56,26 @@ high-risk scope conflict is intentionally visible to report traces.
 
 Machine-readable check: run `mingli-engine knowledge-activation-summary` to
 return the same activation packet as JSON before enabling report workflows.
+
+## Report Acceptance Packet
+
+- `baseline-id=report_acceptance_v1`
+- `acceptance-status=ready_with_guardrails`
+- `acceptance-cases=4`
+- `passed-acceptance-cases=4`
+- `approved-evidence-units=111`
+- `traced-evidence-units=111`
+- `formal-rule-families=10`
+- `missing-rule-families=0`
+- `open-conflicts=1`
+- `next-action=release_reports_with_guardrails`
+
+The four cases cover an ordinary production report, the current conflict
+guardrail, exact-lifespan rejection, and unavailable-evidence degradation.
+They use in-memory fixtures and do not write source-library, 013, or 012 data.
+
+Machine-readable check: run `mingli-engine report-acceptance-summary`. See
+[report_acceptance.md](report_acceptance.md) for scenario and boundary details.
 
 ## Evidence Counts By Source
 

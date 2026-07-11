@@ -433,7 +433,7 @@ FORMAL_SYNTHESIS_AUDIT_STATUS_LABELS = {
 }
 
 
-def _build_formal_synthesis(
+def build_formal_synthesis(
     expanded_evidence: ExpandedReportEvidence,
     report_evidence_audit: ReportEvidenceAudit,
 ) -> str:
@@ -496,6 +496,9 @@ def _build_formal_synthesis(
             )
 
     return "\n".join(lines)
+
+
+_build_formal_synthesis = build_formal_synthesis
 
 
 def _ensure_knowledge_activation_ready(
@@ -573,7 +576,7 @@ def build_report(chart: BaziChart) -> Report:
         knowledge_activation,
         report_evidence_audit,
     )
-    formal_synthesis = _build_formal_synthesis(
+    formal_synthesis = build_formal_synthesis(
         expanded_evidence,
         report_evidence_audit,
     )

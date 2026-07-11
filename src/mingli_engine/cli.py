@@ -19,6 +19,7 @@ from mingli_engine.models import (
     SafetyReviewResult,
 )
 from mingli_engine.report_schema import KnowledgeActivationError, build_report
+from mingli_engine.report_acceptance import build_report_acceptance_summary
 from mingli_engine.safety import safety_check
 from mingli_engine.validation import validate_birth_profile
 from mingli_engine import promotion
@@ -267,6 +268,11 @@ def _knowledge_activation_summary(args: argparse.Namespace) -> int:
     return 0
 
 
+def _report_acceptance_summary(args: argparse.Namespace) -> int:
+    _write_json(build_report_acceptance_summary())
+    return 0
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mingli-engine")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -308,6 +314,9 @@ def _build_parser() -> argparse.ArgumentParser:
     activation_parser = subparsers.add_parser("knowledge-activation-summary")
     activation_parser.add_argument("--corpus-dir", default=None)
     activation_parser.set_defaults(handler=_knowledge_activation_summary)
+
+    acceptance_parser = subparsers.add_parser("report-acceptance-summary")
+    acceptance_parser.set_defaults(handler=_report_acceptance_summary)
 
     return parser
 
