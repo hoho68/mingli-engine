@@ -267,13 +267,22 @@ def test_render_markdown_report_escapes_reasoned_dynamic_text(sample_bazi_chart)
 def test_analysis_markdown_sanitizes_every_dynamic_report_field(sample_bazi_chart):
     profile = replace(
         sample_bazi_chart.birth_profile,
-        birthplace="# birthplace <script>place</script> [place](https://place) | `p`",
-        focus_topic="# focus <script>focus</script> [focus](https://focus) | `f`",
+        birthplace=(
+            "# birthplace <script>place</script> [place](https://place) | `p`"
+            "\nplace heading\n==="
+        ),
+        focus_topic=(
+            "# focus <script>focus</script> [focus](https://focus) | `f`"
+            "\nfocus heading\n==="
+        ),
     )
     report, _ = _build_reasoned_report(
         replace(sample_bazi_chart, birth_profile=profile)
     )
-    payload = "# report <script>report</script> [link](https://report) | `code`"
+    payload = (
+        "# report <script>report</script> [link](https://report) | `code`"
+        "\nattacker heading\n==="
+    )
     text_fields = (
         "title",
         "disclaimer",
@@ -341,5 +350,7 @@ def test_analysis_markdown_sanitizes_every_dynamic_report_field(sample_bazi_char
     assert "| `" not in markdown
     for injected_heading in ("# birthplace", "# focus", "# report"):
         assert injected_heading not in markdown.splitlines()
+    assert "===" not in markdown.splitlines()
+    assert r"\=\=\=" in markdown.splitlines()
     assert r"\# report &lt;script&gt;report&lt;/script&gt;" in markdown
     assert r"\[link\]\(https://report\) \| \`code\`" in markdown

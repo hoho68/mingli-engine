@@ -14,7 +14,7 @@ def _has_reasoned_analysis(report: Report) -> bool:
 
 def _markdown_text(value: str) -> str:
     escaped = escape(value, quote=False)
-    markdown_punctuation = frozenset("\\`*_{}[]()#+-.!|~")
+    markdown_punctuation = frozenset("\\`*_{}[]()#+-.!|~=")
     return "".join(
         f"\\{character}" if character in markdown_punctuation else character
         for character in escaped
