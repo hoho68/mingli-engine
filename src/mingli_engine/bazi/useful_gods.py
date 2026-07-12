@@ -601,23 +601,24 @@ def _validate_patterns(
             item.reasoning.confidence,
             context=f"pattern {item.pattern_id}",
         )
-        has_provenance_damage = any(
-            condition.startswith(("exposed:", "hidden:"))
-            for condition in item.damage_conditions
-        )
-        if not has_provenance_damage:
-            continue
         for condition in item.damage_conditions:
-            if condition not in provenance_index:
-                raise ValueError(
-                    f"damage condition provenance is absent from facts: {condition}"
-                )
             if condition not in item.reasoning.opposing_signals:
                 raise ValueError(
                     "damage condition must be present in reasoning opposing "
                     f"signals: {condition}"
                 )
+            if (
+                condition.startswith(("exposed:", "hidden:"))
+                and condition not in provenance_index
+            ):
+                raise ValueError(
+                    f"damage condition provenance is absent from facts: {condition}"
+                )
         for condition in item.rescue_conditions:
+            if not condition.startswith(("exposed:", "hidden:")):
+                raise ValueError(
+                    f"rescue condition provenance must be structured: {condition}"
+                )
             if condition not in provenance_index:
                 raise ValueError(
                     f"rescue condition provenance is absent from facts: {condition}"

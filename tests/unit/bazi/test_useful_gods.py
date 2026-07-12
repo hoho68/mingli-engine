@@ -598,6 +598,22 @@ def test_rejects_fabricated_pattern_using_present_unrelated_tokens() -> None:
         calculate_useful_god_candidates(facts, actual_strength, (fabricated,))
 
 
+def test_rejects_forged_nonprovenance_damage_with_present_rescue() -> None:
+    facts, actual_strength, expected = damaged_pattern_case()
+    fabricated = replace(
+        expected,
+        damage_conditions=("countercondition:forged",),
+        reasoning=replace(
+            expected.reasoning,
+            opposing_signals=("countercondition:forged",),
+        ),
+    )
+    assert expected.rescue_conditions
+
+    with pytest.raises(ValueError, match="canonical pattern mismatch"):
+        calculate_useful_god_candidates(facts, actual_strength, (fabricated,))
+
+
 def test_rejects_illness_pattern_absent_from_recomputed_baseline() -> None:
     facts, actual_strength, expected = damaged_pattern_case()
     fabricated = replace(
