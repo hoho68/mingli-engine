@@ -1,5 +1,8 @@
 from dataclasses import replace
 
+from mingli_engine.bazi import CalculationBundle, build_legacy_not_computed_bundle
+from mingli_engine.bazi.analysis import _require_calculation_bundle_binding
+from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.classical_sources import (
     load_approved_evidence_units,
     load_classical_sources,
@@ -250,6 +253,12 @@ def _build_report_evidence_audit(
     expanded_evidence: ExpandedReportEvidence,
     knowledge_activation: KnowledgeActivationSummary,
 ) -> ReportEvidenceAudit:
+    calculation_statuses = [
+        assumption.removeprefix("calculation_status:")
+        for conclusion in expanded_evidence.formal_conclusions
+        for assumption in conclusion.trace.assumptions
+        if assumption.startswith("calculation_status:")
+    ]
     conclusion_rule_families = [
         conclusion.rule_family
         for conclusion in expanded_evidence.formal_conclusions
@@ -291,6 +300,10 @@ def _build_report_evidence_audit(
         guardrail_count=len(knowledge_activation.guardrails)
         + len(knowledge_activation.open_conflicts),
         unavailable_conclusion_count=len(expanded_evidence.unavailable_conclusions),
+        computed_rule_family_count=calculation_statuses.count("computed"),
+        indeterminate_rule_family_count=calculation_statuses.count("indeterminate"),
+        disputed_rule_family_count=calculation_statuses.count("disputed"),
+        not_computed_rule_family_count=calculation_statuses.count("not_computed"),
     )
 
 
@@ -952,9 +965,24 @@ def _major_body_sections(report: Report) -> str:
     )
 
 
-def build_report(chart: BaziChart) -> Report:
+def _default_not_computed_calculation(chart: BaziChart) -> CalculationBundle:
+    try:
+        return build_legacy_not_computed_bundle(chart)
+    except ValueError:
+        compatible_chart = calculate_bazi_chart(chart.birth_profile)
+        return build_legacy_not_computed_bundle(compatible_chart)
+
+
+def build_report(
+    chart: BaziChart,
+    calculation: CalculationBundle | None = None,
+) -> Report:
     if len(chart.pillars) != 4:
         raise ValueError("BaziChart must contain exactly four pillars")
+    supplied_calculation = calculation
+    calculation = calculation or _default_not_computed_calculation(chart)
+    if supplied_calculation is not None:
+        _require_calculation_bundle_binding(chart, calculation)
 
     disclaimer = (
         "本报告定位为传统命理知识的文化解读与自我反思材料，不是科学预测，"
@@ -981,6 +1009,7 @@ def build_report(chart: BaziChart) -> Report:
         chart,
         evidence_units,
         source_conflicts,
+        calculation,
     )
     report_evidence_audit = _build_report_evidence_audit(
         expanded_evidence,

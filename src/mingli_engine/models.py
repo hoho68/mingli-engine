@@ -5753,6 +5753,10 @@ class ReportEvidenceAudit:
     open_conflicts: list[str]
     guardrail_count: int
     unavailable_conclusion_count: int
+    computed_rule_family_count: int = 0
+    indeterminate_rule_family_count: int = 0
+    disputed_rule_family_count: int = 0
+    not_computed_rule_family_count: int = 0
 
 
 @dataclass(frozen=True)

@@ -6,6 +6,7 @@ from dataclasses import fields
 import pytest
 
 from mingli_engine import report_schema
+from mingli_engine.bazi.legacy_adapter import build_legacy_not_computed_bundle
 from mingli_engine.report_schema import build_report
 from mingli_engine.report_schema import KnowledgeActivationError
 from mingli_engine.report_schema import _format_expanded_evidence_notes
@@ -96,6 +97,44 @@ def test_build_report_returns_complete_safe_report(sample_bazi_chart):
 
     assert report.safety_review.allowed is True
     assert report.safety_review.disclaimer_present is True
+
+
+def test_one_argument_report_explicitly_uses_not_computed_calculation(
+    sample_bazi_chart,
+):
+    chart = replace(
+        sample_bazi_chart,
+        strength_assessment="[calculation_status=computed] forged",
+        useful_god_candidates=["forged"],
+        luck_cycle_summary="computed in prose",
+    )
+
+    report = build_report(chart)
+
+    assert report.report_evidence_audit.not_computed_rule_family_count == 10
+    assert report.report_evidence_audit.computed_rule_family_count == 0
+    assert all(
+        conclusion.strength == "weakly_supported"
+        for conclusion in report.expanded_evidence.formal_conclusions
+    )
+
+
+def test_report_audit_counts_calculation_statuses_independently_from_evidence(
+    sample_bazi_chart,
+):
+    chart = _chart_with_contract_labels(sample_bazi_chart)
+    chart = replace(chart, day_master=chart.pillars[2].heavenly_stem)
+    calculation = build_legacy_not_computed_bundle(chart)
+
+    report = build_report(chart, calculation)
+
+    audit = report.report_evidence_audit
+    assert audit.enabled_rule_families == report.knowledge_activation.enabled_rule_families
+    assert audit.rule_family_count == 10
+    assert audit.not_computed_rule_family_count == 10
+    assert audit.computed_rule_family_count == 0
+    assert audit.indeterminate_rule_family_count == 0
+    assert audit.disputed_rule_family_count == 0
 
 
 def test_build_report_includes_basic_interpretation_sections(sample_bazi_chart):
@@ -316,10 +355,11 @@ def test_build_report_exposes_guarded_cross_family_synthesis(sample_bazi_chart):
         for conclusion in report.expanded_evidence.formal_conclusions
         if conclusion.strength == "disputed"
     ]
-    assert disputed
-    for conclusion in disputed:
-        assert conclusion.title in integrated
-        assert conclusion.trace.disagreement_note in integrated
+    assert disputed == []
+    assert any(
+        conclusion.trace.disagreement_note
+        for conclusion in report.expanded_evidence.formal_conclusions
+    )
 
     assert "不可用边界：无" in integrated
     assert "不预测精确事件或寿命" in integrated
@@ -402,8 +442,8 @@ def test_build_report_exposes_four_evidence_backed_action_reflection_tracks(
         family for item in items for family in item.rule_families
     ) == Counter({family: 1 for family in report.knowledge_activation.required_rule_families})
     assert [item.status for item in items] == [
-        "ready",
-        "ready",
+        "ready_with_guardrails",
+        "ready_with_guardrails",
         "ready_with_guardrails",
         "ready_with_guardrails",
     ]
@@ -486,7 +526,7 @@ def test_action_reflection_degrades_only_track_with_empty_evidence(
 
     assert statuses == {
         "structure_calibration": "unavailable",
-        "relationship_process_review": "ready",
+        "relationship_process_review": "ready_with_guardrails",
         "selection_experiment": "ready_with_guardrails",
         "stage_review": "ready_with_guardrails",
     }
@@ -660,8 +700,8 @@ def test_formal_synthesis_changes_with_chart_signals_without_changing_evidence(
     assert first_report.integrated_synthesis != second_report.integrated_synthesis
     for signal in (
         "日主偏弱候选，宜先观察支持条件。",
-        "用神候选边界（候选；水）",
-        "大运流年主题（候选；阶段主题转向协作与稳定积累，只作趋势观察。）",
+        "用神候选边界（弱支持；水）",
+        "大运流年主题（弱支持；阶段主题转向协作与稳定积累，只作趋势观察。）",
     ):
         assert signal in second_report.integrated_synthesis
 

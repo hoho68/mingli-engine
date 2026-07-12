@@ -1,6 +1,7 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 
+from mingli_engine.bazi.result_models import CalculationBundle, ReasonedResult
 from mingli_engine.models import (
     BaziChart,
     EvidenceTrace,
@@ -11,49 +12,108 @@ from mingli_engine.models import (
 )
 
 
-_NOT_COMPUTED_MARKERS = (
-    "暂未",
-    "未计算",
-    "未展开评估",
-    "not calculated",
-    "not computed",
-)
-
-_KNOWN_NOT_COMPUTED_PLACEHOLDERS = (
-    "日主强弱暂未展开评估，建议结合后续规则与人工复核。",
-    "大运流年暂未计算，当前结果仅覆盖本命四柱。",
-)
-
-_LEADING_NOT_COMPUTED_MARKERS = ("not calculated", "not computed")
+_STATUS_PRIORITY = {
+    "not_computed": 0,
+    "indeterminate": 1,
+    "computed": 2,
+    "disputed": 3,
+}
+_CONFIDENCE_PRIORITY = {"low": 0, "medium": 1, "high": 2}
 
 
-def _is_computed_signal(value: str) -> bool:
-    normalized = value.strip().casefold()
-    if not normalized:
-        return False
-    if normalized in _NOT_COMPUTED_MARKERS:
-        return False
-    if normalized in _KNOWN_NOT_COMPUTED_PLACEHOLDERS:
-        return False
-    return not normalized.startswith(_LEADING_NOT_COMPUTED_MARKERS)
+def _not_computed_reasoning(rule_family: str) -> ReasonedResult:
+    reason = f"no_v1_calculation_for:{rule_family}"
+    return ReasonedResult(
+        status="not_computed",
+        conclusion=f"No V1 calculation is available for {rule_family}.",
+        confidence="low",
+        missing_inputs=(reason,),
+        rule_ids=(reason,),
+    )
 
 
-def classify_chart_calculation_states(chart: BaziChart) -> dict[str, str]:
+def _aggregate_reasoning(
+    rule_family: str,
+    reasonings: tuple[ReasonedResult, ...],
+) -> ReasonedResult:
+    if not reasonings:
+        return _not_computed_reasoning(rule_family)
+    status = max(reasonings, key=lambda item: _STATUS_PRIORITY[item.status]).status
+    driving = tuple(item for item in reasonings if item.status == status)
+    confidence = min(
+        driving,
+        key=lambda item: _CONFIDENCE_PRIORITY[item.confidence],
+    ).confidence
+
+    def distinct(values: tuple[str, ...]) -> tuple[str, ...]:
+        return tuple(dict.fromkeys(value for value in values if value))
+
+    return ReasonedResult(
+        status=status,
+        conclusion=" | ".join(
+            f"{index + 1}:{item.conclusion}" for index, item in enumerate(reasonings)
+        ),
+        confidence=confidence,
+        supporting_signals=distinct(
+            tuple(signal for item in reasonings for signal in item.supporting_signals)
+        ),
+        opposing_signals=distinct(
+            tuple(signal for item in reasonings for signal in item.opposing_signals)
+        ),
+        assumptions=distinct(
+            tuple(value for item in reasonings for value in item.assumptions)
+        ),
+        missing_inputs=distinct(
+            tuple(value for item in reasonings for value in item.missing_inputs)
+        ),
+        rule_ids=distinct(tuple(value for item in reasonings for value in item.rule_ids)),
+    )
+
+
+def _school_reasonings(
+    calculation: CalculationBundle,
+    disagreement_label: str | None = None,
+) -> tuple[ReasonedResult, ...]:
+    if disagreement_label is None:
+        return tuple(item.reasoning for item in calculation.schools)
+    rule_id = f"school.cross_school_disagreement.{disagreement_label}"
+    return tuple(
+        item.reasoning
+        for item in calculation.schools
+        if item.reasoning.status != "disputed" or rule_id in item.reasoning.rule_ids
+    )
+
+
+def _family_reasoning(
+    calculation: CalculationBundle,
+    rule_family: str,
+) -> ReasonedResult:
+    if rule_family in {"pattern_strength", "five_element_balance"}:
+        reasonings: tuple[ReasonedResult, ...] = (calculation.strength.reasoning,)
+        if rule_family == "pattern_strength":
+            reasonings += tuple(item.reasoning for item in calculation.patterns)
+            reasonings += _school_reasonings(calculation, "pattern_preferences")
+        return _aggregate_reasoning(rule_family, reasonings)
+    if rule_family in {"useful_god_candidate", "remedy_boundary"}:
+        reasonings = tuple(item.reasoning for item in calculation.useful_gods)
+        reasonings += _school_reasonings(calculation, "useful_god_preferences")
+        return _aggregate_reasoning(rule_family, reasonings)
+    if rule_family == "blind_image_method":
+        return _aggregate_reasoning(
+            rule_family,
+            _school_reasonings(calculation),
+        )
+    if rule_family == "luck_cycle":
+        return calculation.luck_cycles.reasoning
+    return _not_computed_reasoning(rule_family)
+
+
+def classify_chart_calculation_states(
+    calculation: CalculationBundle,
+) -> dict[str, str]:
     return {
-        "pattern_strength": (
-            "computed"
-            if _is_computed_signal(chart.strength_assessment)
-            else "not_computed"
-        ),
-        "useful_god_candidate": (
-            "computed" if chart.useful_god_candidates else "not_computed"
-        ),
-        "taboo_god_candidate": "not_computed",
-        "luck_cycle": (
-            "computed"
-            if _is_computed_signal(chart.luck_cycle_summary)
-            else "not_computed"
-        ),
+        spec.rule_family: _family_reasoning(calculation, spec.rule_family).status
+        for spec in _FAMILY_SPECS
     }
 
 
@@ -239,6 +299,52 @@ def _body_for_unavailable(spec: _FamilySpec) -> str:
     )
 
 
+def _school_view_signals(
+    calculation: CalculationBundle | None,
+    rule_family: str,
+) -> list[str]:
+    if calculation is None or rule_family not in {
+        "pattern_strength",
+        "useful_god_candidate",
+        "blind_image_method",
+        "remedy_boundary",
+    }:
+        return []
+    return [
+        (
+            f"school_view:{item.school_id}:{item.reasoning.status}:"
+            f"{item.reasoning.conclusion}:patterns="
+            f"{','.join(item.preferred_pattern_ids)}:useful_gods="
+            f"{','.join(item.preferred_useful_god_elements)}"
+        )
+        for item in calculation.schools
+    ]
+
+
+def _calculation_assumptions(reasoning: ReasonedResult) -> list[str]:
+    return [
+        f"calculation_status:{reasoning.status}",
+        f"calculation_confidence:{reasoning.confidence}",
+        f"calculation_conclusion:{reasoning.conclusion}",
+        *(f"calculation_assumption:{item}" for item in reasoning.assumptions),
+        *(f"calculation_missing_input:{item}" for item in reasoning.missing_inputs),
+        *(f"calculation_rule_id:{item}" for item in reasoning.rule_ids),
+    ]
+
+
+def _school_disagreement_note(
+    calculation: CalculationBundle | None,
+    rule_family: str,
+    calculation_status: str,
+) -> str:
+    if calculation is None or calculation_status != "disputed":
+        return ""
+    views = _school_view_signals(calculation, rule_family)
+    if not views:
+        return ""
+    return "School calculation disagreement preserved: " + "；".join(views)
+
+
 def _relevant_conflicts(
     spec: _FamilySpec,
     units: list[EvidenceUnit],
@@ -255,40 +361,49 @@ def _relevant_conflicts(
 
 def _build_conclusion(
     chart: BaziChart,
+    calculation: CalculationBundle | None,
     spec: _FamilySpec,
     units: list[EvidenceUnit],
     source_conflicts: list[SourceConflict],
 ) -> FormalConclusion:
     conclusion_id = f"formal_{spec.rule_family}"
-    chart_signals = spec.signal_builder(chart)
+    reasoning = (
+        _family_reasoning(calculation, spec.rule_family)
+        if calculation is not None
+        else _not_computed_reasoning(spec.rule_family)
+    )
+    chart_signals = _compact(
+        [
+            *spec.signal_builder(chart),
+            *reasoning.supporting_signals,
+            *reasoning.opposing_signals,
+            *_school_view_signals(calculation, spec.rule_family),
+        ]
+    )
     evidence_ids = [unit.evidence_id for unit in units]
     assumptions = [
         "four_pillars_complete",
         "classical_evidence_units_approved",
         f"rule_family:{spec.rule_family}",
+        *_calculation_assumptions(reasoning),
     ]
-    if not units:
-        trace = EvidenceTrace(
-            trace_id=f"trace_{spec.rule_family}",
-            conclusion_id=conclusion_id,
-            chart_signals=chart_signals,
-            evidence_ids=[],
-            assumptions=assumptions,
-            disagreement_note="No approved evidence unit is available for this rule family.",
-        )
-        return FormalConclusion(
-            conclusion_id=conclusion_id,
-            title=spec.title,
-            body=_body_for_unavailable(spec),
-            rule_family=spec.rule_family,
-            strength="unavailable",
-            risk_tier=spec.risk_tier,
-            trace=trace,
-        )
-
     relevant_conflicts = _relevant_conflicts(spec, units, source_conflicts)
     disagreement_note = "；".join(
-        conflict.reader_note for conflict in relevant_conflicts
+        note
+        for note in [
+            *(conflict.reader_note for conflict in relevant_conflicts),
+            _school_disagreement_note(
+                calculation,
+                spec.rule_family,
+                reasoning.status,
+            ),
+            (
+                "No approved evidence unit is available for this rule family."
+                if not units
+                else ""
+            ),
+        ]
+        if note
     )
     trace = EvidenceTrace(
         trace_id=f"trace_{spec.rule_family}",
@@ -302,19 +417,18 @@ def _build_conclusion(
         conflict.severity == "severe" and conflict.resolution_status == "open"
         for conflict in relevant_conflicts
     )
-    if has_open_severe_conflict:
-        strength = "disputed"
-    elif (
-        classify_chart_calculation_states(chart).get(spec.rule_family)
-        == "not_computed"
-    ):
+    if reasoning.status == "not_computed":
+        strength = "weakly_supported" if evidence_ids else "unavailable"
+    elif reasoning.status == "indeterminate":
         strength = "weakly_supported"
+    elif reasoning.status == "disputed" or has_open_severe_conflict:
+        strength = "disputed"
     else:
-        strength = "candidate" if chart_signals else "weakly_supported"
+        strength = "candidate" if evidence_ids else "unavailable"
     return FormalConclusion(
         conclusion_id=conclusion_id,
         title=spec.title,
-        body=_body_for_supported(spec, units),
+        body=_body_for_supported(spec, units) if units else _body_for_unavailable(spec),
         rule_family=spec.rule_family,
         strength=strength,
         risk_tier=spec.risk_tier,
@@ -326,11 +440,18 @@ def build_formal_interpretation(
     chart: BaziChart,
     evidence_units: list[EvidenceUnit],
     source_conflicts: list[SourceConflict] | None = None,
+    calculation: CalculationBundle | None = None,
 ) -> ExpandedReportEvidence:
     grouped = _group_evidence_by_family(evidence_units)
     conflicts = source_conflicts or []
     conclusions = [
-        _build_conclusion(chart, spec, grouped.get(spec.rule_family, []), conflicts)
+        _build_conclusion(
+            chart,
+            calculation,
+            spec,
+            grouped.get(spec.rule_family, []),
+            conflicts,
+        )
         for spec in _FAMILY_SPECS
     ]
     unavailable = [
