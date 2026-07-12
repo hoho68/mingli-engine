@@ -1,5 +1,5 @@
 from types import MappingProxyType
-from typing import Final, Literal, Mapping
+from typing import Final, Literal, Mapping, cast
 
 
 _Stem = Literal["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]
@@ -108,9 +108,11 @@ def growth_phase(stem: str, branch: str) -> str:
     if branch not in BRANCHES:
         raise ValueError(f"Invalid branch: {branch!r}")
 
-    start_index = BRANCHES.index(GROWTH_START[stem])
-    branch_index = BRANCHES.index(branch)
-    if STEM_POLARITY[stem] == "yang":
+    validated_stem = cast(_Stem, stem)
+    validated_branch = cast(_Branch, branch)
+    start_index = BRANCHES.index(GROWTH_START[validated_stem])
+    branch_index = BRANCHES.index(validated_branch)
+    if STEM_POLARITY[validated_stem] == "yang":
         phase_index = (branch_index - start_index) % len(BRANCHES)
     else:
         phase_index = (start_index - branch_index) % len(BRANCHES)
