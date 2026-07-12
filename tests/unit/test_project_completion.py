@@ -22,10 +22,25 @@ LEGACY_FEATURE_IDS = [
 ]
 BASELINE_ACCEPTANCE = build_report_acceptance_summary()
 BASELINE_RELEASE = build_report_release_summary()
+CALCULATION_CHECKS = {
+    "stages_present": "passed",
+    "placeholder_integrity": "passed",
+    "verified_fixture_count": "passed",
+    "boundary_fixture_count": "passed",
+    "three_school_profiles": "passed",
+    "evidence_calculation_separation": "passed",
+    "high_risk_guardrails": "passed",
+    "no_persistence": "passed",
+}
 
 
 @pytest.fixture(autouse=True)
 def _stable_runtime_gates(monkeypatch):
+    monkeypatch.setattr(
+        project_completion,
+        "build_calculation_checks",
+        lambda: CALCULATION_CHECKS.copy(),
+    )
     monkeypatch.setattr(
         project_completion,
         "validate_curation_quality",
@@ -91,6 +106,7 @@ def test_project_completion_summary_certifies_local_delivery():
         "materials_audit": "passed",
         "learning_reference": "passed",
     }
+    assert summary.calculation_checks == CALCULATION_CHECKS
     assert summary.completion_checks == {
         "feature_baseline": "passed",
         "specification_artifacts": "passed",
@@ -100,6 +116,7 @@ def test_project_completion_summary_certifies_local_delivery():
         "learning_archive_closure": "passed",
         "documentation_navigation": "passed",
         "quality_gates": "passed",
+        "calculation_validation": "passed",
         "report_acceptance": "passed",
         "report_release": "passed",
     }
@@ -116,6 +133,22 @@ def test_project_completion_summary_certifies_local_delivery():
     assert summary.next_action == (
         "local_delivery_complete_wait_for_new_material_or_explicit_remote_request"
     )
+
+
+def test_completion_blocks_and_names_failed_calculation_validation(monkeypatch):
+    failed_checks = CALCULATION_CHECKS | {"placeholder_integrity": "failed"}
+    monkeypatch.setattr(
+        project_completion,
+        "build_calculation_checks",
+        lambda: failed_checks,
+    )
+
+    summary = build_project_completion_summary()
+
+    assert summary.completion_status == "blocked"
+    assert summary.calculation_checks == failed_checks
+    assert summary.completion_checks["calculation_validation"] == "failed"
+    assert "calculation_validation" in summary.remaining_local_blockers
 
 
 def test_feature_results_distinguish_legacy_and_task_tracked_features():

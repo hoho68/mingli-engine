@@ -391,6 +391,19 @@ def test_release_summary_blocks_when_report_acceptance_is_blocked(monkeypatch):
     assert summary.next_action == "repair_report_acceptance"
 
 
+def test_release_summary_blocks_failed_calculation_validation(monkeypatch):
+    monkeypatch.setattr(
+        report_release,
+        "build_calculation_checks",
+        lambda: {"stages_present": "failed"},
+    )
+
+    summary = build_report_release_summary()
+
+    assert summary.release_status == "blocked"
+    assert summary.next_action == "repair_calculation_validation"
+
+
 def test_release_cli_handler_returns_nonzero_for_blocked_packet(
     monkeypatch,
     capsys,

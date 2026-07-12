@@ -6,6 +6,7 @@ from mingli_engine.classical_sources import (
     load_classical_sources,
     load_source_conflicts,
 )
+from mingli_engine.calculation_validation import build_calculation_checks
 from mingli_engine.evidence_curation import build_knowledge_activation_summary
 from mingli_engine.html import render_html_report
 from mingli_engine.markdown import render_markdown_report
@@ -355,6 +356,7 @@ def determine_report_acceptance_status(
 
 
 def build_report_acceptance_summary() -> ReportAcceptanceSummary:
+    calculation_checks = build_calculation_checks()
     try:
         report = _build_safe_report()
     except KnowledgeActivationError:
@@ -392,6 +394,18 @@ def build_report_acceptance_summary() -> ReportAcceptanceSummary:
         _high_risk_rejection_case(),
         _unavailable_degradation_case(),
     ]
+    if not calculation_checks or any(
+        value != _PASS for value in calculation_checks.values()
+    ):
+        cases.append(
+            ReportAcceptanceCaseResult(
+                case_id="calculation_validation",
+                scenario_type="calculation_gate",
+                status=_FAIL,
+                checks=calculation_checks or {"calculation_validation": _FAIL},
+                guardrails=["calculation_failure_blocks_report_acceptance"],
+            )
+        )
     open_conflicts = list(report.report_evidence_audit.open_conflicts)
     status = determine_report_acceptance_status(cases, open_conflicts)
     if status == "ready_with_guardrails":

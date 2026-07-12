@@ -126,6 +126,22 @@ def test_acceptance_status_blocks_any_failed_case():
     assert determine_report_acceptance_status([passed, failed], []) == "blocked"
 
 
+def test_acceptance_blocks_failed_calculation_validation(monkeypatch):
+    monkeypatch.setattr(
+        report_acceptance,
+        "build_calculation_checks",
+        lambda: {"stages_present": "failed"},
+    )
+
+    summary = build_report_acceptance_summary()
+
+    assert summary.acceptance_status == "blocked"
+    calculation_case = _case_by_id(summary, "calculation_validation")
+    assert calculation_case.status == "failed"
+    assert calculation_case.checks == {"stages_present": "failed"}
+    assert summary.next_action == "resolve_failed_acceptance_cases"
+
+
 def test_acceptance_summary_returns_blocked_packet_when_report_gate_fails(
     monkeypatch,
 ):

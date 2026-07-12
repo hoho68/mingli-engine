@@ -6,6 +6,16 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+CALCULATION_CHECKS = {
+    "stages_present": "passed",
+    "placeholder_integrity": "passed",
+    "verified_fixture_count": "passed",
+    "boundary_fixture_count": "passed",
+    "three_school_profiles": "passed",
+    "evidence_calculation_separation": "passed",
+    "high_risk_guardrails": "passed",
+    "no_persistence": "passed",
+}
 
 
 def _run_cli(*args: str) -> subprocess.CompletedProcess[str]:
@@ -50,6 +60,8 @@ def test_project_completion_summary_cli_outputs_final_local_packet():
     assert payload["acceptance_baseline_id"] == "report_acceptance_v1"
     assert payload["acceptance_status"] == "ready_with_guardrails"
     assert payload["remaining_local_blockers"] == []
+    assert payload["calculation_checks"] == CALCULATION_CHECKS
+    assert payload["completion_checks"]["calculation_validation"] == "passed"
     assert payload["next_action"] == (
         "local_delivery_complete_wait_for_new_material_or_explicit_remote_request"
     )

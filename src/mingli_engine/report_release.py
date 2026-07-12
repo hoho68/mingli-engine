@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from mingli_engine.chart_calculator import calculate_bazi_chart
+from mingli_engine.calculation_validation import build_calculation_checks
 from mingli_engine.high_risk import classify_high_risk_request
 from mingli_engine.html import render_html_report
 from mingli_engine.markdown import render_markdown_report
@@ -449,6 +450,10 @@ def build_report_release_summary(
 ) -> ReportReleaseSummary:
     manifest = load_report_release_manifest(manifest_path)
     acceptance = build_report_acceptance_summary()
+    calculation_checks = build_calculation_checks()
+    calculation_ready = bool(calculation_checks) and all(
+        value == PASS for value in calculation_checks.values()
+    )
     evaluations = [_evaluate_case(case) for case in manifest]
     cases = [result for result, _, _ in evaluations]
     fingerprints = {
@@ -466,14 +471,16 @@ def build_report_release_summary(
         "ready",
         "ready_with_guardrails",
     }
-    if not matrix_passed or not acceptance_ready:
+    if not matrix_passed or not acceptance_ready or not calculation_ready:
         release_status = "blocked"
     elif acceptance.acceptance_status == "ready_with_guardrails":
         release_status = "ready_with_guardrails"
     else:
         release_status = "ready"
 
-    if not acceptance_ready:
+    if not calculation_ready:
+        next_action = "repair_calculation_validation"
+    elif not acceptance_ready:
         next_action = "repair_report_acceptance"
     elif not matrix_passed:
         next_action = "repair_report_release_matrix"

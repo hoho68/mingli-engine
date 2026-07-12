@@ -538,6 +538,7 @@ class ProjectCompletionSummary:
     controlled_boundaries: list[str]
     remaining_local_blockers: list[str]
     next_action: str
+    calculation_checks: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

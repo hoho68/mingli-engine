@@ -37,6 +37,43 @@ entrypoint. It combines the 001-017 artifact audit, task and checklist closure,
 learning/archive handoff, three quality validators, report acceptance, and the
 fixed release matrix into one privacy-safe `project_completion_v1` packet.
 
+## Calculation And Evidence Boundary
+
+The V1 calculation engine and the classical evidence corpus are separate
+inputs to report synthesis. A `CalculationBundle` records chart facts,
+relations, strength, pattern candidates, useful-god candidates, luck cycles,
+and enabled-school views. Evidence units retain their existing evidence ids and
+review status; calculation never creates, promotes, or rewrites evidence.
+Legacy reports without a calculation bundle remain explicitly
+`not_computed`. Approved evidence alone cannot upgrade those placeholders to a
+computed candidate, while an open severe conflict can still require a
+`disputed` conclusion.
+
+Calculated output is opt-in at the command line. Use `--analysis` with
+`calculate-chart` or `calculate-report` to run the reasoned calculation path.
+The V1 bundle identifies `engine_version=bazi-core-v1` and
+`ruleset_version=ziping-v1`; enabled built-in school profiles use
+`school-profiles-v1`. Without `--analysis`, the legacy compatibility path and
+its conservative status semantics remain in force.
+
+The tracked calculation fixture review is synthetic and privacy-safe. At least
+30 chart records have pillar artifacts reviewed for exact agreement between
+the pinned `lunar-python` baseline and a temporary `cnlunar` comparison. Each
+artifact is scoped to the four chart pillars and protected by a canonical
+hash. Facts, relations, strength, patterns, and luck outputs are labeled only
+as frozen project-engine snapshots. The cross-provider review does not claim
+independent review of those downstream inferences. At least 20 separately
+identified boundary fixtures are tied to executable behavior contracts for
+thresholds, pattern damage/rescue, incomplete relations, school disagreement,
+luck and solar-term boundaries, and time/gender assumptions.
+
+V1 is a bounded cultural interpretation engine, not scientific prediction and
+not a complete domain-report system. It excludes deterministic event or
+lifespan prediction, medical/legal/psychological/financial conclusions,
+unreviewed evidence promotion, network-backed runtime verification, raw-source
+ingestion during report generation, and persistence of birth profiles or
+generated reports by the calculation validator.
+
 ## Preparation Materials
 
 Root-level PDF files and the root `Markdown/` directory are user-provided

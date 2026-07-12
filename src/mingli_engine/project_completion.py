@@ -2,6 +2,7 @@ from pathlib import Path
 import re
 from typing import Callable
 
+from mingli_engine.calculation_validation import build_calculation_checks
 from mingli_engine.classical_sources import (
     load_approved_evidence_units,
     load_classical_sources,
@@ -285,6 +286,10 @@ def build_project_completion_summary(
         ),
     }
     quality_ready = all(status == PASS for status in quality_checks.values())
+    calculation_checks = build_calculation_checks()
+    calculation_ready = bool(calculation_checks) and all(
+        status == PASS for status in calculation_checks.values()
+    )
 
     try:
         acceptance = build_report_acceptance_summary()
@@ -319,6 +324,7 @@ def build_project_completion_summary(
         "learning_archive_closure": PASS if archive_ready else FAIL,
         "documentation_navigation": PASS if navigation_ready else FAIL,
         "quality_gates": PASS if quality_ready else FAIL,
+        "calculation_validation": PASS if calculation_ready else FAIL,
         "report_acceptance": PASS if acceptance_ready else FAIL,
         "report_release": PASS if release_ready else FAIL,
     }
@@ -403,4 +409,5 @@ def build_project_completion_summary(
         controlled_boundaries=controlled_boundaries,
         remaining_local_blockers=remaining_local_blockers,
         next_action=next_action,
+        calculation_checks=calculation_checks,
     )
