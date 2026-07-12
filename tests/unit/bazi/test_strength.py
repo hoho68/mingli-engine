@@ -2,7 +2,7 @@ import json
 from dataclasses import FrozenInstanceError, replace
 from pathlib import Path
 from types import MappingProxyType
-from typing import Any
+from typing import Callable
 
 import pytest
 
@@ -48,7 +48,7 @@ EXPECTED_PROFILE = {
 }
 
 
-def write_profile(tmp_path: Path, profile: dict[str, Any]) -> Path:
+def write_profile(tmp_path: Path, profile: dict[str, object]) -> Path:
     path = tmp_path / "strength.json"
     path.write_text(json.dumps(profile), encoding="utf-8")
     return path
@@ -88,6 +88,17 @@ def test_rejects_missing_or_empty_version(tmp_path: Path, version: object) -> No
         load_strength_config(write_profile(tmp_path, profile))
 
 
+def test_rejects_unsupported_profile_version(tmp_path: Path) -> None:
+    profile = json.loads(json.dumps(EXPECTED_PROFILE))
+    profile["version"] = "ziping-strength-v2"
+
+    with pytest.raises(
+        ValueError,
+        match="unsupported strength config version: 'ziping-strength-v2'",
+    ):
+        load_strength_config(write_profile(tmp_path, profile))
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
@@ -112,7 +123,9 @@ def test_rejects_missing_or_empty_version(tmp_path: Path, version: object) -> No
     ],
 )
 def test_rejects_missing_or_unknown_categories(
-    tmp_path: Path, mutation: Any, message: str
+    tmp_path: Path,
+    mutation: Callable[[dict[str, object]], object],
+    message: str,
 ) -> None:
     profile = json.loads(json.dumps(EXPECTED_PROFILE))
     mutation(profile)
@@ -147,6 +160,7 @@ def test_rejects_nonnumeric_and_boolean_weights(
         ("hidden_factor", 1.1, "hidden_factor must be between 0 and 1"),
         ("hidden_factor", True, "hidden_factor must be numeric"),
         ("sensitivity_fraction", -0.01, "sensitivity_fraction must be nonnegative"),
+        ("sensitivity_fraction", 1.01, "sensitivity_fraction must be between 0 and 1"),
         ("sensitivity_fraction", False, "sensitivity_fraction must be numeric"),
     ],
 )
@@ -224,8 +238,21 @@ def hidden_stem(
     )
 
 
-def root(value: str, role: str, branch_pillar: str = "month") -> RootFact:
-    return RootFact(value, "day", "synthetic", branch_pillar, role, True)
+def root(
+    value: str,
+    role: str,
+    branch_pillar: str = "month",
+    branch: str = "synthetic",
+    exact_stem_root: bool = True,
+) -> RootFact:
+    return RootFact(
+        value,
+        "day",
+        branch,
+        branch_pillar,
+        role,
+        exact_stem_root,
+    )
 
 
 def configured(
@@ -260,6 +287,11 @@ def test_season_and_exact_roots_are_separate_traceable_contributions() -> None:
         "root",
     ]
     assert [item.value for item in result.contributions] == [24, 18, 12, 6]
+    assert [item.signal for item in result.contributions[1:]] == [
+        "year:synthetic:main",
+        "month:synthetic:middle",
+        "hour:synthetic:residual",
+    ]
     assert all(item.rule_id for item in result.contributions)
     assert result.reasoning.rule_ids == tuple(
         item.rule_id for item in result.contributions
@@ -362,7 +394,7 @@ def test_sensitivity_crossing_returns_ordered_indeterminate_bounds() -> None:
     assert "强" in result.reasoning.conclusion
 
 
-def test_sensitivity_scales_mixed_contribution_magnitudes_independently() -> None:
+def test_sensitivity_recomputes_the_whole_profile_uniformly() -> None:
     result = calculate_strength(
         facts(
             month_branch="巳",
@@ -372,9 +404,34 @@ def test_sensitivity_scales_mixed_contribution_magnitudes_independently() -> Non
     )
 
     assert result.score == 8
-    assert result.lower_bound == pytest.approx(3.6)
-    assert result.upper_bound == pytest.approx(12.4)
-    assert result.label == "临界"
+    assert result.lower_bound == pytest.approx(7.2)
+    assert result.upper_bound == pytest.approx(8.8)
+    assert result.label == "较平衡"
+    assert result.reasoning.status == "computed"
+
+
+def test_nonexact_day_master_root_contributes_nothing() -> None:
+    config = configured(
+        month_command={
+            "same_element": 0,
+            "resource": 0,
+            "output": 0,
+            "wealth": 0,
+            "officer": 0,
+        },
+        sensitivity_fraction=0,
+    )
+
+    result = calculate_strength(
+        facts(
+            month_branch="寅",
+            roots=(root("甲", "main", exact_stem_root=False),),
+        ),
+        config=config,
+    )
+
+    assert result.score == 0
+    assert all(item.category != "root" for item in result.contributions)
 
 
 def test_exposed_self_is_excluded_hidden_factor_applies_and_only_dm_roots_count() -> None:
@@ -403,7 +460,7 @@ def test_exposed_self_is_excluded_hidden_factor_applies_and_only_dm_roots_count(
 
     assert [(item.category, item.signal, item.value) for item in result.contributions] == [
         ("month_command", "companion", 0),
-        ("root", "main", 18),
+        ("root", "month:synthetic:main", 18),
         ("exposed", "year:companion", 8),
         ("hidden", "month:main:officer", -4.5),
     ]
@@ -435,13 +492,80 @@ def test_untransformed_relations_add_trace_without_a_numeric_modifier() -> None:
         "branch.three_combination.申子辰.水",
     )
 
-    baseline = calculate_strength(facts())
-    result = calculate_strength(facts(), (relation,))
+    config = configured(sensitivity_fraction=0)
+    baseline = calculate_strength(facts(), config=config)
+    result = calculate_strength(facts(), (relation,), config=config)
 
     assert result.score == baseline.score
     assert result.contributions == baseline.contributions
     assert any(relation.rule_id in item for item in result.reasoning.assumptions)
     assert any("relation" in rule_id for rule_id in result.reasoning.rule_ids)
+    assert result.reasoning.status == "computed"
+    assert result.reasoning.missing_inputs == ()
+
+
+def transformed_relation() -> BranchRelationResult:
+    return BranchRelationResult(
+        "three_combination",
+        ("申", "子", "辰"),
+        ("year", "month", "day"),
+        "active",
+        "水",
+        ("synthetic transformation",),
+        (),
+        "branch.three_combination.申子辰.水",
+    )
+
+
+def test_transformed_relation_forces_unimplemented_modifier_state() -> None:
+    config = configured(sensitivity_fraction=0)
+    baseline = calculate_strength(facts(), config=config)
+
+    result = calculate_strength(
+        facts(), (transformed_relation(),), config=config
+    )
+
+    assert result.score == baseline.score
+    assert result.contributions == baseline.contributions
+    assert result.reasoning.status == "indeterminate"
+    assert result.reasoning.confidence == "low"
+    assert result.reasoning.missing_inputs == (
+        "transformed_relation_strength_modifier",
+    )
+    assert "modifier not implemented" in result.reasoning.conclusion
+    assert result.label == "待定"
+
+
+def test_transformed_relation_and_sensitivity_crossing_report_both_causes() -> None:
+    result = calculate_strength(facts(), (transformed_relation(),))
+
+    assert result.lower_bound == pytest.approx(21.6)
+    assert result.upper_bound == pytest.approx(26.4)
+    assert result.reasoning.status == "indeterminate"
+    assert "modifier not implemented" in result.reasoning.conclusion
+    assert "偏强" in result.reasoning.conclusion
+    assert "强" in result.reasoning.conclusion
+    assert result.label == "待定"
+
+
+@pytest.mark.parametrize(
+    ("config", "message"),
+    [
+        (
+            replace(load_strength_config(), version="ziping-strength-v2"),
+            "unsupported strength config version: 'ziping-strength-v2'",
+        ),
+        (
+            replace(load_strength_config(), sensitivity_fraction=1.01),
+            "sensitivity_fraction must be between 0 and 1",
+        ),
+    ],
+)
+def test_injected_config_cannot_bypass_guardrails(
+    config: StrengthConfig, message: str
+) -> None:
+    with pytest.raises(ValueError, match=f"^{message}$"):
+        calculate_strength(facts(), config=config)
 
 
 @pytest.mark.parametrize(
