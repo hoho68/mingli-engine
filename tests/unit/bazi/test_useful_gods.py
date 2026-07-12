@@ -12,15 +12,14 @@ from mingli_engine.bazi.constants import (
 from mingli_engine.bazi.facts import build_chart_facts, ten_god
 from mingli_engine.bazi.patterns import calculate_pattern_candidates
 from mingli_engine.bazi.result_models import (
+    BranchRelationResult,
     ChartFacts,
-    ComputationStatus,
     HiddenStemFact,
     PatternCandidateResult,
-    ReasonedResult,
     StemFact,
     StrengthResult,
 )
-from mingli_engine.bazi.strength import calculate_strength
+from mingli_engine.bazi.strength import calculate_strength, load_strength_config
 from mingli_engine.bazi.useful_gods import (
     SUMMER_BRANCHES,
     WINTER_BRANCHES,
@@ -123,32 +122,35 @@ def computed_month_case(month_branch: str) -> tuple[ChartFacts, StrengthResult]:
     raise AssertionError(f"no computed canonical case for {month_branch}")
 
 
-def pattern(
-    *,
-    damage: tuple[str, ...] = (),
-    rescue: tuple[str, ...] = (),
-    status: ComputationStatus = "disputed",
-) -> PatternCandidateResult:
-    return PatternCandidateResult(
-        pattern_id="test.damaged",
-        name="测试受损格",
-        rank=1,
-        reasoning=ReasonedResult(
-            status=status,
-            conclusion="damaged test pattern",
-            confidence="low",
-            supporting_signals=rescue,
-            opposing_signals=damage,
-            rule_ids=("pattern.test.damaged",),
-        ),
-        formation_conditions=("formation:test",),
-        damage_conditions=damage,
-        rescue_conditions=rescue,
-    )
-
-
 def method_results(results, method: str):
     return tuple(item for item in results if item.method == method)
+
+
+def damaged_pattern_case(
+    *, rescue: bool = True
+) -> tuple[ChartFacts, StrengthResult, PatternCandidateResult]:
+    exposed = ("丁", "辛", "甲", "癸") if rescue else ("甲", "辛", "甲", "丁")
+    facts = chart_facts(exposed=exposed)
+    actual_strength = calculate_strength(facts)
+    assert actual_strength.reasoning.status == "computed"
+    damaged = calculate_pattern_candidates(facts, actual_strength)[0]
+    assert damaged.reasoning.status == "disputed"
+    assert damaged.damage_conditions
+    assert bool(damaged.rescue_conditions) is rescue
+    return facts, actual_strength, damaged
+
+
+def blocked_relation() -> BranchRelationResult:
+    return BranchRelationResult(
+        relation_type="clash",
+        branches=("子", "酉"),
+        pillar_names=("year", "month"),
+        state="blocked",
+        transformed_element="",
+        conditions=("both branches present",),
+        blockers=("relation effect guarded in V1",),
+        rule_id="branch.clash.ziyou.test",
+    )
 
 
 def test_strength_prerequisite_returns_exactly_one_blocked_result() -> None:
@@ -314,6 +316,42 @@ def test_rejects_incomplete_or_nonfinite_computed_strength() -> None:
     for forged in mutations:
         with pytest.raises(ValueError, match="computed strength"):
             calculate_useful_god_candidates(facts, forged, ())
+
+
+def test_rejects_forged_strength_contribution_despite_consistent_totals() -> None:
+    facts, actual = strength_case()
+    forged_contribution = replace(
+        actual.contributions[0],
+        category="forged",
+        rule_id="strength.forged.category",
+    )
+    forged = replace(
+        actual,
+        contributions=(forged_contribution, *actual.contributions[1:]),
+        reasoning=replace(
+            actual.reasoning,
+            rule_ids=(
+                "strength.forged.category",
+                *actual.reasoning.rule_ids[1:],
+            ),
+        ),
+    )
+
+    with pytest.raises(ValueError, match="canonical strength mismatch"):
+        calculate_useful_god_candidates(facts, forged, ())
+
+
+def test_rejects_same_version_custom_strength_profile() -> None:
+    facts, _actual = strength_case("甲", "强")
+    config = load_strength_config()
+    custom_exposed = dict(config.exposed)
+    custom_exposed["companion"] += 1.0
+    custom = replace(config, exposed=custom_exposed)
+    custom_strength = calculate_strength(facts, config=custom)
+    assert custom_strength.reasoning.status == "computed"
+
+    with pytest.raises(ValueError, match="canonical strength mismatch"):
+        calculate_useful_god_candidates(facts, custom_strength, ())
 
 
 def test_season_constants_are_immutable_and_exact() -> None:
@@ -485,12 +523,7 @@ def test_illness_remedy_extremes_use_first_directional_candidate(
 
 
 def test_illness_remedy_uses_structured_rescue_ten_god_provenance() -> None:
-    facts = chart_facts()
-    actual_strength = calculate_strength(facts)
-    damaged = pattern(
-        damage=("exposed:month:辛:正官",),
-        rescue=("exposed:year:壬:偏印",),
-    )
+    facts, actual_strength, damaged = damaged_pattern_case()
     illness = method_results(
         calculate_useful_god_candidates(facts, actual_strength, (damaged,)),
         "illness_remedy",
@@ -503,14 +536,9 @@ def test_illness_remedy_uses_structured_rescue_ten_god_provenance() -> None:
 
 
 def test_damaged_pattern_without_rescue_is_indeterminate() -> None:
-    facts = chart_facts()
-    actual_strength = calculate_strength(facts)
+    facts, actual_strength, damaged = damaged_pattern_case(rescue=False)
     illness = method_results(
-        calculate_useful_god_candidates(
-            facts,
-            actual_strength,
-            (pattern(damage=("exposed:month:辛:正官",)),),
-        ),
+        calculate_useful_god_candidates(facts, actual_strength, (damaged,)),
         "illness_remedy",
     )
     assert len(illness) == 1
@@ -520,27 +548,28 @@ def test_damaged_pattern_without_rescue_is_indeterminate() -> None:
 
 
 def test_rejects_prose_and_forged_rescue_provenance() -> None:
-    facts = chart_facts()
-    actual_strength = calculate_strength(facts)
+    facts, actual_strength, damaged = damaged_pattern_case()
     for rescue in (
         ("choose water because prose says so",),
         ("exposed:year:丙:食神",),
     ):
-        damaged = pattern(damage=("exposed:month:辛:正官",), rescue=rescue)
+        forged = replace(
+            damaged,
+            rescue_conditions=rescue,
+            reasoning=replace(
+                damaged.reasoning,
+                supporting_signals=rescue,
+            ),
+        )
         with pytest.raises(ValueError, match="rescue condition provenance"):
-            calculate_useful_god_candidates(facts, actual_strength, (damaged,))
+            calculate_useful_god_candidates(facts, actual_strength, (forged,))
 
 
 @pytest.mark.parametrize("trace_field", ("supporting_signals", "opposing_signals"))
 def test_rejects_pattern_conditions_missing_reasoning_trace(
     trace_field: str,
 ) -> None:
-    facts = chart_facts()
-    actual_strength = calculate_strength(facts)
-    damaged = pattern(
-        damage=("exposed:month:辛:正官",),
-        rescue=("exposed:year:壬:偏印",),
-    )
+    facts, actual_strength, damaged = damaged_pattern_case()
     missing_trace = replace(
         damaged,
         reasoning=replace(damaged.reasoning, **{trace_field: ()}),
@@ -549,10 +578,40 @@ def test_rejects_pattern_conditions_missing_reasoning_trace(
         calculate_useful_god_candidates(facts, actual_strength, (missing_trace,))
 
 
+def test_rejects_fabricated_pattern_using_present_unrelated_tokens() -> None:
+    facts, actual_strength, expected = damaged_pattern_case()
+    unrelated_damage = "exposed:month:辛:正官"
+    assert unrelated_damage in {
+        f"exposed:{item.pillar_name}:{item.stem}:{item.ten_god}"
+        for item in facts.exposed_stems
+    }
+    fabricated = replace(
+        expected,
+        damage_conditions=(unrelated_damage,),
+        reasoning=replace(
+            expected.reasoning,
+            opposing_signals=(unrelated_damage,),
+        ),
+    )
+
+    with pytest.raises(ValueError, match="canonical pattern mismatch"):
+        calculate_useful_god_candidates(facts, actual_strength, (fabricated,))
+
+
+def test_rejects_illness_pattern_absent_from_recomputed_baseline() -> None:
+    facts, actual_strength, expected = damaged_pattern_case()
+    fabricated = replace(
+        expected,
+        pattern_id="fabricated.present_tokens",
+        name="伪造格",
+    )
+
+    with pytest.raises(ValueError, match="absent from canonical baseline"):
+        calculate_useful_god_candidates(facts, actual_strength, (fabricated,))
+
+
 def test_rejects_invalid_pattern_identity() -> None:
-    facts = chart_facts()
-    actual_strength = calculate_strength(facts)
-    damaged = pattern(damage=("exposed:month:辛:正官",))
+    facts, actual_strength, damaged = damaged_pattern_case()
     invalid_identity = replace(damaged, pattern_id="", rank=0)
 
     with pytest.raises(ValueError, match="pattern identity"):
@@ -560,11 +619,11 @@ def test_rejects_invalid_pattern_identity() -> None:
 
 
 def test_nondisputed_structural_countercondition_is_not_a_damage_trigger() -> None:
-    facts = chart_facts()
-    actual_strength = calculate_strength(facts)
-    guarded = pattern(
-        damage=("countercondition:weak:opposition:not_evaluated",),
-        status="indeterminate",
+    facts, actual_strength = strength_case("甲", "弱")
+    guarded = next(
+        item
+        for item in calculate_pattern_candidates(facts, actual_strength)
+        if item.pattern_id == "follow.congruo"
     )
 
     illness = method_results(
@@ -573,42 +632,44 @@ def test_nondisputed_structural_countercondition_is_not_a_damage_trigger() -> No
     )
 
     assert len(illness) == 1
-    assert illness[0].reasoning.status == "not_computed"
+    assert illness[0].element == "水"
+    assert illness[0].reasoning.status == "computed"
+    assert illness[0].reasoning.supporting_signals == ("extreme_strength:弱",)
 
 
 def test_rejects_nondisputed_provenance_shaped_damage() -> None:
-    facts = chart_facts()
-    actual_strength = calculate_strength(facts)
-    forged = pattern(
-        damage=("exposed:month:辛:正官",),
-        status="computed",
+    facts, actual_strength, damaged = damaged_pattern_case()
+    forged = replace(
+        damaged,
+        reasoning=replace(damaged.reasoning, status="computed"),
     )
 
-    with pytest.raises(ValueError, match="damaged pattern.*disputed"):
+    with pytest.raises(ValueError, match="canonical pattern mismatch"):
         calculate_useful_god_candidates(facts, actual_strength, (forged,))
 
 
 def test_each_damaged_pattern_keeps_its_unresolved_rescue_trace() -> None:
-    facts = chart_facts()
+    facts = chart_facts(
+        month_branch="丑",
+        exposed=("甲", "丁", "甲", "辛"),
+    )
     actual_strength = calculate_strength(facts)
-    resolved = pattern(
-        damage=("exposed:month:辛:正官",),
-        rescue=("exposed:year:壬:偏印",),
+    damaged_patterns = tuple(
+        item
+        for item in calculate_pattern_candidates(facts, actual_strength)
+        if item.reasoning.status == "disputed" and item.damage_conditions
     )
-    unresolved = replace(
-        pattern(damage=("exposed:hour:癸:正印",)),
-        pattern_id="test.unresolved",
-    )
+    assert len(damaged_patterns) == 2
 
     illness = method_results(
-        calculate_useful_god_candidates(facts, actual_strength, (resolved, unresolved)),
+        calculate_useful_god_candidates(facts, actual_strength, damaged_patterns),
         "illness_remedy",
     )
 
-    assert any(item.element == "水" for item in illness)
+    assert any(item.element for item in illness)
     empty = next(item for item in illness if item.element == "")
     assert empty.reasoning.status == "indeterminate"
-    assert "damaged_pattern:test.unresolved" in empty.reasoning.opposing_signals
+    assert "damaged_pattern:standard.zhengguan" in empty.reasoning.opposing_signals
 
 
 def test_illness_remedy_without_trigger_is_not_computed() -> None:
@@ -624,15 +685,19 @@ def test_illness_remedy_without_trigger_is_not_computed() -> None:
 
 
 def test_duplicate_illness_candidates_merge_traces_conservatively() -> None:
-    facts = chart_facts(month_branch="子", exposed=("丙", "甲", "甲", "甲"))
+    facts = chart_facts(
+        month_branch="寅",
+        exposed=("甲", "丙", "甲", "戊"),
+    )
     actual_strength = calculate_strength(facts)
     assert (actual_strength.reasoning.status, actual_strength.label) == (
         "computed",
         "强",
     )
-    damaged = pattern(
-        damage=("exposed:month:甲:比肩",),
-        rescue=("exposed:year:丙:食神",),
+    damaged = next(
+        item
+        for item in calculate_pattern_candidates(facts, actual_strength)
+        if item.pattern_id == "standard.piancai"
     )
     illness = method_results(
         calculate_useful_god_candidates(facts, actual_strength, (damaged,)),
@@ -650,12 +715,7 @@ def test_results_are_unique_ranked_deterministically_and_do_not_mutate_inputs() 
     facts = mediation_facts()
     upstream_strength = calculate_strength(facts)
     assert upstream_strength.reasoning.status == "computed"
-    patterns = (
-        pattern(
-            damage=("exposed:month:乙:伤官",),
-            rescue=("exposed:hour:辛:正印",),
-        ),
-    )
+    patterns = calculate_pattern_candidates(facts, upstream_strength)
     before = (facts, upstream_strength, patterns)
 
     first = calculate_useful_god_candidates(facts, upstream_strength, patterns)
@@ -687,6 +747,54 @@ def test_results_are_unique_ranked_deterministically_and_do_not_mutate_inputs() 
         ),
     )
     assert list(first) == expected
+
+
+def test_actual_blocked_relation_strength_and_patterns_are_supported() -> None:
+    facts, _baseline_strength, _damaged = damaged_pattern_case()
+    relation = blocked_relation()
+    related_strength = calculate_strength(facts, (relation,))
+    related_patterns = calculate_pattern_candidates(
+        facts, related_strength, (relation,)
+    )
+    assert related_strength.reasoning.status == "computed"
+    assert any(
+        rule_id.startswith("strength.relation.")
+        for rule_id in related_strength.reasoning.rule_ids
+    )
+    assert any(
+        rule_id.startswith("pattern.relation.")
+        for item in related_patterns
+        for rule_id in item.reasoning.rule_ids
+    )
+
+    results = calculate_useful_god_candidates(facts, related_strength, related_patterns)
+
+    assert results
+
+
+def test_documented_relation_guard_may_make_pattern_more_conservative() -> None:
+    facts, _baseline_strength, _damaged = damaged_pattern_case()
+    relation = blocked_relation()
+    related_strength = calculate_strength(facts, (relation,))
+    related_damaged = next(
+        item
+        for item in calculate_pattern_candidates(facts, related_strength, (relation,))
+        if item.reasoning.status == "disputed" and item.damage_conditions
+    )
+    guarded = replace(
+        related_damaged,
+        reasoning=replace(
+            related_damaged.reasoning,
+            status="not_computed",
+            confidence="low",
+        ),
+    )
+
+    results = calculate_useful_god_candidates(facts, related_strength, (guarded,))
+
+    illness = method_results(results, "illness_remedy")
+    assert len(illness) == 1
+    assert illness[0].reasoning.status == "not_computed"
 
 
 def test_actual_facts_strength_pattern_pipeline_is_supported() -> None:

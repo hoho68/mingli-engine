@@ -15,6 +15,7 @@ from mingli_engine.bazi.constants import (
     STEMS,
 )
 from mingli_engine.bazi.facts import Branch, ten_god
+from mingli_engine.bazi.patterns import calculate_pattern_candidates
 from mingli_engine.bazi.result_models import (
     ChartFacts,
     ComputationStatus,
@@ -24,6 +25,7 @@ from mingli_engine.bazi.result_models import (
     StrengthResult,
     UsefulGodCandidateResult,
 )
+from mingli_engine.bazi.strength import calculate_strength
 
 
 Element = Literal["木", "火", "土", "金", "水"]
@@ -218,7 +220,42 @@ def _classify_strength(value: float) -> str:
     return "强"
 
 
-def _validate_computed_strength(strength: StrengthResult) -> None:
+def _canonical_strength_error(detail: str) -> ValueError:
+    return ValueError(f"canonical strength mismatch: {detail}")
+
+
+def _validate_strength_relation_extras(
+    expected: StrengthResult, supplied: StrengthResult
+) -> None:
+    expected_rules = expected.reasoning.rule_ids
+    supplied_rules = supplied.reasoning.rule_ids
+    if supplied_rules[: len(expected_rules)] != expected_rules:
+        raise _canonical_strength_error("core contribution rule_ids differ")
+    extra_rules = supplied_rules[len(expected_rules) :]
+    expected_assumptions = expected.reasoning.assumptions
+    supplied_assumptions = supplied.reasoning.assumptions
+    if supplied_assumptions[: len(expected_assumptions)] != expected_assumptions:
+        raise _canonical_strength_error("core assumptions differ")
+    extra_assumptions = supplied_assumptions[len(expected_assumptions) :]
+    documented_assumptions: list[str] = []
+    relation_prefix = "strength.relation.no_numeric_modifier:"
+    for rule_id in extra_rules:
+        if not rule_id.startswith(relation_prefix):
+            raise _canonical_strength_error(
+                f"unknown extra strength rule_id {rule_id!r}"
+            )
+        occurrence = rule_id[len(relation_prefix) :]
+        documented_assumptions.append(
+            f"{occurrence}: transformed_element is empty; no numeric "
+            "strength modifier applied"
+        )
+    if extra_assumptions != tuple(documented_assumptions):
+        raise _canonical_strength_error(
+            "relation assumptions do not match strength.relation rule_ids"
+        )
+
+
+def _validate_computed_strength(facts: ChartFacts, strength: StrengthResult) -> None:
     if strength.label not in _COMPUTED_STRENGTH_LABELS:
         raise ValueError(f"invalid computed strength label: {strength.label!r}")
     if strength.reasoning.conclusion != strength.label:
@@ -271,6 +308,40 @@ def _validate_computed_strength(strength: StrengthResult) -> None:
             "computed strength classification must match label for score, "
             "lower_bound, and upper_bound"
         )
+
+    expected = calculate_strength(facts)
+    if expected.reasoning.status != "computed":
+        raise _canonical_strength_error(
+            "recomputed default-profile result is not computed"
+        )
+    for field_name in ("score", "lower_bound", "upper_bound"):
+        supplied_value = getattr(strength, field_name)
+        expected_value = getattr(expected, field_name)
+        if not math.isclose(
+            supplied_value,
+            expected_value,
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        ):
+            raise _canonical_strength_error(f"{field_name} differs")
+    if strength.label != expected.label:
+        raise _canonical_strength_error("label differs")
+    if strength.contributions != expected.contributions:
+        raise _canonical_strength_error("contributions differ")
+    for field_name in (
+        "status",
+        "conclusion",
+        "confidence",
+        "supporting_signals",
+        "opposing_signals",
+    ):
+        if getattr(strength.reasoning, field_name) != getattr(
+            expected.reasoning, field_name
+        ):
+            raise _canonical_strength_error(f"reasoning.{field_name} differs")
+    if strength.reasoning.missing_inputs != expected.reasoning.missing_inputs:
+        raise _canonical_strength_error("reasoning.missing_inputs differs")
+    _validate_strength_relation_extras(expected, strength)
 
 
 def _candidate(
@@ -504,9 +575,14 @@ def _pattern_provenance_index(facts: ChartFacts) -> frozenset[str]:
 
 
 def _validate_patterns(
+    facts: ChartFacts,
+    strength: StrengthResult,
     patterns: tuple[PatternCandidateResult, ...],
     provenance_index: frozenset[str],
 ) -> None:
+    baseline_by_id = {
+        item.pattern_id: item for item in calculate_pattern_candidates(facts, strength)
+    }
     seen_pattern_ids: set[str] = set()
     for item in patterns:
         if (
@@ -529,12 +605,7 @@ def _validate_patterns(
             condition.startswith(("exposed:", "hidden:"))
             for condition in item.damage_conditions
         )
-        if has_provenance_damage and item.reasoning.status != "disputed":
-            raise ValueError(f"damaged pattern {item.pattern_id} must be disputed")
-        is_damaged = item.reasoning.status == "disputed" and bool(
-            item.damage_conditions
-        )
-        if not is_damaged:
+        if not has_provenance_damage:
             continue
         for condition in item.damage_conditions:
             if condition not in provenance_index:
@@ -556,6 +627,85 @@ def _validate_patterns(
                     "rescue condition must be present in reasoning supporting "
                     f"signals: {condition}"
                 )
+
+        expected = baseline_by_id.get(item.pattern_id)
+        if expected is None:
+            raise ValueError(
+                "illness/remedy pattern is absent from canonical baseline: "
+                f"{item.pattern_id}"
+            )
+        core_fields = (
+            "name",
+            "rank",
+            "formation_conditions",
+            "damage_conditions",
+            "rescue_conditions",
+        )
+        for field_name in core_fields:
+            if getattr(item, field_name) != getattr(expected, field_name):
+                raise ValueError(
+                    f"canonical pattern mismatch for {item.pattern_id}: "
+                    f"{field_name} differs"
+                )
+
+        expected_rule_ids = frozenset(expected.reasoning.rule_ids)
+        supplied_rule_ids = frozenset(item.reasoning.rule_ids)
+        if not expected_rule_ids <= supplied_rule_ids:
+            raise ValueError(
+                f"canonical pattern mismatch for {item.pattern_id}: "
+                "formation/damage/rescue rule_ids missing"
+            )
+        extra_rule_ids = tuple(
+            rule_id
+            for rule_id in item.reasoning.rule_ids
+            if rule_id not in expected_rule_ids
+        )
+        for rule_id in extra_rule_ids:
+            relation_prefix = next(
+                (
+                    prefix
+                    for prefix in (
+                        "pattern.relation.trace:",
+                        "pattern.relation.transformed_modifier_unimplemented:",
+                    )
+                    if rule_id.startswith(prefix)
+                ),
+                None,
+            )
+            if relation_prefix is None:
+                raise ValueError(
+                    f"canonical pattern mismatch for {item.pattern_id}: "
+                    f"unknown non-relation rule_id {rule_id!r}"
+                )
+            occurrence = rule_id[len(relation_prefix) :]
+            if not any(
+                assumption.startswith(f"relation:{occurrence}:")
+                for assumption in item.reasoning.assumptions
+            ):
+                raise ValueError(
+                    f"canonical pattern mismatch for {item.pattern_id}: "
+                    "relation rule lacks matching guard trace"
+                )
+
+        expected_status_order = _STATUS_ORDER[expected.reasoning.status]
+        supplied_status_order = _STATUS_ORDER[item.reasoning.status]
+        if supplied_status_order < expected_status_order or (
+            supplied_status_order != expected_status_order and not extra_rule_ids
+        ):
+            raise ValueError(
+                f"canonical pattern mismatch for {item.pattern_id}: "
+                "status is not an equal or relation-guarded conservative result"
+            )
+        expected_confidence_order = _CONFIDENCE_ORDER[expected.reasoning.confidence]
+        supplied_confidence_order = _CONFIDENCE_ORDER[item.reasoning.confidence]
+        if supplied_confidence_order < expected_confidence_order or (
+            supplied_confidence_order != expected_confidence_order
+            and not extra_rule_ids
+        ):
+            raise ValueError(
+                f"canonical pattern mismatch for {item.pattern_id}: "
+                "confidence is not equal or relation-guarded conservative"
+            )
 
 
 def _ten_god_from_provenance(value: str, day_master: str) -> str | None:
@@ -826,8 +976,13 @@ def calculate_useful_god_candidates(
         )
 
     day_element = _validate_chart_facts(facts)
-    _validate_computed_strength(strength)
-    _validate_patterns(patterns, _pattern_provenance_index(facts))
+    _validate_computed_strength(facts, strength)
+    _validate_patterns(
+        facts,
+        strength,
+        patterns,
+        _pattern_provenance_index(facts),
+    )
     candidates = (
         *_support_control_candidates(day_element, strength),
         *_seasonal_adjustment_candidates(facts),
