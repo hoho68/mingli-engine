@@ -8,6 +8,10 @@ from mingli_engine.bazi.constants import BRANCHES, STEMS
 
 _MAX_LUCK_CYCLE_COUNT = 100
 _GENDER_VALUES = {"male": 1, "男": 1, "female": 0, "女": 0}
+_SEXAGENARY_CYCLE = tuple(
+    f"{STEMS[index % len(STEMS)]}{BRANCHES[index % len(BRANCHES)]}"
+    for index in range(60)
+)
 
 
 @dataclass(frozen=True)
@@ -136,8 +140,21 @@ def calculate_provider_luck_cycles(
             .getEightChar()
         )
         yun = eight_char.getYun(gender_value, sect)
+        forward = yun.isForward()
+        seed_items = tuple(
+            item for item in yun.getDaYun(2) if item.getIndex() > 0
+        )
+        if len(seed_items) != 1:
+            raise RuntimeError("provider did not return one luck-cycle seed")
+        seed = seed_items[0]
+        seed_gan_zhi_index = _SEXAGENARY_CYCLE.index(seed.getGanZhi())
+        direction = 1 if forward else -1
+        seed_start_year = seed.getStartYear()
+        seed_end_year = seed.getEndYear()
+        seed_start_age = seed.getStartAge()
+        seed_end_age = seed.getEndAge()
         result = ProviderLuckCycle(
-            forward=yun.isForward(),
+            forward=forward,
             start_years=yun.getStartYear(),
             start_months=yun.getStartMonth(),
             start_days=yun.getStartDay(),
@@ -145,15 +162,16 @@ def calculate_provider_luck_cycles(
             start_solar=yun.getStartSolar().toYmdHms(),
             pillars=tuple(
                 (
-                    item.getIndex(),
-                    item.getGanZhi(),
-                    item.getStartYear(),
-                    item.getEndYear(),
-                    item.getStartAge(),
-                    item.getEndAge(),
+                    index,
+                    _SEXAGENARY_CYCLE[
+                        (seed_gan_zhi_index + direction * (index - 1)) % 60
+                    ],
+                    seed_start_year + (index - 1) * 10,
+                    seed_end_year + (index - 1) * 10,
+                    seed_start_age + (index - 1) * 10,
+                    seed_end_age + (index - 1) * 10,
                 )
-                for item in yun.getDaYun(count + 1)
-                if item.getIndex() > 0
+                for index in range(1, count + 1)
             ),
         )
     except Exception as exc:

@@ -82,8 +82,8 @@ def _normalize_gender(gender: object) -> str | None:
     return _GENDER_ALIASES.get(gender.strip().casefold())
 
 
-def _require_matching_natal_pillars(
-    chart_pillars: tuple[Pillar, ...], birth_datetime: datetime
+def _require_matching_profile_datetime(
+    chart: BaziChart, birth_datetime: datetime
 ) -> None:
     if not isinstance(birth_datetime, datetime):
         raise ValueError("birth_datetime must be a datetime")
@@ -91,6 +91,24 @@ def _require_matching_natal_pillars(
         raise ValueError(
             "birth_datetime must be naive local wall time under chart timezone assumption"
         )
+    try:
+        profile_datetime = datetime.strptime(
+            f"{chart.birth_profile.birth_date} {chart.birth_profile.birth_time}",
+            "%Y-%m-%d %H:%M",
+        )
+    except ValueError as exc:
+        raise ValueError(
+            "birth_datetime must exactly match chart birth_profile birth_date and birth_time"
+        ) from exc
+    if birth_datetime != profile_datetime:
+        raise ValueError(
+            "birth_datetime must exactly match chart birth_profile birth_date and birth_time"
+        )
+
+
+def _require_matching_natal_pillars(
+    chart_pillars: tuple[Pillar, ...], birth_datetime: datetime
+) -> None:
     try:
         provider_pillars = calculate_provider_pillars(birth_datetime)
     except Exception as exc:
@@ -128,6 +146,40 @@ def _selected_year_gan_zhi(selected_year: int) -> str:
     return gan_zhi
 
 
+def _cycle_boundary_key(start_solar: datetime, index: int) -> tuple[int, ...]:
+    return (
+        start_solar.year + (index - 1) * 10,
+        start_solar.month,
+        start_solar.day,
+        start_solar.hour,
+        start_solar.minute,
+        start_solar.second,
+        start_solar.microsecond,
+    )
+
+
+def _active_luck_pillar(
+    pillars: tuple[LuckPillar, ...],
+    start_solar: str,
+    selected_year: int,
+) -> LuckPillar | None:
+    try:
+        first_boundary = datetime.strptime(start_solar, "%Y-%m-%d %H:%M:%S")
+    except ValueError as exc:
+        raise RuntimeError("luck-cycle provider returned invalid start_solar") from exc
+    reference = (selected_year, 7, 1, 0, 0, 0, 0)
+    return next(
+        (
+            pillar
+            for pillar in pillars
+            if _cycle_boundary_key(first_boundary, pillar.index)
+            <= reference
+            < _cycle_boundary_key(first_boundary, pillar.index + 1)
+        ),
+        None,
+    )
+
+
 def calculate_luck_cycles(
     chart: BaziChart,
     *,
@@ -145,6 +197,7 @@ def calculate_luck_cycles(
     if gender is None:
         return _not_computed("supported_gender")
 
+    _require_matching_profile_datetime(chart, birth_datetime)
     _require_matching_natal_pillars(chart_pillars, birth_datetime)
 
     provider = calculate_provider_luck_cycles(
@@ -183,13 +236,10 @@ def calculate_luck_cycles(
 
     if selected_year is not None:
         selected_gan_zhi = _selected_year_gan_zhi(selected_year)
-        active = next(
-            (
-                pillar
-                for pillar in luck_pillars
-                if pillar.start_year <= selected_year <= pillar.end_year
-            ),
-            None,
+        active = _active_luck_pillar(
+            luck_pillars,
+            provider.start_solar,
+            selected_year,
         )
         positions = [(pillar.name, pillar.earthly_branch) for pillar in chart_pillars]
         if active is None:

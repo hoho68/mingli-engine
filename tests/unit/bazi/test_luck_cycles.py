@@ -61,6 +61,34 @@ def test_provider_luck_cycle_dto_is_immutable() -> None:
         result.pillars[0][0] = 9  # type: ignore[index]
 
 
+def test_provider_supports_declared_max_count_with_forward_modulo_sequence() -> None:
+    result = calculate_provider_luck_cycles(
+        datetime(1992, 8, 18, 9, 30), "male", count=100
+    )
+
+    assert len(result.pillars) == 100
+    assert result.pillars[:2] == (
+        (1, "己酉", 1999, 2008, 8, 17),
+        (2, "庚戌", 2009, 2018, 18, 27),
+    )
+    assert result.pillars[60][1] == result.pillars[0][1]
+    assert result.pillars[99][1] == result.pillars[39][1]
+
+
+def test_provider_max_count_preserves_reverse_modulo_sequence() -> None:
+    result = calculate_provider_luck_cycles(
+        datetime(1991, 6, 15, 12), "male", sect=2, count=100
+    )
+
+    assert len(result.pillars) == 100
+    assert result.pillars[:2] == (
+        (1, "癸巳", 1994, 2003, 4, 13),
+        (2, "壬辰", 2004, 2013, 14, 23),
+    )
+    assert result.pillars[60][1] == result.pillars[0][1]
+    assert result.pillars[99][1] == result.pillars[39][1]
+
+
 @pytest.mark.parametrize(
     ("alias", "canonical"),
     [(" MALE ", "male"), ("男", "male"), (" Female ", "female"), ("女", "female")],
@@ -149,12 +177,16 @@ def test_provider_wraps_lunar_exceptions_with_stable_error(
     assert isinstance(exc_info.value.__cause__, LookupError)
 
 
-def _chart(gender: str = "male"):
+def _chart_for(
+    birth_date: str,
+    birth_time: str,
+    gender: str,
+):
     chart = calculate_bazi_chart(
         BirthProfile(
             calendar_type="gregorian",
-            birth_date="1992-08-18",
-            birth_time="09:30",
+            birth_date=birth_date,
+            birth_time=birth_time,
             birthplace="Shanghai",
             gender=gender or "male",
             focus_topic="structure",
@@ -165,6 +197,10 @@ def _chart(gender: str = "male"):
             chart, birth_profile=replace(chart.birth_profile, gender=gender)
         )
     return chart
+
+
+def _chart(gender: str = "male"):
+    return _chart_for("1992-08-18", "09:30", gender)
 
 
 def test_luck_cycles_degrade_when_birth_datetime_is_missing() -> None:
@@ -236,6 +272,63 @@ def test_unsupported_gender_degrades_before_failing_natal_provider(
     assert result.reasoning.missing_inputs == ("supported_gender",)
     assert result.pillars == ()
     assert result.selected_year_relations == ()
+
+
+def test_unsupported_gender_degrades_before_profile_datetime_match(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fail(*args: Any, **kwargs: Any) -> None:
+        raise AssertionError("provider must not be called for unsupported gender")
+
+    monkeypatch.setattr(
+        "mingli_engine.bazi.luck_cycles.calculate_provider_pillars", fail
+    )
+    monkeypatch.setattr(
+        "mingli_engine.bazi.luck_cycles.calculate_provider_luck_cycles", fail
+    )
+
+    result = calculate_luck_cycles(
+        _chart("unsupported"), birth_datetime=datetime(1992, 8, 18, 9, 31)
+    )
+
+    assert result.reasoning.status == "not_computed"
+    assert result.reasoning.missing_inputs == ("supported_gender",)
+
+
+@pytest.mark.parametrize(
+    "birth_datetime",
+    [datetime(1992, 8, 18, 9, 31), datetime(1992, 8, 18, 10, 30)],
+    ids=["minute_mismatch", "hour_mismatch"],
+)
+def test_supported_gender_requires_exact_profile_datetime_before_provider(
+    birth_datetime: datetime, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def fail(*args: Any, **kwargs: Any) -> None:
+        raise AssertionError("provider must not be called for profile mismatch")
+
+    monkeypatch.setattr(
+        "mingli_engine.bazi.luck_cycles.calculate_provider_pillars", fail
+    )
+    monkeypatch.setattr(
+        "mingli_engine.bazi.luck_cycles.calculate_provider_luck_cycles", fail
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            "^birth_datetime must exactly match chart birth_profile birth_date and "
+            "birth_time$"
+        ),
+    ):
+        calculate_luck_cycles(_chart(), birth_datetime=birth_datetime)
+
+
+def test_supported_gender_accepts_exact_profile_datetime() -> None:
+    result = calculate_luck_cycles(
+        _chart(), birth_datetime=datetime(1992, 8, 18, 9, 30), count=2
+    )
+
+    assert result.reasoning.status == "computed"
 
 
 @pytest.mark.parametrize(
@@ -335,6 +428,73 @@ def test_selected_year_active_cycle_boundaries_are_inclusive(
     )
 
     assert "active_luck_pillar=2" in result.reasoning.supporting_signals
+
+
+@pytest.mark.parametrize(
+    ("start_solar", "expected_signal"),
+    [
+        ("1998-07-01 00:00:01", "no_active_luck_pillar"),
+        ("1998-07-01 00:00:00", "active_luck_pillar=1"),
+        ("1998-06-30 23:59:59", "active_luck_pillar=1"),
+    ],
+    ids=["before_start", "on_start", "after_start"],
+)
+def test_july_first_reference_uses_exact_inclusive_cycle_start(
+    start_solar: str,
+    expected_signal: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "mingli_engine.bazi.luck_cycles.calculate_provider_luck_cycles",
+        lambda *args, **kwargs: ProviderLuckCycle(
+            forward=True,
+            start_years=6,
+            start_months=0,
+            start_days=0,
+            start_hours=0,
+            start_solar=start_solar,
+            pillars=(
+                (1, "己酉", 1998, 2007, 7, 16),
+                (2, "庚戌", 2008, 2017, 17, 26),
+            ),
+        ),
+    )
+
+    result = calculate_luck_cycles(
+        _chart(),
+        birth_datetime=datetime(1992, 8, 18, 9, 30),
+        selected_year=1998,
+        count=2,
+    )
+
+    assert expected_signal in result.reasoning.supporting_signals
+
+
+@pytest.mark.parametrize(
+    ("selected_year", "expected_signal"),
+    [
+        (1998, "no_active_luck_pillar"),
+        (1999, "active_luck_pillar=1"),
+        (2008, "active_luck_pillar=1"),
+        (2009, "active_luck_pillar=2"),
+    ],
+)
+def test_late_year_start_uses_inclusive_start_exclusive_next_cycle(
+    selected_year: int,
+    expected_signal: str,
+) -> None:
+    chart = _chart_for("1991-06-15", "12:00", "female")
+    kwargs = {
+        "birth_datetime": datetime(1991, 6, 15, 12),
+        "selected_year": selected_year,
+        "count": 2,
+    }
+
+    first = calculate_luck_cycles(chart, **kwargs)
+    second = calculate_luck_cycles(chart, **kwargs)
+
+    assert first == second
+    assert expected_signal in first.reasoning.supporting_signals
 
 
 def test_selected_year_relations_include_dynamic_positions_and_exclude_natal_only() -> (
