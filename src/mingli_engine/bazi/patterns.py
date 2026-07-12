@@ -1,10 +1,21 @@
+from collections import Counter
 from types import MappingProxyType
-from typing import Final, Literal, Mapping
+from typing import Final, Mapping, TypeGuard
 
-from mingli_engine.bazi.constants import BRANCHES
+from mingli_engine.bazi.constants import (
+    BRANCHES,
+    ELEMENTS,
+    HIDDEN_STEMS,
+    STEM_ELEMENT,
+    STEM_POLARITY,
+    STEMS,
+)
+from mingli_engine.bazi.facts import Branch, Stem, ten_god
 from mingli_engine.bazi.result_models import (
     BranchRelationResult,
     ChartFacts,
+    ComputationStatus,
+    Confidence,
     HiddenStemFact,
     PatternCandidateResult,
     ReasonedResult,
@@ -91,6 +102,14 @@ def _distinct(items: tuple[str, ...]) -> tuple[str, ...]:
     return tuple(dict.fromkeys(items))
 
 
+def _is_stem(value: str) -> TypeGuard[Stem]:
+    return value in STEMS
+
+
+def _is_branch(value: str) -> TypeGuard[Branch]:
+    return value in BRANCHES
+
+
 def _signal_index(
     facts: ChartFacts,
 ) -> tuple[
@@ -98,14 +117,14 @@ def _signal_index(
 ]:
     exposed_signals: dict[str, list[str]] = {}
     hidden_signals: dict[str, list[str]] = {}
-    for item in facts.exposed_stems:
-        if item.pillar_name != "day":
-            exposed_signals.setdefault(item.ten_god, []).append(
-                _exposed_provenance(item)
+    for exposed_fact in facts.exposed_stems:
+        if exposed_fact.pillar_name != "day":
+            exposed_signals.setdefault(exposed_fact.ten_god, []).append(
+                _exposed_provenance(exposed_fact)
             )
-    for item in facts.hidden_stems:
-        hidden_signals.setdefault(item.ten_god, []).append(
-            _hidden_provenance(item)
+    for hidden_fact in facts.hidden_stems:
+        hidden_signals.setdefault(hidden_fact.ten_god, []).append(
+            _hidden_provenance(hidden_fact)
         )
 
     def freeze(
@@ -129,6 +148,145 @@ def _conditions_for(
         for ten_god in ten_gods
         for provenance in signals.get(ten_god, ())
     )
+
+
+def _validate_chart_facts(facts: ChartFacts) -> None:
+    day_master = facts.day_master
+    if not _is_stem(day_master):
+        raise ValueError(f"invalid day master: {day_master!r}")
+    month_branch = facts.month_branch
+    if not _is_branch(month_branch):
+        raise ValueError(f"invalid month branch: {month_branch!r}")
+
+    expected_pillars = Counter({
+        "year": 1,
+        "month": 1,
+        "day": 1,
+        "hour": 1,
+    })
+    exposed_pillars = Counter(
+        exposed_fact.pillar_name for exposed_fact in facts.exposed_stems
+    )
+    if exposed_pillars != expected_pillars:
+        raise ValueError(
+            "expected exactly one exposed stem for year, month, day, and hour"
+        )
+
+    for exposed_fact in facts.exposed_stems:
+        exposed_stem = exposed_fact.stem
+        if not _is_stem(exposed_stem):
+            raise ValueError(f"invalid exposed stem: {exposed_stem!r}")
+        expected_element = STEM_ELEMENT[exposed_stem]
+        if exposed_fact.element != expected_element:
+            raise ValueError(
+                f"exposed element mismatch for {exposed_fact.stem}: "
+                f"{exposed_fact.element!r} != {expected_element!r}"
+            )
+        expected_polarity = STEM_POLARITY[exposed_stem]
+        if exposed_fact.polarity != expected_polarity:
+            raise ValueError(
+                f"exposed polarity mismatch for {exposed_fact.stem}: "
+                f"{exposed_fact.polarity!r} != {expected_polarity!r}"
+            )
+        expected_ten_god = ten_god(day_master, exposed_stem)
+        if exposed_fact.ten_god != expected_ten_god:
+            raise ValueError(
+                f"exposed ten_god mismatch for {exposed_fact.stem}: "
+                f"{exposed_fact.ten_god!r} != {expected_ten_god!r}"
+            )
+
+    day_fact = next(
+        exposed_fact
+        for exposed_fact in facts.exposed_stems
+        if exposed_fact.pillar_name == "day"
+    )
+    if day_fact.stem != facts.day_master:
+        raise ValueError("day exposed stem must match day_master")
+
+    valid_pillars = frozenset(expected_pillars)
+    last_hidden_index: dict[tuple[str, str], int] = {}
+    month_hidden_identity: list[tuple[str, str]] = []
+    for hidden_fact in facts.hidden_stems:
+        if hidden_fact.pillar_name not in valid_pillars:
+            raise ValueError(
+                f"invalid hidden pillar name: {hidden_fact.pillar_name!r}"
+            )
+        hidden_branch = hidden_fact.branch
+        if not _is_branch(hidden_branch):
+            raise ValueError(f"invalid hidden branch: {hidden_branch!r}")
+        hidden_stem = hidden_fact.stem
+        if not _is_stem(hidden_stem):
+            raise ValueError(f"invalid hidden stem: {hidden_stem!r}")
+        if hidden_fact.role not in _ROLE_ORDER:
+            raise ValueError(f"invalid hidden role: {hidden_fact.role!r}")
+
+        canonical_entries = HIDDEN_STEMS[hidden_branch]
+        identity = (hidden_stem, hidden_fact.role)
+        if identity not in canonical_entries:
+            raise ValueError(
+                "hidden stem/role is not canonical for branch "
+                f"{hidden_fact.branch}: {identity!r}"
+            )
+        canonical_index = canonical_entries.index(identity)
+        occurrence = (hidden_fact.pillar_name, hidden_fact.branch)
+        if canonical_index <= last_hidden_index.get(occurrence, -1):
+            raise ValueError(
+                "hidden stems must preserve canonical order without duplicates"
+            )
+        last_hidden_index[occurrence] = canonical_index
+
+        expected_element = STEM_ELEMENT[hidden_stem]
+        if hidden_fact.element != expected_element:
+            raise ValueError(
+                f"hidden element mismatch for {hidden_fact.stem}: "
+                f"{hidden_fact.element!r} != {expected_element!r}"
+            )
+        expected_polarity = STEM_POLARITY[hidden_stem]
+        if hidden_fact.polarity != expected_polarity:
+            raise ValueError(
+                f"hidden polarity mismatch for {hidden_fact.stem}: "
+                f"{hidden_fact.polarity!r} != {expected_polarity!r}"
+            )
+        expected_ten_god = ten_god(day_master, hidden_stem)
+        if hidden_fact.ten_god != expected_ten_god:
+            raise ValueError(
+                f"hidden ten_god mismatch for {hidden_fact.stem}: "
+                f"{hidden_fact.ten_god!r} != {expected_ten_god!r}"
+            )
+        if hidden_fact.pillar_name == "month":
+            if hidden_fact.branch != facts.month_branch:
+                raise ValueError(
+                    "month hidden stem branch must match month_branch: "
+                    f"{hidden_fact.branch!r} != {facts.month_branch!r}"
+                )
+            month_hidden_identity.append(identity)
+
+    if tuple(month_hidden_identity) != HIDDEN_STEMS[month_branch]:
+        raise ValueError(
+            "month hidden facts must exactly match canonical HIDDEN_STEMS"
+        )
+
+
+def _validate_relations(
+    relations: tuple[BranchRelationResult, ...],
+) -> None:
+    for relation in relations:
+        has_element = bool(relation.transformed_element)
+        valid_transformation = (
+            relation.state == "transformed"
+            and has_element
+            and not relation.blockers
+        )
+        if has_element and relation.transformed_element not in ELEMENTS:
+            raise ValueError(
+                "relation transformation consistency: invalid transformed element"
+            )
+        if has_element or relation.state == "transformed":
+            if not valid_transformation:
+                raise ValueError(
+                    "relation transformation consistency: transformed state "
+                    "requires an element and no blockers"
+                )
 
 
 def _relation_trace(
@@ -176,15 +334,21 @@ def _relation_trace(
 
 def _upstream_status(
     strength: StrengthResult,
-    default_status: Literal["computed", "indeterminate", "disputed"],
-    default_confidence: Literal["high", "medium", "low"],
+    default_status: ComputationStatus,
+    default_confidence: Confidence,
     has_transformation: bool,
-) -> tuple[str, str, tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+) -> tuple[
+    ComputationStatus,
+    Confidence,
+    tuple[str, ...],
+    tuple[str, ...],
+    tuple[str, ...],
+]:
     status = strength.reasoning.status
     if status == "computed" and not has_transformation:
         return default_status, default_confidence, (), (), ()
     if status in {"disputed", "not_computed"}:
-        result_status = status
+        result_status: ComputationStatus = status
     else:
         result_status = "indeterminate"
     prerequisite = (
@@ -237,8 +401,8 @@ def _standard_candidate(
     rescue = _conditions_for(PATTERN_RESCUE.get(name, ()), signals)
 
     if damage:
-        default_status: Literal["computed", "disputed"] = "disputed"
-        default_confidence: Literal["high", "medium", "low"] = (
+        default_status: ComputationStatus = "disputed"
+        default_confidence: Confidence = (
             "medium" if rescue else "low"
         )
     else:
@@ -257,12 +421,16 @@ def _standard_candidate(
         ("candidate_only:not_final_pattern",) if ten_god in _SPECIAL_NAMES else ()
     )
     latent_damage_context = tuple(
-        f"latent_damage_context:{item}"
-        for item in _conditions_for(PATTERN_DAMAGE.get(name, ()), hidden_signals)
+        f"latent_damage_context:{damage_provenance}"
+        for damage_provenance in _conditions_for(
+            PATTERN_DAMAGE.get(name, ()), hidden_signals
+        )
     )
     latent_rescue_context = tuple(
-        f"latent_rescue_context:{item}"
-        for item in _conditions_for(PATTERN_RESCUE.get(name, ()), hidden_signals)
+        f"latent_rescue_context:{rescue_provenance}"
+        for rescue_provenance in _conditions_for(
+            PATTERN_RESCUE.get(name, ()), hidden_signals
+        )
     )
     relation_missing = (
         ("transformed_relation_pattern_modifier",)
@@ -275,8 +443,14 @@ def _standard_candidate(
     )
     rule_ids = (
         f"pattern.formation.month_{role}.{_PATTERN_IDS[ten_god]}",
-        *(f"pattern.damage.{name}.{item.rsplit(':', 1)[-1]}" for item in damage),
-        *(f"pattern.rescue.{name}.{item.rsplit(':', 1)[-1]}" for item in rescue),
+        *(
+            f"pattern.damage.{name}.{damage_provenance.rsplit(':', 1)[-1]}"
+            for damage_provenance in damage
+        ),
+        *(
+            f"pattern.rescue.{name}.{rescue_provenance.rsplit(':', 1)[-1]}"
+            for rescue_provenance in rescue
+        ),
         *prerequisite_rules,
         *relation_rule_ids,
     )
@@ -386,27 +560,26 @@ def calculate_pattern_candidates(
     strength: StrengthResult,
     relations: tuple[BranchRelationResult, ...] = (),
 ) -> tuple[PatternCandidateResult, ...]:
-    if facts.month_branch not in BRANCHES:
-        raise ValueError(f"invalid month branch: {facts.month_branch!r}")
+    _validate_chart_facts(facts)
+    _validate_relations(relations)
     month_hidden = tuple(
-        item
-        for item in facts.hidden_stems
-        if item.pillar_name == "month"
+        hidden_fact
+        for hidden_fact in facts.hidden_stems
+        if hidden_fact.pillar_name == "month"
     )
-    month_main = tuple(item for item in month_hidden if item.role == "main")
+    month_main = tuple(
+        hidden_fact
+        for hidden_fact in month_hidden
+        if hidden_fact.role == "main"
+    )
     if len(month_main) != 1:
         raise ValueError("expected exactly one month main hidden stem")
-    for item in month_hidden:
-        if item.branch != facts.month_branch:
+    for month_fact in month_hidden:
+        if month_fact.ten_god not in _KNOWN_TEN_GODS:
+            qualifier = "main " if month_fact.role == "main" else ""
             raise ValueError(
-                "month hidden stem branch must match month_branch: "
-                f"{item.branch!r} != {facts.month_branch!r}"
+                f"unknown month {qualifier}ten god: {month_fact.ten_god!r}"
             )
-        if item.role not in _ROLE_ORDER:
-            raise ValueError(f"unknown month hidden stem role: {item.role!r}")
-        if item.ten_god not in _KNOWN_TEN_GODS:
-            qualifier = "main " if item.role == "main" else ""
-            raise ValueError(f"unknown month {qualifier}ten god: {item.ten_god!r}")
 
     signals, hidden_signals = _signal_index(facts)
     (
@@ -417,28 +590,30 @@ def calculate_pattern_candidates(
     ) = _relation_trace(relations)
     eligible = [month_main[0]]
     eligible.extend(
-        item
-        for item in sorted(month_hidden, key=lambda value: _ROLE_ORDER[value.role])
-        if item.role != "main"
-        and item.ten_god in TEN_GOD_PATTERN_NAMES
+        secondary_fact
+        for secondary_fact in sorted(
+            month_hidden, key=lambda value: _ROLE_ORDER[value.role]
+        )
+        if secondary_fact.role != "main"
+        and secondary_fact.ten_god in TEN_GOD_PATTERN_NAMES
         and any(
             provenance.startswith("exposed:")
-            for provenance in signals.get(item.ten_god, ())
+            for provenance in signals.get(secondary_fact.ten_god, ())
         )
     )
 
     results: list[PatternCandidateResult] = []
     seen_pattern_ids: set[str] = set()
-    for item in eligible:
-        pattern_id = _PATTERN_IDS[item.ten_god]
+    for eligible_fact in eligible:
+        pattern_id = _PATTERN_IDS[eligible_fact.ten_god]
         if pattern_id in seen_pattern_ids:
             continue
         seen_pattern_ids.add(pattern_id)
         results.append(
             _standard_candidate(
-                ten_god=item.ten_god,
-                role=item.role,
-                month_hidden=item,
+                ten_god=eligible_fact.ten_god,
+                role=eligible_fact.role,
+                month_hidden=eligible_fact,
                 rank=len(results) + 1,
                 facts=facts,
                 strength=strength,

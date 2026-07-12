@@ -55,7 +55,7 @@
       "id": "latent_hurting_officer_does_not_damage_officer",
       "pattern_ten_god": "正官",
       "signals": [],
-      "latent_signals": ["伤官"],
+      "latent_branches": ["午"],
       "expected_damage": [],
       "expected_rescue": [],
       "expected_latent_context": ["伤官"]
