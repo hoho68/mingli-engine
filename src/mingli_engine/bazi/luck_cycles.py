@@ -21,6 +21,7 @@ from mingli_engine.models import BaziChart, Pillar
 
 
 _EXPECTED_ROLES = Counter({"year": 1, "month": 1, "day": 1, "hour": 1})
+_ROLE_ORDER = ("year", "month", "day", "hour")
 _GENDER_ALIASES = {"male": "male", "男": "male", "female": "female", "女": "female"}
 _MAX_COUNT = 100
 
@@ -47,12 +48,14 @@ def _validated_chart_pillars(chart: BaziChart) -> tuple[Pillar, ...]:
         raise ValueError("expected exactly four pillars")
     if Counter(pillar.name for pillar in chart.pillars) != _EXPECTED_ROLES:
         raise ValueError("expected exactly one year, month, day, and hour pillar")
-    for pillar in chart.pillars:
+    pillars_by_name = {pillar.name: pillar for pillar in chart.pillars}
+    pillars = tuple(pillars_by_name[name] for name in _ROLE_ORDER)
+    for pillar in pillars:
         if pillar.heavenly_stem not in STEMS:
             raise ValueError(f"Invalid stem: {pillar.heavenly_stem!r}")
         if pillar.earthly_branch not in BRANCHES:
             raise ValueError(f"Invalid branch: {pillar.earthly_branch!r}")
-    return tuple(chart.pillars)
+    return pillars
 
 
 def _not_computed(missing_input: str) -> LuckCycleResult:
@@ -84,7 +87,14 @@ def _require_matching_natal_pillars(
 ) -> None:
     if not isinstance(birth_datetime, datetime):
         raise ValueError("birth_datetime must be a datetime")
-    provider_pillars = calculate_provider_pillars(birth_datetime)
+    if birth_datetime.utcoffset() is not None:
+        raise ValueError(
+            "birth_datetime must be naive local wall time under chart timezone assumption"
+        )
+    try:
+        provider_pillars = calculate_provider_pillars(birth_datetime)
+    except Exception as exc:
+        raise RuntimeError("natal-pillar provider calculation failed") from exc
     chart_by_name = {pillar.name: pillar for pillar in chart_pillars}
     provider_by_name = {pillar.name: pillar for pillar in provider_pillars}
     if set(provider_by_name) != set(_EXPECTED_ROLES):
@@ -131,10 +141,11 @@ def calculate_luck_cycles(
     if birth_datetime is None:
         return _not_computed("birth_datetime")
 
-    _require_matching_natal_pillars(chart_pillars, birth_datetime)
     gender = _normalize_gender(chart.birth_profile.gender)
     if gender is None:
         return _not_computed("supported_gender")
+
+    _require_matching_natal_pillars(chart_pillars, birth_datetime)
 
     provider = calculate_provider_luck_cycles(
         birth_datetime,
@@ -156,7 +167,13 @@ def calculate_luck_cycles(
         f"start_hours={provider.start_hours}",
         f"start_solar={provider.start_solar}",
     ]
-    assumptions = [f"sect={sect}", f"count={count}"]
+    assumptions = [
+        f"sect={sect}",
+        f"count={count}",
+        chart.chart_source.timezone_assumption,
+        "naive_wall_time=true",
+        f"true_solar_time_applied={chart.chart_source.true_solar_time_applied!r}",
+    ]
     rule_ids = [
         "luck_cycle.provider.lunar_python_1_4_8",
         "luck_cycle.direction",

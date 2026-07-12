@@ -103,6 +103,10 @@ def calculate_provider_luck_cycles(
 ) -> ProviderLuckCycle:
     if not isinstance(birth_datetime, datetime):
         raise ValueError("birth_datetime must be a datetime")
+    if birth_datetime.utcoffset() is not None:
+        raise ValueError(
+            "birth_datetime must be naive local wall time under chart timezone assumption"
+        )
     normalized_gender = gender.strip().casefold() if isinstance(gender, str) else ""
     gender_value = _GENDER_VALUES.get(normalized_gender)
     if gender_value is None:

@@ -1,6 +1,6 @@
 import json
 from dataclasses import FrozenInstanceError, replace
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -108,6 +108,31 @@ def test_provider_requires_datetime() -> None:
         calculate_provider_luck_cycles("1992-08-18T09:30:00", "male")  # type: ignore[arg-type]
 
 
+@pytest.mark.parametrize(
+    "tzinfo",
+    [timezone(timedelta(hours=8)), timezone.utc, timezone(timedelta(hours=-5))],
+    ids=["utc_plus_8", "utc", "utc_minus_5"],
+)
+def test_provider_rejects_aware_datetime_before_lunar_call(
+    tzinfo: timezone, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def fail(*args: Any) -> None:
+        raise AssertionError("Solar must not be called for aware datetime")
+
+    monkeypatch.setattr("mingli_engine.calendar_provider.Solar.fromYmdHms", fail)
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            "^birth_datetime must be naive local wall time under chart timezone "
+            "assumption$"
+        ),
+    ):
+        calculate_provider_luck_cycles(
+            datetime(1992, 8, 18, 9, 30, tzinfo=tzinfo), "male"
+        )
+
+
 def test_provider_wraps_lunar_exceptions_with_stable_error(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -164,6 +189,103 @@ def test_luck_cycles_degrade_for_unsupported_chart_gender(gender: str) -> None:
     assert result.pillars == ()
 
 
+def test_unsupported_gender_degrades_before_chart_datetime_mismatch(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    chart = _chart("unsupported")
+    mismatched = replace(chart.pillars[0], heavenly_stem="甲")
+
+    def fail(*args: Any, **kwargs: Any) -> None:
+        raise AssertionError("provider must not be called for unsupported gender")
+
+    monkeypatch.setattr(
+        "mingli_engine.bazi.luck_cycles.calculate_provider_pillars", fail
+    )
+    monkeypatch.setattr(
+        "mingli_engine.bazi.luck_cycles.calculate_provider_luck_cycles", fail
+    )
+
+    result = calculate_luck_cycles(
+        replace(chart, pillars=[mismatched, *chart.pillars[1:]]),
+        birth_datetime=datetime(1992, 8, 18, 9, 30),
+    )
+
+    assert result.reasoning.status == "not_computed"
+    assert result.reasoning.confidence == "low"
+    assert result.reasoning.missing_inputs == ("supported_gender",)
+    assert result.pillars == ()
+    assert result.selected_year_relations == ()
+
+
+def test_unsupported_gender_degrades_before_failing_natal_provider(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fail(*args: Any, **kwargs: Any) -> None:
+        raise LookupError("provider detail")
+
+    monkeypatch.setattr(
+        "mingli_engine.bazi.luck_cycles.calculate_provider_pillars", fail
+    )
+
+    result = calculate_luck_cycles(
+        _chart("unsupported"), birth_datetime=datetime(1992, 8, 18, 9, 30)
+    )
+
+    assert result.reasoning.status == "not_computed"
+    assert result.reasoning.confidence == "low"
+    assert result.reasoning.missing_inputs == ("supported_gender",)
+    assert result.pillars == ()
+    assert result.selected_year_relations == ()
+
+
+@pytest.mark.parametrize(
+    "tzinfo",
+    [timezone(timedelta(hours=8)), timezone.utc, timezone(timedelta(hours=-5))],
+    ids=["utc_plus_8", "utc", "utc_minus_5"],
+)
+def test_high_level_rejects_aware_datetime_before_natal_provider(
+    tzinfo: timezone, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def fail(*args: Any, **kwargs: Any) -> None:
+        raise AssertionError("natal provider must not be called for aware datetime")
+
+    monkeypatch.setattr(
+        "mingli_engine.bazi.luck_cycles.calculate_provider_pillars", fail
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            "^birth_datetime must be naive local wall time under chart timezone "
+            "assumption$"
+        ),
+    ):
+        calculate_luck_cycles(
+            _chart(),
+            birth_datetime=datetime(1992, 8, 18, 9, 30, tzinfo=tzinfo),
+        )
+
+
+def test_natal_provider_exceptions_are_wrapped_with_stable_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fail(*args: Any, **kwargs: Any) -> None:
+        raise LookupError("provider detail")
+
+    monkeypatch.setattr(
+        "mingli_engine.bazi.luck_cycles.calculate_provider_pillars", fail
+    )
+
+    with pytest.raises(
+        RuntimeError, match="^natal-pillar provider calculation failed$"
+    ) as exc_info:
+        calculate_luck_cycles(
+            _chart(), birth_datetime=datetime(1992, 8, 18, 9, 30)
+        )
+
+    assert isinstance(exc_info.value.__cause__, LookupError)
+
+
 def test_luck_cycles_reject_chart_and_datetime_mismatch() -> None:
     chart = _chart()
     mismatched = replace(chart.pillars[0], heavenly_stem="甲")
@@ -195,6 +317,9 @@ def test_luck_cycles_map_real_provider_pipeline_and_trace_start_hours() -> None:
     assert "start_hours=0" in trace
     assert "sect=1" in trace
     assert "count=2" in trace
+    assert _chart().chart_source.timezone_assumption in result.reasoning.assumptions
+    assert "naive_wall_time=true" in result.reasoning.assumptions
+    assert "true_solar_time_applied=False" in result.reasoning.assumptions
     assert result.reasoning.rule_ids
 
 
@@ -247,6 +372,28 @@ def test_selected_year_relations_include_dynamic_positions_and_exclude_natal_onl
     event_terms = ("death", "disaster", "marriage", "wealth", "illness", "career")
     rendered = repr(first).casefold()
     assert not any(term in rendered for term in event_terms)
+
+
+def test_reordered_chart_pillars_produce_identical_luck_cycle_output() -> None:
+    chart = _chart()
+    reordered = replace(
+        chart,
+        pillars=[
+            chart.pillars[2],
+            chart.pillars[0],
+            chart.pillars[3],
+            chart.pillars[1],
+        ],
+    )
+    kwargs = {
+        "birth_datetime": datetime(1992, 8, 18, 9, 30),
+        "selected_year": 2001,
+        "count": 2,
+    }
+
+    assert calculate_luck_cycles(reordered, **kwargs) == calculate_luck_cycles(
+        chart, **kwargs
+    )
 
 
 def test_year_outside_returned_cycles_still_compares_selected_year_to_natal() -> None:
