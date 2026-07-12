@@ -3,6 +3,7 @@ import shutil
 from pathlib import Path
 
 from mingli_engine import calculation_validation
+from mingli_engine import project_completion, report_acceptance, report_release
 from mingli_engine.calculation_validation import build_calculation_checks
 
 
@@ -18,6 +19,21 @@ EXPECTED_CHECKS = {
 }
 
 
+def _copy_fixtures(tmp_path: Path) -> Path:
+    fixture_dir = tmp_path / "bazi_calculation"
+    shutil.copytree(calculation_validation.DEFAULT_FIXTURE_DIR, fixture_dir)
+    return fixture_dir
+
+
+def _load_fixture(fixture_dir: Path, name: str) -> tuple[Path, dict]:
+    path = fixture_dir / name
+    return path, json.loads(path.read_text(encoding="utf-8"))
+
+
+def _write_fixture(path: Path, payload: dict) -> None:
+    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+
 def test_calculation_checks_pass_the_v1_release_baseline():
     assert build_calculation_checks() == EXPECTED_CHECKS
 
@@ -25,8 +41,7 @@ def test_calculation_checks_pass_the_v1_release_baseline():
 def test_verified_fixture_gate_rejects_a_forged_pillar_artifact(
     tmp_path: Path,
 ):
-    fixture_dir = tmp_path / "bazi_calculation"
-    shutil.copytree(calculation_validation.DEFAULT_FIXTURE_DIR, fixture_dir)
+    fixture_dir = _copy_fixtures(tmp_path)
     fixture_path = fixture_dir / "verified_charts.json"
     payload = json.loads(fixture_path.read_text(encoding="utf-8"))
     payload["records"][0]["verification"]["cross_provider_artifact"][
@@ -42,8 +57,7 @@ def test_verified_fixture_gate_rejects_a_forged_pillar_artifact(
 def test_boundary_gate_rejects_metadata_without_the_backed_behavior(
     tmp_path: Path,
 ):
-    fixture_dir = tmp_path / "bazi_calculation"
-    shutil.copytree(calculation_validation.DEFAULT_FIXTURE_DIR, fixture_dir)
+    fixture_dir = _copy_fixtures(tmp_path)
     fixture_path = fixture_dir / "luck_cycle_boundary_cases.json"
     payload = json.loads(fixture_path.read_text(encoding="utf-8"))
     payload["cases"][0]["fixture_metadata"]["demonstrated_behaviors"] = [
@@ -54,6 +68,132 @@ def test_boundary_gate_rejects_metadata_without_the_backed_behavior(
     checks = build_calculation_checks(fixture_dir=fixture_dir)
 
     assert checks["boundary_fixture_count"] == "failed"
+
+
+def test_verified_gate_executes_second_record_input(tmp_path: Path):
+    fixture_dir = _copy_fixtures(tmp_path)
+    path, payload = _load_fixture(fixture_dir, "verified_charts.json")
+    payload["records"][1]["input"]["birth_date"] = "1990-01-01"
+    _write_fixture(path, payload)
+
+    checks = build_calculation_checks(fixture_dir=fixture_dir)
+
+    assert checks["verified_fixture_count"] == "failed"
+
+
+def test_verified_gate_recomputes_downstream_expected_values(tmp_path: Path):
+    fixture_dir = _copy_fixtures(tmp_path)
+    path, payload = _load_fixture(fixture_dir, "verified_charts.json")
+    payload["records"][0]["expected"]["strength"]["score"] += 1
+    _write_fixture(path, payload)
+
+    checks = build_calculation_checks(fixture_dir=fixture_dir)
+
+    assert checks["verified_fixture_count"] == "failed"
+
+
+def test_boundary_gate_executes_luck_direction(tmp_path: Path):
+    fixture_dir = _copy_fixtures(tmp_path)
+    path, payload = _load_fixture(
+        fixture_dir, "luck_cycle_boundary_cases.json"
+    )
+    payload["cases"][0]["expected"]["forward"] = not payload["cases"][0][
+        "expected"
+    ]["forward"]
+    _write_fixture(path, payload)
+
+    checks = build_calculation_checks(fixture_dir=fixture_dir)
+
+    assert checks["boundary_fixture_count"] == "failed"
+
+
+def test_boundary_gate_executes_strength_ranges(tmp_path: Path):
+    fixture_dir = _copy_fixtures(tmp_path)
+    path, payload = _load_fixture(fixture_dir, "strength_boundary_cases.json")
+    case = next(
+        item
+        for item in payload["cases"]
+        if item["expected"]["strength"].get("sensitivity_boundary")
+    )
+    case["expected"]["strength"]["score_range"] = [999.0, 1000.0]
+    _write_fixture(path, payload)
+
+    checks = build_calculation_checks(fixture_dir=fixture_dir)
+
+    assert checks["boundary_fixture_count"] == "failed"
+
+
+def test_boundary_gate_executes_pattern_semantics(tmp_path: Path):
+    fixture_dir = _copy_fixtures(tmp_path)
+    path, payload = _load_fixture(fixture_dir, "pattern_counterexamples.json")
+    case = next(item for item in payload["counterexamples"] if item["expected_damage"])
+    case["expected_damage"] = ["not_the_calculated_damage"]
+    _write_fixture(path, payload)
+
+    checks = build_calculation_checks(fixture_dir=fixture_dir)
+
+    assert checks["boundary_fixture_count"] == "failed"
+
+
+def test_corrupted_fixture_blocks_all_completion_gates(monkeypatch, tmp_path: Path):
+    fixture_dir = _copy_fixtures(tmp_path)
+    path, payload = _load_fixture(fixture_dir, "verified_charts.json")
+    payload["records"][1]["input"]["birth_date"] = "1990-01-01"
+    _write_fixture(path, payload)
+    checks = build_calculation_checks(fixture_dir=fixture_dir)
+    assert checks["verified_fixture_count"] == "failed"
+
+    monkeypatch.setattr(
+        report_acceptance,
+        "build_calculation_checks",
+        lambda: checks,
+    )
+    acceptance = report_acceptance.build_report_acceptance_summary()
+    assert acceptance.acceptance_status == "blocked"
+
+    monkeypatch.setattr(
+        report_release,
+        "build_calculation_checks",
+        lambda: checks,
+    )
+    monkeypatch.setattr(
+        report_release,
+        "build_report_acceptance_summary",
+        lambda: acceptance,
+    )
+    release = report_release.build_report_release_summary()
+    assert release.release_status == "blocked"
+
+    monkeypatch.setattr(project_completion, "build_calculation_checks", lambda: checks)
+    monkeypatch.setattr(
+        project_completion,
+        "validate_curation_quality",
+        lambda sources, evidence, conflicts: [],
+    )
+    monkeypatch.setattr(
+        project_completion,
+        "validate_materials_audit_quality",
+        lambda: [],
+    )
+    monkeypatch.setattr(
+        project_completion,
+        "validate_learning_reference_quality",
+        lambda: [],
+    )
+    monkeypatch.setattr(
+        project_completion,
+        "build_report_acceptance_summary",
+        lambda: acceptance,
+    )
+    monkeypatch.setattr(
+        project_completion,
+        "build_report_release_summary",
+        lambda: release,
+    )
+    completion = project_completion.build_project_completion_summary()
+    assert completion.completion_status == "blocked"
+    assert completion.completion_checks["calculation_validation"] == "failed"
+    assert "calculation_validation" in completion.remaining_local_blockers
 
 
 def test_validator_detects_runtime_probe_writes(monkeypatch, tmp_path: Path):
@@ -75,6 +215,28 @@ def test_validator_detects_runtime_probe_writes(monkeypatch, tmp_path: Path):
     )
 
     checks = build_calculation_checks(snapshot_roots=(watched,))
+
+    assert checks["no_persistence"] == "failed"
+
+
+def test_validator_snapshots_custom_fixture_root(monkeypatch, tmp_path: Path):
+    fixture_dir = _copy_fixtures(tmp_path)
+    original = calculation_validation._verified_fixture_ready
+
+    def verify_with_write(path: Path):
+        result = original(path)
+        (path / "birth-profile-private.json").write_text(
+            "private", encoding="utf-8"
+        )
+        return result
+
+    monkeypatch.setattr(
+        calculation_validation,
+        "_verified_fixture_ready",
+        verify_with_write,
+    )
+
+    checks = build_calculation_checks(fixture_dir=fixture_dir)
 
     assert checks["no_persistence"] == "failed"
 

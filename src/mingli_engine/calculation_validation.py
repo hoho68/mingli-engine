@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import asdict, replace
 from datetime import datetime
 from hashlib import sha256
 import json
@@ -7,9 +8,43 @@ from pathlib import Path
 from typing import Any, Callable
 
 from mingli_engine.bazi.analysis import analyze_bazi_chart
+from mingli_engine.bazi.branch_relations import (
+    detect_branch_relations,
+    detect_branch_relations_for_positions,
+)
+from mingli_engine.bazi.constants import (
+    BRANCHES,
+    HIDDEN_STEMS,
+    STEM_ELEMENT,
+    STEM_POLARITY,
+    STEMS,
+)
+from mingli_engine.bazi.facts import build_chart_facts, ten_god
 from mingli_engine.bazi.legacy_adapter import build_legacy_not_computed_bundle
-from mingli_engine.bazi.schools import load_school_profiles_config
+from mingli_engine.bazi.luck_cycles import calculate_luck_cycles
+from mingli_engine.bazi.patterns import (
+    PATTERN_DAMAGE,
+    PATTERN_RESCUE,
+    TEN_GOD_PATTERN_NAMES,
+    calculate_pattern_candidates,
+)
+from mingli_engine.bazi.result_models import (
+    BranchRelationResult,
+    ChartFacts,
+    HiddenStemFact,
+    ReasonedResult,
+    RootFact,
+    StemFact,
+    StrengthResult,
+)
+from mingli_engine.bazi.schools import (
+    interpret_with_enabled_schools,
+    load_school_profiles_config,
+)
+from mingli_engine.bazi.strength import calculate_strength, load_strength_config
+from mingli_engine.bazi.useful_gods import calculate_useful_god_candidates
 from mingli_engine.bazi.versions import ENGINE_VERSION, RULESET_VERSION
+from mingli_engine.calendar_provider import calculate_provider_luck_cycles
 from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.classical_sources import (
     load_approved_evidence_units,
@@ -122,6 +157,12 @@ _STRENGTH_SEMANTIC_CATEGORIES = {
     "aware_datetime": {"time_assumption_aware"},
     "true_solar_assumption_recorded": {"true_solar_assumption_recorded"},
 }
+_PATTERN_DAY_MASTER = STEMS[0]
+_TEN_GOD_STEM = {ten_god(_PATTERN_DAY_MASTER, stem): stem for stem in STEMS}
+_MONTH_BRANCH_BY_MAIN = {
+    ten_god(_PATTERN_DAY_MASTER, hidden[0][0]): branch
+    for branch, hidden in HIDDEN_STEMS.items()
+}
 
 
 def _load_json_object(path: Path) -> dict[str, Any]:
@@ -150,6 +191,107 @@ def _contains_placeholder(value: object) -> bool:
     if isinstance(value, list):
         return any(_contains_placeholder(item) for item in value)
     return False
+
+
+def _json_value(value: object) -> object:
+    if isinstance(value, tuple):
+        return [_json_value(item) for item in value]
+    if isinstance(value, list):
+        return [_json_value(item) for item in value]
+    if isinstance(value, dict):
+        return {key: _json_value(item) for key, item in value.items()}
+    return value
+
+
+def _require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError(message)
+
+
+def _execute_verified_record(record: dict[str, Any]) -> None:
+    input_data = record["input"]
+    expected = record["expected"]
+    profile = BirthProfile(**input_data)
+    birth_datetime = datetime.fromisoformat(
+        f"{profile.birth_date}T{profile.birth_time}:00"
+    )
+    first_chart = calculate_bazi_chart(profile)
+    first_bundle = analyze_bazi_chart(
+        first_chart,
+        birth_datetime=birth_datetime,
+        selected_year=2030,
+    )
+    second_chart = calculate_bazi_chart(profile)
+    second_bundle = analyze_bazi_chart(
+        second_chart,
+        birth_datetime=birth_datetime,
+        selected_year=2030,
+    )
+    _require(first_chart == second_chart, "verified chart is not deterministic")
+    _require(first_bundle == second_bundle, "verified analysis is not deterministic")
+    _require(
+        first_bundle.engine_version == ENGINE_VERSION
+        and first_bundle.ruleset_version == RULESET_VERSION,
+        "verified analysis version mismatch",
+    )
+    _require(
+        [
+            {
+                "name": pillar.name,
+                "gan_zhi": f"{pillar.heavenly_stem}{pillar.earthly_branch}",
+            }
+            for pillar in first_chart.pillars
+        ]
+        == expected["chart_pillars"],
+        "verified chart pillar mismatch",
+    )
+    _require(
+        _json_value(asdict(first_bundle.facts)) == expected["facts"],
+        "verified facts mismatch",
+    )
+    _require(
+        _json_value([asdict(item) for item in first_bundle.branch_relations])
+        == expected["relations"],
+        "verified relations mismatch",
+    )
+    strength = expected["strength"]
+    _require(
+        {
+            "status": first_bundle.strength.reasoning.status,
+            "label": first_bundle.strength.label,
+            "score": first_bundle.strength.score,
+            "lower_bound": first_bundle.strength.lower_bound,
+            "upper_bound": first_bundle.strength.upper_bound,
+        }
+        == strength,
+        "verified strength mismatch",
+    )
+    _require(
+        [
+            {
+                "pattern_id": item.pattern_id,
+                "status": item.reasoning.status,
+                "rank": item.rank,
+            }
+            for item in first_bundle.patterns
+        ]
+        == expected["patterns"],
+        "verified pattern mismatch",
+    )
+    luck = first_bundle.luck_cycles
+    _require(
+        {
+            "status": luck.reasoning.status,
+            "forward": luck.forward,
+            "start_years": luck.start_years,
+            "start_months": luck.start_months,
+            "start_days": luck.start_days,
+            "start_solar": luck.start_solar,
+            "pillars": [asdict(item) for item in luck.pillars],
+        }
+        == expected["luck"],
+        "verified luck mismatch",
+    )
 
 
 def _verified_fixture_ready(fixture_dir: Path) -> bool:
@@ -216,6 +358,15 @@ def _verified_fixture_ready(fixture_dir: Path) -> bool:
             or [item.get("name") for item in pillars if isinstance(item, dict)]
             != list(_PILLAR_ROLES)
             or pillars != expected_pillars
+            or any(
+                not isinstance(item, dict)
+                or set(item) != {"name", "gan_zhi"}
+                or not isinstance(item.get("gan_zhi"), str)
+                or len(item["gan_zhi"]) != 2
+                or item["gan_zhi"][0] not in STEMS
+                or item["gan_zhi"][1] not in BRANCHES
+                for item in pillars
+            )
             or verification.get("cross_provider_artifact_sha256")
             != _canonical_hash(artifact)
             or not isinstance(downstream, dict)
@@ -227,40 +378,390 @@ def _verified_fixture_ready(fixture_dir: Path) -> bool:
             or downstream.get("ruleset_version") != RULESET_VERSION
         ):
             return False
+        _execute_verified_record(record)
     return len(ids) == len(set(ids))
 
 
-def _derived_boundary_categories(case: dict[str, Any], fixture_name: str) -> set[str]:
-    if fixture_name == "strength_boundary_cases.json":
-        expected = case.get("expected")
-        semantic = expected.get("semantic") if isinstance(expected, dict) else None
-        if not isinstance(semantic, dict):
-            return set()
-        kind = semantic.get("kind")
-        if not isinstance(kind, str):
-            return set()
-        return set(_STRENGTH_SEMANTIC_CATEGORIES.get(kind, set()))
-    if fixture_name == "pattern_counterexamples.json":
-        derived: set[str] = set()
-        if case.get("expected_damage"):
-            derived.add("damaged_pattern")
-        if case.get("expected_rescue"):
-            derived.add("rescued_pattern")
-        if case.get("expected_latent_context"):
-            derived.add("latent_vs_exposed")
-        if case.get("strength_status") == "indeterminate":
-            derived.add("pattern_strength_prerequisite_indeterminate")
-        return derived
+def _chart_facts_from_json(payload: dict[str, Any]) -> ChartFacts:
+    return ChartFacts(
+        day_master=payload["day_master"],
+        month_branch=payload["month_branch"],
+        exposed_stems=tuple(StemFact(**item) for item in payload["exposed_stems"]),
+        hidden_stems=tuple(
+            HiddenStemFact(**item) for item in payload["hidden_stems"]
+        ),
+        roots=tuple(RootFact(**item) for item in payload["roots"]),
+        twelve_growth_by_pillar=tuple(
+            tuple(item) for item in payload["twelve_growth_by_pillar"]
+        ),
+        assumptions=tuple(payload["assumptions"]),
+    )
+
+
+def _relations_from_json(
+    payload: list[dict[str, Any]],
+) -> tuple[BranchRelationResult, ...]:
+    return tuple(BranchRelationResult(**item) for item in payload)
+
+
+def _pattern_stem_fact(pillar_name: str, stem: str) -> StemFact:
+    return StemFact(
+        pillar_name=pillar_name,
+        stem=stem,
+        element=STEM_ELEMENT[stem],
+        polarity=STEM_POLARITY[stem],
+        ten_god=ten_god(_PATTERN_DAY_MASTER, stem),
+    )
+
+
+def _pattern_hidden_facts(
+    pillar_name: str,
+    branch: str,
+) -> tuple[HiddenStemFact, ...]:
+    return tuple(
+        HiddenStemFact(
+            pillar_name=pillar_name,
+            branch=branch,
+            stem=stem,
+            role=role,
+            element=STEM_ELEMENT[stem],
+            polarity=STEM_POLARITY[stem],
+            ten_god=ten_god(_PATTERN_DAY_MASTER, stem),
+        )
+        for stem, role in HIDDEN_STEMS[branch]
+    )
+
+
+def _execute_pattern_boundary(case: dict[str, Any]) -> set[str]:
+    signals = tuple(case["signals"])
+    pattern_name = TEN_GOD_PATTERN_NAMES[case["pattern_ten_god"]]
+    forbidden = {*PATTERN_DAMAGE[pattern_name], *PATTERN_RESCUE[pattern_name]}
+    neutral_god = next(
+        god
+        for god in _TEN_GOD_STEM
+        if god not in forbidden and god not in signals
+    )
+    assigned = tuple(_TEN_GOD_STEM[god] for god in signals)
+    neutral_stem = _TEN_GOD_STEM[neutral_god]
+    non_day_stems = (*assigned, *((neutral_stem,) * (3 - len(assigned))))
+    month_branch = _MONTH_BRANCH_BY_MAIN[case["pattern_ten_god"]]
+    latent = tuple(
+        fact
+        for index, branch in enumerate(case.get("latent_branches", ()))
+        for fact in _pattern_hidden_facts(("year", "hour")[index % 2], branch)
+    )
+    facts = ChartFacts(
+        day_master=_PATTERN_DAY_MASTER,
+        month_branch=month_branch,
+        exposed_stems=(
+            _pattern_stem_fact("year", non_day_stems[0]),
+            _pattern_stem_fact("month", non_day_stems[1]),
+            _pattern_stem_fact("day", _PATTERN_DAY_MASTER),
+            _pattern_stem_fact("hour", non_day_stems[2]),
+        ),
+        hidden_stems=(*_pattern_hidden_facts("month", month_branch), *latent),
+        roots=(),
+        twelve_growth_by_pillar=(),
+        assumptions=("fixture:canonical-pattern-facts",),
+    )
+    strength_status = case.get("strength_status", "computed")
+    strength = StrengthResult(
+        reasoning=ReasonedResult(
+            status=strength_status,
+            conclusion="fixture strength prerequisite",
+            confidence="high" if strength_status == "computed" else "low",
+            rule_ids=("strength.fixture_boundary",),
+        ),
+        score=0.0,
+        lower_bound=0.0,
+        upper_bound=0.0,
+        label="boundary fixture",
+        contributions=(),
+    )
+    candidate = calculate_pattern_candidates(facts, strength)[0]
+    damage = tuple(item.rsplit(":", 1)[-1] for item in candidate.damage_conditions)
+    rescue = tuple(item.rsplit(":", 1)[-1] for item in candidate.rescue_conditions)
+    _require(damage == tuple(case["expected_damage"]), "pattern damage mismatch")
+    _require(rescue == tuple(case["expected_rescue"]), "pattern rescue mismatch")
+    categories: set[str] = set()
+    if damage:
+        _require(candidate.reasoning.status == "disputed", "damage status mismatch")
+        categories.add("damaged_pattern")
+    if rescue:
+        categories.add("rescued_pattern")
+    latent_context = case.get("expected_latent_context")
+    if latent_context:
+        _require(not damage, "latent signal counted as exposed damage")
+        _require(
+            all(
+                any(
+                    assumption.startswith("latent_damage_context:hidden:")
+                    and assumption.endswith(f":{god}")
+                    for assumption in candidate.reasoning.assumptions
+                )
+                for god in latent_context
+            ),
+            "latent context mismatch",
+        )
+        categories.add("latent_vs_exposed")
+    if strength_status == "indeterminate":
+        _require(
+            candidate.reasoning.status == "indeterminate",
+            "pattern prerequisite status mismatch",
+        )
+        categories.add("pattern_strength_prerequisite_indeterminate")
+    _require(bool(categories), "pattern boundary has no executed behavior")
+    return categories
+
+
+def _validate_strength_result(result: StrengthResult, expected: dict[str, Any]) -> None:
+    _require(result.reasoning.status == expected["status"], "strength status mismatch")
+    _require(result.label == expected["label"], "strength label mismatch")
+    if expected.get("sensitivity_boundary"):
+        for field_name in ("score", "lower_bound", "upper_bound"):
+            lower, upper = expected[f"{field_name}_range"]
+            _require(
+                lower <= getattr(result, field_name) <= upper,
+                f"strength {field_name} range mismatch",
+            )
+    else:
+        _require(result.score == expected["score"], "strength score mismatch")
+        _require(
+            result.lower_bound == expected["lower_bound"],
+            "strength lower-bound mismatch",
+        )
+        _require(
+            result.upper_bound == expected["upper_bound"],
+            "strength upper-bound mismatch",
+        )
+
+
+def _execute_strength_boundary(case: dict[str, Any]) -> set[str]:
+    execution = case["execution"]
+    chart = None
+    birth_datetime = None
+    if execution["kind"] == "chart_facts":
+        facts = _chart_facts_from_json(execution["facts"])
+        relations = _relations_from_json(execution["relations"])
+    else:
+        _require(execution["kind"] == "full_chart", "unsupported strength input")
+        chart = calculate_bazi_chart(BirthProfile(**execution["input"]))
+        if execution.get("chart_source_overrides"):
+            chart = replace(
+                chart,
+                chart_source=replace(
+                    chart.chart_source,
+                    **execution["chart_source_overrides"],
+                ),
+            )
+        facts = build_chart_facts(chart)
+        relations = detect_branch_relations(chart)
+        birth_datetime = datetime.fromisoformat(execution["birth_datetime"])
+    result = calculate_strength(facts, relations)
+    _validate_strength_result(result, case["expected"]["strength"])
+    semantic = case["expected"]["semantic"]
+    kind = semantic["kind"]
+    categories = set(_STRENGTH_SEMANTIC_CATEGORIES.get(kind, set()))
+    _require(bool(categories), "unsupported strength semantic")
+    if kind == "near_threshold":
+        crossed = tuple(
+            threshold
+            for threshold in load_strength_config().thresholds.values()
+            if result.lower_bound <= threshold < result.upper_bound
+        )
+        _require(crossed == (semantic["threshold"],), "threshold semantic mismatch")
+        _require(result.reasoning.status == "indeterminate", "threshold status mismatch")
+    elif kind == "incomplete_relation":
+        _require(len(relations) == 1, "incomplete relation count mismatch")
+        relation = relations[0]
+        positions_by_pillar = {
+            item.pillar_name: item.branch
+            for item in facts.hidden_stems
+            if item.role == "main"
+        }
+        detected = detect_branch_relations_for_positions(
+            tuple(positions_by_pillar.items())
+        )
+        _require(
+            not any(
+                item.relation_type == relation.relation_type
+                and set(item.branches) >= set(relation.branches)
+                for item in detected
+            ),
+            "incomplete relation was complete",
+        )
+        _require(relation.state == "incomplete", "relation state mismatch")
+        _require(not relation.transformed_element, "incomplete relation transformed")
+        _require(bool(relation.conditions), "incomplete relation lacks conditions")
+        _require(
+            relation.blockers == (f"missing {semantic['missing_branch']}",),
+            "incomplete relation blocker mismatch",
+        )
+        _require(
+            any(
+                relation.rule_id in rule_id and "no_numeric_modifier" in rule_id
+                for rule_id in result.reasoning.rule_ids
+            ),
+            "incomplete relation affected numeric strength",
+        )
+    elif kind == "school_disagreement":
+        patterns = calculate_pattern_candidates(facts, result, relations)
+        useful_gods = calculate_useful_god_candidates(facts, result, patterns)
+        schools = interpret_with_enabled_schools(
+            facts=facts,
+            strength=result,
+            patterns=patterns,
+            useful_gods=useful_gods,
+        )
+        actual_views = [
+            {
+                "school_id": item.school_id,
+                "status": item.reasoning.status,
+                "preferred_pattern_ids": list(item.preferred_pattern_ids),
+                "preferred_useful_god_elements": list(
+                    item.preferred_useful_god_elements
+                ),
+            }
+            for item in schools
+        ]
+        _require(actual_views == semantic["school_results"], "school view mismatch")
+        _require(
+            all(
+                semantic["cross_school_rule_id"] in item.reasoning.rule_ids
+                for item in schools
+            ),
+            "school disagreement rule mismatch",
+        )
+        _require(
+            len({item.preferred_pattern_ids for item in schools}) > 1,
+            "school preferences do not disagree",
+        )
+    elif kind == "unknown_gender":
+        _require(chart is not None and birth_datetime is not None, "missing chart")
+        luck = calculate_luck_cycles(chart, birth_datetime=birth_datetime)
+        _require(
+            luck.reasoning.status == semantic["luck_status"]
+            and list(luck.reasoning.missing_inputs) == semantic["missing_inputs"],
+            "unknown-gender degradation mismatch",
+        )
+    elif kind == "aware_datetime":
+        _require(chart is not None and birth_datetime is not None, "missing chart")
+        try:
+            calculate_luck_cycles(chart, birth_datetime=birth_datetime)
+        except ValueError as error:
+            _require(str(error) == semantic["error"], "aware-time error mismatch")
+        else:
+            raise ValueError("aware datetime was accepted")
+    else:
+        _require(kind == "true_solar_assumption_recorded", "unknown semantic")
+        if chart is None:
+            raise ValueError("missing true-solar chart")
+        _require(chart.chart_source.true_solar_time_applied is True, "solar flag mismatch")
+        _require(
+            semantic["assumption"] in result.reasoning.assumptions,
+            "true-solar assumption mismatch",
+        )
+    return categories
+
+
+def _execute_luck_boundary(case: dict[str, Any]) -> tuple[set[str], Any | None]:
+    birth_datetime = datetime.fromisoformat(case["birth_datetime"])
     if "expected_error" in case:
-        return {"time_assumption_unsupported"}
-    if "boundary_case" in case:
-        return {"solar_term_boundary"}
-    return {"luck_direction_boundary"}
+        _require(birth_datetime.utcoffset() is not None, "expected aware datetime")
+        try:
+            calculate_provider_luck_cycles(
+                birth_datetime,
+                case["gender"],
+                sect=case["sect"],
+                count=case["count"],
+            )
+        except ValueError as error:
+            _require(
+                str(error) == case["expected_error"]["message"],
+                "provider rejection mismatch",
+            )
+        else:
+            raise ValueError("aware provider datetime was accepted")
+        return {"time_assumption_unsupported"}, None
+    result = calculate_provider_luck_cycles(
+        birth_datetime,
+        case["gender"],
+        sect=case["sect"],
+        count=case.get("count", 2),
+    )
+    expected = case["expected"]
+    _require(result.forward is expected["forward"], "luck direction mismatch")
+    _require(result.start_years == expected["start_years"], "luck years mismatch")
+    _require(result.start_months == expected["start_months"], "luck months mismatch")
+    _require(result.start_days == expected["start_days"], "luck days mismatch")
+    _require(result.start_hours == expected["start_hours"], "luck hours mismatch")
+    _require(result.start_solar == expected["start_solar"], "luck start mismatch")
+    _require(
+        result.pillars == tuple(tuple(item) for item in expected["pillars"]),
+        "luck pillars mismatch",
+    )
+    category = "solar_term_boundary" if "boundary_case" in case else "luck_direction_boundary"
+    return {category}, result
+
+
+def _validate_solar_boundary_group(
+    cases: list[dict[str, Any]],
+    results: dict[str, Any],
+) -> None:
+    boundary_cases = [case for case in cases if "boundary_case" in case]
+    _require(len(boundary_cases) == 3, "solar boundary case count mismatch")
+    transition = datetime.fromisoformat(
+        boundary_cases[0]["boundary_case"]["transition"]
+    )
+    by_delta: dict[int, Any] = {}
+    for case in boundary_cases:
+        _require(
+            datetime.fromisoformat(case["boundary_case"]["transition"])
+            == transition,
+            "solar transition mismatch",
+        )
+        delta = int(
+            (
+                datetime.fromisoformat(case["birth_datetime"]) - transition
+            ).total_seconds()
+        )
+        _require(
+            case["boundary_case"]["phase"]
+            == {-1: "before", 0: "exact", 1: "after"}.get(delta),
+            "solar phase mismatch",
+        )
+        by_delta[delta] = results[case["id"]]
+    _require(set(by_delta) == {-1, 0, 1}, "solar offsets mismatch")
+    _require(by_delta[-1].forward is not by_delta[0].forward, "solar direction unchanged")
+    _require(by_delta[-1].pillars != by_delta[0].pillars, "solar pillars unchanged")
+    _require(by_delta[0].forward is by_delta[1].forward, "solar exact/after drift")
+    _require(
+        tuple(item[1] for item in by_delta[0].pillars)
+        == tuple(item[1] for item in by_delta[1].pillars),
+        "solar exact/after pillars drift",
+    )
+
+
+def _execute_boundary_case(
+    case: dict[str, Any],
+    fixture_name: str,
+) -> tuple[set[str], Any | None]:
+    if fixture_name == "strength_boundary_cases.json":
+        return _execute_strength_boundary(case), None
+    if fixture_name == "pattern_counterexamples.json":
+        return _execute_pattern_boundary(case), None
+    _require(
+        fixture_name == "luck_cycle_boundary_cases.json",
+        "unsupported boundary fixture",
+    )
+    return _execute_luck_boundary(case)
 
 
 def _boundary_fixture_ready(fixture_dir: Path) -> bool:
     counted_ids: list[str] = []
     categories: set[str] = set()
+    luck_cases: list[dict[str, Any]] = []
+    luck_results: dict[str, Any] = {}
     for fixture_name in (
         "strength_boundary_cases.json",
         "pattern_counterexamples.json",
@@ -284,7 +785,7 @@ def _boundary_fixture_ready(fixture_dir: Path) -> bool:
                 return False
             if metadata.get("counts_toward_boundary_gate") is not True:
                 continue
-            derived = _derived_boundary_categories(case, fixture_name)
+            derived, execution_result = _execute_boundary_case(case, fixture_name)
             expected_tests = {
                 _BOUNDARY_BEHAVIOR_CONTRACTS[item][0] for item in derived
             }
@@ -306,6 +807,11 @@ def _boundary_fixture_ready(fixture_dir: Path) -> bool:
                 return False
             counted_ids.append(case_id)
             categories.update(derived)
+            if fixture_name == "luck_cycle_boundary_cases.json":
+                luck_cases.append(case)
+                if execution_result is not None:
+                    luck_results[case_id] = execution_result
+    _validate_solar_boundary_group(luck_cases, luck_results)
     return (
         len(counted_ids) >= 20
         and len(counted_ids) == len(set(counted_ids))
@@ -462,7 +968,15 @@ def build_calculation_checks(
     snapshot_roots: tuple[Path, ...] | None = None,
 ) -> dict[str, str]:
     resolved_fixture_dir = fixture_dir or DEFAULT_FIXTURE_DIR
-    roots = snapshot_roots or DEFAULT_SNAPSHOT_ROOTS
+    if snapshot_roots is not None:
+        roots = snapshot_roots
+    elif fixture_dir is not None:
+        roots = tuple(
+            resolved_fixture_dir if root == DEFAULT_FIXTURE_DIR else root
+            for root in DEFAULT_SNAPSHOT_ROOTS
+        )
+    else:
+        roots = DEFAULT_SNAPSHOT_ROOTS
     before: tuple[tuple[str, str], ...] | None
     try:
         before = _snapshot(roots)
