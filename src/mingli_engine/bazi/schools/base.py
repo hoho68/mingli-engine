@@ -4,7 +4,7 @@ import json
 from dataclasses import dataclass, replace
 from pathlib import Path
 from types import MappingProxyType
-from typing import Mapping, Protocol, cast, runtime_checkable
+from typing import ClassVar, Mapping, Protocol, cast, runtime_checkable
 
 from mingli_engine.bazi.constants import ELEMENTS
 from mingli_engine.bazi.patterns import calculate_pattern_candidates
@@ -77,10 +77,21 @@ class _ValidatedSchoolInputs:
     useful_gods: tuple[UsefulGodCandidateResult, ...]
 
 
-@runtime_checkable
-class SchoolAdapter(Protocol):
+@dataclass(frozen=True)
+class _AdapterSnapshot:
+    adapter: SchoolAdapter
     school_id: str
     profile_version: str
+    priority: int
+
+
+@runtime_checkable
+class SchoolAdapter(Protocol):
+    @property
+    def school_id(self) -> str: ...
+
+    @property
+    def profile_version(self) -> str: ...
 
     def interpret(
         self,
@@ -92,18 +103,22 @@ class SchoolAdapter(Protocol):
     ) -> SchoolInterpretation: ...
 
 
+@dataclass(frozen=True)
 class SchoolAdapterBase:
-    school_id: str
+    profile: SchoolProfile
+    profile_version: str
+    school_id: ClassVar[str]
 
-    def __init__(self, profile: SchoolProfile, profile_version: str) -> None:
-        if profile.school_id != self.school_id:
+    def __post_init__(self) -> None:
+        if self.profile.school_id != self.school_id:
             raise ValueError(
-                f"profile {profile.school_id!r} cannot configure {self.school_id!r}"
+                f"profile {self.profile.school_id!r} cannot configure "
+                f"{self.school_id!r}"
             )
-        if profile_version != PROFILE_VERSION:
-            raise ValueError(f"unsupported school profile version: {profile_version!r}")
-        self.profile = profile
-        self.profile_version = profile_version
+        if self.profile_version != PROFILE_VERSION:
+            raise ValueError(
+                f"unsupported school profile version: {self.profile_version!r}"
+            )
 
     def interpret(
         self,
@@ -389,70 +404,78 @@ def _build_enabled_school_adapters(
     )
 
 
-def _validated_injected_adapters(
+def _validated_adapter_snapshots(
     adapters: object,
     config: SchoolProfilesConfig,
-) -> tuple[SchoolAdapter, ...]:
+) -> tuple[_AdapterSnapshot, ...]:
     if not isinstance(adapters, tuple):
         raise ValueError("injected school adapters must be a tuple")
-    validated: list[SchoolAdapter] = []
+    validated: list[_AdapterSnapshot] = []
     seen_ids: set[str] = set()
     for adapter in adapters:
         if not isinstance(adapter, SchoolAdapter):
             raise ValueError("injected school adapter must conform to SchoolAdapter")
-        if adapter.school_id not in config.enabled:
+        school_id = adapter.school_id
+        profile_version = adapter.profile_version
+        if school_id not in config.enabled:
             raise ValueError(
-                f"injected school adapter id must be enabled: {adapter.school_id!r}"
+                f"injected school adapter id must be enabled: {school_id!r}"
             )
-        if adapter.school_id in seen_ids:
+        if school_id in seen_ids:
             raise ValueError("injected school adapter ids must be unique")
-        if adapter.profile_version != PROFILE_VERSION:
+        if profile_version != PROFILE_VERSION:
             raise ValueError("injected school adapter profile version is invalid")
-        seen_ids.add(adapter.school_id)
-        validated.append(adapter)
+        seen_ids.add(school_id)
+        validated.append(
+            _AdapterSnapshot(
+                adapter=adapter,
+                school_id=school_id,
+                profile_version=profile_version,
+                priority=config.profiles[school_id].priority,
+            )
+        )
     return tuple(
         sorted(
             validated,
-            key=lambda adapter: (
-                -config.profiles[adapter.school_id].priority,
-                adapter.school_id,
-            ),
+            key=lambda snapshot: (-snapshot.priority, snapshot.school_id),
         )
     )
 
 
-def _adapter_failure(adapter: SchoolAdapter, exc: Exception) -> SchoolInterpretation:
+def _adapter_failure(
+    school_id: str,
+    profile_version: str,
+    exc: Exception,
+) -> SchoolInterpretation:
     return not_computed_interpretation(
-        school_id=adapter.school_id,
-        profile_version=PROFILE_VERSION,
+        school_id=school_id,
+        profile_version=profile_version,
         conclusion="school adapter failed in isolation",
         missing_inputs=(f"adapter_error:{type(exc).__name__}",),
-        rule_id=f"school.{adapter.school_id}.adapter_error",
+        rule_id=f"school.{school_id}.adapter_error",
     )
 
 
 def _validate_school_interpretation(
     result: SchoolInterpretation,
-    adapter: SchoolAdapter,
+    school_id: str,
+    profile_version: str,
     inputs: _ValidatedSchoolInputs,
 ) -> None:
     if not isinstance(result, SchoolInterpretation):
         raise ValueError("school adapter output must be a SchoolInterpretation")
-    if result.school_id != adapter.school_id:
+    if result.school_id != school_id:
         raise ValueError("adapter result school id mismatch")
-    if (
-        adapter.profile_version != PROFILE_VERSION
-        or result.profile_version != adapter.profile_version
-    ):
+    if profile_version != PROFILE_VERSION or result.profile_version != profile_version:
         raise ValueError("adapter result profile version mismatch")
-    _validate_reasoning(result.reasoning, f"school {adapter.school_id}")
+    _validate_reasoning(result.reasoning, f"school {school_id}")
     if (
         not result.reasoning.conclusion
         or result.reasoning.conclusion != result.reasoning.conclusion.strip()
     ):
         raise ValueError("school adapter conclusion must be nonempty and trimmed")
     rule_ids = result.reasoning.rule_ids
-    rule_prefix = f"school.{adapter.school_id}."
+    rule_prefix = f"school.{school_id}."
     if (
         not isinstance(rule_ids, tuple)
         or not rule_ids
@@ -549,29 +572,38 @@ def interpret_with_enabled_schools(
         useful_gods=useful_gods,
     )
     config = load_school_profiles_config(path)
-    selected_adapters = (
-        _validated_injected_adapters(adapters, config)
-        if adapters is not None
-        else _build_enabled_school_adapters(config)
+    snapshots = _validated_adapter_snapshots(
+        adapters if adapters is not None else _build_enabled_school_adapters(config),
+        config,
     )
     results: list[SchoolInterpretation] = []
-    for adapter in selected_adapters:
+    for snapshot in snapshots:
         try:
-            result = (
-                adapter._interpret_validated(inputs)
-                if isinstance(adapter, SchoolAdapterBase)
-                else adapter.interpret(
-                    facts=facts,
-                    strength=strength,
-                    patterns=patterns,
-                    useful_gods=useful_gods,
-                )
+            result = snapshot.adapter.interpret(
+                facts=facts,
+                strength=strength,
+                patterns=patterns,
+                useful_gods=useful_gods,
             )
-            _validate_school_interpretation(result, adapter, inputs)
+            _validate_school_interpretation(
+                result,
+                snapshot.school_id,
+                snapshot.profile_version,
+                inputs,
+            )
             results.append(result)
         except Exception as exc:
-            failure = _adapter_failure(adapter, exc)
-            _validate_school_interpretation(failure, adapter, inputs)
+            failure = _adapter_failure(
+                snapshot.school_id,
+                snapshot.profile_version,
+                exc,
+            )
+            _validate_school_interpretation(
+                failure,
+                snapshot.school_id,
+                snapshot.profile_version,
+                inputs,
+            )
             results.append(failure)
     marked = _mark_disagreements(
         tuple(results), "preferred_pattern_ids", "pattern_preferences"

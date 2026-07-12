@@ -1,15 +1,22 @@
 import json
+import operator
+from collections.abc import Callable, MutableMapping
 from dataclasses import FrozenInstanceError, replace
 from pathlib import Path
 from types import MappingProxyType
+from typing import TypedDict, cast
 
 import pytest
 
 from mingli_engine.bazi.facts import build_chart_facts
 from mingli_engine.bazi.patterns import calculate_pattern_candidates
 from mingli_engine.bazi.result_models import (
+    ChartFacts,
+    PatternCandidateResult,
     ReasonedResult,
     SchoolInterpretation,
+    StrengthResult,
+    UsefulGodCandidateResult,
 )
 from mingli_engine.bazi.schools import (
     DuanSchoolAdapter,
@@ -27,7 +34,38 @@ from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.models import BirthProfile
 
 
-EXPECTED_CONFIG = {
+class ProfilePayload(TypedDict):
+    priority: int
+    method_order: list[str]
+
+
+class SchoolProfilesPayload(TypedDict):
+    version: str
+    enabled: list[str]
+    profiles: dict[str, ProfilePayload]
+
+
+PipelineCase = tuple[
+    ChartFacts,
+    StrengthResult,
+    tuple[PatternCandidateResult, ...],
+    tuple[UsefulGodCandidateResult, ...],
+]
+SchoolResultForge = Callable[[SchoolInterpretation], SchoolInterpretation]
+InputForge = Callable[
+    [
+        tuple[PatternCandidateResult, ...],
+        tuple[UsefulGodCandidateResult, ...],
+    ],
+    tuple[
+        tuple[PatternCandidateResult, ...],
+        tuple[UsefulGodCandidateResult, ...],
+    ],
+]
+ConfigMutation = Callable[[dict[str, object]], None]
+
+
+EXPECTED_CONFIG: SchoolProfilesPayload = {
     "version": "school-profiles-v1",
     "enabled": ["ziping", "liang_xiangrun", "duan"],
     "profiles": {
@@ -60,7 +98,7 @@ EXPECTED_CONFIG = {
 }
 
 
-def pipeline_case(birth_date: str = "1992-08-18"):
+def pipeline_case(birth_date: str = "1992-08-18") -> PipelineCase:
     chart = calculate_bazi_chart(
         BirthProfile(
             calendar_type="gregorian",
@@ -91,7 +129,14 @@ class ReturningAdapter:
         self.school_id = school_id
         self.result = result
 
-    def interpret(self, *, facts, strength, patterns, useful_gods):
+    def interpret(
+        self,
+        *,
+        facts: ChartFacts,
+        strength: StrengthResult,
+        patterns: tuple[PatternCandidateResult, ...],
+        useful_gods: tuple[UsefulGodCandidateResult, ...],
+    ) -> SchoolInterpretation:
         return self.result
 
 
@@ -153,11 +198,15 @@ def test_tracked_school_profile_json_is_exact_and_deeply_immutable() -> None:
         "illness_remedy",
     )
     with pytest.raises(FrozenInstanceError):
-        config.version = "changed"  # type: ignore[misc]
+        setattr(config, "version", "changed")
     with pytest.raises(TypeError):
-        config.profiles["ziping"] = config.profiles["duan"]  # type: ignore[index]
+        operator.setitem(
+            cast(MutableMapping[str, SchoolProfile], config.profiles),
+            "ziping",
+            config.profiles["duan"],
+        )
     with pytest.raises(TypeError):
-        config.profiles["ziping"].method_order[0] = "changed"  # type: ignore[index]
+        operator.setitem(config.profiles["ziping"].method_order, 0, "changed")
 
 
 @pytest.mark.parametrize(
@@ -222,7 +271,7 @@ def test_tracked_school_profile_json_is_exact_and_deeply_immutable() -> None:
     ],
 )
 def test_school_profile_validation_boundaries(
-    tmp_path: Path, mutate, message: str
+    tmp_path: Path, mutate: ConfigMutation, message: str
 ) -> None:
     payload = json.loads(json.dumps(EXPECTED_CONFIG))
     mutate(payload)
@@ -253,6 +302,25 @@ def test_loader_returns_runtime_protocol_adapters_in_priority_order() -> None:
     )
     assert all(isinstance(item, SchoolAdapter) for item in adapters)
     assert all(item.profile_version == "school-profiles-v1" for item in adapters)
+
+
+def test_builtin_adapters_are_immutable_when_loaded_or_constructed_directly() -> None:
+    config = load_school_profiles_config()
+    loaded = load_enabled_school_adapters()
+    direct = (
+        ZipingSchoolAdapter(config.profiles["ziping"], config.version),
+        LiangXiangrunSchoolAdapter(config.profiles["liang_xiangrun"], config.version),
+        DuanSchoolAdapter(config.profiles["duan"], config.version),
+    )
+
+    for adapter in (*loaded, *direct):
+        original_profile = adapter.profile
+        with pytest.raises(FrozenInstanceError):
+            adapter.profile = config.profiles["ziping"]
+        with pytest.raises(FrozenInstanceError):
+            adapter.profile_version = "changed"
+        assert adapter.profile is original_profile
+        assert adapter.profile_version == "school-profiles-v1"
 
 
 def test_ziping_preserves_full_baseline_order_and_method_order() -> None:
@@ -345,6 +413,102 @@ def test_liang_uses_only_exposed_patterns_then_computed_seasonal_and_support() -
     assert all(item.method != "mediation" for item in selected)
     assert "school.liang_xiangrun.exposed_pattern_context" in result.reasoning.rule_ids
     assert any("excluded" in item for item in result.reasoning.assumptions)
+
+
+def test_liang_support_only_profile_emits_only_support_preferences_and_rules() -> None:
+    facts, strength, patterns, useful_gods = pipeline_case("1991-01-18")
+    profile = SchoolProfile(
+        school_id="liang_xiangrun",
+        priority=80,
+        method_order=("support_control",),
+    )
+    result = LiangXiangrunSchoolAdapter(profile, "school-profiles-v1").interpret(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+    )
+    expected_elements = tuple(
+        dict.fromkeys(
+            item.element
+            for item in useful_gods
+            if item.method == "support_control"
+            and item.reasoning.status == "computed"
+            and item.element
+        )
+    )
+
+    assert result.preferred_pattern_ids == ()
+    assert result.preferred_useful_god_elements == expected_elements
+    assert result.reasoning.rule_ids == ("school.liang_xiangrun.support_control",)
+    claimed = (
+        result.reasoning.conclusion,
+        *result.reasoning.supporting_signals,
+        *result.reasoning.rule_ids,
+    )
+    assert all("pattern" not in value and "seasonal" not in value for value in claimed)
+
+
+def test_liang_profile_method_order_controls_preferences_and_pattern_gate() -> None:
+    facts, strength, patterns, useful_gods = pipeline_case("1991-01-18")
+    seasonal_first = SchoolProfile(
+        school_id="liang_xiangrun",
+        priority=80,
+        method_order=("seasonal_adjustment", "support_control"),
+    )
+    support_first = SchoolProfile(
+        school_id="liang_xiangrun",
+        priority=80,
+        method_order=("support_control", "seasonal_adjustment"),
+    )
+    seasonal_result = LiangXiangrunSchoolAdapter(
+        seasonal_first, "school-profiles-v1"
+    ).interpret(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+    )
+    support_result = LiangXiangrunSchoolAdapter(
+        support_first, "school-profiles-v1"
+    ).interpret(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+    )
+    assert seasonal_result.preferred_pattern_ids == ()
+    assert support_result.preferred_pattern_ids == ()
+    assert seasonal_result.preferred_useful_god_elements != (
+        support_result.preferred_useful_god_elements
+    )
+    assert seasonal_result.reasoning.rule_ids == (
+        "school.liang_xiangrun.seasonal_adjustment",
+        "school.liang_xiangrun.support_control",
+    )
+    assert support_result.reasoning.rule_ids == (
+        "school.liang_xiangrun.support_control",
+        "school.liang_xiangrun.seasonal_adjustment",
+    )
+
+    pattern_profile = SchoolProfile(
+        school_id="liang_xiangrun",
+        priority=80,
+        method_order=("pattern_context",),
+    )
+    pattern_result = LiangXiangrunSchoolAdapter(
+        pattern_profile, "school-profiles-v1"
+    ).interpret(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+    )
+    assert pattern_result.preferred_pattern_ids
+    assert pattern_result.preferred_useful_god_elements == ()
+    assert pattern_result.reasoning.rule_ids == (
+        "school.liang_xiangrun.exposed_pattern_context",
+    )
 
 
 def test_duan_requires_explicit_conditions_counterconditions_and_provenance() -> None:
@@ -451,7 +615,9 @@ def test_direct_adapter_rejects_forged_empty_useful_preferences() -> None:
         ),
     ],
 )
-def test_direct_adapter_rejects_duplicate_rank_and_forged_inputs(forge) -> None:
+def test_direct_adapter_rejects_duplicate_rank_and_forged_inputs(
+    forge: InputForge,
+) -> None:
     facts, strength, patterns, useful_gods = pipeline_case()
     forged_patterns, forged_useful = forge(patterns, useful_gods)
     with pytest.raises(ValueError):
@@ -548,7 +714,9 @@ def test_aggregation_preserves_preferences_and_marks_only_real_disagreement() ->
         ),
     ],
 )
-def test_malformed_adapter_output_is_isolated_before_disagreement(forge) -> None:
+def test_malformed_adapter_output_is_isolated_before_disagreement(
+    forge: SchoolResultForge,
+) -> None:
     facts, strength, patterns, useful_gods = pipeline_case()
     element = next(item.element for item in useful_gods if item.element)
     base_result = valid_fake_result(
@@ -585,7 +753,7 @@ def test_malformed_adapter_output_is_isolated_before_disagreement(forge) -> None
     assert isolated.reasoning.missing_inputs[0].startswith("adapter_error:")
     assert first[1].reasoning.status != "not_computed"
     with pytest.raises(FrozenInstanceError):
-        isolated.school_id = "changed"  # type: ignore[misc]
+        setattr(isolated, "school_id", "changed")
 
 
 @pytest.mark.parametrize(
@@ -614,7 +782,9 @@ def test_malformed_adapter_output_is_isolated_before_disagreement(forge) -> None
         lambda result: mutate_reasoning(result, "rule_ids", ({"malformed": "rule"},)),
     ],
 )
-def test_malformed_reasoning_payload_is_isolated_before_aggregation(forge) -> None:
+def test_malformed_reasoning_payload_is_isolated_before_aggregation(
+    forge: SchoolResultForge,
+) -> None:
     facts, strength, patterns, useful_gods = pipeline_case()
     base_result = valid_fake_result(
         school_id="ziping",
@@ -677,13 +847,22 @@ def test_disagreement_compares_preference_order_not_only_membership() -> None:
     )
 
 
-def fake_adapters_for_inputs(pattern_id: str):
-    return tuple(
+def fake_adapters_for_inputs(
+    pattern_id: str,
+) -> tuple[ReturningAdapter, ReturningAdapter, ReturningAdapter]:
+    return (
         ReturningAdapter(
-            school_id,
-            valid_fake_result(school_id=school_id, pattern_id=pattern_id),
-        )
-        for school_id in ("ziping", "liang_xiangrun", "duan")
+            "ziping",
+            valid_fake_result(school_id="ziping", pattern_id=pattern_id),
+        ),
+        ReturningAdapter(
+            "liang_xiangrun",
+            valid_fake_result(school_id="liang_xiangrun", pattern_id=pattern_id),
+        ),
+        ReturningAdapter(
+            "duan",
+            valid_fake_result(school_id="duan", pattern_id=pattern_id),
+        ),
     )
 
 
@@ -751,7 +930,8 @@ def test_injected_adapter_contract_rejects_invalid_collections(tmp_path: Path) -
         "useful_gods": useful_gods,
     }
     with pytest.raises(ValueError, match="tuple"):
-        interpret_with_enabled_schools(**common, adapters=[ziping])  # type: ignore[arg-type]
+        invalid_adapters = cast(tuple[SchoolAdapter, ...], [ziping])
+        interpret_with_enabled_schools(**common, adapters=invalid_adapters)
     with pytest.raises(ValueError, match="enabled"):
         interpret_with_enabled_schools(**common, adapters=(unknown,))
     with pytest.raises(ValueError, match="unique"):
@@ -766,6 +946,112 @@ def test_injected_adapter_contract_rejects_invalid_collections(tmp_path: Path) -
         interpret_with_enabled_schools(**common, adapters=(liang,), path=path)
 
 
+@pytest.mark.parametrize("raises", [False, True])
+def test_mutating_adapter_identity_is_snapshotted_before_call(raises: bool) -> None:
+    facts, strength, patterns, useful_gods = pipeline_case()
+    stable_result = valid_fake_result(
+        school_id="ziping", pattern_id=patterns[0].pattern_id
+    )
+
+    class MutatingAdapter:
+        school_id = "ziping"
+        profile_version = "school-profiles-v1"
+
+        def interpret(
+            self,
+            *,
+            facts: ChartFacts,
+            strength: StrengthResult,
+            patterns: tuple[PatternCandidateResult, ...],
+            useful_gods: tuple[UsefulGodCandidateResult, ...],
+        ) -> SchoolInterpretation:
+            self.school_id = "unknown"
+            self.profile_version = "wrong-version"
+            if raises:
+                raise RuntimeError("mutated adapter failure")
+            return stable_result
+
+    valid_liang = load_enabled_school_adapters()[1]
+    results = interpret_with_enabled_schools(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+        adapters=(valid_liang, MutatingAdapter()),
+    )
+
+    assert tuple(item.school_id for item in results) == (
+        "ziping",
+        "liang_xiangrun",
+    )
+    if raises:
+        assert results[0].reasoning.status == "not_computed"
+        assert results[0].reasoning.rule_ids == ("school.ziping.adapter_error",)
+    else:
+        assert results[0].preferred_pattern_ids == stable_result.preferred_pattern_ids
+        assert "school.ziping.fake" in results[0].reasoning.rule_ids
+        assert "school.ziping.adapter_error" not in results[0].reasoning.rule_ids
+
+
+def test_aggregate_uses_public_interpret_override_and_isolates_exception() -> None:
+    facts, strength, patterns, useful_gods = pipeline_case()
+    profile = load_school_profiles_config().profiles["ziping"]
+    expected = valid_fake_result(school_id="ziping", pattern_id=patterns[0].pattern_id)
+    calls: list[str] = []
+
+    class OverridingZipingAdapter(ZipingSchoolAdapter):
+        def interpret(
+            self,
+            *,
+            facts: ChartFacts,
+            strength: StrengthResult,
+            patterns: tuple[PatternCandidateResult, ...],
+            useful_gods: tuple[UsefulGodCandidateResult, ...],
+        ) -> SchoolInterpretation:
+            calls.append("interpret")
+            return expected
+
+    adapter = OverridingZipingAdapter(profile, "school-profiles-v1")
+    direct = adapter.interpret(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+    )
+    aggregate = interpret_with_enabled_schools(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+        adapters=(adapter,),
+    )
+    assert direct == expected
+    assert aggregate == (expected,)
+    assert calls == ["interpret", "interpret"]
+
+    class RaisingZipingAdapter(ZipingSchoolAdapter):
+        def interpret(
+            self,
+            *,
+            facts: ChartFacts,
+            strength: StrengthResult,
+            patterns: tuple[PatternCandidateResult, ...],
+            useful_gods: tuple[UsefulGodCandidateResult, ...],
+        ) -> SchoolInterpretation:
+            raise RuntimeError("public override failure")
+
+    failure = interpret_with_enabled_schools(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+        adapters=(RaisingZipingAdapter(profile, "school-profiles-v1"),),
+    )
+    assert failure[0].school_id == "ziping"
+    assert failure[0].reasoning.status == "not_computed"
+    assert failure[0].reasoning.rule_ids == ("school.ziping.adapter_error",)
+
+
 def test_aggregation_does_not_promote_not_computed_or_allow_adapter_suppression() -> (
     None
 ):
@@ -775,7 +1061,14 @@ def test_aggregation_does_not_promote_not_computed_or_allow_adapter_suppression(
         school_id = "ziping"
         profile_version = "school-profiles-v1"
 
-        def interpret(self, *, facts, strength, patterns, useful_gods):
+        def interpret(
+            self,
+            *,
+            facts: ChartFacts,
+            strength: StrengthResult,
+            patterns: tuple[PatternCandidateResult, ...],
+            useful_gods: tuple[UsefulGodCandidateResult, ...],
+        ) -> SchoolInterpretation:
             return SchoolInterpretation(
                 school_id=self.school_id,
                 profile_version=self.profile_version,
@@ -813,9 +1106,9 @@ def test_inputs_are_frozen_and_never_mutated_by_direct_or_aggregate_calls() -> N
     facts, strength, patterns, useful_gods = pipeline_case()
     snapshot = (facts, strength, patterns, useful_gods)
     with pytest.raises(FrozenInstanceError):
-        facts.day_master = "forged"  # type: ignore[misc]
+        setattr(facts, "day_master", "forged")
     with pytest.raises(TypeError):
-        patterns[0].formation_conditions[0] = "forged"  # type: ignore[index]
+        operator.setitem(patterns[0].formation_conditions, 0, "forged")
 
     for adapter in load_enabled_school_adapters():
         adapter.interpret(
