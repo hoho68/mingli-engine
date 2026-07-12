@@ -1,6 +1,7 @@
 from types import MappingProxyType
 from typing import Final, Literal, Mapping
 
+from mingli_engine.bazi.constants import BRANCHES
 from mingli_engine.bazi.result_models import (
     BranchRelationResult,
     ChartFacts,
@@ -90,21 +91,34 @@ def _distinct(items: tuple[str, ...]) -> tuple[str, ...]:
     return tuple(dict.fromkeys(items))
 
 
-def _signal_index(facts: ChartFacts) -> Mapping[str, tuple[str, ...]]:
-    signals: dict[str, list[str]] = {}
+def _signal_index(
+    facts: ChartFacts,
+) -> tuple[
+    Mapping[str, tuple[str, ...]], Mapping[str, tuple[str, ...]]
+]:
+    exposed_signals: dict[str, list[str]] = {}
+    hidden_signals: dict[str, list[str]] = {}
     for item in facts.exposed_stems:
         if item.pillar_name != "day":
-            signals.setdefault(item.ten_god, []).append(
+            exposed_signals.setdefault(item.ten_god, []).append(
                 _exposed_provenance(item)
             )
     for item in facts.hidden_stems:
-        signals.setdefault(item.ten_god, []).append(_hidden_provenance(item))
-    return MappingProxyType(
-        {
-            ten_god: _distinct(tuple(provenance))
-            for ten_god, provenance in signals.items()
-        }
-    )
+        hidden_signals.setdefault(item.ten_god, []).append(
+            _hidden_provenance(item)
+        )
+
+    def freeze(
+        values: dict[str, list[str]],
+    ) -> Mapping[str, tuple[str, ...]]:
+        return MappingProxyType(
+            {
+                ten_god: _distinct(tuple(provenance))
+                for ten_god, provenance in values.items()
+            }
+        )
+
+    return freeze(exposed_signals), freeze(hidden_signals)
 
 
 def _conditions_for(
@@ -119,10 +133,11 @@ def _conditions_for(
 
 def _relation_trace(
     relations: tuple[BranchRelationResult, ...],
-) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...], bool]:
     assumptions: list[str] = []
     opposing: list[str] = []
     rule_ids: list[str] = []
+    has_transformation = False
     for relation in relations:
         if not relation.blockers and not relation.transformed_element:
             continue
@@ -139,29 +154,58 @@ def _relation_trace(
             f"relation:{occurrence}:blocker={blocker}"
             for blocker in relation.blockers
         )
-        rule_ids.append(f"pattern.relation.trace:{occurrence}")
-    return tuple(assumptions), tuple(opposing), tuple(rule_ids)
+        if relation.transformed_element:
+            has_transformation = True
+            opposing.append(
+                f"relation:{occurrence}:transformed_element="
+                f"{relation.transformed_element}"
+            )
+            rule_ids.append(
+                "pattern.relation.transformed_modifier_unimplemented:"
+                f"{occurrence}"
+            )
+        else:
+            rule_ids.append(f"pattern.relation.trace:{occurrence}")
+    return (
+        tuple(assumptions),
+        tuple(opposing),
+        tuple(rule_ids),
+        has_transformation,
+    )
 
 
 def _upstream_status(
     strength: StrengthResult,
-    default_status: Literal["computed", "disputed"],
+    default_status: Literal["computed", "indeterminate", "disputed"],
     default_confidence: Literal["high", "medium", "low"],
+    has_transformation: bool,
 ) -> tuple[str, str, tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
     status = strength.reasoning.status
-    if status == "computed":
+    if status == "computed" and not has_transformation:
         return default_status, default_confidence, (), (), ()
-    prerequisite = f"prerequisite:strength:{status}"
+    if status in {"disputed", "not_computed"}:
+        result_status = status
+    else:
+        result_status = "indeterminate"
+    prerequisite = (
+        (f"prerequisite:strength:{status}",)
+        if status != "computed"
+        else ()
+    )
     return (
-        status,
+        result_status,
         "low",
-        (prerequisite,),
+        prerequisite,
         (
             ("strength_result_computed",)
             if status in {"indeterminate", "not_computed"}
             else ()
         ),
-        (f"pattern.prerequisite.strength.{status}",),
+        (
+            (f"pattern.prerequisite.strength.{status}",)
+            if status != "computed"
+            else ()
+        ),
     )
 
 
@@ -174,19 +218,17 @@ def _standard_candidate(
     facts: ChartFacts,
     strength: StrengthResult,
     signals: Mapping[str, tuple[str, ...]],
+    hidden_signals: Mapping[str, tuple[str, ...]],
     relation_assumptions: tuple[str, ...],
     relation_opposition: tuple[str, ...],
     relation_rule_ids: tuple[str, ...],
+    has_transformation: bool,
 ) -> PatternCandidateResult:
     name = TEN_GOD_PATTERN_NAMES.get(ten_god, _SPECIAL_NAMES.get(ten_god))
     if name is None:
         raise ValueError(f"unknown month ten god: {ten_god!r}")
 
-    exposed_formation = tuple(
-        item
-        for item in signals.get(ten_god, ())
-        if item.startswith("exposed:")
-    )
+    exposed_formation = signals.get(ten_god, ())
     formation_conditions = (
         _hidden_provenance(month_hidden),
         *(exposed_formation or (f"exposure:none:{ten_god}",)),
@@ -205,7 +247,7 @@ def _standard_candidate(
             "high" if role == "main" and exposed_formation else "medium"
         )
     status, confidence, prerequisite, missing, prerequisite_rules = _upstream_status(
-        strength, default_status, default_confidence
+        strength, default_status, default_confidence, has_transformation
     )
 
     latent_assumption = (
@@ -213,6 +255,19 @@ def _standard_candidate(
     )
     candidate_only = (
         ("candidate_only:not_final_pattern",) if ten_god in _SPECIAL_NAMES else ()
+    )
+    latent_damage_context = tuple(
+        f"latent_damage_context:{item}"
+        for item in _conditions_for(PATTERN_DAMAGE.get(name, ()), hidden_signals)
+    )
+    latent_rescue_context = tuple(
+        f"latent_rescue_context:{item}"
+        for item in _conditions_for(PATTERN_RESCUE.get(name, ()), hidden_signals)
+    )
+    relation_missing = (
+        ("transformed_relation_pattern_modifier",)
+        if has_transformation
+        else ()
     )
     supporting = (
         *exposed_formation,
@@ -245,10 +300,12 @@ def _standard_candidate(
                 *facts.assumptions,
                 *latent_assumption,
                 *candidate_only,
+                *latent_damage_context,
+                *latent_rescue_context,
                 *prerequisite,
                 *relation_assumptions,
             ),
-            missing_inputs=missing,
+            missing_inputs=_distinct((*missing, *relation_missing)),
             rule_ids=_distinct(rule_ids),
         ),
         formation_conditions=formation_conditions,
@@ -266,19 +323,20 @@ def _follow_candidate(
     relation_assumptions: tuple[str, ...],
     relation_opposition: tuple[str, ...],
     relation_rule_ids: tuple[str, ...],
+    has_transformation: bool,
 ) -> PatternCandidateResult:
     is_strong = label == "强"
     pattern_id = "follow.congqiang" if is_strong else "follow.congruo"
     name = "从强候选" if is_strong else "从弱候选"
     direction = "strong" if is_strong else "weak"
-    if strength.reasoning.status == "computed":
-        status = "indeterminate"
-        prerequisite = ()
-        prerequisite_rules = ()
-    else:
-        status = strength.reasoning.status
-        prerequisite = (f"prerequisite:strength:{status}",)
-        prerequisite_rules = (f"pattern.prerequisite.strength.{status}",)
+    status, confidence, prerequisite, missing, prerequisite_rules = _upstream_status(
+        strength, "indeterminate", "low", has_transformation
+    )
+    relation_missing = (
+        ("transformed_relation_pattern_modifier",)
+        if has_transformation
+        else ()
+    )
     return PatternCandidateResult(
         pattern_id=pattern_id,
         name=name,
@@ -286,7 +344,7 @@ def _follow_candidate(
         reasoning=ReasonedResult(
             status=status,
             conclusion=f"{name}: guarded V1 candidate",
-            confidence="low",
+            confidence=confidence,
             supporting_signals=(f"strength:label:{label}",),
             opposing_signals=(
                 f"countercondition:{direction}:independent_opposition:not_evaluated",
@@ -298,9 +356,13 @@ def _follow_candidate(
                 *prerequisite,
                 *relation_assumptions,
             ),
-            missing_inputs=(
-                f"follow_{direction}_necessary_conditions_verified",
-                f"follow_{direction}_counterconditions_excluded",
+            missing_inputs=_distinct(
+                (
+                    f"follow_{direction}_necessary_conditions_verified",
+                    f"follow_{direction}_counterconditions_excluded",
+                    *missing,
+                    *relation_missing,
+                )
             ),
             rule_ids=(
                 f"pattern.follow.{direction}.guarded_v1",
@@ -324,6 +386,8 @@ def calculate_pattern_candidates(
     strength: StrengthResult,
     relations: tuple[BranchRelationResult, ...] = (),
 ) -> tuple[PatternCandidateResult, ...]:
+    if facts.month_branch not in BRANCHES:
+        raise ValueError(f"invalid month branch: {facts.month_branch!r}")
     month_hidden = tuple(
         item
         for item in facts.hidden_stems
@@ -333,16 +397,24 @@ def calculate_pattern_candidates(
     if len(month_main) != 1:
         raise ValueError("expected exactly one month main hidden stem")
     for item in month_hidden:
+        if item.branch != facts.month_branch:
+            raise ValueError(
+                "month hidden stem branch must match month_branch: "
+                f"{item.branch!r} != {facts.month_branch!r}"
+            )
         if item.role not in _ROLE_ORDER:
             raise ValueError(f"unknown month hidden stem role: {item.role!r}")
         if item.ten_god not in _KNOWN_TEN_GODS:
             qualifier = "main " if item.role == "main" else ""
             raise ValueError(f"unknown month {qualifier}ten god: {item.ten_god!r}")
 
-    signals = _signal_index(facts)
-    relation_assumptions, relation_opposition, relation_rule_ids = _relation_trace(
-        relations
-    )
+    signals, hidden_signals = _signal_index(facts)
+    (
+        relation_assumptions,
+        relation_opposition,
+        relation_rule_ids,
+        has_transformation,
+    ) = _relation_trace(relations)
     eligible = [month_main[0]]
     eligible.extend(
         item
@@ -371,9 +443,11 @@ def calculate_pattern_candidates(
                 facts=facts,
                 strength=strength,
                 signals=signals,
+                hidden_signals=hidden_signals,
                 relation_assumptions=relation_assumptions,
                 relation_opposition=relation_opposition,
                 relation_rule_ids=relation_rule_ids,
+                has_transformation=has_transformation,
             )
         )
 
@@ -387,6 +461,7 @@ def calculate_pattern_candidates(
                 relation_assumptions=relation_assumptions,
                 relation_opposition=relation_opposition,
                 relation_rule_ids=relation_rule_ids,
+                has_transformation=has_transformation,
             )
         )
     return tuple(results)

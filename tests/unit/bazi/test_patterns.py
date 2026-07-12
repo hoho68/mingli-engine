@@ -188,9 +188,9 @@ def test_companion_month_command_stays_an_explicit_candidate(
 def test_secondary_roles_require_exposure_and_preserve_canonical_order() -> None:
     chart = facts(
         month_secondary=(
-            hidden("month", "residual", "偏财", "戊", "辰"),
-            hidden("month", "middle", "食神", "丙", "辰"),
-            hidden("month", "middle", "食神", "丙", "辰"),
+            hidden("month", "residual", "偏财", "戊", "子"),
+            hidden("month", "middle", "食神", "丙", "子"),
+            hidden("month", "middle", "食神", "丙", "子"),
         ),
         exposed_stems=(
             exposed("hour", "偏财", "戊"),
@@ -215,9 +215,17 @@ def test_fixture_drives_damage_rescue_and_strength_prerequisite() -> None:
             exposed("year" if index % 2 == 0 else "hour", ten_god, f"S{index}")
             for index, ten_god in enumerate(case["signals"])
         )
+        latent_signals = tuple(
+            hidden("month", "middle", ten_god, f"H{index}", "子")
+            for index, ten_god in enumerate(case.get("latent_signals", ()))
+        )
         upstream_status = case.get("strength_status", "computed")
         candidate = calculate_pattern_candidates(
-            facts(case["pattern_ten_god"], exposed_stems=signals),
+            facts(
+                case["pattern_ten_god"],
+                exposed_stems=signals,
+                month_secondary=latent_signals,
+            ),
             strength(status=upstream_status),
         )[0]
 
@@ -230,6 +238,30 @@ def test_fixture_drives_damage_rescue_and_strength_prerequisite() -> None:
                 "prerequisite:strength:indeterminate"
                 in candidate.reasoning.assumptions
             )
+        for ten_god in case.get("expected_latent_context", ()):
+            assert any(
+                item.startswith("latent_damage_context:hidden:month:子:middle:")
+                and item.endswith(f":{ten_god}")
+                for item in candidate.reasoning.assumptions
+            )
+
+
+def test_unexposed_month_middle_damage_is_latent_context_only() -> None:
+    chart = facts(
+        "正官",
+        month_secondary=(hidden("month", "middle", "伤官", "丁", "子"),),
+    )
+
+    candidate = calculate_pattern_candidates(chart, strength())[0]
+
+    assert candidate.reasoning.status == "computed"
+    assert candidate.reasoning.confidence == "medium"
+    assert candidate.damage_conditions == ()
+    assert candidate.rescue_conditions == ()
+    assert (
+        "latent_damage_context:hidden:month:子:middle:丁:伤官"
+        in candidate.reasoning.assumptions
+    )
 
 
 @pytest.mark.parametrize("pattern_ten_god", tuple(TEN_GOD_PATTERN_NAMES))
@@ -271,7 +303,7 @@ def test_damage_keeps_candidate_and_rescue_never_erases_opposition() -> None:
     assert rescued.rescue_conditions[0] in rescued.reasoning.supporting_signals
 
 
-def test_exposed_signals_precede_hidden_without_dropping_hidden_provenance() -> None:
+def test_hidden_damage_is_retained_as_latent_context_not_decisive_evidence() -> None:
     chart = facts(
         "正官",
         exposed_stems=(exposed("hour", "伤官", "丁"),),
@@ -280,9 +312,10 @@ def test_exposed_signals_precede_hidden_without_dropping_hidden_provenance() -> 
 
     candidate = calculate_pattern_candidates(chart, strength())[0]
 
-    assert candidate.damage_conditions == (
-        "exposed:hour:丁:伤官",
-        "hidden:year:午:main:丁:伤官",
+    assert candidate.damage_conditions == ("exposed:hour:丁:伤官",)
+    assert (
+        "latent_damage_context:hidden:year:午:main:丁:伤官"
+        in candidate.reasoning.assumptions
     )
 
 
@@ -357,7 +390,7 @@ def test_malformed_month_facts_raise_explicit_value_error(
 def test_results_are_immutable_deterministic_and_use_protocol_statuses() -> None:
     chart = facts(
         exposed_stems=(exposed("year", "正官", "辛"), exposed("hour", "伤官", "丁")),
-        month_secondary=(hidden("month", "middle", "伤官", "丁", "午"),),
+        month_secondary=(hidden("month", "middle", "伤官", "丁", "子"),),
     )
 
     first = calculate_pattern_candidates(chart, strength(label="强"))
@@ -397,4 +430,83 @@ def test_relation_blockers_and_transformed_state_are_traced_without_effects() ->
         "V1 pattern effect not implemented" in item
         for item in candidate.reasoning.assumptions
     )
-    assert candidate.reasoning.status == "computed"
+    assert candidate.reasoning.status == "indeterminate"
+    assert candidate.reasoning.confidence == "low"
+    assert candidate.reasoning.missing_inputs == (
+        "transformed_relation_pattern_modifier",
+    )
+
+
+def test_transformed_relations_guard_standard_and_follow_candidates() -> None:
+    first = BranchRelationResult(
+        relation_type="three_combination",
+        branches=("申", "子", "辰"),
+        pillar_names=("year", "month", "hour"),
+        state="transformed",
+        transformed_element="水",
+        conditions=("three branches present",),
+        blockers=(),
+        rule_id="branch.three_combination.shenzichen",
+    )
+    second = BranchRelationResult(
+        relation_type="six_combination",
+        branches=("子", "丑"),
+        pillar_names=("month", "hour"),
+        state="transformed",
+        transformed_element="土",
+        conditions=("two branches present",),
+        blockers=(),
+        rule_id="branch.six_combination.zichou",
+    )
+
+    results = calculate_pattern_candidates(
+        facts(), strength(label="强"), (first, second)
+    )
+
+    assert {item.name for item in results} == {"正官格", "从强候选"}
+    for candidate in results:
+        assert candidate.reasoning.status == "indeterminate"
+        assert candidate.reasoning.confidence == "low"
+        assert candidate.reasoning.missing_inputs.count(
+            "transformed_relation_pattern_modifier"
+        ) == 1
+        transformed_opposition = tuple(
+            item
+            for item in candidate.reasoning.opposing_signals
+            if ":transformed_element=" in item
+        )
+        assert len(transformed_opposition) == 2
+        assert any("pillars=year,month,hour" in item for item in transformed_opposition)
+        assert any("pillars=month,hour" in item for item in transformed_opposition)
+        relation_rules = tuple(
+            item
+            for item in candidate.reasoning.rule_ids
+            if item.startswith("pattern.relation.transformed_modifier_unimplemented:")
+        )
+        assert len(relation_rules) == 2
+
+
+@pytest.mark.parametrize(
+    ("month_branch", "month_hidden_branch", "message"),
+    [
+        ("invalid", "invalid", "invalid month branch"),
+        ("子", "午", "month hidden stem branch must match month_branch"),
+    ],
+)
+def test_month_branch_and_hidden_provenance_are_validated(
+    month_branch: str, month_hidden_branch: str, message: str
+) -> None:
+    malformed = ChartFacts(
+        day_master="甲",
+        month_branch=month_branch,
+        exposed_stems=(),
+        hidden_stems=(
+            hidden("month", "main", "正官", "癸", month_hidden_branch),
+        ),
+        roots=(),
+        twelve_growth_by_pillar=(),
+        assumptions=(),
+    )
+
+    with pytest.raises(ValueError, match=message):
+        calculate_pattern_candidates(malformed, strength())
