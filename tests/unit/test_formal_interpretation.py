@@ -397,8 +397,10 @@ def test_family_without_v1_calculation_does_not_infer_status_from_chart_signal(
     ].trace.assumptions
 
 
-def test_formal_interpretation_marks_open_severe_conflict_disputed(
+@pytest.mark.parametrize("calculation_status", ["not_computed", "indeterminate"])
+def test_formal_interpretation_open_severe_conflict_precedes_calculation_status(
     sample_bazi_chart,
+    calculation_status,
 ):
     chart = replace(
         sample_bazi_chart,
@@ -423,7 +425,10 @@ def test_formal_interpretation_marks_open_severe_conflict_disputed(
     legacy = build_legacy_not_computed_bundle(calculation_chart)
     calculation = replace(
         legacy,
-        strength=replace(legacy.strength, reasoning=_reasoning("computed")),
+        strength=replace(
+            legacy.strength,
+            reasoning=_reasoning(calculation_status),
+        ),
     )
     expanded = build_formal_interpretation(
         calculation_chart,
@@ -439,3 +444,38 @@ def test_formal_interpretation_marks_open_severe_conflict_disputed(
 
     assert pattern.strength == "disputed"
     assert conflict.reader_note in pattern.trace.disagreement_note
+
+
+def test_not_computed_with_non_severe_evidence_remains_weakly_supported(
+    sample_bazi_chart,
+):
+    chart = _calculation_chart(sample_bazi_chart)
+    calculation = build_legacy_not_computed_bundle(chart)
+    evidence_units = [
+        unit
+        for unit in load_approved_evidence_units()
+        if unit.rule_family == "useful_god_candidate"
+    ][:2]
+    conflict = SourceConflict(
+        conflict_id="conflict_useful_god",
+        rule_family="useful_god_candidate",
+        evidence_ids=[unit.evidence_id for unit in evidence_units],
+        conflict_type="school_difference",
+        reader_note="Documented moderate school difference.",
+        severity="moderate",
+        resolution_status="documented",
+    )
+
+    useful = _family(
+        build_formal_interpretation(
+            chart,
+            evidence_units,
+            [conflict],
+            calculation,
+        ),
+        "useful_god_candidate",
+    )
+
+    assert useful.strength == "weakly_supported"
+    assert "calculation_status:not_computed" in useful.trace.assumptions
+    assert conflict.reader_note in useful.trace.disagreement_note

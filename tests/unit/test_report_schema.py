@@ -113,10 +113,21 @@ def test_one_argument_report_explicitly_uses_not_computed_calculation(
 
     assert report.report_evidence_audit.not_computed_rule_family_count == 10
     assert report.report_evidence_audit.computed_rule_family_count == 0
-    assert all(
-        conclusion.strength == "weakly_supported"
+    high_risk = next(
+        conclusion
         for conclusion in report.expanded_evidence.formal_conclusions
+        if conclusion.rule_family == "high_risk_signal"
     )
+    useful_god = next(
+        conclusion
+        for conclusion in report.expanded_evidence.formal_conclusions
+        if conclusion.rule_family == "useful_god_candidate"
+    )
+    assert "calculation_status:not_computed" in high_risk.trace.assumptions
+    assert high_risk.strength == "disputed"
+    assert "高风险结论必须降级并强调边界" in high_risk.trace.disagreement_note
+    assert useful_god.strength == "weakly_supported"
+    assert "段氏与师传口径" in useful_god.trace.disagreement_note
 
 
 def test_report_audit_counts_calculation_statuses_independently_from_evidence(
@@ -355,11 +366,12 @@ def test_build_report_exposes_guarded_cross_family_synthesis(sample_bazi_chart):
         for conclusion in report.expanded_evidence.formal_conclusions
         if conclusion.strength == "disputed"
     ]
-    assert disputed == []
-    assert any(
-        conclusion.trace.disagreement_note
-        for conclusion in report.expanded_evidence.formal_conclusions
-    )
+    assert [conclusion.rule_family for conclusion in disputed] == [
+        "high_risk_signal"
+    ]
+    for conclusion in disputed:
+        assert conclusion.title in integrated
+        assert conclusion.trace.disagreement_note in integrated
 
     assert "不可用边界：无" in integrated
     assert "不预测精确事件或寿命" in integrated

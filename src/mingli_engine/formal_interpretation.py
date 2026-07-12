@@ -417,12 +417,12 @@ def _build_conclusion(
         conflict.severity == "severe" and conflict.resolution_status == "open"
         for conflict in relevant_conflicts
     )
-    if reasoning.status == "not_computed":
+    if reasoning.status == "disputed" or has_open_severe_conflict:
+        strength = "disputed"
+    elif reasoning.status == "not_computed":
         strength = "weakly_supported" if evidence_ids else "unavailable"
     elif reasoning.status == "indeterminate":
         strength = "weakly_supported"
-    elif reasoning.status == "disputed" or has_open_severe_conflict:
-        strength = "disputed"
     else:
         strength = "candidate" if evidence_ids else "unavailable"
     return FormalConclusion(
