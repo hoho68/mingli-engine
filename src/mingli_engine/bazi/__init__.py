@@ -8,7 +8,10 @@ from mingli_engine.bazi.result_models import (
 )
 
 if TYPE_CHECKING:
-    from mingli_engine.bazi.analysis import analyze_bazi_chart
+    from mingli_engine.bazi.analysis import (
+        analyze_bazi_chart,
+        validate_calculation_binding,
+    )
     from mingli_engine.bazi.legacy_adapter import (
         apply_calculation_bundle,
         build_legacy_not_computed_bundle,
@@ -21,7 +24,7 @@ def __getattr__(name: str) -> object:
         from mingli_engine.bazi import versions
 
         value = getattr(versions, name)
-    elif name == "analyze_bazi_chart":
+    elif name in {"analyze_bazi_chart", "validate_calculation_binding"}:
         from mingli_engine.bazi import analysis
 
         value = getattr(analysis, name)
@@ -47,4 +50,5 @@ __all__ = [
     "analyze_bazi_chart",
     "apply_calculation_bundle",
     "build_legacy_not_computed_bundle",
+    "validate_calculation_binding",
 ]

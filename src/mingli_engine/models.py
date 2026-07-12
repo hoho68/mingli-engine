@@ -1,7 +1,16 @@
 from dataclasses import dataclass, field
+from typing import Literal
 
 
 SOURCE_TYPES = frozenset({"pdf", "markdown"})
+CalculationStatus = Literal[
+    "not_computed", "computed", "indeterminate", "disputed"
+]
+CalculationConfidence = Literal["high", "medium", "low"]
+CALCULATION_STATUSES = frozenset(
+    {"not_computed", "computed", "indeterminate", "disputed"}
+)
+CALCULATION_CONFIDENCES = frozenset({"high", "medium", "low"})
 EXTRACTION_STATUSES = frozenset({"not_started", "converted", "partial", "failed"})
 REVIEW_STATUSES = frozenset({"unreviewed", "reviewed", "approved", "blocked"})
 REPORT_USABLE_REVIEW_STATUS = "approved"
@@ -5707,6 +5716,19 @@ class EvidenceTrace:
     evidence_ids: list[str]
     assumptions: list[str]
     disagreement_note: str = ""
+    calculation_status: CalculationStatus = "not_computed"
+    calculation_confidence: CalculationConfidence = "low"
+
+    def __post_init__(self) -> None:
+        if self.calculation_status not in CALCULATION_STATUSES:
+            raise ValueError(
+                f"unsupported calculation status: {self.calculation_status}"
+            )
+        if self.calculation_confidence not in CALCULATION_CONFIDENCES:
+            raise ValueError(
+                "unsupported calculation confidence: "
+                f"{self.calculation_confidence}"
+            )
 
 
 @dataclass(frozen=True)

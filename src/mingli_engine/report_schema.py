@@ -1,8 +1,10 @@
 from dataclasses import replace
 
-from mingli_engine.bazi import CalculationBundle, build_legacy_not_computed_bundle
-from mingli_engine.bazi.analysis import _require_calculation_bundle_binding
-from mingli_engine.chart_calculator import calculate_bazi_chart
+from mingli_engine.bazi import (
+    CalculationBundle,
+    build_legacy_not_computed_bundle,
+    validate_calculation_binding,
+)
 from mingli_engine.classical_sources import (
     load_approved_evidence_units,
     load_classical_sources,
@@ -15,6 +17,8 @@ from mingli_engine.interpretation import build_basic_interpretation
 from mingli_engine.models import (
     ActionReflectionItem,
     BaziChart,
+    CALCULATION_STATUSES,
+    CalculationStatus,
     ExpandedReportEvidence,
     FormalConclusion,
     KnowledgeActivationSummary,
@@ -253,12 +257,22 @@ def _build_report_evidence_audit(
     expanded_evidence: ExpandedReportEvidence,
     knowledge_activation: KnowledgeActivationSummary,
 ) -> ReportEvidenceAudit:
-    calculation_statuses = [
-        assumption.removeprefix("calculation_status:")
-        for conclusion in expanded_evidence.formal_conclusions
-        for assumption in conclusion.trace.assumptions
-        if assumption.startswith("calculation_status:")
-    ]
+    calculation_status_by_family: dict[str, CalculationStatus] = {}
+    for conclusion in expanded_evidence.formal_conclusions:
+        rule_family = conclusion.rule_family
+        status = conclusion.trace.calculation_status
+        if (
+            rule_family in calculation_status_by_family
+            or status not in CALCULATION_STATUSES
+        ):
+            raise ValueError(
+                "exactly one recognized calculation status per formal rule family"
+            )
+        calculation_status_by_family[rule_family] = status
+    calculation_statuses = list(calculation_status_by_family.values())
+    calculation_status_contract_complete = set(calculation_status_by_family) == set(
+        knowledge_activation.enabled_rule_families
+    )
     conclusion_rule_families = [
         conclusion.rule_family
         for conclusion in expanded_evidence.formal_conclusions
@@ -281,7 +295,11 @@ def _build_report_evidence_audit(
         for rule_family in knowledge_activation.missing_rule_families
         if rule_family not in missing_rule_families
     )
-    if missing_rule_families or expanded_evidence.unavailable_conclusions:
+    if (
+        missing_rule_families
+        or expanded_evidence.unavailable_conclusions
+        or not calculation_status_contract_complete
+    ):
         audit_status = "incomplete"
     elif knowledge_activation.activation_status == "enabled_with_guardrails":
         audit_status = "complete_with_guardrails"
@@ -965,24 +983,14 @@ def _major_body_sections(report: Report) -> str:
     )
 
 
-def _default_not_computed_calculation(chart: BaziChart) -> CalculationBundle:
-    try:
-        return build_legacy_not_computed_bundle(chart)
-    except ValueError:
-        compatible_chart = calculate_bazi_chart(chart.birth_profile)
-        return build_legacy_not_computed_bundle(compatible_chart)
-
-
 def build_report(
     chart: BaziChart,
     calculation: CalculationBundle | None = None,
 ) -> Report:
     if len(chart.pillars) != 4:
         raise ValueError("BaziChart must contain exactly four pillars")
-    supplied_calculation = calculation
-    calculation = calculation or _default_not_computed_calculation(chart)
-    if supplied_calculation is not None:
-        _require_calculation_bundle_binding(chart, calculation)
+    calculation = calculation or build_legacy_not_computed_bundle(chart)
+    validate_calculation_binding(chart, calculation)
 
     disclaimer = (
         "本报告定位为传统命理知识的文化解读与自我反思材料，不是科学预测，"

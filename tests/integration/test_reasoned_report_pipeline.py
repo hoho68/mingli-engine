@@ -1,12 +1,160 @@
 from datetime import datetime
 
+import pytest
+
 from mingli_engine.bazi import analyze_bazi_chart
 from mingli_engine.chart_calculator import calculate_bazi_chart
+from mingli_engine.formal_interpretation import classify_chart_calculation_states
+from mingli_engine.models import BirthProfile
 from mingli_engine.report_schema import build_report
 
 
 def _calculation_chart(chart):
     return calculate_bazi_chart(chart.birth_profile)
+
+
+def _analyzed_bundle(birth_date: str):
+    profile = BirthProfile(
+        calendar_type="gregorian",
+        birth_date=birth_date,
+        birth_time="09:30",
+        birthplace="Shanghai",
+        gender="female",
+        focus_topic="career",
+    )
+    chart = calculate_bazi_chart(profile)
+    calculation = analyze_bazi_chart(
+        chart,
+        birth_datetime=datetime.fromisoformat(f"{birth_date}T09:30"),
+        selected_year=2030,
+    )
+    return chart, calculation
+
+
+@pytest.mark.parametrize(
+    ("birth_date", "expected"),
+    [
+        (
+            "1950-03-22",
+            {
+                "pattern_strength": "disputed",
+                "five_element_balance": "computed",
+                "useful_god_candidate": "disputed",
+                "taboo_god_candidate": "not_computed",
+                "ten_god_relation": "not_computed",
+                "branch_interaction": "not_computed",
+                "blind_image_method": "disputed",
+                "luck_cycle": "computed",
+                "remedy_boundary": "disputed",
+                "high_risk_signal": "not_computed",
+            },
+        ),
+        (
+            "1950-03-25",
+            {
+                "pattern_strength": "computed",
+                "five_element_balance": "computed",
+                "useful_god_candidate": "indeterminate",
+                "taboo_god_candidate": "not_computed",
+                "ten_god_relation": "not_computed",
+                "branch_interaction": "not_computed",
+                "blind_image_method": "computed",
+                "luck_cycle": "computed",
+                "remedy_boundary": "indeterminate",
+                "high_risk_signal": "not_computed",
+            },
+        ),
+    ],
+)
+def test_real_bundles_have_exact_conservative_family_status_maps(
+    birth_date,
+    expected,
+):
+    chart, calculation = _analyzed_bundle(birth_date)
+
+    assert classify_chart_calculation_states(calculation) == expected
+    report = build_report(chart, calculation)
+    assert {
+        conclusion.rule_family: conclusion.trace.calculation_status
+        for conclusion in report.expanded_evidence.formal_conclusions
+    } == expected
+
+
+def _formal_family(report, rule_family: str):
+    return next(
+        conclusion
+        for conclusion in report.expanded_evidence.formal_conclusions
+        if conclusion.rule_family == rule_family
+    )
+
+
+def _school_view_signals(conclusion):
+    return [
+        signal
+        for signal in conclusion.trace.chart_signals
+        if signal.startswith("school_view:")
+    ]
+
+
+def test_disputed_calculation_without_family_school_rule_has_no_school_note():
+    chart, calculation = _analyzed_bundle("1950-03-22")
+
+    report = build_report(chart, calculation)
+
+    for rule_family in (
+        "pattern_strength",
+        "useful_god_candidate",
+        "blind_image_method",
+    ):
+        conclusion = _formal_family(report, rule_family)
+        assert conclusion.strength == "disputed"
+        assert "School calculation disagreement preserved" not in (
+            conclusion.trace.disagreement_note
+        )
+        views = _school_view_signals(conclusion)
+        assert len(views) == len(calculation.schools)
+    pattern_views = _school_view_signals(_formal_family(report, "pattern_strength"))
+    assert all(":patterns=" in view for view in pattern_views)
+    assert all(":useful_gods=" not in view for view in pattern_views)
+    useful_views = _school_view_signals(
+        _formal_family(report, "useful_god_candidate")
+    )
+    assert all(":useful_gods=" in view for view in useful_views)
+    assert all(":patterns=" not in view for view in useful_views)
+    blind_views = _school_view_signals(
+        _formal_family(report, "blind_image_method")
+    )
+    assert all(":patterns=" not in view for view in blind_views)
+    assert all(":useful_gods=" not in view for view in blind_views)
+
+
+def test_useful_god_school_rule_projects_only_useful_god_views():
+    chart, calculation = _analyzed_bundle("1950-01-01")
+
+    report = build_report(chart, calculation)
+
+    pattern = _formal_family(report, "pattern_strength")
+    useful = _formal_family(report, "useful_god_candidate")
+    remedy = _formal_family(report, "remedy_boundary")
+    blind = _formal_family(report, "blind_image_method")
+    assert "School calculation disagreement preserved" not in (
+        pattern.trace.disagreement_note
+    )
+    assert "School calculation disagreement preserved" not in (
+        blind.trace.disagreement_note
+    )
+    for conclusion in (useful, remedy):
+        assert "School calculation disagreement preserved" in (
+            conclusion.trace.disagreement_note
+        )
+        views = _school_view_signals(conclusion)
+        assert len(views) == len(calculation.schools)
+        assert all(":useful_gods=" in view for view in views)
+        assert all(":patterns=" not in view for view in views)
+        for school in calculation.schools:
+            assert f"school_view:{school.school_id}:" in (
+                conclusion.trace.disagreement_note
+            )
 
 
 def test_reasoned_calculation_reaches_formal_evidence_and_audit(sample_bazi_chart):
@@ -33,11 +181,11 @@ def test_reasoned_calculation_reaches_formal_evidence_and_audit(sample_bazi_char
         == 10
     )
     assert conclusions["luck_cycle"].strength in {"candidate", "disputed"}
-    assert "calculation_status:computed" in conclusions["luck_cycle"].trace.assumptions
+    assert conclusions["luck_cycle"].trace.calculation_status == "computed"
     assert conclusions["taboo_god_candidate"].strength == "weakly_supported"
-    assert "calculation_status:not_computed" in conclusions[
-        "taboo_god_candidate"
-    ].trace.assumptions
+    assert conclusions["taboo_god_candidate"].trace.calculation_status == (
+        "not_computed"
+    )
     school_signals = conclusions["blind_image_method"].trace.chart_signals
     assert {signal.split(":", 2)[1] for signal in school_signals if signal.startswith("school_view:")} == {
         item.school_id for item in calculation.schools

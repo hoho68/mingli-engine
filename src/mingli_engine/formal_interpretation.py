@@ -1,9 +1,14 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 
+from mingli_engine.bazi import (
+    build_legacy_not_computed_bundle,
+    validate_calculation_binding,
+)
 from mingli_engine.bazi.result_models import CalculationBundle, ReasonedResult
 from mingli_engine.models import (
     BaziChart,
+    CalculationStatus,
     EvidenceTrace,
     EvidenceUnit,
     ExpandedReportEvidence,
@@ -14,11 +19,18 @@ from mingli_engine.models import (
 
 _STATUS_PRIORITY = {
     "not_computed": 0,
-    "indeterminate": 1,
-    "computed": 2,
+    "computed": 1,
+    "indeterminate": 2,
     "disputed": 3,
 }
 _CONFIDENCE_PRIORITY = {"low": 0, "medium": 1, "high": 2}
+_SCHOOL_DISAGREEMENT_RULE_IDS = {
+    "pattern_strength": "school.cross_school_disagreement.pattern_preferences",
+    "useful_god_candidate": (
+        "school.cross_school_disagreement.useful_god_preferences"
+    ),
+    "remedy_boundary": "school.cross_school_disagreement.useful_god_preferences",
+}
 
 
 def _not_computed_reasoning(rule_family: str) -> ReasonedResult:
@@ -310,34 +322,35 @@ def _school_view_signals(
         "remedy_boundary",
     }:
         return []
-    return [
-        (
+    views: list[str] = []
+    for item in calculation.schools:
+        view = (
             f"school_view:{item.school_id}:{item.reasoning.status}:"
-            f"{item.reasoning.conclusion}:patterns="
-            f"{','.join(item.preferred_pattern_ids)}:useful_gods="
-            f"{','.join(item.preferred_useful_god_elements)}"
+            f"{item.reasoning.conclusion}"
         )
-        for item in calculation.schools
-    ]
-
-
-def _calculation_assumptions(reasoning: ReasonedResult) -> list[str]:
-    return [
-        f"calculation_status:{reasoning.status}",
-        f"calculation_confidence:{reasoning.confidence}",
-        f"calculation_conclusion:{reasoning.conclusion}",
-        *(f"calculation_assumption:{item}" for item in reasoning.assumptions),
-        *(f"calculation_missing_input:{item}" for item in reasoning.missing_inputs),
-        *(f"calculation_rule_id:{item}" for item in reasoning.rule_ids),
-    ]
+        if rule_family == "pattern_strength":
+            view += f":patterns={','.join(item.preferred_pattern_ids)}"
+        elif rule_family in {"useful_god_candidate", "remedy_boundary"}:
+            view += (
+                ":useful_gods="
+                f"{','.join(item.preferred_useful_god_elements)}"
+            )
+        views.append(view)
+    return views
 
 
 def _school_disagreement_note(
     calculation: CalculationBundle | None,
     rule_family: str,
-    calculation_status: str,
+    calculation_status: CalculationStatus,
 ) -> str:
     if calculation is None or calculation_status != "disputed":
+        return ""
+    disagreement_rule_id = _SCHOOL_DISAGREEMENT_RULE_IDS.get(rule_family)
+    if disagreement_rule_id is None or not any(
+        disagreement_rule_id in item.reasoning.rule_ids
+        for item in calculation.schools
+    ):
         return ""
     views = _school_view_signals(calculation, rule_family)
     if not views:
@@ -385,7 +398,7 @@ def _build_conclusion(
         "four_pillars_complete",
         "classical_evidence_units_approved",
         f"rule_family:{spec.rule_family}",
-        *_calculation_assumptions(reasoning),
+        *reasoning.assumptions,
     ]
     relevant_conflicts = _relevant_conflicts(spec, units, source_conflicts)
     disagreement_note = "；".join(
@@ -412,6 +425,8 @@ def _build_conclusion(
         evidence_ids=evidence_ids,
         assumptions=assumptions,
         disagreement_note=disagreement_note,
+        calculation_status=reasoning.status,
+        calculation_confidence=reasoning.confidence,
     )
     has_open_severe_conflict = any(
         conflict.severity == "severe" and conflict.resolution_status == "open"
@@ -442,6 +457,8 @@ def build_formal_interpretation(
     source_conflicts: list[SourceConflict] | None = None,
     calculation: CalculationBundle | None = None,
 ) -> ExpandedReportEvidence:
+    calculation = calculation or build_legacy_not_computed_bundle(chart)
+    validate_calculation_binding(chart, calculation)
     grouped = _group_evidence_by_family(evidence_units)
     conflicts = source_conflicts or []
     conclusions = [

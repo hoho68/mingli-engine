@@ -123,11 +123,30 @@ def test_one_argument_report_explicitly_uses_not_computed_calculation(
         for conclusion in report.expanded_evidence.formal_conclusions
         if conclusion.rule_family == "useful_god_candidate"
     )
-    assert "calculation_status:not_computed" in high_risk.trace.assumptions
+    assert high_risk.trace.calculation_status == "not_computed"
     assert high_risk.strength == "disputed"
     assert "高风险结论必须降级并强调边界" in high_risk.trace.disagreement_note
     assert useful_god.strength == "weakly_supported"
     assert "段氏与师传口径" in useful_god.trace.disagreement_note
+
+
+def test_one_argument_legacy_report_does_not_recalculate_a_different_chart(
+    sample_bazi_chart,
+    monkeypatch,
+):
+    def reject_recalculation(*_args, **_kwargs):
+        raise AssertionError("legacy fallback recalculated a different chart")
+
+    monkeypatch.setattr(
+        report_schema,
+        "calculate_bazi_chart",
+        reject_recalculation,
+        raising=False,
+    )
+
+    report = build_report(sample_bazi_chart)
+
+    assert report.report_evidence_audit.not_computed_rule_family_count == 10
 
 
 def test_report_audit_counts_calculation_statuses_independently_from_evidence(
@@ -146,6 +165,102 @@ def test_report_audit_counts_calculation_statuses_independently_from_evidence(
     assert audit.computed_rule_family_count == 0
     assert audit.indeterminate_rule_family_count == 0
     assert audit.disputed_rule_family_count == 0
+
+
+def test_evidence_trace_typed_calculation_fields_are_backward_compatible():
+    trace = EvidenceTrace(
+        trace_id="trace",
+        conclusion_id="conclusion",
+        chart_signals=[],
+        evidence_ids=[],
+        assumptions=[],
+    )
+
+    assert [field.name for field in fields(EvidenceTrace)] == [
+        "trace_id",
+        "conclusion_id",
+        "chart_signals",
+        "evidence_ids",
+        "assumptions",
+        "disagreement_note",
+        "calculation_status",
+        "calculation_confidence",
+    ]
+    assert trace.calculation_status == "not_computed"
+    assert trace.calculation_confidence == "low"
+
+
+def test_evidence_trace_rejects_unknown_typed_calculation_values():
+    with pytest.raises(ValueError, match="unsupported calculation status"):
+        EvidenceTrace(
+            trace_id="trace",
+            conclusion_id="conclusion",
+            chart_signals=[],
+            evidence_ids=[],
+            assumptions=[],
+            calculation_status="candidate",
+        )
+    with pytest.raises(ValueError, match="unsupported calculation confidence"):
+        EvidenceTrace(
+            trace_id="trace",
+            conclusion_id="conclusion",
+            chart_signals=[],
+            evidence_ids=[],
+            assumptions=[],
+            calculation_confidence="certain",
+        )
+
+
+def test_report_audit_counts_typed_statuses_once_per_family(sample_bazi_chart):
+    report = build_report(sample_bazi_chart)
+    statuses = (
+        "computed",
+        "indeterminate",
+        "disputed",
+        "not_computed",
+    )
+    conclusions = [
+        replace(
+            conclusion,
+            trace=replace(
+                conclusion.trace,
+                calculation_status=statuses[index % len(statuses)],
+            ),
+        )
+        for index, conclusion in enumerate(
+            report.expanded_evidence.formal_conclusions
+        )
+    ]
+
+    audit = report_schema._build_report_evidence_audit(
+        replace(report.expanded_evidence, formal_conclusions=conclusions),
+        report.knowledge_activation,
+    )
+
+    assert audit.computed_rule_family_count == 3
+    assert audit.indeterminate_rule_family_count == 3
+    assert audit.disputed_rule_family_count == 2
+    assert audit.not_computed_rule_family_count == 2
+
+
+def test_report_audit_rejects_duplicate_family_calculation_status(
+    sample_bazi_chart,
+):
+    report = build_report(sample_bazi_chart)
+    conclusions = report.expanded_evidence.formal_conclusions
+    duplicated = replace(
+        report.expanded_evidence,
+        formal_conclusions=[*conclusions, conclusions[0]],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="exactly one recognized calculation status per formal rule family",
+    ):
+        report_schema._build_report_evidence_audit(
+            duplicated,
+            report.knowledge_activation,
+        )
 
 
 def test_build_report_includes_basic_interpretation_sections(sample_bazi_chart):
@@ -667,7 +782,20 @@ def test_formal_synthesis_changes_with_chart_signals_without_changing_evidence(
     ]
     alternate_chart = replace(
         sample_bazi_chart,
-        pillars=alternate_pillars,
+        pillars=[
+            replace(pillar, hidden_stems=hidden_stems)
+            for pillar, hidden_stems in zip(
+                alternate_pillars,
+                (
+                    ["甲", "丙", "戊"],
+                    ["乙"],
+                    ["戊", "乙", "癸"],
+                    ["丙", "戊", "庚"],
+                ),
+                strict=True,
+            )
+        ],
+        day_master="丙",
         strength_assessment="日主偏弱候选，宜先观察支持条件。",
         pattern_candidates=["财星配印候选", "食神制杀线索"],
         useful_god_candidates=["水", "木"],

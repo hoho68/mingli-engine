@@ -2,6 +2,7 @@ from dataclasses import replace
 
 import pytest
 
+from mingli_engine.bazi.analysis import _bind_calculation_bundle
 from mingli_engine.classical_sources import load_approved_evidence_units
 from mingli_engine.bazi.legacy_adapter import build_legacy_not_computed_bundle
 from mingli_engine.bazi.result_models import ReasonedResult, SchoolInterpretation
@@ -62,6 +63,10 @@ def _calculation_chart(chart):
     )
 
 
+def _bound_calculation(chart, calculation):
+    return _bind_calculation_bundle(calculation, chart)
+
+
 def test_classification_uses_bundle_reasoning_not_legacy_summary_strings(
     sample_bazi_chart,
 ):
@@ -101,12 +106,8 @@ def test_each_family_separates_calculation_evidence_strength_and_confidence(
     )
 
     assert conclusion.trace.evidence_ids
-    assert "calculation_status:not_computed" in conclusion.trace.assumptions
-    assert "calculation_confidence:low" in conclusion.trace.assumptions
-    assert any(
-        item.startswith("calculation_conclusion:")
-        for item in conclusion.trace.assumptions
-    )
+    assert conclusion.trace.calculation_status == "not_computed"
+    assert conclusion.trace.calculation_confidence == "low"
     assert conclusion.strength == "weakly_supported"
 
 
@@ -120,13 +121,25 @@ def test_computed_with_evidence_is_candidate_and_confidence_is_independent(
         for unit in load_approved_evidence_units()
         if unit.rule_family == "luck_cycle"
     ]
-    low = replace(
-        legacy,
-        luck_cycles=replace(legacy.luck_cycles, reasoning=_reasoning("computed", confidence="low")),
+    low = _bound_calculation(
+        chart,
+        replace(
+            legacy,
+            luck_cycles=replace(
+                legacy.luck_cycles,
+                reasoning=_reasoning("computed", confidence="low"),
+            ),
+        ),
     )
-    high = replace(
-        low,
-        luck_cycles=replace(low.luck_cycles, reasoning=_reasoning("computed", confidence="high")),
+    high = _bound_calculation(
+        chart,
+        replace(
+            low,
+            luck_cycles=replace(
+                low.luck_cycles,
+                reasoning=_reasoning("computed", confidence="high"),
+            ),
+        ),
     )
 
     low_conclusion = _family(
@@ -139,16 +152,22 @@ def test_computed_with_evidence_is_candidate_and_confidence_is_independent(
     )
 
     assert low_conclusion.strength == high_conclusion.strength == "candidate"
-    assert "calculation_confidence:low" in low_conclusion.trace.assumptions
-    assert "calculation_confidence:high" in high_conclusion.trace.assumptions
+    assert low_conclusion.trace.calculation_confidence == "low"
+    assert high_conclusion.trace.calculation_confidence == "high"
 
 
 def test_computed_without_evidence_is_unavailable(sample_bazi_chart):
     chart = _calculation_chart(sample_bazi_chart)
     legacy = build_legacy_not_computed_bundle(chart)
-    calculation = replace(
-        legacy,
-        luck_cycles=replace(legacy.luck_cycles, reasoning=_reasoning("computed")),
+    calculation = _bound_calculation(
+        chart,
+        replace(
+            legacy,
+            luck_cycles=replace(
+                legacy.luck_cycles,
+                reasoning=_reasoning("computed"),
+            ),
+        ),
     )
 
     conclusion = _family(
@@ -157,15 +176,21 @@ def test_computed_without_evidence_is_unavailable(sample_bazi_chart):
     )
 
     assert conclusion.strength == "unavailable"
-    assert "calculation_status:computed" in conclusion.trace.assumptions
+    assert conclusion.trace.calculation_status == "computed"
 
 
 def test_indeterminate_with_evidence_is_weakly_supported(sample_bazi_chart):
     chart = _calculation_chart(sample_bazi_chart)
     legacy = build_legacy_not_computed_bundle(chart)
-    calculation = replace(
-        legacy,
-        luck_cycles=replace(legacy.luck_cycles, reasoning=_reasoning("indeterminate")),
+    calculation = _bound_calculation(
+        chart,
+        replace(
+            legacy,
+            luck_cycles=replace(
+                legacy.luck_cycles,
+                reasoning=_reasoning("indeterminate"),
+            ),
+        ),
     )
     evidence = [
         unit
@@ -179,7 +204,7 @@ def test_indeterminate_with_evidence_is_weakly_supported(sample_bazi_chart):
     )
 
     assert conclusion.strength == "weakly_supported"
-    assert "calculation_status:indeterminate" in conclusion.trace.assumptions
+    assert conclusion.trace.calculation_status == "indeterminate"
 
 
 @pytest.mark.parametrize(
@@ -193,11 +218,14 @@ def test_interpretation_status_precedes_missing_evidence(
 ):
     chart = _calculation_chart(sample_bazi_chart)
     legacy = build_legacy_not_computed_bundle(chart)
-    calculation = replace(
-        legacy,
-        luck_cycles=replace(
-            legacy.luck_cycles,
-            reasoning=_reasoning(calculation_status),
+    calculation = _bound_calculation(
+        chart,
+        replace(
+            legacy,
+            luck_cycles=replace(
+                legacy.luck_cycles,
+                reasoning=_reasoning(calculation_status),
+            ),
         ),
     )
 
@@ -217,32 +245,42 @@ def test_school_disagreement_is_disputed_and_preserves_each_view(sample_bazi_cha
         SchoolInterpretation(
             school_id="school_a",
             profile_version="v1",
-            reasoning=_reasoning("disputed"),
+            reasoning=replace(
+                _reasoning("disputed"),
+                rule_ids=(
+                    "school.cross_school_disagreement.pattern_preferences",
+                ),
+            ),
             preferred_pattern_ids=("pattern_a",),
             preferred_useful_god_elements=("木",),
         ),
         SchoolInterpretation(
             school_id="school_b",
             profile_version="v1",
-            reasoning=_reasoning("disputed"),
+            reasoning=replace(
+                _reasoning("disputed"),
+                rule_ids=(
+                    "school.cross_school_disagreement.pattern_preferences",
+                ),
+            ),
             preferred_pattern_ids=("pattern_b",),
             preferred_useful_god_elements=("火",),
         ),
     )
-    calculation = replace(legacy, schools=schools)
+    calculation = _bound_calculation(chart, replace(legacy, schools=schools))
     evidence = [
         unit
         for unit in load_approved_evidence_units()
-        if unit.rule_family == "blind_image_method"
+        if unit.rule_family == "pattern_strength"
     ]
 
     conclusion = _family(
         build_formal_interpretation(chart, evidence, calculation=calculation),
-        "blind_image_method",
+        "pattern_strength",
     )
 
     assert conclusion.strength == "disputed"
-    assert "calculation_status:disputed" in conclusion.trace.assumptions
+    assert conclusion.trace.calculation_status == "disputed"
     assert any("school_view:school_a:" in signal for signal in conclusion.trace.chart_signals)
     assert any("school_view:school_b:" in signal for signal in conclusion.trace.chart_signals)
     assert "school_a" in conclusion.trace.disagreement_note
@@ -337,11 +375,14 @@ def test_formal_interpretation_adds_disagreement_note_for_documented_conflict(
 
     chart = _calculation_chart(sample_bazi_chart)
     legacy = build_legacy_not_computed_bundle(chart)
-    calculation = replace(
-        legacy,
-        useful_gods=tuple(
-            replace(item, reasoning=_reasoning("computed"))
-            for item in legacy.useful_gods
+    calculation = _bound_calculation(
+        chart,
+        replace(
+            legacy,
+            useful_gods=tuple(
+                replace(item, reasoning=_reasoning("computed"))
+                for item in legacy.useful_gods
+            ),
         ),
     )
     expanded = build_formal_interpretation(
@@ -392,9 +433,9 @@ def test_family_without_v1_calculation_does_not_infer_status_from_chart_signal(
     }
 
     assert conclusions["high_risk_signal"].strength == "weakly_supported"
-    assert "calculation_status:not_computed" in conclusions[
-        "high_risk_signal"
-    ].trace.assumptions
+    assert conclusions["high_risk_signal"].trace.calculation_status == (
+        "not_computed"
+    )
 
 
 @pytest.mark.parametrize("calculation_status", ["not_computed", "indeterminate"])
@@ -423,11 +464,14 @@ def test_formal_interpretation_open_severe_conflict_precedes_calculation_status(
 
     calculation_chart = _calculation_chart(chart)
     legacy = build_legacy_not_computed_bundle(calculation_chart)
-    calculation = replace(
-        legacy,
-        strength=replace(
-            legacy.strength,
-            reasoning=_reasoning(calculation_status),
+    calculation = _bound_calculation(
+        calculation_chart,
+        replace(
+            legacy,
+            strength=replace(
+                legacy.strength,
+                reasoning=_reasoning(calculation_status),
+            ),
         ),
     )
     expanded = build_formal_interpretation(
@@ -477,5 +521,45 @@ def test_not_computed_with_non_severe_evidence_remains_weakly_supported(
     )
 
     assert useful.strength == "weakly_supported"
-    assert "calculation_status:not_computed" in useful.trace.assumptions
+    assert useful.trace.calculation_status == "not_computed"
     assert conflict.reader_note in useful.trace.disagreement_note
+
+
+def test_formal_interpretation_rejects_unbound_calculation_before_use(
+    sample_bazi_chart,
+):
+    chart = _calculation_chart(sample_bazi_chart)
+    calculation = replace(build_legacy_not_computed_bundle(chart))
+
+    with pytest.raises(
+        ValueError,
+        match="^calculation bundle is unbound or does not match chart input$",
+    ):
+        build_formal_interpretation(
+            chart,
+            load_approved_evidence_units(),
+            calculation=calculation,
+        )
+
+
+def test_formal_trace_exposes_typed_calculation_state_not_assumption_tokens(
+    sample_bazi_chart,
+):
+    chart = _calculation_chart(sample_bazi_chart)
+    calculation = build_legacy_not_computed_bundle(chart)
+
+    conclusion = _family(
+        build_formal_interpretation(
+            chart,
+            load_approved_evidence_units(),
+            calculation=calculation,
+        ),
+        "luck_cycle",
+    )
+
+    assert conclusion.trace.calculation_status == "not_computed"
+    assert conclusion.trace.calculation_confidence == "low"
+    assert not any(
+        assumption.startswith("calculation_")
+        for assumption in conclusion.trace.assumptions
+    )

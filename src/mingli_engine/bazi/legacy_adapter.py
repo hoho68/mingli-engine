@@ -2,8 +2,9 @@ from dataclasses import replace
 
 from mingli_engine.bazi.analysis import (
     _bind_calculation_bundle,
-    _require_calculation_bundle_binding,
+    validate_calculation_binding,
 )
+from mingli_engine.bazi.constants import STEM_ELEMENT
 from mingli_engine.bazi.facts import build_chart_facts
 from mingli_engine.bazi.result_models import (
     CalculationBundle,
@@ -19,6 +20,17 @@ from mingli_engine.models import BaziChart
 
 
 LEGACY_REASON_CODE = "legacy_report_without_calculation_bundle"
+_LEGACY_PILLAR_NAMES = {
+    "year": "year",
+    "month": "month",
+    "day": "day",
+    "hour": "hour",
+    "time": "hour",
+    "年柱": "year",
+    "月柱": "month",
+    "日柱": "day",
+    "时柱": "hour",
+}
 
 
 def _status_token(status: str) -> str:
@@ -42,7 +54,7 @@ def _not_computed_reasoning(stage: str) -> ReasonedResult:
 def apply_calculation_bundle(
     chart: BaziChart, bundle: CalculationBundle
 ) -> BaziChart:
-    _require_calculation_bundle_binding(chart, bundle)
+    validate_calculation_binding(chart, bundle)
     ten_gods = ", ".join(
         f"{fact.pillar_name}:{fact.ten_god}" for fact in bundle.facts.exposed_stems
     )
@@ -89,8 +101,25 @@ def apply_calculation_bundle(
     )
 
 
+def _normalize_legacy_fact_chart(chart: BaziChart) -> BaziChart:
+    pillars = [
+        replace(
+            pillar,
+            name=_LEGACY_PILLAR_NAMES.get(pillar.name, pillar.name),
+        )
+        for pillar in chart.pillars
+    ]
+    day_pillars = [pillar for pillar in pillars if pillar.name == "day"]
+    day_master = chart.day_master
+    if len(day_pillars) == 1:
+        stem = day_pillars[0].heavenly_stem
+        if chart.day_master == f"{stem}{STEM_ELEMENT.get(stem, '')}":
+            day_master = stem
+    return replace(chart, pillars=pillars, day_master=day_master)
+
+
 def build_legacy_not_computed_bundle(chart: BaziChart) -> CalculationBundle:
-    facts = build_chart_facts(chart)
+    facts = build_chart_facts(_normalize_legacy_fact_chart(chart))
     strength = StrengthResult(
         reasoning=_not_computed_reasoning("strength"),
         score=0.0,

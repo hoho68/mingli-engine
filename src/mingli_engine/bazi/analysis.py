@@ -92,7 +92,7 @@ def _bind_calculation_bundle(
     return bundle
 
 
-def _require_calculation_bundle_binding(
+def validate_calculation_binding(
     chart: BaziChart, bundle: CalculationBundle
 ) -> None:
     with _PROVENANCE_LOCK:
@@ -102,6 +102,9 @@ def _require_calculation_bundle_binding(
         expected_digest = current[1]
     if not compare_digest(expected_digest, _chart_context_digest(chart)):
         raise ValueError(PROVENANCE_ERROR)
+
+
+_require_calculation_bundle_binding = validate_calculation_binding
 
 
 def analyze_bazi_chart(

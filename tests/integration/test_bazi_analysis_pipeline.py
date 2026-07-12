@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+import mingli_engine.bazi as bazi_api
 import mingli_engine.bazi.analysis as analysis
 from mingli_engine.bazi.analysis import analyze_bazi_chart
 from mingli_engine.bazi.facts import build_chart_facts
@@ -359,6 +360,36 @@ def test_legacy_not_computed_bundle_is_bound_only_to_its_chart() -> None:
             ),
             bundle,
         )
+
+
+def test_public_binding_validator_accepts_only_original_legacy_chart() -> None:
+    chart = _chart()
+    localized_names = ("年柱", "月柱", "日柱", "time")
+    localized_chart = replace(
+        chart,
+        pillars=[
+            replace(pillar, name=name)
+            for pillar, name in zip(
+                chart.pillars,
+                localized_names,
+                strict=True,
+            )
+        ],
+        day_master=chart.day_master,
+    )
+
+    assert callable(getattr(bazi_api, "validate_calculation_binding", None))
+    bundle = build_legacy_not_computed_bundle(localized_chart)
+
+    bazi_api.validate_calculation_binding(localized_chart, bundle)
+    assert tuple(fact.pillar_name for fact in bundle.facts.exposed_stems) == (
+        "year",
+        "month",
+        "day",
+        "hour",
+    )
+    with pytest.raises(ValueError, match=f"^{PROVENANCE_ERROR}$"):
+        bazi_api.validate_calculation_binding(chart, bundle)
 
 
 def test_legacy_adapter_defensively_copies_mutable_chart_fields() -> None:
