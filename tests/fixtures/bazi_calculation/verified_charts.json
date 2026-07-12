@@ -246,18 +246,9 @@
         "strength": {
           "status": "computed",
           "label": "弱",
-          "score_range": [
-            -31.000001,
-            -30.999999
-          ],
-          "lower_bound_range": [
-            -34.100001,
-            -34.099999000000004
-          ],
-          "upper_bound_range": [
-            -27.900001000000003,
-            -27.899999
-          ]
+          "score": -31.0,
+          "lower_bound": -34.1,
+          "upper_bound": -27.900000000000002
         },
         "patterns": [
           {
@@ -620,18 +611,9 @@
         "strength": {
           "status": "computed",
           "label": "强",
-          "score_range": [
-            48.499999,
-            48.500001
-          ],
-          "lower_bound_range": [
-            43.649999,
-            43.650000999999996
-          ],
-          "upper_bound_range": [
-            53.349999000000004,
-            53.350001
-          ]
+          "score": 48.5,
+          "lower_bound": 43.65,
+          "upper_bound": 53.35
         },
         "patterns": [
           {
@@ -966,18 +948,9 @@
         "strength": {
           "status": "computed",
           "label": "强",
-          "score_range": [
-            67.999999,
-            68.000001
-          ],
-          "lower_bound_range": [
-            61.199999,
-            61.20000099999999
-          ],
-          "upper_bound_range": [
-            74.799999,
-            74.800001
-          ]
+          "score": 68.0,
+          "lower_bound": 61.199999999999996,
+          "upper_bound": 74.8
         },
         "patterns": [
           {
@@ -1348,18 +1321,9 @@
         "strength": {
           "status": "indeterminate",
           "label": "临界",
-          "score_range": [
-            -24.000001,
-            -23.999999
-          ],
-          "lower_bound_range": [
-            -26.400001000000003,
-            -26.399999
-          ],
-          "upper_bound_range": [
-            -21.600001,
-            -21.599998999999997
-          ]
+          "score": -24.0,
+          "lower_bound": -26.400000000000002,
+          "upper_bound": -21.599999999999998
         },
         "patterns": [
           {
@@ -1735,18 +1699,9 @@
         "strength": {
           "status": "computed",
           "label": "弱",
-          "score_range": [
-            -65.500001,
-            -65.499999
-          ],
-          "lower_bound_range": [
-            -72.050001,
-            -72.049999
-          ],
-          "upper_bound_range": [
-            -58.95000099999999,
-            -58.949999
-          ]
+          "score": -65.5,
+          "lower_bound": -72.05,
+          "upper_bound": -58.949999999999996
         },
         "patterns": [
           {
@@ -2126,18 +2081,9 @@
         "strength": {
           "status": "computed",
           "label": "较平衡",
-          "score_range": [
-            -5.000001,
-            -4.999999
-          ],
-          "lower_bound_range": [
-            -5.500000999999998,
-            -5.499998999999998
-          ],
-          "upper_bound_range": [
-            -4.500001,
-            -4.499999
-          ]
+          "score": -5.0,
+          "lower_bound": -5.499999999999998,
+          "upper_bound": -4.5
         },
         "patterns": [
           {
@@ -2598,18 +2544,9 @@
         "strength": {
           "status": "computed",
           "label": "偏强",
-          "score_range": [
-            11.999999,
-            12.000001
-          ],
-          "lower_bound_range": [
-            10.799999,
-            10.800000999999998
-          ],
-          "upper_bound_range": [
-            13.199999000000004,
-            13.200001000000002
-          ]
+          "score": 12.0,
+          "lower_bound": 10.799999999999999,
+          "upper_bound": 13.200000000000003
         },
         "patterns": [
           {
@@ -2998,18 +2935,9 @@
         "strength": {
           "status": "computed",
           "label": "弱",
-          "score_range": [
-            -45.000001,
-            -44.999999
-          ],
-          "lower_bound_range": [
-            -49.500001,
-            -49.499999
-          ],
-          "upper_bound_range": [
-            -40.500001,
-            -40.499999
-          ]
+          "score": -45.0,
+          "lower_bound": -49.5,
+          "upper_bound": -40.5
         },
         "patterns": [
           {
@@ -3439,18 +3367,9 @@
         "strength": {
           "status": "computed",
           "label": "强",
-          "score_range": [
-            52.499999,
-            52.500001
-          ],
-          "lower_bound_range": [
-            47.249999,
-            47.250001
-          ],
-          "upper_bound_range": [
-            57.74999900000001,
-            57.750001000000005
-          ]
+          "score": 52.5,
+          "lower_bound": 47.25,
+          "upper_bound": 57.75000000000001
         },
         "patterns": [
           {
@@ -3839,18 +3758,9 @@
         "strength": {
           "status": "indeterminate",
           "label": "临界",
-          "score_range": [
-            26.499999,
-            26.500001
-          ],
-          "lower_bound_range": [
-            23.849999,
-            23.850001000000002
-          ],
-          "upper_bound_range": [
-            29.149999000000005,
-            29.150001000000007
-          ]
+          "score": 26.5,
+          "lower_bound": 23.85,
+          "upper_bound": 29.150000000000006
         },
         "patterns": [
           {
@@ -4185,18 +4095,9 @@
         "strength": {
           "status": "computed",
           "label": "弱",
-          "score_range": [
-            -37.000001,
-            -36.999999
-          ],
-          "lower_bound_range": [
-            -40.700001,
-            -40.699999000000005
-          ],
-          "upper_bound_range": [
-            -33.300000999999995,
-            -33.299999
-          ]
+          "score": -37.0,
+          "lower_bound": -40.7,
+          "upper_bound": -33.3
         },
         "patterns": [
           {
@@ -4574,18 +4475,9 @@
         "strength": {
           "status": "computed",
           "label": "偏强",
-          "score_range": [
-            22.499999,
-            22.500001
-          ],
-          "lower_bound_range": [
-            20.249999,
-            20.250001
-          ],
-          "upper_bound_range": [
-            24.749999000000003,
-            24.750001000000005
-          ]
+          "score": 22.5,
+          "lower_bound": 20.25,
+          "upper_bound": 24.750000000000004
         },
         "patterns": [
           {
@@ -4996,18 +4888,9 @@
         "strength": {
           "status": "indeterminate",
           "label": "临界",
-          "score_range": [
-            -24.500001,
-            -24.499999
-          ],
-          "lower_bound_range": [
-            -26.950001000000004,
-            -26.949999000000002
-          ],
-          "upper_bound_range": [
-            -22.050001,
-            -22.049999
-          ]
+          "score": -24.5,
+          "lower_bound": -26.950000000000003,
+          "upper_bound": -22.05
         },
         "patterns": [
           {
@@ -5323,18 +5206,9 @@
         "strength": {
           "status": "computed",
           "label": "强",
-          "score_range": [
-            45.499999,
-            45.500001
-          ],
-          "lower_bound_range": [
-            40.949999000000005,
-            40.950001
-          ],
-          "upper_bound_range": [
-            50.04999900000001,
-            50.050001
-          ]
+          "score": 45.5,
+          "lower_bound": 40.95,
+          "upper_bound": 50.050000000000004
         },
         "patterns": [
           {
@@ -5686,18 +5560,9 @@
         "strength": {
           "status": "computed",
           "label": "强",
-          "score_range": [
-            54.999999,
-            55.000001
-          ],
-          "lower_bound_range": [
-            49.499999,
-            49.500001
-          ],
-          "upper_bound_range": [
-            60.499999,
-            60.500001
-          ]
+          "score": 55.0,
+          "lower_bound": 49.5,
+          "upper_bound": 60.5
         },
         "patterns": [
           {
@@ -6083,18 +5948,9 @@
         "strength": {
           "status": "computed",
           "label": "偏强",
-          "score_range": [
-            19.999999,
-            20.000001
-          ],
-          "lower_bound_range": [
-            17.999999,
-            18.000001
-          ],
-          "upper_bound_range": [
-            21.999999000000003,
-            22.000001000000005
-          ]
+          "score": 20.0,
+          "lower_bound": 18.0,
+          "upper_bound": 22.000000000000004
         },
         "patterns": [
           {
@@ -6482,18 +6338,9 @@
         "strength": {
           "status": "computed",
           "label": "偏弱",
-          "score_range": [
-            -14.000001,
-            -13.999999
-          ],
-          "lower_bound_range": [
-            -15.400000999999998,
-            -15.399999
-          ],
-          "upper_bound_range": [
-            -12.600000999999999,
-            -12.599999
-          ]
+          "score": -14.0,
+          "lower_bound": -15.399999999999999,
+          "upper_bound": -12.6
         },
         "patterns": [
           {
@@ -6921,18 +6768,9 @@
         "strength": {
           "status": "computed",
           "label": "强",
-          "score_range": [
-            36.999999,
-            37.000001
-          ],
-          "lower_bound_range": [
-            33.29999900000001,
-            33.300001
-          ],
-          "upper_bound_range": [
-            40.699999000000005,
-            40.700001
-          ]
+          "score": 37.0,
+          "lower_bound": 33.300000000000004,
+          "upper_bound": 40.7
         },
         "patterns": [
           {
@@ -7368,18 +7206,9 @@
         "strength": {
           "status": "computed",
           "label": "弱",
-          "score_range": [
-            -55.500001,
-            -55.499999
-          ],
-          "lower_bound_range": [
-            -61.050001,
-            -61.04999900000001
-          ],
-          "upper_bound_range": [
-            -49.95000099999999,
-            -49.949999
-          ]
+          "score": -55.5,
+          "lower_bound": -61.050000000000004,
+          "upper_bound": -49.949999999999996
         },
         "patterns": [
           {
@@ -7786,18 +7615,9 @@
         "strength": {
           "status": "computed",
           "label": "较平衡",
-          "score_range": [
-            -8.000001,
-            -7.999999
-          ],
-          "lower_bound_range": [
-            -8.800001,
-            -8.799999000000001
-          ],
-          "upper_bound_range": [
-            -7.200000999999998,
-            -7.199998999999997
-          ]
+          "score": -8.0,
+          "lower_bound": -8.8,
+          "upper_bound": -7.1999999999999975
         },
         "patterns": [
           {
@@ -8204,18 +8024,9 @@
         "strength": {
           "status": "computed",
           "label": "较平衡",
-          "score_range": [
-            5.499999,
-            5.500001
-          ],
-          "lower_bound_range": [
-            4.949999000000002,
-            4.950001000000002
-          ],
-          "upper_bound_range": [
-            6.0499990000000015,
-            6.050001000000002
-          ]
+          "score": 5.5,
+          "lower_bound": 4.950000000000002,
+          "upper_bound": 6.050000000000002
         },
         "patterns": [
           {
@@ -8636,18 +8447,9 @@
         "strength": {
           "status": "computed",
           "label": "强",
-          "score_range": [
-            30.999999,
-            31.000001
-          ],
-          "lower_bound_range": [
-            27.899999,
-            27.900001000000003
-          ],
-          "upper_bound_range": [
-            34.09999900000001,
-            34.100001000000006
-          ]
+          "score": 31.0,
+          "lower_bound": 27.900000000000002,
+          "upper_bound": 34.10000000000001
         },
         "patterns": [
           {
@@ -9094,18 +8896,9 @@
         "strength": {
           "status": "computed",
           "label": "强",
-          "score_range": [
-            53.999999,
-            54.000001
-          ],
-          "lower_bound_range": [
-            48.599999000000004,
-            48.600001
-          ],
-          "upper_bound_range": [
-            59.39999900000001,
-            59.400001
-          ]
+          "score": 54.0,
+          "lower_bound": 48.6,
+          "upper_bound": 59.400000000000006
         },
         "patterns": [
           {
@@ -9522,18 +9315,9 @@
         "strength": {
           "status": "computed",
           "label": "强",
-          "score_range": [
-            36.999999,
-            37.000001
-          ],
-          "lower_bound_range": [
-            33.29999900000001,
-            33.300001
-          ],
-          "upper_bound_range": [
-            40.699999000000005,
-            40.700001
-          ]
+          "score": 37.0,
+          "lower_bound": 33.300000000000004,
+          "upper_bound": 40.7
         },
         "patterns": [
           {
@@ -9932,18 +9716,9 @@
         "strength": {
           "status": "computed",
           "label": "偏强",
-          "score_range": [
-            11.999999,
-            12.000001
-          ],
-          "lower_bound_range": [
-            10.799999000000001,
-            10.800001
-          ],
-          "upper_bound_range": [
-            13.199999000000004,
-            13.200001000000002
-          ]
+          "score": 12.0,
+          "lower_bound": 10.8,
+          "upper_bound": 13.200000000000003
         },
         "patterns": [
           {
@@ -10329,18 +10104,9 @@
         "strength": {
           "status": "computed",
           "label": "强",
-          "score_range": [
-            51.499999,
-            51.500001
-          ],
-          "lower_bound_range": [
-            46.349999000000004,
-            46.350001
-          ],
-          "upper_bound_range": [
-            56.64999900000001,
-            56.650001
-          ]
+          "score": 51.5,
+          "lower_bound": 46.35,
+          "upper_bound": 56.650000000000006
         },
         "patterns": [
           {
@@ -10724,18 +10490,9 @@
         "strength": {
           "status": "computed",
           "label": "弱",
-          "score_range": [
-            -41.000001,
-            -40.999999
-          ],
-          "lower_bound_range": [
-            -45.100001,
-            -45.099999000000004
-          ],
-          "upper_bound_range": [
-            -36.900000999999996,
-            -36.899999
-          ]
+          "score": -41.0,
+          "lower_bound": -45.1,
+          "upper_bound": -36.9
         },
         "patterns": [
           {
@@ -11106,18 +10863,9 @@
         "strength": {
           "status": "indeterminate",
           "label": "临界",
-          "score_range": [
-            -10.000001,
-            -9.999999
-          ],
-          "lower_bound_range": [
-            -11.000001,
-            -10.999999
-          ],
-          "upper_bound_range": [
-            -9.000000999999996,
-            -8.999998999999997
-          ]
+          "score": -10.0,
+          "lower_bound": -11.0,
+          "upper_bound": -8.999999999999996
         },
         "patterns": [
           {
@@ -11506,18 +11254,9 @@
         "strength": {
           "status": "computed",
           "label": "偏强",
-          "score_range": [
-            13.499999,
-            13.500001
-          ],
-          "lower_bound_range": [
-            12.149999000000003,
-            12.150001000000001
-          ],
-          "upper_bound_range": [
-            14.849999000000002,
-            14.850001
-          ]
+          "score": 13.5,
+          "lower_bound": 12.150000000000002,
+          "upper_bound": 14.850000000000001
         },
         "patterns": [
           {
@@ -11940,18 +11679,9 @@
         "strength": {
           "status": "indeterminate",
           "label": "临界",
-          "score_range": [
-            25.499999,
-            25.500001
-          ],
-          "lower_bound_range": [
-            22.949999000000002,
-            22.950001000000004
-          ],
-          "upper_bound_range": [
-            28.049999000000003,
-            28.050001000000005
-          ]
+          "score": 25.5,
+          "lower_bound": 22.950000000000003,
+          "upper_bound": 28.050000000000004
         },
         "patterns": [
           {

@@ -43,7 +43,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "luck_direction_boundary"
-        ]
+        ],
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
       }
     },
     {
@@ -83,7 +84,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "luck_direction_boundary"
-        ]
+        ],
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
       }
     },
     {
@@ -123,7 +125,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "luck_direction_boundary"
-        ]
+        ],
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
       }
     },
     {
@@ -163,7 +166,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "luck_direction_boundary"
-        ]
+        ],
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
       }
     },
     {
@@ -203,7 +207,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "luck_direction_boundary"
-        ]
+        ],
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
       }
     },
     {
@@ -243,7 +248,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "luck_direction_boundary"
-        ]
+        ],
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
       }
     },
     {
@@ -283,7 +289,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "solar_term_exact"
-        ]
+        ],
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
       }
     },
     {
@@ -323,7 +330,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "solar_term_before"
-        ]
+        ],
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
       }
     },
     {
@@ -363,7 +371,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "solar_term_after"
-        ]
+        ],
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
       }
     }
   ]

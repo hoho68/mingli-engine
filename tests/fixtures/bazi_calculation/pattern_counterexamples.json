@@ -20,7 +20,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "damaged_pattern"
-        ]
+        ],
+        "execution_test": "test_fixture_counterexamples_use_canonical_fact_builders"
       }
     },
     {
@@ -41,7 +42,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "rescued_pattern"
-        ]
+        ],
+        "execution_test": "test_fixture_counterexamples_use_canonical_fact_builders"
       }
     },
     {
@@ -62,7 +64,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "damaged_pattern"
-        ]
+        ],
+        "execution_test": "test_fixture_counterexamples_use_canonical_fact_builders"
       }
     },
     {
@@ -83,7 +86,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "damaged_pattern"
-        ]
+        ],
+        "execution_test": "test_fixture_counterexamples_use_canonical_fact_builders"
       }
     },
     {
@@ -102,7 +106,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "damaged_pattern"
-        ]
+        ],
+        "execution_test": "test_fixture_counterexamples_use_canonical_fact_builders"
       }
     },
     {
@@ -125,7 +130,8 @@
         "categories": [
           "damaged_pattern",
           "rescued_pattern"
-        ]
+        ],
+        "execution_test": "test_fixture_counterexamples_use_canonical_fact_builders"
       }
     },
     {
@@ -141,7 +147,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "near_threshold_strength"
-        ]
+        ],
+        "execution_test": "test_fixture_counterexamples_use_canonical_fact_builders"
       }
     },
     {
@@ -162,7 +169,8 @@
         "counts_toward_boundary_gate": true,
         "categories": [
           "latent_vs_exposed"
-        ]
+        ],
+        "execution_test": "test_fixture_counterexamples_use_canonical_fact_builders"
       }
     }
   ]

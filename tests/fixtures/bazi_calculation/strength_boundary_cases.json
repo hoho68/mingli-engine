@@ -1,27 +1,51 @@
 {
   "schema_version": "bazi-boundary-fixtures-v1",
-  "fixture_version": "ziping-strength-boundaries-v1",
+  "fixture_version": "ziping-strength-boundaries-v2",
   "synthetic_input": true,
   "contains_real_personal_data": false,
   "cases": [
     {
       "id": "weak_threshold_sensitivity_crossing",
-      "boundary_input": {
-        "score_center": -30.0,
-        "sensitivity_fraction": 0.1
+      "execution": {
+        "kind": "full_chart",
+        "input": {
+          "calendar_type": "gregorian",
+          "birth_date": "2001-03-15",
+          "birth_time": "01:30",
+          "birthplace": "UTC+08 synthetic fixture",
+          "gender": "female",
+          "focus_topic": "synthetic boundary regression"
+        },
+        "birth_datetime": "2001-03-15T01:30:00"
       },
       "expected": {
-        "status": "indeterminate",
-        "label": "??",
-        "score_range": [
-          -30.000001,
-          -29.999999
-        ]
+        "strength": {
+          "status": "indeterminate",
+          "label": "临界",
+          "sensitivity_boundary": true,
+          "score_range": [
+            -24.000001,
+            -23.999999
+          ],
+          "lower_bound_range": [
+            -26.400001000000003,
+            -26.399999
+          ],
+          "upper_bound_range": [
+            -21.600001,
+            -21.599998999999997
+          ]
+        },
+        "semantic": {
+          "kind": "near_threshold",
+          "threshold": -25.0
+        }
       },
       "fixture_metadata": {
         "synthetic_input": true,
         "contains_real_personal_data": false,
         "counts_toward_boundary_gate": true,
+        "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
           "near_threshold_strength"
         ]
@@ -29,22 +53,229 @@
     },
     {
       "id": "incomplete_water_three_combination",
-      "boundary_input": {
-        "present_branches": [
-          "?",
-          "?"
-        ],
-        "missing_branch": "?"
+      "execution": {
+        "kind": "chart_facts",
+        "facts": {
+          "day_master": "乙",
+          "month_branch": "子",
+          "exposed_stems": [
+            {
+              "pillar_name": "year",
+              "stem": "壬",
+              "element": "水",
+              "polarity": "yang",
+              "ten_god": "正印"
+            },
+            {
+              "pillar_name": "month",
+              "stem": "壬",
+              "element": "水",
+              "polarity": "yang",
+              "ten_god": "正印"
+            },
+            {
+              "pillar_name": "day",
+              "stem": "乙",
+              "element": "木",
+              "polarity": "yin",
+              "ten_god": "比肩"
+            },
+            {
+              "pillar_name": "hour",
+              "stem": "辛",
+              "element": "金",
+              "polarity": "yin",
+              "ten_god": "七杀"
+            }
+          ],
+          "hidden_stems": [
+            {
+              "pillar_name": "year",
+              "branch": "申",
+              "stem": "庚",
+              "role": "main",
+              "element": "金",
+              "polarity": "yang",
+              "ten_god": "正官"
+            },
+            {
+              "pillar_name": "year",
+              "branch": "申",
+              "stem": "壬",
+              "role": "middle",
+              "element": "水",
+              "polarity": "yang",
+              "ten_god": "正印"
+            },
+            {
+              "pillar_name": "year",
+              "branch": "申",
+              "stem": "戊",
+              "role": "residual",
+              "element": "土",
+              "polarity": "yang",
+              "ten_god": "正财"
+            },
+            {
+              "pillar_name": "month",
+              "branch": "子",
+              "stem": "癸",
+              "role": "main",
+              "element": "水",
+              "polarity": "yin",
+              "ten_god": "偏印"
+            },
+            {
+              "pillar_name": "day",
+              "branch": "丑",
+              "stem": "己",
+              "role": "main",
+              "element": "土",
+              "polarity": "yin",
+              "ten_god": "偏财"
+            },
+            {
+              "pillar_name": "day",
+              "branch": "丑",
+              "stem": "癸",
+              "role": "middle",
+              "element": "水",
+              "polarity": "yin",
+              "ten_god": "偏印"
+            },
+            {
+              "pillar_name": "day",
+              "branch": "丑",
+              "stem": "辛",
+              "role": "residual",
+              "element": "金",
+              "polarity": "yin",
+              "ten_god": "七杀"
+            },
+            {
+              "pillar_name": "hour",
+              "branch": "巳",
+              "stem": "丙",
+              "role": "main",
+              "element": "火",
+              "polarity": "yang",
+              "ten_god": "伤官"
+            },
+            {
+              "pillar_name": "hour",
+              "branch": "巳",
+              "stem": "戊",
+              "role": "middle",
+              "element": "土",
+              "polarity": "yang",
+              "ten_god": "正财"
+            },
+            {
+              "pillar_name": "hour",
+              "branch": "巳",
+              "stem": "庚",
+              "role": "residual",
+              "element": "金",
+              "polarity": "yang",
+              "ten_god": "正官"
+            }
+          ],
+          "roots": [
+            {
+              "stem": "壬",
+              "stem_pillar": "year",
+              "branch": "申",
+              "branch_pillar": "year",
+              "role": "middle",
+              "exact_stem_root": true
+            },
+            {
+              "stem": "壬",
+              "stem_pillar": "month",
+              "branch": "申",
+              "branch_pillar": "year",
+              "role": "middle",
+              "exact_stem_root": true
+            },
+            {
+              "stem": "辛",
+              "stem_pillar": "hour",
+              "branch": "丑",
+              "branch_pillar": "day",
+              "role": "residual",
+              "exact_stem_root": true
+            }
+          ],
+          "twelve_growth_by_pillar": [
+            [
+              "year",
+              "胎"
+            ],
+            [
+              "month",
+              "病"
+            ],
+            [
+              "day",
+              "衰"
+            ],
+            [
+              "hour",
+              "沐浴"
+            ]
+          ],
+          "assumptions": [
+            "按公历生日输入，并按节气划分年月柱。",
+            "按 UTC+08:00 语境解释出生日期与时间。",
+            "节气数据由 lunar_python 提供。",
+            "true_solar_time_applied=False",
+            "No longitude or true-solar-time conversion was inferred from birthplace."
+          ]
+        },
+        "relations": [
+          {
+            "relation_type": "three_combination",
+            "branches": [
+              "申",
+              "子"
+            ],
+            "pillar_names": [
+              "year",
+              "month"
+            ],
+            "state": "incomplete",
+            "transformed_element": "",
+            "conditions": [
+              "requires 辰 to complete water three-combination"
+            ],
+            "blockers": [
+              "missing 辰"
+            ],
+            "rule_id": "branch.three_combination.water.incomplete"
+          }
+        ]
       },
       "expected": {
-        "relation_type": "three_combination",
-        "state": "incomplete",
-        "transformed_element": ""
+        "strength": {
+          "status": "indeterminate",
+          "label": "临界",
+          "score": 10.5,
+          "lower_bound": 9.450000000000001,
+          "upper_bound": 11.550000000000004
+        },
+        "semantic": {
+          "kind": "incomplete_relation",
+          "relation_type": "three_combination",
+          "state": "incomplete",
+          "rule_id": "branch.three_combination.water.incomplete",
+          "missing_branch": "辰"
+        }
       },
       "fixture_metadata": {
         "synthetic_input": true,
         "contains_real_personal_data": false,
         "counts_toward_boundary_gate": true,
+        "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
           "incomplete_three_groups"
         ]
@@ -52,21 +283,74 @@
     },
     {
       "id": "ziping_duan_pattern_preference_disagreement",
-      "boundary_input": {
-        "school_ids": [
-          "ziping",
-          "duan"
-        ],
-        "shared_facts": true
+      "execution": {
+        "kind": "full_chart",
+        "input": {
+          "calendar_type": "gregorian",
+          "birth_date": "1992-08-18",
+          "birth_time": "09:30",
+          "birthplace": "UTC+08 synthetic fixture",
+          "gender": "female",
+          "focus_topic": "synthetic boundary regression"
+        },
+        "birth_datetime": "1992-08-18T09:30:00"
       },
       "expected": {
-        "status": "disputed",
-        "agreement_required": false
+        "strength": {
+          "status": "computed",
+          "label": "弱",
+          "score": -38.5,
+          "lower_bound": -42.35,
+          "upper_bound": -34.65
+        },
+        "semantic": {
+          "kind": "school_disagreement",
+          "school_results": [
+            {
+              "school_id": "ziping",
+              "status": "disputed",
+              "preferred_pattern_ids": [
+                "standard.piancai",
+                "standard.qisha",
+                "standard.shishen",
+                "follow.congruo"
+              ],
+              "preferred_useful_god_elements": [
+                "木",
+                "火"
+              ]
+            },
+            {
+              "school_id": "liang_xiangrun",
+              "status": "disputed",
+              "preferred_pattern_ids": [
+                "standard.qisha",
+                "standard.shishen"
+              ],
+              "preferred_useful_god_elements": [
+                "木",
+                "火"
+              ]
+            },
+            {
+              "school_id": "duan",
+              "status": "disputed",
+              "preferred_pattern_ids": [
+                "follow.congruo"
+              ],
+              "preferred_useful_god_elements": [
+                "木",
+                "火"
+              ]
+            }
+          ]
+        }
       },
       "fixture_metadata": {
         "synthetic_input": true,
         "contains_real_personal_data": false,
         "counts_toward_boundary_gate": true,
+        "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
           "school_disagreement"
         ]
@@ -74,19 +358,39 @@
     },
     {
       "id": "unknown_gender_luck_prerequisite",
-      "boundary_input": {
-        "gender": "unspecified"
+      "execution": {
+        "kind": "full_chart",
+        "input": {
+          "calendar_type": "gregorian",
+          "birth_date": "1992-08-18",
+          "birth_time": "09:30",
+          "birthplace": "UTC+08 synthetic fixture",
+          "gender": "unspecified",
+          "focus_topic": "synthetic boundary regression"
+        },
+        "birth_datetime": "1992-08-18T09:30:00"
       },
       "expected": {
-        "luck_status": "not_computed",
-        "missing_inputs": [
-          "supported_gender"
-        ]
+        "strength": {
+          "status": "computed",
+          "label": "弱",
+          "score": -38.5,
+          "lower_bound": -42.35,
+          "upper_bound": -34.65
+        },
+        "semantic": {
+          "kind": "unknown_gender",
+          "luck_status": "not_computed",
+          "missing_inputs": [
+            "supported_gender"
+          ]
+        }
       },
       "fixture_metadata": {
         "synthetic_input": true,
         "contains_real_personal_data": false,
         "counts_toward_boundary_gate": true,
+        "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
           "unknown_gender"
         ]
@@ -94,18 +398,36 @@
     },
     {
       "id": "aware_datetime_rejected_by_local_wall_time_contract",
-      "boundary_input": {
-        "birth_datetime": "1992-08-18T09:30:00+08:00",
-        "timezone_assumption": "UTC+08 aware input"
+      "execution": {
+        "kind": "full_chart",
+        "input": {
+          "calendar_type": "gregorian",
+          "birth_date": "1992-08-18",
+          "birth_time": "09:30",
+          "birthplace": "UTC+08 synthetic fixture",
+          "gender": "female",
+          "focus_topic": "synthetic boundary regression"
+        },
+        "birth_datetime": "1992-08-18T09:30:00+08:00"
       },
       "expected": {
-        "status": "unsupported",
-        "reason": "birth_datetime must be naive local wall time under chart timezone assumption"
+        "strength": {
+          "status": "computed",
+          "label": "弱",
+          "score": -38.5,
+          "lower_bound": -42.35,
+          "upper_bound": -34.65
+        },
+        "semantic": {
+          "kind": "aware_datetime",
+          "error": "birth_datetime must be naive local wall time under chart timezone assumption"
+        }
       },
       "fixture_metadata": {
         "synthetic_input": true,
         "contains_real_personal_data": false,
         "counts_toward_boundary_gate": true,
+        "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
           "time_assumption_aware"
         ]
@@ -113,20 +435,40 @@
     },
     {
       "id": "unsupported_true_solar_time_assumption",
-      "boundary_input": {
+      "execution": {
+        "kind": "full_chart",
+        "input": {
+          "calendar_type": "gregorian",
+          "birth_date": "1992-08-18",
+          "birth_time": "09:30",
+          "birthplace": "UTC+08 synthetic fixture",
+          "gender": "female",
+          "focus_topic": "synthetic boundary regression"
+        },
         "birth_datetime": "1992-08-18T09:30:00",
-        "true_solar_time_applied": true
+        "chart_source_overrides": {
+          "true_solar_time_applied": true,
+          "timezone_assumption": "UTC+08 synthetic fixture with externally applied true solar time"
+        }
       },
       "expected": {
-        "status": "not_computed",
-        "missing_inputs": [
-          "supported_time_assumption"
-        ]
+        "strength": {
+          "status": "computed",
+          "label": "弱",
+          "score": -38.5,
+          "lower_bound": -42.35,
+          "upper_bound": -34.65
+        },
+        "semantic": {
+          "kind": "unsupported_time_assumption",
+          "assumption": "true_solar_time_applied=True"
+        }
       },
       "fixture_metadata": {
         "synthetic_input": true,
         "contains_real_personal_data": false,
         "counts_toward_boundary_gate": true,
+        "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
           "time_assumption_unsupported"
         ]

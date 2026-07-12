@@ -14,11 +14,24 @@ import pytest
 import mingli_engine.bazi as bazi_api
 import mingli_engine.bazi.analysis as analysis
 from mingli_engine.bazi.analysis import analyze_bazi_chart
+from mingli_engine.bazi.branch_relations import detect_branch_relations
 from mingli_engine.bazi.facts import build_chart_facts
 from mingli_engine.bazi.legacy_adapter import (
     apply_calculation_bundle,
     build_legacy_not_computed_bundle,
 )
+from mingli_engine.bazi.luck_cycles import calculate_luck_cycles
+from mingli_engine.bazi.patterns import calculate_pattern_candidates
+from mingli_engine.bazi.result_models import (
+    BranchRelationResult,
+    ChartFacts,
+    HiddenStemFact,
+    RootFact,
+    StemFact,
+)
+from mingli_engine.bazi.schools import interpret_with_enabled_schools
+from mingli_engine.bazi.strength import calculate_strength
+from mingli_engine.bazi.useful_gods import calculate_useful_god_candidates
 from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.models import BirthProfile
 
@@ -77,6 +90,44 @@ def _verified_parameters() -> list[Any]:
     if not records:
         return [pytest.param(None, id="verified_fixture_missing")]
     return [pytest.param(record, id=str(record["id"])) for record in records]
+
+
+def _strength_boundary_cases() -> list[dict[str, Any]]:
+    payload = _load_json(FIXTURE_DIR / "strength_boundary_cases.json")
+    return payload["cases"]
+
+
+def _chart_facts_from_json(payload: dict[str, Any]) -> ChartFacts:
+    return ChartFacts(
+        day_master=payload["day_master"],
+        month_branch=payload["month_branch"],
+        exposed_stems=tuple(StemFact(**item) for item in payload["exposed_stems"]),
+        hidden_stems=tuple(
+            HiddenStemFact(**item) for item in payload["hidden_stems"]
+        ),
+        roots=tuple(RootFact(**item) for item in payload["roots"]),
+        twelve_growth_by_pillar=tuple(
+            tuple(item) for item in payload["twelve_growth_by_pillar"]
+        ),
+        assumptions=tuple(payload["assumptions"]),
+    )
+
+
+def _relations_from_json(
+    payload: list[dict[str, Any]],
+) -> tuple[BranchRelationResult, ...]:
+    return tuple(BranchRelationResult(**item) for item in payload)
+
+
+def _contains_placeholder(value: object) -> bool:
+    if isinstance(value, str):
+        normalized = value.strip().casefold()
+        return "?" in normalized or normalized in {"tbd", "todo", "placeholder"}
+    if isinstance(value, dict):
+        return any(_contains_placeholder(item) for item in value.values())
+    if isinstance(value, (list, tuple)):
+        return any(_contains_placeholder(item) for item in value)
+    return False
 
 
 def _profile(**overrides: str) -> BirthProfile:
@@ -195,6 +246,7 @@ def test_verified_chart_fixture_schema_privacy_review_and_coverage() -> None:
     assert payload["selection"]["method"] == "deterministic_exact_set_cover"
     assert isinstance(records, list)
     assert len(records) >= 30
+    assert not _contains_placeholder(payload)
 
     ids = [record["id"] for record in records]
     assert len(ids) == len(set(ids))
@@ -228,6 +280,11 @@ def test_verified_chart_fixture_schema_privacy_review_and_coverage() -> None:
         }
         for record in records
     )
+    assert all(
+        set(record["expected"]["strength"])
+        == {"status", "label", "score", "lower_bound", "upper_bound"}
+        for record in records
+    )
 
     day_masters = {record["expected"]["facts"]["day_master"] for record in records}
     month_branches = {record["expected"]["facts"]["month_branch"] for record in records}
@@ -245,6 +302,17 @@ def test_verified_chart_fixture_schema_privacy_review_and_coverage() -> None:
 
 def test_boundary_fixture_schemas_counts_privacy_and_categories() -> None:
     all_cases: list[dict[str, Any]] = []
+    execution_tests = {
+        "strength_boundary_cases.json": (
+            "test_strength_boundary_fixture_executes_real_calculation"
+        ),
+        "pattern_counterexamples.json": (
+            "test_fixture_counterexamples_use_canonical_fact_builders"
+        ),
+        "luck_cycle_boundary_cases.json": (
+            "test_provider_luck_cycles_match_frozen_regression_cases"
+        ),
+    }
     for path in BOUNDARY_FIXTURE_PATHS:
         payload = _load_json(path)
         assert payload["schema_version"] == "bazi-boundary-fixtures-v1"
@@ -259,6 +327,16 @@ def test_boundary_fixture_schemas_counts_privacy_and_categories() -> None:
             assert isinstance(metadata["categories"], list)
             assert metadata["categories"]
             assert isinstance(metadata["counts_toward_boundary_gate"], bool)
+            assert metadata["execution_test"] == execution_tests[path.name]
+            assert not _contains_placeholder(case)
+            if path.name == "strength_boundary_cases.json":
+                expected_strength = case["expected"]["strength"]
+                range_keys = {
+                    key for key in expected_strength if key.endswith("_range")
+                }
+                assert bool(range_keys) is bool(
+                    expected_strength.get("sensitivity_boundary")
+                )
         all_cases.extend(cases)
 
     counted = [
@@ -275,6 +353,11 @@ def test_boundary_fixture_schemas_counts_privacy_and_categories() -> None:
     assert len(counted) >= 20
     assert len(counted_ids) == len(set(counted_ids))
     assert EXPECTED_BOUNDARY_CATEGORIES <= categories
+    assert sum(
+        case["fixture_metadata"]["execution_test"]
+        == "test_strength_boundary_fixture_executes_real_calculation"
+        for case in counted
+    ) == 6
 
 
 @pytest.mark.parametrize("record", _verified_parameters())
@@ -319,15 +402,9 @@ def test_verified_chart_pipeline_matches_frozen_cross_provider_fixture(
     strength = expected["strength"]
     assert first_bundle.strength.reasoning.status == strength["status"]
     assert first_bundle.strength.label == strength["label"]
-    assert strength["score_range"][0] <= first_bundle.strength.score <= strength[
-        "score_range"
-    ][1]
-    assert strength["lower_bound_range"][0] <= first_bundle.strength.lower_bound <= strength[
-        "lower_bound_range"
-    ][1]
-    assert strength["upper_bound_range"][0] <= first_bundle.strength.upper_bound <= strength[
-        "upper_bound_range"
-    ][1]
+    assert first_bundle.strength.score == strength["score"]
+    assert first_bundle.strength.lower_bound == strength["lower_bound"]
+    assert first_bundle.strength.upper_bound == strength["upper_bound"]
 
     assert [
         {
@@ -346,6 +423,110 @@ def test_verified_chart_pipeline_matches_frozen_cross_provider_fixture(
         "start_solar": first_bundle.luck_cycles.start_solar,
         "pillars": [asdict(pillar) for pillar in first_bundle.luck_cycles.pillars],
     } == expected["luck"]
+
+
+@pytest.mark.parametrize(
+    "case",
+    _strength_boundary_cases(),
+    ids=lambda case: case["id"],
+)
+def test_strength_boundary_fixture_executes_real_calculation(
+    case: dict[str, Any],
+) -> None:
+    execution = case["execution"]
+    chart = None
+    birth_datetime = None
+    if execution["kind"] == "chart_facts":
+        facts = _chart_facts_from_json(execution["facts"])
+        relations = _relations_from_json(execution["relations"])
+    else:
+        assert execution["kind"] == "full_chart"
+        chart = calculate_bazi_chart(BirthProfile(**execution["input"]))
+        if execution.get("chart_source_overrides"):
+            chart = replace(
+                chart,
+                chart_source=replace(
+                    chart.chart_source,
+                    **execution["chart_source_overrides"],
+                ),
+            )
+        facts = build_chart_facts(chart)
+        relations = detect_branch_relations(chart)
+        birth_datetime = datetime.fromisoformat(execution["birth_datetime"])
+
+    result = calculate_strength(facts, relations)
+    expected_strength = case["expected"]["strength"]
+    assert result.reasoning.status == expected_strength["status"]
+    assert result.label == expected_strength["label"]
+    if expected_strength.get("sensitivity_boundary"):
+        for field_name in ("score", "lower_bound", "upper_bound"):
+            lower, upper = expected_strength[f"{field_name}_range"]
+            assert lower <= getattr(result, field_name) <= upper
+    else:
+        assert result.score == expected_strength["score"]
+        assert result.lower_bound == expected_strength["lower_bound"]
+        assert result.upper_bound == expected_strength["upper_bound"]
+
+    semantic = case["expected"]["semantic"]
+    if semantic["kind"] == "near_threshold":
+        assert expected_strength["sensitivity_boundary"] is True
+        assert result.lower_bound <= semantic["threshold"] < result.upper_bound
+    elif semantic["kind"] == "incomplete_relation":
+        assert len(relations) == 1
+        assert relations[0].relation_type == semantic["relation_type"]
+        assert relations[0].state == semantic["state"]
+        available_branches = {item.branch for item in facts.hidden_stems}
+        assert set(relations[0].branches) <= available_branches
+        assert semantic["missing_branch"] not in available_branches
+        assert f"missing {semantic['missing_branch']}" in relations[0].blockers
+        assert semantic["rule_id"] in result.reasoning.rule_ids[-1]
+    elif semantic["kind"] == "school_disagreement":
+        patterns = calculate_pattern_candidates(facts, result, relations)
+        useful_gods = calculate_useful_god_candidates(facts, result, patterns)
+        schools = interpret_with_enabled_schools(
+            facts=facts,
+            strength=result,
+            patterns=patterns,
+            useful_gods=useful_gods,
+        )
+        actual_schools = [
+            {
+                "school_id": school.school_id,
+                "status": school.reasoning.status,
+                "preferred_pattern_ids": list(school.preferred_pattern_ids),
+                "preferred_useful_god_elements": list(
+                    school.preferred_useful_god_elements
+                ),
+            }
+            for school in schools
+        ]
+        assert actual_schools == semantic["school_results"]
+        assert len(
+            {
+                (
+                    tuple(item["preferred_pattern_ids"]),
+                    tuple(item["preferred_useful_god_elements"]),
+                )
+                for item in actual_schools
+            }
+        ) > 1
+    elif semantic["kind"] == "unknown_gender":
+        assert chart is not None
+        assert birth_datetime is not None
+        luck = calculate_luck_cycles(chart, birth_datetime=birth_datetime)
+        assert luck.reasoning.status == semantic["luck_status"]
+        assert list(luck.reasoning.missing_inputs) == semantic["missing_inputs"]
+    elif semantic["kind"] == "aware_datetime":
+        assert chart is not None
+        assert birth_datetime is not None
+        assert birth_datetime.utcoffset() is not None
+        with pytest.raises(ValueError, match=semantic["error"]):
+            calculate_luck_cycles(chart, birth_datetime=birth_datetime)
+    else:
+        assert semantic["kind"] == "unsupported_time_assumption"
+        assert chart is not None
+        assert chart.chart_source.true_solar_time_applied is True
+        assert semantic["assumption"] in result.reasoning.assumptions
 
 
 def test_complete_profile_pipeline_has_exact_order_versions_and_immutable_output(
