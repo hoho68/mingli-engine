@@ -28,6 +28,7 @@ from mingli_engine.bazi.schools import (
     load_enabled_school_adapters,
     load_school_profiles_config,
 )
+from mingli_engine.bazi.schools.base import SchoolAdapterBase
 from mingli_engine.bazi.strength import calculate_strength
 from mingli_engine.bazi.useful_gods import calculate_useful_god_candidates
 from mingli_engine.chart_calculator import calculate_bazi_chart
@@ -304,23 +305,55 @@ def test_loader_returns_runtime_protocol_adapters_in_priority_order() -> None:
     assert all(item.profile_version == "school-profiles-v1" for item in adapters)
 
 
-def test_builtin_adapters_are_immutable_when_loaded_or_constructed_directly() -> None:
+def direct_builtin_adapters() -> tuple[SchoolAdapterBase, ...]:
     config = load_school_profiles_config()
-    loaded = load_enabled_school_adapters()
-    direct = (
+    return (
         ZipingSchoolAdapter(config.profiles["ziping"], config.version),
         LiangXiangrunSchoolAdapter(config.profiles["liang_xiangrun"], config.version),
         DuanSchoolAdapter(config.profiles["duan"], config.version),
     )
 
-    for adapter in (*loaded, *direct):
+
+def test_builtin_adapters_are_immutable_when_loaded_or_constructed_directly() -> None:
+    config = load_school_profiles_config()
+    loaded = load_enabled_school_adapters()
+    assert all(isinstance(adapter, SchoolAdapterBase) for adapter in loaded)
+    loaded_builtins = tuple(cast(SchoolAdapterBase, adapter) for adapter in loaded)
+    direct = direct_builtin_adapters()
+
+    for adapter in (*loaded_builtins, *direct):
         original_profile = adapter.profile
         with pytest.raises(FrozenInstanceError):
-            adapter.profile = config.profiles["ziping"]
+            setattr(adapter, "profile", config.profiles["ziping"])
         with pytest.raises(FrozenInstanceError):
-            adapter.profile_version = "changed"
+            setattr(adapter, "profile_version", "changed")
         assert adapter.profile is original_profile
         assert adapter.profile_version == "school-profiles-v1"
+
+
+def test_direct_builtin_school_identity_cannot_be_shadowed() -> None:
+    facts, strength, patterns, useful_gods = pipeline_case()
+    adapters = direct_builtin_adapters()
+
+    for adapter, expected_school_id in zip(
+        adapters,
+        ("ziping", "liang_xiangrun", "duan"),
+        strict=True,
+    ):
+        assert adapter.school_id == expected_school_id
+        assert "school_id" not in adapter.__dict__
+        with pytest.raises((AttributeError, FrozenInstanceError)):
+            setattr(adapter, "school_id", "forged")
+        assert "school_id" not in adapter.__dict__
+        assert adapter.school_id == expected_school_id
+
+        result = adapter.interpret(
+            facts=facts,
+            strength=strength,
+            patterns=patterns,
+            useful_gods=useful_gods,
+        )
+        assert result.school_id == expected_school_id
 
 
 def test_ziping_preserves_full_baseline_order_and_method_order() -> None:

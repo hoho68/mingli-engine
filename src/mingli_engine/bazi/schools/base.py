@@ -107,7 +107,11 @@ class SchoolAdapter(Protocol):
 class SchoolAdapterBase:
     profile: SchoolProfile
     profile_version: str
-    school_id: ClassVar[str]
+    _SCHOOL_ID: ClassVar[str]
+
+    @property
+    def school_id(self) -> str:
+        return self._SCHOOL_ID
 
     def __post_init__(self) -> None:
         if self.profile.school_id != self.school_id:

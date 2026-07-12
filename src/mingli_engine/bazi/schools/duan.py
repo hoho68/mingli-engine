@@ -22,7 +22,7 @@ _STRUCTURED_PREFIXES = (
 
 
 class DuanSchoolAdapter(SchoolAdapterBase):
-    school_id = "duan"
+    _SCHOOL_ID = "duan"
 
     def _interpret_validated(
         self, inputs: _ValidatedSchoolInputs

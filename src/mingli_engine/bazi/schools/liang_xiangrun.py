@@ -8,7 +8,7 @@ from mingli_engine.bazi.schools.base import (
 
 
 class LiangXiangrunSchoolAdapter(SchoolAdapterBase):
-    school_id = "liang_xiangrun"
+    _SCHOOL_ID = "liang_xiangrun"
 
     def _interpret_validated(
         self, inputs: _ValidatedSchoolInputs
