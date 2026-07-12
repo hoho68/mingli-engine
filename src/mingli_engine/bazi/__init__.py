@@ -8,19 +8,20 @@ from mingli_engine.bazi.result_models import (
 )
 
 if TYPE_CHECKING:
-    from mingli_engine.bazi.analysis import (
-        ENGINE_VERSION,
-        RULESET_VERSION,
-        analyze_bazi_chart,
-    )
+    from mingli_engine.bazi.analysis import analyze_bazi_chart
     from mingli_engine.bazi.legacy_adapter import (
         apply_calculation_bundle,
         build_legacy_not_computed_bundle,
     )
+    from mingli_engine.bazi.versions import ENGINE_VERSION, RULESET_VERSION
 
 
 def __getattr__(name: str) -> object:
-    if name in {"ENGINE_VERSION", "RULESET_VERSION", "analyze_bazi_chart"}:
+    if name in {"ENGINE_VERSION", "RULESET_VERSION"}:
+        from mingli_engine.bazi import versions
+
+        value = getattr(versions, name)
+    elif name == "analyze_bazi_chart":
         from mingli_engine.bazi import analysis
 
         value = getattr(analysis, name)

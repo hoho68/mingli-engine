@@ -1,4 +1,10 @@
 from datetime import datetime
+from hashlib import blake2b
+from hmac import compare_digest
+import json
+from secrets import token_bytes
+from threading import Lock
+from weakref import ReferenceType, ref
 
 from mingli_engine.bazi.branch_relations import detect_branch_relations
 from mingli_engine.bazi.facts import build_chart_facts
@@ -8,11 +14,94 @@ from mingli_engine.bazi.result_models import CalculationBundle
 from mingli_engine.bazi.schools import interpret_with_enabled_schools
 from mingli_engine.bazi.strength import calculate_strength
 from mingli_engine.bazi.useful_gods import calculate_useful_god_candidates
+from mingli_engine.bazi.versions import ENGINE_VERSION, RULESET_VERSION
 from mingli_engine.models import BaziChart
 
 
-ENGINE_VERSION = "bazi-core-v1"
-RULESET_VERSION = "ziping-v1"
+PROVENANCE_ERROR = "calculation bundle is unbound or does not match chart input"
+
+_PROVENANCE_KEY = token_bytes(32)
+_PROVENANCE_LOCK = Lock()
+_PROVENANCE: dict[
+    int, tuple[ReferenceType[CalculationBundle], bytes]
+] = {}
+
+
+def _chart_context_digest(chart: BaziChart) -> bytes:
+    profile = chart.birth_profile
+    source = chart.chart_source
+    context = (
+        (
+            profile.calendar_type,
+            profile.birth_date,
+            profile.birth_time,
+            profile.birthplace,
+            profile.gender,
+            profile.focus_topic,
+        ),
+        (
+            source.source_type,
+            source.source_note,
+            source.calendar_assumption,
+            source.timezone_assumption,
+            source.solar_terms_assumption,
+            source.true_solar_time_applied,
+            source.confidence,
+        ),
+        tuple(
+            (
+                pillar.name,
+                pillar.heavenly_stem,
+                pillar.earthly_branch,
+                tuple(pillar.hidden_stems),
+                pillar.ten_god,
+                pillar.element,
+            )
+            for pillar in chart.pillars
+        ),
+        chart.day_master,
+        tuple(sorted(chart.five_elements_summary.items())),
+    )
+    encoded = json.dumps(
+        context,
+        ensure_ascii=False,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return blake2b(encoded, key=_PROVENANCE_KEY, digest_size=32).digest()
+
+
+def _bind_calculation_bundle(
+    bundle: CalculationBundle, chart: BaziChart
+) -> CalculationBundle:
+    """Keep only a keyed digest in a process-local, weak-lifetime binding."""
+    bundle_id = id(bundle)
+
+    def discard(dead_reference: ReferenceType[CalculationBundle]) -> None:
+        with _PROVENANCE_LOCK:
+            current = _PROVENANCE.get(bundle_id)
+            if current is not None and current[0] is dead_reference:
+                _PROVENANCE.pop(bundle_id, None)
+
+    bundle_reference = ref(bundle, discard)
+    digest = _chart_context_digest(chart)
+    with _PROVENANCE_LOCK:
+        current = _PROVENANCE.get(bundle_id)
+        if current is not None and current[0]() is not bundle:
+            raise RuntimeError("calculation bundle identity collision")
+        _PROVENANCE[bundle_id] = (bundle_reference, digest)
+    return bundle
+
+
+def _require_calculation_bundle_binding(
+    chart: BaziChart, bundle: CalculationBundle
+) -> None:
+    with _PROVENANCE_LOCK:
+        current = _PROVENANCE.get(id(bundle))
+        if current is None or current[0]() is not bundle:
+            raise ValueError(PROVENANCE_ERROR)
+        expected_digest = current[1]
+    if not compare_digest(expected_digest, _chart_context_digest(chart)):
+        raise ValueError(PROVENANCE_ERROR)
 
 
 def analyze_bazi_chart(
@@ -37,7 +126,7 @@ def analyze_bazi_chart(
         patterns=patterns,
         useful_gods=useful_gods,
     )
-    return CalculationBundle(
+    bundle = CalculationBundle(
         engine_version=ENGINE_VERSION,
         ruleset_version=RULESET_VERSION,
         facts=facts,
@@ -48,3 +137,4 @@ def analyze_bazi_chart(
         luck_cycles=luck_cycles,
         schools=schools,
     )
+    return _bind_calculation_bundle(bundle, chart)

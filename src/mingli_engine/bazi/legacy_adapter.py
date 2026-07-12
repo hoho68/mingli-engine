@@ -1,6 +1,9 @@
 from dataclasses import replace
 
-from mingli_engine.bazi.analysis import ENGINE_VERSION, RULESET_VERSION
+from mingli_engine.bazi.analysis import (
+    _bind_calculation_bundle,
+    _require_calculation_bundle_binding,
+)
 from mingli_engine.bazi.facts import build_chart_facts
 from mingli_engine.bazi.result_models import (
     CalculationBundle,
@@ -11,6 +14,7 @@ from mingli_engine.bazi.result_models import (
     StrengthResult,
     UsefulGodCandidateResult,
 )
+from mingli_engine.bazi.versions import ENGINE_VERSION, RULESET_VERSION
 from mingli_engine.models import BaziChart
 
 
@@ -38,6 +42,7 @@ def _not_computed_reasoning(stage: str) -> ReasonedResult:
 def apply_calculation_bundle(
     chart: BaziChart, bundle: CalculationBundle
 ) -> BaziChart:
+    _require_calculation_bundle_binding(chart, bundle)
     ten_gods = ", ".join(
         f"{fact.pillar_name}:{fact.ten_god}" for fact in bundle.facts.exposed_stems
     )
@@ -62,6 +67,11 @@ def apply_calculation_bundle(
     luck_cycles = bundle.luck_cycles
     return replace(
         chart,
+        pillars=[
+            replace(pillar, hidden_stems=list(pillar.hidden_stems))
+            for pillar in chart.pillars
+        ],
+        five_elements_summary=dict(chart.five_elements_summary),
         ten_gods_summary=_summary("computed", ten_gods),
         strength_assessment=_summary(
             strength.reasoning.status,
@@ -127,7 +137,7 @@ def build_legacy_not_computed_bundle(chart: BaziChart) -> CalculationBundle:
             preferred_useful_god_elements=(),
         ),
     )
-    return CalculationBundle(
+    bundle = CalculationBundle(
         engine_version=ENGINE_VERSION,
         ruleset_version=RULESET_VERSION,
         facts=facts,
@@ -138,3 +148,4 @@ def build_legacy_not_computed_bundle(chart: BaziChart) -> CalculationBundle:
         luck_cycles=luck_cycles,
         schools=schools,
     )
+    return _bind_calculation_bundle(bundle, chart)

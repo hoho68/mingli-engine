@@ -19,19 +19,24 @@ from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.models import BirthProfile
 
 
-def _profile(*, gender: str = "female") -> BirthProfile:
-    return BirthProfile(
-        calendar_type="gregorian",
-        birth_date="1992-08-18",
-        birth_time="09:30",
-        birthplace="Shanghai",
-        gender=gender,
-        focus_topic="career",
-    )
+PROVENANCE_ERROR = "calculation bundle is unbound or does not match chart input"
 
 
-def _chart(*, gender: str = "female"):
-    return calculate_bazi_chart(_profile(gender=gender))
+def _profile(**overrides: str) -> BirthProfile:
+    values = {
+        "calendar_type": "gregorian",
+        "birth_date": "1992-08-18",
+        "birth_time": "09:30",
+        "birthplace": "Shanghai",
+        "gender": "female",
+        "focus_topic": "career",
+    }
+    values.update(overrides)
+    return BirthProfile(**values)
+
+
+def _chart(**overrides: str):
+    return calculate_bazi_chart(_profile(**overrides))
 
 
 def _record_real_stage_calls(monkeypatch: pytest.MonkeyPatch):
@@ -100,6 +105,19 @@ def test_public_exports_do_not_create_calendar_provider_import_cycle() -> None:
     )
 
     assert completed.returncode == 0, completed.stderr
+
+
+def test_versions_are_available_from_dependency_neutral_and_public_modules() -> None:
+    from mingli_engine.bazi import ENGINE_VERSION, RULESET_VERSION
+    from mingli_engine.bazi.versions import (
+        ENGINE_VERSION as NEUTRAL_ENGINE_VERSION,
+    )
+    from mingli_engine.bazi.versions import (
+        RULESET_VERSION as NEUTRAL_RULESET_VERSION,
+    )
+
+    assert ENGINE_VERSION == NEUTRAL_ENGINE_VERSION == "bazi-core-v1"
+    assert RULESET_VERSION == NEUTRAL_RULESET_VERSION == "ziping-v1"
 
 
 def test_complete_profile_pipeline_has_exact_order_versions_and_immutable_output(
@@ -272,3 +290,154 @@ def test_legacy_adapter_is_one_way_and_prefixes_every_summary_with_status() -> N
     assert adapted.luck_cycle_summary.startswith(
         f"[calculation_status={bundle.luck_cycles.reasoning.status}]"
     )
+
+
+def test_legacy_adapter_rejects_bundle_from_chart_with_different_pillars() -> None:
+    chart = _chart()
+    other_chart = _chart(birth_date="1993-08-18")
+    bundle = analyze_bazi_chart(
+        chart,
+        birth_datetime=datetime(1992, 8, 18, 9, 30),
+    )
+
+    with pytest.raises(ValueError, match=f"^{PROVENANCE_ERROR}$"):
+        apply_calculation_bundle(other_chart, bundle)
+
+
+@pytest.mark.parametrize(
+    ("field_name", "value"),
+    [
+        ("birthplace", "Beijing"),
+        ("gender", "male"),
+        ("birth_time", "09:31"),
+    ],
+)
+def test_legacy_adapter_rejects_same_pillars_with_different_birth_context(
+    field_name: str,
+    value: str,
+) -> None:
+    chart = _chart()
+    bundle = analyze_bazi_chart(
+        chart,
+        birth_datetime=datetime(1992, 8, 18, 9, 30),
+    )
+    foreign_profile = replace(chart.birth_profile, **{field_name: value})
+    foreign_chart = replace(chart, birth_profile=foreign_profile)
+
+    with pytest.raises(ValueError, match=f"^{PROVENANCE_ERROR}$"):
+        apply_calculation_bundle(foreign_chart, bundle)
+
+
+def test_legacy_adapter_rejects_unbound_equal_bundle_copy() -> None:
+    chart = _chart()
+    bundle = analyze_bazi_chart(
+        chart,
+        birth_datetime=datetime(1992, 8, 18, 9, 30),
+    )
+    unbound_copy = replace(bundle)
+
+    assert unbound_copy == bundle
+    assert unbound_copy is not bundle
+    with pytest.raises(ValueError, match=f"^{PROVENANCE_ERROR}$"):
+        apply_calculation_bundle(chart, unbound_copy)
+
+
+def test_legacy_not_computed_bundle_is_bound_only_to_its_chart() -> None:
+    chart = _chart()
+    bundle = build_legacy_not_computed_bundle(chart)
+
+    adapted = apply_calculation_bundle(chart, bundle)
+
+    assert adapted.strength_assessment.startswith(
+        "[calculation_status=not_computed]"
+    )
+    with pytest.raises(ValueError, match=f"^{PROVENANCE_ERROR}$"):
+        apply_calculation_bundle(
+            replace(
+                chart,
+                birth_profile=replace(chart.birth_profile, gender="male"),
+            ),
+            bundle,
+        )
+
+
+def test_legacy_adapter_defensively_copies_mutable_chart_fields() -> None:
+    chart = _chart()
+    bundle = analyze_bazi_chart(
+        chart,
+        birth_datetime=datetime(1992, 8, 18, 9, 30),
+    )
+
+    adapted = apply_calculation_bundle(chart, bundle)
+
+    assert adapted.pillars == chart.pillars
+    assert adapted.pillars is not chart.pillars
+    assert all(
+        adapted_pillar is not original_pillar
+        for adapted_pillar, original_pillar in zip(
+            adapted.pillars, chart.pillars, strict=True
+        )
+    )
+    assert all(
+        adapted_pillar.hidden_stems is not original_pillar.hidden_stems
+        for adapted_pillar, original_pillar in zip(
+            adapted.pillars, chart.pillars, strict=True
+        )
+    )
+    assert adapted.five_elements_summary == chart.five_elements_summary
+    assert adapted.five_elements_summary is not chart.five_elements_summary
+
+    chart.pillars[0].hidden_stems.append("original-only")
+    adapted.pillars[1].hidden_stems.append("adapted-only")
+    chart.five_elements_summary["original-only"] = "wood"
+    adapted.five_elements_summary["adapted-only"] = "fire"
+
+    assert "original-only" not in adapted.pillars[0].hidden_stems
+    assert "adapted-only" not in chart.pillars[1].hidden_stems
+    assert "original-only" not in adapted.five_elements_summary
+    assert "adapted-only" not in chart.five_elements_summary
+
+
+def test_legacy_summaries_are_exact_and_deterministic_across_runs() -> None:
+    chart = _chart()
+    birth_datetime = datetime(1992, 8, 18, 9, 30)
+
+    first = apply_calculation_bundle(
+        chart,
+        analyze_bazi_chart(chart, birth_datetime=birth_datetime, selected_year=2030),
+    )
+    second = apply_calculation_bundle(
+        chart,
+        analyze_bazi_chart(chart, birth_datetime=birth_datetime, selected_year=2030),
+    )
+
+    expected = (
+        "[calculation_status=computed] year:七杀, month:食神, day:比肩, hour:正官",
+        "[calculation_status=computed] 弱 label=弱; score=-38.5",
+        (
+            "[calculation_status=computed] 偏财格: 偏财格: candidate",
+            "[calculation_status=computed] 七杀格: 七杀格: candidate",
+            "[calculation_status=computed] 食神格: 食神格: candidate",
+            "[calculation_status=indeterminate] 从弱候选: 从弱候选: guarded V1 candidate",
+        ),
+        (
+            "[calculation_status=computed] support_control:木: resource element is a conditional weak-chart support/control candidate",
+            "[calculation_status=computed] support_control:火: companion element is a conditional weak-chart support/control candidate",
+            "[calculation_status=computed] illness_remedy:木: first weak-chart remedy candidate",
+            "[calculation_status=not_computed] seasonal_adjustment:: no V1 seasonal rule for spring/autumn month branch",
+            "[calculation_status=not_computed] mediation:: no explicit controlling bottleneck detected",
+        ),
+        "[calculation_status=computed] Luck-cycle direction, start, pillars, and requested structural branch relations were calculated.",
+    )
+
+    def summaries(adapted):
+        return (
+            adapted.ten_gods_summary,
+            adapted.strength_assessment,
+            tuple(adapted.pattern_candidates),
+            tuple(adapted.useful_god_candidates),
+            adapted.luck_cycle_summary,
+        )
+
+    assert summaries(first) == expected
+    assert summaries(second) == expected
