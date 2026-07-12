@@ -9,6 +9,7 @@ from mingli_engine.bazi.schools.base import (
 
 
 class ZipingSchoolAdapter(SchoolAdapterBase):
+    __slots__ = ()
     _SCHOOL_ID = "ziping"
 
     def _interpret_validated(

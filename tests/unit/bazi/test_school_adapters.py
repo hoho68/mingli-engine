@@ -341,10 +341,12 @@ def test_direct_builtin_school_identity_cannot_be_shadowed() -> None:
         strict=True,
     ):
         assert adapter.school_id == expected_school_id
-        assert "school_id" not in adapter.__dict__
+        assert not hasattr(adapter, "__dict__")
         with pytest.raises((AttributeError, FrozenInstanceError)):
             setattr(adapter, "school_id", "forged")
-        assert "school_id" not in adapter.__dict__
+        with pytest.raises((AttributeError, FrozenInstanceError, TypeError)):
+            setattr(adapter, "_SCHOOL_ID", "forged")
+        assert not hasattr(adapter, "__dict__")
         assert adapter.school_id == expected_school_id
 
         result = adapter.interpret(

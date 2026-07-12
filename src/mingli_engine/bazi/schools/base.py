@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from types import MappingProxyType
 from typing import ClassVar, Mapping, Protocol, cast, runtime_checkable
@@ -103,26 +103,25 @@ class SchoolAdapter(Protocol):
     ) -> SchoolInterpretation: ...
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class SchoolAdapterBase:
     profile: SchoolProfile
     profile_version: str
+    school_id: str = field(init=False)
     _SCHOOL_ID: ClassVar[str]
 
-    @property
-    def school_id(self) -> str:
-        return self._SCHOOL_ID
-
     def __post_init__(self) -> None:
-        if self.profile.school_id != self.school_id:
+        expected_school_id = type(self)._SCHOOL_ID
+        if self.profile.school_id != expected_school_id:
             raise ValueError(
                 f"profile {self.profile.school_id!r} cannot configure "
-                f"{self.school_id!r}"
+                f"{expected_school_id!r}"
             )
         if self.profile_version != PROFILE_VERSION:
             raise ValueError(
                 f"unsupported school profile version: {self.profile_version!r}"
             )
+        object.__setattr__(self, "school_id", expected_school_id)
 
     def interpret(
         self,

@@ -8,6 +8,7 @@ from mingli_engine.bazi.schools.base import (
 
 
 class LiangXiangrunSchoolAdapter(SchoolAdapterBase):
+    __slots__ = ()
     _SCHOOL_ID = "liang_xiangrun"
 
     def _interpret_validated(
