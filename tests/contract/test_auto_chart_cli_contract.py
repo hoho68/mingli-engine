@@ -3,11 +3,19 @@ import json
 import os
 import subprocess
 import sys
-from dataclasses import asdict
+from dataclasses import asdict, replace
+from datetime import datetime
 from pathlib import Path
 
+import pytest
+
 import mingli_engine.cli as cli
+from mingli_engine.bazi import analyze_bazi_chart
 from mingli_engine.chart_calculator import calculate_bazi_chart
+from mingli_engine.public_assumptions import (
+    PUBLIC_ASSUMPTION_LIMIT,
+    PUBLIC_ASSUMPTION_TRUNCATION_MARKER,
+)
 from mingli_engine.report_inputs import birth_profile_from_dict
 
 
@@ -248,6 +256,67 @@ def test_calculate_chart_analysis_uses_public_whitelist_projection():
     assert "provenance" not in serialized
 
 
+def test_public_calculation_projection_bounds_and_filters_assumptions():
+    profile_payload = json.loads(
+        (EXAMPLES_DIR / "birth-profile.auto-gregorian.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    chart = calculate_bazi_chart(birth_profile_from_dict(profile_payload))
+    calculation = analyze_bazi_chart(
+        chart,
+        birth_datetime=datetime.fromisoformat(
+            f"{chart.birth_profile.birth_date}T{chart.birth_profile.birth_time}"
+        ),
+    )
+    assumptions = (
+        "calendar:gregorian",
+        "timezone:UTC+8",
+        "sect=1",
+        "count=8",
+        "public_boundary:candidate_only",
+        "calendar:gregorian",
+        "sensitivity_fraction=0.1",
+        "root_weight=1.2",
+        "tuning_mode=internal",
+        "internal_config_path=C:/private/provider.json",
+        "score_threshold=0.4",
+        *(f"public_assumption_{index:02d}" for index in range(20)),
+    )
+    calculation = replace(
+        calculation,
+        strength=replace(
+            calculation.strength,
+            reasoning=replace(
+                calculation.strength.reasoning,
+                assumptions=assumptions,
+            ),
+        ),
+    )
+
+    payload = cli._public_calculation_payload(calculation)
+    projected = payload["strength"]["reasoning"]["assumptions"]
+
+    assert len(projected) == PUBLIC_ASSUMPTION_LIMIT
+    assert projected[:5] == [
+        "calendar:gregorian",
+        "timezone:UTC+8",
+        "sect=1",
+        "count=8",
+        "public_boundary:candidate_only",
+    ]
+    assert projected[-1] == PUBLIC_ASSUMPTION_TRUNCATION_MARKER
+    serialized = json.dumps(payload, ensure_ascii=False).lower()
+    for excluded in (
+        "sensitivity",
+        "weight",
+        "tuning",
+        "internal_config",
+        "threshold",
+    ):
+        assert excluded not in serialized
+
+
 def test_calculate_chart_without_analysis_preserves_legacy_shape():
     result = _run_cli(
         "calculate-chart",
@@ -304,3 +373,38 @@ def test_calculate_chart_analysis_flag_does_not_change_refusal_bytes():
     assert default.returncode == analysis.returncode == 3
     assert default.stdout == analysis.stdout
     assert default.stderr == analysis.stderr == ""
+
+
+@pytest.mark.parametrize(
+    "analysis_error",
+    [
+        ValueError("internal provider path: C:/private/provider.json"),
+        RuntimeError("private inference implementation detail"),
+    ],
+)
+def test_calculate_chart_analysis_returns_controlled_inference_error(
+    monkeypatch,
+    analysis_error,
+):
+    profile = (EXAMPLES_DIR / "birth-profile.auto-gregorian.json").read_text(
+        encoding="utf-8"
+    )
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+
+    def fail_analysis(*args, **kwargs):
+        raise analysis_error
+
+    monkeypatch.setattr(cli, "analyze_bazi_chart", fail_analysis)
+    monkeypatch.setattr(cli.sys, "stdin", io.StringIO(profile))
+    monkeypatch.setattr(cli.sys, "stdout", stdout)
+    monkeypatch.setattr(cli.sys, "stderr", stderr)
+
+    return_code = cli.main(["calculate-chart", "--input", "-", "--analysis"])
+
+    assert return_code == 1
+    assert stdout.getvalue() == ""
+    assert stderr.getvalue() == "Analysis error: analysis could not be completed\n"
+    assert "provider" not in stderr.getvalue().lower()
+    assert "private" not in stderr.getvalue().lower()
+    assert "traceback" not in stderr.getvalue().lower()

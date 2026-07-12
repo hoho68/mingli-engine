@@ -1,10 +1,14 @@
 import hashlib
+import io
 import json
 import os
 import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
+import mingli_engine.cli as cli
 from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.html import render_html_report
 from mingli_engine.markdown import render_markdown_report
@@ -210,6 +214,15 @@ def test_calculate_report_analysis_outputs_reasoned_markdown():
     for school_id in ("ziping", "liang_xiangrun", "duan"):
         escaped_school_id = school_id.replace("_", r"\_")
         assert f"school\\_view:{escaped_school_id}:" in result.stdout
+    lowered = result.stdout.lower()
+    for excluded in ("sensitivity", "weight", "tuning", "internal_config"):
+        assert excluded not in lowered
+    assumption_lines = [
+        line for line in result.stdout.splitlines() if line.startswith("- 假设：")
+    ]
+    assert assumption_lines
+    assert max(map(len, assumption_lines)) <= 1200
+    assert len(result.stdout.splitlines()) <= 450
 
 
 def test_calculate_report_analysis_outputs_reasoned_html():
@@ -228,6 +241,17 @@ def test_calculate_report_analysis_outputs_reasoned_html():
     assert ">推理分析<" in result.stdout
     assert "计算状态：" in result.stdout
     assert "可信度：" in result.stdout
+    for heading in ("盘面事实", "计算结果", "流派视角", "证据依据", "解读与安全边界"):
+        assert f">{heading}<" in result.stdout
+    lowered = result.stdout.lower()
+    for excluded in ("sensitivity", "weight", "tuning", "internal_config"):
+        assert excluded not in lowered
+    assumption_lines = [
+        line for line in result.stdout.splitlines() if "<strong>假设：</strong>" in line
+    ]
+    assert assumption_lines
+    assert max(map(len, assumption_lines)) <= 1200
+    assert len(result.stdout.splitlines()) <= 550
 
 
 def test_calculate_report_without_analysis_keeps_legacy_renderer_output():
@@ -331,3 +355,91 @@ def test_calculate_report_analysis_flag_does_not_change_refusal_bytes():
     assert default.returncode == analysis.returncode == 3
     assert default.stdout == analysis.stdout
     assert default.stderr == analysis.stderr == ""
+
+
+@pytest.mark.parametrize(
+    "analysis_error",
+    [
+        ValueError("internal provider path: C:/private/provider.json"),
+        RuntimeError("private inference implementation detail"),
+    ],
+)
+def test_calculate_report_analysis_returns_controlled_inference_error(
+    monkeypatch,
+    analysis_error,
+):
+    profile = (EXAMPLES_DIR / "birth-profile.auto-gregorian.json").read_text(
+        encoding="utf-8"
+    )
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+
+    def fail_analysis(*args, **kwargs):
+        raise analysis_error
+
+    monkeypatch.setattr(cli, "analyze_bazi_chart", fail_analysis)
+    monkeypatch.setattr(cli.sys, "stdin", io.StringIO(profile))
+    monkeypatch.setattr(cli.sys, "stdout", stdout)
+    monkeypatch.setattr(cli.sys, "stderr", stderr)
+
+    return_code = cli.main(
+        [
+            "calculate-report",
+            "--input",
+            "-",
+            "--format",
+            "markdown",
+            "--analysis",
+        ]
+    )
+
+    assert return_code == 1
+    assert stdout.getvalue() == ""
+    assert stderr.getvalue() == "Analysis error: analysis could not be completed\n"
+    assert "provider" not in stderr.getvalue().lower()
+    assert "private" not in stderr.getvalue().lower()
+    assert "traceback" not in stderr.getvalue().lower()
+
+
+@pytest.mark.parametrize(
+    "analysis_error",
+    [
+        ValueError("internal report config path: C:/private/report.json"),
+        RuntimeError("private report synthesis detail"),
+    ],
+)
+def test_calculate_report_analysis_controls_build_errors(
+    monkeypatch,
+    analysis_error,
+):
+    profile = (EXAMPLES_DIR / "birth-profile.auto-gregorian.json").read_text(
+        encoding="utf-8"
+    )
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+
+    def fail_build(*args, **kwargs):
+        raise analysis_error
+
+    monkeypatch.setattr(cli, "build_report", fail_build)
+    monkeypatch.setattr(cli.sys, "stdin", io.StringIO(profile))
+    monkeypatch.setattr(cli.sys, "stdout", stdout)
+    monkeypatch.setattr(cli.sys, "stderr", stderr)
+
+    return_code = cli.main(
+        [
+            "calculate-report",
+            "--input",
+            "-",
+            "--format",
+            "html",
+            "--analysis",
+        ]
+    )
+
+    assert return_code == 1
+    assert stdout.getvalue() == ""
+    assert stderr.getvalue() == "Analysis error: analysis could not be completed\n"
+    assert "config" not in stderr.getvalue().lower()
+    assert "private" not in stderr.getvalue().lower()
+    assert "traceback" not in stderr.getvalue().lower()

@@ -8,7 +8,12 @@ from pathlib import Path
 from typing import Any
 
 from mingli_engine import classical_sources
-from mingli_engine.bazi import CalculationBundle, analyze_bazi_chart
+from mingli_engine.bazi import analyze_bazi_chart
+from mingli_engine.bazi.result_models import (
+    BranchRelationResult,
+    CalculationBundle,
+    ReasonedResult,
+)
 from mingli_engine.chart_calculator import ChartCalculationError, calculate_bazi_chart
 from mingli_engine.evidence_curation import build_knowledge_activation_summary
 from mingli_engine.high_risk import classify_high_risk_request
@@ -35,9 +40,14 @@ from mingli_engine.project_completion import (
     ProjectCompletionError,
     build_project_completion_summary,
 )
+from mingli_engine.public_assumptions import project_public_assumptions
 from mingli_engine.safety import safety_check
 from mingli_engine.validation import validate_birth_profile
 from mingli_engine import promotion
+
+
+class AnalysisExecutionError(RuntimeError):
+    pass
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -84,29 +94,20 @@ def _birth_datetime(profile: BirthProfile) -> datetime:
     )
 
 
-def _public_assumptions(values: Sequence[str]) -> list[str]:
-    internal_terms = ("sensitivity", "weight", "tuning")
-    return [
-        value
-        for value in values
-        if not any(term in value.lower() for term in internal_terms)
-    ]
-
-
-def _public_reasoning(reasoning: Any) -> dict[str, Any]:
+def _public_reasoning(reasoning: ReasonedResult) -> dict[str, object]:
     return {
         "status": reasoning.status,
         "conclusion": reasoning.conclusion,
         "confidence": reasoning.confidence,
         "supporting_signals": list(reasoning.supporting_signals),
         "opposing_signals": list(reasoning.opposing_signals),
-        "assumptions": _public_assumptions(reasoning.assumptions),
+        "assumptions": project_public_assumptions(reasoning.assumptions),
         "missing_inputs": list(reasoning.missing_inputs),
         "rule_ids": list(reasoning.rule_ids),
     }
 
 
-def _public_relation(relation: Any) -> dict[str, Any]:
+def _public_relation(relation: BranchRelationResult) -> dict[str, object]:
     return {
         "relation_type": relation.relation_type,
         "branches": list(relation.branches),
@@ -119,7 +120,9 @@ def _public_relation(relation: Any) -> dict[str, Any]:
     }
 
 
-def _public_calculation_payload(calculation: CalculationBundle) -> dict[str, Any]:
+def _public_calculation_payload(
+    calculation: CalculationBundle,
+) -> dict[str, object]:
     facts = calculation.facts
     return {
         "engine_version": calculation.engine_version,
@@ -163,7 +166,7 @@ def _public_calculation_payload(calculation: CalculationBundle) -> dict[str, Any
             "twelve_growth_by_pillar": [
                 list(item) for item in facts.twelve_growth_by_pillar
             ],
-            "assumptions": _public_assumptions(facts.assumptions),
+            "assumptions": project_public_assumptions(facts.assumptions),
         },
         "branch_relations": [
             _public_relation(item) for item in calculation.branch_relations
@@ -282,12 +285,15 @@ def _calculate_chart(args: argparse.Namespace) -> int:
 
     chart = calculate_bazi_chart(profile)
     if args.analysis:
-        calculation = analyze_bazi_chart(
-            chart,
-            birth_datetime=_birth_datetime(profile),
-        )
-        output = _to_json_payload(chart)
-        output["calculation"] = _public_calculation_payload(calculation)
+        try:
+            calculation = analyze_bazi_chart(
+                chart,
+                birth_datetime=_birth_datetime(profile),
+            )
+            output = _to_json_payload(chart)
+            output["calculation"] = _public_calculation_payload(calculation)
+        except (ValueError, RuntimeError):
+            raise AnalysisExecutionError from None
         _write_json(output)
     else:
         _write_json(chart)
@@ -309,11 +315,14 @@ def _calculate_report(args: argparse.Namespace) -> int:
 
     chart = calculate_bazi_chart(profile)
     if args.analysis:
-        calculation = analyze_bazi_chart(
-            chart,
-            birth_datetime=_birth_datetime(profile),
-        )
-        report = build_report(chart, calculation)
+        try:
+            calculation = analyze_bazi_chart(
+                chart,
+                birth_datetime=_birth_datetime(profile),
+            )
+            report = build_report(chart, calculation)
+        except (ValueError, RuntimeError):
+            raise AnalysisExecutionError from None
     else:
         report = build_report(chart)
     if not report.safety_review.allowed:
@@ -453,6 +462,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         return args.handler(args)
+    except AnalysisExecutionError:
+        print("Analysis error: analysis could not be completed", file=sys.stderr)
+        return 1
     except json.JSONDecodeError as error:
         print(f"Invalid JSON: {error}", file=sys.stderr)
         return 1

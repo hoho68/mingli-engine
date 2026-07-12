@@ -12,6 +12,10 @@ from mingli_engine.formal_interpretation import (
     get_formal_interpretation_rule_families,
 )
 from mingli_engine.models import SourceConflict
+from mingli_engine.public_assumptions import (
+    PUBLIC_ASSUMPTION_LIMIT,
+    PUBLIC_ASSUMPTION_TRUNCATION_MARKER,
+)
 
 
 EXPECTED_FORMAL_FAMILIES = {
@@ -240,6 +244,58 @@ def test_formal_trace_preserves_exact_reasoning_channels(sample_bazi_chart):
     assert conclusion.trace.missing_inputs == ["missing:exact"]
     assert "assumption:exact" in conclusion.trace.assumptions
     assert conclusion.trace.school_views == []
+
+
+def test_formal_trace_projects_bounded_public_assumptions(sample_bazi_chart):
+    chart = _calculation_chart(sample_bazi_chart)
+    legacy = build_legacy_not_computed_bundle(chart)
+    assumptions = (
+        "calendar:gregorian",
+        "timezone:UTC+8",
+        "sect=1",
+        "count=8",
+        "public_boundary:candidate_only",
+        "calendar:gregorian",
+        "sensitivity_fraction=0.1",
+        "root_weight=1.2",
+        "tuning_mode=internal",
+        "internal_config_path=C:/private/provider.json",
+        "score_threshold=0.4",
+        *(f"public_assumption_{index:02d}" for index in range(20)),
+    )
+    reasoning = replace(
+        _reasoning("computed"),
+        assumptions=assumptions,
+    )
+    calculation = _bound_calculation(
+        chart,
+        replace(
+            legacy,
+            luck_cycles=replace(legacy.luck_cycles, reasoning=reasoning),
+        ),
+    )
+
+    conclusion = _family(
+        build_formal_interpretation(chart, [], calculation=calculation),
+        "luck_cycle",
+    )
+
+    projected = conclusion.trace.assumptions
+    assert len(projected) == PUBLIC_ASSUMPTION_LIMIT
+    assert projected[:8] == [
+        "four_pillars_complete",
+        "classical_evidence_units_approved",
+        "rule_family:luck_cycle",
+        "calendar:gregorian",
+        "timezone:UTC+8",
+        "sect=1",
+        "count=8",
+        "public_boundary:candidate_only",
+    ]
+    assert projected[-1] == PUBLIC_ASSUMPTION_TRUNCATION_MARKER
+    serialized = " ".join(projected).lower()
+    for excluded in ("sensitivity", "weight", "tuning", "config", "threshold"):
+        assert excluded not in serialized
 
 
 @pytest.mark.parametrize(

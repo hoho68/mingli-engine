@@ -15,6 +15,7 @@ from mingli_engine.models import (
     FormalConclusion,
     SourceConflict,
 )
+from mingli_engine.public_assumptions import project_public_assumptions
 
 
 _STATUS_PRIORITY = {
@@ -387,12 +388,14 @@ def _build_conclusion(
     )
     chart_signals = _compact(spec.signal_builder(chart))
     evidence_ids = [unit.evidence_id for unit in units]
-    assumptions = [
-        "four_pillars_complete",
-        "classical_evidence_units_approved",
-        f"rule_family:{spec.rule_family}",
-        *reasoning.assumptions,
-    ]
+    assumptions = project_public_assumptions(
+        [
+            "four_pillars_complete",
+            "classical_evidence_units_approved",
+            f"rule_family:{spec.rule_family}",
+            *reasoning.assumptions,
+        ]
+    )
     relevant_conflicts = _relevant_conflicts(spec, units, source_conflicts)
     disagreement_note = "；".join(
         note
