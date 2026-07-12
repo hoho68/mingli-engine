@@ -13,6 +13,7 @@ from mingli_engine.bazi.result_models import (
     BranchRelationResult,
     CalculationBundle,
     ReasonedResult,
+    StrengthContribution,
 )
 from mingli_engine.chart_calculator import ChartCalculationError, calculate_bazi_chart
 from mingli_engine.evidence_curation import build_knowledge_activation_summary
@@ -120,6 +121,17 @@ def _public_relation(relation: BranchRelationResult) -> dict[str, object]:
     }
 
 
+def _public_strength_contribution(
+    contribution: StrengthContribution,
+) -> dict[str, object]:
+    return {
+        "category": contribution.category,
+        "signal": contribution.signal,
+        "value": contribution.value,
+        "rule_id": contribution.rule_id,
+    }
+
+
 def _public_calculation_payload(
     calculation: CalculationBundle,
 ) -> dict[str, object]:
@@ -173,7 +185,14 @@ def _public_calculation_payload(
         ],
         "strength": {
             "reasoning": _public_reasoning(calculation.strength.reasoning),
+            "score": calculation.strength.score,
+            "lower_bound": calculation.strength.lower_bound,
+            "upper_bound": calculation.strength.upper_bound,
             "label": calculation.strength.label,
+            "contributions": [
+                _public_strength_contribution(item)
+                for item in calculation.strength.contributions
+            ],
         },
         "patterns": [
             {

@@ -3,7 +3,7 @@ import json
 import os
 import subprocess
 import sys
-from dataclasses import asdict, replace
+from dataclasses import asdict, fields, is_dataclass, replace
 from datetime import datetime
 from pathlib import Path
 
@@ -158,6 +158,30 @@ def test_calculate_chart_outputs_safety_review_for_unsafe_focus():
     assert "lifespan_or_death_timing" in payload["red_line_categories"]
 
 
+def _json_value(value):
+    if isinstance(value, tuple):
+        return [_json_value(item) for item in value]
+    return value
+
+
+def _assert_complete_public_dto_shape(dto, payload):
+    assert is_dataclass(dto)
+    assert isinstance(payload, dict)
+    assert list(payload) == [field.name for field in fields(dto)]
+    for model_field in fields(dto):
+        raw = getattr(dto, model_field.name)
+        projected = payload[model_field.name]
+        if is_dataclass(raw):
+            _assert_complete_public_dto_shape(raw, projected)
+        elif isinstance(raw, tuple) and raw and is_dataclass(raw[0]):
+            assert isinstance(projected, list)
+            assert len(projected) == len(raw)
+            for raw_item, projected_item in zip(raw, projected, strict=True):
+                _assert_complete_public_dto_shape(raw_item, projected_item)
+        elif model_field.name != "assumptions":
+            assert projected == _json_value(raw)
+
+
 def test_calculate_chart_analysis_adds_versioned_calculation_envelope():
     result = _run_cli(
         "calculate-chart",
@@ -205,7 +229,14 @@ def test_calculate_chart_analysis_uses_public_whitelist_projection():
         "luck_cycles",
         "schools",
     }
-    assert set(calculation["strength"]) == {"reasoning", "label"}
+    assert set(calculation["strength"]) == {
+        "reasoning",
+        "score",
+        "lower_bound",
+        "upper_bound",
+        "label",
+        "contributions",
+    }
     required_reasoning = {
         "status",
         "conclusion",
@@ -243,17 +274,64 @@ def test_calculate_chart_analysis_uses_public_whitelist_projection():
                 yield from all_keys(item)
 
     keys = set(all_keys(calculation))
-    assert keys.isdisjoint(
-        {"score", "lower_bound", "upper_bound", "contributions", "value"}
-    )
+    assert {"score", "lower_bound", "upper_bound", "contributions", "value"} <= keys
     assert not any("weight" in key.lower() for key in keys)
     assert not any("sensitivity" in key.lower() for key in keys)
+    assert not any("tuning" in key.lower() for key in keys)
+    assert not any("provenance" in key.lower() for key in keys)
     serialized = json.dumps(calculation, ensure_ascii=False).lower()
     assert "sensitivity_fraction" not in serialized
     assert "weight_config" not in serialized
+    assert "strength_weights.json" not in serialized
+    assert "internal_config" not in serialized
+    assert "provider_path" not in serialized
+    assert "provenance" not in serialized
     assert "reasonedresult(" not in serialized
     assert "calculationbundle(" not in serialized
-    assert "provenance" not in serialized
+
+
+def test_public_calculation_projection_matches_complete_nested_dto_schema():
+    profile_payload = json.loads(
+        (EXAMPLES_DIR / "birth-profile.auto-gregorian.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    chart = calculate_bazi_chart(birth_profile_from_dict(profile_payload))
+    calculation = analyze_bazi_chart(
+        chart,
+        birth_datetime=datetime.fromisoformat(
+            f"{chart.birth_profile.birth_date}T{chart.birth_profile.birth_time}"
+        ),
+    )
+
+    payload = cli._public_calculation_payload(calculation)
+
+    _assert_complete_public_dto_shape(calculation, payload)
+    strength = payload["strength"]
+    assert strength["score"] == calculation.strength.score
+    assert strength["lower_bound"] == calculation.strength.lower_bound
+    assert strength["upper_bound"] == calculation.strength.upper_bound
+    assert len(strength["contributions"]) == len(calculation.strength.contributions)
+    assert strength["contributions"]
+    first = strength["contributions"][0]
+    assert set(first) == {"category", "signal", "value", "rule_id"}
+    assert isinstance(first["value"], float)
+
+
+def test_calculate_chart_analysis_json_is_deterministic():
+    args = (
+        "calculate-chart",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.auto-gregorian.json"),
+        "--analysis",
+    )
+
+    first = _run_cli(*args)
+    second = _run_cli(*args)
+
+    assert first.returncode == second.returncode == 0
+    assert first.stderr == second.stderr == ""
+    assert first.stdout == second.stdout
 
 
 def test_public_calculation_projection_bounds_and_filters_assumptions():
