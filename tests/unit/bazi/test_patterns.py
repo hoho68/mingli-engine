@@ -369,6 +369,11 @@ def test_fixture_counterexamples_use_canonical_fact_builders() -> None:
             ),
             strength(status=case.get("strength_status", "computed")),
         )[0]
+        expected_status = (
+            case.get("strength_status")
+            or ("disputed" if case["expected_damage"] else "computed")
+        )
+        assert candidate.reasoning.status == expected_status
         assert signal_ten_gods(candidate.damage_conditions) == case["expected_damage"]
         assert signal_ten_gods(candidate.rescue_conditions) == case["expected_rescue"]
         for latent_god in case.get("expected_latent_context", ()):

@@ -44,7 +44,10 @@
         "categories": [
           "luck_direction_boundary"
         ],
-        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
+        "demonstrated_behaviors": [
+          "luck_direction_and_start_asserted"
+        ]
       }
     },
     {
@@ -85,7 +88,10 @@
         "categories": [
           "luck_direction_boundary"
         ],
-        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
+        "demonstrated_behaviors": [
+          "luck_direction_and_start_asserted"
+        ]
       }
     },
     {
@@ -126,7 +132,10 @@
         "categories": [
           "luck_direction_boundary"
         ],
-        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
+        "demonstrated_behaviors": [
+          "luck_direction_and_start_asserted"
+        ]
       }
     },
     {
@@ -167,7 +176,10 @@
         "categories": [
           "luck_direction_boundary"
         ],
-        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
+        "demonstrated_behaviors": [
+          "luck_direction_and_start_asserted"
+        ]
       }
     },
     {
@@ -208,7 +220,10 @@
         "categories": [
           "luck_direction_boundary"
         ],
-        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
+        "demonstrated_behaviors": [
+          "luck_direction_and_start_asserted"
+        ]
       }
     },
     {
@@ -249,7 +264,10 @@
         "categories": [
           "luck_direction_boundary"
         ],
-        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
+        "demonstrated_behaviors": [
+          "luck_direction_and_start_asserted"
+        ]
       }
     },
     {
@@ -290,7 +308,10 @@
         "categories": [
           "solar_term_exact"
         ],
-        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
+        "demonstrated_behaviors": [
+          "solar_term_boundary_output_asserted"
+        ]
       }
     },
     {
@@ -331,7 +352,10 @@
         "categories": [
           "solar_term_before"
         ],
-        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
+        "demonstrated_behaviors": [
+          "solar_term_boundary_output_asserted"
+        ]
       }
     },
     {
@@ -372,7 +396,82 @@
         "categories": [
           "solar_term_after"
         ],
-        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases"
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
+        "demonstrated_behaviors": [
+          "solar_term_boundary_output_asserted"
+        ]
+      }
+    },
+    {
+      "id": "aware_datetime_utc_plus_08_rejected_before_provider",
+      "birth_datetime": "1992-08-18T09:30:00+08:00",
+      "gender": "male",
+      "sect": 1,
+      "count": 2,
+      "expected_error": {
+        "type": "ValueError",
+        "message": "birth_datetime must be naive local wall time under chart timezone assumption",
+        "provider_called": false
+      },
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "time_assumption_unsupported"
+        ],
+        "execution_test": "test_provider_rejects_aware_fixture_before_lunar_call",
+        "demonstrated_behaviors": [
+          "aware_datetime_rejected_before_provider"
+        ]
+      }
+    },
+    {
+      "id": "aware_datetime_utc_rejected_before_provider",
+      "birth_datetime": "1992-08-18T09:30:00+00:00",
+      "gender": "male",
+      "sect": 1,
+      "count": 2,
+      "expected_error": {
+        "type": "ValueError",
+        "message": "birth_datetime must be naive local wall time under chart timezone assumption",
+        "provider_called": false
+      },
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "time_assumption_unsupported"
+        ],
+        "execution_test": "test_provider_rejects_aware_fixture_before_lunar_call",
+        "demonstrated_behaviors": [
+          "aware_datetime_rejected_before_provider"
+        ]
+      }
+    },
+    {
+      "id": "aware_datetime_utc_minus_05_rejected_before_provider",
+      "birth_datetime": "1992-08-18T09:30:00-05:00",
+      "gender": "male",
+      "sect": 1,
+      "count": 2,
+      "expected_error": {
+        "type": "ValueError",
+        "message": "birth_datetime must be naive local wall time under chart timezone assumption",
+        "provider_called": false
+      },
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "time_assumption_unsupported"
+        ],
+        "execution_test": "test_provider_rejects_aware_fixture_before_lunar_call",
+        "demonstrated_behaviors": [
+          "aware_datetime_rejected_before_provider"
+        ]
       }
     }
   ]

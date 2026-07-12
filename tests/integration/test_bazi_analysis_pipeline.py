@@ -1,5 +1,7 @@
 import builtins
+from copy import deepcopy
 from dataclasses import asdict
+from hashlib import sha256
 import json
 import os
 import subprocess
@@ -15,6 +17,12 @@ import mingli_engine.bazi as bazi_api
 import mingli_engine.bazi.analysis as analysis
 from mingli_engine.bazi.analysis import analyze_bazi_chart
 from mingli_engine.bazi.branch_relations import detect_branch_relations
+from mingli_engine.bazi.constants import (
+    BRANCHES,
+    STEM_ELEMENT,
+    STEM_POLARITY,
+    STEMS,
+)
 from mingli_engine.bazi.facts import build_chart_facts
 from mingli_engine.bazi.legacy_adapter import (
     apply_calculation_bundle,
@@ -57,6 +65,73 @@ EXPECTED_BOUNDARY_CATEGORIES = {
     "unknown_gender",
     "time_assumption_aware",
     "time_assumption_unsupported",
+    "true_solar_assumption_recorded",
+}
+CANONICAL_PILLAR_ROLES = ("year", "month", "day", "hour")
+ELEMENT_NAMES = dict(
+    zip(("木", "火", "土", "金", "水"), ("wood", "fire", "earth", "metal", "water"), strict=True)
+)
+BOUNDARY_BEHAVIOR_CONTRACTS = {
+    "near_threshold_strength": (
+        "test_strength_boundary_fixture_executes_real_calculation",
+        "near_threshold_range_asserted",
+    ),
+    "latent_vs_exposed": (
+        "test_fixture_counterexamples_use_canonical_fact_builders",
+        "latent_signal_does_not_count_as_exposed",
+    ),
+    "pattern_strength_prerequisite_indeterminate": (
+        "test_fixture_counterexamples_use_canonical_fact_builders",
+        "indeterminate_strength_blocks_pattern",
+    ),
+    "damaged_pattern": (
+        "test_fixture_counterexamples_use_canonical_fact_builders",
+        "pattern_damage_asserted",
+    ),
+    "rescued_pattern": (
+        "test_fixture_counterexamples_use_canonical_fact_builders",
+        "pattern_rescue_asserted",
+    ),
+    "incomplete_three_groups": (
+        "test_strength_boundary_fixture_executes_real_calculation",
+        "incomplete_relation_asserted",
+    ),
+    "school_disagreement": (
+        "test_strength_boundary_fixture_executes_real_calculation",
+        "school_preferences_compared",
+    ),
+    "solar_term_before": (
+        "test_provider_luck_cycles_match_frozen_regression_cases",
+        "solar_term_boundary_output_asserted",
+    ),
+    "solar_term_exact": (
+        "test_provider_luck_cycles_match_frozen_regression_cases",
+        "solar_term_boundary_output_asserted",
+    ),
+    "solar_term_after": (
+        "test_provider_luck_cycles_match_frozen_regression_cases",
+        "solar_term_boundary_output_asserted",
+    ),
+    "luck_direction_boundary": (
+        "test_provider_luck_cycles_match_frozen_regression_cases",
+        "luck_direction_and_start_asserted",
+    ),
+    "unknown_gender": (
+        "test_strength_boundary_fixture_executes_real_calculation",
+        "unknown_gender_luck_degradation_asserted",
+    ),
+    "time_assumption_aware": (
+        "test_strength_boundary_fixture_executes_real_calculation",
+        "aware_datetime_rejection_asserted",
+    ),
+    "time_assumption_unsupported": (
+        "test_provider_rejects_aware_fixture_before_lunar_call",
+        "aware_datetime_rejected_before_provider",
+    ),
+    "true_solar_assumption_recorded": (
+        "test_strength_boundary_fixture_executes_real_calculation",
+        "true_solar_assumption_recorded",
+    ),
 }
 
 
@@ -128,6 +203,72 @@ def _contains_placeholder(value: object) -> bool:
     if isinstance(value, (list, tuple)):
         return any(_contains_placeholder(item) for item in value)
     return False
+
+
+def _canonical_artifact_hash(artifact: dict[str, Any]) -> str:
+    encoded = json.dumps(
+        artifact,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return sha256(encoded).hexdigest()
+
+
+def _validate_cross_provider_record(record: dict[str, Any]) -> None:
+    verification = record["verification"]
+    artifact = verification["cross_provider_artifact"]
+    pillars = artifact["pillars"]
+    assert verification["baseline_kind"] == (
+        "chart_pillars_cross_provider_agreement"
+    )
+    assert verification["review_status"] == "cross_provider_reviewed"
+    assert verification["review_scope"] == ["chart_pillars"]
+    assert artifact["provider"] == "cnlunar"
+    assert artifact["version"] == "0.2.4"
+    assert artifact["api"] == "cnlunar.Lunar(datetime)"
+    assert artifact["method"] == (
+        "year8Char, month8Char, day8Char, twohour8Char"
+    )
+    assert set(artifact) == {"provider", "version", "api", "method", "pillars"}
+    assert len(pillars) == 4
+    assert tuple(item["name"] for item in pillars) == CANONICAL_PILLAR_ROLES
+    assert all(
+        len(item["gan_zhi"]) == 2
+        and item["gan_zhi"][0] in STEMS
+        and item["gan_zhi"][1] in BRANCHES
+        for item in pillars
+    )
+    assert pillars == record["expected"]["chart_pillars"]
+    assert verification["cross_provider_artifact_sha256"] == (
+        _canonical_artifact_hash(artifact)
+    )
+    assert verification["downstream_snapshot"] == {
+        "review_status": "project_engine_frozen_snapshot",
+        "scope": ["facts", "relations", "strength", "patterns", "luck"],
+        "engine_version": "bazi-core-v1",
+        "ruleset_version": "ziping-v1",
+    }
+
+
+def _derived_verified_coverage(record: dict[str, Any]) -> dict[str, Any]:
+    pillars = record["expected"]["chart_pillars"]
+    by_role = {item["name"]: item["gan_zhi"] for item in pillars}
+    assert tuple(item["name"] for item in pillars) == CANONICAL_PILLAR_ROLES
+    day_stem = by_role["day"][0]
+    month_branch = by_role["month"][1]
+    branches = [item["gan_zhi"][1] for item in pillars]
+    assert record["expected"]["facts"]["day_master"] == day_stem
+    assert record["expected"]["facts"]["month_branch"] == month_branch
+    return {
+        "day_master": day_stem,
+        "day_master_element": ELEMENT_NAMES[STEM_ELEMENT[day_stem]],
+        "day_master_polarity": STEM_POLARITY[day_stem],
+        "month_branch": month_branch,
+        "forward": record["expected"]["luck"]["forward"],
+        "repeated_branch": len(set(branches)) < len(branches),
+        "no_relation_chart": not record["expected"]["relations"],
+    }
 
 
 def _profile(**overrides: str) -> BirthProfile:
@@ -239,14 +380,30 @@ def test_verified_chart_fixture_schema_privacy_review_and_coverage() -> None:
         "name": "lunar-python",
         "version": "1.4.8",
     }
-    assert payload["independent_provider"] == {
-        "name": "cnlunar",
+    assert payload["independent_verification"] == {
+        "provider": "cnlunar",
         "version": "0.2.4",
+        "api": "cnlunar.Lunar(datetime)",
+        "method": "year8Char, month8Char, day8Char, twohour8Char",
+        "installation_scope": "temporary_target_only",
+        "runtime_dependency": False,
+        "command_description": (
+            "python -m pip install --target <temporary-directory> "
+            "cnlunar==0.2.4; prepend that directory to PYTHONPATH only for "
+            "the one-time fixture verification process"
+        ),
+        "claim_boundary": (
+            "Cross-provider review covers chart_pillars only; downstream "
+            "expectations are frozen project-engine snapshots."
+        ),
     }
     assert payload["selection"]["method"] == "deterministic_exact_set_cover"
     assert isinstance(records, list)
     assert len(records) >= 30
     assert not _contains_placeholder(payload)
+    serialized = json.dumps(payload, ensure_ascii=False).casefold()
+    assert "human_reviewed" not in serialized
+    assert "authoritative" not in serialized
 
     ids = [record["id"] for record in records]
     assert len(ids) == len(set(ids))
@@ -256,20 +413,8 @@ def test_verified_chart_fixture_schema_privacy_review_and_coverage() -> None:
         record["verification"]["contains_real_personal_data"] is False
         for record in records
     )
-    assert all(
-        record["verification"]["baseline_kind"] == "cross_provider_agreement"
-        and record["verification"]["review_status"] == "cross_provider_reviewed"
-        for record in records
-    )
-    assert all(
-        record["verification"]["independent_check"]["provider"] == "cnlunar"
-        and record["verification"]["independent_check"]["version"] == "0.2.4"
-        and record["verification"]["independent_check"]["method"]
-        == "independent_four_pillars"
-        and record["verification"]["independent_check"]["artifact"]["agreement"]
-        is True
-        for record in records
-    )
+    for record in records:
+        _validate_cross_provider_record(record)
     assert all(
         record["versions"]
         == {
@@ -286,33 +431,51 @@ def test_verified_chart_fixture_schema_privacy_review_and_coverage() -> None:
         for record in records
     )
 
-    day_masters = {record["expected"]["facts"]["day_master"] for record in records}
-    month_branches = {record["expected"]["facts"]["month_branch"] for record in records}
-    directions = {record["expected"]["luck"]["forward"] for record in records}
-    polarities = {record["coverage"]["day_master_polarity"] for record in records}
-    elements = {record["coverage"]["day_master_element"] for record in records}
+    derived = [_derived_verified_coverage(record) for record in records]
+    for record, actual in zip(records, derived, strict=True):
+        assert record["coverage"]["day_master_element"] == actual[
+            "day_master_element"
+        ]
+        assert record["coverage"]["day_master_polarity"] == actual[
+            "day_master_polarity"
+        ]
+        assert record["coverage"]["repeated_branch"] is actual[
+            "repeated_branch"
+        ]
+        assert record["coverage"]["no_relation_chart"] is actual[
+            "no_relation_chart"
+        ]
+    day_masters = {item["day_master"] for item in derived}
+    month_branches = {item["month_branch"] for item in derived}
+    directions = {item["forward"] for item in derived}
+    polarities = {item["day_master_polarity"] for item in derived}
+    elements = {item["day_master_element"] for item in derived}
     assert day_masters == set("甲乙丙丁戊己庚辛壬癸")
     assert month_branches == set("子丑寅卯辰巳午未申酉戌亥")
     assert directions == {True, False}
     assert polarities == {"yin", "yang"}
     assert elements == {"wood", "fire", "earth", "metal", "water"}
-    assert any(record["coverage"]["repeated_branch"] for record in records)
-    assert any(record["coverage"]["no_relation_chart"] for record in records)
+    assert any(item["repeated_branch"] for item in derived)
+    assert any(item["no_relation_chart"] for item in derived)
+
+
+def test_cross_provider_contract_rejects_empty_or_mismatched_artifacts() -> None:
+    record = _verified_records()[0]
+    empty = deepcopy(record)
+    empty["verification"]["cross_provider_artifact"]["pillars"] = []
+    with pytest.raises(AssertionError):
+        _validate_cross_provider_record(empty)
+
+    mismatched = deepcopy(record)
+    mismatched["verification"]["cross_provider_artifact"]["pillars"][0][
+        "gan_zhi"
+    ] = mismatched["expected"]["chart_pillars"][1]["gan_zhi"]
+    with pytest.raises(AssertionError):
+        _validate_cross_provider_record(mismatched)
 
 
 def test_boundary_fixture_schemas_counts_privacy_and_categories() -> None:
     all_cases: list[dict[str, Any]] = []
-    execution_tests = {
-        "strength_boundary_cases.json": (
-            "test_strength_boundary_fixture_executes_real_calculation"
-        ),
-        "pattern_counterexamples.json": (
-            "test_fixture_counterexamples_use_canonical_fact_builders"
-        ),
-        "luck_cycle_boundary_cases.json": (
-            "test_provider_luck_cycles_match_frozen_regression_cases"
-        ),
-    }
     for path in BOUNDARY_FIXTURE_PATHS:
         payload = _load_json(path)
         assert payload["schema_version"] == "bazi-boundary-fixtures-v1"
@@ -327,7 +490,14 @@ def test_boundary_fixture_schemas_counts_privacy_and_categories() -> None:
             assert isinstance(metadata["categories"], list)
             assert metadata["categories"]
             assert isinstance(metadata["counts_toward_boundary_gate"], bool)
-            assert metadata["execution_test"] == execution_tests[path.name]
+            assert isinstance(metadata["demonstrated_behaviors"], list)
+            assert metadata["demonstrated_behaviors"]
+            for category in metadata["categories"]:
+                execution_test, demonstrated_behavior = (
+                    BOUNDARY_BEHAVIOR_CONTRACTS[category]
+                )
+                assert metadata["execution_test"] == execution_test
+                assert demonstrated_behavior in metadata["demonstrated_behaviors"]
             assert not _contains_placeholder(case)
             if path.name == "strength_boundary_cases.json":
                 expected_strength = case["expected"]["strength"]
@@ -523,7 +693,7 @@ def test_strength_boundary_fixture_executes_real_calculation(
         with pytest.raises(ValueError, match=semantic["error"]):
             calculate_luck_cycles(chart, birth_datetime=birth_datetime)
     else:
-        assert semantic["kind"] == "unsupported_time_assumption"
+        assert semantic["kind"] == "true_solar_assumption_recorded"
         assert chart is not None
         assert chart.chart_source.true_solar_time_applied is True
         assert semantic["assumption"] in result.reasoning.assumptions

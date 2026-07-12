@@ -23,8 +23,21 @@ FIXTURE_PATH = (
 )
 
 
-def _fixture_cases() -> list[dict[str, Any]]:
+def _all_fixture_cases() -> list[dict[str, Any]]:
     return json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))["cases"]
+
+
+def _fixture_cases() -> list[dict[str, Any]]:
+    return [case for case in _all_fixture_cases() if "expected" in case]
+
+
+def _aware_error_fixture_cases() -> list[Any]:
+    cases = [
+        case for case in _all_fixture_cases() if "expected_error" in case
+    ]
+    if not cases:
+        return [pytest.param(None, id="aware_error_fixture_missing")]
+    return cases
 
 
 @pytest.mark.parametrize("case", _fixture_cases(), ids=lambda case: case["id"])
@@ -47,6 +60,36 @@ def test_provider_luck_cycles_match_frozen_regression_cases(
     assert result.start_hours == expected["start_hours"]
     assert result.start_solar == expected["start_solar"]
     assert result.pillars == tuple(tuple(item) for item in expected["pillars"])
+
+
+@pytest.mark.parametrize(
+    "case",
+    _aware_error_fixture_cases(),
+    ids=lambda case: case["id"] if case is not None else None,
+)
+def test_provider_rejects_aware_fixture_before_lunar_call(
+    case: dict[str, Any] | None,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    assert case is not None
+
+    def fail(*_args: Any, **_kwargs: Any) -> None:
+        pytest.fail("Solar.fromYmdHms must not run for aware datetime")
+
+    monkeypatch.setattr(
+        "mingli_engine.calendar_provider.Solar.fromYmdHms",
+        fail,
+    )
+    with pytest.raises(
+        ValueError,
+        match=f"^{case['expected_error']['message']}$",
+    ):
+        calculate_provider_luck_cycles(
+            datetime.fromisoformat(case["birth_datetime"]),
+            case["gender"],
+            sect=case["sect"],
+            count=case["count"],
+        )
 
 
 def test_provider_luck_cycle_dto_is_immutable() -> None:

@@ -6,10 +6,6 @@
     "name": "lunar-python",
     "version": "1.4.8"
   },
-  "independent_provider": {
-    "name": "cnlunar",
-    "version": "0.2.4"
-  },
   "selection": {
     "method": "deterministic_exact_set_cover",
     "candidate_policy": "Gregorian day 15 at six fixed two-hour slots, years 1988-2007; only exact four-pillar cross-provider agreements; 12-record exact month-branch/day-stem cover plus deterministic coverage-balanced supplements to 30.",
@@ -338,37 +334,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "丙子"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "庚子"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "丙戌"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "癸巳"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "丙子"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "庚子"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "丙戌"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "癸巳"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "5d384d4b9130e4562b7ee572a3d6b0ef808298b8e39c5aa4161abd64bd362da2",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -708,37 +716,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "丁卯"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "癸丑"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "乙丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "丁卯"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "癸丑"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "乙丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "4dda5cc5a3a69bb9a1104319bd623b32b8872f0e90879347973aff0d2cb2d1ef",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -1040,37 +1060,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "壬午"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "壬寅"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "甲寅"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "癸酉"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "壬午"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "壬寅"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "甲寅"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "癸酉"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "b6b38edfdbe226990bdc1c085f0ce2468a43e5f6312a2dbd19a2dece127b54f5",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -1408,37 +1440,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "辛巳"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "辛卯"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "丁丑"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "辛丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "辛巳"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "辛卯"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "丁丑"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "辛丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "25b98f10eb12548ba7fe80960af7c3ea687961cf26f8c5c488355cba5f893ae4",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -1791,37 +1835,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "乙巳"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "辛巳"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "乙巳"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "辛巳"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "13da59659a491e604cc34a3963295330ef8663d2391c0e4622f8b474cc0764ce",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -2173,37 +2229,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "丁巳"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "庚午"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "辛巳"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "丁巳"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "庚午"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "辛巳"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "b9ce7de2d1b2216ebd2c3c15a48aeffdcdb80918d1e013667d11ef8e9096b091",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -2636,37 +2704,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "戊午"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "辛丑"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "己丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "戊午"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "辛丑"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "己丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "773465a04ef765acf3c972513daf451261598a031ab949b38fb36826e74c8ad5",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -3032,37 +3112,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "壬申"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "丁未"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "壬辰"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "丁未"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "壬申"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "丁未"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "壬辰"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "丁未"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "4084b41afb8fa9dc011b81fd582c527e38e04fda95f666dfb04e526cd5959f2f",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -3464,37 +3556,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "壬申"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "戊申"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "癸亥"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "癸丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "壬申"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "戊申"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "癸亥"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "癸丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "723536a61ea4476caf996e9ad1e5689ce491ddba92132a8be6ccaed9f7609912",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -3845,37 +3949,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "癸酉"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "戊寅"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "丁巳"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "癸酉"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "戊寅"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "丁巳"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "2a7039a5bcdaa78b82445bd3073c493cfc2b2829750b2de18896e7a4915f42c6",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -4187,37 +4303,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "甲戌"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "甲戌"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "甲戌"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "乙丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "甲戌"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "甲戌"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "甲戌"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "乙丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "9b66f7e0d7f1390ded89d39d4a97004b120fea2a1ce8d4340df5a1050aaeccc2",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -4562,37 +4690,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "丁丑"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "辛亥"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "辛酉"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "己丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "丁丑"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "辛亥"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "辛酉"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "己丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "5a8675910a8359475b0601dda5e4a2a571c6c6ce234d681699ffb3859d99fab0",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -4975,37 +5115,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "乙卯"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "乙丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "乙卯"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "乙丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "57a38d6620c02e162d244b1c4b4daa31e22551999f385eda293ed2add2e79894",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -5303,37 +5455,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "丁卯"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "癸丑"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "丁卯"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "丁卯"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "癸丑"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "丁卯"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "5c7c1649845e0d5b7fedc50fda737bc1cb235f37b591355cc77c7a24d2e0afa8",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -5657,37 +5821,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "丁卯"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "癸丑"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "己巳"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "丁卯"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "癸丑"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "己巳"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "ff2d7072d16e69e426542437a5e1003c8cafad6de855df22d6cec551783af8c2",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -6035,37 +6211,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "己未"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "辛未"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "癸巳"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "己未"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "辛未"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "癸巳"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "7e4c8604454db8ff01275be5a754c9eb1382dbae75d9c23e81e11500233e025f",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -6425,37 +6613,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "乙丑"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "乙亥"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "丁丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "乙丑"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "乙亥"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "丁丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "554e5baabf27e26daf4f280dd622a08688e9b45a37cd148262b37ce24b731ec1",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -6860,37 +7060,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "丙寅"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "丙午"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "己丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "丙寅"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "丙午"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "己丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "77912540c20b0d971e00689e1a8fe0a8b538f4b8e45c8cfccbfc72a5810380b5",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -7303,37 +7515,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "壬申"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "丁未"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "辛丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "壬申"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "丁未"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "辛丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "7f0ae9aebb82ddfa0c9c43ae44a9c903a593863faf614dfc83430d7a4342d87d",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -7702,37 +7926,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "癸酉"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "戊寅"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "癸丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "癸酉"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "戊寅"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "癸丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "faec6d041b6789197bb5c3485dda2bbe21685d9a2e45c6727fbae1f0ae3ffef5",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -8111,37 +8347,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "丙辰"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "庚子"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "丁丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "丙辰"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "庚子"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "丁丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "0208a2446fba0868ea2107cd93df37e3c3e83ba4831b9625a532805de9f90d68",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -8544,37 +8792,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "庚申"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "壬寅"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "辛丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "庚申"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "壬寅"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "辛丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "67a95a7db905171f6649fbd969fe5bee7470c78f6809174c1644e3d1085b779c",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -8988,37 +9248,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "辛酉"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "癸酉"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "癸丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "辛酉"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "癸酉"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "癸丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "ba77da1c16cc615c278292143b9b2890d648793bae063582805534dcbcebf5e5",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -9407,37 +9679,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "癸亥"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "甲戌"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "乙丑"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "癸亥"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "甲戌"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "乙丑"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "977cd9187c92163b42bc9cf87270602a8dce0f95e402bba886fbb4641c8e606b",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -9803,37 +10087,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "乙丑"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "乙亥"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "己卯"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "乙丑"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "乙亥"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "己卯"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "a823294bc313540e8a282b5ea5b91821ce10c0f44e8386dc0e72b18e3e6b6ac1",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -10196,37 +10492,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "丙寅"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "丙午"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "辛卯"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "丙寅"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "丙午"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "辛卯"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "5a9817d372c1392a92095ff74a26025b83f465fe129fdc44ff9352d4b81449b7",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -10587,37 +10895,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "壬申"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "丁未"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "癸卯"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "壬申"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "丁未"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "癸卯"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "8a97d72835dd73ad62dae9e3c32b52bff703d8cab76ed6ce691212c8d69aece4",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -10950,37 +11270,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "己巳"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "癸酉"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "戊寅"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "乙卯"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "己巳"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "癸酉"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "戊寅"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "乙卯"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "09f0c6173d80829522eaa22542290c2e5a5e49d1f438a26c0b6b582987c54eea",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -11341,37 +11673,49 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "丙辰"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "庚子"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "己卯"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "丙辰"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "庚子"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "己卯"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "4ce756f760363dabd8cee7259bc3c08047fb601a36b040815021dfbeadbeb5e0",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     },
@@ -11771,39 +12115,61 @@
         }
       },
       "verification": {
-        "baseline_kind": "cross_provider_agreement",
-        "provider": "lunar-python",
-        "version": "1.4.8",
+        "baseline_kind": "chart_pillars_cross_provider_agreement",
         "review_status": "cross_provider_reviewed",
+        "review_scope": [
+          "chart_pillars"
+        ],
         "synthetic_input": true,
         "contains_real_personal_data": false,
-        "independent_check": {
+        "cross_provider_artifact": {
           "provider": "cnlunar",
           "version": "0.2.4",
-          "method": "independent_four_pillars",
-          "artifact": {
-            "agreement": true,
-            "pillars": [
-              {
-                "name": "year",
-                "gan_zhi": "戊辰"
-              },
-              {
-                "name": "month",
-                "gan_zhi": "庚申"
-              },
-              {
-                "name": "day",
-                "gan_zhi": "壬寅"
-              },
-              {
-                "name": "hour",
-                "gan_zhi": "癸卯"
-              }
-            ]
-          }
+          "api": "cnlunar.Lunar(datetime)",
+          "method": "year8Char, month8Char, day8Char, twohour8Char",
+          "pillars": [
+            {
+              "name": "year",
+              "gan_zhi": "戊辰"
+            },
+            {
+              "name": "month",
+              "gan_zhi": "庚申"
+            },
+            {
+              "name": "day",
+              "gan_zhi": "壬寅"
+            },
+            {
+              "name": "hour",
+              "gan_zhi": "癸卯"
+            }
+          ]
+        },
+        "cross_provider_artifact_sha256": "f344b7d31b101e94f477952e5dab845632d5e7288241b287b60598c1c5ef4370",
+        "downstream_snapshot": {
+          "review_status": "project_engine_frozen_snapshot",
+          "scope": [
+            "facts",
+            "relations",
+            "strength",
+            "patterns",
+            "luck"
+          ],
+          "engine_version": "bazi-core-v1",
+          "ruleset_version": "ziping-v1"
         }
       }
     }
-  ]
+  ],
+  "independent_verification": {
+    "provider": "cnlunar",
+    "version": "0.2.4",
+    "api": "cnlunar.Lunar(datetime)",
+    "method": "year8Char, month8Char, day8Char, twohour8Char",
+    "installation_scope": "temporary_target_only",
+    "runtime_dependency": false,
+    "command_description": "python -m pip install --target <temporary-directory> cnlunar==0.2.4; prepend that directory to PYTHONPATH only for the one-time fixture verification process",
+    "claim_boundary": "Cross-provider review covers chart_pillars only; downstream expectations are frozen project-engine snapshots."
+  }
 }

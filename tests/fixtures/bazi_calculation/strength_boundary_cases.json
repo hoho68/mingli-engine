@@ -48,6 +48,9 @@
         "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
           "near_threshold_strength"
+        ],
+        "demonstrated_behaviors": [
+          "near_threshold_range_asserted"
         ]
       }
     },
@@ -278,6 +281,9 @@
         "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
           "incomplete_three_groups"
+        ],
+        "demonstrated_behaviors": [
+          "incomplete_relation_asserted"
         ]
       }
     },
@@ -353,6 +359,9 @@
         "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
           "school_disagreement"
+        ],
+        "demonstrated_behaviors": [
+          "school_preferences_compared"
         ]
       }
     },
@@ -393,6 +402,9 @@
         "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
           "unknown_gender"
+        ],
+        "demonstrated_behaviors": [
+          "unknown_gender_luck_degradation_asserted"
         ]
       }
     },
@@ -430,11 +442,14 @@
         "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
           "time_assumption_aware"
+        ],
+        "demonstrated_behaviors": [
+          "aware_datetime_rejection_asserted"
         ]
       }
     },
     {
-      "id": "unsupported_true_solar_time_assumption",
+      "id": "true_solar_time_assumption_recorded",
       "execution": {
         "kind": "full_chart",
         "input": {
@@ -460,7 +475,7 @@
           "upper_bound": -34.65
         },
         "semantic": {
-          "kind": "unsupported_time_assumption",
+          "kind": "true_solar_assumption_recorded",
           "assumption": "true_solar_time_applied=True"
         }
       },
@@ -470,7 +485,10 @@
         "counts_toward_boundary_gate": true,
         "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
-          "time_assumption_unsupported"
+          "true_solar_assumption_recorded"
+        ],
+        "demonstrated_behaviors": [
+          "true_solar_assumption_recorded"
         ]
       }
     }
