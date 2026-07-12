@@ -753,6 +753,7 @@ def test_verified_chart_fixture_schema_privacy_review_and_coverage() -> None:
         ),
     }
     assert payload["selection"]["method"] == "deterministic_exact_set_cover"
+    assert "transition_policy" not in payload["selection"]
     assert isinstance(records, list)
     assert len(records) >= 30
     assert not _contains_placeholder(payload)

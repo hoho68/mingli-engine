@@ -9,7 +9,6 @@
   "selection": {
     "method": "deterministic_exact_set_cover",
     "candidate_policy": "Gregorian day 15 at six fixed two-hour slots, years 1988-2007; only exact four-pillar cross-provider agreements; 12-record exact month-branch/day-stem cover plus deterministic coverage-balanced supplements to 30.",
-    "transition_policy": "Verified dates are at least four days from a month-command solar-term transition in both providers.",
     "required_coverage": [
       "all_day_master_stems",
       "all_day_master_elements",
