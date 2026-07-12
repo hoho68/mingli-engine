@@ -5,6 +5,7 @@ from mingli_engine.bazi import (
     build_legacy_not_computed_bundle,
     validate_calculation_binding,
 )
+from mingli_engine.bazi.legacy_adapter import LEGACY_REASON_CODE
 from mingli_engine.bazi.result_models import CalculationBundle, ReasonedResult
 from mingli_engine.models import (
     BaziChart,
@@ -97,6 +98,91 @@ def _school_reasonings(
     )
 
 
+def _is_legacy_not_computed_bundle(calculation: CalculationBundle) -> bool:
+    return LEGACY_REASON_CODE in calculation.strength.reasoning.rule_ids
+
+
+def _ten_god_reasoning(calculation: CalculationBundle) -> ReasonedResult:
+    if _is_legacy_not_computed_bundle(calculation):
+        return _not_computed_reasoning("ten_god_relation")
+    facts = calculation.facts
+    exposed_complete = (
+        len(facts.exposed_stems) == 4
+        and {fact.pillar_name for fact in facts.exposed_stems}
+        == {"year", "month", "day", "hour"}
+        and all(fact.stem and fact.ten_god for fact in facts.exposed_stems)
+    )
+    hidden_complete = bool(facts.hidden_stems) and all(
+        fact.pillar_name
+        and fact.branch
+        and fact.stem
+        and fact.role
+        and fact.ten_god
+        for fact in facts.hidden_stems
+    )
+    if not facts.day_master or not facts.month_branch or not (
+        exposed_complete and hidden_complete
+    ):
+        return ReasonedResult(
+            status="indeterminate",
+            conclusion="canonical ten-god fact rows are incomplete",
+            confidence="low",
+            assumptions=facts.assumptions,
+            missing_inputs=("canonical_exposed_and_hidden_ten_god_facts",),
+            rule_ids=("facts.ten_god.canonical_structure",),
+        )
+    supporting_signals = tuple(
+        f"{fact.pillar_name}:exposed:{fact.stem}:{fact.ten_god}"
+        for fact in facts.exposed_stems
+    ) + tuple(
+        (
+            f"{fact.pillar_name}:hidden:{fact.branch}:{fact.stem}:"
+            f"{fact.role}:{fact.ten_god}"
+        )
+        for fact in facts.hidden_stems
+    )
+    return ReasonedResult(
+        status="computed",
+        conclusion="canonical exposed and hidden ten-god facts were calculated",
+        confidence="high",
+        supporting_signals=supporting_signals,
+        assumptions=facts.assumptions,
+        rule_ids=("facts.ten_god.exposed", "facts.ten_god.hidden"),
+    )
+
+
+def _branch_interaction_reasoning(
+    calculation: CalculationBundle,
+) -> ReasonedResult:
+    if _is_legacy_not_computed_bundle(calculation):
+        return _not_computed_reasoning("branch_interaction")
+    relations = calculation.branch_relations
+    if not relations:
+        return ReasonedResult(
+            status="computed",
+            conclusion="no branch relations detected",
+            confidence="high",
+            supporting_signals=("no branch relations detected",),
+            assumptions=calculation.facts.assumptions,
+            rule_ids=("branch.relation.none_detected",),
+        )
+    return ReasonedResult(
+        status="computed",
+        conclusion=f"{len(relations)} branch relations detected",
+        confidence="high",
+        supporting_signals=tuple(
+            (
+                f"branch_relation:{relation.relation_type}:"
+                f"{','.join(relation.pillar_names)}:"
+                f"{','.join(relation.branches)}:{relation.state}"
+            )
+            for relation in relations
+        ),
+        assumptions=calculation.facts.assumptions,
+        rule_ids=tuple(dict.fromkeys(relation.rule_id for relation in relations)),
+    )
+
+
 def _family_reasoning(
     calculation: CalculationBundle,
     rule_family: str,
@@ -118,6 +204,10 @@ def _family_reasoning(
         )
     if rule_family == "luck_cycle":
         return calculation.luck_cycles.reasoning
+    if rule_family == "ten_god_relation":
+        return _ten_god_reasoning(calculation)
+    if rule_family == "branch_interaction":
+        return _branch_interaction_reasoning(calculation)
     return _not_computed_reasoning(rule_family)
 
 

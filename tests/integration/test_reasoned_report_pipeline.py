@@ -1,10 +1,14 @@
+from dataclasses import replace
 from datetime import datetime
 
 import pytest
 
 from mingli_engine.bazi import analyze_bazi_chart
 from mingli_engine.chart_calculator import calculate_bazi_chart
-from mingli_engine.formal_interpretation import classify_chart_calculation_states
+from mingli_engine.formal_interpretation import (
+    _family_reasoning,
+    classify_chart_calculation_states,
+)
 from mingli_engine.models import BirthProfile
 from mingli_engine.report_schema import build_report
 
@@ -41,8 +45,8 @@ def _analyzed_bundle(birth_date: str):
                 "five_element_balance": "computed",
                 "useful_god_candidate": "disputed",
                 "taboo_god_candidate": "not_computed",
-                "ten_god_relation": "not_computed",
-                "branch_interaction": "not_computed",
+                "ten_god_relation": "computed",
+                "branch_interaction": "computed",
                 "blind_image_method": "disputed",
                 "luck_cycle": "computed",
                 "remedy_boundary": "disputed",
@@ -56,8 +60,8 @@ def _analyzed_bundle(birth_date: str):
                 "five_element_balance": "computed",
                 "useful_god_candidate": "indeterminate",
                 "taboo_god_candidate": "not_computed",
-                "ten_god_relation": "not_computed",
-                "branch_interaction": "not_computed",
+                "ten_god_relation": "computed",
+                "branch_interaction": "computed",
                 "blind_image_method": "computed",
                 "luck_cycle": "computed",
                 "remedy_boundary": "indeterminate",
@@ -78,6 +82,71 @@ def test_real_bundles_have_exact_conservative_family_status_maps(
         conclusion.rule_family: conclusion.trace.calculation_status
         for conclusion in report.expanded_evidence.formal_conclusions
     } == expected
+
+
+def test_real_structural_facts_and_relations_become_computed_candidates():
+    chart, calculation = _analyzed_bundle("1950-03-22")
+    assert calculation.branch_relations
+
+    ten_gods = _family_reasoning(calculation, "ten_god_relation")
+    branches = _family_reasoning(calculation, "branch_interaction")
+    report = build_report(chart, calculation)
+
+    assert ten_gods.status == "computed"
+    assert ten_gods.confidence == "high"
+    assert ten_gods.assumptions == calculation.facts.assumptions
+    assert ten_gods.rule_ids == (
+        "facts.ten_god.exposed",
+        "facts.ten_god.hidden",
+    )
+    assert {
+        f"{fact.pillar_name}:exposed:{fact.stem}:{fact.ten_god}"
+        for fact in calculation.facts.exposed_stems
+    }.issubset(set(ten_gods.supporting_signals))
+    assert branches.status == "computed"
+    assert branches.confidence == "high"
+    assert branches.rule_ids == tuple(
+        dict.fromkeys(relation.rule_id for relation in calculation.branch_relations)
+    )
+    assert len(branches.supporting_signals) == len(calculation.branch_relations)
+    for rule_family in ("ten_god_relation", "branch_interaction"):
+        conclusion = _formal_family(report, rule_family)
+        assert conclusion.trace.calculation_status == "computed"
+        assert conclusion.strength == "candidate"
+        assert conclusion.trace.evidence_ids
+
+
+def test_real_empty_relation_stage_is_computed_with_explicit_none_detected_signal():
+    chart, calculation = _analyzed_bundle("1950-01-06")
+    assert calculation.branch_relations == ()
+
+    reasoning = _family_reasoning(calculation, "branch_interaction")
+    report = build_report(chart, calculation)
+    conclusion = _formal_family(report, "branch_interaction")
+
+    assert reasoning.status == "computed"
+    assert reasoning.conclusion == "no branch relations detected"
+    assert reasoning.supporting_signals == ("no branch relations detected",)
+    assert reasoning.rule_ids == ("branch.relation.none_detected",)
+    assert conclusion.trace.calculation_status == "computed"
+    assert conclusion.strength == "candidate"
+    assert conclusion.trace.evidence_ids
+
+
+@pytest.mark.parametrize("empty_field", ["exposed_stems", "hidden_stems"])
+def test_empty_structural_fact_rows_are_indeterminate(empty_field):
+    _chart, calculation = _analyzed_bundle("1950-03-22")
+    incomplete_facts = replace(calculation.facts, **{empty_field: ()})
+    incomplete = replace(calculation, facts=incomplete_facts)
+
+    reasoning = _family_reasoning(incomplete, "ten_god_relation")
+
+    assert reasoning.status == "indeterminate"
+    assert reasoning.confidence == "low"
+    assert reasoning.missing_inputs == (
+        "canonical_exposed_and_hidden_ten_god_facts",
+    )
+    assert reasoning.rule_ids == ("facts.ten_god.canonical_structure",)
 
 
 def _formal_family(report, rule_family: str):

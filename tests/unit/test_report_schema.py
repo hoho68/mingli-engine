@@ -128,6 +128,14 @@ def test_one_argument_report_explicitly_uses_not_computed_calculation(
     assert "高风险结论必须降级并强调边界" in high_risk.trace.disagreement_note
     assert useful_god.strength == "weakly_supported"
     assert "段氏与师传口径" in useful_god.trace.disagreement_note
+    for rule_family in ("ten_god_relation", "branch_interaction"):
+        structural = next(
+            conclusion
+            for conclusion in report.expanded_evidence.formal_conclusions
+            if conclusion.rule_family == rule_family
+        )
+        assert structural.trace.calculation_status == "not_computed"
+        assert structural.strength == "weakly_supported"
 
 
 def test_one_argument_legacy_report_does_not_recalculate_a_different_chart(
