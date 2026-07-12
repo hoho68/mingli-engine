@@ -2,14 +2,13 @@ from dataclasses import replace
 
 import pytest
 
-from mingli_engine.bazi.constants import HIDDEN_STEMS
 from mingli_engine.bazi.facts import build_chart_facts, ten_god
 from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.models import BirthProfile, Pillar
 
 
-def verified_chart():
-    chart = calculate_bazi_chart(
+def raw_verified_chart():
+    return calculate_bazi_chart(
         BirthProfile(
             calendar_type="gregorian",
             birth_date="1992-08-18",
@@ -19,16 +18,6 @@ def verified_chart():
             focus_topic="整体结构观察",
         )
     )
-    canonical_pillars = [
-        replace(
-            pillar,
-            hidden_stems=[
-                stem for stem, _role in HIDDEN_STEMS[pillar.earthly_branch]
-            ],
-        )
-        for pillar in chart.pillars
-    ]
-    return replace(chart, pillars=canonical_pillars)
 
 
 @pytest.mark.parametrize(
@@ -64,7 +53,9 @@ def test_ten_god_rejects_invalid_stems(
 
 
 def test_build_chart_facts_reconstructs_verified_chart() -> None:
-    chart = verified_chart()
+    chart = raw_verified_chart()
+
+    assert chart.pillars[3].hidden_stems == ["丙", "庚", "戊"]
 
     facts = build_chart_facts(chart)
 
@@ -92,6 +83,16 @@ def test_build_chart_facts_reconstructs_verified_chart() -> None:
         assert [fact.ten_god for fact in hidden] == ["偏财", "七杀", "食神"]
         assert [fact.element for fact in hidden] == ["金", "水", "土"]
         assert [fact.polarity for fact in hidden] == ["yang", "yang", "yang"]
+
+    hour_hidden = [
+        fact for fact in facts.hidden_stems if fact.pillar_name == "hour"
+    ]
+    assert [fact.stem for fact in hour_hidden] == ["丙", "戊", "庚"]
+    assert [fact.role for fact in hour_hidden] == [
+        "main",
+        "middle",
+        "residual",
+    ]
 
     day_master_roots = [root for root in facts.roots if root.stem == "丙"]
     assert [
@@ -125,9 +126,23 @@ def test_build_chart_facts_reconstructs_verified_chart() -> None:
     assert all("longitude=" not in assumption for assumption in facts.assumptions)
 
 
-def test_build_chart_facts_rejects_provider_hidden_stem_mismatch() -> None:
-    chart = verified_chart()
-    mismatched_year = replace(chart.pillars[0], hidden_stems=["壬", "庚", "戊"])
+@pytest.mark.parametrize(
+    "provider_hidden_stems",
+    [
+        ["庚", "壬"],
+        ["庚", "壬", "戊", "甲"],
+        ["庚", "壬", "壬"],
+        ["庚", "壬", "己"],
+    ],
+    ids=["missing", "extra", "duplicate", "different"],
+)
+def test_build_chart_facts_rejects_provider_hidden_stem_mismatch(
+    provider_hidden_stems: list[str],
+) -> None:
+    chart = raw_verified_chart()
+    mismatched_year = replace(
+        chart.pillars[0], hidden_stems=provider_hidden_stems
+    )
 
     with pytest.raises(
         ValueError,
@@ -139,41 +154,73 @@ def test_build_chart_facts_rejects_provider_hidden_stem_mismatch() -> None:
 
 
 def test_build_chart_facts_requires_exactly_four_pillars() -> None:
-    chart = verified_chart()
+    chart = raw_verified_chart()
 
     with pytest.raises(ValueError, match="exactly four pillars"):
         build_chart_facts(replace(chart, pillars=chart.pillars[:3]))
 
 
 @pytest.mark.parametrize(
-    "pillars",
+    ("source_name", "replacement_name"),
     [
-        lambda chart: [
-            replace(pillar, name="hour") if pillar.name == "day" else pillar
-            for pillar in chart.pillars
-        ],
-        lambda chart: [
-            replace(pillar, name="day") if pillar.name == "hour" else pillar
-            for pillar in chart.pillars
-        ],
+        ("hour", "year"),
+        ("year", "hour"),
+        ("year", "unknown"),
     ],
+    ids=["duplicate-year", "duplicate-hour", "unknown-role"],
 )
-def test_build_chart_facts_requires_exactly_one_day_pillar(pillars) -> None:
-    chart = verified_chart()
+def test_build_chart_facts_requires_every_pillar_role_once(
+    source_name: str, replacement_name: str
+) -> None:
+    chart = raw_verified_chart()
+    pillars = [
+        replace(pillar, name=replacement_name)
+        if pillar.name == source_name
+        else pillar
+        for pillar in chart.pillars
+    ]
 
-    with pytest.raises(ValueError, match="exactly one day pillar"):
-        build_chart_facts(replace(chart, pillars=pillars(chart)))
+    with pytest.raises(
+        ValueError,
+        match="^expected exactly one year, month, day, and hour pillar$",
+    ):
+        build_chart_facts(replace(chart, pillars=pillars))
+
+
+def test_build_chart_facts_preserves_given_pillar_order() -> None:
+    chart = raw_verified_chart()
+    reordered_pillars = [
+        chart.pillars[2],
+        chart.pillars[0],
+        chart.pillars[3],
+        chart.pillars[1],
+    ]
+
+    facts = build_chart_facts(replace(chart, pillars=reordered_pillars))
+
+    assert [fact.pillar_name for fact in facts.exposed_stems] == [
+        "day",
+        "year",
+        "hour",
+        "month",
+    ]
+    assert facts.twelve_growth_by_pillar == (
+        ("day", "长生"),
+        ("year", "病"),
+        ("hour", "临官"),
+        ("month", "病"),
+    )
 
 
 def test_build_chart_facts_rejects_day_master_mismatch() -> None:
-    chart = verified_chart()
+    chart = raw_verified_chart()
 
     with pytest.raises(ValueError, match="day master does not match day pillar"):
         build_chart_facts(replace(chart, day_master="丁"))
 
 
 def test_build_chart_facts_preserves_repeated_exposed_stem_occurrences() -> None:
-    chart = verified_chart()
+    chart = raw_verified_chart()
     repeated_stem_pillars = [
         replace(chart.pillars[0], heavenly_stem="丙"),
         *chart.pillars[1:],
@@ -187,7 +234,7 @@ def test_build_chart_facts_preserves_repeated_exposed_stem_occurrences() -> None
 
 
 def test_build_chart_facts_validates_exposed_stems() -> None:
-    chart = verified_chart()
+    chart = raw_verified_chart()
     invalid_pillar = Pillar(
         name="year",
         heavenly_stem="invalid",

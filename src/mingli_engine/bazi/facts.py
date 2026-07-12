@@ -1,3 +1,5 @@
+from collections import Counter
+
 from mingli_engine.bazi.constants import (
     CONTROLS,
     GENERATES,
@@ -51,7 +53,7 @@ def _canonical_hidden_stems(pillar: Pillar) -> tuple[tuple[str, str], ...]:
         ) from exc
 
     canonical_stems = tuple(stem for stem, _role in hidden_stems)
-    if tuple(pillar.hidden_stems) != canonical_stems:
+    if Counter(pillar.hidden_stems) != Counter(canonical_stems):
         raise ValueError("provider hidden stems do not match canonical table")
     return hidden_stems
 
@@ -60,19 +62,17 @@ def build_chart_facts(chart: BaziChart) -> ChartFacts:
     if len(chart.pillars) != 4:
         raise ValueError("expected exactly four pillars")
 
-    day_pillars = [pillar for pillar in chart.pillars if pillar.name == "day"]
-    if len(day_pillars) != 1:
-        raise ValueError("expected exactly one day pillar")
-    day_pillar = day_pillars[0]
+    expected_roles = Counter({"year": 1, "month": 1, "day": 1, "hour": 1})
+    if Counter(pillar.name for pillar in chart.pillars) != expected_roles:
+        raise ValueError(
+            "expected exactly one year, month, day, and hour pillar"
+        )
+
+    pillars_by_name = {pillar.name: pillar for pillar in chart.pillars}
+    day_pillar = pillars_by_name["day"]
     if chart.day_master != day_pillar.heavenly_stem:
         raise ValueError("day master does not match day pillar")
     _validate_stem(chart.day_master)
-
-    month_pillars = [
-        pillar for pillar in chart.pillars if pillar.name == "month"
-    ]
-    if len(month_pillars) != 1:
-        raise ValueError("expected exactly one month pillar")
 
     exposed_stems = []
     canonical_hidden_by_pillar = []
@@ -123,7 +123,7 @@ def build_chart_facts(chart: BaziChart) -> ChartFacts:
     source = chart.chart_source
     return ChartFacts(
         day_master=chart.day_master,
-        month_branch=month_pillars[0].earthly_branch,
+        month_branch=pillars_by_name["month"].earthly_branch,
         exposed_stems=tuple(exposed_stems),
         hidden_stems=tuple(hidden_stem_facts),
         roots=tuple(roots),
