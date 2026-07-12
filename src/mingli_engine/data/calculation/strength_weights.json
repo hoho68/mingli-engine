@@ -1,0 +1,30 @@
+{
+  "version": "ziping-strength-v1",
+  "month_command": {
+    "same_element": 30,
+    "resource": 24,
+    "output": -18,
+    "wealth": -20,
+    "officer": -24
+  },
+  "root": {
+    "main": 18,
+    "middle": 12,
+    "residual": 6
+  },
+  "exposed": {
+    "companion": 8,
+    "resource": 7,
+    "output": -7,
+    "wealth": -8,
+    "officer": -9
+  },
+  "hidden_factor": 0.5,
+  "thresholds": {
+    "weak": -25,
+    "balanced_low": -10,
+    "balanced_high": 10,
+    "strong": 25
+  },
+  "sensitivity_fraction": 0.1
+}
