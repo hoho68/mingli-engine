@@ -1,11 +1,14 @@
 import argparse
 import json
 import sys
-from dataclasses import asdict
+from collections.abc import Mapping, Sequence
+from dataclasses import fields, is_dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from mingli_engine import classical_sources
+from mingli_engine.bazi import analyze_bazi_chart
 from mingli_engine.chart_calculator import ChartCalculationError, calculate_bazi_chart
 from mingli_engine.evidence_curation import build_knowledge_activation_summary
 from mingli_engine.high_risk import classify_high_risk_request
@@ -35,7 +38,6 @@ from mingli_engine.project_completion import (
 from mingli_engine.safety import safety_check
 from mingli_engine.validation import validate_birth_profile
 from mingli_engine import promotion
-from mingli_engine.models import PromotionPlan, PromotionResult
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -56,11 +58,30 @@ def _write_json(payload: Any) -> None:
 
 
 def _to_json_payload(payload: Any) -> Any:
-    data = asdict(payload)
+    if isinstance(payload, Mapping):
+        return {key: _to_json_payload(value) for key, value in payload.items()}
+    if isinstance(payload, Sequence) and not isinstance(
+        payload, (str, bytes, bytearray)
+    ):
+        return [_to_json_payload(value) for value in payload]
+    if not is_dataclass(payload) or isinstance(payload, type):
+        return payload
+
+    data = {
+        model_field.name: _to_json_payload(getattr(payload, model_field.name))
+        for model_field in fields(payload)
+    }
     if isinstance(payload, BaziChart):
         for pillar in data["pillars"]:
             pillar["gan_zhi"] = pillar["heavenly_stem"] + pillar["earthly_branch"]
     return data
+
+
+def _birth_datetime(profile: BirthProfile) -> datetime:
+    return datetime.strptime(
+        f"{profile.birth_date} {profile.birth_time}",
+        "%Y-%m-%d %H:%M",
+    )
 
 
 def _configure_stream_encoding(stream: Any) -> None:
@@ -112,7 +133,17 @@ def _calculate_chart(args: argparse.Namespace) -> int:
         _write_json(safety_review)
         return 3
 
-    _write_json(calculate_bazi_chart(profile))
+    chart = calculate_bazi_chart(profile)
+    if args.analysis:
+        calculation = analyze_bazi_chart(
+            chart,
+            birth_datetime=_birth_datetime(profile),
+        )
+        output = _to_json_payload(chart)
+        output["calculation"] = calculation
+        _write_json(output)
+    else:
+        _write_json(chart)
     return 0
 
 
@@ -130,7 +161,14 @@ def _calculate_report(args: argparse.Namespace) -> int:
         return 3
 
     chart = calculate_bazi_chart(profile)
-    report = build_report(chart)
+    if args.analysis:
+        calculation = analyze_bazi_chart(
+            chart,
+            birth_datetime=_birth_datetime(profile),
+        )
+        report = build_report(chart, calculation)
+    else:
+        report = build_report(chart)
     if not report.safety_review.allowed:
         _write_json(report.safety_review)
         return 3
@@ -218,6 +256,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     calculate_parser = subparsers.add_parser("calculate-chart")
     calculate_parser.add_argument("--input", required=True, type=Path)
+    calculate_parser.add_argument("--analysis", action="store_true")
     calculate_parser.set_defaults(handler=_calculate_chart)
 
     calculated_report_parser = subparsers.add_parser("calculate-report")
@@ -227,6 +266,7 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=["markdown", "html"],
         required=True,
     )
+    calculated_report_parser.add_argument("--analysis", action="store_true")
     calculated_report_parser.set_defaults(handler=_calculate_report)
 
     report_parser = subparsers.add_parser("generate-report")

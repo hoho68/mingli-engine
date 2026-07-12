@@ -1,3 +1,8 @@
+from dataclasses import replace
+from datetime import datetime
+
+from mingli_engine.bazi import analyze_bazi_chart
+from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.markdown import render_markdown_report
 from mingli_engine.report_schema import build_report
 
@@ -6,6 +11,15 @@ def _assert_in_order(text: str, headings: tuple[str, ...]) -> None:
     lines = text.splitlines()
     positions = [lines.index(heading) for heading in headings]
     assert positions == sorted(positions)
+
+
+def _build_reasoned_report(sample_bazi_chart):
+    chart = calculate_bazi_chart(sample_bazi_chart.birth_profile)
+    calculation = analyze_bazi_chart(
+        chart,
+        birth_datetime=datetime(1990, 1, 1, 8, 30),
+    )
+    return build_report(chart, calculation), calculation
 
 
 def test_render_markdown_report_contains_required_headings(sample_bazi_chart):
@@ -142,3 +156,72 @@ def test_render_markdown_report_includes_interpretation_boundaries(sample_bazi_c
     assert "不做格局定论" in markdown
     assert "不做用神定论" in markdown
     assert "不做大运流年判断" in markdown
+
+
+def test_render_markdown_report_exposes_five_reasoned_dimensions(sample_bazi_chart):
+    report, calculation = _build_reasoned_report(sample_bazi_chart)
+
+    markdown = render_markdown_report(report)
+
+    for heading in (
+        "## 推理分析",
+        "### 盘面事实",
+        "### 计算结果",
+        "### 流派视角",
+        "### 证据依据",
+        "### 解读与安全边界",
+    ):
+        assert heading in markdown.splitlines()
+    assert "- 计算状态：" in markdown
+    assert "- 可信度：" in markdown
+    for label in (
+        "支持信号",
+        "反对信号",
+        "规则 ID",
+        "证据 ID",
+        "假设",
+        "缺失输入",
+    ):
+        assert f"- {label}：" in markdown
+    for school in calculation.schools:
+        assert f"school_view:{school.school_id}:" in markdown
+    assert report.chart_card in markdown
+    assert report.interpretation_boundaries in markdown
+    assert report.ethics_reminder in markdown
+
+
+def test_render_markdown_report_escapes_reasoned_dynamic_text(sample_bazi_chart):
+    report, _ = _build_reasoned_report(sample_bazi_chart)
+    first = report.expanded_evidence.formal_conclusions[0]
+    hostile = replace(
+        first,
+        title="# injected <script>alert(1)</script>",
+        body="<b>unsafe conclusion</b>",
+        rule_family="rule<unsafe>&value",
+        trace=replace(
+            first.trace,
+            chart_signals=["school_view:<school>:value=<img src=x>"],
+        ),
+    )
+    report = replace(
+        report,
+        formal_synthesis="<iframe>formal injection</iframe>\n# formal heading",
+        expanded_evidence=replace(
+            report.expanded_evidence,
+            formal_conclusions=[
+                hostile,
+                *report.expanded_evidence.formal_conclusions[1:],
+            ],
+        ),
+    )
+
+    markdown = render_markdown_report(report)
+
+    assert "<script>" not in markdown
+    assert "<b>unsafe conclusion</b>" not in markdown
+    assert "<img src=x>" not in markdown
+    assert "<iframe>formal injection</iframe>" not in markdown
+    assert "\n# formal heading" not in markdown
+    assert "#### # injected" not in markdown
+    assert r"\# injected &lt;script&gt;alert\(1\)&lt;/script&gt;" in markdown
+    assert "rule&lt;unsafe&gt;&amp;value" in markdown

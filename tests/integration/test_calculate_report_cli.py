@@ -178,3 +178,75 @@ def test_calculate_report_returns_exit_3_json_for_unsafe_focus_topic():
     payload = json.loads(result.stdout)
     assert payload["allowed"] is False
     assert "lifespan_or_death_timing" in payload["red_line_categories"]
+
+
+def test_calculate_report_analysis_outputs_reasoned_markdown():
+    result = _run_cli(
+        "calculate-report",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.auto-gregorian.json"),
+        "--format",
+        "markdown",
+        "--analysis",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.count("# 八字结构化报告") == 1
+    assert "## 推理分析" in result.stdout.splitlines()
+    assert "### 盘面事实" in result.stdout.splitlines()
+    assert "### 计算结果" in result.stdout.splitlines()
+    assert "### 流派视角" in result.stdout.splitlines()
+    assert "### 证据依据" in result.stdout.splitlines()
+    assert "### 解读与安全边界" in result.stdout.splitlines()
+    assert "- 计算状态：" in result.stdout
+    assert "- 可信度：" in result.stdout
+    for school_id in ("ziping", "liang_xiangrun", "duan"):
+        assert f"school_view:{school_id}:" in result.stdout
+
+
+def test_calculate_report_analysis_outputs_reasoned_html():
+    result = _run_cli(
+        "calculate-report",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.auto-gregorian.json"),
+        "--format",
+        "html",
+        "--analysis",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.startswith("<!doctype html>")
+    assert result.stdout.count("<html") == 1
+    assert ">推理分析<" in result.stdout
+    assert "计算状态：" in result.stdout
+    assert "可信度：" in result.stdout
+
+
+def test_calculate_report_without_analysis_keeps_legacy_renderer_output():
+    result = _run_cli(
+        "calculate-report",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.auto-gregorian.json"),
+        "--format",
+        "markdown",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "## 推理分析" not in result.stdout
+    assert "- 计算状态：" not in result.stdout
+
+
+def test_calculate_report_analysis_keeps_safety_refusal_shape():
+    result = _run_cli(
+        "calculate-report",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.unsafe-focus.json"),
+        "--format",
+        "html",
+        "--analysis",
+    )
+
+    assert result.returncode == 3, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["allowed"] is False
+    assert "calculation" not in payload

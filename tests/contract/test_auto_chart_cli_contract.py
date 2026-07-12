@@ -145,3 +145,56 @@ def test_calculate_chart_outputs_safety_review_for_unsafe_focus():
     payload = json.loads(result.stdout)
     assert payload["allowed"] is False
     assert "lifespan_or_death_timing" in payload["red_line_categories"]
+
+
+def test_calculate_chart_analysis_adds_versioned_calculation_envelope():
+    result = _run_cli(
+        "calculate-chart",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.auto-gregorian.json"),
+        "--analysis",
+    )
+
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert len(payload["pillars"]) == 4
+    assert all(pillar["gan_zhi"] for pillar in payload["pillars"])
+    calculation = payload["calculation"]
+    assert calculation["engine_version"]
+    assert calculation["ruleset_version"]
+    assert calculation["strength"]["reasoning"]["status"] in {
+        "computed",
+        "indeterminate",
+        "disputed",
+        "not_computed",
+    }
+    assert isinstance(calculation["schools"], list)
+    assert isinstance(calculation["facts"]["twelve_growth_by_pillar"], list)
+    assert "provenance" not in result.stdout.lower()
+
+
+def test_calculate_chart_without_analysis_preserves_legacy_shape():
+    result = _run_cli(
+        "calculate-chart",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.auto-gregorian.json"),
+    )
+
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert "calculation" not in payload
+    assert all("gan_zhi" in pillar for pillar in payload["pillars"])
+
+
+def test_calculate_chart_analysis_refuses_unsafe_focus_before_analysis():
+    result = _run_cli(
+        "calculate-chart",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.unsafe-focus.json"),
+        "--analysis",
+    )
+
+    assert result.returncode == 3, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["allowed"] is False
+    assert "calculation" not in payload

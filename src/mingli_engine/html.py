@@ -82,6 +82,96 @@ def _subsection(heading: str, text: str) -> str:
     return f"<section>\n<h3>{_text(heading)}</h3>\n{_block(text)}\n</section>"
 
 
+def _has_reasoned_analysis(report: Report) -> bool:
+    audit = report.report_evidence_audit
+    return bool(
+        audit.computed_rule_family_count
+        or audit.indeterminate_rule_family_count
+        or audit.disputed_rule_family_count
+    )
+
+
+def _compact(values: list[str]) -> str:
+    return "、".join(values) or "不可用"
+
+
+def _reasoned_list(lines: list[tuple[str, str]]) -> str:
+    items = "\n".join(
+        f"<li><strong>{_text(label)}：</strong>{_text(value)}</li>"
+        for label, value in lines
+    )
+    return f"<ul>\n{items}\n</ul>"
+
+
+def _reasoned_analysis(report: Report) -> str:
+    conclusion_blocks: list[str] = []
+    school_views: list[str] = []
+    evidence_lines: list[tuple[str, str]] = []
+    for conclusion in report.expanded_evidence.formal_conclusions:
+        trace = conclusion.trace
+        for signal in trace.chart_signals:
+            if signal.startswith("school_view:") and signal not in school_views:
+                school_views.append(signal)
+        opposing = [trace.disagreement_note] if trace.disagreement_note else []
+        details = _reasoned_list(
+            [
+                ("规则族", conclusion.rule_family),
+                ("计算状态", trace.calculation_status),
+                ("可信度", trace.calculation_confidence),
+                ("支持信号", _compact(trace.chart_signals)),
+                ("反对信号", _compact(opposing)),
+                ("规则 ID", "不可用"),
+                ("证据 ID", _compact(trace.evidence_ids)),
+                ("假设", _compact(trace.assumptions)),
+                ("缺失输入", "不可用"),
+            ]
+        )
+        conclusion_blocks.append(
+            "\n".join(
+                [
+                    "<article>",
+                    f"<h4>{_text(conclusion.title)}</h4>",
+                    _block(conclusion.body),
+                    details,
+                    "</article>",
+                ]
+            )
+        )
+        evidence_lines.append((conclusion.title, _compact(trace.evidence_ids)))
+
+    body = "\n".join(
+        [
+            _subsection(
+                "盘面事实",
+                f"{report.chart_card}\n{report.four_pillars_summary}",
+            ),
+            "<section>\n<h3>"
+            + _text("计算结果")
+            + "</h3>\n"
+            + "\n".join(conclusion_blocks)
+            + "\n</section>",
+            "<section>\n<h3>"
+            + _text("流派视角")
+            + "</h3>\n"
+            + _reasoned_list(
+                [("流派视角", view) for view in school_views]
+                or [("流派视角", "不可用")]
+            )
+            + "\n</section>",
+            "<section>\n<h3>"
+            + _text("证据依据")
+            + "</h3>\n"
+            + _reasoned_list(evidence_lines or [("证据", "不可用")])
+            + "\n</section>",
+            _subsection(
+                "解读与安全边界",
+                f"{report.interpretation_boundaries}\n{report.ethics_reminder}",
+            ),
+        ]
+    )
+    return _section("推理分析", body)
+
+
 def render_html_report(report: Report) -> str:
     basic_data = "\n".join(
         [
@@ -122,6 +212,8 @@ def render_html_report(report: Report) -> str:
             _section("伦理边界提醒", _block(report.ethics_reminder)),
         ]
     )
+    if _has_reasoned_analysis(report):
+        sections = "\n".join([sections, _reasoned_analysis(report)])
 
     return "\n".join(
         [
