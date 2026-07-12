@@ -13,11 +13,14 @@ from mingli_engine.bazi.result_models import (
     RootFact,
     StemFact,
 )
+from mingli_engine.bazi.facts import build_chart_facts
 from mingli_engine.bazi.strength import (
     StrengthConfig,
     calculate_strength,
     load_strength_config,
 )
+from mingli_engine.chart_calculator import calculate_bazi_chart
+from mingli_engine.models import BirthProfile
 
 
 EXPECTED_PROFILE = {
@@ -258,12 +261,18 @@ def root(
 def configured(
     *,
     month_command: dict[str, float] | None = None,
+    exposed: dict[str, float] | None = None,
+    thresholds: dict[str, float] | None = None,
     sensitivity_fraction: float | None = None,
 ) -> StrengthConfig:
     base = load_strength_config()
     changes: dict[str, object] = {}
     if month_command is not None:
         changes["month_command"] = MappingProxyType(month_command)
+    if exposed is not None:
+        changes["exposed"] = MappingProxyType(exposed)
+    if thresholds is not None:
+        changes["thresholds"] = MappingProxyType(thresholds)
     if sensitivity_fraction is not None:
         changes["sensitivity_fraction"] = sensitivity_fraction
     return replace(base, **changes)
@@ -297,6 +306,58 @@ def test_season_and_exact_roots_are_separate_traceable_contributions() -> None:
         item.rule_id for item in result.contributions
     )
     assert "profile_version=ziping-strength-v1" in result.reasoning.assumptions
+
+
+def test_canonical_repeated_day_master_stem_counts_each_physical_root_once() -> None:
+    chart = calculate_bazi_chart(
+        BirthProfile(
+            calendar_type="gregorian",
+            birth_date="1992-08-18",
+            birth_time="09:30",
+            birthplace="上海市",
+            gender="未指定",
+            focus_topic="整体结构观察",
+        )
+    )
+    repeated_day_master = [
+        replace(chart.pillars[0], heavenly_stem=chart.day_master),
+        *chart.pillars[1:],
+    ]
+    chart_facts = build_chart_facts(
+        replace(chart, pillars=repeated_day_master)
+    )
+
+    assert len(
+        [item for item in chart_facts.roots if item.stem == chart.day_master]
+    ) == 4
+
+    result = calculate_strength(chart_facts)
+    root_contributions = [
+        item for item in result.contributions if item.category == "root"
+    ]
+
+    assert [(item.signal, item.value, item.rule_id) for item in root_contributions] == [
+        ("day:寅:middle", 12, "strength.root.middle"),
+        ("hour:巳:main", 18, "strength.root.main"),
+    ]
+
+
+def test_same_branch_in_different_pillar_positions_remains_distinct_roots() -> None:
+    config = configured(sensitivity_fraction=0)
+
+    result = calculate_strength(
+        facts(
+            roots=(
+                root("甲", "main", "year", "寅"),
+                root("甲", "main", "month", "寅"),
+            )
+        ),
+        config=config,
+    )
+
+    assert [
+        item.signal for item in result.contributions if item.category == "root"
+    ] == ["year:寅:main", "month:寅:main"]
 
 
 @pytest.mark.parametrize(
@@ -410,6 +471,96 @@ def test_sensitivity_recomputes_the_whole_profile_uniformly() -> None:
     assert result.reasoning.status == "computed"
 
 
+@pytest.mark.parametrize("weight", [1e308, -1e308])
+def test_nonfinite_central_aggregate_is_rejected(weight: float) -> None:
+    config = configured(
+        month_command={
+            "same_element": weight,
+            "resource": 0,
+            "output": 0,
+            "wealth": 0,
+            "officer": 0,
+        },
+        exposed={
+            "companion": weight,
+            "resource": 0,
+            "output": 0,
+            "wealth": 0,
+            "officer": 0,
+        },
+        sensitivity_fraction=0,
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="^strength calculation produced a non-finite value$",
+    ):
+        calculate_strength(
+            facts(
+                month_branch="寅",
+                exposed=(stem("year", "乙", "木"),),
+            ),
+            config=config,
+        )
+
+
+def test_nonfinite_sensitivity_product_is_rejected() -> None:
+    config = configured(
+        month_command={
+            "same_element": 1e308,
+            "resource": 0,
+            "output": 0,
+            "wealth": 0,
+            "officer": 0,
+        },
+        sensitivity_fraction=1,
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="^strength calculation produced a non-finite value$",
+    ):
+        calculate_strength(facts(month_branch="寅"), config=config)
+
+
+def test_floating_point_threshold_noise_preserves_inclusive_boundary() -> None:
+    config = configured(
+        month_command={
+            "same_element": 0.1,
+            "resource": 0,
+            "output": 0,
+            "wealth": 0,
+            "officer": 0,
+        },
+        exposed={
+            "companion": 0.2,
+            "resource": 0,
+            "output": 0,
+            "wealth": 0,
+            "officer": 0,
+        },
+        thresholds={
+            "weak": -1,
+            "balanced_low": -0.3,
+            "balanced_high": 0.3,
+            "strong": 1,
+        },
+        sensitivity_fraction=0,
+    )
+
+    result = calculate_strength(
+        facts(
+            month_branch="寅",
+            exposed=(stem("year", "乙", "木"),),
+        ),
+        config=config,
+    )
+
+    assert result.score == 0.1 + 0.2
+    assert result.score > 0.3
+    assert result.label == "较平衡"
+
+
 def test_nonexact_day_master_root_contributes_nothing() -> None:
     config = configured(
         month_command={
@@ -504,6 +655,50 @@ def test_untransformed_relations_add_trace_without_a_numeric_modifier() -> None:
     assert result.reasoning.missing_inputs == ()
 
 
+def test_repeated_relation_rule_ids_keep_distinct_occurrence_traces() -> None:
+    first = BranchRelationResult(
+        "six_combination",
+        ("子", "丑"),
+        ("year", "month"),
+        "present",
+        "",
+        ("synthetic",),
+        (),
+        "branch.six_combination.子丑",
+    )
+    second = replace(
+        first,
+        branches=("丑", "子"),
+        pillar_names=("day", "hour"),
+    )
+    config = configured(sensitivity_fraction=0)
+
+    result = calculate_strength(facts(), (first, second), config=config)
+
+    relation_assumptions = tuple(
+        item
+        for item in result.reasoning.assumptions
+        if first.rule_id in item
+    )
+    relation_rule_ids = tuple(
+        item
+        for item in result.reasoning.rule_ids
+        if first.rule_id in item
+    )
+    assert relation_assumptions == (
+        "branch.six_combination.子丑|pillars=year,month|branches=子,丑: "
+        "transformed_element is empty; no numeric strength modifier applied",
+        "branch.six_combination.子丑|pillars=day,hour|branches=丑,子: "
+        "transformed_element is empty; no numeric strength modifier applied",
+    )
+    assert relation_rule_ids == (
+        "strength.relation.no_numeric_modifier:"
+        "branch.six_combination.子丑|pillars=year,month|branches=子,丑",
+        "strength.relation.no_numeric_modifier:"
+        "branch.six_combination.子丑|pillars=day,hour|branches=丑,子",
+    )
+
+
 def transformed_relation() -> BranchRelationResult:
     return BranchRelationResult(
         "three_combination",
@@ -566,6 +761,38 @@ def test_injected_config_cannot_bypass_guardrails(
 ) -> None:
     with pytest.raises(ValueError, match=f"^{message}$"):
         calculate_strength(facts(), config=config)
+
+
+def test_strength_config_defensively_copies_ordinary_mapping_inputs() -> None:
+    month_command = dict(EXPECTED_PROFILE["month_command"])
+    roots = dict(EXPECTED_PROFILE["root"])
+    exposed = dict(EXPECTED_PROFILE["exposed"])
+    thresholds = dict(EXPECTED_PROFILE["thresholds"])
+    config = StrengthConfig(
+        version="ziping-strength-v1",
+        month_command=month_command,
+        root=roots,
+        exposed=exposed,
+        hidden_factor=0.5,
+        thresholds=thresholds,
+        sensitivity_fraction=0.1,
+    )
+    replacement_roots = {"main": 80, "middle": 40, "residual": 20}
+    replaced = replace(config, root=replacement_roots)
+
+    month_command["same_element"] = 999
+    roots["main"] = 999
+    exposed["companion"] = 999
+    thresholds["strong"] = 999
+    replacement_roots["main"] = 999
+
+    assert config.month_command["same_element"] == 30
+    assert config.root["main"] == 18
+    assert config.exposed["companion"] == 8
+    assert config.thresholds["strong"] == 25
+    assert replaced.root["main"] == 80
+    with pytest.raises(TypeError):
+        config.root["main"] = 999
 
 
 @pytest.mark.parametrize(

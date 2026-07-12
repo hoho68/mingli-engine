@@ -3,7 +3,7 @@ import json
 import math
 from pathlib import Path
 from types import MappingProxyType
-from typing import Literal, Mapping, TypeAlias, cast
+from typing import Iterable, Literal, Mapping, TypeAlias, cast
 
 from mingli_engine.bazi.constants import (
     BRANCHES,
@@ -53,6 +53,9 @@ _SECTION_KEYS = {
 }
 _ROOT_ROLES = frozenset({"main", "middle", "residual"})
 _SUPPORTED_VERSION = "ziping-strength-v1"
+_NONFINITE_ERROR = "strength calculation produced a non-finite value"
+_THRESHOLD_REL_TOLERANCE = 1e-12
+_THRESHOLD_ABS_TOLERANCE = 1e-12
 
 Stem: TypeAlias = Literal[
     "甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"
@@ -87,11 +90,32 @@ class StrengthConfig:
     thresholds: Mapping[ThresholdKey, float]
     sensitivity_fraction: float
 
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "month_command",
+            MappingProxyType(dict(self.month_command)),
+        )
+        object.__setattr__(self, "root", MappingProxyType(dict(self.root)))
+        object.__setattr__(
+            self,
+            "exposed",
+            MappingProxyType(dict(self.exposed)),
+        )
+        object.__setattr__(
+            self,
+            "thresholds",
+            MappingProxyType(dict(self.thresholds)),
+        )
+
 
 def _numeric(value: object, field_name: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{field_name} must be numeric")
-    number = float(value)
+    try:
+        number = float(value)
+    except (OverflowError, ValueError) as exc:
+        raise ValueError(f"{field_name} must be numeric and finite") from exc
     if not math.isfinite(number):
         raise ValueError(f"{field_name} must be numeric and finite")
     return number
@@ -265,16 +289,63 @@ def _element_category(
     raise ValueError(f"Invalid element: {target_element!r}")
 
 
+def _finite_value(value: float) -> float:
+    if not math.isfinite(value):
+        raise ValueError(_NONFINITE_ERROR)
+    return value
+
+
+def _safe_product(left: float, right: float) -> float:
+    return _finite_value(left * right)
+
+
+def _safe_total(values: Iterable[float]) -> float:
+    try:
+        total = math.fsum(values)
+    except (OverflowError, ValueError) as exc:
+        raise ValueError(_NONFINITE_ERROR) from exc
+    return _finite_value(total)
+
+
+def _threshold_snapped_score(
+    score: float, thresholds: Mapping[ThresholdKey, float]
+) -> float:
+    # Snap only comparison operands to absorb binary float noise at boundaries.
+    for threshold_name in (
+        "weak",
+        "balanced_low",
+        "balanced_high",
+        "strong",
+    ):
+        threshold = thresholds[threshold_name]
+        if math.isclose(
+            score,
+            threshold,
+            rel_tol=_THRESHOLD_REL_TOLERANCE,
+            abs_tol=_THRESHOLD_ABS_TOLERANCE,
+        ):
+            return threshold
+    return score
+
+
 def _label(score: float, thresholds: Mapping[ThresholdKey, float]) -> str:
-    if score <= thresholds["weak"]:
+    comparison_score = _threshold_snapped_score(score, thresholds)
+    if comparison_score <= thresholds["weak"]:
         return "弱"
-    if score < thresholds["balanced_low"]:
+    if comparison_score < thresholds["balanced_low"]:
         return "偏弱"
-    if score <= thresholds["balanced_high"]:
+    if comparison_score <= thresholds["balanced_high"]:
         return "较平衡"
-    if score < thresholds["strong"]:
+    if comparison_score < thresholds["strong"]:
         return "偏强"
     return "强"
+
+
+def _relation_occurrence_token(relation: BranchRelationResult) -> str:
+    return (
+        f"{relation.rule_id}|pillars={','.join(relation.pillar_names)}"
+        f"|branches={','.join(relation.branches)}"
+    )
 
 
 def calculate_strength(
@@ -304,11 +375,21 @@ def calculate_strength(
         )
     )
 
+    seen_physical_roots: set[tuple[str, str, str, RootRole]] = set()
     for root in facts.roots:
         _stem_element(root.stem)
         role = _validated_root_role(root.role)
         if root.stem != facts.day_master or not root.exact_stem_root:
             continue
+        physical_identity = (
+            root.stem,
+            root.branch_pillar,
+            root.branch,
+            role,
+        )
+        if physical_identity in seen_physical_roots:
+            continue
+        seen_physical_roots.add(physical_identity)
         contributions.append(
             StrengthContribution(
                 category="root",
@@ -351,42 +432,50 @@ def calculate_strength(
             )
         )
 
-    score = sum(item.value for item in contributions)
+    contribution_values = tuple(
+        _finite_value(item.value) for item in contributions
+    )
+    score = _safe_total(contribution_values)
     sensitivity = active_config.sensitivity_fraction
     sensitivity_scores = tuple(
-        sum(item.value * factor for item in contributions)
+        _safe_total(
+            _safe_product(value, factor)
+            for value in contribution_values
+        )
         for factor in (1 - sensitivity, 1 + sensitivity)
     )
-    lower_bound = min(sensitivity_scores)
-    upper_bound = max(sensitivity_scores)
+    lower_bound = _finite_value(min(sensitivity_scores))
+    upper_bound = _finite_value(max(sensitivity_scores))
     central_label = _label(score, active_config.thresholds)
     lower_label = _label(lower_bound, active_config.thresholds)
     upper_label = _label(upper_bound, active_config.thresholds)
 
-    untransformed_relations = tuple(
-        relation for relation in relations if not relation.transformed_element
-    )
     transformed_relations = tuple(
         relation for relation in relations if relation.transformed_element
     )
-    relation_assumptions = tuple(
-        f"{relation.rule_id}: transformed_element is empty; no numeric "
-        "strength modifier applied"
-        for relation in untransformed_relations
-    ) + tuple(
-        f"{relation.rule_id}: transformed_element="
-        f"{relation.transformed_element}; V1 transformed relation strength "
-        "modifier not implemented"
-        for relation in transformed_relations
-    )
-    relation_rule_ids = tuple(
-        f"strength.relation.no_numeric_modifier:{relation.rule_id}"
-        for relation in untransformed_relations
-    ) + tuple(
-        f"strength.relation.transformed_modifier_unimplemented:"
-        f"{relation.rule_id}"
-        for relation in transformed_relations
-    )
+    relation_assumptions: list[str] = []
+    relation_rule_ids: list[str] = []
+    for relation in relations:
+        occurrence_token = _relation_occurrence_token(relation)
+        if relation.transformed_element:
+            relation_assumptions.append(
+                f"{occurrence_token}: transformed_element="
+                f"{relation.transformed_element}; V1 transformed relation "
+                "strength modifier not implemented"
+            )
+            relation_rule_ids.append(
+                "strength.relation.transformed_modifier_unimplemented:"
+                f"{occurrence_token}"
+            )
+        else:
+            relation_assumptions.append(
+                f"{occurrence_token}: transformed_element is empty; no "
+                "numeric strength modifier applied"
+            )
+            relation_rule_ids.append(
+                "strength.relation.no_numeric_modifier:"
+                f"{occurrence_token}"
+            )
     contribution_rule_ids = tuple(item.rule_id for item in contributions)
     labels = (lower_label, central_label, upper_label)
     sensitivity_crosses = len(set(labels)) > 1
@@ -437,7 +526,7 @@ def calculate_strength(
             if transformed_relations
             else ()
         ),
-        rule_ids=contribution_rule_ids + relation_rule_ids,
+        rule_ids=contribution_rule_ids + tuple(relation_rule_ids),
     )
     return StrengthResult(
         reasoning=reasoning,
