@@ -599,7 +599,7 @@ def _validate_patterns(
     strength: StrengthResult,
     patterns: tuple[PatternCandidateResult, ...],
     provenance_index: frozenset[str],
-) -> None:
+) -> tuple[PatternCandidateResult, ...]:
     baseline = calculate_pattern_candidates(facts, strength)
     baseline_ids = tuple(item.pattern_id for item in baseline)
     supplied_ids = tuple(item.pattern_id for item in patterns)
@@ -733,6 +733,7 @@ def _validate_patterns(
                 f"canonical pattern mismatch for {item.pattern_id}: "
                 "confidence is not equal or relation-guarded conservative"
             )
+    return baseline
 
 
 def _ten_god_from_provenance(value: str, day_master: str) -> str | None:
@@ -1004,7 +1005,7 @@ def calculate_useful_god_candidates(
 
     day_element = _validate_chart_facts(facts)
     _validate_computed_strength(facts, strength)
-    _validate_patterns(
+    canonical_patterns = _validate_patterns(
         facts,
         strength,
         patterns,
@@ -1015,7 +1016,10 @@ def calculate_useful_god_candidates(
         *_seasonal_adjustment_candidates(facts),
         *_mediation_candidates(facts),
         *_illness_remedy_candidates(
-            cast(Stem, facts.day_master), day_element, strength, patterns
+            cast(Stem, facts.day_master),
+            day_element,
+            strength,
+            canonical_patterns,
         ),
     )
     return _deduplicate_and_rank(candidates)

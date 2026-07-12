@@ -819,6 +819,36 @@ def test_nondisputed_structural_countercondition_is_not_a_damage_trigger() -> No
     assert illness[0].reasoning.supporting_signals == ("extreme_strength:弱",)
 
 
+def test_guarded_follow_cannot_create_remedy_trigger() -> None:
+    facts, actual_strength = strength_case("甲", "弱")
+    canonical_patterns = baseline_patterns(facts, actual_strength)
+    canonical_results = calculate_useful_god_candidates(
+        facts, actual_strength, canonical_patterns
+    )
+    relation = replace(
+        blocked_relation(),
+        branches=("子", "巳"),
+        rule_id="branch.clash.zisi.test",
+    )
+    guarded_patterns = calculate_pattern_candidates(facts, actual_strength, (relation,))
+    guarded_follow = next(
+        item for item in guarded_patterns if item.pattern_id == "follow.congruo"
+    )
+    assert guarded_follow.reasoning.status == "indeterminate"
+    disputed_follow = replace(
+        guarded_follow,
+        reasoning=replace(guarded_follow.reasoning, status="disputed"),
+    )
+    supplied = replace_baseline_pattern(guarded_patterns, disputed_follow)
+
+    guarded_results = calculate_useful_god_candidates(facts, actual_strength, supplied)
+
+    assert guarded_results == canonical_results
+    assert len(method_results(guarded_results, "illness_remedy")) == len(
+        method_results(canonical_results, "illness_remedy")
+    )
+
+
 def test_rejects_nondisputed_provenance_shaped_damage() -> None:
     facts, actual_strength, damaged = damaged_pattern_case()
     forged = replace(
@@ -978,7 +1008,7 @@ def test_documented_relation_guard_may_make_pattern_more_conservative() -> None:
 
     illness = method_results(results, "illness_remedy")
     assert len(illness) == 1
-    assert illness[0].reasoning.status == "not_computed"
+    assert illness[0].reasoning.status == "disputed"
 
 
 def test_actual_facts_strength_pattern_pipeline_is_supported() -> None:
