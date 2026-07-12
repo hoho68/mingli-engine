@@ -14,6 +14,7 @@ from mingli_engine.bazi.branch_relations import (
     THREE_MEETINGS,
     TRIPLE_PUNISHMENTS,
     detect_branch_relations,
+    detect_branch_relations_for_positions,
 )
 from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.models import BirthProfile, Pillar
@@ -359,3 +360,69 @@ def test_rejects_invalid_branches() -> None:
 
     with pytest.raises(ValueError, match="^Invalid branch: 'invalid'$"):
         detect_branch_relations(replace(chart, pillars=[*chart.pillars[:3], invalid]))
+
+
+def test_generic_position_detection_matches_canonical_chart_detection() -> None:
+    chart = chart_with_branches("午", "子", "午", "酉")
+    positions = tuple(
+        (pillar.name, pillar.earthly_branch)
+        for pillar in (
+            chart.pillars[2],
+            chart.pillars[0],
+            chart.pillars[3],
+            chart.pillars[1],
+        )
+    )
+
+    assert detect_branch_relations_for_positions(positions) != detect_branch_relations(
+        chart
+    )
+    assert detect_branch_relations_for_positions(
+        tuple(
+            (name, next(p for p in chart.pillars if p.name == name).earthly_branch)
+            for name in ("year", "month", "day", "hour")
+        )
+    ) == detect_branch_relations(chart)
+
+
+def test_generic_position_detection_preserves_extra_positions_and_duplicates() -> None:
+    positions = (
+        ("year", "子"),
+        ("month", "寅"),
+        ("day", "午"),
+        ("hour", "酉"),
+        ("active_luck_2", "午"),
+        ("selected_year_2031", "卯"),
+    )
+
+    first = detect_branch_relations_for_positions(positions)
+    second = detect_branch_relations_for_positions(positions)
+
+    assert first == second
+    assert any(
+        result.branches == ("午", "午")
+        and result.pillar_names == ("day", "active_luck_2")
+        for result in first
+    )
+    assert any(
+        "selected_year_2031" in result.pillar_names
+        and "active_luck_2" in result.pillar_names
+        for result in first
+    )
+
+
+@pytest.mark.parametrize(
+    ("positions", "message"),
+    [
+        ([("year", "子"), ("month", "丑")], "positions must be a tuple"),
+        ((("year", "子"),), "at least two positions are required"),
+        ((("year", "子"), ("year", "丑")), "position names must be unique"),
+        ((("", "子"), ("month", "丑")), "position names must be nonempty"),
+        ((("year", "invalid"), ("month", "丑")), "Invalid branch: 'invalid'"),
+    ],
+)
+def test_generic_position_detection_validates_inputs(
+    positions: Any, message: str
+) -> None:
+    with pytest.raises(ValueError, match=f"^{message}$"):
+        detect_branch_relations_for_positions(positions)

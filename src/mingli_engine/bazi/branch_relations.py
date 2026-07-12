@@ -137,16 +137,16 @@ def _position_combinations(
 
 def _result(
     relation_type: str,
-    positions: tuple[int, ...],
-    pillars: tuple[Pillar, ...],
+    indexes: tuple[int, ...],
+    positions: tuple[tuple[str, str], ...],
     state: str,
     conditions: tuple[str, ...],
     rule_id: str,
 ) -> BranchRelationResult:
     return BranchRelationResult(
         relation_type=relation_type,
-        branches=tuple(pillars[index].earthly_branch for index in positions),
-        pillar_names=tuple(pillars[index].name for index in positions),
+        branches=tuple(positions[index][1] for index in indexes),
+        pillar_names=tuple(positions[index][0] for index in indexes),
         state=state,
         transformed_element="",
         conditions=conditions,
@@ -159,17 +159,44 @@ def detect_branch_relations(
     chart: BaziChart,
 ) -> tuple[BranchRelationResult, ...]:
     pillars = _validated_pillars(chart)
-    branches = tuple(pillar.earthly_branch for pillar in pillars)
+    return detect_branch_relations_for_positions(
+        tuple((pillar.name, pillar.earthly_branch) for pillar in pillars)
+    )
+
+
+def detect_branch_relations_for_positions(
+    positions: tuple[tuple[str, str], ...],
+) -> tuple[BranchRelationResult, ...]:
+    if not isinstance(positions, tuple):
+        raise ValueError("positions must be a tuple")
+    if len(positions) < 2:
+        raise ValueError("at least two positions are required")
+    if any(
+        not isinstance(position, tuple) or len(position) != 2 for position in positions
+    ):
+        raise ValueError("each position must be a name and branch tuple")
+
+    names = tuple(position[0] for position in positions)
+    if any(not isinstance(name, str) or not name.strip() for name in names):
+        raise ValueError("position names must be nonempty")
+    if len(set(names)) != len(names):
+        raise ValueError("position names must be unique")
+
+    branches = tuple(position[1] for position in positions)
+    for branch in branches:
+        if branch not in BRANCHES:
+            raise ValueError(f"Invalid branch: {branch!r}")
+
     results: list[BranchRelationResult] = []
 
     for relation_type, table in _PAIR_FAMILIES:
         for pair in table:
-            for positions in _position_combinations(branches, pair):
+            for indexes in _position_combinations(branches, pair):
                 results.append(
                     _result(
                         relation_type,
+                        indexes,
                         positions,
-                        pillars,
                         "present",
                         (f"branches {pair[0]} and {pair[1]} are both present",),
                         f"branch.{relation_type}.{''.join(pair)}",
@@ -177,12 +204,12 @@ def detect_branch_relations(
                 )
 
     for pair in PAIR_PUNISHMENTS:
-        for positions in _position_combinations(branches, pair):
+        for indexes in _position_combinations(branches, pair):
             results.append(
                 _result(
                     "punishment",
+                    indexes,
                     positions,
-                    pillars,
                     "present",
                     (f"punishment pair {''.join(pair)} is present",),
                     f"branch.punishment.{''.join(pair)}",
@@ -190,12 +217,12 @@ def detect_branch_relations(
             )
 
     for group in TRIPLE_PUNISHMENTS:
-        for positions in _position_combinations(branches, group):
+        for indexes in _position_combinations(branches, group):
             results.append(
                 _result(
                     "punishment",
+                    indexes,
                     positions,
-                    pillars,
                     "present",
                     (f"complete punishment group {''.join(group)} is present",),
                     f"branch.punishment.{''.join(group)}",
@@ -203,16 +230,16 @@ def detect_branch_relations(
             )
 
     for branch in SELF_PUNISHMENTS:
-        positions = tuple(
+        branch_indexes = tuple(
             index for index, present in enumerate(branches) if present == branch
         )
-        for first_index, first in enumerate(positions):
-            for second in positions[first_index + 1 :]:
+        for first_index, first in enumerate(branch_indexes):
+            for second in branch_indexes[first_index + 1 :]:
                 results.append(
                     _result(
                         "punishment",
                         (first, second),
-                        pillars,
+                        positions,
                         "present",
                         (f"branch {branch} occurs in multiple pillar positions",),
                         f"branch.self_punishment.{branch}",
@@ -223,20 +250,20 @@ def detect_branch_relations(
         ("three_combination", THREE_COMBINATIONS),
         ("three_meeting", THREE_MEETINGS),
     )
-    for relation_type, table in triple_families:
-        for group, element in table.items():
-            for positions in _position_combinations(branches, group):
+    for triple_relation_type, triple_table in triple_families:
+        for group, element in triple_table.items():
+            for indexes in _position_combinations(branches, group):
                 results.append(
                     _result(
-                        relation_type,
+                        triple_relation_type,
+                        indexes,
                         positions,
-                        pillars,
                         "active",
                         (
                             f"complete group {''.join(group)} is present; "
                             f"table element={element}; transformation is not assessed",
                         ),
-                        f"branch.{relation_type}.{''.join(group)}.{element}",
+                        f"branch.{triple_relation_type}.{''.join(group)}.{element}",
                     )
                 )
 
@@ -245,7 +272,7 @@ def detect_branch_relations(
             results,
             key=lambda result: (
                 _FAMILY_ORDER[result.relation_type],
-                tuple(_PILLAR_ORDER.index(name) for name in result.pillar_names),
+                tuple(names.index(name) for name in result.pillar_names),
                 result.rule_id,
             ),
         )

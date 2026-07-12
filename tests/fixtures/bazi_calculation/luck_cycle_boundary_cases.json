@@ -1,0 +1,63 @@
+{
+  "fixture_version": "1.0",
+  "provider": "lunar-python==1.4.8",
+  "source_note": "Manually frozen provider regression baseline recorded from the pinned local lunar-python package; it is not independently authoritative calendrical evidence.",
+  "cases": [
+    {
+      "id": "verified_1992_male_sect1",
+      "birth_datetime": "1992-08-18T09:30:00",
+      "gender": "male",
+      "sect": 1,
+      "expected": {"forward": true, "start_years": 6, "start_months": 9, "start_days": 10, "start_hours": 0, "start_solar": "1999-05-28 09:30:00", "pillars": [[1, "己酉", 1999, 2008, 8, 17], [2, "庚戌", 2009, 2018, 18, 27]]}
+    },
+    {
+      "id": "verified_1992_female_sect1",
+      "birth_datetime": "1992-08-18T09:30:00",
+      "gender": "female",
+      "sect": 1,
+      "expected": {"forward": false, "start_years": 3, "start_months": 7, "start_days": 10, "start_hours": 0, "start_solar": "1996-03-28 09:30:00", "pillars": [[1, "丁未", 1996, 2005, 5, 14], [2, "丙午", 2006, 2015, 15, 24]]}
+    },
+    {
+      "id": "yang_year_male_forward",
+      "birth_datetime": "1990-06-15T12:00:00",
+      "gender": "male",
+      "sect": 1,
+      "expected": {"forward": true, "start_years": 7, "start_months": 5, "start_days": 0, "start_hours": 0, "start_solar": "1997-11-15 12:00:00", "pillars": [[1, "癸未", 1997, 2006, 8, 17], [2, "甲申", 2007, 2016, 18, 27]]}
+    },
+    {
+      "id": "yin_year_female_forward",
+      "birth_datetime": "1991-06-15T12:00:00",
+      "gender": "female",
+      "sect": 1,
+      "expected": {"forward": true, "start_years": 7, "start_months": 5, "start_days": 20, "start_hours": 0, "start_solar": "1998-12-05 12:00:00", "pillars": [[1, "乙未", 1998, 2007, 8, 17], [2, "丙申", 2008, 2017, 18, 27]]}
+    },
+    {
+      "id": "yin_year_male_reverse_sect2",
+      "birth_datetime": "1991-06-15T12:00:00",
+      "gender": "male",
+      "sect": 2,
+      "expected": {"forward": false, "start_years": 2, "start_months": 11, "start_days": 26, "start_hours": 20, "start_solar": "1994-06-11 08:00:00", "pillars": [[1, "癸巳", 1994, 2003, 4, 13], [2, "壬辰", 2004, 2013, 14, 23]]}
+    },
+    {
+      "id": "yang_year_female_reverse_sect2",
+      "birth_datetime": "1990-06-15T12:00:00",
+      "gender": "female",
+      "sect": 2,
+      "expected": {"forward": false, "start_years": 3, "start_months": 0, "start_days": 26, "start_hours": 4, "start_solar": "1993-07-11 16:00:00", "pillars": [[1, "辛巳", 1993, 2002, 4, 13], [2, "庚辰", 2003, 2012, 14, 23]]}
+    },
+    {
+      "id": "exact_li_chun_sect1",
+      "birth_datetime": "1992-02-04T21:48:17",
+      "gender": "male",
+      "sect": 1,
+      "expected": {"forward": true, "start_years": 9, "start_months": 11, "start_days": 0, "start_hours": 0, "start_solar": "2002-01-04 21:48:17", "pillars": [[1, "癸卯", 2002, 2011, 11, 20], [2, "甲辰", 2012, 2021, 21, 30]]}
+    },
+    {
+      "id": "one_second_before_li_chun_sect2",
+      "birth_datetime": "1992-02-04T21:48:16",
+      "gender": "female",
+      "sect": 2,
+      "expected": {"forward": true, "start_years": 0, "start_months": 0, "start_days": 0, "start_hours": 0, "start_solar": "1992-02-04 21:48:16", "pillars": [[1, "壬寅", 1992, 2001, 1, 10], [2, "癸卯", 2002, 2011, 11, 20]]}
+    }
+  ]
+}
