@@ -79,6 +79,27 @@ _PERSONAL_ARTIFACT_MARKERS = (
     "report-output",
     "report_output",
 )
+_PROJECT_OUTPUT_MARKERS = frozenset(
+    {
+        "project-output",
+        "project_output",
+        "generated-reports",
+        "generated_reports",
+        "report-output",
+        "report_output",
+    }
+)
+_GIT_RECURSIVE_SURFACES = (
+    "refs",
+    "logs",
+    "worktrees",
+    "modules",
+    "rebase-apply",
+    "rebase-merge",
+    "sequencer",
+    "objects/info",
+    "objects/pack",
+)
 PASS = "passed"
 FAIL = "failed"
 CHECK_NAMES = (
@@ -877,28 +898,118 @@ def _workspace_snapshot(
     return tuple(entries)
 
 
-def _artifact_snapshot(workspace_root: Path) -> frozenset[str]:
+def _metadata_entry(
+    path: Path,
+    root: Path,
+    kind: str,
+) -> tuple[str, str, int, int]:
+    stat = path.stat()
+    return (
+        path.relative_to(root).as_posix(),
+        kind,
+        stat.st_size,
+        stat.st_mtime_ns,
+    )
+
+
+def _artifact_snapshot(
+    workspace_root: Path,
+) -> tuple[tuple[str, str, int, int], ...]:
     root = workspace_root.resolve()
-    artifacts: set[str] = set()
+    artifacts: list[tuple[str, str, int, int]] = []
     for current, dir_names, file_names in os.walk(root, followlinks=False):
-        dir_names[:] = sorted(
-            name for name in dir_names if name not in _WORKSPACE_EXCLUDED_DIRS
-        )
+        dir_names[:] = sorted(dir_names)
         current_path = Path(current)
+        current_parts = tuple(
+            part.casefold() for part in current_path.relative_to(root).parts
+        )
+        in_virtualenv = bool(current_parts) and current_parts[0] == ".venv"
+        in_project_output = any(
+            part in _PROJECT_OUTPUT_MARKERS for part in current_parts
+        )
         for dir_name in dir_names:
-            if dir_name in _CACHE_DIR_NAMES:
-                artifacts.add(
-                    (current_path / dir_name).relative_to(root).as_posix() + "/"
+            normalized = dir_name.casefold()
+            personal = any(
+                marker in normalized for marker in _PERSONAL_ARTIFACT_MARKERS
+            )
+            project_output = normalized in _PROJECT_OUTPUT_MARKERS
+            cache = normalized in _CACHE_DIR_NAMES and (
+                not in_virtualenv or in_project_output or project_output
+            )
+            if personal or project_output or cache:
+                artifacts.append(
+                    _metadata_entry(current_path / dir_name, root, "directory")
                 )
         for file_name in sorted(file_names):
             normalized = file_name.casefold()
-            if normalized.endswith(".pyc") or any(
+            personal = any(
                 marker in normalized for marker in _PERSONAL_ARTIFACT_MARKERS
-            ):
-                artifacts.add(
-                    (current_path / file_name).relative_to(root).as_posix()
+            )
+            cache = normalized.endswith(".pyc") and (
+                not in_virtualenv or in_project_output
+            )
+            if personal or cache:
+                artifacts.append(
+                    _metadata_entry(current_path / file_name, root, "file")
                 )
-    return frozenset(artifacts)
+    return tuple(sorted(artifacts))
+
+
+def _subtree_metadata_snapshot(
+    workspace_root: Path,
+    subtree_name: str,
+) -> tuple[tuple[str, str, int, int], ...]:
+    root = workspace_root.resolve()
+    subtree = root / subtree_name
+    if not subtree.exists():
+        return ()
+    entries = [_metadata_entry(subtree, root, "directory")]
+    for current, dir_names, file_names in os.walk(subtree, followlinks=False):
+        dir_names[:] = sorted(dir_names)
+        current_path = Path(current)
+        entries.extend(
+            _metadata_entry(current_path / name, root, "directory")
+            for name in dir_names
+        )
+        entries.extend(
+            _metadata_entry(current_path / name, root, "file")
+            for name in sorted(file_names)
+            if (current_path / name).is_file()
+            and not (current_path / name).is_symlink()
+        )
+    return tuple(sorted(entries))
+
+
+def _git_metadata_snapshot(
+    workspace_root: Path,
+) -> tuple[tuple[str, str, int, int], ...]:
+    root = workspace_root.resolve()
+    git_root = root / ".git"
+    if not git_root.is_dir():
+        return ()
+    entries = [_metadata_entry(git_root, root, "directory")]
+    entries.extend(
+        _metadata_entry(path, root, "file")
+        for path in sorted(git_root.iterdir())
+        if path.is_file() and not path.is_symlink()
+    )
+    entries.extend(
+        _metadata_entry(path, root, "directory")
+        for path in sorted(git_root.iterdir())
+        if path.is_dir() and not path.is_symlink()
+    )
+    for relative in _GIT_RECURSIVE_SURFACES:
+        entries.extend(
+            _subtree_metadata_snapshot(root, f".git/{relative}")
+        )
+    objects_root = git_root / "objects"
+    if objects_root.is_dir():
+        entries.extend(
+            _metadata_entry(path, root, "directory")
+            for path in sorted(objects_root.iterdir())
+            if path.is_dir() and not path.is_symlink()
+        )
+    return tuple(sorted(set(entries)))
 
 
 def _reasonings(bundle: Any) -> tuple[Any, ...]:
@@ -1051,15 +1162,24 @@ def build_calculation_checks(
         roots = DEFAULT_SNAPSHOT_ROOTS
     before_content: tuple[tuple[str, str], ...] | None
     before_workspace: tuple[tuple[str, int, int], ...] | None
-    before_artifacts: frozenset[str] | None
+    before_artifacts: tuple[tuple[str, str, int, int], ...] | None
+    before_git: tuple[tuple[str, str, int, int], ...] | None
+    before_uv_cache: tuple[tuple[str, str, int, int], ...] | None
     try:
         before_content = _content_snapshot(roots)
         before_workspace = _workspace_snapshot(resolved_workspace_root)
         before_artifacts = _artifact_snapshot(resolved_workspace_root)
+        before_git = _git_metadata_snapshot(resolved_workspace_root)
+        before_uv_cache = _subtree_metadata_snapshot(
+            resolved_workspace_root,
+            ".uv_cache_tmp",
+        )
     except Exception:
         before_content = None
         before_workspace = None
         before_artifacts = None
+        before_git = None
+        before_uv_cache = None
 
     runtime = {
         "stages_present": False,
@@ -1093,13 +1213,22 @@ def build_calculation_checks(
         after_content = _content_snapshot(roots)
         after_workspace = _workspace_snapshot(resolved_workspace_root)
         after_artifacts = _artifact_snapshot(resolved_workspace_root)
+        after_git = _git_metadata_snapshot(resolved_workspace_root)
+        after_uv_cache = _subtree_metadata_snapshot(
+            resolved_workspace_root,
+            ".uv_cache_tmp",
+        )
         checks["no_persistence"] = (
             before_content is not None
             and before_workspace is not None
             and before_artifacts is not None
+            and before_git is not None
+            and before_uv_cache is not None
             and before_content == after_content
             and before_workspace == after_workspace
             and before_artifacts == after_artifacts
+            and before_git == after_git
+            and before_uv_cache == after_uv_cache
         )
     except Exception:
         checks["no_persistence"] = False

@@ -3,6 +3,8 @@ import os
 import shutil
 from pathlib import Path
 
+import pytest
+
 from mingli_engine import calculation_validation
 from mingli_engine import project_completion, report_acceptance, report_release
 from mingli_engine.calculation_validation import build_calculation_checks
@@ -341,6 +343,121 @@ def test_validator_detects_personal_report_artifact(monkeypatch, tmp_path: Path)
         (output / "personal-report.json").write_text("{}", encoding="utf-8")
 
     checks = _checks_with_workspace_mutation(monkeypatch, tmp_path, create_report)
+
+    assert checks["no_persistence"] == "failed"
+
+
+@pytest.mark.parametrize("excluded_root", [".git", ".venv", ".uv_cache_tmp"])
+def test_validator_detects_same_byte_profile_overwrite_in_excluded_root(
+    monkeypatch,
+    tmp_path: Path,
+    excluded_root: str,
+):
+    target = tmp_path / excluded_root / "private-birth-profile.json"
+    target.parent.mkdir()
+    target.write_bytes(b"same profile bytes")
+    original = target.stat()
+
+    def overwrite():
+        target.write_bytes(b"same profile bytes")
+        os.utime(
+            target,
+            ns=(original.st_atime_ns, original.st_mtime_ns + 1_000_000),
+        )
+
+    try:
+        checks = _checks_with_workspace_mutation(monkeypatch, tmp_path, overwrite)
+    finally:
+        target.write_bytes(b"same profile bytes")
+        os.utime(
+            target,
+            ns=(original.st_atime_ns, original.st_mtime_ns),
+        )
+
+    assert checks["no_persistence"] == "failed"
+
+
+@pytest.mark.parametrize("excluded_root", [".git", ".venv", ".uv_cache_tmp"])
+def test_validator_detects_new_report_in_excluded_root(
+    monkeypatch,
+    tmp_path: Path,
+    excluded_root: str,
+):
+    target = tmp_path / excluded_root / "outputs" / "personal-report.json"
+
+    def create_report():
+        target.parent.mkdir(parents=True)
+        target.write_text("{}", encoding="utf-8")
+
+    try:
+        checks = _checks_with_workspace_mutation(
+            monkeypatch,
+            tmp_path,
+            create_report,
+        )
+    finally:
+        if target.exists():
+            target.unlink()
+
+    assert checks["no_persistence"] == "failed"
+
+
+def test_validator_detects_git_metadata_overwrite_and_restores_probe(
+    monkeypatch,
+    tmp_path: Path,
+):
+    head = tmp_path / ".git" / "HEAD"
+    head.parent.mkdir()
+    head.write_bytes(b"ref: refs/heads/test\n")
+    original = head.stat()
+
+    def overwrite_head():
+        head.write_bytes(b"ref: refs/heads/test\n")
+        os.utime(
+            head,
+            ns=(original.st_atime_ns, original.st_mtime_ns + 1_000_000),
+        )
+
+    try:
+        checks = _checks_with_workspace_mutation(
+            monkeypatch,
+            tmp_path,
+            overwrite_head,
+        )
+    finally:
+        head.write_bytes(b"ref: refs/heads/test\n")
+        os.utime(head, ns=(original.st_atime_ns, original.st_mtime_ns))
+
+    assert checks["no_persistence"] == "failed"
+    assert head.read_bytes() == b"ref: refs/heads/test\n"
+    assert head.stat().st_mtime_ns == original.st_mtime_ns
+
+
+def test_validator_detects_arbitrary_uv_cache_metadata_change(
+    monkeypatch,
+    tmp_path: Path,
+):
+    cached = tmp_path / ".uv_cache_tmp" / "ordinary-package.bin"
+    cached.parent.mkdir()
+    cached.write_bytes(b"same cache bytes")
+    original = cached.stat()
+
+    def overwrite_cache():
+        cached.write_bytes(b"same cache bytes")
+        os.utime(
+            cached,
+            ns=(original.st_atime_ns, original.st_mtime_ns + 1_000_000),
+        )
+
+    try:
+        checks = _checks_with_workspace_mutation(
+            monkeypatch,
+            tmp_path,
+            overwrite_cache,
+        )
+    finally:
+        cached.write_bytes(b"same cache bytes")
+        os.utime(cached, ns=(original.st_atime_ns, original.st_mtime_ns))
 
     assert checks["no_persistence"] == "failed"
 
