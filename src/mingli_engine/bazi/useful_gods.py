@@ -1,5 +1,6 @@
 from collections import Counter
 from dataclasses import replace
+import math
 from types import MappingProxyType
 from typing import Final, Literal, Mapping, TypeGuard, cast
 
@@ -149,6 +150,9 @@ def _validate_chart_facts(facts: ChartFacts) -> Element:
         if exposed_item.ten_god != ten_god(facts.day_master, exposed_item.stem):
             raise ValueError(f"exposed ten_god mismatch for {exposed_item.stem}")
 
+    hidden_by_pillar: dict[str, list[tuple[str, str, str]]] = {
+        pillar: [] for pillar in _PILLARS
+    }
     for hidden_item in facts.hidden_stems:
         if hidden_item.pillar_name not in _PILLARS:
             raise ValueError(f"invalid hidden pillar: {hidden_item.pillar_name!r}")
@@ -176,9 +180,42 @@ def _validate_chart_facts(facts: ChartFacts) -> Element:
             and hidden_item.branch != facts.month_branch
         ):
             raise ValueError("month hidden branch must match month_branch")
+        hidden_by_pillar[hidden_item.pillar_name].append(
+            (hidden_item.branch, hidden_item.stem, hidden_item.role)
+        )
+
+    for pillar in _PILLARS:
+        pillar_entries = hidden_by_pillar[pillar]
+        branches = {branch for branch, _stem, _role in pillar_entries}
+        if len(branches) != 1:
+            raise ValueError(
+                f"{pillar} pillar must contain complete canonical hidden stems "
+                "for exactly one branch"
+            )
+        branch = next(iter(branches))
+        if not _is_branch(branch):
+            raise ValueError(f"invalid hidden branch: {branch!r}")
+        actual = tuple((stem, role) for _branch, stem, role in pillar_entries)
+        if actual != HIDDEN_STEMS[branch]:
+            raise ValueError(
+                f"{pillar} pillar must contain complete canonical hidden stems "
+                "in HIDDEN_STEMS order"
+            )
 
     day_element = STEM_ELEMENT[facts.day_master]
     return cast(Element, day_element)
+
+
+def _classify_strength(value: float) -> str:
+    if value <= -25:
+        return "弱"
+    if value < -10:
+        return "偏弱"
+    if value <= 10:
+        return "较平衡"
+    if value < 25:
+        return "偏强"
+    return "强"
 
 
 def _validate_computed_strength(strength: StrengthResult) -> None:
@@ -187,6 +224,52 @@ def _validate_computed_strength(strength: StrengthResult) -> None:
     if strength.reasoning.conclusion != strength.label:
         raise ValueError(
             "strength label consistency requires computed conclusion to match label"
+        )
+    if not strength.contributions:
+        raise ValueError("computed strength requires nonempty contributions")
+    contribution_values = tuple(
+        contribution.value for contribution in strength.contributions
+    )
+    if not all(math.isfinite(value) for value in contribution_values):
+        raise ValueError("computed strength contributions must be finite")
+    bounds = (strength.lower_bound, strength.score, strength.upper_bound)
+    if not all(math.isfinite(value) for value in bounds):
+        raise ValueError("computed strength bounds and score must be finite")
+    if not strength.lower_bound <= strength.score <= strength.upper_bound:
+        raise ValueError(
+            "computed strength requires lower_bound <= score <= upper_bound"
+        )
+    try:
+        contribution_total = math.fsum(contribution_values)
+    except (OverflowError, ValueError) as exc:
+        raise ValueError("computed strength contribution sum must be finite") from exc
+    if not math.isclose(
+        contribution_total,
+        strength.score,
+        rel_tol=1e-12,
+        abs_tol=1e-12,
+    ):
+        raise ValueError("strength contribution sum must equal computed score")
+    if "profile_version=ziping-strength-v1" not in strength.reasoning.assumptions:
+        raise ValueError(
+            "computed strength requires profile_version=ziping-strength-v1"
+        )
+    reasoning_rule_ids = frozenset(strength.reasoning.rule_ids)
+    missing_rule_ids = tuple(
+        contribution.rule_id
+        for contribution in strength.contributions
+        if contribution.rule_id not in reasoning_rule_ids
+    )
+    if missing_rule_ids:
+        raise ValueError(
+            "computed strength reasoning is missing contribution rule_ids: "
+            + ", ".join(dict.fromkeys(missing_rule_ids))
+        )
+    classifications = tuple(_classify_strength(value) for value in bounds)
+    if any(label != strength.label for label in classifications):
+        raise ValueError(
+            "computed strength classification must match label for score, "
+            "lower_bound, and upper_bound"
         )
 
 
@@ -220,18 +303,19 @@ def _candidate(
     )
 
 
-def _blocked_candidate() -> UsefulGodCandidateResult:
-    return replace(
-        _candidate(
-            "support_control",
-            "",
-            status="not_computed",
-            conclusion="support/control blocked until strength is computed",
-            confidence="low",
-            missing_inputs=("strength_computed",),
-            rule_ids=("useful_god.prerequisite.strength_computed",),
-        ),
-        rank=1,
+def _blocked_candidate(method: str, reason: str) -> UsefulGodCandidateResult:
+    if method not in _METHOD_ORDER:
+        raise ValueError(f"invalid blocked candidate method: {method!r}")
+    if not reason or reason != reason.strip():
+        raise ValueError("blocked candidate reason must be a nonempty token")
+    return _candidate(
+        method,
+        "",
+        status="not_computed",
+        conclusion=f"{method} blocked: {reason}",
+        confidence="low",
+        missing_inputs=(reason,),
+        rule_ids=(f"useful_god.prerequisite.{method}.{reason}",),
     )
 
 
@@ -403,6 +487,75 @@ def _mediation_candidates(
             rule_ids=("useful_god.mediation.no_explicit_bottleneck",),
         ),
     )
+
+
+def _pattern_provenance_index(facts: ChartFacts) -> frozenset[str]:
+    exposed = tuple(
+        f"exposed:{item.pillar_name}:{item.stem}:{item.ten_god}"
+        for item in facts.exposed_stems
+        if item.pillar_name != "day"
+    )
+    hidden = tuple(
+        f"hidden:{item.pillar_name}:{item.branch}:{item.role}:"
+        f"{item.stem}:{item.ten_god}"
+        for item in facts.hidden_stems
+    )
+    return frozenset((*exposed, *hidden))
+
+
+def _validate_patterns(
+    patterns: tuple[PatternCandidateResult, ...],
+    provenance_index: frozenset[str],
+) -> None:
+    seen_pattern_ids: set[str] = set()
+    for item in patterns:
+        if (
+            not item.pattern_id
+            or item.pattern_id != item.pattern_id.strip()
+            or not item.name
+            or item.name != item.name.strip()
+            or item.rank < 1
+        ):
+            raise ValueError("invalid pattern identity")
+        if item.pattern_id in seen_pattern_ids:
+            raise ValueError(f"duplicate pattern identity: {item.pattern_id}")
+        seen_pattern_ids.add(item.pattern_id)
+        _validate_status_and_confidence(
+            item.reasoning.status,
+            item.reasoning.confidence,
+            context=f"pattern {item.pattern_id}",
+        )
+        has_provenance_damage = any(
+            condition.startswith(("exposed:", "hidden:"))
+            for condition in item.damage_conditions
+        )
+        if has_provenance_damage and item.reasoning.status != "disputed":
+            raise ValueError(f"damaged pattern {item.pattern_id} must be disputed")
+        is_damaged = item.reasoning.status == "disputed" and bool(
+            item.damage_conditions
+        )
+        if not is_damaged:
+            continue
+        for condition in item.damage_conditions:
+            if condition not in provenance_index:
+                raise ValueError(
+                    f"damage condition provenance is absent from facts: {condition}"
+                )
+            if condition not in item.reasoning.opposing_signals:
+                raise ValueError(
+                    "damage condition must be present in reasoning opposing "
+                    f"signals: {condition}"
+                )
+        for condition in item.rescue_conditions:
+            if condition not in provenance_index:
+                raise ValueError(
+                    f"rescue condition provenance is absent from facts: {condition}"
+                )
+            if condition not in item.reasoning.supporting_signals:
+                raise ValueError(
+                    "rescue condition must be present in reasoning supporting "
+                    f"signals: {condition}"
+                )
 
 
 def _ten_god_from_provenance(value: str, day_master: str) -> str | None:
@@ -665,10 +818,16 @@ def calculate_useful_god_candidates(
         context="strength",
     )
     if strength.reasoning.status != "computed":
-        return (_blocked_candidate(),)
+        return (
+            replace(
+                _blocked_candidate("support_control", "strength_not_computed"),
+                rank=1,
+            ),
+        )
 
     day_element = _validate_chart_facts(facts)
     _validate_computed_strength(strength)
+    _validate_patterns(patterns, _pattern_provenance_index(facts))
     candidates = (
         *_support_control_candidates(day_element, strength),
         *_seasonal_adjustment_candidates(facts),
