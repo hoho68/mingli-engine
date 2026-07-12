@@ -588,6 +588,61 @@ def test_malformed_adapter_output_is_isolated_before_disagreement(forge) -> None
         isolated.school_id = "changed"  # type: ignore[misc]
 
 
+@pytest.mark.parametrize(
+    "forge",
+    [
+        lambda result: mutate_preference(
+            result, "reasoning", {"malformed": "reasoning"}
+        ),
+        lambda result: mutate_reasoning(
+            result, "conclusion", {"malformed": "conclusion"}
+        ),
+        lambda result: mutate_reasoning(result, "conclusion", ""),
+        lambda result: mutate_reasoning(result, "conclusion", " padded "),
+        lambda result: mutate_reasoning(
+            result, "supporting_signals", ({"malformed": "support"},)
+        ),
+        lambda result: mutate_reasoning(
+            result, "opposing_signals", ({"malformed": "opposition"},)
+        ),
+        lambda result: mutate_reasoning(
+            result, "assumptions", ({"malformed": "assumption"},)
+        ),
+        lambda result: mutate_reasoning(
+            result, "missing_inputs", ({"malformed": "missing"},)
+        ),
+        lambda result: mutate_reasoning(result, "rule_ids", ({"malformed": "rule"},)),
+    ],
+)
+def test_malformed_reasoning_payload_is_isolated_before_aggregation(forge) -> None:
+    facts, strength, patterns, useful_gods = pipeline_case()
+    base_result = valid_fake_result(
+        school_id="ziping",
+        pattern_id=patterns[0].pattern_id,
+    )
+    malformed = ReturningAdapter("ziping", forge(base_result))
+    valid_liang = load_enabled_school_adapters()[1]
+
+    results = interpret_with_enabled_schools(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+        adapters=(malformed, valid_liang),
+    )
+
+    assert tuple(item.school_id for item in results) == (
+        "ziping",
+        "liang_xiangrun",
+    )
+    isolated = results[0]
+    assert isolated.reasoning.status == "not_computed"
+    assert isolated.reasoning.rule_ids == ("school.ziping.adapter_error",)
+    assert isolated.preferred_pattern_ids == ()
+    assert isolated.preferred_useful_god_elements == ()
+    assert results[1].reasoning.status != "not_computed"
+
+
 def test_disagreement_compares_preference_order_not_only_membership() -> None:
     facts, strength, patterns, useful_gods = pipeline_case()
     first_id, second_id = (item.pattern_id for item in patterns[:2])

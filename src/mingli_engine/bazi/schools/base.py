@@ -222,7 +222,9 @@ def load_school_profiles_config(
     )
 
 
-def _validate_reasoning(reasoning: ReasonedResult, context: str) -> None:
+def _validate_reasoning(reasoning: object, context: str) -> None:
+    if not isinstance(reasoning, ReasonedResult):
+        raise ValueError(f"{context} reasoning must be a ReasonedResult")
     if reasoning.status not in {
         "not_computed",
         "computed",
@@ -232,6 +234,25 @@ def _validate_reasoning(reasoning: ReasonedResult, context: str) -> None:
         raise ValueError(f"invalid {context} status: {reasoning.status!r}")
     if reasoning.confidence not in {"high", "medium", "low"}:
         raise ValueError(f"invalid {context} confidence: {reasoning.confidence!r}")
+    if not isinstance(reasoning.conclusion, str):
+        raise ValueError(f"{context} conclusion must be a string")
+    for field_name in (
+        "supporting_signals",
+        "opposing_signals",
+        "assumptions",
+        "missing_inputs",
+        "rule_ids",
+    ):
+        values = getattr(reasoning, field_name)
+        if not isinstance(values, tuple):
+            raise ValueError(f"{context} {field_name} must be a tuple")
+        if not all(
+            isinstance(value, str) and value and value == value.strip()
+            for value in values
+        ):
+            raise ValueError(
+                f"{context} {field_name} must contain nonempty trimmed strings"
+            )
 
 
 def _validate_school_inputs(
@@ -425,6 +446,11 @@ def _validate_school_interpretation(
     ):
         raise ValueError("adapter result profile version mismatch")
     _validate_reasoning(result.reasoning, f"school {adapter.school_id}")
+    if (
+        not result.reasoning.conclusion
+        or result.reasoning.conclusion != result.reasoning.conclusion.strip()
+    ):
+        raise ValueError("school adapter conclusion must be nonempty and trimmed")
     rule_ids = result.reasoning.rule_ids
     rule_prefix = f"school.{adapter.school_id}."
     if (
