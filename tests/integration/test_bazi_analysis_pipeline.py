@@ -10,37 +10,50 @@ from dataclasses import FrozenInstanceError, replace
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 import pytest
 
 import mingli_engine.bazi as bazi_api
 import mingli_engine.bazi.analysis as analysis
 from mingli_engine.bazi.analysis import analyze_bazi_chart
-from mingli_engine.bazi.branch_relations import detect_branch_relations
+from mingli_engine.bazi.branch_relations import (
+    detect_branch_relations,
+    detect_branch_relations_for_positions,
+)
 from mingli_engine.bazi.constants import (
     BRANCHES,
+    HIDDEN_STEMS,
     STEM_ELEMENT,
     STEM_POLARITY,
     STEMS,
 )
-from mingli_engine.bazi.facts import build_chart_facts
+from mingli_engine.bazi.facts import build_chart_facts, ten_god
 from mingli_engine.bazi.legacy_adapter import (
     apply_calculation_bundle,
     build_legacy_not_computed_bundle,
 )
 from mingli_engine.bazi.luck_cycles import calculate_luck_cycles
-from mingli_engine.bazi.patterns import calculate_pattern_candidates
+from mingli_engine.bazi.patterns import (
+    PATTERN_DAMAGE,
+    PATTERN_RESCUE,
+    TEN_GOD_PATTERN_NAMES,
+    calculate_pattern_candidates,
+)
 from mingli_engine.bazi.result_models import (
     BranchRelationResult,
     ChartFacts,
     HiddenStemFact,
+    ReasonedResult,
     RootFact,
     StemFact,
+    StrengthResult,
 )
 from mingli_engine.bazi.schools import interpret_with_enabled_schools
-from mingli_engine.bazi.strength import calculate_strength
+from mingli_engine.bazi.strength import calculate_strength, load_strength_config
 from mingli_engine.bazi.useful_gods import calculate_useful_god_candidates
 from mingli_engine.chart_calculator import calculate_bazi_chart
+from mingli_engine.calendar_provider import calculate_provider_luck_cycles
 from mingli_engine.models import BirthProfile
 
 
@@ -57,11 +70,9 @@ EXPECTED_BOUNDARY_CATEGORIES = {
     "latent_vs_exposed",
     "damaged_pattern",
     "rescued_pattern",
-    "incomplete_three_groups",
+    "incomplete_three_group",
     "school_disagreement",
-    "solar_term_before",
-    "solar_term_exact",
-    "solar_term_after",
+    "solar_term_boundary",
     "unknown_gender",
     "time_assumption_aware",
     "time_assumption_unsupported",
@@ -92,7 +103,7 @@ BOUNDARY_BEHAVIOR_CONTRACTS = {
         "test_fixture_counterexamples_use_canonical_fact_builders",
         "pattern_rescue_asserted",
     ),
-    "incomplete_three_groups": (
+    "incomplete_three_group": (
         "test_strength_boundary_fixture_executes_real_calculation",
         "incomplete_relation_asserted",
     ),
@@ -100,15 +111,7 @@ BOUNDARY_BEHAVIOR_CONTRACTS = {
         "test_strength_boundary_fixture_executes_real_calculation",
         "school_preferences_compared",
     ),
-    "solar_term_before": (
-        "test_provider_luck_cycles_match_frozen_regression_cases",
-        "solar_term_boundary_output_asserted",
-    ),
-    "solar_term_exact": (
-        "test_provider_luck_cycles_match_frozen_regression_cases",
-        "solar_term_boundary_output_asserted",
-    ),
-    "solar_term_after": (
+    "solar_term_boundary": (
         "test_provider_luck_cycles_match_frozen_regression_cases",
         "solar_term_boundary_output_asserted",
     ),
@@ -269,6 +272,358 @@ def _derived_verified_coverage(record: dict[str, Any]) -> dict[str, Any]:
         "repeated_branch": len(set(branches)) < len(branches),
         "no_relation_chart": not record["expected"]["relations"],
     }
+
+
+_PATTERN_DAY_MASTER = STEMS[0]
+_TEN_GOD_STEM = {
+    ten_god(_PATTERN_DAY_MASTER, stem): stem for stem in STEMS
+}
+_MONTH_BRANCH_BY_MAIN = {
+    ten_god(_PATTERN_DAY_MASTER, hidden[0][0]): branch
+    for branch, hidden in HIDDEN_STEMS.items()
+}
+
+
+def _pattern_stem_fact(pillar_name: str, stem: str) -> StemFact:
+    return StemFact(
+        pillar_name=pillar_name,
+        stem=stem,
+        element=STEM_ELEMENT[stem],
+        polarity=STEM_POLARITY[stem],
+        ten_god=ten_god(_PATTERN_DAY_MASTER, stem),
+    )
+
+
+def _pattern_hidden_facts(
+    pillar_name: str, branch: str
+) -> tuple[HiddenStemFact, ...]:
+    return tuple(
+        HiddenStemFact(
+            pillar_name=pillar_name,
+            branch=branch,
+            stem=stem,
+            role=role,
+            element=STEM_ELEMENT[stem],
+            polarity=STEM_POLARITY[stem],
+            ten_god=ten_god(_PATTERN_DAY_MASTER, stem),
+        )
+        for stem, role in HIDDEN_STEMS[branch]
+    )
+
+
+def _pattern_fixture_candidate(case: dict[str, Any]):
+    signals = tuple(case["signals"])
+    pattern_name = TEN_GOD_PATTERN_NAMES[case["pattern_ten_god"]]
+    forbidden = {
+        *PATTERN_DAMAGE[pattern_name],
+        *PATTERN_RESCUE[pattern_name],
+    }
+    neutral_god = next(
+        god
+        for god in _TEN_GOD_STEM
+        if god not in forbidden and god not in signals
+    )
+    assigned = tuple(_TEN_GOD_STEM[god] for god in signals)
+    neutral_stem = _TEN_GOD_STEM[neutral_god]
+    non_day_stems = (*assigned, *((neutral_stem,) * (3 - len(assigned))))
+    month_branch = _MONTH_BRANCH_BY_MAIN[case["pattern_ten_god"]]
+    latent = tuple(
+        fact
+        for index, branch in enumerate(case.get("latent_branches", ()))
+        for fact in _pattern_hidden_facts(
+            ("year", "hour")[index % 2],
+            branch,
+        )
+    )
+    facts = ChartFacts(
+        day_master=_PATTERN_DAY_MASTER,
+        month_branch=month_branch,
+        exposed_stems=(
+            _pattern_stem_fact("year", non_day_stems[0]),
+            _pattern_stem_fact("month", non_day_stems[1]),
+            _pattern_stem_fact("day", _PATTERN_DAY_MASTER),
+            _pattern_stem_fact("hour", non_day_stems[2]),
+        ),
+        hidden_stems=(*_pattern_hidden_facts("month", month_branch), *latent),
+        roots=(),
+        twelve_growth_by_pillar=(),
+        assumptions=("fixture:canonical-pattern-facts",),
+    )
+    strength_status = case.get("strength_status", "computed")
+    strength = StrengthResult(
+        reasoning=ReasonedResult(
+            status=strength_status,
+            conclusion="fixture strength prerequisite",
+            confidence="high" if strength_status == "computed" else "low",
+            rule_ids=("strength.fixture_boundary",),
+        ),
+        score=0.0,
+        lower_bound=0.0,
+        upper_bound=0.0,
+        label="较平衡",
+        contributions=(),
+    )
+    return calculate_pattern_candidates(facts, strength)[0]
+
+
+def _condition_ten_gods(conditions: tuple[str, ...]) -> tuple[str, ...]:
+    return tuple(condition.rsplit(":", 1)[-1] for condition in conditions)
+
+
+def _derive_pattern_boundary_categories(case: dict[str, Any]) -> set[str]:
+    candidate = _pattern_fixture_candidate(case)
+    damage = _condition_ten_gods(candidate.damage_conditions)
+    rescue = _condition_ten_gods(candidate.rescue_conditions)
+    assert damage == tuple(case["expected_damage"])
+    assert rescue == tuple(case["expected_rescue"])
+    derived: set[str] = set()
+    if damage:
+        assert candidate.reasoning.status == "disputed"
+        derived.add("damaged_pattern")
+    if rescue:
+        derived.add("rescued_pattern")
+    if case.get("expected_latent_context"):
+        assert not damage
+        assert all(
+            any(
+                assumption.startswith("latent_damage_context:hidden:")
+                and assumption.endswith(f":{god}")
+                for assumption in candidate.reasoning.assumptions
+            )
+            for god in case["expected_latent_context"]
+        )
+        derived.add("latent_vs_exposed")
+    if case.get("strength_status") == "indeterminate":
+        assert candidate.reasoning.status == "indeterminate"
+        derived.add("pattern_strength_prerequisite_indeterminate")
+    assert derived
+    return derived
+
+
+def _execute_strength_boundary(case: dict[str, Any]):
+    execution = case["execution"]
+    chart = None
+    birth_datetime = None
+    if execution["kind"] == "chart_facts":
+        facts = _chart_facts_from_json(execution["facts"])
+        relations = _relations_from_json(execution["relations"])
+    else:
+        assert execution["kind"] == "full_chart"
+        chart = calculate_bazi_chart(BirthProfile(**execution["input"]))
+        if execution.get("chart_source_overrides"):
+            chart = replace(
+                chart,
+                chart_source=replace(
+                    chart.chart_source,
+                    **execution["chart_source_overrides"],
+                ),
+            )
+        facts = build_chart_facts(chart)
+        relations = detect_branch_relations(chart)
+        birth_datetime = datetime.fromisoformat(execution["birth_datetime"])
+    result = calculate_strength(facts, relations)
+    return chart, birth_datetime, facts, relations, result
+
+
+def _derive_strength_boundary_categories(case: dict[str, Any]) -> set[str]:
+    chart, birth_datetime, facts, relations, result = _execute_strength_boundary(case)
+    semantic = case["expected"]["semantic"]
+    if semantic["kind"] == "near_threshold":
+        thresholds = tuple(load_strength_config().thresholds.values())
+        crossed = tuple(
+            threshold
+            for threshold in thresholds
+            if result.lower_bound <= threshold < result.upper_bound
+        )
+        assert crossed == (semantic["threshold"],)
+        assert abs(result.score - crossed[0]) <= (
+            result.upper_bound - result.lower_bound
+        ) / 2
+        assert result.reasoning.status == "indeterminate"
+        return {"near_threshold_strength"}
+    if semantic["kind"] == "incomplete_relation":
+        relation = relations[0]
+        positions_by_pillar = {
+            item.pillar_name: item.branch
+            for item in facts.hidden_stems
+            if item.role == "main"
+        }
+        positions = tuple(positions_by_pillar.items())
+        detected = detect_branch_relations_for_positions(positions)
+        assert not any(
+            item.relation_type == relation.relation_type
+            and set(item.branches) >= set(relation.branches)
+            for item in detected
+        )
+        assert relation.state == "incomplete"
+        assert relation.transformed_element == ""
+        assert relation.conditions
+        assert relation.blockers == (f"missing {semantic['missing_branch']}",)
+        assert set(relation.branches) <= set(positions_by_pillar.values())
+        assert semantic["missing_branch"] not in positions_by_pillar.values()
+        assert any(
+            relation.rule_id in assumption
+            and "transformed_element is empty" in assumption
+            for assumption in result.reasoning.assumptions
+        )
+        assert any(
+            relation.rule_id in rule_id
+            and "no_numeric_modifier" in rule_id
+            for rule_id in result.reasoning.rule_ids
+        )
+        return {"incomplete_three_group"}
+    if semantic["kind"] == "school_disagreement":
+        patterns = calculate_pattern_candidates(facts, result, relations)
+        useful_gods = calculate_useful_god_candidates(facts, result, patterns)
+        schools = interpret_with_enabled_schools(
+            facts=facts,
+            strength=result,
+            patterns=patterns,
+            useful_gods=useful_gods,
+        )
+        assert all(school.reasoning.status == "disputed" for school in schools)
+        assert all(
+            semantic["cross_school_rule_id"]
+            in school.reasoning.rule_ids
+            for school in schools
+        )
+        assert all(
+            any(
+                signal.startswith(
+                    "cross_school_disagreement:pattern_preferences:"
+                )
+                for signal in school.reasoning.opposing_signals
+            )
+            for school in schools
+        )
+        actual_views = [
+            {
+                "school_id": school.school_id,
+                "status": school.reasoning.status,
+                "preferred_pattern_ids": list(school.preferred_pattern_ids),
+                "preferred_useful_god_elements": list(
+                    school.preferred_useful_god_elements
+                ),
+            }
+            for school in schools
+        ]
+        assert actual_views == semantic["school_results"]
+        assert len({school.preferred_pattern_ids for school in schools}) > 1
+        return {"school_disagreement"}
+    if semantic["kind"] == "unknown_gender":
+        assert chart is not None and birth_datetime is not None
+        luck = calculate_luck_cycles(chart, birth_datetime=birth_datetime)
+        assert luck.reasoning.status == "not_computed"
+        assert luck.reasoning.missing_inputs == ("supported_gender",)
+        return {"unknown_gender"}
+    if semantic["kind"] == "aware_datetime":
+        assert chart is not None and birth_datetime is not None
+        assert birth_datetime.utcoffset() is not None
+        with pytest.raises(ValueError, match=semantic["error"]):
+            calculate_luck_cycles(chart, birth_datetime=birth_datetime)
+        return {"time_assumption_aware"}
+    assert semantic["kind"] == "true_solar_assumption_recorded"
+    assert chart is not None
+    assert chart.chart_source.true_solar_time_applied is True
+    assert semantic["assumption"] in result.reasoning.assumptions
+    return {"true_solar_assumption_recorded"}
+
+
+def _assert_luck_matches_expected(case: dict[str, Any]):
+    result = calculate_provider_luck_cycles(
+        datetime.fromisoformat(case["birth_datetime"]),
+        case["gender"],
+        sect=case["sect"],
+        count=case.get("count", 2),
+    )
+    expected = case["expected"]
+    assert result.forward is expected["forward"]
+    assert result.start_years == expected["start_years"]
+    assert result.start_months == expected["start_months"]
+    assert result.start_days == expected["start_days"]
+    assert result.start_hours == expected["start_hours"]
+    assert result.start_solar == expected["start_solar"]
+    assert result.pillars == tuple(tuple(item) for item in expected["pillars"])
+    return result
+
+
+def _validated_solar_boundary_ids() -> set[str]:
+    payload = _load_json(FIXTURE_DIR / "luck_cycle_boundary_cases.json")
+    cases = [case for case in payload["cases"] if "boundary_case" in case]
+    assert len(cases) == 3
+    assert len(
+        {
+            (case["gender"], case["sect"], case.get("count", 2))
+            for case in cases
+        }
+    ) == 1
+    transition = datetime.fromisoformat(cases[0]["boundary_case"]["transition"])
+    by_delta: dict[int, Any] = {}
+    for case in cases:
+        assert datetime.fromisoformat(case["boundary_case"]["transition"]) == transition
+        delta = int(
+            (
+                datetime.fromisoformat(case["birth_datetime"]) - transition
+            ).total_seconds()
+        )
+        assert case["boundary_case"]["phase"] == {
+            -1: "before",
+            0: "exact",
+            1: "after",
+        }[delta]
+        by_delta[delta] = _assert_luck_matches_expected(case)
+    assert set(by_delta) == {-1, 0, 1}
+    assert by_delta[-1].forward is not by_delta[0].forward
+    assert by_delta[-1].pillars != by_delta[0].pillars
+    assert by_delta[0].forward is by_delta[1].forward
+    assert tuple(item[1] for item in by_delta[0].pillars) == tuple(
+        item[1] for item in by_delta[1].pillars
+    )
+    return {case["id"] for case in cases}
+
+
+def _derive_luck_boundary_categories(case: dict[str, Any]) -> set[str]:
+    birth_datetime = datetime.fromisoformat(case["birth_datetime"])
+    if "expected_error" in case:
+        assert birth_datetime.utcoffset() is not None
+        with patch(
+            "mingli_engine.calendar_provider.Solar.fromYmdHms"
+        ) as provider_call:
+            with pytest.raises(
+                ValueError,
+                match=case["expected_error"]["message"],
+            ):
+                calculate_provider_luck_cycles(
+                    birth_datetime,
+                    case["gender"],
+                    sect=case["sect"],
+                    count=case["count"],
+                )
+            provider_call.assert_not_called()
+        return {"time_assumption_unsupported"}
+    _assert_luck_matches_expected(case)
+    if case["id"] in _validated_solar_boundary_ids():
+        return {"solar_term_boundary"}
+    return {"luck_direction_boundary"}
+
+
+def _validate_boundary_contract(
+    case: dict[str, Any], *, fixture_name: str
+) -> set[str]:
+    if fixture_name == "strength_boundary_cases.json":
+        derived = _derive_strength_boundary_categories(case)
+    elif fixture_name == "pattern_counterexamples.json":
+        derived = _derive_pattern_boundary_categories(case)
+    else:
+        assert fixture_name == "luck_cycle_boundary_cases.json"
+        derived = _derive_luck_boundary_categories(case)
+    metadata = case["fixture_metadata"]
+    assert set(metadata["categories"]) == derived
+    expected_tests = {BOUNDARY_BEHAVIOR_CONTRACTS[item][0] for item in derived}
+    expected_behaviors = {BOUNDARY_BEHAVIOR_CONTRACTS[item][1] for item in derived}
+    assert expected_tests == {metadata["execution_test"]}
+    assert set(metadata["demonstrated_behaviors"]) == expected_behaviors
+    return derived
 
 
 def _profile(**overrides: str) -> BirthProfile:
@@ -433,6 +788,7 @@ def test_verified_chart_fixture_schema_privacy_review_and_coverage() -> None:
 
     derived = [_derived_verified_coverage(record) for record in records]
     for record, actual in zip(records, derived, strict=True):
+        assert "solar_term_transition_safe" not in record["coverage"]
         assert record["coverage"]["day_master_element"] == actual[
             "day_master_element"
         ]
@@ -476,6 +832,8 @@ def test_cross_provider_contract_rejects_empty_or_mismatched_artifacts() -> None
 
 def test_boundary_fixture_schemas_counts_privacy_and_categories() -> None:
     all_cases: list[dict[str, Any]] = []
+    validated_categories: set[str] = set()
+    validated_ids: set[str] = set()
     for path in BOUNDARY_FIXTURE_PATHS:
         payload = _load_json(path)
         assert payload["schema_version"] == "bazi-boundary-fixtures-v1"
@@ -492,12 +850,6 @@ def test_boundary_fixture_schemas_counts_privacy_and_categories() -> None:
             assert isinstance(metadata["counts_toward_boundary_gate"], bool)
             assert isinstance(metadata["demonstrated_behaviors"], list)
             assert metadata["demonstrated_behaviors"]
-            for category in metadata["categories"]:
-                execution_test, demonstrated_behavior = (
-                    BOUNDARY_BEHAVIOR_CONTRACTS[category]
-                )
-                assert metadata["execution_test"] == execution_test
-                assert demonstrated_behavior in metadata["demonstrated_behaviors"]
             assert not _contains_placeholder(case)
             if path.name == "strength_boundary_cases.json":
                 expected_strength = case["expected"]["strength"]
@@ -507,6 +859,14 @@ def test_boundary_fixture_schemas_counts_privacy_and_categories() -> None:
                 assert bool(range_keys) is bool(
                     expected_strength.get("sensitivity_boundary")
                 )
+            if metadata["counts_toward_boundary_gate"]:
+                derived = _validate_boundary_contract(
+                    case,
+                    fixture_name=path.name,
+                )
+                validated_categories.update(derived)
+                assert case["id"] not in validated_ids
+                validated_ids.add(case["id"])
         all_cases.extend(cases)
 
     counted = [
@@ -514,20 +874,50 @@ def test_boundary_fixture_schemas_counts_privacy_and_categories() -> None:
         for case in all_cases
         if case["fixture_metadata"]["counts_toward_boundary_gate"]
     ]
-    counted_ids = [case["id"] for case in counted]
-    categories = {
-        category
-        for case in counted
-        for category in case["fixture_metadata"]["categories"]
-    }
-    assert len(counted) >= 20
-    assert len(counted_ids) == len(set(counted_ids))
-    assert EXPECTED_BOUNDARY_CATEGORIES <= categories
+    assert len(validated_ids) == len(counted) >= 20
+    assert EXPECTED_BOUNDARY_CATEGORIES <= validated_categories
     assert sum(
         case["fixture_metadata"]["execution_test"]
         == "test_strength_boundary_fixture_executes_real_calculation"
         for case in counted
     ) == 6
+
+
+def test_boundary_contract_rejects_swapped_metadata_between_behaviors() -> None:
+    cases = _strength_boundary_cases()
+    near_threshold = deepcopy(
+        next(
+            case
+            for case in cases
+            if case["expected"]["semantic"]["kind"] == "near_threshold"
+        )
+    )
+    unknown_gender = deepcopy(
+        next(
+            case
+            for case in cases
+            if case["expected"]["semantic"]["kind"] == "unknown_gender"
+        )
+    )
+    luck_cases = _load_json(
+        FIXTURE_DIR / "luck_cycle_boundary_cases.json"
+    )["cases"]
+    aware_time = next(case for case in luck_cases if "expected_error" in case)
+    swapped_values = {
+        "categories": unknown_gender["fixture_metadata"]["categories"],
+        "execution_test": aware_time["fixture_metadata"]["execution_test"],
+        "demonstrated_behaviors": unknown_gender["fixture_metadata"][
+            "demonstrated_behaviors"
+        ],
+    }
+    for field_name, swapped_value in swapped_values.items():
+        forged = deepcopy(near_threshold)
+        forged["fixture_metadata"][field_name] = deepcopy(swapped_value)
+        with pytest.raises(AssertionError):
+            _validate_boundary_contract(
+                forged,
+                fixture_name="strength_boundary_cases.json",
+            )
 
 
 @pytest.mark.parametrize("record", _verified_parameters())

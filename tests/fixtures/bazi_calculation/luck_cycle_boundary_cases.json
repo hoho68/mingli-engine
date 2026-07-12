@@ -306,12 +306,16 @@
         "contains_real_personal_data": false,
         "counts_toward_boundary_gate": true,
         "categories": [
-          "solar_term_exact"
+          "solar_term_boundary"
         ],
         "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
         "demonstrated_behaviors": [
           "solar_term_boundary_output_asserted"
         ]
+      },
+      "boundary_case": {
+        "transition": "1992-02-04T21:48:17",
+        "phase": "exact"
       }
     },
     {
@@ -350,11 +354,11 @@
         "contains_real_personal_data": false,
         "counts_toward_boundary_gate": true,
         "categories": [
-          "solar_term_before"
+          "luck_direction_boundary"
         ],
         "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
         "demonstrated_behaviors": [
-          "solar_term_boundary_output_asserted"
+          "luck_direction_and_start_asserted"
         ]
       }
     },
@@ -394,12 +398,16 @@
         "contains_real_personal_data": false,
         "counts_toward_boundary_gate": true,
         "categories": [
-          "solar_term_after"
+          "solar_term_boundary"
         ],
         "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
         "demonstrated_behaviors": [
           "solar_term_boundary_output_asserted"
         ]
+      },
+      "boundary_case": {
+        "transition": "1992-02-04T21:48:17",
+        "phase": "after"
       }
     },
     {
@@ -471,6 +479,54 @@
         "execution_test": "test_provider_rejects_aware_fixture_before_lunar_call",
         "demonstrated_behaviors": [
           "aware_datetime_rejected_before_provider"
+        ]
+      }
+    },
+    {
+      "id": "one_second_before_li_chun_same_options",
+      "birth_datetime": "1992-02-04T21:48:16",
+      "gender": "male",
+      "sect": 1,
+      "expected": {
+        "forward": false,
+        "start_years": 9,
+        "start_months": 10,
+        "start_days": 0,
+        "start_hours": 0,
+        "start_solar": "2001-12-04 21:48:16",
+        "pillars": [
+          [
+            1,
+            "庚子",
+            2001,
+            2010,
+            10,
+            19
+          ],
+          [
+            2,
+            "己亥",
+            2011,
+            2020,
+            20,
+            29
+          ]
+        ]
+      },
+      "boundary_case": {
+        "transition": "1992-02-04T21:48:17",
+        "phase": "before"
+      },
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "solar_term_boundary"
+        ],
+        "execution_test": "test_provider_luck_cycles_match_frozen_regression_cases",
+        "demonstrated_behaviors": [
+          "solar_term_boundary_output_asserted"
         ]
       }
     }

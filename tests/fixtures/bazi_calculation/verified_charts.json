@@ -41,8 +41,7 @@
         "day_master_element": "fire",
         "day_master_polarity": "yang",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -400,8 +399,7 @@
         "day_master_element": "earth",
         "day_master_polarity": "yin",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -782,8 +780,7 @@
         "day_master_element": "wood",
         "day_master_polarity": "yang",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -1126,8 +1123,7 @@
         "day_master_element": "fire",
         "day_master_polarity": "yin",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -1506,8 +1502,7 @@
         "day_master_element": "wood",
         "day_master_polarity": "yin",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -1901,8 +1896,7 @@
         "day_master_element": "metal",
         "day_master_polarity": "yang",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -2295,8 +2289,7 @@
         "day_master_element": "metal",
         "day_master_polarity": "yin",
         "repeated_branch": true,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -2770,8 +2763,7 @@
         "day_master_element": "water",
         "day_master_polarity": "yang",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -3178,8 +3170,7 @@
         "day_master_element": "water",
         "day_master_polarity": "yin",
         "repeated_branch": true,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -3622,8 +3613,7 @@
         "day_master_element": "earth",
         "day_master_polarity": "yang",
         "repeated_branch": true,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -4015,8 +4005,7 @@
         "day_master_element": "wood",
         "day_master_polarity": "yang",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -4369,8 +4358,7 @@
         "day_master_element": "metal",
         "day_master_polarity": "yin",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -4756,8 +4744,7 @@
         "day_master_element": "earth",
         "day_master_polarity": "yin",
         "repeated_branch": false,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -5181,8 +5168,7 @@
         "day_master_element": "earth",
         "day_master_polarity": "yin",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -5521,8 +5507,7 @@
         "day_master_element": "earth",
         "day_master_polarity": "yin",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -5887,8 +5872,7 @@
         "day_master_element": "metal",
         "day_master_polarity": "yin",
         "repeated_branch": true,
-        "no_relation_chart": true,
-        "solar_term_transition_safe": true
+        "no_relation_chart": true
       },
       "expected": {
         "chart_pillars": [
@@ -6277,8 +6261,7 @@
         "day_master_element": "wood",
         "day_master_polarity": "yin",
         "repeated_branch": true,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -6679,8 +6662,7 @@
         "day_master_element": "fire",
         "day_master_polarity": "yang",
         "repeated_branch": false,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -7126,8 +7108,7 @@
         "day_master_element": "fire",
         "day_master_polarity": "yin",
         "repeated_branch": false,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -7581,8 +7562,7 @@
         "day_master_element": "earth",
         "day_master_polarity": "yang",
         "repeated_branch": false,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -7992,8 +7972,7 @@
         "day_master_element": "metal",
         "day_master_polarity": "yang",
         "repeated_branch": true,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -8413,8 +8392,7 @@
         "day_master_element": "water",
         "day_master_polarity": "yang",
         "repeated_branch": false,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -8858,8 +8836,7 @@
         "day_master_element": "water",
         "day_master_polarity": "yin",
         "repeated_branch": true,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -9314,8 +9291,7 @@
         "day_master_element": "wood",
         "day_master_polarity": "yang",
         "repeated_branch": false,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -9745,8 +9721,7 @@
         "day_master_element": "wood",
         "day_master_polarity": "yin",
         "repeated_branch": false,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -10153,8 +10128,7 @@
         "day_master_element": "fire",
         "day_master_polarity": "yang",
         "repeated_branch": false,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -10558,8 +10532,7 @@
         "day_master_element": "fire",
         "day_master_polarity": "yin",
         "repeated_branch": false,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -10961,8 +10934,7 @@
         "day_master_element": "earth",
         "day_master_polarity": "yang",
         "repeated_branch": false,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -11336,8 +11308,7 @@
         "day_master_element": "metal",
         "day_master_polarity": "yang",
         "repeated_branch": true,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [
@@ -11739,8 +11710,7 @@
         "day_master_element": "water",
         "day_master_polarity": "yang",
         "repeated_branch": false,
-        "no_relation_chart": false,
-        "solar_term_transition_safe": true
+        "no_relation_chart": false
       },
       "expected": {
         "chart_pillars": [

@@ -280,7 +280,7 @@
         "counts_toward_boundary_gate": true,
         "execution_test": "test_strength_boundary_fixture_executes_real_calculation",
         "categories": [
-          "incomplete_three_groups"
+          "incomplete_three_group"
         ],
         "demonstrated_behaviors": [
           "incomplete_relation_asserted"
@@ -349,7 +349,8 @@
                 "火"
               ]
             }
-          ]
+          ],
+          "cross_school_rule_id": "school.cross_school_disagreement.pattern_preferences"
         }
       },
       "fixture_metadata": {
