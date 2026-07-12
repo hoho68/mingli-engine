@@ -16,6 +16,7 @@ from mingli_engine.materials_audit import validate_materials_audit_quality
 from mingli_engine.models import (
     ProjectCompletionFeatureResult,
     ProjectCompletionSummary,
+    ReportAcceptanceSummary,
 )
 from mingli_engine.report_acceptance import build_report_acceptance_summary
 from mingli_engine.report_release import build_report_release_summary
@@ -205,6 +206,8 @@ def build_project_completion_summary(
     *,
     specs_dir: Path | None = None,
     docs_dir: Path | None = None,
+    calculation_checks: dict[str, str] | None = None,
+    acceptance_summary: ReportAcceptanceSummary | None = None,
 ) -> ProjectCompletionSummary:
     resolved_specs_dir = specs_dir or DEFAULT_SPECS_DIR
     resolved_docs_dir = docs_dir or DEFAULT_DOCS_DIR
@@ -286,13 +289,19 @@ def build_project_completion_summary(
         ),
     }
     quality_ready = all(status == PASS for status in quality_checks.values())
-    calculation_checks = build_calculation_checks()
-    calculation_ready = bool(calculation_checks) and all(
-        status == PASS for status in calculation_checks.values()
+    resolved_calculation_checks = (
+        dict(calculation_checks)
+        if calculation_checks is not None
+        else build_calculation_checks()
+    )
+    calculation_ready = bool(resolved_calculation_checks) and all(
+        status == PASS for status in resolved_calculation_checks.values()
     )
 
     try:
-        acceptance = build_report_acceptance_summary()
+        acceptance = acceptance_summary or build_report_acceptance_summary(
+            calculation_checks=resolved_calculation_checks,
+        )
         acceptance_ready = acceptance.acceptance_status in {
             "ready",
             "ready_with_guardrails",
@@ -301,7 +310,10 @@ def build_project_completion_summary(
         acceptance = None
         acceptance_ready = False
     try:
-        release = build_report_release_summary()
+        release = build_report_release_summary(
+            calculation_checks=resolved_calculation_checks,
+            acceptance_summary=acceptance,
+        )
         release_ready = (
             release.release_status in {"ready", "ready_with_guardrails"}
             and acceptance is not None
@@ -409,5 +421,5 @@ def build_project_completion_summary(
         controlled_boundaries=controlled_boundaries,
         remaining_local_blockers=remaining_local_blockers,
         next_action=next_action,
-        calculation_checks=calculation_checks,
+        calculation_checks=resolved_calculation_checks.copy(),
     )

@@ -4,6 +4,7 @@ from dataclasses import asdict, replace
 from datetime import datetime
 from hashlib import sha256
 import json
+import os
 from pathlib import Path
 from typing import Any, Callable
 
@@ -60,10 +61,23 @@ from mingli_engine.report_schema import build_report
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FIXTURE_DIR = REPO_ROOT / "tests" / "fixtures" / "bazi_calculation"
 DEFAULT_SNAPSHOT_ROOTS = (
-    REPO_ROOT / "src" / "mingli_engine" / "data" / "calculation",
-    REPO_ROOT / "src" / "mingli_engine" / "data" / "classical_sources",
+    REPO_ROOT / "src" / "mingli_engine",
     DEFAULT_FIXTURE_DIR,
     REPO_ROOT / "docs" / "classical_sources",
+)
+_WORKSPACE_EXCLUDED_DIRS = frozenset({".git", ".venv", ".uv_cache_tmp"})
+_CACHE_DIR_NAMES = frozenset(
+    {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+)
+_PERSONAL_ARTIFACT_MARKERS = (
+    "birth-profile",
+    "birth_profile",
+    "personal-profile",
+    "personal_profile",
+    "personal-report",
+    "personal_report",
+    "report-output",
+    "report_output",
 )
 PASS = "passed"
 FAIL = "failed"
@@ -758,6 +772,7 @@ def _execute_boundary_case(
 
 
 def _boundary_fixture_ready(fixture_dir: Path) -> bool:
+    tracked_ids: list[str] = []
     counted_ids: list[str] = []
     categories: set[str] = set()
     luck_cases: list[dict[str, Any]] = []
@@ -783,8 +798,9 @@ def _boundary_fixture_ready(fixture_dir: Path) -> bool:
             metadata = case.get("fixture_metadata")
             if not isinstance(metadata, dict):
                 return False
-            if metadata.get("counts_toward_boundary_gate") is not True:
-                continue
+            counts_toward_gate = metadata.get("counts_toward_boundary_gate")
+            if not isinstance(counts_toward_gate, bool):
+                return False
             derived, execution_result = _execute_boundary_case(case, fixture_name)
             expected_tests = {
                 _BOUNDARY_BEHAVIOR_CONTRACTS[item][0] for item in derived
@@ -805,21 +821,24 @@ def _boundary_fixture_ready(fixture_dir: Path) -> bool:
                 != expected_behaviors
             ):
                 return False
-            counted_ids.append(case_id)
-            categories.update(derived)
+            tracked_ids.append(case_id)
             if fixture_name == "luck_cycle_boundary_cases.json":
                 luck_cases.append(case)
                 if execution_result is not None:
                     luck_results[case_id] = execution_result
+            if counts_toward_gate:
+                counted_ids.append(case_id)
+                categories.update(derived)
     _validate_solar_boundary_group(luck_cases, luck_results)
     return (
         len(counted_ids) >= 20
         and len(counted_ids) == len(set(counted_ids))
+        and len(tracked_ids) == len(set(tracked_ids))
         and _REQUIRED_BOUNDARY_CATEGORIES <= categories
     )
 
 
-def _snapshot(roots: tuple[Path, ...]) -> tuple[tuple[str, str], ...]:
+def _content_snapshot(roots: tuple[Path, ...]) -> tuple[tuple[str, str], ...]:
     entries: list[tuple[str, str]] = []
     for root in roots:
         resolved = root.resolve()
@@ -829,6 +848,57 @@ def _snapshot(roots: tuple[Path, ...]) -> tuple[tuple[str, str], ...]:
         for path in sorted(item for item in resolved.rglob("*") if item.is_file()):
             entries.append((str(path), sha256(path.read_bytes()).hexdigest()))
     return tuple(entries)
+
+
+def _workspace_snapshot(
+    workspace_root: Path,
+) -> tuple[tuple[str, int, int], ...]:
+    root = workspace_root.resolve()
+    if not root.is_dir():
+        raise ValueError("workspace root is unavailable")
+    entries: list[tuple[str, int, int]] = []
+    for current, dir_names, file_names in os.walk(root, followlinks=False):
+        dir_names[:] = sorted(
+            name for name in dir_names if name not in _WORKSPACE_EXCLUDED_DIRS
+        )
+        current_path = Path(current)
+        for file_name in sorted(file_names):
+            path = current_path / file_name
+            if not path.is_file() or path.is_symlink():
+                continue
+            stat = path.stat()
+            entries.append(
+                (
+                    path.relative_to(root).as_posix(),
+                    stat.st_size,
+                    stat.st_mtime_ns,
+                )
+            )
+    return tuple(entries)
+
+
+def _artifact_snapshot(workspace_root: Path) -> frozenset[str]:
+    root = workspace_root.resolve()
+    artifacts: set[str] = set()
+    for current, dir_names, file_names in os.walk(root, followlinks=False):
+        dir_names[:] = sorted(
+            name for name in dir_names if name not in _WORKSPACE_EXCLUDED_DIRS
+        )
+        current_path = Path(current)
+        for dir_name in dir_names:
+            if dir_name in _CACHE_DIR_NAMES:
+                artifacts.add(
+                    (current_path / dir_name).relative_to(root).as_posix() + "/"
+                )
+        for file_name in sorted(file_names):
+            normalized = file_name.casefold()
+            if normalized.endswith(".pyc") or any(
+                marker in normalized for marker in _PERSONAL_ARTIFACT_MARKERS
+            ):
+                artifacts.add(
+                    (current_path / file_name).relative_to(root).as_posix()
+                )
+    return frozenset(artifacts)
 
 
 def _reasonings(bundle: Any) -> tuple[Any, ...]:
@@ -966,8 +1036,10 @@ def build_calculation_checks(
     *,
     fixture_dir: Path | None = None,
     snapshot_roots: tuple[Path, ...] | None = None,
+    workspace_root: Path | None = None,
 ) -> dict[str, str]:
     resolved_fixture_dir = fixture_dir or DEFAULT_FIXTURE_DIR
+    resolved_workspace_root = workspace_root or REPO_ROOT
     if snapshot_roots is not None:
         roots = snapshot_roots
     elif fixture_dir is not None:
@@ -977,11 +1049,17 @@ def build_calculation_checks(
         )
     else:
         roots = DEFAULT_SNAPSHOT_ROOTS
-    before: tuple[tuple[str, str], ...] | None
+    before_content: tuple[tuple[str, str], ...] | None
+    before_workspace: tuple[tuple[str, int, int], ...] | None
+    before_artifacts: frozenset[str] | None
     try:
-        before = _snapshot(roots)
+        before_content = _content_snapshot(roots)
+        before_workspace = _workspace_snapshot(resolved_workspace_root)
+        before_artifacts = _artifact_snapshot(resolved_workspace_root)
     except Exception:
-        before = None
+        before_content = None
+        before_workspace = None
+        before_artifacts = None
 
     runtime = {
         "stages_present": False,
@@ -1012,8 +1090,17 @@ def build_calculation_checks(
         "no_persistence": False,
     }
     try:
-        after = _snapshot(roots)
-        checks["no_persistence"] = before is not None and before == after
+        after_content = _content_snapshot(roots)
+        after_workspace = _workspace_snapshot(resolved_workspace_root)
+        after_artifacts = _artifact_snapshot(resolved_workspace_root)
+        checks["no_persistence"] = (
+            before_content is not None
+            and before_workspace is not None
+            and before_artifacts is not None
+            and before_content == after_content
+            and before_workspace == after_workspace
+            and before_artifacts == after_artifacts
+        )
     except Exception:
         checks["no_persistence"] = False
     return {

@@ -1,4 +1,5 @@
 import json
+import os
 import shutil
 from pathlib import Path
 
@@ -135,6 +136,19 @@ def test_boundary_gate_executes_pattern_semantics(tmp_path: Path):
     assert checks["boundary_fixture_count"] == "failed"
 
 
+def test_boundary_gate_validates_false_count_cases(tmp_path: Path):
+    fixture_dir = _copy_fixtures(tmp_path)
+    path, payload = _load_fixture(fixture_dir, "pattern_counterexamples.json")
+    case = next(item for item in payload["counterexamples"] if item["expected_damage"])
+    case["fixture_metadata"]["counts_toward_boundary_gate"] = False
+    case["expected_damage"] = ["not_the_calculated_damage"]
+    _write_fixture(path, payload)
+
+    checks = build_calculation_checks(fixture_dir=fixture_dir)
+
+    assert checks["boundary_fixture_count"] == "failed"
+
+
 def test_corrupted_fixture_blocks_all_completion_gates(monkeypatch, tmp_path: Path):
     fixture_dir = _copy_fixtures(tmp_path)
     path, payload = _load_fixture(fixture_dir, "verified_charts.json")
@@ -159,7 +173,7 @@ def test_corrupted_fixture_blocks_all_completion_gates(monkeypatch, tmp_path: Pa
     monkeypatch.setattr(
         report_release,
         "build_report_acceptance_summary",
-        lambda: acceptance,
+        lambda **_kwargs: acceptance,
     )
     release = report_release.build_report_release_summary()
     assert release.release_status == "blocked"
@@ -183,12 +197,12 @@ def test_corrupted_fixture_blocks_all_completion_gates(monkeypatch, tmp_path: Pa
     monkeypatch.setattr(
         project_completion,
         "build_report_acceptance_summary",
-        lambda: acceptance,
+        lambda **_kwargs: acceptance,
     )
     monkeypatch.setattr(
         project_completion,
         "build_report_release_summary",
-        lambda: release,
+        lambda **_kwargs: release,
     )
     completion = project_completion.build_project_completion_summary()
     assert completion.completion_status == "blocked"
@@ -237,6 +251,96 @@ def test_validator_snapshots_custom_fixture_root(monkeypatch, tmp_path: Path):
     )
 
     checks = build_calculation_checks(fixture_dir=fixture_dir)
+
+    assert checks["no_persistence"] == "failed"
+
+
+def _checks_with_workspace_mutation(
+    monkeypatch,
+    workspace: Path,
+    mutate,
+):
+    original = calculation_validation._run_runtime_probes
+
+    def probe_with_mutation():
+        result = original()
+        mutate()
+        return result
+
+    monkeypatch.setattr(
+        calculation_validation,
+        "_run_runtime_probes",
+        probe_with_mutation,
+    )
+    monkeypatch.setattr(
+        calculation_validation,
+        "_verified_fixture_ready",
+        lambda fixture_dir: True,
+    )
+    monkeypatch.setattr(
+        calculation_validation,
+        "_boundary_fixture_ready",
+        lambda fixture_dir: True,
+    )
+    return build_calculation_checks(
+        workspace_root=workspace,
+        snapshot_roots=(),
+    )
+
+
+def test_validator_detects_same_byte_overwrite(monkeypatch, tmp_path: Path):
+    watched = tmp_path / "notes.txt"
+    watched.write_bytes(b"unchanged bytes")
+    original = watched.stat()
+
+    def overwrite():
+        watched.write_bytes(b"unchanged bytes")
+        os.utime(
+            watched,
+            ns=(original.st_atime_ns, original.st_mtime_ns + 1_000_000),
+        )
+
+    checks = _checks_with_workspace_mutation(monkeypatch, tmp_path, overwrite)
+
+    assert checks["no_persistence"] == "failed"
+
+
+def test_validator_detects_new_file_outside_critical_roots(
+    monkeypatch,
+    tmp_path: Path,
+):
+    def create_unscoped_file():
+        target = tmp_path / "formerly-unscoped"
+        target.mkdir()
+        (target / "runtime-created.txt").write_text("created", encoding="utf-8")
+
+    checks = _checks_with_workspace_mutation(
+        monkeypatch,
+        tmp_path,
+        create_unscoped_file,
+    )
+
+    assert checks["no_persistence"] == "failed"
+
+
+def test_validator_detects_cache_creation(monkeypatch, tmp_path: Path):
+    def create_cache():
+        cache = tmp_path / "nested" / "__pycache__"
+        cache.mkdir(parents=True)
+        (cache / "runtime.pyc").write_bytes(b"cache")
+
+    checks = _checks_with_workspace_mutation(monkeypatch, tmp_path, create_cache)
+
+    assert checks["no_persistence"] == "failed"
+
+
+def test_validator_detects_personal_report_artifact(monkeypatch, tmp_path: Path):
+    def create_report():
+        output = tmp_path / "outputs"
+        output.mkdir()
+        (output / "personal-report.json").write_text("{}", encoding="utf-8")
+
+    checks = _checks_with_workspace_mutation(monkeypatch, tmp_path, create_report)
 
     assert checks["no_persistence"] == "failed"
 

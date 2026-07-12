@@ -14,6 +14,7 @@ from mingli_engine.models import (
     BaziChart,
     BirthProfile,
     Report,
+    ReportAcceptanceSummary,
     ReportReleaseCaseResult,
     ReportReleaseSummary,
 )
@@ -447,12 +448,21 @@ def _evaluate_case(
 
 def build_report_release_summary(
     manifest_path: Path | None = None,
+    *,
+    calculation_checks: dict[str, str] | None = None,
+    acceptance_summary: ReportAcceptanceSummary | None = None,
 ) -> ReportReleaseSummary:
     manifest = load_report_release_manifest(manifest_path)
-    acceptance = build_report_acceptance_summary()
-    calculation_checks = build_calculation_checks()
-    calculation_ready = bool(calculation_checks) and all(
-        value == PASS for value in calculation_checks.values()
+    resolved_calculation_checks = (
+        dict(calculation_checks)
+        if calculation_checks is not None
+        else build_calculation_checks()
+    )
+    acceptance = acceptance_summary or build_report_acceptance_summary(
+        calculation_checks=resolved_calculation_checks,
+    )
+    calculation_ready = bool(resolved_calculation_checks) and all(
+        value == PASS for value in resolved_calculation_checks.values()
     )
     evaluations = [_evaluate_case(case) for case in manifest]
     cases = [result for result, _, _ in evaluations]

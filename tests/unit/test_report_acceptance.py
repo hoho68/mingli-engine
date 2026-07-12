@@ -142,6 +142,17 @@ def test_acceptance_blocks_failed_calculation_validation(monkeypatch):
     assert summary.next_action == "resolve_failed_acceptance_cases"
 
 
+def test_acceptance_uses_copy_of_precomputed_calculation_checks():
+    provided = {"stages_present": "failed"}
+
+    summary = build_report_acceptance_summary(calculation_checks=provided)
+    calculation_case = _case_by_id(summary, "calculation_validation")
+    provided["stages_present"] = "passed"
+
+    assert calculation_case.checks == {"stages_present": "failed"}
+    assert calculation_case.checks is not provided
+
+
 def test_acceptance_summary_returns_blocked_packet_when_report_gate_fails(
     monkeypatch,
 ):

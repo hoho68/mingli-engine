@@ -355,8 +355,15 @@ def determine_report_acceptance_status(
     return "ready"
 
 
-def build_report_acceptance_summary() -> ReportAcceptanceSummary:
-    calculation_checks = build_calculation_checks()
+def build_report_acceptance_summary(
+    *,
+    calculation_checks: dict[str, str] | None = None,
+) -> ReportAcceptanceSummary:
+    resolved_calculation_checks = (
+        dict(calculation_checks)
+        if calculation_checks is not None
+        else build_calculation_checks()
+    )
     try:
         report = _build_safe_report()
     except KnowledgeActivationError:
@@ -394,15 +401,18 @@ def build_report_acceptance_summary() -> ReportAcceptanceSummary:
         _high_risk_rejection_case(),
         _unavailable_degradation_case(),
     ]
-    if not calculation_checks or any(
-        value != _PASS for value in calculation_checks.values()
+    if not resolved_calculation_checks or any(
+        value != _PASS for value in resolved_calculation_checks.values()
     ):
         cases.append(
             ReportAcceptanceCaseResult(
                 case_id="calculation_validation",
                 scenario_type="calculation_gate",
                 status=_FAIL,
-                checks=calculation_checks or {"calculation_validation": _FAIL},
+                checks=(
+                    resolved_calculation_checks.copy()
+                    or {"calculation_validation": _FAIL}
+                ),
                 guardrails=["calculation_failure_blocks_report_acceptance"],
             )
         )

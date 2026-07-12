@@ -59,12 +59,12 @@ def _stable_runtime_gates(monkeypatch):
     monkeypatch.setattr(
         project_completion,
         "build_report_acceptance_summary",
-        lambda: BASELINE_ACCEPTANCE,
+        lambda **_kwargs: BASELINE_ACCEPTANCE,
     )
     monkeypatch.setattr(
         project_completion,
         "build_report_release_summary",
-        lambda: BASELINE_RELEASE,
+        lambda **_kwargs: BASELINE_RELEASE,
     )
 
 
@@ -149,6 +149,45 @@ def test_completion_blocks_and_names_failed_calculation_validation(monkeypatch):
     assert summary.calculation_checks == failed_checks
     assert summary.completion_checks["calculation_validation"] == "failed"
     assert "calculation_validation" in summary.remaining_local_blockers
+
+
+def test_completion_computes_one_check_map_and_propagates_it(monkeypatch):
+    calls = 0
+    acceptance_inputs = []
+    release_inputs = []
+
+    def build_checks():
+        nonlocal calls
+        calls += 1
+        return CALCULATION_CHECKS.copy()
+
+    def build_acceptance(*, calculation_checks=None):
+        acceptance_inputs.append(calculation_checks)
+        return BASELINE_ACCEPTANCE
+
+    def build_release(*, calculation_checks=None, acceptance_summary=None):
+        release_inputs.append((calculation_checks, acceptance_summary))
+        return BASELINE_RELEASE
+
+    monkeypatch.setattr(project_completion, "build_calculation_checks", build_checks)
+    monkeypatch.setattr(
+        project_completion,
+        "build_report_acceptance_summary",
+        build_acceptance,
+    )
+    monkeypatch.setattr(
+        project_completion,
+        "build_report_release_summary",
+        build_release,
+    )
+
+    summary = build_project_completion_summary()
+
+    assert calls == 1
+    assert acceptance_inputs == [CALCULATION_CHECKS]
+    assert release_inputs == [(CALCULATION_CHECKS, BASELINE_ACCEPTANCE)]
+    assert summary.calculation_checks == CALCULATION_CHECKS
+    assert summary.calculation_checks is not acceptance_inputs[0]
 
 
 def test_feature_results_distinguish_legacy_and_task_tracked_features():
@@ -287,7 +326,7 @@ def test_completion_propagates_quality_and_release_failures(monkeypatch):
     monkeypatch.setattr(
         project_completion,
         "build_report_release_summary",
-        lambda: blocked_release,
+        lambda **_kwargs: blocked_release,
     )
 
     summary = build_project_completion_summary()
@@ -308,7 +347,7 @@ def test_completion_blocks_release_acceptance_baseline_drift(monkeypatch):
     monkeypatch.setattr(
         project_completion,
         "build_report_release_summary",
-        lambda: drifted_release,
+        lambda **_kwargs: drifted_release,
     )
 
     summary = build_project_completion_summary()

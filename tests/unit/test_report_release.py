@@ -380,7 +380,7 @@ def test_release_summary_blocks_when_report_acceptance_is_blocked(monkeypatch):
     monkeypatch.setattr(
         report_release,
         "build_report_acceptance_summary",
-        lambda: blocked,
+        lambda **_kwargs: blocked,
     )
 
     summary = build_report_release_summary()
@@ -402,6 +402,34 @@ def test_release_summary_blocks_failed_calculation_validation(monkeypatch):
 
     assert summary.release_status == "blocked"
     assert summary.next_action == "repair_calculation_validation"
+
+
+def test_standalone_release_computes_calculation_checks_once(monkeypatch):
+    calls = 0
+    propagated = []
+    real_acceptance = report_release.build_report_acceptance_summary
+
+    def build_checks():
+        nonlocal calls
+        calls += 1
+        return {"stages_present": "passed"}
+
+    def build_acceptance(*, calculation_checks=None):
+        propagated.append(calculation_checks)
+        return real_acceptance(calculation_checks=calculation_checks)
+
+    monkeypatch.setattr(report_release, "build_calculation_checks", build_checks)
+    monkeypatch.setattr(
+        report_release,
+        "build_report_acceptance_summary",
+        build_acceptance,
+    )
+
+    summary = build_report_release_summary()
+
+    assert calls == 1
+    assert propagated == [{"stages_present": "passed"}]
+    assert summary.release_status == "ready_with_guardrails"
 
 
 def test_release_cli_handler_returns_nonzero_for_blocked_packet(
