@@ -1,0 +1,9 @@
+{
+  "version": "school-profiles-v1",
+  "enabled": ["ziping", "liang_xiangrun", "duan"],
+  "profiles": {
+    "ziping": {"priority": 100, "method_order": ["support_control", "seasonal_adjustment", "mediation", "illness_remedy"]},
+    "liang_xiangrun": {"priority": 80, "method_order": ["pattern_context", "seasonal_adjustment", "support_control"]},
+    "duan": {"priority": 70, "method_order": ["structural_flow", "support_control", "pattern_context"]}
+  }
+}
