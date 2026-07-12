@@ -22,6 +22,7 @@ from mingli_engine.bazi.result_models import (
     Confidence,
     PatternCandidateResult,
     ReasonedResult,
+    RootFact,
     StrengthResult,
     UsefulGodCandidateResult,
 )
@@ -203,6 +204,25 @@ def _validate_chart_facts(facts: ChartFacts) -> Element:
                 f"{pillar} pillar must contain complete canonical hidden stems "
                 "in HIDDEN_STEMS order"
             )
+
+    expected_roots = tuple(
+        RootFact(
+            stem=exposed_item.stem,
+            stem_pillar=exposed_item.pillar_name,
+            branch=hidden_item.branch,
+            branch_pillar=hidden_item.pillar_name,
+            role=hidden_item.role,
+            exact_stem_root=True,
+        )
+        for exposed_item in facts.exposed_stems
+        for hidden_item in facts.hidden_stems
+        if exposed_item.stem == hidden_item.stem
+    )
+    if facts.roots != expected_roots:
+        raise ValueError(
+            "facts.roots must exactly match canonical roots derived from "
+            "exposed and hidden stems"
+        )
 
     day_element = STEM_ELEMENT[facts.day_master]
     return cast(Element, day_element)
@@ -580,9 +600,15 @@ def _validate_patterns(
     patterns: tuple[PatternCandidateResult, ...],
     provenance_index: frozenset[str],
 ) -> None:
-    baseline_by_id = {
-        item.pattern_id: item for item in calculate_pattern_candidates(facts, strength)
-    }
+    baseline = calculate_pattern_candidates(facts, strength)
+    baseline_ids = tuple(item.pattern_id for item in baseline)
+    supplied_ids = tuple(item.pattern_id for item in patterns)
+    if supplied_ids != baseline_ids:
+        raise ValueError(
+            "supplied patterns must match canonical pattern sequence exactly: "
+            f"expected={baseline_ids!r}; supplied={supplied_ids!r}"
+        )
+    baseline_by_id = {item.pattern_id: item for item in baseline}
     seen_pattern_ids: set[str] = set()
     for item in patterns:
         if (

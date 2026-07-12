@@ -1,4 +1,5 @@
 from dataclasses import FrozenInstanceError, replace
+from typing import Final, Mapping, TypeGuard
 
 import pytest
 
@@ -9,17 +10,24 @@ from mingli_engine.bazi.constants import (
     STEM_POLARITY,
     STEMS,
 )
-from mingli_engine.bazi.facts import build_chart_facts, ten_god
+from mingli_engine.bazi.facts import Branch, Stem, build_chart_facts, ten_god
 from mingli_engine.bazi.patterns import calculate_pattern_candidates
 from mingli_engine.bazi.result_models import (
     BranchRelationResult,
     ChartFacts,
     HiddenStemFact,
     PatternCandidateResult,
+    RootFact,
     StemFact,
     StrengthResult,
+    UsefulGodCandidateResult,
 )
-from mingli_engine.bazi.strength import calculate_strength, load_strength_config
+from mingli_engine.bazi.strength import (
+    Element,
+    ElementCategory,
+    calculate_strength,
+    load_strength_config,
+)
 from mingli_engine.bazi.useful_gods import (
     SUMMER_BRANCHES,
     WINTER_BRANCHES,
@@ -30,29 +38,52 @@ from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.models import BirthProfile
 
 
-PILLARS = ("year", "month", "day", "hour")
-DEFAULT_BRANCHES = ("子", "酉", "卯", "亥")
-STRENGTH_CASES = {
+PILLARS: Final = ("year", "month", "day", "hour")
+DEFAULT_BRANCHES: Final[tuple[Branch, Branch, Branch, Branch]] = (
+    "子",
+    "酉",
+    "卯",
+    "亥",
+)
+STRENGTH_CASES: Final[
+    Mapping[Stem, Mapping[str, tuple[Branch, tuple[Stem, Stem, Stem]]]]
+] = {
     "甲": {
-        "强": ("子", "甲"),
-        "偏强": ("子", "丙"),
-        "较平衡": ("巳", "甲"),
-        "偏弱": ("辰", "丙"),
-        "弱": ("丑", "丙"),
+        "强": ("子", ("甲", "甲", "甲")),
+        "偏强": ("巳", ("甲", "甲", "甲")),
+        "较平衡": ("丑", ("甲", "甲", "庚")),
+        "偏弱": ("丑", ("丙", "丙", "丙")),
+        "弱": ("巳", ("庚", "庚", "庚")),
     },
-    "丙": {"强": ("寅", "甲"), "弱": ("子", "戊")},
-    "戊": {"强": ("丑", "丙"), "弱": ("子", "甲")},
-    "庚": {"强": ("丑", "戊"), "弱": ("子", "甲")},
-    "壬": {"强": ("子", "庚"), "弱": ("丑", "甲")},
+    "丙": {
+        "强": ("寅", ("甲", "甲", "甲")),
+        "弱": ("子", ("戊", "戊", "戊")),
+    },
+    "戊": {
+        "强": ("丑", ("丙", "丙", "丙")),
+        "弱": ("子", ("甲", "甲", "甲")),
+    },
+    "庚": {
+        "强": ("丑", ("戊", "戊", "戊")),
+        "弱": ("子", ("甲", "甲", "甲")),
+    },
+    "壬": {
+        "强": ("子", ("甲", "甲", "甲")),
+        "弱": ("丑", ("戊", "戊", "戊")),
+    },
 }
 
 
+def is_stem(value: str) -> TypeGuard[Stem]:
+    return value in STEMS
+
+
 def chart_facts(
-    day_master: str = "甲",
+    day_master: Stem = "甲",
     *,
-    month_branch: str = "酉",
-    exposed: tuple[str, str, str, str] | None = None,
-    branches: tuple[str, str, str, str] | None = None,
+    month_branch: Branch = "酉",
+    exposed: tuple[Stem, Stem, Stem, Stem] | None = None,
+    branches: tuple[Branch, Branch, Branch, Branch] | None = None,
 ) -> ChartFacts:
     stems = exposed or ("壬", "辛", day_master, "癸")
     active_branches = branches or (
@@ -84,25 +115,43 @@ def chart_facts(
         for pillar, branch in zip(PILLARS, active_branches, strict=True)
         for stem, role in HIDDEN_STEMS[branch]
     )
+    roots = tuple(
+        RootFact(
+            stem=exposed_item.stem,
+            stem_pillar=exposed_item.pillar_name,
+            branch=hidden_item.branch,
+            branch_pillar=hidden_item.pillar_name,
+            role=hidden_item.role,
+            exact_stem_root=True,
+        )
+        for exposed_item in exposed_facts
+        for hidden_item in hidden_facts
+        if exposed_item.stem == hidden_item.stem
+    )
     return ChartFacts(
         day_master=day_master,
         month_branch=month_branch,
         exposed_stems=exposed_facts,
         hidden_stems=hidden_facts,
-        roots=(),
+        roots=roots,
         twelve_growth_by_pillar=(),
         assumptions=("facts:useful-god-test",),
     )
 
 
 def strength_case(
-    day_master: str = "甲", label: str = "较平衡"
+    day_master: Stem = "甲", label: str = "较平衡"
 ) -> tuple[ChartFacts, StrengthResult]:
-    month_branch, target_stem = STRENGTH_CASES[day_master][label]
+    month_branch, non_day_stems = STRENGTH_CASES[day_master][label]
     facts = chart_facts(
         day_master,
         month_branch=month_branch,
-        exposed=(target_stem, target_stem, day_master, target_stem),
+        exposed=(
+            non_day_stems[0],
+            non_day_stems[1],
+            day_master,
+            non_day_stems[2],
+        ),
     )
     result = calculate_strength(facts)
     assert result.reasoning.status == "computed"
@@ -110,8 +159,10 @@ def strength_case(
     return facts, result
 
 
-def computed_month_case(month_branch: str) -> tuple[ChartFacts, StrengthResult]:
+def computed_month_case(month_branch: Branch) -> tuple[ChartFacts, StrengthResult]:
     for target_stem in STEMS:
+        if not is_stem(target_stem):
+            raise AssertionError(f"invalid canonical stem {target_stem!r}")
         facts = chart_facts(
             month_branch=month_branch,
             exposed=(target_stem, target_stem, "甲", target_stem),
@@ -122,14 +173,18 @@ def computed_month_case(month_branch: str) -> tuple[ChartFacts, StrengthResult]:
     raise AssertionError(f"no computed canonical case for {month_branch}")
 
 
-def method_results(results, method: str):
+def method_results(
+    results: tuple[UsefulGodCandidateResult, ...], method: str
+) -> tuple[UsefulGodCandidateResult, ...]:
     return tuple(item for item in results if item.method == method)
 
 
 def damaged_pattern_case(
     *, rescue: bool = True
 ) -> tuple[ChartFacts, StrengthResult, PatternCandidateResult]:
-    exposed = ("丁", "辛", "甲", "癸") if rescue else ("甲", "辛", "甲", "丁")
+    exposed: tuple[Stem, Stem, Stem, Stem] = (
+        ("甲", "丁", "甲", "壬") if rescue else ("甲", "甲", "甲", "丁")
+    )
     facts = chart_facts(exposed=exposed)
     actual_strength = calculate_strength(facts)
     assert actual_strength.reasoning.status == "computed"
@@ -153,8 +208,37 @@ def blocked_relation() -> BranchRelationResult:
     )
 
 
+def baseline_patterns(
+    facts: ChartFacts, strength: StrengthResult
+) -> tuple[PatternCandidateResult, ...]:
+    return calculate_pattern_candidates(facts, strength)
+
+
+def calculate_with_baseline(
+    facts: ChartFacts, strength: StrengthResult
+) -> tuple[UsefulGodCandidateResult, ...]:
+    return calculate_useful_god_candidates(
+        facts,
+        strength,
+        baseline_patterns(facts, strength),
+    )
+
+
+def replace_baseline_pattern(
+    baseline: tuple[PatternCandidateResult, ...],
+    replacement: PatternCandidateResult,
+) -> tuple[PatternCandidateResult, ...]:
+    return tuple(
+        replacement if item.pattern_id == replacement.pattern_id else item
+        for item in baseline
+    )
+
+
 def test_strength_prerequisite_returns_exactly_one_blocked_result() -> None:
-    facts = chart_facts(month_branch="巳")
+    facts = chart_facts(
+        month_branch="子",
+        exposed=("庚", "庚", "甲", "庚"),
+    )
     upstream = calculate_strength(facts)
     assert upstream.reasoning.status == "indeterminate"
 
@@ -197,13 +281,13 @@ def test_blocked_candidate_validates_method_and_records_reason() -> None:
     ],
 )
 def test_support_control_maps_all_five_day_elements(
-    day_master: str,
-    strong_expected: tuple[str, ...],
-    weak_expected: tuple[str, ...],
+    day_master: Stem,
+    strong_expected: tuple[Element, ...],
+    weak_expected: tuple[Element, ...],
 ) -> None:
     for label in ("强", "弱"):
         facts, actual_strength = strength_case(day_master, label)
-        results = calculate_useful_god_candidates(facts, actual_strength, ())
+        results = calculate_with_baseline(facts, actual_strength)
         expected = strong_expected if label == "强" else weak_expected
         assert (
             tuple(item.element for item in method_results(results, "support_control"))
@@ -216,10 +300,10 @@ def test_support_control_maps_all_five_day_elements(
     [("偏强", ("火", "土", "金")), ("偏弱", ("水", "木"))],
 )
 def test_partial_strength_labels_keep_directional_order(
-    label: str, expected: tuple[str, ...]
+    label: str, expected: tuple[Element, ...]
 ) -> None:
     facts, actual_strength = strength_case("甲", label)
-    results = calculate_useful_god_candidates(facts, actual_strength, ())
+    results = calculate_with_baseline(facts, actual_strength)
     assert (
         tuple(item.element for item in method_results(results, "support_control"))
         == expected
@@ -229,7 +313,7 @@ def test_partial_strength_labels_keep_directional_order(
 def test_balanced_strength_has_no_directional_preference() -> None:
     facts, actual_strength = strength_case()
     support = method_results(
-        calculate_useful_god_candidates(facts, actual_strength, ()),
+        calculate_with_baseline(facts, actual_strength),
         "support_control",
     )
     assert len(support) == 1
@@ -344,7 +428,7 @@ def test_rejects_forged_strength_contribution_despite_consistent_totals() -> Non
 def test_rejects_same_version_custom_strength_profile() -> None:
     facts, _actual = strength_case("甲", "强")
     config = load_strength_config()
-    custom_exposed = dict(config.exposed)
+    custom_exposed: dict[ElementCategory, float] = dict(config.exposed)
     custom_exposed["companion"] += 1.0
     custom = replace(config, exposed=custom_exposed)
     custom_strength = calculate_strength(facts, config=custom)
@@ -362,10 +446,10 @@ def test_season_constants_are_immutable_and_exact() -> None:
 
 
 @pytest.mark.parametrize("branch", tuple(WINTER_BRANCHES))
-def test_winter_month_nominates_fire(branch: str) -> None:
+def test_winter_month_nominates_fire(branch: Branch) -> None:
     facts, actual_strength = computed_month_case(branch)
     seasonal = method_results(
-        calculate_useful_god_candidates(facts, actual_strength, ()),
+        calculate_with_baseline(facts, actual_strength),
         "seasonal_adjustment",
     )
     assert [
@@ -375,10 +459,10 @@ def test_winter_month_nominates_fire(branch: str) -> None:
 
 
 @pytest.mark.parametrize("branch", tuple(SUMMER_BRANCHES))
-def test_summer_month_nominates_water(branch: str) -> None:
+def test_summer_month_nominates_water(branch: Branch) -> None:
     facts, actual_strength = computed_month_case(branch)
     seasonal = method_results(
-        calculate_useful_god_candidates(facts, actual_strength, ()),
+        calculate_with_baseline(facts, actual_strength),
         "seasonal_adjustment",
     )
     assert [
@@ -388,10 +472,10 @@ def test_summer_month_nominates_water(branch: str) -> None:
 
 
 @pytest.mark.parametrize("branch", ("寅", "卯", "辰", "申", "酉", "戌"))
-def test_spring_and_autumn_have_no_v1_seasonal_rule(branch: str) -> None:
+def test_spring_and_autumn_have_no_v1_seasonal_rule(branch: Branch) -> None:
     facts, actual_strength = computed_month_case(branch)
     seasonal = method_results(
-        calculate_useful_god_candidates(facts, actual_strength, ()),
+        calculate_with_baseline(facts, actual_strength),
         "seasonal_adjustment",
     )
     assert len(seasonal) == 1
@@ -416,7 +500,7 @@ def test_mediation_detects_explicit_controlling_bottleneck_with_provenance() -> 
     actual_strength = calculate_strength(facts)
     assert actual_strength.reasoning.status == "computed"
     mediation = method_results(
-        calculate_useful_god_candidates(facts, actual_strength, ()),
+        calculate_with_baseline(facts, actual_strength),
         "mediation",
     )
     fire = next(item for item in mediation if item.element == "火")
@@ -440,7 +524,7 @@ def test_mediation_requires_two_controllers_and_absent_bridge() -> None:
         actual_strength = calculate_strength(facts)
         assert actual_strength.reasoning.status == "computed"
         mediation = method_results(
-            calculate_useful_god_candidates(facts, actual_strength, ()),
+            calculate_with_baseline(facts, actual_strength),
             "mediation",
         )
         assert len(mediation) == 1
@@ -507,13 +591,81 @@ def test_rejects_omitted_hidden_bridge_occurrence() -> None:
         calculate_useful_god_candidates(omitted_bridge, actual_strength, ())
 
 
+def test_rejects_extra_root() -> None:
+    facts = chart_facts()
+    actual_strength = calculate_strength(facts)
+    forged = replace(
+        facts,
+        roots=(
+            *facts.roots,
+            replace(facts.roots[0], branch_pillar="forged"),
+        ),
+    )
+    with pytest.raises(ValueError, match="canonical roots"):
+        calculate_useful_god_candidates(
+            forged,
+            actual_strength,
+            baseline_patterns(facts, actual_strength),
+        )
+
+
+def test_rejects_missing_root() -> None:
+    facts = chart_facts()
+    actual_strength = calculate_strength(facts)
+    forged = replace(facts, roots=facts.roots[1:])
+    with pytest.raises(ValueError, match="canonical roots"):
+        calculate_useful_god_candidates(
+            forged,
+            actual_strength,
+            baseline_patterns(facts, actual_strength),
+        )
+
+
+def test_rejects_duplicate_root() -> None:
+    facts = chart_facts()
+    actual_strength = calculate_strength(facts)
+    forged = replace(facts, roots=(*facts.roots, facts.roots[0]))
+    with pytest.raises(ValueError, match="canonical roots"):
+        calculate_useful_god_candidates(
+            forged,
+            actual_strength,
+            baseline_patterns(facts, actual_strength),
+        )
+
+
+def test_rejects_reordered_roots() -> None:
+    facts = chart_facts()
+    actual_strength = calculate_strength(facts)
+    forged = replace(facts, roots=tuple(reversed(facts.roots)))
+    with pytest.raises(ValueError, match="canonical roots"):
+        calculate_useful_god_candidates(
+            forged,
+            actual_strength,
+            baseline_patterns(facts, actual_strength),
+        )
+
+
+def test_repeated_exposed_stem_preserves_root_multiplicity() -> None:
+    facts = chart_facts(exposed=("甲", "甲", "甲", "甲"))
+    actual_strength = calculate_strength(facts)
+    assert tuple(root.stem_pillar for root in facts.roots) == PILLARS
+
+    results = calculate_useful_god_candidates(
+        facts,
+        actual_strength,
+        baseline_patterns(facts, actual_strength),
+    )
+
+    assert results
+
+
 @pytest.mark.parametrize(("label", "expected"), (("强", "火"), ("弱", "水")))
 def test_illness_remedy_extremes_use_first_directional_candidate(
-    label: str, expected: str
+    label: str, expected: Element
 ) -> None:
     facts, actual_strength = strength_case("甲", label)
     illness = method_results(
-        calculate_useful_god_candidates(facts, actual_strength, ()),
+        calculate_with_baseline(facts, actual_strength),
         "illness_remedy",
     )
     assert len(illness) == 1
@@ -565,22 +717,23 @@ def test_rejects_prose_and_forged_rescue_provenance() -> None:
             calculate_useful_god_candidates(facts, actual_strength, (forged,))
 
 
-@pytest.mark.parametrize("trace_field", ("supporting_signals", "opposing_signals"))
+@pytest.mark.parametrize("remove_supporting", (True, False))
 def test_rejects_pattern_conditions_missing_reasoning_trace(
-    trace_field: str,
+    remove_supporting: bool,
 ) -> None:
     facts, actual_strength, damaged = damaged_pattern_case()
-    missing_trace = replace(
-        damaged,
-        reasoning=replace(damaged.reasoning, **{trace_field: ()}),
-    )
+    if remove_supporting:
+        reasoning = replace(damaged.reasoning, supporting_signals=())
+    else:
+        reasoning = replace(damaged.reasoning, opposing_signals=())
+    missing_trace = replace(damaged, reasoning=reasoning)
     with pytest.raises(ValueError, match="reasoning supporting|reasoning opposing"):
         calculate_useful_god_candidates(facts, actual_strength, (missing_trace,))
 
 
 def test_rejects_fabricated_pattern_using_present_unrelated_tokens() -> None:
     facts, actual_strength, expected = damaged_pattern_case()
-    unrelated_damage = "exposed:month:辛:正官"
+    unrelated_damage = "exposed:year:甲:比肩"
     assert unrelated_damage in {
         f"exposed:{item.pillar_name}:{item.stem}:{item.ten_god}"
         for item in facts.exposed_stems
@@ -622,15 +775,25 @@ def test_rejects_illness_pattern_absent_from_recomputed_baseline() -> None:
         name="伪造格",
     )
 
-    with pytest.raises(ValueError, match="absent from canonical baseline"):
+    with pytest.raises(ValueError, match="canonical pattern sequence"):
         calculate_useful_god_candidates(facts, actual_strength, (fabricated,))
+
+
+def test_rejects_omitted_canonical_damaged_pattern() -> None:
+    facts, actual_strength, damaged = damaged_pattern_case()
+    baseline = baseline_patterns(facts, actual_strength)
+    supplied = tuple(item for item in baseline if item.pattern_id != damaged.pattern_id)
+    assert len(supplied) + 1 == len(baseline)
+
+    with pytest.raises(ValueError, match="canonical pattern sequence"):
+        calculate_useful_god_candidates(facts, actual_strength, supplied)
 
 
 def test_rejects_invalid_pattern_identity() -> None:
     facts, actual_strength, damaged = damaged_pattern_case()
     invalid_identity = replace(damaged, pattern_id="", rank=0)
 
-    with pytest.raises(ValueError, match="pattern identity"):
+    with pytest.raises(ValueError, match="canonical pattern sequence"):
         calculate_useful_god_candidates(facts, actual_strength, (invalid_identity,))
 
 
@@ -641,9 +804,12 @@ def test_nondisputed_structural_countercondition_is_not_a_damage_trigger() -> No
         for item in calculate_pattern_candidates(facts, actual_strength)
         if item.pattern_id == "follow.congruo"
     )
+    supplied = replace_baseline_pattern(
+        baseline_patterns(facts, actual_strength), guarded
+    )
 
     illness = method_results(
-        calculate_useful_god_candidates(facts, actual_strength, (guarded,)),
+        calculate_useful_god_candidates(facts, actual_strength, supplied),
         "illness_remedy",
     )
 
@@ -670,15 +836,16 @@ def test_each_damaged_pattern_keeps_its_unresolved_rescue_trace() -> None:
         exposed=("甲", "丁", "甲", "辛"),
     )
     actual_strength = calculate_strength(facts)
+    patterns = baseline_patterns(facts, actual_strength)
     damaged_patterns = tuple(
         item
-        for item in calculate_pattern_candidates(facts, actual_strength)
+        for item in patterns
         if item.reasoning.status == "disputed" and item.damage_conditions
     )
     assert len(damaged_patterns) == 2
 
     illness = method_results(
-        calculate_useful_god_candidates(facts, actual_strength, damaged_patterns),
+        calculate_useful_god_candidates(facts, actual_strength, patterns),
         "illness_remedy",
     )
 
@@ -691,7 +858,7 @@ def test_each_damaged_pattern_keeps_its_unresolved_rescue_trace() -> None:
 def test_illness_remedy_without_trigger_is_not_computed() -> None:
     facts, actual_strength = strength_case("甲", "偏强")
     illness = method_results(
-        calculate_useful_god_candidates(facts, actual_strength, ()),
+        calculate_with_baseline(facts, actual_strength),
         "illness_remedy",
     )
     assert len(illness) == 1
@@ -710,13 +877,10 @@ def test_duplicate_illness_candidates_merge_traces_conservatively() -> None:
         "computed",
         "强",
     )
-    damaged = next(
-        item
-        for item in calculate_pattern_candidates(facts, actual_strength)
-        if item.pattern_id == "standard.piancai"
-    )
+    patterns = baseline_patterns(facts, actual_strength)
+    damaged = next(item for item in patterns if item.pattern_id == "standard.piancai")
     illness = method_results(
-        calculate_useful_god_candidates(facts, actual_strength, (damaged,)),
+        calculate_useful_god_candidates(facts, actual_strength, patterns),
         "illness_remedy",
     )
     fire = tuple(item for item in illness if item.element == "火")
@@ -742,7 +906,7 @@ def test_results_are_unique_ranked_deterministically_and_do_not_mutate_inputs() 
     assert tuple(item.rank for item in first) == tuple(range(1, len(first) + 1))
     assert len({(item.method, item.element) for item in first}) == len(first)
     with pytest.raises(FrozenInstanceError):
-        first[0].rank = 99  # type: ignore[misc]
+        setattr(first[0], "rank", 99)
 
     status_order = {"computed": 0, "indeterminate": 1, "disputed": 2, "not_computed": 3}
     confidence_order = {"high": 0, "medium": 1, "low": 2}
@@ -792,9 +956,12 @@ def test_documented_relation_guard_may_make_pattern_more_conservative() -> None:
     facts, _baseline_strength, _damaged = damaged_pattern_case()
     relation = blocked_relation()
     related_strength = calculate_strength(facts, (relation,))
+    related_patterns = calculate_pattern_candidates(
+        facts, related_strength, (relation,)
+    )
     related_damaged = next(
         item
-        for item in calculate_pattern_candidates(facts, related_strength, (relation,))
+        for item in related_patterns
         if item.reasoning.status == "disputed" and item.damage_conditions
     )
     guarded = replace(
@@ -805,8 +972,9 @@ def test_documented_relation_guard_may_make_pattern_more_conservative() -> None:
             confidence="low",
         ),
     )
+    supplied = replace_baseline_pattern(related_patterns, guarded)
 
-    results = calculate_useful_god_candidates(facts, related_strength, (guarded,))
+    results = calculate_useful_god_candidates(facts, related_strength, supplied)
 
     illness = method_results(results, "illness_remedy")
     assert len(illness) == 1
