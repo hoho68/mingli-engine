@@ -1,0 +1,55 @@
+{
+  "version": "ziping-pattern-counterexamples-v1",
+  "counterexamples": [
+    {
+      "id": "officer_meets_hurting_officer",
+      "pattern_ten_god": "正官",
+      "signals": ["伤官"],
+      "expected_damage": ["伤官"],
+      "expected_rescue": []
+    },
+    {
+      "id": "killing_meets_food_and_seal",
+      "pattern_ten_god": "七杀",
+      "signals": ["食神", "正印"],
+      "expected_damage": [],
+      "expected_rescue": ["食神", "正印"]
+    },
+    {
+      "id": "wealth_meets_companions",
+      "pattern_ten_god": "正财",
+      "signals": ["比肩", "劫财"],
+      "expected_damage": ["比肩", "劫财"],
+      "expected_rescue": []
+    },
+    {
+      "id": "seal_meets_wealth",
+      "pattern_ten_god": "正印",
+      "signals": ["正财", "偏财"],
+      "expected_damage": ["正财", "偏财"],
+      "expected_rescue": []
+    },
+    {
+      "id": "food_meets_indirect_seal",
+      "pattern_ten_god": "食神",
+      "signals": ["偏印"],
+      "expected_damage": ["偏印"],
+      "expected_rescue": []
+    },
+    {
+      "id": "damage_and_rescue_coexist",
+      "pattern_ten_god": "正官",
+      "signals": ["伤官", "正印"],
+      "expected_damage": ["伤官"],
+      "expected_rescue": ["正印"]
+    },
+    {
+      "id": "strength_indeterminate_prerequisite",
+      "pattern_ten_god": "偏财",
+      "signals": [],
+      "expected_damage": [],
+      "expected_rescue": [],
+      "strength_status": "indeterminate"
+    }
+  ]
+}
