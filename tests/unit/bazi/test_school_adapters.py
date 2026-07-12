@@ -84,6 +84,53 @@ def write_config(tmp_path: Path, payload: object) -> Path:
     return path
 
 
+class ReturningAdapter:
+    profile_version = "school-profiles-v1"
+
+    def __init__(self, school_id: str, result: SchoolInterpretation) -> None:
+        self.school_id = school_id
+        self.result = result
+
+    def interpret(self, *, facts, strength, patterns, useful_gods):
+        return self.result
+
+
+def valid_fake_result(
+    *,
+    school_id: str,
+    pattern_id: str,
+    element: str = "",
+) -> SchoolInterpretation:
+    return SchoolInterpretation(
+        school_id=school_id,
+        profile_version="school-profiles-v1",
+        reasoning=ReasonedResult(
+            status="computed",
+            conclusion="validated fake preference",
+            confidence="medium",
+            rule_ids=(f"school.{school_id}.fake",),
+        ),
+        preferred_pattern_ids=(pattern_id,),
+        preferred_useful_god_elements=((element,) if element else ()),
+    )
+
+
+def mutate_reasoning(
+    result: SchoolInterpretation, field_name: str, value: object
+) -> SchoolInterpretation:
+    reasoning = replace(result.reasoning)
+    object.__setattr__(reasoning, field_name, value)
+    return replace(result, reasoning=reasoning)
+
+
+def mutate_preference(
+    result: SchoolInterpretation, field_name: str, value: object
+) -> SchoolInterpretation:
+    mutated = replace(result)
+    object.__setattr__(mutated, field_name, value)
+    return mutated
+
+
 def test_tracked_school_profile_json_is_exact_and_deeply_immutable() -> None:
     config_path = (
         Path(__file__).parents[3]
@@ -230,7 +277,7 @@ def test_ziping_preserves_full_baseline_order_and_method_order() -> None:
     assert any("follow.congruo" in item for item in result.reasoning.opposing_signals)
 
 
-def test_ziping_orders_computed_preferences_before_disputed_candidates() -> None:
+def test_ziping_keeps_earlier_disputed_method_before_later_computed_method() -> None:
     facts, strength, patterns, useful_gods = pipeline_case("1980-06-15")
     assert any(
         item.element and item.reasoning.status == "disputed" for item in useful_gods
@@ -258,8 +305,8 @@ def test_ziping_orders_computed_preferences_before_disputed_candidates() -> None
             for item in sorted(
                 (item for item in useful_gods if item.element),
                 key=lambda item: (
-                    item.reasoning.status != "computed",
                     profile.method_order.index(item.method),
+                    item.reasoning.status != "computed",
                     item.rank,
                 ),
             )
@@ -313,12 +360,25 @@ def test_duan_requires_explicit_conditions_counterconditions_and_provenance() ->
         for item in patterns
         if item.formation_conditions and item.damage_conditions
     )
-    contextual = tuple(
+    clean = tuple(
         item.pattern_id
         for item in patterns
-        if item.formation_conditions and item.pattern_id not in qualifying
+        if item.formation_conditions and not item.damage_conditions
     )
-    assert positive.preferred_pattern_ids == (*qualifying, *contextual)
+    assert qualifying
+    assert clean
+    assert positive.preferred_pattern_ids == qualifying
+    assert not set(clean) & set(positive.preferred_pattern_ids)
+    assert all(
+        item.formation_conditions
+        and item.damage_conditions
+        and all(
+            condition in item.reasoning.opposing_signals
+            for condition in item.damage_conditions
+        )
+        for item in patterns
+        if item.pattern_id in positive.preferred_pattern_ids
+    )
     assert positive.preferred_useful_god_elements
     assert "school.duan.structural_flow" in positive.reasoning.rule_ids
     assert any(
@@ -440,13 +500,224 @@ def test_aggregation_preserves_preferences_and_marks_only_real_disagreement() ->
     )
 
 
+@pytest.mark.parametrize(
+    "forge",
+    [
+        lambda result: replace(result, profile_version="wrong-version"),
+        lambda result: replace(
+            result, reasoning=replace(result.reasoning, rule_ids=())
+        ),
+        lambda result: replace(
+            result,
+            reasoning=replace(result.reasoning, rule_ids=("other.rule",)),
+        ),
+        lambda result: mutate_reasoning(result, "status", "invalid"),
+        lambda result: mutate_reasoning(result, "confidence", "invalid"),
+        lambda result: replace(result, preferred_pattern_ids=("unknown.pattern",)),
+        lambda result: replace(
+            result,
+            preferred_pattern_ids=(
+                result.preferred_pattern_ids[0],
+                result.preferred_pattern_ids[0],
+            ),
+        ),
+        lambda result: replace(
+            result, preferred_useful_god_elements=("unknown-element",)
+        ),
+        lambda result: replace(
+            result,
+            preferred_useful_god_elements=(
+                result.preferred_useful_god_elements[0],
+                result.preferred_useful_god_elements[0],
+            ),
+        ),
+        lambda result: mutate_preference(
+            result, "preferred_pattern_ids", [result.preferred_pattern_ids[0]]
+        ),
+        lambda result: mutate_preference(
+            result, "preferred_pattern_ids", (["unhashable"],)
+        ),
+        lambda result: replace(
+            result,
+            preferred_pattern_ids=(),
+            preferred_useful_god_elements=(),
+        ),
+        lambda result: replace(
+            result,
+            reasoning=replace(result.reasoning, status="not_computed"),
+        ),
+    ],
+)
+def test_malformed_adapter_output_is_isolated_before_disagreement(forge) -> None:
+    facts, strength, patterns, useful_gods = pipeline_case()
+    element = next(item.element for item in useful_gods if item.element)
+    base_result = valid_fake_result(
+        school_id="ziping",
+        pattern_id=patterns[0].pattern_id,
+        element=element,
+    )
+    malformed = ReturningAdapter("ziping", forge(base_result))
+    valid_liang = load_enabled_school_adapters()[1]
+
+    first = interpret_with_enabled_schools(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+        adapters=(malformed, valid_liang),
+    )
+    second = interpret_with_enabled_schools(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+        adapters=(malformed, valid_liang),
+    )
+
+    assert first == second
+    assert tuple(item.school_id for item in first) == ("ziping", "liang_xiangrun")
+    isolated = first[0]
+    assert isolated.profile_version == "school-profiles-v1"
+    assert isolated.reasoning.status == "not_computed"
+    assert isolated.reasoning.rule_ids == ("school.ziping.adapter_error",)
+    assert isolated.preferred_pattern_ids == ()
+    assert isolated.preferred_useful_god_elements == ()
+    assert isolated.reasoning.missing_inputs[0].startswith("adapter_error:")
+    assert first[1].reasoning.status != "not_computed"
+    with pytest.raises(FrozenInstanceError):
+        isolated.school_id = "changed"  # type: ignore[misc]
+
+
+def test_disagreement_compares_preference_order_not_only_membership() -> None:
+    facts, strength, patterns, useful_gods = pipeline_case()
+    first_id, second_id = (item.pattern_id for item in patterns[:2])
+    ziping_result = valid_fake_result(school_id="ziping", pattern_id=first_id)
+    ziping_result = replace(ziping_result, preferred_pattern_ids=(first_id, second_id))
+    liang_result = valid_fake_result(school_id="liang_xiangrun", pattern_id=second_id)
+    liang_result = replace(liang_result, preferred_pattern_ids=(second_id, first_id))
+
+    results = interpret_with_enabled_schools(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+        adapters=(
+            ReturningAdapter("ziping", ziping_result),
+            ReturningAdapter("liang_xiangrun", liang_result),
+        ),
+    )
+
+    assert tuple(item.reasoning.status for item in results) == (
+        "disputed",
+        "disputed",
+    )
+    assert tuple(item.preferred_pattern_ids for item in results) == (
+        (first_id, second_id),
+        (second_id, first_id),
+    )
+    assert all(
+        "school.cross_school_disagreement.pattern_preferences"
+        in item.reasoning.rule_ids
+        for item in results
+    )
+
+
+def fake_adapters_for_inputs(pattern_id: str):
+    return tuple(
+        ReturningAdapter(
+            school_id,
+            valid_fake_result(school_id=school_id, pattern_id=pattern_id),
+        )
+        for school_id in ("ziping", "liang_xiangrun", "duan")
+    )
+
+
+def test_injected_adapters_are_sorted_by_config_and_allow_subsets(
+    tmp_path: Path,
+) -> None:
+    facts, strength, patterns, useful_gods = pipeline_case()
+    ziping, liang, duan = fake_adapters_for_inputs(patterns[0].pattern_id)
+
+    reversed_results = interpret_with_enabled_schools(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+        adapters=(duan, liang, ziping),
+    )
+    assert tuple(item.school_id for item in reversed_results) == (
+        "ziping",
+        "liang_xiangrun",
+        "duan",
+    )
+
+    subset = interpret_with_enabled_schools(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+        adapters=(liang,),
+    )
+    assert tuple(item.school_id for item in subset) == ("liang_xiangrun",)
+
+    payload = json.loads(json.dumps(EXPECTED_CONFIG))
+    payload["profiles"]["ziping"]["priority"] = 70
+    payload["profiles"]["duan"]["priority"] = 100
+    custom_path = write_config(tmp_path, payload)
+    custom_results = interpret_with_enabled_schools(
+        facts=facts,
+        strength=strength,
+        patterns=patterns,
+        useful_gods=useful_gods,
+        adapters=(ziping, liang, duan),
+        path=custom_path,
+    )
+    assert tuple(item.school_id for item in custom_results) == (
+        "duan",
+        "liang_xiangrun",
+        "ziping",
+    )
+
+
+def test_injected_adapter_contract_rejects_invalid_collections(tmp_path: Path) -> None:
+    facts, strength, patterns, useful_gods = pipeline_case()
+    ziping, liang, _ = fake_adapters_for_inputs(patterns[0].pattern_id)
+    unknown = ReturningAdapter(
+        "unknown",
+        valid_fake_result(school_id="unknown", pattern_id=patterns[0].pattern_id),
+    )
+    wrong_version = ReturningAdapter("liang_xiangrun", liang.result)
+    wrong_version.profile_version = "wrong-version"
+
+    common = {
+        "facts": facts,
+        "strength": strength,
+        "patterns": patterns,
+        "useful_gods": useful_gods,
+    }
+    with pytest.raises(ValueError, match="tuple"):
+        interpret_with_enabled_schools(**common, adapters=[ziping])  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="enabled"):
+        interpret_with_enabled_schools(**common, adapters=(unknown,))
+    with pytest.raises(ValueError, match="unique"):
+        interpret_with_enabled_schools(**common, adapters=(ziping, ziping))
+    with pytest.raises(ValueError, match="profile version"):
+        interpret_with_enabled_schools(**common, adapters=(wrong_version,))
+
+    payload = json.loads(json.dumps(EXPECTED_CONFIG))
+    payload["enabled"] = ["ziping"]
+    path = write_config(tmp_path, payload)
+    with pytest.raises(ValueError, match="enabled"):
+        interpret_with_enabled_schools(**common, adapters=(liang,), path=path)
+
+
 def test_aggregation_does_not_promote_not_computed_or_allow_adapter_suppression() -> (
     None
 ):
     facts, strength, patterns, useful_gods = pipeline_case()
 
     class EmptyAdapter:
-        school_id = "empty"
+        school_id = "ziping"
         profile_version = "school-profiles-v1"
 
         def interpret(self, *, facts, strength, patterns, useful_gods):
@@ -458,13 +729,14 @@ def test_aggregation_does_not_promote_not_computed_or_allow_adapter_suppression(
                     conclusion="no supported preference",
                     confidence="low",
                     missing_inputs=("reviewed_rules",),
-                    rule_ids=("school.empty.no_supported_preference",),
+                    rule_ids=("school.ziping.no_supported_preference",),
                 ),
                 preferred_pattern_ids=(),
                 preferred_useful_god_elements=(),
             )
 
-    adapters = (EmptyAdapter(), *load_enabled_school_adapters())
+    enabled = load_enabled_school_adapters()
+    adapters = (enabled[2], EmptyAdapter(), enabled[1])
     results = interpret_with_enabled_schools(
         facts=facts,
         strength=strength,
@@ -472,12 +744,11 @@ def test_aggregation_does_not_promote_not_computed_or_allow_adapter_suppression(
         useful_gods=useful_gods,
         adapters=adapters,
     )
-    assert len(results) == 4
-    assert results[0].school_id == "empty"
+    assert len(results) == 3
+    assert results[0].school_id == "ziping"
     assert results[0].reasoning.status == "not_computed"
     assert results[0].preferred_pattern_ids == ()
     assert tuple(item.school_id for item in results[1:]) == (
-        "ziping",
         "liang_xiangrun",
         "duan",
     )

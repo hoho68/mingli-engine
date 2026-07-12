@@ -29,8 +29,8 @@ class ZipingSchoolAdapter(SchoolAdapterBase):
                     in {"computed", "indeterminate", "disputed"}
                 ),
                 key=lambda candidate: (
-                    candidate.reasoning.status != "computed",
                     method_priority[candidate.method],
+                    candidate.reasoning.status != "computed",
                     candidate.rank,
                 ),
             )

@@ -341,13 +341,18 @@ def not_computed_interpretation(
 def load_enabled_school_adapters(
     path: str | Path | None = None,
 ) -> tuple[SchoolAdapter, ...]:
+    return _build_enabled_school_adapters(load_school_profiles_config(path))
+
+
+def _build_enabled_school_adapters(
+    config: SchoolProfilesConfig,
+) -> tuple[SchoolAdapter, ...]:
     from mingli_engine.bazi.schools.duan import DuanSchoolAdapter
     from mingli_engine.bazi.schools.liang_xiangrun import (
         LiangXiangrunSchoolAdapter,
     )
     from mingli_engine.bazi.schools.ziping import ZipingSchoolAdapter
 
-    config = load_school_profiles_config(path)
     registry = {
         "ziping": ZipingSchoolAdapter,
         "liang_xiangrun": LiangXiangrunSchoolAdapter,
@@ -363,14 +368,108 @@ def load_enabled_school_adapters(
     )
 
 
+def _validated_injected_adapters(
+    adapters: object,
+    config: SchoolProfilesConfig,
+) -> tuple[SchoolAdapter, ...]:
+    if not isinstance(adapters, tuple):
+        raise ValueError("injected school adapters must be a tuple")
+    validated: list[SchoolAdapter] = []
+    seen_ids: set[str] = set()
+    for adapter in adapters:
+        if not isinstance(adapter, SchoolAdapter):
+            raise ValueError("injected school adapter must conform to SchoolAdapter")
+        if adapter.school_id not in config.enabled:
+            raise ValueError(
+                f"injected school adapter id must be enabled: {adapter.school_id!r}"
+            )
+        if adapter.school_id in seen_ids:
+            raise ValueError("injected school adapter ids must be unique")
+        if adapter.profile_version != PROFILE_VERSION:
+            raise ValueError("injected school adapter profile version is invalid")
+        seen_ids.add(adapter.school_id)
+        validated.append(adapter)
+    return tuple(
+        sorted(
+            validated,
+            key=lambda adapter: (
+                -config.profiles[adapter.school_id].priority,
+                adapter.school_id,
+            ),
+        )
+    )
+
+
 def _adapter_failure(adapter: SchoolAdapter, exc: Exception) -> SchoolInterpretation:
     return not_computed_interpretation(
         school_id=adapter.school_id,
-        profile_version=adapter.profile_version,
+        profile_version=PROFILE_VERSION,
         conclusion="school adapter failed in isolation",
         missing_inputs=(f"adapter_error:{type(exc).__name__}",),
-        rule_id="school.adapter.isolated_failure",
+        rule_id=f"school.{adapter.school_id}.adapter_error",
     )
+
+
+def _validate_school_interpretation(
+    result: SchoolInterpretation,
+    adapter: SchoolAdapter,
+    inputs: _ValidatedSchoolInputs,
+) -> None:
+    if not isinstance(result, SchoolInterpretation):
+        raise ValueError("school adapter output must be a SchoolInterpretation")
+    if result.school_id != adapter.school_id:
+        raise ValueError("adapter result school id mismatch")
+    if (
+        adapter.profile_version != PROFILE_VERSION
+        or result.profile_version != adapter.profile_version
+    ):
+        raise ValueError("adapter result profile version mismatch")
+    _validate_reasoning(result.reasoning, f"school {adapter.school_id}")
+    rule_ids = result.reasoning.rule_ids
+    rule_prefix = f"school.{adapter.school_id}."
+    if (
+        not isinstance(rule_ids, tuple)
+        or not rule_ids
+        or not all(
+            isinstance(rule_id, str)
+            and rule_id
+            and rule_id == rule_id.strip()
+            and rule_id.startswith(rule_prefix)
+            for rule_id in rule_ids
+        )
+    ):
+        raise ValueError("school adapter rule ids must be nonempty and school-specific")
+
+    pattern_ids = result.preferred_pattern_ids
+    useful_elements = result.preferred_useful_god_elements
+    for values, field_name in (
+        (pattern_ids, "preferred pattern ids"),
+        (useful_elements, "preferred useful-god elements"),
+    ):
+        if not isinstance(values, tuple):
+            raise ValueError(f"school adapter {field_name} must be a tuple")
+        if not all(
+            isinstance(value, str) and value and value == value.strip()
+            for value in values
+        ):
+            raise ValueError(
+                f"school adapter {field_name} must contain nonempty strings"
+            )
+        if len(set(values)) != len(values):
+            raise ValueError(f"school adapter {field_name} must be unique")
+
+    canonical_pattern_ids = {item.pattern_id for item in inputs.patterns}
+    if not set(pattern_ids) <= canonical_pattern_ids:
+        raise ValueError("school adapter preferred pattern ids must be canonical")
+    canonical_elements = {item.element for item in inputs.useful_gods if item.element}
+    if not set(useful_elements) <= canonical_elements:
+        raise ValueError("school adapter preferred elements must be canonical")
+
+    has_preference = bool(pattern_ids or useful_elements)
+    if result.reasoning.status in _ACTIVE_STATUSES and not has_preference:
+        raise ValueError("active school interpretation requires a preference")
+    if result.reasoning.status == "not_computed" and has_preference:
+        raise ValueError("not-computed school interpretation cannot have preferences")
 
 
 def _mark_disagreements(
@@ -383,7 +482,7 @@ def _mark_disagreements(
         for index, item in enumerate(results)
         if item.reasoning.status in _ACTIVE_STATUSES and getattr(item, field_name)
     )
-    if len({frozenset(values) for _, _, values in involved}) < 2:
+    if len({values for _, _, values in involved}) < 2:
         return results
     occurrence = ";".join(
         f"{index}:{item.school_id}={','.join(values)}"
@@ -423,8 +522,11 @@ def interpret_with_enabled_schools(
         patterns=patterns,
         useful_gods=useful_gods,
     )
+    config = load_school_profiles_config(path)
     selected_adapters = (
-        adapters if adapters is not None else load_enabled_school_adapters(path)
+        _validated_injected_adapters(adapters, config)
+        if adapters is not None
+        else _build_enabled_school_adapters(config)
     )
     results: list[SchoolInterpretation] = []
     for adapter in selected_adapters:
@@ -439,11 +541,12 @@ def interpret_with_enabled_schools(
                     useful_gods=useful_gods,
                 )
             )
-            if result.school_id != adapter.school_id:
-                raise ValueError("adapter result school id mismatch")
+            _validate_school_interpretation(result, adapter, inputs)
             results.append(result)
         except Exception as exc:
-            results.append(_adapter_failure(adapter, exc))
+            failure = _adapter_failure(adapter, exc)
+            _validate_school_interpretation(failure, adapter, inputs)
+            results.append(failure)
     marked = _mark_disagreements(
         tuple(results), "preferred_pattern_ids", "pattern_preferences"
     )

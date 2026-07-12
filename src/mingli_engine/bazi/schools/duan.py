@@ -1,5 +1,4 @@
 from mingli_engine.bazi.result_models import (
-    PatternCandidateResult,
     ReasonedResult,
     SchoolInterpretation,
     UsefulGodCandidateResult,
@@ -86,19 +85,14 @@ class DuanSchoolAdapter(SchoolAdapterBase):
                     if item.method == "support_control"
                 )
         selected_useful_tuple = tuple(dict.fromkeys(selected_useful))
-        selected_patterns: list[PatternCandidateResult] = []
-        for method in self.profile.method_order:
-            if method == "structural_flow":
-                selected_patterns.extend(structural_patterns)
-            elif method == "pattern_context":
-                selected_patterns.extend(
-                    item
-                    for item in inputs.patterns
-                    if item.formation_conditions
-                    and item.reasoning.status
-                    in {"computed", "indeterminate", "disputed"}
-                )
-        selected_patterns_tuple = tuple(dict.fromkeys(selected_patterns))
+        selected_patterns_tuple = (
+            structural_patterns
+            if any(
+                method in {"structural_flow", "pattern_context"}
+                for method in self.profile.method_order
+            )
+            else ()
+        )
         preferred_elements = distinct(
             tuple(item.element for item in selected_useful_tuple)
         )
