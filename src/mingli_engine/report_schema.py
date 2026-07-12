@@ -20,6 +20,7 @@ from mingli_engine.models import (
     CALCULATION_STATUSES,
     CalculationStatus,
     ExpandedReportEvidence,
+    EvidenceTrace,
     FormalConclusion,
     KnowledgeActivationSummary,
     Report,
@@ -253,6 +254,17 @@ def _unique_preserving_order(values: list[str]) -> list[str]:
     return unique
 
 
+def _legacy_display_signals(trace: EvidenceTrace) -> list[str]:
+    return _unique_preserving_order(
+        [
+            *trace.chart_signals,
+            *trace.supporting_signals,
+            *trace.opposing_signals,
+            *trace.school_views,
+        ]
+    )
+
+
 def _build_report_evidence_audit(
     expanded_evidence: ExpandedReportEvidence,
     knowledge_activation: KnowledgeActivationSummary,
@@ -377,7 +389,7 @@ def _format_expanded_evidence_notes(
         evidence_ids = "、".join(conclusion.trace.evidence_ids) or "暂无可用证据"
         chart_signals = format_reader_chart_signals(
             conclusion.rule_family,
-            conclusion.trace.chart_signals,
+            _legacy_display_signals(conclusion.trace),
         )
         lines.append(
             "- 正式判断："
@@ -586,7 +598,7 @@ def build_formal_synthesis(
             )
             chart_signals = format_reader_chart_signals(
                 conclusion.rule_family,
-                conclusion.trace.chart_signals,
+                _legacy_display_signals(conclusion.trace),
             )
             lines.append(
                 f"- rule_family={rule_family}｜{conclusion.title}｜"
@@ -636,7 +648,7 @@ def _integrated_conclusion_text(
     )
     signals = format_reader_chart_signals(
         conclusion.rule_family,
-        conclusion.trace.chart_signals,
+        _legacy_display_signals(conclusion.trace),
     )
     signal_excerpt = signals.split("、", 1)[0]
     return f"{conclusion.title}（{strength}；{signal_excerpt}）"
@@ -870,7 +882,7 @@ def build_action_reflection_items(
                     evidence_ids.append(evidence_id)
             conditions.append(
                 f"{FORMAL_SYNTHESIS_RULE_TITLES[conclusion.rule_family]}："
-                f"{format_reader_chart_signals(conclusion.rule_family, conclusion.trace.chart_signals)}"
+                f"{format_reader_chart_signals(conclusion.rule_family, _legacy_display_signals(conclusion.trace))}"
             )
             if conclusion.trace.disagreement_note:
                 conditions.append(

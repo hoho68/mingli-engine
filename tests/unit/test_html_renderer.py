@@ -159,6 +159,41 @@ def test_render_html_report_exposes_five_reasoned_dimensions(sample_bazi_chart):
     assert report.ethics_reminder in html
 
 
+def test_render_html_report_uses_faithful_reasoning_channels(sample_bazi_chart):
+    report, _ = _build_reasoned_report(sample_bazi_chart)
+    first = report.expanded_evidence.formal_conclusions[0]
+    trace = replace(
+        first.trace,
+        chart_signals=["chart:exact"],
+        supporting_signals=["support:exact"],
+        opposing_signals=["oppose:exact"],
+        rule_ids=["rule.exact"],
+        missing_inputs=["missing:exact"],
+        school_views=["school_view:exact"],
+        disagreement_note="disagreement:exact",
+    )
+    report = replace(
+        report,
+        expanded_evidence=replace(
+            report.expanded_evidence,
+            formal_conclusions=[
+                replace(first, trace=trace),
+                *report.expanded_evidence.formal_conclusions[1:],
+            ],
+        ),
+    )
+
+    html = render_html_report(report)
+
+    assert "<strong>支持信号：</strong>support:exact" in html
+    assert "<strong>反对信号：</strong>oppose:exact" in html
+    assert "<strong>规则 ID：</strong>rule.exact" in html
+    assert "<strong>缺失输入：</strong>missing:exact" in html
+    assert "<strong>分歧说明：</strong>disagreement:exact" in html
+    assert "<strong>反对信号：</strong>disagreement:exact" not in html
+    assert "<strong>流派视角：</strong>school_view:exact" in html
+
+
 def test_render_html_report_escapes_reasoned_dynamic_text(sample_bazi_chart):
     report, _ = _build_reasoned_report(sample_bazi_chart)
     first = report.expanded_evidence.formal_conclusions[0]
@@ -170,6 +205,7 @@ def test_render_html_report_escapes_reasoned_dynamic_text(sample_bazi_chart):
         trace=replace(
             first.trace,
             chart_signals=['school_view:<school>:value=<img onerror="bad">'],
+            school_views=['school_view:<school>:value=<img onerror="bad">'],
         ),
     )
     report = replace(

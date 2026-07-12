@@ -385,14 +385,7 @@ def _build_conclusion(
         if calculation is not None
         else _not_computed_reasoning(spec.rule_family)
     )
-    chart_signals = _compact(
-        [
-            *spec.signal_builder(chart),
-            *reasoning.supporting_signals,
-            *reasoning.opposing_signals,
-            *_school_view_signals(calculation, spec.rule_family),
-        ]
-    )
+    chart_signals = _compact(spec.signal_builder(chart))
     evidence_ids = [unit.evidence_id for unit in units]
     assumptions = [
         "four_pillars_complete",
@@ -427,6 +420,11 @@ def _build_conclusion(
         disagreement_note=disagreement_note,
         calculation_status=reasoning.status,
         calculation_confidence=reasoning.confidence,
+        supporting_signals=_compact(list(reasoning.supporting_signals)),
+        opposing_signals=_compact(list(reasoning.opposing_signals)),
+        rule_ids=_compact(list(reasoning.rule_ids)),
+        missing_inputs=_compact(list(reasoning.missing_inputs)),
+        school_views=_school_view_signals(calculation, spec.rule_family),
     )
     has_open_severe_conflict = any(
         conflict.severity == "severe" and conflict.resolution_status == "open"

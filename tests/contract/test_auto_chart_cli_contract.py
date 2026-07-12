@@ -3,9 +3,12 @@ import json
 import os
 import subprocess
 import sys
+from dataclasses import asdict
 from pathlib import Path
 
 import mingli_engine.cli as cli
+from mingli_engine.chart_calculator import calculate_bazi_chart
+from mingli_engine.report_inputs import birth_profile_from_dict
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -173,6 +176,78 @@ def test_calculate_chart_analysis_adds_versioned_calculation_envelope():
     assert "provenance" not in result.stdout.lower()
 
 
+def test_calculate_chart_analysis_uses_public_whitelist_projection():
+    result = _run_cli(
+        "calculate-chart",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.auto-gregorian.json"),
+        "--analysis",
+    )
+
+    assert result.returncode == 0, result.stderr
+    calculation = json.loads(result.stdout)["calculation"]
+    assert set(calculation) == {
+        "engine_version",
+        "ruleset_version",
+        "facts",
+        "branch_relations",
+        "strength",
+        "patterns",
+        "useful_gods",
+        "luck_cycles",
+        "schools",
+    }
+    assert set(calculation["strength"]) == {"reasoning", "label"}
+    required_reasoning = {
+        "status",
+        "conclusion",
+        "confidence",
+        "supporting_signals",
+        "opposing_signals",
+        "assumptions",
+        "missing_inputs",
+        "rule_ids",
+    }
+    reasonings = [
+        calculation["strength"]["reasoning"],
+        calculation["luck_cycles"]["reasoning"],
+        *(item["reasoning"] for item in calculation["patterns"]),
+        *(item["reasoning"] for item in calculation["useful_gods"]),
+        *(item["reasoning"] for item in calculation["schools"]),
+    ]
+    assert reasonings
+    assert all(set(reasoning) == required_reasoning for reasoning in reasonings)
+    assert calculation["facts"]["day_master"]
+    assert calculation["facts"]["exposed_stems"]
+    assert calculation["branch_relations"]
+    assert calculation["patterns"]
+    assert calculation["useful_gods"]
+    assert isinstance(calculation["luck_cycles"]["pillars"], list)
+    assert calculation["schools"]
+
+    def all_keys(value):
+        if isinstance(value, dict):
+            for key, item in value.items():
+                yield key
+                yield from all_keys(item)
+        elif isinstance(value, list):
+            for item in value:
+                yield from all_keys(item)
+
+    keys = set(all_keys(calculation))
+    assert keys.isdisjoint(
+        {"score", "lower_bound", "upper_bound", "contributions", "value"}
+    )
+    assert not any("weight" in key.lower() for key in keys)
+    assert not any("sensitivity" in key.lower() for key in keys)
+    serialized = json.dumps(calculation, ensure_ascii=False).lower()
+    assert "sensitivity_fraction" not in serialized
+    assert "weight_config" not in serialized
+    assert "reasonedresult(" not in serialized
+    assert "calculationbundle(" not in serialized
+    assert "provenance" not in serialized
+
+
 def test_calculate_chart_without_analysis_preserves_legacy_shape():
     result = _run_cli(
         "calculate-chart",
@@ -184,6 +259,22 @@ def test_calculate_chart_without_analysis_preserves_legacy_shape():
     payload = json.loads(result.stdout)
     assert "calculation" not in payload
     assert all("gan_zhi" in pillar for pillar in payload["pillars"])
+
+
+def test_calculate_chart_without_analysis_is_byte_exact_legacy_json():
+    input_text = (EXAMPLES_DIR / "birth-profile.auto-gregorian.json").read_text(
+        encoding="utf-8"
+    )
+    chart = calculate_bazi_chart(birth_profile_from_dict(json.loads(input_text)))
+    expected_payload = asdict(chart)
+    for pillar in expected_payload["pillars"]:
+        pillar["gan_zhi"] = pillar["heavenly_stem"] + pillar["earthly_branch"]
+    expected = json.dumps(expected_payload, ensure_ascii=False, indent=2) + "\n"
+
+    result = _run_cli("calculate-chart", "--input", "-", input_text=input_text)
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == expected
 
 
 def test_calculate_chart_analysis_refuses_unsafe_focus_before_analysis():
@@ -198,3 +289,18 @@ def test_calculate_chart_analysis_refuses_unsafe_focus_before_analysis():
     payload = json.loads(result.stdout)
     assert payload["allowed"] is False
     assert "calculation" not in payload
+
+
+def test_calculate_chart_analysis_flag_does_not_change_refusal_bytes():
+    args = (
+        "calculate-chart",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.unsafe-focus.json"),
+    )
+
+    default = _run_cli(*args)
+    analysis = _run_cli(*args, "--analysis")
+
+    assert default.returncode == analysis.returncode == 3
+    assert default.stdout == analysis.stdout
+    assert default.stderr == analysis.stderr == ""

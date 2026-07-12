@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from mingli_engine import classical_sources
-from mingli_engine.bazi import analyze_bazi_chart
+from mingli_engine.bazi import CalculationBundle, analyze_bazi_chart
 from mingli_engine.chart_calculator import ChartCalculationError, calculate_bazi_chart
 from mingli_engine.evidence_curation import build_knowledge_activation_summary
 from mingli_engine.high_risk import classify_high_risk_request
@@ -84,6 +84,153 @@ def _birth_datetime(profile: BirthProfile) -> datetime:
     )
 
 
+def _public_assumptions(values: Sequence[str]) -> list[str]:
+    internal_terms = ("sensitivity", "weight", "tuning")
+    return [
+        value
+        for value in values
+        if not any(term in value.lower() for term in internal_terms)
+    ]
+
+
+def _public_reasoning(reasoning: Any) -> dict[str, Any]:
+    return {
+        "status": reasoning.status,
+        "conclusion": reasoning.conclusion,
+        "confidence": reasoning.confidence,
+        "supporting_signals": list(reasoning.supporting_signals),
+        "opposing_signals": list(reasoning.opposing_signals),
+        "assumptions": _public_assumptions(reasoning.assumptions),
+        "missing_inputs": list(reasoning.missing_inputs),
+        "rule_ids": list(reasoning.rule_ids),
+    }
+
+
+def _public_relation(relation: Any) -> dict[str, Any]:
+    return {
+        "relation_type": relation.relation_type,
+        "branches": list(relation.branches),
+        "pillar_names": list(relation.pillar_names),
+        "state": relation.state,
+        "transformed_element": relation.transformed_element,
+        "conditions": list(relation.conditions),
+        "blockers": list(relation.blockers),
+        "rule_id": relation.rule_id,
+    }
+
+
+def _public_calculation_payload(calculation: CalculationBundle) -> dict[str, Any]:
+    facts = calculation.facts
+    return {
+        "engine_version": calculation.engine_version,
+        "ruleset_version": calculation.ruleset_version,
+        "facts": {
+            "day_master": facts.day_master,
+            "month_branch": facts.month_branch,
+            "exposed_stems": [
+                {
+                    "pillar_name": item.pillar_name,
+                    "stem": item.stem,
+                    "element": item.element,
+                    "polarity": item.polarity,
+                    "ten_god": item.ten_god,
+                }
+                for item in facts.exposed_stems
+            ],
+            "hidden_stems": [
+                {
+                    "pillar_name": item.pillar_name,
+                    "branch": item.branch,
+                    "stem": item.stem,
+                    "role": item.role,
+                    "element": item.element,
+                    "polarity": item.polarity,
+                    "ten_god": item.ten_god,
+                }
+                for item in facts.hidden_stems
+            ],
+            "roots": [
+                {
+                    "stem": item.stem,
+                    "stem_pillar": item.stem_pillar,
+                    "branch": item.branch,
+                    "branch_pillar": item.branch_pillar,
+                    "role": item.role,
+                    "exact_stem_root": item.exact_stem_root,
+                }
+                for item in facts.roots
+            ],
+            "twelve_growth_by_pillar": [
+                list(item) for item in facts.twelve_growth_by_pillar
+            ],
+            "assumptions": _public_assumptions(facts.assumptions),
+        },
+        "branch_relations": [
+            _public_relation(item) for item in calculation.branch_relations
+        ],
+        "strength": {
+            "reasoning": _public_reasoning(calculation.strength.reasoning),
+            "label": calculation.strength.label,
+        },
+        "patterns": [
+            {
+                "pattern_id": item.pattern_id,
+                "name": item.name,
+                "rank": item.rank,
+                "reasoning": _public_reasoning(item.reasoning),
+                "formation_conditions": list(item.formation_conditions),
+                "damage_conditions": list(item.damage_conditions),
+                "rescue_conditions": list(item.rescue_conditions),
+            }
+            for item in calculation.patterns
+        ],
+        "useful_gods": [
+            {
+                "method": item.method,
+                "element": item.element,
+                "rank": item.rank,
+                "reasoning": _public_reasoning(item.reasoning),
+            }
+            for item in calculation.useful_gods
+        ],
+        "luck_cycles": {
+            "reasoning": _public_reasoning(calculation.luck_cycles.reasoning),
+            "forward": calculation.luck_cycles.forward,
+            "start_years": calculation.luck_cycles.start_years,
+            "start_months": calculation.luck_cycles.start_months,
+            "start_days": calculation.luck_cycles.start_days,
+            "start_solar": calculation.luck_cycles.start_solar,
+            "pillars": [
+                {
+                    "index": item.index,
+                    "gan_zhi": item.gan_zhi,
+                    "start_year": item.start_year,
+                    "end_year": item.end_year,
+                    "start_age": item.start_age,
+                    "end_age": item.end_age,
+                }
+                for item in calculation.luck_cycles.pillars
+            ],
+            "selected_year_relations": [
+                _public_relation(item)
+                for item in calculation.luck_cycles.selected_year_relations
+            ],
+        },
+        "schools": [
+            {
+                "school_id": item.school_id,
+                "profile_version": item.profile_version,
+                "reasoning": _public_reasoning(item.reasoning),
+                "preferred_pattern_ids": list(item.preferred_pattern_ids),
+                "preferred_useful_god_elements": list(
+                    item.preferred_useful_god_elements
+                ),
+            }
+            for item in calculation.schools
+        ],
+    }
+
+
 def _configure_stream_encoding(stream: Any) -> None:
     reconfigure = getattr(stream, "reconfigure", None)
     if reconfigure is not None:
@@ -140,7 +287,7 @@ def _calculate_chart(args: argparse.Namespace) -> int:
             birth_datetime=_birth_datetime(profile),
         )
         output = _to_json_payload(chart)
-        output["calculation"] = calculation
+        output["calculation"] = _public_calculation_payload(calculation)
         _write_json(output)
     else:
         _write_json(chart)

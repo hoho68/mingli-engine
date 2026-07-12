@@ -1,8 +1,15 @@
+import hashlib
 import json
 import os
 import subprocess
 import sys
 from pathlib import Path
+
+from mingli_engine.chart_calculator import calculate_bazi_chart
+from mingli_engine.html import render_html_report
+from mingli_engine.markdown import render_markdown_report
+from mingli_engine.report_inputs import birth_profile_from_dict
+from mingli_engine.report_schema import build_report
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -201,7 +208,8 @@ def test_calculate_report_analysis_outputs_reasoned_markdown():
     assert "- 计算状态：" in result.stdout
     assert "- 可信度：" in result.stdout
     for school_id in ("ziping", "liang_xiangrun", "duan"):
-        assert f"school_view:{school_id}:" in result.stdout
+        escaped_school_id = school_id.replace("_", r"\_")
+        assert f"school\\_view:{escaped_school_id}:" in result.stdout
 
 
 def test_calculate_report_analysis_outputs_reasoned_html():
@@ -236,6 +244,62 @@ def test_calculate_report_without_analysis_keeps_legacy_renderer_output():
     assert "- 计算状态：" not in result.stdout
 
 
+def test_calculate_report_default_markdown_is_byte_exact_renderer_output():
+    profile_payload = json.loads(
+        (EXAMPLES_DIR / "birth-profile.auto-gregorian.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    report = build_report(
+        calculate_bazi_chart(birth_profile_from_dict(profile_payload))
+    )
+    expected = render_markdown_report(report)
+
+    result = _run_cli(
+        "calculate-report",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.auto-gregorian.json"),
+        "--format",
+        "markdown",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == expected
+    encoded = result.stdout.encode("utf-8")
+    assert len(encoded) == 30900
+    assert hashlib.sha256(encoded).hexdigest() == (
+        "2b78db5f7bd28172a0eaf16f92f46c2a79142e9fe50ac81efd6f2d53daca4709"
+    )
+
+
+def test_calculate_report_default_html_is_byte_exact_renderer_output():
+    profile_payload = json.loads(
+        (EXAMPLES_DIR / "birth-profile.auto-gregorian.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    report = build_report(
+        calculate_bazi_chart(birth_profile_from_dict(profile_payload))
+    )
+    expected = render_html_report(report)
+
+    result = _run_cli(
+        "calculate-report",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.auto-gregorian.json"),
+        "--format",
+        "html",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == expected
+    encoded = result.stdout.encode("utf-8")
+    assert len(encoded) == 32823
+    assert hashlib.sha256(encoded).hexdigest() == (
+        "f3bb5beb3cfaafa99ae8384e454f5deff46c256c724bba2b82067ae3b119c579"
+    )
+
+
 def test_calculate_report_analysis_keeps_safety_refusal_shape():
     result = _run_cli(
         "calculate-report",
@@ -250,3 +314,20 @@ def test_calculate_report_analysis_keeps_safety_refusal_shape():
     payload = json.loads(result.stdout)
     assert payload["allowed"] is False
     assert "calculation" not in payload
+
+
+def test_calculate_report_analysis_flag_does_not_change_refusal_bytes():
+    args = (
+        "calculate-report",
+        "--input",
+        str(EXAMPLES_DIR / "birth-profile.unsafe-focus.json"),
+        "--format",
+        "markdown",
+    )
+
+    default = _run_cli(*args)
+    analysis = _run_cli(*args, "--analysis")
+
+    assert default.returncode == analysis.returncode == 3
+    assert default.stdout == analysis.stdout
+    assert default.stderr == analysis.stderr == ""

@@ -109,21 +109,21 @@ def _reasoned_analysis(report: Report) -> str:
     evidence_lines: list[tuple[str, str]] = []
     for conclusion in report.expanded_evidence.formal_conclusions:
         trace = conclusion.trace
-        for signal in trace.chart_signals:
-            if signal.startswith("school_view:") and signal not in school_views:
-                school_views.append(signal)
-        opposing = [trace.disagreement_note] if trace.disagreement_note else []
+        for view in trace.school_views:
+            if view not in school_views:
+                school_views.append(view)
         details = _reasoned_list(
             [
                 ("规则族", conclusion.rule_family),
                 ("计算状态", trace.calculation_status),
                 ("可信度", trace.calculation_confidence),
-                ("支持信号", _compact(trace.chart_signals)),
-                ("反对信号", _compact(opposing)),
-                ("规则 ID", "不可用"),
+                ("支持信号", _compact(trace.supporting_signals)),
+                ("反对信号", _compact(trace.opposing_signals)),
+                ("规则 ID", _compact(trace.rule_ids)),
                 ("证据 ID", _compact(trace.evidence_ids)),
                 ("假设", _compact(trace.assumptions)),
-                ("缺失输入", "不可用"),
+                ("缺失输入", _compact(trace.missing_inputs)),
+                ("分歧说明", trace.disagreement_note or "不可用"),
             ]
         )
         conclusion_blocks.append(

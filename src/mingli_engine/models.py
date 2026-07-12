@@ -5718,6 +5718,11 @@ class EvidenceTrace:
     disagreement_note: str = ""
     calculation_status: CalculationStatus = "not_computed"
     calculation_confidence: CalculationConfidence = "low"
+    supporting_signals: list[str] = field(default_factory=list)
+    opposing_signals: list[str] = field(default_factory=list)
+    rule_ids: list[str] = field(default_factory=list)
+    missing_inputs: list[str] = field(default_factory=list)
+    school_views: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         if self.calculation_status not in CALCULATION_STATUSES:

@@ -185,9 +185,19 @@ def test_evidence_trace_typed_calculation_fields_are_backward_compatible():
         "disagreement_note",
         "calculation_status",
         "calculation_confidence",
+        "supporting_signals",
+        "opposing_signals",
+        "rule_ids",
+        "missing_inputs",
+        "school_views",
     ]
     assert trace.calculation_status == "not_computed"
     assert trace.calculation_confidence == "low"
+    assert trace.supporting_signals == []
+    assert trace.opposing_signals == []
+    assert trace.rule_ids == []
+    assert trace.missing_inputs == []
+    assert trace.school_views == []
 
 
 def test_evidence_trace_rejects_unknown_typed_calculation_values():

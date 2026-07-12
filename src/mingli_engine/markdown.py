@@ -14,7 +14,7 @@ def _has_reasoned_analysis(report: Report) -> bool:
 
 def _markdown_text(value: str) -> str:
     escaped = escape(value, quote=False)
-    markdown_punctuation = frozenset("\\`*_{}[]()#+-.!|")
+    markdown_punctuation = frozenset("\\`*_{}[]()#+-.!|~")
     return "".join(
         f"\\{character}" if character in markdown_punctuation else character
         for character in escaped
@@ -32,10 +32,9 @@ def _reasoned_analysis(report: Report) -> list[str]:
     evidence_lines: list[str] = []
     for conclusion in conclusions:
         trace = conclusion.trace
-        for signal in trace.chart_signals:
-            if signal.startswith("school_view:") and signal not in school_views:
-                school_views.append(signal)
-        opposing = [trace.disagreement_note] if trace.disagreement_note else []
+        for view in trace.school_views:
+            if view not in school_views:
+                school_views.append(view)
         calculation_lines.extend(
             [
                 f"#### {_markdown_text(conclusion.title)}",
@@ -43,12 +42,18 @@ def _reasoned_analysis(report: Report) -> list[str]:
                 f"- 规则族：{_markdown_text(conclusion.rule_family)}",
                 f"- 计算状态：{_markdown_text(trace.calculation_status)}",
                 f"- 可信度：{_markdown_text(trace.calculation_confidence)}",
-                f"- 支持信号：{_compact(trace.chart_signals)}",
-                f"- 反对信号：{_compact(opposing)}",
-                "- 规则 ID：不可用",
+                f"- 支持信号：{_compact(trace.supporting_signals)}",
+                f"- 反对信号：{_compact(trace.opposing_signals)}",
+                f"- 规则 ID：{_compact(trace.rule_ids)}",
                 f"- 证据 ID：{_compact(trace.evidence_ids)}",
                 f"- 假设：{_compact(trace.assumptions)}",
-                "- 缺失输入：不可用",
+                f"- 缺失输入：{_compact(trace.missing_inputs)}",
+                "- 分歧说明："
+                + (
+                    _markdown_text(trace.disagreement_note)
+                    if trace.disagreement_note
+                    else "不可用"
+                ),
                 "",
             ]
         )
@@ -76,53 +81,47 @@ def _reasoned_analysis(report: Report) -> list[str]:
 
 def render_markdown_report(report: Report) -> str:
     has_reasoned_analysis = _has_reasoned_analysis(report)
-    evidence_notes = report.evidence_notes
-    formal_synthesis = report.formal_synthesis
-    integrated_synthesis = report.integrated_synthesis
-    if has_reasoned_analysis:
-        evidence_notes = _markdown_text(evidence_notes)
-        formal_synthesis = _markdown_text(formal_synthesis)
-        integrated_synthesis = _markdown_text(integrated_synthesis)
+    render_text = _markdown_text if has_reasoned_analysis else lambda value: value
     sections = [
-        f"# {report.title}",
+        f"# {render_text(report.title)}",
         "## 免责声明",
-        report.disclaimer,
+        render_text(report.disclaimer),
         "## 快速导读",
-        report.quick_guide,
+        render_text(report.quick_guide),
         "## 第一层：基础资料",
         "### 命造卡片",
-        report.chart_card,
+        render_text(report.chart_card),
         "### 排盘来源与假设",
-        report.assumptions,
+        render_text(report.assumptions),
         "## 第二层：结构观察",
         "### 四柱与五行摘要",
-        report.four_pillars_summary,
-        report.five_elements_summary,
+        render_text(report.four_pillars_summary),
+        render_text(report.five_elements_summary),
         "### 十神摘要",
-        report.ten_gods_summary,
+        render_text(report.ten_gods_summary),
         "### 观察依据",
-        evidence_notes,
+        render_text(report.evidence_notes),
         "### 正式知识综合",
-        formal_synthesis,
+        render_text(report.formal_synthesis),
         "### 综合脉络",
-        integrated_synthesis,
+        render_text(report.integrated_synthesis),
         "### 结构分析",
-        report.structure_analysis,
+        render_text(report.structure_analysis),
         "### 性格倾向",
-        report.personality_tendencies,
+        render_text(report.personality_tendencies),
         "## 第三层：解读边界",
-        report.interpretation_boundaries,
+        render_text(report.interpretation_boundaries),
         "## 第四层：行动反思",
         "### 优势与议题",
-        report.strengths_and_issues,
+        render_text(report.strengths_and_issues),
         "### 阶段概览",
-        report.phase_overview,
+        render_text(report.phase_overview),
         "### 行动建议",
-        report.action_suggestions,
+        render_text(report.action_suggestions),
         "## 术语简注",
-        report.glossary,
+        render_text(report.glossary),
         "## 伦理边界提醒",
-        report.ethics_reminder,
+        render_text(report.ethics_reminder),
     ]
     if has_reasoned_analysis:
         sections.extend(_reasoned_analysis(report))

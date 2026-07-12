@@ -184,10 +184,46 @@ def test_render_markdown_report_exposes_five_reasoned_dimensions(sample_bazi_cha
     ):
         assert f"- {label}：" in markdown
     for school in calculation.schools:
-        assert f"school_view:{school.school_id}:" in markdown
-    assert report.chart_card in markdown
-    assert report.interpretation_boundaries in markdown
-    assert report.ethics_reminder in markdown
+        escaped_school_id = school.school_id.replace("_", r"\_")
+        assert f"school\\_view:{escaped_school_id}:" in markdown
+    assert "出生地点：北京" in markdown
+    assert "不做格局定论" in markdown
+    assert "命理报告不应制造恐惧" in markdown
+
+
+def test_render_markdown_report_uses_faithful_reasoning_channels(sample_bazi_chart):
+    report, _ = _build_reasoned_report(sample_bazi_chart)
+    first = report.expanded_evidence.formal_conclusions[0]
+    trace = replace(
+        first.trace,
+        chart_signals=["chart:exact"],
+        supporting_signals=["support:exact"],
+        opposing_signals=["oppose:exact"],
+        rule_ids=["rule.exact"],
+        missing_inputs=["missing:exact"],
+        school_views=["school_view:exact"],
+        disagreement_note="disagreement:exact",
+    )
+    report = replace(
+        report,
+        expanded_evidence=replace(
+            report.expanded_evidence,
+            formal_conclusions=[
+                replace(first, trace=trace),
+                *report.expanded_evidence.formal_conclusions[1:],
+            ],
+        ),
+    )
+
+    markdown = render_markdown_report(report)
+
+    assert "- 支持信号：support:exact" in markdown
+    assert "- 反对信号：oppose:exact" in markdown
+    assert r"- 规则 ID：rule\.exact" in markdown
+    assert "- 缺失输入：missing:exact" in markdown
+    assert "- 分歧说明：disagreement:exact" in markdown
+    assert "- 反对信号：disagreement:exact" not in markdown
+    assert r"- school\_view:exact" in markdown
 
 
 def test_render_markdown_report_escapes_reasoned_dynamic_text(sample_bazi_chart):
@@ -201,6 +237,7 @@ def test_render_markdown_report_escapes_reasoned_dynamic_text(sample_bazi_chart)
         trace=replace(
             first.trace,
             chart_signals=["school_view:<school>:value=<img src=x>"],
+            school_views=["school_view:<school>:value=<img src=x>"],
         ),
     )
     report = replace(
@@ -225,3 +262,84 @@ def test_render_markdown_report_escapes_reasoned_dynamic_text(sample_bazi_chart)
     assert "#### # injected" not in markdown
     assert r"\# injected &lt;script&gt;alert\(1\)&lt;/script&gt;" in markdown
     assert "rule&lt;unsafe&gt;&amp;value" in markdown
+
+
+def test_analysis_markdown_sanitizes_every_dynamic_report_field(sample_bazi_chart):
+    profile = replace(
+        sample_bazi_chart.birth_profile,
+        birthplace="# birthplace <script>place</script> [place](https://place) | `p`",
+        focus_topic="# focus <script>focus</script> [focus](https://focus) | `f`",
+    )
+    report, _ = _build_reasoned_report(
+        replace(sample_bazi_chart, birth_profile=profile)
+    )
+    payload = "# report <script>report</script> [link](https://report) | `code`"
+    text_fields = (
+        "title",
+        "disclaimer",
+        "quick_guide",
+        "chart_card",
+        "assumptions",
+        "four_pillars_summary",
+        "five_elements_summary",
+        "ten_gods_summary",
+        "evidence_notes",
+        "formal_synthesis",
+        "integrated_synthesis",
+        "structure_analysis",
+        "personality_tendencies",
+        "strengths_and_issues",
+        "phase_overview",
+        "action_suggestions",
+        "interpretation_boundaries",
+        "glossary",
+        "ethics_reminder",
+    )
+    report = replace(
+        report,
+        **{
+            field_name: f"{getattr(report, field_name)}\n{payload}"
+            for field_name in text_fields
+        },
+    )
+    first = report.expanded_evidence.formal_conclusions[0]
+    hostile = replace(
+        first,
+        title=payload,
+        body=payload,
+        rule_family=payload,
+        trace=replace(
+            first.trace,
+            chart_signals=[payload],
+            evidence_ids=[payload],
+            assumptions=[payload],
+            disagreement_note=payload,
+            supporting_signals=[payload],
+            opposing_signals=[payload],
+            rule_ids=[payload],
+            missing_inputs=[payload],
+            school_views=[payload],
+        ),
+    )
+    report = replace(
+        report,
+        expanded_evidence=replace(
+            report.expanded_evidence,
+            formal_conclusions=[
+                hostile,
+                *report.expanded_evidence.formal_conclusions[1:],
+            ],
+        ),
+    )
+
+    markdown = render_markdown_report(report)
+
+    assert "<script>" not in markdown
+    assert "[place](https://place)" not in markdown
+    assert "[focus](https://focus)" not in markdown
+    assert "[link](https://report)" not in markdown
+    assert "| `" not in markdown
+    for injected_heading in ("# birthplace", "# focus", "# report"):
+        assert injected_heading not in markdown.splitlines()
+    assert r"\# report &lt;script&gt;report&lt;/script&gt;" in markdown
+    assert r"\[link\]\(https://report\) \| \`code\`" in markdown

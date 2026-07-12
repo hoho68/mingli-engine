@@ -207,6 +207,41 @@ def test_indeterminate_with_evidence_is_weakly_supported(sample_bazi_chart):
     assert conclusion.trace.calculation_status == "indeterminate"
 
 
+def test_formal_trace_preserves_exact_reasoning_channels(sample_bazi_chart):
+    chart = _calculation_chart(sample_bazi_chart)
+    legacy = build_legacy_not_computed_bundle(chart)
+    reasoning = ReasonedResult(
+        status="indeterminate",
+        conclusion="bounded result",
+        confidence="low",
+        supporting_signals=("support:exact",),
+        opposing_signals=("oppose:exact",),
+        assumptions=("assumption:exact",),
+        missing_inputs=("missing:exact",),
+        rule_ids=("rule.exact",),
+    )
+    calculation = _bound_calculation(
+        chart,
+        replace(
+            legacy,
+            luck_cycles=replace(legacy.luck_cycles, reasoning=reasoning),
+        ),
+    )
+
+    conclusion = _family(
+        build_formal_interpretation(chart, [], calculation=calculation),
+        "luck_cycle",
+    )
+
+    assert conclusion.trace.chart_signals == [chart.luck_cycle_summary]
+    assert conclusion.trace.supporting_signals == ["support:exact"]
+    assert conclusion.trace.opposing_signals == ["oppose:exact"]
+    assert conclusion.trace.rule_ids == ["rule.exact"]
+    assert conclusion.trace.missing_inputs == ["missing:exact"]
+    assert "assumption:exact" in conclusion.trace.assumptions
+    assert conclusion.trace.school_views == []
+
+
 @pytest.mark.parametrize(
     ("calculation_status", "formal_strength"),
     [("indeterminate", "weakly_supported"), ("disputed", "disputed")],
@@ -281,8 +316,11 @@ def test_school_disagreement_is_disputed_and_preserves_each_view(sample_bazi_cha
 
     assert conclusion.strength == "disputed"
     assert conclusion.trace.calculation_status == "disputed"
-    assert any("school_view:school_a:" in signal for signal in conclusion.trace.chart_signals)
-    assert any("school_view:school_b:" in signal for signal in conclusion.trace.chart_signals)
+    assert not any(
+        signal.startswith("school_view:") for signal in conclusion.trace.chart_signals
+    )
+    assert any("school_view:school_a:" in view for view in conclusion.trace.school_views)
+    assert any("school_view:school_b:" in view for view in conclusion.trace.school_views)
     assert "school_a" in conclusion.trace.disagreement_note
     assert "school_b" in conclusion.trace.disagreement_note
 

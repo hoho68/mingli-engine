@@ -89,11 +89,7 @@ def _formal_family(report, rule_family: str):
 
 
 def _school_view_signals(conclusion):
-    return [
-        signal
-        for signal in conclusion.trace.chart_signals
-        if signal.startswith("school_view:")
-    ]
+    return conclusion.trace.school_views
 
 
 def test_disputed_calculation_without_family_school_rule_has_no_school_note():
@@ -186,10 +182,15 @@ def test_reasoned_calculation_reaches_formal_evidence_and_audit(sample_bazi_char
     assert conclusions["taboo_god_candidate"].trace.calculation_status == (
         "not_computed"
     )
-    school_signals = conclusions["blind_image_method"].trace.chart_signals
-    assert {signal.split(":", 2)[1] for signal in school_signals if signal.startswith("school_view:")} == {
+    school_views = conclusions["blind_image_method"].trace.school_views
+    assert {view.split(":", 2)[1] for view in school_views} == {
         item.school_id for item in calculation.schools
     }
+    assert not any(
+        signal.startswith("school_view:")
+        for conclusion in conclusions.values()
+        for signal in conclusion.trace.chart_signals
+    )
     assert report.knowledge_activation.open_conflicts
 
 
