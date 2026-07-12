@@ -2,7 +2,10 @@ from pathlib import Path
 import re
 from typing import Callable
 
-from mingli_engine.calculation_validation import build_calculation_checks
+from mingli_engine.calculation_validation import (
+    build_calculation_checks,
+    calculation_checks_pass,
+)
 from mingli_engine.classical_sources import (
     load_approved_evidence_units,
     load_classical_sources,
@@ -294,9 +297,7 @@ def build_project_completion_summary(
         if calculation_checks is not None
         else build_calculation_checks()
     )
-    calculation_ready = bool(resolved_calculation_checks) and all(
-        status == PASS for status in resolved_calculation_checks.values()
-    )
+    calculation_ready = calculation_checks_pass(resolved_calculation_checks)
 
     try:
         acceptance = acceptance_summary or build_report_acceptance_summary(

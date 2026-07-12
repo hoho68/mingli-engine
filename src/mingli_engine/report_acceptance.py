@@ -6,7 +6,10 @@ from mingli_engine.classical_sources import (
     load_classical_sources,
     load_source_conflicts,
 )
-from mingli_engine.calculation_validation import build_calculation_checks
+from mingli_engine.calculation_validation import (
+    build_calculation_checks,
+    calculation_checks_pass,
+)
 from mingli_engine.evidence_curation import build_knowledge_activation_summary
 from mingli_engine.html import render_html_report
 from mingli_engine.markdown import render_markdown_report
@@ -401,9 +404,7 @@ def build_report_acceptance_summary(
         _high_risk_rejection_case(),
         _unavailable_degradation_case(),
     ]
-    if not resolved_calculation_checks or any(
-        value != _PASS for value in resolved_calculation_checks.values()
-    ):
+    if not calculation_checks_pass(resolved_calculation_checks):
         cases.append(
             ReportAcceptanceCaseResult(
                 case_id="calculation_validation",

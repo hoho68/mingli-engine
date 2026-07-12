@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import asdict, replace
 from datetime import datetime
 from hashlib import sha256
 import json
 import os
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Final
 
 from mingli_engine.bazi.analysis import analyze_bazi_chart
 from mingli_engine.bazi.branch_relations import (
@@ -102,7 +103,7 @@ _GIT_RECURSIVE_SURFACES = (
 )
 PASS = "passed"
 FAIL = "failed"
-CHECK_NAMES = (
+CHECK_NAMES: Final[tuple[str, ...]] = (
     "stages_present",
     "placeholder_integrity",
     "verified_fixture_count",
@@ -1141,6 +1142,15 @@ def _safe_check(check: Callable[[], bool]) -> bool:
         return bool(check())
     except Exception:
         return False
+
+
+def calculation_checks_pass(checks: Mapping[str, str] | None) -> bool:
+    if checks is None:
+        return False
+    snapshot = dict(checks)
+    return set(snapshot) == set(CHECK_NAMES) and all(
+        snapshot[name] == PASS for name in CHECK_NAMES
+    )
 
 
 def build_calculation_checks(

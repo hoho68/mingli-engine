@@ -32,6 +32,13 @@ CALCULATION_CHECKS = {
     "high_risk_guardrails": "passed",
     "no_persistence": "passed",
 }
+MALFORMED_CHECK_MAPS = [
+    {"stages_present": "passed"},
+    {"fake": "passed"},
+    CALCULATION_CHECKS | {"extra": "passed"},
+    {},
+    {"stages_present": "invalid"},
+]
 
 
 @pytest.fixture(autouse=True)
@@ -188,6 +195,15 @@ def test_completion_computes_one_check_map_and_propagates_it(monkeypatch):
     assert release_inputs == [(CALCULATION_CHECKS, BASELINE_ACCEPTANCE)]
     assert summary.calculation_checks == CALCULATION_CHECKS
     assert summary.calculation_checks is not acceptance_inputs[0]
+
+
+@pytest.mark.parametrize("checks", MALFORMED_CHECK_MAPS)
+def test_completion_rejects_noncanonical_calculation_check_maps(checks):
+    summary = build_project_completion_summary(calculation_checks=checks)
+
+    assert summary.completion_status == "blocked"
+    assert summary.completion_checks["calculation_validation"] == "failed"
+    assert "calculation_validation" in summary.remaining_local_blockers
 
 
 def test_feature_results_distinguish_legacy_and_task_tracked_features():

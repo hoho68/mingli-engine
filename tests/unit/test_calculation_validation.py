@@ -20,6 +20,13 @@ EXPECTED_CHECKS = {
     "high_risk_guardrails": "passed",
     "no_persistence": "passed",
 }
+MALFORMED_CHECK_MAPS = [
+    {"stages_present": "passed"},
+    {"fake": "passed"},
+    EXPECTED_CHECKS | {"extra": "passed"},
+    {},
+    EXPECTED_CHECKS | {"no_persistence": "invalid"},
+]
 
 
 def _copy_fixtures(tmp_path: Path) -> Path:
@@ -39,6 +46,20 @@ def _write_fixture(path: Path, payload: dict) -> None:
 
 def test_calculation_checks_pass_the_v1_release_baseline():
     assert build_calculation_checks() == EXPECTED_CHECKS
+
+
+def test_calculation_check_contract_requires_exact_immutable_key_set():
+    exact = EXPECTED_CHECKS.copy()
+    before = exact.copy()
+
+    assert isinstance(calculation_validation.CHECK_NAMES, tuple)
+    assert tuple(exact) == calculation_validation.CHECK_NAMES
+    assert calculation_validation.calculation_checks_pass(exact) is True
+    assert exact == before
+    assert all(
+        calculation_validation.calculation_checks_pass(checks) is False
+        for checks in MALFORMED_CHECK_MAPS
+    )
 
 
 def test_verified_fixture_gate_rejects_a_forged_pillar_artifact(

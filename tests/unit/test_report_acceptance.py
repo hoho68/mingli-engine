@@ -1,3 +1,5 @@
+import pytest
+
 from mingli_engine.models import KnowledgeActivationSummary, ReportAcceptanceCaseResult
 from mingli_engine.report_schema import KnowledgeActivationError
 from mingli_engine import report_acceptance
@@ -5,6 +7,25 @@ from mingli_engine.report_acceptance import (
     build_report_acceptance_summary,
     determine_report_acceptance_status,
 )
+
+
+MALFORMED_CHECK_MAPS = [
+    {"stages_present": "passed"},
+    {"fake": "passed"},
+    {
+        "stages_present": "passed",
+        "placeholder_integrity": "passed",
+        "verified_fixture_count": "passed",
+        "boundary_fixture_count": "passed",
+        "three_school_profiles": "passed",
+        "evidence_calculation_separation": "passed",
+        "high_risk_guardrails": "passed",
+        "no_persistence": "passed",
+        "extra": "passed",
+    },
+    {},
+    {"stages_present": "invalid"},
+]
 
 
 def _case_by_id(summary, case_id: str):
@@ -151,6 +172,14 @@ def test_acceptance_uses_copy_of_precomputed_calculation_checks():
 
     assert calculation_case.checks == {"stages_present": "failed"}
     assert calculation_case.checks is not provided
+
+
+@pytest.mark.parametrize("checks", MALFORMED_CHECK_MAPS)
+def test_acceptance_rejects_noncanonical_calculation_check_maps(checks):
+    summary = build_report_acceptance_summary(calculation_checks=checks)
+
+    assert summary.acceptance_status == "blocked"
+    assert _case_by_id(summary, "calculation_validation").status == "failed"
 
 
 def test_acceptance_summary_returns_blocked_packet_when_report_gate_fails(

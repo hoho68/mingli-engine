@@ -6,7 +6,10 @@ from pathlib import Path
 from typing import Any
 
 from mingli_engine.chart_calculator import calculate_bazi_chart
-from mingli_engine.calculation_validation import build_calculation_checks
+from mingli_engine.calculation_validation import (
+    build_calculation_checks,
+    calculation_checks_pass,
+)
 from mingli_engine.high_risk import classify_high_risk_request
 from mingli_engine.html import render_html_report
 from mingli_engine.markdown import render_markdown_report
@@ -461,9 +464,7 @@ def build_report_release_summary(
     acceptance = acceptance_summary or build_report_acceptance_summary(
         calculation_checks=resolved_calculation_checks,
     )
-    calculation_ready = bool(resolved_calculation_checks) and all(
-        value == PASS for value in resolved_calculation_checks.values()
-    )
+    calculation_ready = calculation_checks_pass(resolved_calculation_checks)
     evaluations = [_evaluate_case(case) for case in manifest]
     cases = [result for result, _, _ in evaluations]
     fingerprints = {

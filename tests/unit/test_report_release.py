@@ -5,6 +5,7 @@ import pytest
 
 from mingli_engine import report_release
 from mingli_engine import cli
+from mingli_engine.calculation_validation import CHECK_NAMES
 from mingli_engine.report_acceptance import build_report_acceptance_summary
 from mingli_engine.report_release import (
     ReportReleaseError,
@@ -20,6 +21,23 @@ EXPECTED_CASE_IDS = [
     "unsafe-lifespan-focus",
     "high-risk-general-lifespan",
     "unsafe-exact-lifespan",
+]
+MALFORMED_CHECK_MAPS = [
+    {"stages_present": "passed"},
+    {"fake": "passed"},
+    {
+        "stages_present": "passed",
+        "placeholder_integrity": "passed",
+        "verified_fixture_count": "passed",
+        "boundary_fixture_count": "passed",
+        "three_school_profiles": "passed",
+        "evidence_calculation_separation": "passed",
+        "high_risk_guardrails": "passed",
+        "no_persistence": "passed",
+        "extra": "passed",
+    },
+    {},
+    {"stages_present": "invalid"},
 ]
 
 
@@ -412,7 +430,7 @@ def test_standalone_release_computes_calculation_checks_once(monkeypatch):
     def build_checks():
         nonlocal calls
         calls += 1
-        return {"stages_present": "passed"}
+        return {name: "passed" for name in CHECK_NAMES}
 
     def build_acceptance(*, calculation_checks=None):
         propagated.append(calculation_checks)
@@ -428,8 +446,16 @@ def test_standalone_release_computes_calculation_checks_once(monkeypatch):
     summary = build_report_release_summary()
 
     assert calls == 1
-    assert propagated == [{"stages_present": "passed"}]
+    assert propagated == [{name: "passed" for name in CHECK_NAMES}]
     assert summary.release_status == "ready_with_guardrails"
+
+
+@pytest.mark.parametrize("checks", MALFORMED_CHECK_MAPS)
+def test_release_rejects_noncanonical_calculation_check_maps(checks):
+    summary = build_report_release_summary(calculation_checks=checks)
+
+    assert summary.release_status == "blocked"
+    assert summary.next_action == "repair_calculation_validation"
 
 
 def test_release_cli_handler_returns_nonzero_for_blocked_packet(
