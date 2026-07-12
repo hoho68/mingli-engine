@@ -1,3 +1,5 @@
+from typing import Any
+
 import pytest
 
 from mingli_engine.bazi import constants
@@ -125,3 +127,39 @@ def test_growth_phase_rejects_invalid_stem(stem: str) -> None:
 def test_growth_phase_rejects_invalid_branch(branch: str) -> None:
     with pytest.raises(ValueError, match=f"Invalid branch: {branch!r}"):
         constants.growth_phase("甲", branch)
+
+
+@pytest.mark.parametrize(
+    "mapping_name",
+    [
+        "GENERATES",
+        "CONTROLS",
+        "STEM_ELEMENT",
+        "STEM_POLARITY",
+        "BRANCH_ELEMENT",
+        "HIDDEN_STEMS",
+        "GROWTH_START",
+    ],
+)
+@pytest.mark.parametrize("operation", ["assignment", "deletion"])
+def test_canonical_mappings_reject_mutation_and_preserve_growth_phase(
+    mapping_name: str,
+    operation: str,
+) -> None:
+    mapping: Any = getattr(constants, mapping_name)
+    key = next(iter(mapping))
+    original = dict(mapping)
+    expected_phase = constants.growth_phase("甲", "子")
+
+    try:
+        with pytest.raises(TypeError):
+            if operation == "assignment":
+                mapping[key] = object()
+            else:
+                del mapping[key]
+
+        assert constants.growth_phase("甲", "子") == expected_phase
+    finally:
+        if isinstance(mapping, dict):
+            mapping.clear()
+            mapping.update(original)

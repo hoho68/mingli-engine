@@ -1,11 +1,27 @@
+from types import MappingProxyType
+from typing import Final, Literal, Mapping
+
+
+_Stem = Literal["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]
+_Branch = Literal["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]
+_Element = Literal["木", "火", "土", "金", "水"]
+_Polarity = Literal["yang", "yin"]
+_HiddenRole = Literal["main", "middle", "residual"]
+_HiddenStemEntries = tuple[tuple[_Stem, _HiddenRole], ...]
+
+
 STEMS = ("甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸")
 BRANCHES = ("子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥")
 ELEMENTS = ("木", "火", "土", "金", "水")
 
-GENERATES = {"木": "火", "火": "土", "土": "金", "金": "水", "水": "木"}
-CONTROLS = {"木": "土", "土": "水", "水": "火", "火": "金", "金": "木"}
+GENERATES: Final[Mapping[_Element, _Element]] = MappingProxyType(
+    {"木": "火", "火": "土", "土": "金", "金": "水", "水": "木"}
+)
+CONTROLS: Final[Mapping[_Element, _Element]] = MappingProxyType(
+    {"木": "土", "土": "水", "水": "火", "火": "金", "金": "木"}
+)
 
-STEM_ELEMENT = {
+STEM_ELEMENT: Final[Mapping[_Stem, _Element]] = MappingProxyType({
     "甲": "木",
     "乙": "木",
     "丙": "火",
@@ -16,8 +32,8 @@ STEM_ELEMENT = {
     "辛": "金",
     "壬": "水",
     "癸": "水",
-}
-STEM_POLARITY = {
+})
+STEM_POLARITY: Final[Mapping[_Stem, _Polarity]] = MappingProxyType({
     "甲": "yang",
     "乙": "yin",
     "丙": "yang",
@@ -28,8 +44,8 @@ STEM_POLARITY = {
     "辛": "yin",
     "壬": "yang",
     "癸": "yin",
-}
-BRANCH_ELEMENT = {
+})
+BRANCH_ELEMENT: Final[Mapping[_Branch, _Element]] = MappingProxyType({
     "子": "水",
     "丑": "土",
     "寅": "木",
@@ -42,8 +58,8 @@ BRANCH_ELEMENT = {
     "酉": "金",
     "戌": "土",
     "亥": "水",
-}
-HIDDEN_STEMS = {
+})
+HIDDEN_STEMS: Final[Mapping[_Branch, _HiddenStemEntries]] = MappingProxyType({
     "子": (("癸", "main"),),
     "丑": (("己", "main"), ("癸", "middle"), ("辛", "residual")),
     "寅": (("甲", "main"), ("丙", "middle"), ("戊", "residual")),
@@ -56,7 +72,7 @@ HIDDEN_STEMS = {
     "酉": (("辛", "main"),),
     "戌": (("戊", "main"), ("辛", "middle"), ("丁", "residual")),
     "亥": (("壬", "main"), ("甲", "middle")),
-}
+})
 
 GROWTH_PHASES = (
     "长生",
@@ -72,7 +88,7 @@ GROWTH_PHASES = (
     "胎",
     "养",
 )
-GROWTH_START = {
+GROWTH_START: Final[Mapping[_Stem, _Branch]] = MappingProxyType({
     "甲": "亥",
     "乙": "午",
     "丙": "寅",
@@ -83,7 +99,7 @@ GROWTH_START = {
     "辛": "子",
     "壬": "申",
     "癸": "卯",
-}
+})
 
 
 def growth_phase(stem: str, branch: str) -> str:
