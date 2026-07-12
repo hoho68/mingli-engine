@@ -1,0 +1,136 @@
+{
+  "schema_version": "bazi-boundary-fixtures-v1",
+  "fixture_version": "ziping-strength-boundaries-v1",
+  "synthetic_input": true,
+  "contains_real_personal_data": false,
+  "cases": [
+    {
+      "id": "weak_threshold_sensitivity_crossing",
+      "boundary_input": {
+        "score_center": -30.0,
+        "sensitivity_fraction": 0.1
+      },
+      "expected": {
+        "status": "indeterminate",
+        "label": "??",
+        "score_range": [
+          -30.000001,
+          -29.999999
+        ]
+      },
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "near_threshold_strength"
+        ]
+      }
+    },
+    {
+      "id": "incomplete_water_three_combination",
+      "boundary_input": {
+        "present_branches": [
+          "?",
+          "?"
+        ],
+        "missing_branch": "?"
+      },
+      "expected": {
+        "relation_type": "three_combination",
+        "state": "incomplete",
+        "transformed_element": ""
+      },
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "incomplete_three_groups"
+        ]
+      }
+    },
+    {
+      "id": "ziping_duan_pattern_preference_disagreement",
+      "boundary_input": {
+        "school_ids": [
+          "ziping",
+          "duan"
+        ],
+        "shared_facts": true
+      },
+      "expected": {
+        "status": "disputed",
+        "agreement_required": false
+      },
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "school_disagreement"
+        ]
+      }
+    },
+    {
+      "id": "unknown_gender_luck_prerequisite",
+      "boundary_input": {
+        "gender": "unspecified"
+      },
+      "expected": {
+        "luck_status": "not_computed",
+        "missing_inputs": [
+          "supported_gender"
+        ]
+      },
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "unknown_gender"
+        ]
+      }
+    },
+    {
+      "id": "aware_datetime_rejected_by_local_wall_time_contract",
+      "boundary_input": {
+        "birth_datetime": "1992-08-18T09:30:00+08:00",
+        "timezone_assumption": "UTC+08 aware input"
+      },
+      "expected": {
+        "status": "unsupported",
+        "reason": "birth_datetime must be naive local wall time under chart timezone assumption"
+      },
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "time_assumption_aware"
+        ]
+      }
+    },
+    {
+      "id": "unsupported_true_solar_time_assumption",
+      "boundary_input": {
+        "birth_datetime": "1992-08-18T09:30:00",
+        "true_solar_time_applied": true
+      },
+      "expected": {
+        "status": "not_computed",
+        "missing_inputs": [
+          "supported_time_assumption"
+        ]
+      },
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "time_assumption_unsupported"
+        ]
+      }
+    }
+  ]
+}

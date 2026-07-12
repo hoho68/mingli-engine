@@ -1,47 +1,132 @@
 {
+  "schema_version": "bazi-boundary-fixtures-v1",
   "version": "ziping-pattern-counterexamples-v1",
+  "synthetic_input": true,
+  "contains_real_personal_data": false,
   "counterexamples": [
     {
       "id": "officer_meets_hurting_officer",
       "pattern_ten_god": "正官",
-      "signals": ["伤官"],
-      "expected_damage": ["伤官"],
-      "expected_rescue": []
+      "signals": [
+        "伤官"
+      ],
+      "expected_damage": [
+        "伤官"
+      ],
+      "expected_rescue": [],
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "damaged_pattern"
+        ]
+      }
     },
     {
       "id": "killing_meets_food_and_seal",
       "pattern_ten_god": "七杀",
-      "signals": ["食神", "正印"],
+      "signals": [
+        "食神",
+        "正印"
+      ],
       "expected_damage": [],
-      "expected_rescue": ["食神", "正印"]
+      "expected_rescue": [
+        "食神",
+        "正印"
+      ],
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "rescued_pattern"
+        ]
+      }
     },
     {
       "id": "wealth_meets_companions",
       "pattern_ten_god": "正财",
-      "signals": ["比肩", "劫财"],
-      "expected_damage": ["比肩", "劫财"],
-      "expected_rescue": []
+      "signals": [
+        "比肩",
+        "劫财"
+      ],
+      "expected_damage": [
+        "比肩",
+        "劫财"
+      ],
+      "expected_rescue": [],
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "damaged_pattern"
+        ]
+      }
     },
     {
       "id": "seal_meets_wealth",
       "pattern_ten_god": "正印",
-      "signals": ["正财", "偏财"],
-      "expected_damage": ["正财", "偏财"],
-      "expected_rescue": []
+      "signals": [
+        "正财",
+        "偏财"
+      ],
+      "expected_damage": [
+        "正财",
+        "偏财"
+      ],
+      "expected_rescue": [],
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "damaged_pattern"
+        ]
+      }
     },
     {
       "id": "food_meets_indirect_seal",
       "pattern_ten_god": "食神",
-      "signals": ["偏印"],
-      "expected_damage": ["偏印"],
-      "expected_rescue": []
+      "signals": [
+        "偏印"
+      ],
+      "expected_damage": [
+        "偏印"
+      ],
+      "expected_rescue": [],
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "damaged_pattern"
+        ]
+      }
     },
     {
       "id": "damage_and_rescue_coexist",
       "pattern_ten_god": "正官",
-      "signals": ["伤官", "正印"],
-      "expected_damage": ["伤官"],
-      "expected_rescue": ["正印"]
+      "signals": [
+        "伤官",
+        "正印"
+      ],
+      "expected_damage": [
+        "伤官"
+      ],
+      "expected_rescue": [
+        "正印"
+      ],
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "damaged_pattern",
+          "rescued_pattern"
+        ]
+      }
     },
     {
       "id": "strength_indeterminate_prerequisite",
@@ -49,16 +134,36 @@
       "signals": [],
       "expected_damage": [],
       "expected_rescue": [],
-      "strength_status": "indeterminate"
+      "strength_status": "indeterminate",
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "near_threshold_strength"
+        ]
+      }
     },
     {
       "id": "latent_hurting_officer_does_not_damage_officer",
       "pattern_ten_god": "正官",
       "signals": [],
-      "latent_branches": ["午"],
+      "latent_branches": [
+        "午"
+      ],
       "expected_damage": [],
       "expected_rescue": [],
-      "expected_latent_context": ["伤官"]
+      "expected_latent_context": [
+        "伤官"
+      ],
+      "fixture_metadata": {
+        "synthetic_input": true,
+        "contains_real_personal_data": false,
+        "counts_toward_boundary_gate": true,
+        "categories": [
+          "latent_vs_exposed"
+        ]
+      }
     }
   ]
 }

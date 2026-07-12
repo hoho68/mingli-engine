@@ -1,10 +1,13 @@
 import builtins
+from dataclasses import asdict
+import json
 import os
 import subprocess
 import sys
 from dataclasses import FrozenInstanceError, replace
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -21,6 +24,59 @@ from mingli_engine.models import BirthProfile
 
 
 PROVENANCE_ERROR = "calculation bundle is unbound or does not match chart input"
+FIXTURE_DIR = Path(__file__).parents[1] / "fixtures" / "bazi_calculation"
+VERIFIED_FIXTURE_PATH = FIXTURE_DIR / "verified_charts.json"
+BOUNDARY_FIXTURE_PATHS = (
+    FIXTURE_DIR / "strength_boundary_cases.json",
+    FIXTURE_DIR / "pattern_counterexamples.json",
+    FIXTURE_DIR / "luck_cycle_boundary_cases.json",
+)
+EXPECTED_BOUNDARY_CATEGORIES = {
+    "near_threshold_strength",
+    "latent_vs_exposed",
+    "damaged_pattern",
+    "rescued_pattern",
+    "incomplete_three_groups",
+    "school_disagreement",
+    "solar_term_before",
+    "solar_term_exact",
+    "solar_term_after",
+    "unknown_gender",
+    "time_assumption_aware",
+    "time_assumption_unsupported",
+}
+
+
+def _load_json(path: Path) -> dict[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    assert isinstance(payload, dict)
+    return payload
+
+
+def _json_value(value: object) -> object:
+    if isinstance(value, tuple):
+        return [_json_value(item) for item in value]
+    if isinstance(value, list):
+        return [_json_value(item) for item in value]
+    if isinstance(value, dict):
+        return {key: _json_value(item) for key, item in value.items()}
+    return value
+
+
+def _verified_records() -> list[dict[str, Any]]:
+    if not VERIFIED_FIXTURE_PATH.exists():
+        return []
+    payload = _load_json(VERIFIED_FIXTURE_PATH)
+    records = payload.get("records")
+    assert isinstance(records, list)
+    return records
+
+
+def _verified_parameters() -> list[Any]:
+    records = _verified_records()
+    if not records:
+        return [pytest.param(None, id="verified_fixture_missing")]
+    return [pytest.param(record, id=str(record["id"])) for record in records]
 
 
 def _profile(**overrides: str) -> BirthProfile:
@@ -121,6 +177,177 @@ def test_versions_are_available_from_dependency_neutral_and_public_modules() -> 
     assert RULESET_VERSION == NEUTRAL_RULESET_VERSION == "ziping-v1"
 
 
+def test_verified_chart_fixture_schema_privacy_review_and_coverage() -> None:
+    payload = _load_json(VERIFIED_FIXTURE_PATH)
+    records = payload["records"]
+
+    assert payload["schema_version"] == "bazi-verified-charts-v1"
+    assert payload["engine_version"] == "bazi-core-v1"
+    assert payload["ruleset_version"] == "ziping-v1"
+    assert payload["primary_provider"] == {
+        "name": "lunar-python",
+        "version": "1.4.8",
+    }
+    assert payload["independent_provider"] == {
+        "name": "cnlunar",
+        "version": "0.2.4",
+    }
+    assert payload["selection"]["method"] == "deterministic_exact_set_cover"
+    assert isinstance(records, list)
+    assert len(records) >= 30
+
+    ids = [record["id"] for record in records]
+    assert len(ids) == len(set(ids))
+    assert all(record["input"]["birthplace"] == "UTC+08 synthetic fixture" for record in records)
+    assert all(record["verification"]["synthetic_input"] is True for record in records)
+    assert all(
+        record["verification"]["contains_real_personal_data"] is False
+        for record in records
+    )
+    assert all(
+        record["verification"]["baseline_kind"] == "cross_provider_agreement"
+        and record["verification"]["review_status"] == "cross_provider_reviewed"
+        for record in records
+    )
+    assert all(
+        record["verification"]["independent_check"]["provider"] == "cnlunar"
+        and record["verification"]["independent_check"]["version"] == "0.2.4"
+        and record["verification"]["independent_check"]["method"]
+        == "independent_four_pillars"
+        and record["verification"]["independent_check"]["artifact"]["agreement"]
+        is True
+        for record in records
+    )
+    assert all(
+        record["versions"]
+        == {
+            "engine": "bazi-core-v1",
+            "ruleset": "ziping-v1",
+            "primary_provider": "lunar-python==1.4.8",
+            "independent_provider": "cnlunar==0.2.4",
+        }
+        for record in records
+    )
+
+    day_masters = {record["expected"]["facts"]["day_master"] for record in records}
+    month_branches = {record["expected"]["facts"]["month_branch"] for record in records}
+    directions = {record["expected"]["luck"]["forward"] for record in records}
+    polarities = {record["coverage"]["day_master_polarity"] for record in records}
+    elements = {record["coverage"]["day_master_element"] for record in records}
+    assert day_masters == set("甲乙丙丁戊己庚辛壬癸")
+    assert month_branches == set("子丑寅卯辰巳午未申酉戌亥")
+    assert directions == {True, False}
+    assert polarities == {"yin", "yang"}
+    assert elements == {"wood", "fire", "earth", "metal", "water"}
+    assert any(record["coverage"]["repeated_branch"] for record in records)
+    assert any(record["coverage"]["no_relation_chart"] for record in records)
+
+
+def test_boundary_fixture_schemas_counts_privacy_and_categories() -> None:
+    all_cases: list[dict[str, Any]] = []
+    for path in BOUNDARY_FIXTURE_PATHS:
+        payload = _load_json(path)
+        assert payload["schema_version"] == "bazi-boundary-fixtures-v1"
+        assert payload["synthetic_input"] is True
+        assert payload["contains_real_personal_data"] is False
+        cases = payload.get("cases", payload.get("counterexamples"))
+        assert isinstance(cases, list)
+        for case in cases:
+            metadata = case["fixture_metadata"]
+            assert metadata["synthetic_input"] is True
+            assert metadata["contains_real_personal_data"] is False
+            assert isinstance(metadata["categories"], list)
+            assert metadata["categories"]
+            assert isinstance(metadata["counts_toward_boundary_gate"], bool)
+        all_cases.extend(cases)
+
+    counted = [
+        case
+        for case in all_cases
+        if case["fixture_metadata"]["counts_toward_boundary_gate"]
+    ]
+    counted_ids = [case["id"] for case in counted]
+    categories = {
+        category
+        for case in counted
+        for category in case["fixture_metadata"]["categories"]
+    }
+    assert len(counted) >= 20
+    assert len(counted_ids) == len(set(counted_ids))
+    assert EXPECTED_BOUNDARY_CATEGORIES <= categories
+
+
+@pytest.mark.parametrize("record", _verified_parameters())
+def test_verified_chart_pipeline_matches_frozen_cross_provider_fixture(
+    record: dict[str, Any] | None,
+) -> None:
+    assert record is not None
+    input_data = record["input"]
+    expected = record["expected"]
+    profile = BirthProfile(**input_data)
+    birth_datetime = datetime.fromisoformat(
+        f"{input_data['birth_date']}T{input_data['birth_time']}:00"
+    )
+
+    first_chart = calculate_bazi_chart(profile)
+    first_bundle = analyze_bazi_chart(
+        first_chart,
+        birth_datetime=birth_datetime,
+        selected_year=2030,
+    )
+    second_chart = calculate_bazi_chart(profile)
+    second_bundle = analyze_bazi_chart(
+        second_chart,
+        birth_datetime=birth_datetime,
+        selected_year=2030,
+    )
+
+    assert first_chart == second_chart
+    assert first_bundle == second_bundle
+    assert [
+        {
+            "name": pillar.name,
+            "gan_zhi": f"{pillar.heavenly_stem}{pillar.earthly_branch}",
+        }
+        for pillar in first_chart.pillars
+    ] == expected["chart_pillars"]
+    assert _json_value(asdict(first_bundle.facts)) == expected["facts"]
+    assert _json_value(
+        [asdict(relation) for relation in first_bundle.branch_relations]
+    ) == expected["relations"]
+
+    strength = expected["strength"]
+    assert first_bundle.strength.reasoning.status == strength["status"]
+    assert first_bundle.strength.label == strength["label"]
+    assert strength["score_range"][0] <= first_bundle.strength.score <= strength[
+        "score_range"
+    ][1]
+    assert strength["lower_bound_range"][0] <= first_bundle.strength.lower_bound <= strength[
+        "lower_bound_range"
+    ][1]
+    assert strength["upper_bound_range"][0] <= first_bundle.strength.upper_bound <= strength[
+        "upper_bound_range"
+    ][1]
+
+    assert [
+        {
+            "pattern_id": pattern.pattern_id,
+            "status": pattern.reasoning.status,
+            "rank": pattern.rank,
+        }
+        for pattern in first_bundle.patterns
+    ] == expected["patterns"]
+    assert {
+        "status": first_bundle.luck_cycles.reasoning.status,
+        "forward": first_bundle.luck_cycles.forward,
+        "start_years": first_bundle.luck_cycles.start_years,
+        "start_months": first_bundle.luck_cycles.start_months,
+        "start_days": first_bundle.luck_cycles.start_days,
+        "start_solar": first_bundle.luck_cycles.start_solar,
+        "pillars": [asdict(pillar) for pillar in first_bundle.luck_cycles.pillars],
+    } == expected["luck"]
+
+
 def test_complete_profile_pipeline_has_exact_order_versions_and_immutable_output(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -183,9 +410,9 @@ def test_complete_profile_pipeline_has_exact_order_versions_and_immutable_output
     assert isinstance(bundle.useful_gods, tuple)
     assert isinstance(bundle.schools, tuple)
     with pytest.raises(FrozenInstanceError):
-        bundle.engine_version = "changed"
+        bundle.engine_version = "changed"  # type: ignore[misc]
     with pytest.raises(FrozenInstanceError):
-        bundle.facts.day_master = "changed"
+        bundle.facts.day_master = "changed"  # type: ignore[misc]
 
 
 def test_unsupported_gender_degrades_only_luck_prerequisite(
