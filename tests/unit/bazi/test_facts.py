@@ -42,6 +42,27 @@ def test_ten_god_covers_every_relationship_and_polarity(
 
 
 @pytest.mark.parametrize(
+    ("target_stem", "expected"),
+    [
+        ("丁", "比肩"),
+        ("丙", "劫财"),
+        ("乙", "偏印"),
+        ("甲", "正印"),
+        ("己", "食神"),
+        ("戊", "伤官"),
+        ("辛", "偏财"),
+        ("庚", "正财"),
+        ("癸", "七杀"),
+        ("壬", "正官"),
+    ],
+)
+def test_ten_god_covers_yin_day_master_relationships_and_polarities(
+    target_stem: str, expected: str
+) -> None:
+    assert ten_god("丁", target_stem) == expected
+
+
+@pytest.mark.parametrize(
     ("day_master", "target_stem"),
     [("invalid", "甲"), ("甲", "invalid")],
 )
@@ -231,6 +252,25 @@ def test_build_chart_facts_preserves_repeated_exposed_stem_occurrences() -> None
     roots = [root for root in facts.roots if root.stem == "丙"]
     assert len(roots) == 4
     assert [root.stem_pillar for root in roots] == ["year", "year", "day", "day"]
+
+
+def test_build_chart_facts_preserves_roots_for_each_repeated_branch() -> None:
+    chart = raw_verified_chart()
+
+    facts = build_chart_facts(chart)
+
+    year_stem_roots = [
+        root
+        for root in facts.roots
+        if root.stem == "壬" and root.stem_pillar == "year"
+    ]
+    assert [
+        (root.branch, root.branch_pillar, root.role)
+        for root in year_stem_roots
+    ] == [
+        ("申", "year", "middle"),
+        ("申", "month", "middle"),
+    ]
 
 
 def test_build_chart_facts_validates_exposed_stems() -> None:

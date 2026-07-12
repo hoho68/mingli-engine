@@ -1,6 +1,8 @@
 from collections import Counter
+from typing import Literal, cast
 
 from mingli_engine.bazi.constants import (
+    BRANCHES,
     CONTROLS,
     GENERATES,
     HIDDEN_STEMS,
@@ -18,18 +20,36 @@ from mingli_engine.bazi.result_models import (
 from mingli_engine.models import BaziChart, Pillar
 
 
-def _validate_stem(stem: str) -> None:
+Stem = Literal["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]
+Branch = Literal[
+    "子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"
+]
+HiddenRole = Literal["main", "middle", "residual"]
+CanonicalHiddenStems = tuple[tuple[Stem, HiddenRole], ...]
+
+
+def _validate_stem(stem: str) -> Stem:
     if stem not in STEMS:
         raise ValueError(f"Invalid stem: {stem!r}")
+    return cast(Stem, stem)
+
+
+def _validate_branch(branch: str) -> Branch:
+    if branch not in BRANCHES:
+        raise ValueError(f"Invalid branch: {branch!r}")
+    return cast(Branch, branch)
 
 
 def ten_god(day_master: str, target_stem: str) -> str:
-    _validate_stem(day_master)
-    _validate_stem(target_stem)
+    validated_day_master = _validate_stem(day_master)
+    validated_target_stem = _validate_stem(target_stem)
 
-    day_element = STEM_ELEMENT[day_master]
-    target_element = STEM_ELEMENT[target_stem]
-    same_polarity = STEM_POLARITY[day_master] == STEM_POLARITY[target_stem]
+    day_element = STEM_ELEMENT[validated_day_master]
+    target_element = STEM_ELEMENT[validated_target_stem]
+    same_polarity = (
+        STEM_POLARITY[validated_day_master]
+        == STEM_POLARITY[validated_target_stem]
+    )
 
     if target_element == day_element:
         return "比肩" if same_polarity else "劫财"
@@ -44,13 +64,9 @@ def ten_god(day_master: str, target_stem: str) -> str:
     raise ValueError("unreachable five-element relation")
 
 
-def _canonical_hidden_stems(pillar: Pillar) -> tuple[tuple[str, str], ...]:
-    try:
-        hidden_stems = HIDDEN_STEMS[pillar.earthly_branch]
-    except KeyError as exc:
-        raise ValueError(
-            f"Invalid branch: {pillar.earthly_branch!r}"
-        ) from exc
+def _canonical_hidden_stems(pillar: Pillar) -> CanonicalHiddenStems:
+    branch = _validate_branch(pillar.earthly_branch)
+    hidden_stems = HIDDEN_STEMS[branch]
 
     canonical_stems = tuple(stem for stem, _role in hidden_stems)
     if Counter(pillar.hidden_stems) != Counter(canonical_stems):
@@ -72,20 +88,22 @@ def build_chart_facts(chart: BaziChart) -> ChartFacts:
     day_pillar = pillars_by_name["day"]
     if chart.day_master != day_pillar.heavenly_stem:
         raise ValueError("day master does not match day pillar")
-    _validate_stem(chart.day_master)
+    day_master = _validate_stem(chart.day_master)
 
-    exposed_stems = []
-    canonical_hidden_by_pillar = []
-    hidden_stem_facts = []
+    exposed_stems: list[StemFact] = []
+    canonical_hidden_by_pillar: list[
+        tuple[Pillar, CanonicalHiddenStems]
+    ] = []
+    hidden_stem_facts: list[HiddenStemFact] = []
     for pillar in chart.pillars:
-        _validate_stem(pillar.heavenly_stem)
+        stem = _validate_stem(pillar.heavenly_stem)
         exposed_stems.append(
             StemFact(
                 pillar_name=pillar.name,
-                stem=pillar.heavenly_stem,
-                element=STEM_ELEMENT[pillar.heavenly_stem],
-                polarity=STEM_POLARITY[pillar.heavenly_stem],
-                ten_god=ten_god(chart.day_master, pillar.heavenly_stem),
+                stem=stem,
+                element=STEM_ELEMENT[stem],
+                polarity=STEM_POLARITY[stem],
+                ten_god=ten_god(day_master, stem),
             )
         )
 
@@ -99,12 +117,12 @@ def build_chart_facts(chart: BaziChart) -> ChartFacts:
                 role=role,
                 element=STEM_ELEMENT[stem],
                 polarity=STEM_POLARITY[stem],
-                ten_god=ten_god(chart.day_master, stem),
+                ten_god=ten_god(day_master, stem),
             )
             for stem, role in canonical_hidden
         )
 
-    roots = []
+    roots: list[RootFact] = []
     for stem_fact in exposed_stems:
         for branch_pillar, canonical_hidden in canonical_hidden_by_pillar:
             roots.extend(
