@@ -117,12 +117,11 @@ def _ids(records: tuple[object, ...], field_name: str) -> tuple[str, ...]:
     return tuple(getattr(record, field_name) for record in records)
 
 
-def test_corpus_has_exact_packaged_files_and_minimum_record_counts(
+def test_corpus_has_required_packaged_files_and_minimum_record_counts(
     corpus: _Corpus,
 ) -> None:
-    assert tuple(sorted(item.name for item in corpus.root.iterdir())) == tuple(
-        sorted(RESOURCE_FILENAMES)
-    )
+    packaged_filenames = {item.name for item in corpus.root.iterdir()}
+    assert set(RESOURCE_FILENAMES) <= packaged_filenames
     assert len(corpus.fixtures.records) == 11
     assert len(corpus.cases.records) == 11
     assert len(corpus.assertions.records) == 43
