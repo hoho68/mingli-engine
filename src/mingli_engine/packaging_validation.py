@@ -1,16 +1,25 @@
 from __future__ import annotations
 
+import csv
 from dataclasses import dataclass
 from hashlib import sha256
+from io import StringIO
 from importlib import metadata, resources
 from importlib.resources.abc import Traversable
 import json
 from pathlib import Path
+import re
 import sys
 from typing import Iterator
 
 
 _DISTRIBUTION_NAME = "mingli-engine"
+_VERSION_PATTERN = re.compile(
+    r"^[0-9]+(?:\.[0-9]+)*(?:(?:a|b|rc)[0-9]+)?"
+    r"(?:\.post[0-9]+)?(?:\.dev[0-9]+)?"
+    r"(?:\+[a-z0-9]+(?:[._-][a-z0-9]+)*)?$",
+    re.IGNORECASE,
+)
 EXPECTED_RUNTIME_JSON_ASSETS = (
     "data/calculation/school_profiles.json",
     "data/calculation/strength_weights.json",
@@ -122,10 +131,66 @@ def _load_asset_hashes(package_root: Traversable) -> tuple[dict[str, str], bool]
     return assets, tuple(assets) == EXPECTED_RUNTIME_JSON_ASSETS
 
 
-def _is_noneditable_wheel(distribution: metadata.Distribution) -> bool:
-    wheel_metadata = distribution.read_text("WHEEL")
-    if not wheel_metadata:
-        return False
+def _iter_python_modules(
+    directory: Traversable,
+    relative_directory: str = "",
+) -> Iterator[str]:
+    for child in sorted(directory.iterdir(), key=lambda item: item.name):
+        relative_path = (
+            f"{relative_directory}/{child.name}"
+            if relative_directory
+            else child.name
+        )
+        if child.is_dir():
+            yield from _iter_python_modules(child, relative_path)
+        elif child.is_file() and child.name.endswith(".py"):
+            yield f"mingli_engine/{relative_path}"
+
+
+def _expected_distribution_files(
+    package_root: Traversable | None,
+) -> frozenset[str] | None:
+    if package_root is None:
+        return None
+    try:
+        modules = frozenset(_iter_python_modules(package_root))
+    except Exception:
+        return None
+    if "mingli_engine/packaging_validation.py" not in modules:
+        return None
+    runtime_assets = {
+        f"mingli_engine/{path}" for path in EXPECTED_RUNTIME_JSON_ASSETS
+    }
+    return modules | runtime_assets
+
+
+def _normalized_distribution_name(value: object) -> str | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    return re.sub(r"[-_.]+", "-", value.strip()).lower()
+
+
+def _valid_distribution_version(value: object) -> str | None:
+    if not isinstance(value, str) or not value or value != value.strip():
+        return None
+    return value if _VERSION_PATTERN.fullmatch(value) else None
+
+
+def _record_paths(record: str) -> frozenset[str] | None:
+    try:
+        rows = tuple(csv.reader(StringIO(record)))
+    except (csv.Error, TypeError):
+        return None
+    if not rows or any(not row or not row[0] for row in rows):
+        return None
+    return frozenset(row[0].replace("\\", "/") for row in rows)
+
+
+def _contains_dist_info_file(paths: frozenset[str], filename: str) -> bool:
+    return any(path.endswith(f".dist-info/{filename}") for path in paths)
+
+
+def _valid_direct_url(distribution: metadata.Distribution) -> bool:
     direct_url = distribution.read_text("direct_url.json")
     if direct_url is None:
         return True
@@ -133,26 +198,80 @@ def _is_noneditable_wheel(distribution: metadata.Distribution) -> bool:
         payload = json.loads(direct_url)
     except (TypeError, ValueError):
         return False
-    dir_info = payload.get("dir_info") if isinstance(payload, dict) else None
-    return not (isinstance(dir_info, dict) and dir_info.get("editable") is True)
+    if not isinstance(payload, dict):
+        return False
+    dir_info = payload.get("dir_info")
+    if not isinstance(dir_info, dict) or "editable" not in dir_info:
+        return False
+    editable = dir_info["editable"]
+    return isinstance(editable, bool) and editable is False
 
 
-def _load_distribution() -> tuple[str, Path | None, Path | None, bool]:
+def _valid_wheel_metadata(
+    distribution: metadata.Distribution,
+    expected_package_files: frozenset[str] | None,
+) -> bool:
+    if expected_package_files is None:
+        return False
+    wheel_metadata = distribution.read_text("WHEEL")
+    record = distribution.read_text("RECORD")
+    if not wheel_metadata or not record:
+        return False
+    distribution_files = distribution.files
+    if distribution_files is None:
+        return False
+    file_paths = frozenset(
+        str(path).replace("\\", "/") for path in distribution_files
+    )
+    recorded_paths = _record_paths(record)
+    if recorded_paths is None:
+        return False
+    metadata_files_present = all(
+        _contains_dist_info_file(file_paths, filename)
+        and _contains_dist_info_file(recorded_paths, filename)
+        for filename in ("WHEEL", "RECORD")
+    )
+    return (
+        metadata_files_present
+        and expected_package_files.issubset(file_paths)
+        and expected_package_files.issubset(recorded_paths)
+        and _valid_direct_url(distribution)
+    )
+
+
+def _load_distribution(
+    expected_package_files: frozenset[str] | None,
+) -> tuple[str, Path | None, Path | None, bool]:
     try:
         distribution = metadata.distribution(_DISTRIBUTION_NAME)
-        distribution_version = distribution.version
+        distribution_name = _normalized_distribution_name(
+            distribution.metadata.get("Name")
+        )
+        metadata_version = _valid_distribution_version(
+            distribution.metadata.get("Version")
+        )
+        distribution_version = _valid_distribution_version(distribution.version)
+        if (
+            distribution_name != _DISTRIBUTION_NAME
+            or metadata_version is None
+            or distribution_version != metadata_version
+        ):
+            raise ValueError("invalid distribution identity")
         distribution_root = Path(str(distribution.locate_file(""))).resolve()
         installed_package_root = Path(
             str(distribution.locate_file("mingli_engine"))
         ).resolve()
-        is_noneditable_wheel = _is_noneditable_wheel(distribution)
+        valid_wheel_metadata = _valid_wheel_metadata(
+            distribution,
+            expected_package_files,
+        )
     except Exception:
         return "not_installed", None, None, False
     return (
         distribution_version,
         distribution_root,
         installed_package_root,
-        is_noneditable_wheel,
+        valid_wheel_metadata,
     )
 
 
@@ -174,13 +293,13 @@ def _is_source_isolated(
     package_root: Traversable | None,
     distribution_root: Path | None,
     metadata_package_root: Path | None,
-    is_noneditable_wheel: bool,
+    valid_wheel_metadata: bool,
 ) -> bool:
     if (
         package_root is None
         or distribution_root is None
         or metadata_package_root is None
-        or not is_noneditable_wheel
+        or not valid_wheel_metadata
     ):
         return False
     try:
@@ -207,18 +326,19 @@ def build_packaging_verification() -> PackagingVerification:
         manifest_complete = False
     else:
         assets, manifest_complete = _load_asset_hashes(package_root)
+    expected_distribution_files = _expected_distribution_files(package_root)
 
     (
         distribution_version,
         distribution_root,
         metadata_package_root,
-        is_noneditable_wheel,
-    ) = _load_distribution()
+        valid_wheel_metadata,
+    ) = _load_distribution(expected_distribution_files)
     source_isolated = _is_source_isolated(
         package_root=package_root,
         distribution_root=distribution_root,
         metadata_package_root=metadata_package_root,
-        is_noneditable_wheel=is_noneditable_wheel,
+        valid_wheel_metadata=valid_wheel_metadata,
     )
     verified = (
         manifest_complete

@@ -32,16 +32,20 @@ def installed_target(
             "uv",
             "pip",
             "install",
+            "--offline",
             "--target",
             str(target_dir),
             "--no-deps",
-            str(built_wheel),
+            "--find-links",
+            str(built_wheel.parent),
+            "mingli-engine==0.1.0",
         ],
         cwd=work_dir,
         text=True,
         encoding="utf-8",
         capture_output=True,
         check=False,
+        timeout=60,
     )
     assert installed.returncode == 0, installed.stderr
     return target_dir
@@ -63,6 +67,7 @@ def _run_isolated(
         encoding="utf-8",
         capture_output=True,
         check=False,
+        timeout=30,
     )
 
 
@@ -71,6 +76,20 @@ def _source_asset_hashes() -> dict[str, str]:
         path.relative_to(PACKAGE_ROOT).as_posix(): sha256(path.read_bytes()).hexdigest()
         for path in sorted((PACKAGE_ROOT / "data").rglob("*.json"))
     }
+
+
+def _installed_file_snapshot(root: Path) -> dict[str, tuple[str, int, int]]:
+    snapshot: dict[str, tuple[str, int, int]] = {}
+    for path in sorted(root.rglob("*")):
+        if not path.is_file():
+            continue
+        stat = path.stat()
+        snapshot[path.relative_to(root).as_posix()] = (
+            sha256(path.read_bytes()).hexdigest(),
+            stat.st_size,
+            stat.st_mtime_ns,
+        )
+    return snapshot
 
 
 def test_installed_package_runs_chart_analysis_and_evidence_report_outside_checkout(
@@ -175,10 +194,7 @@ def test_installed_packaging_verifier_is_exact_read_only_and_deterministic(
         print(json.dumps(first, sort_keys=True))
         """
     )
-    target_before = {
-        path.relative_to(installed_target).as_posix()
-        for path in installed_target.rglob("*")
-    }
+    target_before = _installed_file_snapshot(installed_target)
 
     completed = _run_isolated(installed_target, tmp_path, script)
 
@@ -193,10 +209,7 @@ def test_installed_packaging_verifier_is_exact_read_only_and_deterministic(
     }
     assert list(result["asset_sha256"]) == sorted(result["asset_sha256"])
     assert list(tmp_path.iterdir()) == []
-    assert {
-        path.relative_to(installed_target).as_posix()
-        for path in installed_target.rglob("*")
-    } == target_before
+    assert _installed_file_snapshot(installed_target) == target_before
 
 
 def test_installed_verifier_fails_when_any_non_anchor_asset_is_missing(
@@ -233,7 +246,7 @@ def test_installed_verifier_fails_when_any_non_anchor_asset_is_missing(
     assert completed.stderr == ""
     result = json.loads(completed.stdout)
     assert result["overall_status"] == "failed"
-    assert result["source_isolated"] is True
+    assert result["source_isolated"] is False
     assert "data/source_library/source_priority_assessments.json" not in result[
         "asset_sha256"
     ]

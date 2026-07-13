@@ -4,7 +4,7 @@ from dataclasses import asdict
 from hashlib import sha256
 from inspect import signature
 import subprocess
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from shutil import copy2, copytree
 from zipfile import ZipFile
 
@@ -18,20 +18,59 @@ PACKAGE_ROOT = REPO_ROOT / "src" / "mingli_engine"
 
 
 class _InstalledDistribution:
-    version = "0.1.0"
-
-    def __init__(self, installed_root: Path, *, editable: bool = False) -> None:
+    def __init__(
+        self,
+        installed_root: Path,
+        package_root: Path,
+        *,
+        name: str = "Mingli.Engine",
+        version: str | None = "0.1.0",
+        wheel_exists: bool = True,
+        record_exists: bool = True,
+        direct_url: str | None = None,
+        omitted_files: frozenset[str] = frozenset(),
+        omitted_record_entries: frozenset[str] = frozenset(),
+    ) -> None:
         self._installed_root = installed_root
-        self._editable = editable
+        self._wheel_exists = wheel_exists
+        self._record_exists = record_exists
+        self._direct_url = direct_url
+        self.metadata = {"Name": name}
+        if version is not None:
+            self.metadata["Version"] = version
+        package_entries = {
+            f"mingli_engine/{path.relative_to(package_root).as_posix()}"
+            for path in package_root.rglob("*")
+            if path.is_file()
+        }
+        dist_info = "mingli_engine-0.1.0.dist-info"
+        metadata_entries = {
+            f"{dist_info}/METADATA",
+            f"{dist_info}/WHEEL",
+            f"{dist_info}/RECORD",
+        }
+        all_entries = package_entries | metadata_entries
+        self.files = tuple(
+            PurePosixPath(path) for path in sorted(all_entries - omitted_files)
+        )
+        self._record_entries = tuple(
+            sorted(all_entries - omitted_record_entries)
+        )
+
+    @property
+    def version(self) -> str:
+        return self.metadata.get("Version", "")
 
     def locate_file(self, path: str) -> Path:
         return self._installed_root / path
 
     def read_text(self, filename: str) -> str | None:
-        if filename == "WHEEL":
+        if filename == "WHEEL" and self._wheel_exists:
             return "Wheel-Version: 1.0\n"
-        if filename == "direct_url.json" and self._editable:
-            return '{"dir_info":{"editable":true}}'
+        if filename == "RECORD" and self._record_exists:
+            return "".join(f"{path},,\n" for path in self._record_entries)
+        if filename == "direct_url.json":
+            return self._direct_url
         return None
 
 
@@ -45,12 +84,13 @@ def built_wheel(tmp_path_factory: pytest.TempPathFactory) -> Path:
     copy2(REPO_ROOT / "pyproject.toml", staged_project / "pyproject.toml")
     copytree(REPO_ROOT / "src", staged_project / "src")
     completed = subprocess.run(
-        ["uv", "build", "--wheel", "--out-dir", str(output_dir)],
+        ["uv", "build", "--offline", "--wheel", "--out-dir", str(output_dir)],
         cwd=staged_project,
         text=True,
         encoding="utf-8",
         capture_output=True,
         check=False,
+        timeout=60,
     )
     assert completed.returncode == 0, completed.stderr
     wheels = tuple(output_dir.glob("*.whl"))
@@ -76,6 +116,8 @@ def _copy_package_data(tmp_path: Path) -> tuple[Path, Path]:
     installed_root = tmp_path / "target"
     package_root = installed_root / "mingli_engine"
     package_root.mkdir(parents=True)
+    (package_root / "__init__.py").write_text("", encoding="utf-8")
+    (package_root / "packaging_validation.py").write_text("", encoding="utf-8")
     copytree(PACKAGE_ROOT / "data", package_root / "data")
     return installed_root, package_root
 
@@ -93,7 +135,29 @@ def _patch_package_context(
     monkeypatch.setattr(
         packaging_validation.metadata,
         "distribution",
-        lambda name: _InstalledDistribution(installed_root),
+        lambda name: _InstalledDistribution(installed_root, package_root),
+    )
+
+
+def _patch_isolated_distribution(
+    monkeypatch: pytest.MonkeyPatch,
+    package_root: Path,
+    distribution: _InstalledDistribution,
+) -> None:
+    monkeypatch.setattr(
+        packaging_validation.resources,
+        "files",
+        lambda package: package_root,
+    )
+    monkeypatch.setattr(
+        packaging_validation.metadata,
+        "distribution",
+        lambda name: distribution,
+    )
+    monkeypatch.setattr(
+        packaging_validation,
+        "_loaded_package_paths",
+        lambda: tuple(sorted(package_root.rglob("*.py"))),
     )
 
 
@@ -232,13 +296,122 @@ def test_editable_wheel_metadata_never_reports_isolated(
     monkeypatch.setattr(
         packaging_validation.metadata,
         "distribution",
-        lambda name: _InstalledDistribution(installed_root, editable=True),
+        lambda name: _InstalledDistribution(
+            installed_root,
+            package_root,
+            direct_url='{"dir_info":{"editable":true}}',
+        ),
     )
     monkeypatch.setattr(
         packaging_validation,
         "_loaded_package_paths",
         lambda: (package_root / "packaging_validation.py",),
     )
+
+    result = packaging_validation.build_packaging_verification()
+
+    assert result.source_isolated is False
+    assert result.overall_status == "failed"
+
+
+def test_missing_record_metadata_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    installed_root, package_root = _copy_package_data(tmp_path)
+    distribution = _InstalledDistribution(
+        installed_root,
+        package_root,
+        record_exists=False,
+    )
+    _patch_isolated_distribution(monkeypatch, package_root, distribution)
+
+    result = packaging_validation.build_packaging_verification()
+
+    assert result.source_isolated is False
+    assert result.overall_status == "failed"
+
+
+def test_missing_version_metadata_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    installed_root, package_root = _copy_package_data(tmp_path)
+    distribution = _InstalledDistribution(
+        installed_root,
+        package_root,
+        version=None,
+    )
+    _patch_isolated_distribution(monkeypatch, package_root, distribution)
+
+    result = packaging_validation.build_packaging_verification()
+
+    assert result.distribution_version == "not_installed"
+    assert result.source_isolated is False
+    assert result.overall_status == "failed"
+
+
+@pytest.mark.parametrize(
+    "direct_url",
+    (
+        "not-json",
+        "{}",
+        '{"dir_info":{}}',
+        '{"dir_info":{"editable":"false"}}',
+        '{"dir_info":{"editable":null}}',
+    ),
+)
+def test_malformed_direct_url_editable_metadata_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    direct_url: str,
+) -> None:
+    installed_root, package_root = _copy_package_data(tmp_path)
+    distribution = _InstalledDistribution(
+        installed_root,
+        package_root,
+        direct_url=direct_url,
+    )
+    _patch_isolated_distribution(monkeypatch, package_root, distribution)
+
+    result = packaging_validation.build_packaging_verification()
+
+    assert result.source_isolated is False
+    assert result.overall_status == "failed"
+
+
+def test_record_must_cover_every_runtime_json(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    installed_root, package_root = _copy_package_data(tmp_path)
+    missing_entry = (
+        "mingli_engine/data/source_library/source_priority_assessments.json"
+    )
+    distribution = _InstalledDistribution(
+        installed_root,
+        package_root,
+        omitted_record_entries=frozenset({missing_entry}),
+    )
+    _patch_isolated_distribution(monkeypatch, package_root, distribution)
+
+    result = packaging_validation.build_packaging_verification()
+
+    assert result.source_isolated is False
+    assert result.overall_status == "failed"
+
+
+def test_distribution_files_must_cover_every_package_module(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    installed_root, package_root = _copy_package_data(tmp_path)
+    distribution = _InstalledDistribution(
+        installed_root,
+        package_root,
+        omitted_files=frozenset({"mingli_engine/packaging_validation.py"}),
+    )
+    _patch_isolated_distribution(monkeypatch, package_root, distribution)
 
     result = packaging_validation.build_packaging_verification()
 
