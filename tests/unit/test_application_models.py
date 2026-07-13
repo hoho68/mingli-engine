@@ -38,6 +38,10 @@ from mingli_engine.application_models import (
 TRACE_ID = "550e8400-e29b-41d4-a716-446655440000"
 
 
+def _wrong_type(value: object) -> Any:
+    return value
+
+
 def _profile() -> RealUseProfileV1:
     return RealUseProfileV1(
         calendar_type="gregorian",
@@ -239,9 +243,7 @@ def test_protocol_literals_and_schema_constants_are_exact() -> None:
     )
     assert get_args(ContentMediaType) == ("text/markdown", "text/html")
     assert get_args(ChartSourceType) == ("calculated",)
-    assert get_args(ChartSourceConfidence) == (
-        "deterministic_supported_range",
-    )
+    assert get_args(ChartSourceConfidence) == ("deterministic_supported_range",)
     assert get_args(RetentionPolicy) == ("not_stored_by_engine",)
     assert APPLICATION_ERROR_CODES == frozenset(get_args(ApplicationErrorCode))
     assert CONTENT_MEDIA_TYPES == frozenset(get_args(ContentMediaType))
@@ -303,7 +305,9 @@ def test_sequence_inputs_normalize_to_tuples_without_aliasing() -> None:
     )
 
 
-def test_request_requires_all_fields_and_accepts_nullable_id_and_false_attestation() -> None:
+def test_request_requires_all_fields_and_accepts_nullable_id_and_false_attestation() -> (
+    None
+):
     request = _request(request_id=None, attested=False)
 
     assert request.request_id is None
@@ -338,7 +342,14 @@ def test_request_rejects_invalid_literals_but_does_not_parse_text_or_dates() -> 
     with pytest.raises(ValueError, match="report_format"):
         RealUseOptionsV1("pdf", False)  # type: ignore[arg-type]
     with pytest.raises(ValueError, match="schema_version"):
-        RealUseRequestV1("v2", None, "analysis", profile, AuthorizationAttestationV1("self", True), RealUseOptionsV1(None, False))  # type: ignore[arg-type]
+        RealUseRequestV1(
+            _wrong_type("v2"),
+            None,
+            "analysis",
+            profile,
+            AuthorizationAttestationV1("self", True),
+            RealUseOptionsV1(None, False),
+        )
 
 
 @pytest.mark.parametrize(
@@ -423,6 +434,34 @@ def test_parse_error_matrix_is_constructible(code: ApplicationErrorCode) -> None
     assert response.error == _error(code)
 
 
+def test_parse_time_unsupported_input_uses_null_operation_contract() -> None:
+    response = _response(
+        operation=None,
+        status="error",
+        result=None,
+        safety=_safety("not_evaluated"),
+        provenance=None,
+        error=_error("unsupported_input"),
+    )
+
+    assert response.operation is None
+    assert response.safety.decision == "not_evaluated"
+
+
+def test_post_parse_unsupported_input_preserves_operation_contract() -> None:
+    response = _response(
+        operation="analysis",
+        status="error",
+        result=None,
+        safety=_safety("error"),
+        provenance=None,
+        error=_error("unsupported_input"),
+    )
+
+    assert response.operation == "analysis"
+    assert response.safety.decision == "error"
+
+
 @pytest.mark.parametrize("operation", ["analysis", "report"])
 def test_authorization_refusal_matrix_is_constructible(
     operation: RealUseOperation,
@@ -430,9 +469,7 @@ def test_authorization_refusal_matrix_is_constructible(
     safety = _safety(
         "authorization_required",
         categories=["authorization"],
-        redirect_message=(
-            "Provide a true self-use or authorized-other attestation."
-        ),
+        redirect_message=("Provide a true self-use or authorized-other attestation."),
     )
     response = _response(
         operation=operation,
@@ -629,3 +666,188 @@ def test_response_nested_dtos_reject_values_outside_literals(
 ) -> None:
     with pytest.raises(ValueError, match=message):
         factory()
+
+
+@pytest.mark.parametrize(
+    ("field_name", "factory"),
+    [
+        (
+            "birth_date",
+            lambda: RealUseProfileV1(
+                "gregorian", _wrong_type(1), "09:30", "place", "unknown", "focus"
+            ),
+        ),
+        (
+            "birth_time",
+            lambda: RealUseProfileV1(
+                "gregorian", "1996-12-15", _wrong_type(1), "place", "unknown", "focus"
+            ),
+        ),
+        (
+            "birthplace",
+            lambda: RealUseProfileV1(
+                "gregorian", "1996-12-15", "09:30", _wrong_type(1), "unknown", "focus"
+            ),
+        ),
+        (
+            "gender",
+            lambda: RealUseProfileV1(
+                "gregorian", "1996-12-15", "09:30", "place", _wrong_type(1), "focus"
+            ),
+        ),
+        (
+            "focus_topic",
+            lambda: RealUseProfileV1(
+                "gregorian", "1996-12-15", "09:30", "place", "unknown", _wrong_type(1)
+            ),
+        ),
+        (
+            "message",
+            lambda: ApplicationErrorV1(
+                "invalid_json", _wrong_type(1), None, False, TRACE_ID
+            ),
+        ),
+        (
+            "field_path",
+            lambda: ApplicationErrorV1(
+                "invalid_json", "error", _wrong_type(False), False, TRACE_ID
+            ),
+        ),
+        (
+            "retryable",
+            lambda: ApplicationErrorV1(
+                "invalid_json", "error", None, _wrong_type(1), TRACE_ID
+            ),
+        ),
+        (
+            "trace_id",
+            lambda: ApplicationErrorV1(
+                "invalid_json", "error", None, False, _wrong_type(1)
+            ),
+        ),
+        (
+            "categories",
+            lambda: ApplicationSafetyV1(
+                False, "unsafe_request", _wrong_type("unsafe"), "redirect", True
+            ),
+        ),
+        (
+            "categories",
+            lambda: ApplicationSafetyV1(
+                False, "unsafe_request", _wrong_type([1]), "redirect", True
+            ),
+        ),
+        (
+            "redirect_message",
+            lambda: ApplicationSafetyV1(False, "error", (), _wrong_type(1), False),
+        ),
+        (
+            "requires_narrowing",
+            lambda: ApplicationSafetyV1(False, "error", (), "", _wrong_type(1)),
+        ),
+        (
+            "engine_version",
+            lambda: ApplicationProvenanceV1(
+                _wrong_type(1),
+                "rules",
+                "provider",
+                "calculated",
+                "deterministic_supported_range",
+                "baseline",
+                (),
+            ),
+        ),
+        (
+            "evidence_ids",
+            lambda: ApplicationProvenanceV1(
+                "engine",
+                "rules",
+                "provider",
+                "calculated",
+                "deterministic_supported_range",
+                "baseline",
+                _wrong_type("evidence"),
+            ),
+        ),
+        (
+            "evidence_ids",
+            lambda: ApplicationProvenanceV1(
+                "engine",
+                "rules",
+                "provider",
+                "calculated",
+                "deterministic_supported_range",
+                "baseline",
+                _wrong_type([1]),
+            ),
+        ),
+        ("code", lambda: ApplicationWarningV1(_wrong_type(1), "warning")),
+        ("message", lambda: ApplicationWarningV1("warning", _wrong_type(1))),
+        (
+            "contains_sensitive_profile",
+            lambda: ApplicationPrivacyV1("not_stored_by_engine", _wrong_type(1)),
+        ),
+        (
+            "content",
+            lambda: ApplicationContentV1("text/markdown", _wrong_type(1), False),
+        ),
+        (
+            "contains_sensitive_profile",
+            lambda: ApplicationContentV1("text/markdown", "content", _wrong_type(1)),
+        ),
+        ("chart", lambda: ApplicationAnalysisResultV1(_wrong_type([]), {})),
+        ("calculation", lambda: ApplicationAnalysisResultV1({}, _wrong_type([]))),
+        ("report", lambda: ApplicationReportResultV1(_wrong_type([]), None)),
+        ("content", lambda: ApplicationReportResultV1(None, _wrong_type(object()))),
+    ],
+)
+def test_nested_dto_fields_reject_wrong_runtime_types(
+    field_name: str,
+    factory: Any,
+) -> None:
+    with pytest.raises(TypeError, match=field_name):
+        factory()
+
+
+@pytest.mark.parametrize(
+    ("field_name", "changes"),
+    [
+        ("result", {"result": object()}),
+        ("safety", {"safety": object()}),
+        ("provenance", {"provenance": object()}),
+        ("warnings", {"warnings": [object()]}),
+        ("privacy", {"privacy": object()}),
+        ("error", {"error": object()}),
+    ],
+)
+def test_response_rejects_wrong_nested_runtime_types(
+    field_name: str,
+    changes: dict[str, object],
+) -> None:
+    with pytest.raises(TypeError, match=field_name):
+        _response(**changes)
+
+
+@pytest.mark.parametrize(
+    ("field_name", "changes"),
+    [
+        ("profile", {"profile": object()}),
+        ("authorization", {"authorization": object()}),
+        ("options", {"options": object()}),
+    ],
+)
+def test_request_rejects_wrong_nested_runtime_types(
+    field_name: str,
+    changes: dict[str, object],
+) -> None:
+    values: dict[str, object] = {
+        "schema_version": REAL_USE_REQUEST_SCHEMA_VERSION,
+        "request_id": None,
+        "operation": "analysis",
+        "profile": _profile(),
+        "authorization": AuthorizationAttestationV1("self", True),
+        "options": RealUseOptionsV1(None, False),
+    }
+    values.update(changes)
+    with pytest.raises(TypeError, match=field_name):
+        RealUseRequestV1(**values)  # type: ignore[arg-type]

@@ -2,9 +2,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 
-REAL_USE_REQUEST_SCHEMA_VERSION: Literal["real-use-request-v1"] = (
-    "real-use-request-v1"
-)
+REAL_USE_REQUEST_SCHEMA_VERSION: Literal["real-use-request-v1"] = "real-use-request-v1"
 REAL_USE_RESPONSE_SCHEMA_VERSION: Literal["real-use-response-v1"] = (
     "real-use-response-v1"
 )
@@ -67,13 +65,14 @@ _SAFETY_DECISIONS = frozenset(
         "error",
     }
 )
-_PARSE_ERROR_CODES = frozenset(
+_STRICT_PARSE_ERROR_CODES = frozenset(
     {"payload_too_large", "invalid_json", "invalid_request", "unsupported_input"}
 )
-_REFUSAL_ERROR_CODES = frozenset({"authorization_required", "unsafe_request"})
-_AUTHORIZATION_REDIRECT = (
-    "Provide a true self-use or authorized-other attestation."
+_PARSE_ONLY_ERROR_CODES = frozenset(
+    {"payload_too_large", "invalid_json", "invalid_request"}
 )
+_REFUSAL_ERROR_CODES = frozenset({"authorization_required", "unsafe_request"})
+_AUTHORIZATION_REDIRECT = "Provide a true self-use or authorized-other attestation."
 
 
 def _require_bool(value: object, field_name: str) -> None:
@@ -81,9 +80,28 @@ def _require_bool(value: object, field_name: str) -> None:
         raise TypeError(f"{field_name} must be bool")
 
 
+def _require_str(value: object, field_name: str) -> None:
+    if not isinstance(value, str):
+        raise TypeError(f"{field_name} must be str")
+
+
+def _require_dict(value: object, field_name: str) -> None:
+    if not isinstance(value, dict):
+        raise TypeError(f"{field_name} must be dict")
+
+
 def _require_literal(value: object, allowed: frozenset[str], field_name: str) -> None:
+    _require_str(value, field_name)
     if value not in allowed:
         raise ValueError(f"unsupported {field_name}")
+
+
+def _normalize_str_tuple(value: object, field_name: str) -> tuple[str, ...]:
+    if not isinstance(value, (list, tuple)):
+        raise TypeError(f"{field_name} must be a list or tuple")
+    if not all(isinstance(item, str) for item in value):
+        raise TypeError(f"{field_name} must contain only str values")
+    return tuple(value)
 
 
 @dataclass(frozen=True)
@@ -96,8 +114,12 @@ class RealUseProfileV1:
     focus_topic: str
 
     def __post_init__(self) -> None:
-        if self.calendar_type != "gregorian":
-            raise ValueError("unsupported calendar_type")
+        _require_literal(self.calendar_type, frozenset({"gregorian"}), "calendar_type")
+        _require_str(self.birth_date, "birth_date")
+        _require_str(self.birth_time, "birth_time")
+        _require_str(self.birthplace, "birthplace")
+        _require_str(self.gender, "gender")
+        _require_str(self.focus_topic, "focus_topic")
 
 
 @dataclass(frozen=True)
@@ -134,6 +156,7 @@ class RealUseRequestV1:
     options: RealUseOptionsV1
 
     def __post_init__(self) -> None:
+        _require_str(self.schema_version, "schema_version")
         if self.schema_version != REAL_USE_REQUEST_SCHEMA_VERSION:
             raise ValueError("unsupported schema_version")
         if self.request_id is not None and not isinstance(self.request_id, str):
@@ -147,9 +170,7 @@ class RealUseRequestV1:
             raise TypeError("options must be RealUseOptionsV1")
         format_matches = (
             self.operation == "analysis" and self.options.report_format is None
-        ) or (
-            self.operation == "report" and self.options.report_format is not None
-        )
+        ) or (self.operation == "report" and self.options.report_format is not None)
         if not format_matches:
             raise ValueError("operation and report_format are incompatible")
 
@@ -164,7 +185,11 @@ class ApplicationErrorV1:
 
     def __post_init__(self) -> None:
         _require_literal(self.code, APPLICATION_ERROR_CODES, "code")
+        _require_str(self.message, "message")
+        if self.field_path is not None:
+            _require_str(self.field_path, "field_path")
         _require_bool(self.retryable, "retryable")
+        _require_str(self.trace_id, "trace_id")
 
 
 @dataclass(frozen=True)
@@ -178,7 +203,12 @@ class ApplicationSafetyV1:
     def __post_init__(self) -> None:
         _require_bool(self.allowed, "allowed")
         _require_literal(self.decision, _SAFETY_DECISIONS, "decision")
-        object.__setattr__(self, "categories", tuple(self.categories))
+        object.__setattr__(
+            self,
+            "categories",
+            _normalize_str_tuple(self.categories, "categories"),
+        )
+        _require_str(self.redirect_message, "redirect_message")
         _require_bool(self.requires_narrowing, "requires_narrowing")
 
 
@@ -193,17 +223,35 @@ class ApplicationProvenanceV1:
     evidence_ids: tuple[str, ...]
 
     def __post_init__(self) -> None:
-        if self.chart_source_type != "calculated":
-            raise ValueError("unsupported chart_source_type")
-        if self.chart_source_confidence != "deterministic_supported_range":
-            raise ValueError("unsupported chart_source_confidence")
-        object.__setattr__(self, "evidence_ids", tuple(self.evidence_ids))
+        _require_str(self.engine_version, "engine_version")
+        _require_str(self.ruleset_version, "ruleset_version")
+        _require_str(self.provider_version, "provider_version")
+        _require_literal(
+            self.chart_source_type,
+            frozenset({"calculated"}),
+            "chart_source_type",
+        )
+        _require_literal(
+            self.chart_source_confidence,
+            frozenset({"deterministic_supported_range"}),
+            "chart_source_confidence",
+        )
+        _require_str(self.evidence_baseline_id, "evidence_baseline_id")
+        object.__setattr__(
+            self,
+            "evidence_ids",
+            _normalize_str_tuple(self.evidence_ids, "evidence_ids"),
+        )
 
 
 @dataclass(frozen=True)
 class ApplicationWarningV1:
     code: str
     message: str
+
+    def __post_init__(self) -> None:
+        _require_str(self.code, "code")
+        _require_str(self.message, "message")
 
 
 @dataclass(frozen=True)
@@ -212,8 +260,11 @@ class ApplicationPrivacyV1:
     contains_sensitive_profile: bool
 
     def __post_init__(self) -> None:
-        if self.retention != "not_stored_by_engine":
-            raise ValueError("unsupported retention")
+        _require_literal(
+            self.retention,
+            frozenset({"not_stored_by_engine"}),
+            "retention",
+        )
         _require_bool(
             self.contains_sensitive_profile,
             "contains_sensitive_profile",
@@ -228,6 +279,7 @@ class ApplicationContentV1:
 
     def __post_init__(self) -> None:
         _require_literal(self.media_type, CONTENT_MEDIA_TYPES, "media_type")
+        _require_str(self.content, "content")
         _require_bool(
             self.contains_sensitive_profile,
             "contains_sensitive_profile",
@@ -239,6 +291,10 @@ class ApplicationAnalysisResultV1:
     chart: dict[str, object]
     calculation: dict[str, object]
 
+    def __post_init__(self) -> None:
+        _require_dict(self.chart, "chart")
+        _require_dict(self.calculation, "calculation")
+
 
 @dataclass(frozen=True)
 class ApplicationReportResultV1:
@@ -246,6 +302,13 @@ class ApplicationReportResultV1:
     content: ApplicationContentV1 | None
 
     def __post_init__(self) -> None:
+        if self.report is not None:
+            _require_dict(self.report, "report")
+        if self.content is not None and not isinstance(
+            self.content,
+            ApplicationContentV1,
+        ):
+            raise TypeError("content must be ApplicationContentV1 or None")
         if (self.report is None) == (self.content is None):
             raise ValueError("report result requires exactly one representation")
 
@@ -267,7 +330,11 @@ class RealUseResponseV1:
     error: ApplicationErrorV1 | None
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "warnings", tuple(self.warnings))
+        object.__setattr__(
+            self,
+            "warnings",
+            self._normalize_warnings(self.warnings),
+        )
         self._validate_envelope_types_and_literals()
         if self.status == "ok":
             self._validate_ok()
@@ -275,17 +342,37 @@ class RealUseResponseV1:
             self._validate_non_ok()
 
     def _validate_envelope_types_and_literals(self) -> None:
+        _require_str(self.schema_version, "schema_version")
         if self.schema_version != REAL_USE_RESPONSE_SCHEMA_VERSION:
             raise ValueError("unsupported schema_version")
+        _require_str(self.trace_id, "trace_id")
         if self.operation is not None:
             _require_literal(self.operation, _OPERATIONS, "operation")
         _require_literal(self.status, _RESPONSE_STATUSES, "status")
+        if self.result is not None and not isinstance(
+            self.result,
+            (ApplicationAnalysisResultV1, ApplicationReportResultV1),
+        ):
+            raise TypeError("result must be an application result DTO or None")
         if not isinstance(self.safety, ApplicationSafetyV1):
             raise TypeError("safety must be ApplicationSafetyV1")
+        if self.provenance is not None and not isinstance(
+            self.provenance,
+            ApplicationProvenanceV1,
+        ):
+            raise TypeError("provenance must be ApplicationProvenanceV1 or None")
         if not isinstance(self.privacy, ApplicationPrivacyV1):
             raise TypeError("privacy must be ApplicationPrivacyV1")
-        if not all(isinstance(item, ApplicationWarningV1) for item in self.warnings):
+        if self.error is not None and not isinstance(self.error, ApplicationErrorV1):
+            raise TypeError("error must be ApplicationErrorV1 or None")
+
+    @staticmethod
+    def _normalize_warnings(value: object) -> tuple[ApplicationWarningV1, ...]:
+        if not isinstance(value, (list, tuple)):
+            raise TypeError("warnings must be a list or tuple")
+        if not all(isinstance(item, ApplicationWarningV1) for item in value):
             raise TypeError("warnings must contain ApplicationWarningV1 values")
+        return tuple(value)
 
     def _validate_ok(self) -> None:
         expected_result_type = (
@@ -344,9 +431,11 @@ class RealUseResponseV1:
             raise ValueError("error response requires an error")
         if self.error.code in _REFUSAL_ERROR_CODES:
             raise ValueError("refusal error codes require refused status")
-        is_parse_error = self.error.code in _PARSE_ERROR_CODES
-        if is_parse_error != (self.operation is None):
-            raise ValueError("operation is null only for parse errors")
+        is_parse_error = self.operation is None
+        if is_parse_error and self.error.code not in _STRICT_PARSE_ERROR_CODES:
+            raise ValueError("null operation requires a strict parse error code")
+        if not is_parse_error and self.error.code in _PARSE_ONLY_ERROR_CODES:
+            raise ValueError("parse-only error codes require null operation")
         expected_decision: SafetyDecision = (
             "not_evaluated" if is_parse_error else "error"
         )
