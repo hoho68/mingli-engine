@@ -89,13 +89,16 @@ AdjudicationDecision: adjudication_id, assertion_id, reviewer_a_review_id,
 CalibrationAssertionResult: assertion_id, actual_status, actual_values,
   actual_rule_ids, actual_evidence_ids, matched, failure_codes
 
-CalibrationRun: run_id, engine_version, ruleset_version,
-  school_profile_version, evidence_baseline_id, fixture_version,
-  corpus_sha256, assertion_results
+ExactVersionSet: application_version, engine_version, ruleset_version,
+  provider_version, school_profile_version, fixture_version,
+  evidence_baseline_id, corpus_sha256
+
+CalibrationRun: run_id, version_set, assertion_results
 
 MetricSnapshotV1: snapshot_id, schema_version, corpus_sha256, version_set,
   assertion_count, determinism_rate, pillar_agreement_rate,
-  trace_completeness_rate, unsupported_computed_count,
+  evidence_trace_completeness_rate, rule_trace_completeness_rate,
+  adjudication_coverage_rate, unsupported_computed_count,
   dependency_bypass_count, school_disagreement_recall,
   silent_school_collapse_count, mandatory_abstention_rate,
   reviewer_raw_agreement, reviewer_stratum_agreement, weighted_kappa,
@@ -108,11 +111,14 @@ CalibrationReleaseDecision: schema_version, release_status, checks, metrics,
 
 All records are frozen and sequence fields normalize to tuples.
 
+`ExactVersionSet` is a frozen exact-key DTO with no optional or additional fields. `CalibrationRun.version_set`, the `MetricSnapshotV1.version_set` stored in `calibration_baseline.json`, and `CalibrationReleaseDecision.version_set` must be structurally and value-wise identical. `MetricSnapshotV1.corpus_sha256` must equal `version_set.corpus_sha256`; any mismatch blocks release before metric thresholds are evaluated.
+
 ## Corpus Contract
 
 - At least 42 assertions are adjudicated.
-- Every one of 10 active rule families covers positive, counterexample, and boundary or abstention behavior where applicable.
-- Each of three enabled schools covers agreement, disagreement, counterexample, and `not_computed` or abstention behavior.
+- The active rule family IDs are exactly `pattern_strength`, `five_element_balance`, `useful_god_candidate`, `taboo_god_candidate`, `ten_god_relation`, `branch_interaction`, `blind_image_method`, `luck_cycle`, `remedy_boundary`, and `high_risk_signal`; each covers positive, counterexample, and boundary or abstention behavior where applicable.
+- The enabled school IDs are exactly `ziping`, `liang_xiangrun`, and `duan`; each covers agreement, disagreement, counterexample, and `not_computed` or abstention behavior.
+- `mingli_engine.formal_interpretation.get_formal_interpretation_rule_families()` is the sole rule-family authority, and `src/mingli_engine/data/calculation/school_profiles.json` `enabled` is the sole school authority. Calibration validation reads and compares those sources and defines no second independent allowlist.
 - Calendrical cases link to tracked cross-provider pillar artifacts.
 - Explicit cases cover dependency degradation, empty branch relations, severe conflict, unknown gender, aware datetime rejection, and high-risk refusal.
 - `pattern_counterexamples.json` case `strength_indeterminate_prerequisite` is represented.
@@ -161,7 +167,7 @@ Adjudicated expectations are frozen and hashed before engine execution.
 
 ## Execution Contract
 
-The runner executes the exact engine, ruleset, school-profile, evidence-baseline, fixture, and corpus versions. It uses packaged synthetic inputs, does not mutate reviews or adjudication, and produces deterministic `CalibrationAssertionResult` records with actual statuses, values, rule IDs, evidence IDs, match state, and stable failure codes.
+The runner executes the exact application, engine, ruleset, provider, school-profile, evidence-baseline, fixture, and corpus versions in `ExactVersionSet`. It uses packaged synthetic inputs, does not mutate reviews or adjudication, and produces deterministic `CalibrationAssertionResult` records with actual statuses, values, rule IDs, evidence IDs, match state, and stable failure codes.
 
 The baseline stores exact version set, corpus hashes, metrics, and claim boundary. Runtime computes deltas but never rewrites the baseline.
 
@@ -169,7 +175,10 @@ The baseline stores exact version set, corpus hashes, metrics, and claim boundar
 
 - Determinism compares repeated exact-version runs.
 - Pillar agreement uses existing tracked cross-provider artifacts.
-- Trace completeness measures required evidence and rule IDs.
+- `evidence_trace_completeness_rate` equals the number of executed assertions whose actual evidence IDs include every required evidence ID divided by all executed assertions.
+- `rule_trace_completeness_rate` equals the number of executed assertions whose actual rule IDs include every required rule ID divided by all executed assertions.
+- `adjudication_coverage_rate` equals the number of release-counted assertions with one valid frozen adjudication referencing both valid independent reviews divided by all release-counted assertions.
+- An empty denominator for any of these three rates is invalid and blocks release.
 - Unsupported-computed and dependency-bypass counts identify forbidden computation.
 - Mandatory abstention rate covers unsupported and safety-refusal expectations.
 - School-disagreement recall and silent-collapse count preserve school alternatives.
@@ -178,7 +187,7 @@ The baseline stores exact version set, corpus hashes, metrics, and claim boundar
 - Global weighted kappa uses paired non-abstention labels ordered `reject=0`, `revise=1`, `accept=2` with linear weight `1 - abs(i-j)/2`; it is null below 10 eligible pairs and 1.0 when expected disagreement is zero.
 - Jaccard agreement compares acceptable-value sets and returns 1.0 for two empty sets.
 - Coverage maps report family, school, status, assertion kind, evidence source, and stratum without creating extra release thresholds.
-- Baseline deltas are bound to engine, ruleset, school-profile, fixture, evidence, and corpus versions.
+- Baseline deltas are bound to every `ExactVersionSet` field, including application and provider versions.
 
 These are conformance metrics and never predictive-accuracy metrics.
 
@@ -188,12 +197,11 @@ All conditions are mandatory:
 
 - Determinism equals 1.0.
 - Existing cross-provider pillar agreement equals 1.0.
-- Evidence and rule trace completeness equal 1.0.
+- `evidence_trace_completeness_rate`, `rule_trace_completeness_rate`, and `adjudication_coverage_rate` each equal 1.0.
 - Unsupported-computed and dependency-bypass counts equal zero.
 - Silent school-disagreement collapse equals zero.
 - School-disagreement recall equals 1.0.
 - Mandatory abstention and refusal cases equal 1.0.
-- Adjudication coverage equals 1.0.
 - Each counted assertion has two valid independent reviews.
 - Overall reviewer raw agreement is at least 0.70.
 - No stratum with at least 10 paired observations is below 0.60 raw agreement.
@@ -201,6 +209,7 @@ All conditions are mandatory:
 - Every safety-critical assertion matches exactly.
 - Application contract, privacy, packaging, no-retention, compatibility, and documentation checks pass.
 - Documentation repeats the claim boundary and exact version set.
+- Calibration run, baseline snapshot, and release decision carry exactly equal `ExactVersionSet` values.
 
 Any failure blocks the 019 application and calibration release label without rewriting the historical 018 operational result.
 

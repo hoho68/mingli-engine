@@ -21,6 +21,8 @@
 - [X] Scope and non-goals are explicit
 - [X] Dependencies and assumptions are identified
 - [X] Exact request, response, error, CLI, calibration, metric, and release literals are defined
+- [X] `request_id` is required and nullable, `include_profile_in_report` is required and boolean, and every object field is exact and required
+- [X] Parse error, authorization refusal, unsafe refusal, and internal error have complete response-field nullability and value matrices
 
 ## Safety, Ethics, And Privacy
 
@@ -29,6 +31,7 @@
 - [X] Procedural blindness is distinguished from OS-level isolation
 - [X] High-risk refusal categories and professional-domain boundaries are explicit
 - [X] Whole-object redaction and active-markup escaping are required
+- [X] JSON, Markdown, and HTML each require source/evidence traceability, disclaimers, non-absolute language, and absolute-language rejection tests
 - [X] No-engine-retention wording accurately limits the engine's control boundary
 - [X] Synthetic calibration data and no-real-personal-data requirements are explicit
 
@@ -37,9 +40,13 @@
 - [X] Functional requirements map to one or more user stories or release gates
 - [X] Success criteria cover application, CLI, privacy, packaging, calibration, compatibility, and governance
 - [X] Data model and both contracts use consistent exact fields and literals
+- [X] Metric snapshot separately defines evidence trace, rule trace, and adjudication coverage rates and 100% gates
+- [X] `ExactVersionSet` has eight exact keys and must match across run, baseline, and release
+- [X] All 10 active rule family IDs and three school IDs are enumerated with one authority for each set
 - [X] Research resolves architecture choices and rejected alternatives
 - [X] Quickstart provides synthetic examples and complete verification commands
 - [X] Tasks are dependency ordered, test first, and entirely unchecked for in-progress work
+- [X] Task headings map one-to-one to approved Tasks 0 through 17 and named tasks include exact files, tests, and outputs
 - [X] Draft path and final atomic closure behavior are explicit
 
 ## Notes

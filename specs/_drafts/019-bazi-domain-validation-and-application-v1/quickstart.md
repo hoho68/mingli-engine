@@ -47,6 +47,8 @@ uv run --with ruff==0.12.11 ruff check src tests
 
 Each implementation task begins with a focused failing test, reaches green with the minimum implementation, and reruns compatibility tests before commit.
 
+Strict request objects contain every documented key exactly once. `request_id` is required even when its value is null, and `include_profile_in_report` is required with a boolean value. Missing keys, unknown keys, and duplicate keys are invalid.
+
 ## Synthetic Analysis Request
 
 Use only synthetic data in examples and tests:
@@ -85,6 +87,8 @@ response_bytes = handle_real_use_json(request_bytes)
 
 Expected response properties are schema `real-use-response-v1`, operation `analysis`, status `ok`, one UUID4 trace ID, analysis result, safety decision, actual provenance, no raw profile metadata, and privacy retention `not_stored_by_engine`.
 
+Also run the same synthetic request with `"request_id": null` to prove the required nullable field is accepted; deleting the key must produce `invalid_request`. Deleting `include_profile_in_report` or replacing its boolean with null must also produce `invalid_request`.
+
 ## Synthetic Report Request
 
 For a report, set operation to `report` and format to `json`, `markdown`, or `html`:
@@ -114,6 +118,8 @@ For a report, set operation to `report` and format to `json`, `markdown`, or `ht
 ```
 
 With inclusion false, scan the complete report object and rendered output to confirm all six raw and NFKC-normalized profile values are absent. With inclusion true, expect `contains_sensitive_profile=true` and escaped Markdown or HTML values.
+
+For JSON, Markdown, and HTML separately, assert that source locators, source IDs, evidence IDs, and rule IDs remain traceable; the traditional-analysis and qualified-professional disclaimers are present; conclusions use conditional and uncertainty language; and `必定`, `注定`, `一定会`, `死定`, plus equivalent prohibited absolute wording, are rejected before output.
 
 ## Controlled Refusal Check
 
@@ -159,7 +165,7 @@ After calibration models and corpus exist, run:
 uv run --with pytest==8.4.1 python -m pytest tests/unit/test_domain_calibration_models.py tests/unit/test_domain_calibration_corpus.py -q -p no:cacheprovider
 ```
 
-Confirm at least 42 assertions, all 10 active rule families, all three schools, required boundary cases, packaged synthetic input closure, exact canonical hashes, no real personal data, and no runtime dependency on `tests/`.
+Confirm at least 42 assertions; exact rule families `pattern_strength`, `five_element_balance`, `useful_god_candidate`, `taboo_god_candidate`, `ten_god_relation`, `branch_interaction`, `blind_image_method`, `luck_cycle`, `remedy_boundary`, and `high_risk_signal`; exact schools `ziping`, `liang_xiangrun`, and `duan`; required boundary cases; packaged synthetic input closure; exact canonical hashes; no real personal data; and no runtime dependency on `tests/`. Confirm the IDs equal `get_formal_interpretation_rule_families()` and `school_profiles.json` `enabled` rather than a calibration-local allowlist.
 
 ## Reviewer Procedure
 
@@ -184,13 +190,16 @@ python -m mingli_engine.cli domain-calibration-summary
 
 The summary must expose the exact version set, conformance metrics, gate checks, blockers, claim boundary, and next action. Passing requires:
 
-- 100% determinism, pillar agreement, trace completeness, school-disagreement recall, mandatory abstention or refusal, and adjudication coverage;
+- 100% determinism, pillar agreement, school-disagreement recall, and mandatory abstention or refusal;
+- `evidence_trace_completeness_rate=1.0`, `rule_trace_completeness_rate=1.0`, and `adjudication_coverage_rate=1.0`, each with a non-empty denominator;
 - zero unsupported computation, dependency bypass, and silent school collapse;
 - overall raw reviewer agreement at least 0.70;
 - sufficiently sampled stratum agreement at least 0.60;
 - adjudicated engine match at least 0.90;
 - exact safety-critical match;
 - passing application, privacy, packaging, no-retention, compatibility, and documentation checks.
+
+The run, `calibration_baseline.json` metric snapshot, and release decision must carry the same exact `ExactVersionSet`: `application_version`, `engine_version`, `ruleset_version`, `provider_version`, `school_profile_version`, `fixture_version`, `evidence_baseline_id`, and `corpus_sha256`. Any missing, additional, or unequal field blocks release.
 
 ## Installed Wheel Verification
 

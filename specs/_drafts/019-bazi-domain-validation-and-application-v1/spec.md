@@ -43,6 +43,7 @@ An authorized caller requests JSON, Markdown, or HTML report content and chooses
 1. **Given** `include_profile_in_report=false`, **When** any report format is generated, **Then** all raw and NFKC-normalized occurrences of calendar type, birth date, birth time, birthplace, gender, and focus topic are absent from the complete report object and output.
 2. **Given** profile inclusion is enabled, **When** untrusted values contain Markdown or HTML syntax, **Then** the values are escaped, the content is marked sensitive, and trusted headings retain formatting.
 3. **Given** post-build safety review refuses the report, **When** the facade handles the result, **Then** no renderer is called and a controlled refusal envelope is returned.
+4. **Given** an allowed evidence-backed report, **When** JSON, Markdown, or HTML is rendered, **Then** each format preserves source and evidence traceability, includes the required traditional-analysis disclaimer, uses non-absolute uncertainty language, and rejects prohibited absolute destiny wording.
 
 ---
 
@@ -96,7 +97,9 @@ A maintainer runs deterministic application, privacy, packaging, calibration, an
 
 - Requests over 32 KiB are rejected after reading at most one sentinel byte beyond the limit.
 - JSON deeper than 8 levels, duplicate keys, invalid UTF-8, non-finite numbers, and unknown fields are rejected.
-- `request_id` accepts only 1 to 64 ASCII letters, digits, `_`, or `-`.
+- The `request_id` key is required and its value is either null or 1 to 64 ASCII letters, digits, `_`, or `-`.
+- The `include_profile_in_report` key is required and its value is a boolean.
+- Every request object and nested object contains exactly its specified required keys; omission and unknown keys are invalid.
 - Dates outside 1901-01-01 through 2099-12-31, aware datetimes, non-Gregorian input, external charts, and serialized calculation bundles are rejected.
 - Focus topics covering lifespan or death, medical, legal, psychological, investment, coercive matching, anxiety creation, or remedy upsells are refused before calculation.
 - Response serialization over 1 MiB becomes a small `response_too_large` envelope.
@@ -110,7 +113,7 @@ A maintainer runs deterministic application, privacy, packaging, calibration, an
 
 - **FR-001**: The feature MUST expose frozen `RealUseRequestV1` and `RealUseResponseV1` DTOs with schema versions `real-use-request-v1` and `real-use-response-v1`.
 - **FR-002**: The root package MUST expose `handle_real_use`, `handle_real_use_json`, and `response_status_from_json_bytes` while preserving existing low-level interfaces.
-- **FR-003**: The strict parser MUST reject invalid UTF-8, duplicate keys, non-finite values, excessive depth, unknown fields, invalid literals, invalid identifiers, unsupported dates, external charts, and precomputed bundles.
+- **FR-003**: The strict parser MUST require every exact root and nested object field, reject unknown fields, require `request_id` with a null or valid identifier value, require boolean `include_profile_in_report`, and reject invalid UTF-8, duplicate keys, non-finite values, excessive depth, invalid literals, invalid identifiers, unsupported dates, external charts, and precomputed bundles.
 - **FR-004**: The JSON boundary MUST enforce a 32 KiB request limit, nesting depth 8, text limits, Gregorian dates from 1901-01-01 through 2099-12-31, UTC+08 wall-time assumptions, and no true solar time.
 - **FR-005**: Authorization MUST require `attested=true` and `subject_relation` of `self` or `authorized_other` before safety classification or calculation.
 - **FR-006**: Safety checks MUST run before chart calculation and MUST refuse prohibited high-risk or professional-advice requests without invoking downstream calculation or rendering.
@@ -122,14 +125,15 @@ A maintainer runs deterministic application, privacy, packaging, calibration, an
 - **FR-012**: The CLI MUST accept exactly one bounded request from a path or stdin, emit exactly one response envelope, and use exit codes 0 for `ok`, 3 for `refused`, and 1 for `error`.
 - **FR-013**: The wheel MUST package every runtime JSON asset and installed tests MUST run chart analysis, evidence-backed reports, calibration summary, and real-use outside the source checkout.
 - **FR-014**: Every calibration JSON file MUST use a strict `CalibrationFileEnvelopeV1` with canonical ordering, canonical record SHA-256, sorted upstream hashes, exact keys, suite version, and privacy declaration.
-- **FR-015**: The V1 corpus MUST contain at least 42 adjudicated assertions and cover all 10 active rule families and all three enabled schools across required positive, counterexample, boundary, disagreement, and abstention behavior.
+- **FR-015**: The V1 corpus MUST contain at least 42 adjudicated assertions and cover the active rule family IDs `pattern_strength`, `five_element_balance`, `useful_god_candidate`, `taboo_god_candidate`, `ten_god_relation`, `branch_interaction`, `blind_image_method`, `luck_cycle`, `remedy_boundary`, and `high_risk_signal`, plus school IDs `ziping`, `liang_xiangrun`, and `duan`, across required positive, counterexample, boundary, disagreement, and abstention behavior. `get_formal_interpretation_rule_families()` and `src/mingli_engine/data/calculation/school_profiles.json` `enabled` are the respective sole authorities; calibration MUST NOT define a second independent allowlist.
 - **FR-016**: Reviewer packets MUST embed a blinded assertion projection, allowlisted evidence and locators, limitations, and the exact access manifest while excluding engine output, peer labels, checkout paths, and unrelated records.
 - **FR-017**: Every counted assertion MUST have two valid reviews from distinct `agent_independent` reviewers and a separate adjudication decision frozen before engine execution.
 - **FR-018**: Adjudication MUST retain legitimate school alternatives or unresolved disagreement and MUST NOT collapse school-dependent claims into a universal winner.
-- **FR-019**: Calibration metrics MUST report determinism, pillar agreement, trace completeness, unsupported computation, dependency bypass, abstention, school disagreement, reviewer agreement, weighted kappa, Jaccard agreement, coverage, engine match, safety-critical match, and version deltas.
-- **FR-020**: Release decisions MUST bind the exact version set and block 019 when any mandatory application, privacy, packaging, calibration, review, documentation, or compatibility gate fails.
+- **FR-019**: Calibration metrics MUST separately report `evidence_trace_completeness_rate`, `rule_trace_completeness_rate`, and `adjudication_coverage_rate`, plus determinism, pillar agreement, unsupported computation, dependency bypass, abstention, school disagreement, reviewer agreement, weighted kappa, Jaccard agreement, coverage, engine match, safety-critical match, and version deltas.
+- **FR-020**: Release decisions MUST bind an `ExactVersionSet` containing exactly `application_version`, `engine_version`, `ruleset_version`, `provider_version`, `school_profile_version`, `fixture_version`, `evidence_baseline_id`, and `corpus_sha256`; the run, baseline snapshot, and release decision version sets MUST be exactly equal, and any mismatch or failed application, privacy, packaging, calibration, review, documentation, or compatibility gate MUST block 019.
 - **FR-021**: The application package version MUST advance to `0.2.0` only after all non-version release gates pass and fresh installed-wheel verification is recomputed.
 - **FR-022**: Feature governance MUST remain in the explicit draft path while tasks are open and move atomically to the formal 019 path only during final closure.
+- **FR-023**: JSON, Markdown, and HTML report acceptance MUST each prove source and evidence traceability, required disclaimer presence, non-absolute uncertainty language, and rejection of prohibited absolute destiny wording before release.
 
 ### Safety, Ethics, And Privacy Requirements
 
@@ -154,6 +158,7 @@ A maintainer runs deterministic application, privacy, packaging, calibration, an
 - **CalibrationReview**: Structured agent-independent label with evidence, rationale, confidence, and packet hash.
 - **AdjudicationDecision**: Frozen resolution that retains legitimate alternatives and safety-critical expectations.
 - **CalibrationRun**: Exact-version execution result over the frozen corpus.
+- **ExactVersionSet**: Frozen eight-field identity shared without difference by the calibration run, baseline metric snapshot, and release decision.
 - **MetricSnapshotV1**: Reproducible conformance metrics and version deltas.
 - **CalibrationReleaseDecision**: Versioned release status, checks, blockers, claim boundary, and next action.
 
@@ -169,12 +174,13 @@ A maintainer runs deterministic application, privacy, packaging, calibration, an
 - **SC-006**: The installed wheel contains every required JSON asset and all installed smoke operations run with zero dependency on the source checkout.
 - **SC-007**: The frozen corpus contains at least 42 adjudicated assertions, covers every active rule family and school behavior required by FR-015, and contains zero real personal records.
 - **SC-008**: Counted assertions have exactly two valid independent reviews and 100% adjudication coverage.
-- **SC-009**: Determinism, cross-provider pillar agreement, evidence trace completeness, rule trace completeness, school-disagreement recall, and mandatory abstention or refusal rates are 100%.
+- **SC-009**: Determinism, cross-provider pillar agreement, `evidence_trace_completeness_rate`, `rule_trace_completeness_rate`, `adjudication_coverage_rate`, school-disagreement recall, and mandatory abstention or refusal rates are 100%.
 - **SC-010**: Unsupported-computed count, dependency-bypass count, and silent school-disagreement collapse count are zero.
 - **SC-011**: Overall reviewer raw agreement is at least 0.70 and no stratum with at least 10 paired reviews is below 0.60.
 - **SC-012**: Adjudicated engine acceptable-set match is at least 0.90 and every safety-critical assertion matches exactly.
 - **SC-013**: Existing 018 calculation, report, release, and project-completion tests remain green throughout draft implementation.
 - **SC-014**: Final release summaries are `ready_with_guardrails` or stricter and repeat the exact version set and claim boundary.
+- **SC-015**: JSON, Markdown, and HTML report tests each pass source trace, evidence trace, disclaimer, non-absolute language, and prohibited absolute-language rejection checks.
 
 ## Assumptions And Dependencies
 

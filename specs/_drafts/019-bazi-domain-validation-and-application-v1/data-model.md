@@ -16,15 +16,15 @@ Rules: relation is `self` or `authorized_other`; false attestation is schema-val
 
 ### RealUseOptionsV1
 
-Exact fields: `report_format`, `include_profile_in_report`.
+Exact required fields: `report_format`, `include_profile_in_report`.
 
-Rules: analysis requires null format; report requires `json`, `markdown`, or `html`; profile inclusion defaults false.
+Rules: analysis requires null format; report requires `json`, `markdown`, or `html`; `include_profile_in_report` is always present and is a boolean. Omission and defaulting are invalid.
 
 ### RealUseRequestV1
 
-Exact fields: `schema_version`, `request_id`, `operation`, `profile`, `authorization`, `options`.
+Exact required fields: `schema_version`, `request_id`, `operation`, `profile`, `authorization`, `options`.
 
-Rules: schema is `real-use-request-v1`; operation is `analysis` or `report`; request ID is absent or matches `[A-Za-z0-9_-]{1,64}`; no unknown fields.
+Rules: schema is `real-use-request-v1`; operation is `analysis` or `report`; the `request_id` key is always present and its value is null or matches `[A-Za-z0-9_-]{1,64}`. Every root and nested request field is required exactly once; missing and unknown fields are invalid.
 
 ## Application Response Models
 
@@ -62,6 +62,15 @@ raw bytes
 ```
 
 Stable error codes are `invalid_json`, `invalid_request`, `authorization_required`, `unsafe_request`, `unsupported_input`, `payload_too_large`, `response_too_large`, `calculation_failed`, `knowledge_unavailable`, and `internal_error`.
+
+### Required Non-OK Response Matrix
+
+| Outcome | status | operation | result | safety | provenance | privacy | error |
+|---|---|---|---|---|---|---|---|
+| Parse error | `error` | null | null | `allowed=false`, `decision=not_evaluated`, empty categories and redirect, `requires_narrowing=false` | null | `retention=not_stored_by_engine`, `contains_sensitive_profile=false` | non-null parse code with matching trace ID |
+| Authorization refusal | `refused` | parsed operation | null | `allowed=false`, `decision=authorization_required`, categories `authorization`, fixed attestation redirect, `requires_narrowing=false` | null | `retention=not_stored_by_engine`, `contains_sensitive_profile=false` | non-null `authorization_required` |
+| Unsafe refusal | `refused` | parsed operation | null | `allowed=false`, `decision=unsafe_request`, non-empty normalized categories, non-empty safe redirect, `requires_narrowing=true` | null | `retention=not_stored_by_engine`, `contains_sensitive_profile=false` | non-null `unsafe_request` |
+| Internal error after parse | `error` | parsed operation | null | `allowed=false`, `decision=error`, empty categories and redirect, `requires_narrowing=false` | null | `retention=not_stored_by_engine`, `contains_sensitive_profile=false` | non-null `internal_error` |
 
 ## Verification Models
 
@@ -143,21 +152,27 @@ Rules: decisions are agreement, clerical correction, retained alternative, or un
 
 ## Execution And Metric Models
 
+### ExactVersionSet
+
+Exact fields: `application_version`, `engine_version`, `ruleset_version`, `provider_version`, `school_profile_version`, `fixture_version`, `evidence_baseline_id`, `corpus_sha256`.
+
+Rules: the DTO is frozen with no optional or additional fields. `CalibrationRun.version_set`, the baseline `MetricSnapshotV1.version_set`, and `CalibrationReleaseDecision.version_set` are structurally and value-wise equal. Any mismatch blocks release. `MetricSnapshotV1.corpus_sha256` equals `version_set.corpus_sha256`.
+
 ### CalibrationAssertionResult
 
 Exact fields: `assertion_id`, `actual_status`, `actual_values`, `actual_rule_ids`, `actual_evidence_ids`, `matched`, `failure_codes`.
 
 ### CalibrationRun
 
-Exact fields: `run_id`, `engine_version`, `ruleset_version`, `school_profile_version`, `evidence_baseline_id`, `fixture_version`, `corpus_sha256`, `assertion_results`.
+Exact fields: `run_id`, `version_set`, `assertion_results`.
 
 Rules: read-only execution uses frozen adjudication and exact packaged inputs; repeated runs are deterministic.
 
 ### MetricSnapshotV1
 
-Exact fields: `snapshot_id`, `schema_version`, `corpus_sha256`, `version_set`, `assertion_count`, `determinism_rate`, `pillar_agreement_rate`, `trace_completeness_rate`, `unsupported_computed_count`, `dependency_bypass_count`, `school_disagreement_recall`, `silent_school_collapse_count`, `mandatory_abstention_rate`, `reviewer_raw_agreement`, `reviewer_stratum_agreement`, `weighted_kappa`, `jaccard_agreement`, `adjudicated_engine_match`, `safety_critical_exact_match`, `coverage`, `baseline_deltas`.
+Exact fields: `snapshot_id`, `schema_version`, `corpus_sha256`, `version_set`, `assertion_count`, `determinism_rate`, `pillar_agreement_rate`, `evidence_trace_completeness_rate`, `rule_trace_completeness_rate`, `adjudication_coverage_rate`, `unsupported_computed_count`, `dependency_bypass_count`, `school_disagreement_recall`, `silent_school_collapse_count`, `mandatory_abstention_rate`, `reviewer_raw_agreement`, `reviewer_stratum_agreement`, `weighted_kappa`, `jaccard_agreement`, `adjudicated_engine_match`, `safety_critical_exact_match`, `coverage`, `baseline_deltas`.
 
-Rules: raw agreement uses exact four-label equality; global weighted kappa excludes abstentions, orders reject 0, revise 1, accept 2, uses linear weights, is null below 10 eligible pairs, and is 1.0 when expected disagreement is zero; Jaccard returns 1.0 for two empty sets; stratum agreement has exactly calendrical, structural, and school keys.
+Rules: `evidence_trace_completeness_rate` is executed assertions whose actual evidence IDs include every required evidence ID divided by all executed assertions. `rule_trace_completeness_rate` is executed assertions whose actual rule IDs include every required rule ID divided by all executed assertions. `adjudication_coverage_rate` is release-counted assertions with one valid frozen adjudication referencing both valid independent reviews divided by all release-counted assertions. Empty denominators are invalid. Raw agreement uses exact four-label equality; global weighted kappa excludes abstentions, orders reject 0, revise 1, accept 2, uses linear weights, is null below 10 eligible pairs, and is 1.0 when expected disagreement is zero; Jaccard returns 1.0 for two empty sets; stratum agreement has exactly calendrical, structural, and school keys.
 
 ### CalibrationReleaseDecision
 

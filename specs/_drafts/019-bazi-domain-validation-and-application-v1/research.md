@@ -20,6 +20,15 @@
 - Use permissive forward-compatible unknown fields: rejected because V1 security and privacy behavior depends on an exact object shape.
 - Accept external charts or calculation bundles: rejected because this would bypass same-process calculation provenance.
 
+## Decision: Require exact request keys without defaults
+
+**Rationale**: Strict V1 parsing must distinguish an explicitly supplied nullable value from an omitted key. `request_id` is therefore required but may be null, and `include_profile_in_report` is required and boolean. Every root and nested field is mandatory exactly once.
+
+**Alternatives considered**:
+
+- Default omitted profile inclusion to false: rejected because omission would weaken exact-schema validation and make signed or reviewed requests ambiguous.
+- Treat absent request ID as equivalent to null: rejected because V1 canonical request shape requires the key.
+
 ## Decision: Require structural authorization before lexical safety
 
 **Rationale**: Self-use or authorized-other attestation is a clear machine-enforceable boundary. Safety classification then narrows high-risk focus topics before chart calculation.
@@ -79,6 +88,33 @@
 - Allow loaders to repair order or hashes: rejected because validation would mutate evidence of drift.
 - Store review output in free-form Markdown: rejected because metrics and independence checks require strict fields.
 - Hash entire files including formatting: rejected because the contract needs a stable semantic hash of canonical records.
+
+## Decision: Use one exact version identity across run, baseline, and release
+
+**Rationale**: Application and provider changes can alter public behavior even when ruleset and fixtures do not. `ExactVersionSet` therefore has exactly application, engine, ruleset, provider, school-profile, fixture, evidence-baseline, and corpus identities, and the run, baseline snapshot, and release decision must carry equal values.
+
+**Alternatives considered**:
+
+- Keep versions as separate fields on each artifact: rejected because fields could drift or omit application and provider identity.
+- Compare only engine and ruleset versions: rejected because it cannot prove installed application or provider equivalence.
+
+## Decision: Derive calibration enums from existing authorities
+
+**Rationale**: Rule families already have one ordered authority in `get_formal_interpretation_rule_families()`, and enabled schools already have one authority in `school_profiles.json`. Calibration validates against those sources rather than maintaining a second allowlist.
+
+**Alternatives considered**:
+
+- Define new calibration constants with the same IDs: rejected because duplicated authorities can drift silently.
+- Infer IDs from corpus records: rejected because malformed corpus content must not define what is valid.
+
+## Decision: Separate trace and adjudication completeness metrics
+
+**Rationale**: Evidence trace, rule trace, and adjudication coverage have different numerators and failure meanings. Three explicit rates make each 100% gate independently auditable and reject empty denominators.
+
+**Alternatives considered**:
+
+- Keep one combined trace rate: rejected because a complete evidence trace could mask missing rule IDs.
+- Treat missing adjudication as an engine mismatch: rejected because review governance and execution conformance are separate failures.
 
 ## Decision: Use two independent agent reviews and separate adjudication
 

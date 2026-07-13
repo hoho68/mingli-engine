@@ -26,7 +26,7 @@ Publish a strict V1 Python and JSON CLI application boundary over the existing d
 
 **Constraints**: Gregorian dates 1901-01-01 through 2099-12-31; documented UTC+08 wall-time assumption; no true solar time; no external chart or serialized calculation input; no raw profile leakage; no engine-managed retention; no real personal calibration data; no scientific or predictive claims.
 
-**Scale/Scope**: At least 42 adjudicated assertions covering 10 active rule families, three enabled schools, mandatory boundary and refusal cases, two valid independent reviews per counted assertion, and one exact installed distribution version set.
+**Scale/Scope**: At least 42 adjudicated assertions covering rule families `pattern_strength`, `five_element_balance`, `useful_god_candidate`, `taboo_god_candidate`, `ten_god_relation`, `branch_interaction`, `blind_image_method`, `luck_cycle`, `remedy_boundary`, and `high_risk_signal`, plus schools `ziping`, `liang_xiangrun`, and `duan`, mandatory boundary and refusal cases, two valid independent reviews per counted assertion, and one exact installed distribution version set. The sole authorities are `get_formal_interpretation_rule_families()` and `src/mingli_engine/data/calculation/school_profiles.json` `enabled`.
 
 ## Constitution Check
 
@@ -106,6 +106,7 @@ No constitution violations. Two application entry points are required because ty
 Research decisions are documented in [research.md](research.md):
 
 - Use a strict frozen V1 envelope independent of engine and ruleset versions.
+- Require every root and nested request field; `request_id` is required and nullable, while `include_profile_in_report` is required and boolean.
 - Perform authorization and safety before any calculation.
 - Keep chart, analysis, report, and provenance in one process and request.
 - Redact the complete report object before rendering.
@@ -114,6 +115,7 @@ Research decisions are documented in [research.md](research.md):
 - Use two procedurally blinded independent agents followed by separate adjudication.
 - Measure traditional-method conformance rather than predictive accuracy.
 - Bind release status to exact versions and preserve the historical 018 result.
+- Share one exact eight-field `ExactVersionSet` unchanged across run, baseline snapshot, and release decision.
 
 ## Phase 1: Design Summary
 
@@ -124,25 +126,23 @@ Detailed models, contracts, and operator workflow are defined in:
 - [contracts/domain-calibration-v1-contract.md](contracts/domain-calibration-v1-contract.md)
 - [quickstart.md](quickstart.md)
 
-## Implementation Phases
+## Approved Task Mapping
 
-1. Governance and package-resource verification.
-2. Frozen application DTOs, strict parser, and explicit serializers.
-3. Authorization, safety, same-process analysis, report privacy, JSON handler, and CLI.
-4. Calibration models, synthetic corpus, blinded packets, two reviews, and adjudication.
-5. Calibration runner, metrics, release gates, installed-wheel proof, version 0.2.0, and final governance closure.
+The headings in [tasks.md](tasks.md) map one-to-one to approved implementation-plan Tasks 0 through 17. `T001-T005` belong to Task 0, `T006-T011` to Task 1, and each subsequent heading states its exact approved Task number through Task 17. The word "phase" is reserved here for Spec Kit research/design stages and is not used as a second implementation numbering system.
 
 Every implementation task follows red-green-refactor. The detailed dependency-ordered checklist is [tasks.md](tasks.md).
 
 ## Release Gates
 
 - Application contract, privacy, safety, no-retention, packaging, and compatibility checks pass.
-- Determinism, pillar agreement, evidence trace completeness, rule trace completeness, school-disagreement recall, mandatory abstention or refusal, and adjudication coverage equal 1.0.
+- Determinism, pillar agreement, `evidence_trace_completeness_rate`, `rule_trace_completeness_rate`, `adjudication_coverage_rate`, school-disagreement recall, and mandatory abstention or refusal equal 1.0.
 - Unsupported-computed, dependency-bypass, and silent school-collapse counts equal zero.
 - Overall reviewer raw agreement is at least 0.70; each stratum with at least 10 paired observations is at least 0.60.
 - Adjudicated acceptable-set engine match is at least 0.90 and every safety-critical assertion matches exactly.
 - Every counted assertion has two valid independent reviews.
 - Documentation repeats the claim boundary, procedural blindness limitation, no-engine-retention wording, exclusions, and exact version set.
+- `CalibrationRun.version_set`, baseline `MetricSnapshotV1.version_set`, and `CalibrationReleaseDecision.version_set` are exactly equal and contain only `application_version`, `engine_version`, `ruleset_version`, `provider_version`, `school_profile_version`, `fixture_version`, `evidence_baseline_id`, and `corpus_sha256`.
+- JSON, Markdown, and HTML report tests each prove source and evidence traceability, disclaimer presence, non-absolute uncertainty language, and rejection of prohibited absolute destiny wording.
 
 ## Verification Commands
 

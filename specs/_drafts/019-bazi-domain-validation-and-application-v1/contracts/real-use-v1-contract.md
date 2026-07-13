@@ -52,10 +52,10 @@ RealUseRequestV1: schema_version, request_id, operation, profile, authorization,
 
 Request rules:
 
-- Root and nested objects reject unknown or missing fields.
+- Root and nested objects require every listed field exactly once and reject unknown or missing fields.
 - `schema_version` is exactly `real-use-request-v1`.
 - `operation` is `analysis` or `report`.
-- `request_id` is null or 1 to 64 ASCII letters, digits, `_`, or `-`.
+- The `request_id` field is required; its value is null or 1 to 64 ASCII letters, digits, `_`, or `-`.
 - `calendar_type` is exactly `gregorian`.
 - Supported dates are 1901-01-01 through 2099-12-31 under the documented UTC+08 wall-time assumption.
 - Aware datetimes, longitude, timezone lookup, true solar time, external charts, and precomputed calculation bundles are unsupported.
@@ -63,7 +63,7 @@ Request rules:
 - `attested=false` is schema-valid and produces `authorization_required` before calculation.
 - Analysis requires `report_format=null`.
 - Report requires `report_format` of `json`, `markdown`, or `html`.
-- `include_profile_in_report` defaults to false.
+- The `include_profile_in_report` field is required and must be boolean; omission and defaulting are invalid.
 
 ## Strict Input Boundary
 
@@ -159,6 +159,17 @@ Response invariants:
 - Serialized JSON is deterministic UTF-8 with sorted keys and no NaN.
 - Maximum response size is 1 MiB. Oversized normal output becomes a small `response_too_large` envelope.
 
+## Required Non-OK Response Matrix
+
+| Outcome | status | operation | result | safety | provenance | privacy | error |
+|---|---|---|---|---|---|---|---|
+| Parse error (`payload_too_large`, `invalid_json`, `invalid_request`, or parse-time `unsupported_input`) | `error` | null | null | `allowed=false`, `decision=not_evaluated`, `categories=()`, `redirect_message=""`, `requires_narrowing=false` | null | `retention=not_stored_by_engine`, `contains_sensitive_profile=false` | non-null matching code; trace ID equals root trace ID |
+| Authorization refusal | `refused` | parsed `analysis` or `report` | null | `allowed=false`, `decision=authorization_required`, `categories=("authorization",)`, `redirect_message="Provide a true self-use or authorized-other attestation."`, `requires_narrowing=false` | null | `retention=not_stored_by_engine`, `contains_sensitive_profile=false` | non-null `authorization_required`; trace ID equals root trace ID |
+| Unsafe refusal | `refused` | parsed `analysis` or `report` | null | `allowed=false`, `decision=unsafe_request`, non-empty normalized categories, non-empty safe redirect, `requires_narrowing=true` | null | `retention=not_stored_by_engine`, `contains_sensitive_profile=false` | non-null `unsafe_request`; trace ID equals root trace ID |
+| Internal error after successful parse | `error` | parsed `analysis` or `report` | null | `allowed=false`, `decision=error`, `categories=()`, `redirect_message=""`, `requires_narrowing=false` | null | `retention=not_stored_by_engine`, `contains_sensitive_profile=false` | non-null `internal_error`; trace ID equals root trace ID |
+
+All four outcomes use a non-null `ApplicationSafetyV1` and `ApplicationPrivacyV1`; only `operation`, `result`, and `provenance` have the nullability shown above. Tests assert every field value, not only status and error code.
+
 ## Stable Error Contract
 
 Allowed codes:
@@ -185,6 +196,8 @@ Analysis output includes chart source and pillars without the raw birth profile,
 ## Report Serialization And Privacy
 
 Report JSON includes stable report fields, evidence audit, formal traces, safety result, and knowledge activation summary. Markdown and HTML use `ApplicationContentV1` with media type and sensitivity flag.
+
+Every successful JSON, Markdown, and HTML report preserves source locators, source IDs, evidence IDs, and rule IDs for major conclusions; contains the required traditional-analysis disclaimer and qualified-professional boundary; uses conditional, uncertainty, and school-dependent language; and rejects prohibited absolute terms such as `必定`, `注定`, `一定会`, and `死定` before output.
 
 When `include_profile_in_report=false`, all raw and NFKC-normalized occurrences of `calendar_type`, `birth_date`, `birth_time`, `birthplace`, `gender`, and `focus_topic` are removed from every explicit report field, nested value, metadata value, and rendered output before any renderer runs.
 
