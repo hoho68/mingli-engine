@@ -46,4 +46,4 @@
 
 - The requirement checklist evaluates specification quality and is complete before implementation.
 - Implementation tasks remain open until their corresponding red-green-refactor work and verification are performed.
-- The draft parent intentionally prevents open 019 work from changing the completed 001-018 project baseline.
+- The draft parent intentionally prevents open 019 work from changing the 001-017 completion baseline and historical 018 result.

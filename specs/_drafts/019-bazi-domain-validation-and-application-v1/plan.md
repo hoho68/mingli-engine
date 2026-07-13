@@ -6,7 +6,7 @@
 
 ## Summary
 
-Publish a strict V1 Python and JSON CLI application boundary over the existing deterministic Bazi engine, enforcing authorization, safety, whole-report privacy, same-process provenance, explicit serialization, and no engine retention. Add a separately governed calibration corpus with two procedurally blinded independent agent reviews, adjudication, exact conformance metrics, installed-wheel verification, and version-bound release gates. Keep the open Spec Kit under `specs/_drafts/` so the completed 001-018 baseline remains unchanged until final closure.
+Publish a strict V1 Python and JSON CLI application boundary over the existing deterministic Bazi engine, enforcing authorization, safety, whole-report privacy, same-process provenance, explicit serialization, and no engine retention. Add a separately governed calibration corpus with two procedurally blinded independent agent reviews, adjudication, exact conformance metrics, installed-wheel verification, and version-bound release gates. Keep the open Spec Kit under `specs/_drafts/` so the 001-017 completion baseline and historical 018 result remain unchanged until final closure.
 
 ## Technical Context
 
