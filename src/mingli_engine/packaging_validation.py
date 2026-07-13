@@ -32,6 +32,7 @@ EXPECTED_RUNTIME_JSON_ASSETS = (
     "data/classical_sources/evidence_units.json",
     "data/classical_sources/source_conflicts.json",
     "data/classical_sources/sources.json",
+    "data/domain_calibration/adjudication.json",
     "data/domain_calibration/calibration_assertions.json",
     "data/domain_calibration/calibration_cases.json",
     "data/domain_calibration/calibration_citations.json",
