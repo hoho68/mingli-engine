@@ -1,0 +1,21 @@
+{
+  "schema_version": "real-use-request-v1",
+  "request_id": "synthetic-analysis-001",
+  "operation": "analysis",
+  "profile": {
+    "calendar_type": "gregorian",
+    "birth_date": "1996-12-15",
+    "birth_time": "09:30",
+    "birthplace": "Synthetic UTC+08 Place",
+    "gender": "unknown",
+    "focus_topic": "traditional structural overview"
+  },
+  "authorization": {
+    "subject_relation": "self",
+    "attested": true
+  },
+  "options": {
+    "report_format": null,
+    "include_profile_in_report": false
+  }
+}

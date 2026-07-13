@@ -1,0 +1,21 @@
+{
+  "schema_version": "real-use-request-v1",
+  "request_id": "synthetic-report-001",
+  "operation": "report",
+  "profile": {
+    "calendar_type": "gregorian",
+    "birth_date": "2001-02-03",
+    "birth_time": "23:05",
+    "birthplace": "Synthetic UTC+08 Report Place",
+    "gender": "unknown",
+    "focus_topic": "traditional report with school-aware uncertainty"
+  },
+  "authorization": {
+    "subject_relation": "authorized_other",
+    "attested": true
+  },
+  "options": {
+    "report_format": "markdown",
+    "include_profile_in_report": true
+  }
+}
