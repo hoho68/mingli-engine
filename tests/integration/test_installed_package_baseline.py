@@ -55,8 +55,6 @@ def _run_isolated(
     environment = os.environ.copy()
     environment["PYTHONPATH"] = str(installed_target)
     environment["PYTHONDONTWRITEBYTECODE"] = "1"
-    environment["MINGLI_TEST_INSTALLED_ROOT"] = str(installed_target)
-    environment["MINGLI_TEST_FORBIDDEN_CHECKOUT_ROOT"] = str(REPO_ROOT)
     return subprocess.run(
         [sys.executable, "-c", script],
         cwd=cwd,
@@ -84,7 +82,6 @@ def test_installed_package_runs_chart_analysis_and_evidence_report_outside_check
         from datetime import datetime
         from importlib import resources
         import json
-        import os
         from pathlib import Path
         import sys
 
@@ -110,12 +107,7 @@ def test_installed_package_runs_chart_analysis_and_evidence_report_outside_check
             selected_year=2030,
         )
         report = build_report(chart, analysis)
-        verification = build_packaging_verification(
-            installed_root=os.environ["MINGLI_TEST_INSTALLED_ROOT"],
-            forbidden_checkout_root=os.environ[
-                "MINGLI_TEST_FORBIDDEN_CHECKOUT_ROOT"
-            ],
-        )
+        verification = build_packaging_verification()
         module_files = sorted(
             str(Path(module.__file__).resolve())
             for name, module in sys.modules.items()
@@ -174,18 +166,11 @@ def test_installed_packaging_verifier_is_exact_read_only_and_deterministic(
         """
         from dataclasses import asdict
         import json
-        import os
 
         from mingli_engine.packaging_validation import build_packaging_verification
 
-        context = {
-            "installed_root": os.environ["MINGLI_TEST_INSTALLED_ROOT"],
-            "forbidden_checkout_root": os.environ[
-                "MINGLI_TEST_FORBIDDEN_CHECKOUT_ROOT"
-            ],
-        }
-        first = asdict(build_packaging_verification(**context))
-        second = asdict(build_packaging_verification(**context))
+        first = asdict(build_packaging_verification())
+        second = asdict(build_packaging_verification())
         assert first == second
         print(json.dumps(first, sort_keys=True))
         """
@@ -234,16 +219,10 @@ def test_installed_verifier_fails_when_any_non_anchor_asset_is_missing(
         """
         from dataclasses import asdict
         import json
-        import os
 
         from mingli_engine.packaging_validation import build_packaging_verification
 
-        result = build_packaging_verification(
-            installed_root=os.environ["MINGLI_TEST_INSTALLED_ROOT"],
-            forbidden_checkout_root=os.environ[
-                "MINGLI_TEST_FORBIDDEN_CHECKOUT_ROOT"
-            ],
-        )
+        result = build_packaging_verification()
         print(json.dumps(asdict(result), sort_keys=True))
         """
     )

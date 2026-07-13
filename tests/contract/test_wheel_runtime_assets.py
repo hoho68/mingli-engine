@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import asdict
 from hashlib import sha256
+from inspect import signature
 import subprocess
 from pathlib import Path
 from shutil import copy2, copytree
@@ -19,11 +20,19 @@ PACKAGE_ROOT = REPO_ROOT / "src" / "mingli_engine"
 class _InstalledDistribution:
     version = "0.1.0"
 
-    def __init__(self, installed_root: Path) -> None:
+    def __init__(self, installed_root: Path, *, editable: bool = False) -> None:
         self._installed_root = installed_root
+        self._editable = editable
 
     def locate_file(self, path: str) -> Path:
         return self._installed_root / path
+
+    def read_text(self, filename: str) -> str | None:
+        if filename == "WHEEL":
+            return "Wheel-Version: 1.0\n"
+        if filename == "direct_url.json" and self._editable:
+            return '{"dir_info":{"editable":true}}'
+        return None
 
 
 @pytest.fixture(scope="session")
@@ -118,10 +127,7 @@ def test_missing_data_root_returns_exact_failed_verification(
     package_root.mkdir(parents=True)
     _patch_package_context(monkeypatch, installed_root, package_root)
 
-    result = packaging_validation.build_packaging_verification(
-        installed_root=installed_root,
-        forbidden_checkout_root=REPO_ROOT,
-    )
+    result = packaging_validation.build_packaging_verification()
 
     assert asdict(result) == {
         "asset_sha256": {},
@@ -146,10 +152,7 @@ def test_resource_read_failure_returns_exact_failed_verification(
 
     monkeypatch.setattr(Path, "read_bytes", fail_package_reads)
 
-    result = packaging_validation.build_packaging_verification(
-        installed_root=installed_root,
-        forbidden_checkout_root=REPO_ROOT,
-    )
+    result = packaging_validation.build_packaging_verification()
 
     assert asdict(result) == {
         "asset_sha256": {},
@@ -175,10 +178,7 @@ def test_missing_metadata_returns_exact_failed_verification(
         missing_distribution,
     )
 
-    result = packaging_validation.build_packaging_verification(
-        installed_root=installed_root,
-        forbidden_checkout_root=REPO_ROOT,
-    )
+    result = packaging_validation.build_packaging_verification()
 
     assert asdict(result) == {
         "asset_sha256": _asset_hashes(package_root),
@@ -195,10 +195,7 @@ def test_nonisolated_paths_return_exact_failed_verification(
     installed_root, package_root = _copy_package_data(tmp_path)
     _patch_package_context(monkeypatch, installed_root, package_root)
 
-    result = packaging_validation.build_packaging_verification(
-        installed_root=installed_root,
-        forbidden_checkout_root=REPO_ROOT,
-    )
+    result = packaging_validation.build_packaging_verification()
 
     assert asdict(result) == {
         "asset_sha256": _asset_hashes(package_root),
@@ -209,6 +206,40 @@ def test_nonisolated_paths_return_exact_failed_verification(
 
 
 def test_source_checkout_without_context_never_reports_isolated() -> None:
+    result = packaging_validation.build_packaging_verification()
+
+    assert result.source_isolated is False
+    assert result.overall_status == "failed"
+
+
+def test_packaging_verifier_public_contract_is_parameterless() -> None:
+    parameters = signature(
+        packaging_validation.build_packaging_verification
+    ).parameters
+    assert tuple(parameters) == ()
+
+
+def test_editable_wheel_metadata_never_reports_isolated(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    installed_root, package_root = _copy_package_data(tmp_path)
+    monkeypatch.setattr(
+        packaging_validation.resources,
+        "files",
+        lambda package: package_root,
+    )
+    monkeypatch.setattr(
+        packaging_validation.metadata,
+        "distribution",
+        lambda name: _InstalledDistribution(installed_root, editable=True),
+    )
+    monkeypatch.setattr(
+        packaging_validation,
+        "_loaded_package_paths",
+        lambda: (package_root / "packaging_validation.py",),
+    )
+
     result = packaging_validation.build_packaging_verification()
 
     assert result.source_isolated is False
