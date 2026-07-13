@@ -16,10 +16,16 @@ from mingli_engine.application_models import (
     RealUseRequestV1,
     RealUseResponseV1,
 )
+from mingli_engine.application_inputs import (
+    ApplicationInputError,
+    parse_real_use_request,
+)
 from mingli_engine.application_serialization import (
     serialize_calculation_bundle,
     serialize_chart,
     serialize_report,
+    serialize_response,
+    serialize_response_with_size_fallback,
 )
 from mingli_engine.application_reports import (
     build_application_report,
@@ -27,12 +33,19 @@ from mingli_engine.application_reports import (
     review_built_report,
 )
 from mingli_engine.bazi import analyze_bazi_chart, validate_calculation_binding
-from mingli_engine.chart_calculator import calculate_bazi_chart
-from mingli_engine.classical_sources import load_approved_evidence_units
+from mingli_engine.chart_calculator import (
+    ChartCalculationError,
+    calculate_bazi_chart,
+)
+from mingli_engine.classical_sources import (
+    ClassicalEvidenceError,
+    load_approved_evidence_units,
+)
 from mingli_engine.high_risk import classify_high_risk_request
 from mingli_engine.html import render_html_report
 from mingli_engine.markdown import render_markdown_report
 from mingli_engine.models import BirthProfile
+from mingli_engine.report_schema import KnowledgeActivationError
 from mingli_engine.safety import safety_check
 
 
@@ -59,6 +72,18 @@ _UNSAFE_FOCUS_REDIRECT = (
 )
 _EVIDENCE_BASELINE_ID = "report_acceptance_v1"
 _PROVIDER_DISTRIBUTION = "lunar-python"
+_CONTROLLED_ERROR_MESSAGES: dict[ApplicationErrorCode, str] = {
+    "invalid_json": "Request payload is not valid JSON.",
+    "invalid_request": "Request fields are invalid.",
+    "authorization_required": "Authorization is required.",
+    "unsafe_request": "Request cannot be processed safely.",
+    "unsupported_input": "Request contains unsupported input.",
+    "payload_too_large": "Request payload exceeds 32 KiB.",
+    "response_too_large": "Response payload exceeds the size limit.",
+    "calculation_failed": "Calculation could not be completed.",
+    "knowledge_unavailable": "Required knowledge is unavailable.",
+    "internal_error": "Request processing failed.",
+}
 _SAFE_CONTEXT_MARKERS = (
     "不预测",
     "不看",
@@ -214,26 +239,46 @@ def _unsafe_refusal(
     )
 
 
-def _internal_error(
-    request: RealUseRequestV1,
+def _controlled_error(
+    operation: str | None,
     trace_id: str,
+    *,
+    code: ApplicationErrorCode,
+    field_path: str | None = None,
 ) -> RealUseResponseV1:
     return RealUseResponseV1(
         schema_version=REAL_USE_RESPONSE_SCHEMA_VERSION,
         trace_id=trace_id,
-        operation=request.operation,
+        operation=operation,  # type: ignore[arg-type]
         status="error",
         result=None,
-        safety=ApplicationSafetyV1(False, "error", (), "", False),
+        safety=ApplicationSafetyV1(
+            False,
+            "not_evaluated" if operation is None else "error",
+            (),
+            "",
+            False,
+        ),
         provenance=None,
         warnings=(),
         privacy=_privacy(),
         error=_error(
-            code="internal_error",
-            message="Request processing failed.",
-            field_path=None,
+            code=code,
+            message=_CONTROLLED_ERROR_MESSAGES[code],
+            field_path=field_path,
             trace_id=trace_id,
         ),
+    )
+
+
+def _internal_error(
+    request: RealUseRequestV1,
+    trace_id: str,
+) -> RealUseResponseV1:
+    return _controlled_error(
+        request.operation,
+        trace_id,
+        code="internal_error",
     )
 
 
@@ -361,9 +406,10 @@ def _execute_authorized_request(
     )
 
 
-def handle_real_use(request: RealUseRequestV1) -> RealUseResponseV1:
-    """Apply authorization and pre-calculation safety to one typed V1 request."""
-    trace_id = str(uuid4())
+def _handle_real_use_with_trace(
+    request: RealUseRequestV1,
+    trace_id: str,
+) -> RealUseResponseV1:
     if not request.authorization.attested:
         return _authorization_refusal(request, trace_id)
 
@@ -406,5 +452,49 @@ def handle_real_use(request: RealUseRequestV1) -> RealUseResponseV1:
             )
 
         return _execute_authorized_request(request, trace_id)
+    except ChartCalculationError:
+        return _controlled_error(
+            request.operation,
+            trace_id,
+            code="calculation_failed",
+        )
+    except (ClassicalEvidenceError, KnowledgeActivationError):
+        return _controlled_error(
+            request.operation,
+            trace_id,
+            code="knowledge_unavailable",
+        )
     except Exception:
         return _internal_error(request, trace_id)
+
+
+def handle_real_use(request: RealUseRequestV1) -> RealUseResponseV1:
+    """Apply authorization and pre-calculation safety to one typed V1 request."""
+    return _handle_real_use_with_trace(request, str(uuid4()))
+
+
+def handle_real_use_json(payload: bytes) -> bytes:
+    """Parse, execute, and serialize one strict V1 JSON request."""
+    trace_id = str(uuid4())
+    try:
+        request = parse_real_use_request(payload)
+    except ApplicationInputError as error:
+        response = _controlled_error(
+            None,
+            trace_id,
+            code=error.code,
+            field_path=error.field_path,
+        )
+        return serialize_response(response)
+
+    response = _handle_real_use_with_trace(request, trace_id)
+    try:
+        return serialize_response_with_size_fallback(response)
+    except Exception:
+        return serialize_response(
+            _controlled_error(
+                request.operation,
+                trace_id,
+                code="internal_error",
+            )
+        )

@@ -15,7 +15,8 @@ from mingli_engine.application_models import (
     RealUseRequestV1,
     RealUseResponseV1,
 )
-from mingli_engine.application_service import handle_real_use
+from mingli_engine.application_serialization import response_status_from_json_bytes
+from mingli_engine.application_service import handle_real_use, handle_real_use_json
 
 __all__ = [
     "ApplicationAnalysisResultV1",
@@ -44,5 +45,7 @@ __all__ = [
     "materials_audit",
     "extraction_queue_intake",
     "handle_real_use",
+    "handle_real_use_json",
     "learning_reference_curation",
+    "response_status_from_json_bytes",
 ]

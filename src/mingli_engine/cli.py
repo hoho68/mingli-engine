@@ -16,11 +16,14 @@ from mingli_engine.bazi.result_models import (
     StrengthContribution,
 )
 from mingli_engine.application_serialization import (
+    response_status_from_json_bytes,
     serialize_branch_relation,
     serialize_calculation_bundle,
     serialize_reasoned_result,
     serialize_strength_contribution,
 )
+from mingli_engine.application_inputs import MAX_REQUEST_BYTES
+from mingli_engine.application_service import handle_real_use_json
 from mingli_engine.chart_calculator import ChartCalculationError, calculate_bazi_chart
 from mingli_engine.evidence_curation import build_knowledge_activation_summary
 from mingli_engine.high_risk import classify_high_risk_request
@@ -124,6 +127,32 @@ def _configure_stream_encoding(stream: Any) -> None:
     reconfigure = getattr(stream, "reconfigure", None)
     if reconfigure is not None:
         reconfigure(encoding="utf-8")
+
+
+def _read_real_use_input(path: Path) -> bytes:
+    if str(path) == "-":
+        return sys.stdin.buffer.read(MAX_REQUEST_BYTES + 1)
+    with path.open("rb") as stream:
+        return stream.read(MAX_REQUEST_BYTES + 1)
+
+
+def _write_real_use_response(payload: bytes) -> None:
+    output = getattr(sys.stdout, "buffer", None)
+    if output is None:
+        sys.stdout.write(payload.decode("utf-8"))
+    else:
+        output.write(payload)
+
+
+def _real_use(args: argparse.Namespace) -> int:
+    try:
+        request_payload = _read_real_use_input(args.input)
+    except OSError:
+        request_payload = b""
+    response_payload = handle_real_use_json(request_payload)
+    _write_real_use_response(response_payload)
+    status = response_status_from_json_bytes(response_payload)
+    return {"ok": 0, "refused": 3, "error": 1}[status]
 
 
 def _validate_intake(args: argparse.Namespace) -> int:
@@ -336,6 +365,10 @@ def _build_parser() -> argparse.ArgumentParser:
 
     completion_parser = subparsers.add_parser("project-completion-summary")
     completion_parser.set_defaults(handler=_project_completion_summary)
+
+    real_use_parser = subparsers.add_parser("real-use")
+    real_use_parser.add_argument("--input", required=True, type=Path)
+    real_use_parser.set_defaults(handler=_real_use)
 
     return parser
 

@@ -4,6 +4,7 @@ from typing import Any, NoReturn, TypeVar, cast
 from uuid import UUID
 
 from mingli_engine.application_models import (
+    REAL_USE_RESPONSE_SCHEMA_VERSION,
     ApplicationAnalysisResultV1,
     ApplicationContentV1,
     ApplicationErrorV1,
@@ -507,6 +508,34 @@ def serialize_response(response: RealUseResponseV1) -> bytes:
             f"response exceeds {MAX_RESPONSE_BYTES} bytes"
         )
     return payload
+
+
+def serialize_response_with_size_fallback(response: RealUseResponseV1) -> bytes:
+    """Serialize one response, replacing oversized output with a bounded error."""
+    try:
+        return serialize_response(response)
+    except ResponseSizeError:
+        if response.operation is None:
+            raise
+        fallback = RealUseResponseV1(
+            schema_version=REAL_USE_RESPONSE_SCHEMA_VERSION,
+            trace_id=response.trace_id,
+            operation=response.operation,
+            status="error",
+            result=None,
+            safety=ApplicationSafetyV1(False, "error", (), "", False),
+            provenance=None,
+            warnings=(),
+            privacy=ApplicationPrivacyV1("not_stored_by_engine", False),
+            error=ApplicationErrorV1(
+                code="response_too_large",
+                message="Response payload exceeds the size limit.",
+                field_path=None,
+                retryable=False,
+                trace_id=response.trace_id,
+            ),
+        )
+        return serialize_response(fallback)
 
 
 def _invalid_envelope() -> NoReturn:
