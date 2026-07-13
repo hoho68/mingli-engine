@@ -156,7 +156,7 @@ Rules: decisions are agreement, clerical correction, retained alternative, or un
 
 Exact fields: `application_version`, `engine_version`, `ruleset_version`, `provider_version`, `school_profile_version`, `fixture_version`, `evidence_baseline_id`, `corpus_sha256`.
 
-Rules: the DTO is frozen with no optional or additional fields. `CalibrationRun.version_set`, the baseline `MetricSnapshotV1.version_set`, and `CalibrationReleaseDecision.version_set` are structurally and value-wise equal. Any mismatch blocks release. `MetricSnapshotV1.corpus_sha256` equals `version_set.corpus_sha256`.
+Rules: the DTO is frozen with no optional or additional fields. A Task 14 candidate uses target `application_version=0.2.0` and is not release evidence. After Task 16 installs version 0.2.0, the fresh final `CalibrationRun.version_set`, final baseline `MetricSnapshotV1.version_set`, and `CalibrationReleaseDecision.version_set` are structurally and value-wise equal. Any target/installed mismatch or final-artifact mismatch blocks release. `MetricSnapshotV1.corpus_sha256` equals `version_set.corpus_sha256`.
 
 ### CalibrationAssertionResult
 
@@ -166,7 +166,7 @@ Exact fields: `assertion_id`, `actual_status`, `actual_values`, `actual_rule_ids
 
 Exact fields: `run_id`, `version_set`, `assertion_results`.
 
-Rules: read-only execution uses frozen adjudication and exact packaged inputs; repeated runs are deterministic.
+Rules: read-only execution uses frozen adjudication and exact packaged inputs; repeated runs are deterministic. Task 14 output is a candidate run against the declared 0.2.0 target and cannot be promoted directly. Task 16 executes a new final run from the installed 0.2.0 distribution.
 
 ### MetricSnapshotV1
 
@@ -179,6 +179,12 @@ Rules: `evidence_trace_completeness_rate` is executed assertions whose actual ev
 Exact fields: `schema_version`, `release_status`, `checks`, `metrics`, `blockers`, `claim_boundary`, `version_set`, `next_action`.
 
 Rules: release status cannot pass with a failed mandatory gate; blockers are deterministic; claim boundary and version set are always present.
+
+## Candidate And Final Baseline Lifecycle
+
+Task 14 computes candidate run and snapshot objects with target `application_version=0.2.0`. Candidate baseline serialization is test-local at `tmp_path/calibration_baseline_candidate.json`; it is not packaged, is not a release baseline, and never replaces `src/mingli_engine/data/domain_calibration/calibration_baseline.json`.
+
+Task 15 may prove every non-version gate but keeps release blocked for installed-version mismatch and missing final 0.2.0 calibration artifacts. Task 16 first advances and installs 0.2.0, then reruns the full calibration, creates the final snapshot, and invokes the sole controlled release writer to update and freeze `src/mingli_engine/data/domain_calibration/calibration_baseline.json`. Release is recomputed only after the final run, final baseline snapshot, and release decision carry equal `ExactVersionSet` values.
 
 ## Calibration State Flow
 

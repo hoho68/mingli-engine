@@ -132,6 +132,12 @@ The headings in [tasks.md](tasks.md) map one-to-one to approved implementation-p
 
 Every implementation task follows red-green-refactor. The detailed dependency-ordered checklist is [tasks.md](tasks.md).
 
+## Calibration Release Sequence
+
+Task 14 computes a candidate run, candidate metric snapshot, and test-local candidate baseline for target `application_version=0.2.0`; it does not mutate `src/mingli_engine/data/domain_calibration/calibration_baseline.json` and cannot create a final release decision. Task 15 proves all non-version gates while version/final-baseline checks remain blocked. Task 16 advances `pyproject.toml` to 0.2.0, rebuilds and installs the wheel, executes a fresh final calibration run and snapshot from installed resources, updates and freezes the tracked final baseline through the sole controlled release writer, and then recomputes release without cached Task 14 or Task 15 results.
+
+The final `CalibrationRun.version_set`, final baseline `MetricSnapshotV1.version_set`, and `CalibrationReleaseDecision.version_set` must be exactly equal. Runtime and Task 14 remain read-only with respect to the tracked final baseline.
+
 ## Release Gates
 
 - Application contract, privacy, safety, no-retention, packaging, and compatibility checks pass.
@@ -142,6 +148,7 @@ Every implementation task follows red-green-refactor. The detailed dependency-or
 - Every counted assertion has two valid independent reviews.
 - Documentation repeats the claim boundary, procedural blindness limitation, no-engine-retention wording, exclusions, and exact version set.
 - `CalibrationRun.version_set`, baseline `MetricSnapshotV1.version_set`, and `CalibrationReleaseDecision.version_set` are exactly equal and contain only `application_version`, `engine_version`, `ruleset_version`, `provider_version`, `school_profile_version`, `fixture_version`, `evidence_baseline_id`, and `corpus_sha256`.
+- Final equality is evaluated only from the fresh Task 16 installed-0.2.0 run, final snapshot, controlled baseline freeze, and recomputed release; Task 14 candidate values never satisfy this gate.
 - JSON, Markdown, and HTML report tests each prove source and evidence traceability, disclaimer presence, non-absolute uncertainty language, and rejection of prohibited absolute destiny wording.
 
 ## Verification Commands

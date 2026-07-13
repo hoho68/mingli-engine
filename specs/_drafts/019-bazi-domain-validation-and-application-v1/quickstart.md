@@ -199,13 +199,17 @@ The summary must expose the exact version set, conformance metrics, gate checks,
 - exact safety-critical match;
 - passing application, privacy, packaging, no-retention, compatibility, and documentation checks.
 
-The run, `calibration_baseline.json` metric snapshot, and release decision must carry the same exact `ExactVersionSet`: `application_version`, `engine_version`, `ruleset_version`, `provider_version`, `school_profile_version`, `fixture_version`, `evidence_baseline_id`, and `corpus_sha256`. Any missing, additional, or unequal field blocks release.
+The final installed run, final `calibration_baseline.json` metric snapshot, and recomputed release decision must carry the same exact `ExactVersionSet`: `application_version`, `engine_version`, `ruleset_version`, `provider_version`, `school_profile_version`, `fixture_version`, `evidence_baseline_id`, and `corpus_sha256`. Any missing, additional, or unequal field blocks release.
+
+Task 14 produces only candidate objects for target `application_version=0.2.0`. Its optional serialized candidate exists only at the integration test's `tmp_path/calibration_baseline_candidate.json`; it must not update `src/mingli_engine/data/domain_calibration/calibration_baseline.json` and cannot produce a ready release while the installed package remains 0.1.0.
 
 ## Installed Wheel Verification
 
 The release workflow builds a wheel without network access, inspects required JSON resources, installs into a temporary target, removes checkout `PYTHONPATH`, and runs chart analysis, evidence-backed report generation, calibration summary, and real-use CLI.
 
-The installed calibration child receives its local `PackagingVerification`; it does not recursively build another wheel. Version advances to 0.2.0 only after every non-version gate passes and the full wheel verification is recomputed.
+The installed calibration child receives its local `PackagingVerification`; it does not recursively build another wheel. Version advances to 0.2.0 only after every non-version gate passes. Then rebuild and install the wheel, execute a fresh final calibration run, generate a fresh final snapshot, update and freeze `src/mingli_engine/data/domain_calibration/calibration_baseline.json` through the controlled release writer, and recompute release from installed resources. Do not reuse the Task 14 candidate or cached Task 15 status.
+
+Before accepting `ready_with_guardrails`, compare the final installed run, final baseline snapshot, and recomputed release `ExactVersionSet` values for exact equality and confirm all three report `application_version=0.2.0`.
 
 ## Final Verification
 

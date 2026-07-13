@@ -111,7 +111,7 @@ CalibrationReleaseDecision: schema_version, release_status, checks, metrics,
 
 All records are frozen and sequence fields normalize to tuples.
 
-`ExactVersionSet` is a frozen exact-key DTO with no optional or additional fields. `CalibrationRun.version_set`, the `MetricSnapshotV1.version_set` stored in `calibration_baseline.json`, and `CalibrationReleaseDecision.version_set` must be structurally and value-wise identical. `MetricSnapshotV1.corpus_sha256` must equal `version_set.corpus_sha256`; any mismatch blocks release before metric thresholds are evaluated.
+`ExactVersionSet` is a frozen exact-key DTO with no optional or additional fields. Task 14 candidate objects declare target `application_version=0.2.0` but are not final release evidence. After Task 16 installs 0.2.0 and reruns calibration, the final `CalibrationRun.version_set`, the final `MetricSnapshotV1.version_set` stored in `calibration_baseline.json`, and `CalibrationReleaseDecision.version_set` must be structurally and value-wise identical. `MetricSnapshotV1.corpus_sha256` must equal `version_set.corpus_sha256`; target/installed mismatch or final-artifact mismatch blocks release before metric thresholds are evaluated.
 
 ## Corpus Contract
 
@@ -169,7 +169,7 @@ Adjudicated expectations are frozen and hashed before engine execution.
 
 The runner executes the exact application, engine, ruleset, provider, school-profile, evidence-baseline, fixture, and corpus versions in `ExactVersionSet`. It uses packaged synthetic inputs, does not mutate reviews or adjudication, and produces deterministic `CalibrationAssertionResult` records with actual statuses, values, rule IDs, evidence IDs, match state, and stable failure codes.
 
-The baseline stores exact version set, corpus hashes, metrics, and claim boundary. Runtime computes deltas but never rewrites the baseline.
+Task 14 generates only in-memory candidate run/snapshot objects and an optional test-local `tmp_path/calibration_baseline_candidate.json` for target version 0.2.0. It never updates the tracked baseline. Runtime remains read-only. The only permitted baseline mutation is the controlled Task 16 release writer after 0.2.0 is built and installed; that writer freezes the fresh final snapshot in `src/mingli_engine/data/domain_calibration/calibration_baseline.json` before final release recomputation.
 
 ## Metric Contract
 
@@ -210,6 +210,7 @@ All conditions are mandatory:
 - Application contract, privacy, packaging, no-retention, compatibility, and documentation checks pass.
 - Documentation repeats the claim boundary and exact version set.
 - Calibration run, baseline snapshot, and release decision carry exactly equal `ExactVersionSet` values.
+- The final run and snapshot are freshly recomputed after installing 0.2.0; no Task 14 candidate or cached Task 15 release result is reused.
 
 Any failure blocks the 019 application and calibration release label without rewriting the historical 018 operational result.
 
@@ -217,4 +218,4 @@ Any failure blocks the 019 application and calibration release label without rew
 
 The built wheel includes every JSON resource under `mingli_engine/data/`, including all domain calibration files. Release verification builds without network access, inspects the wheel manifest, installs to a temporary target, and runs chart analysis, evidence-backed report generation, calibration summary, and real-use CLI outside the checkout.
 
-The installed calibration child receives an explicit local `PackagingVerification` so it verifies installed resources and source isolation without recursively building another wheel. Package version advances from 0.1.0 to 0.2.0 only after every non-version gate passes and fresh wheel verification is recomputed.
+The installed calibration child receives an explicit local `PackagingVerification` so it verifies installed resources and source isolation without recursively building another wheel. Package version advances from 0.1.0 to 0.2.0 only after every non-version gate passes. After advancement, the workflow rebuilds and installs the wheel, executes a fresh final calibration run and snapshot, updates and freezes the final baseline through the controlled release writer, and recomputes the release decision from installed resources.
