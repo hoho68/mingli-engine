@@ -6,10 +6,12 @@ from uuid import uuid4
 from mingli_engine.application_models import (
     REAL_USE_RESPONSE_SCHEMA_VERSION,
     ApplicationAnalysisResultV1,
+    ApplicationContentV1,
     ApplicationErrorCode,
     ApplicationErrorV1,
     ApplicationPrivacyV1,
     ApplicationProvenanceV1,
+    ApplicationReportResultV1,
     ApplicationSafetyV1,
     RealUseRequestV1,
     RealUseResponseV1,
@@ -17,11 +19,19 @@ from mingli_engine.application_models import (
 from mingli_engine.application_serialization import (
     serialize_calculation_bundle,
     serialize_chart,
+    serialize_report,
+)
+from mingli_engine.application_reports import (
+    build_application_report,
+    redact_report,
+    review_built_report,
 )
 from mingli_engine.bazi import analyze_bazi_chart, validate_calculation_binding
 from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.classical_sources import load_approved_evidence_units
 from mingli_engine.high_risk import classify_high_risk_request
+from mingli_engine.html import render_html_report
+from mingli_engine.markdown import render_markdown_report
 from mingli_engine.models import BirthProfile
 from mingli_engine.safety import safety_check
 
@@ -105,10 +115,10 @@ _ADDITIONAL_FOCUS_RULES = (
 )
 
 
-def _privacy() -> ApplicationPrivacyV1:
+def _privacy(*, contains_sensitive_profile: bool = False) -> ApplicationPrivacyV1:
     return ApplicationPrivacyV1(
         retention="not_stored_by_engine",
-        contains_sensitive_profile=False,
+        contains_sensitive_profile=contains_sensitive_profile,
     )
 
 
@@ -253,10 +263,6 @@ def _execute_authorized_request(
     request: RealUseRequestV1,
     trace_id: str,
 ) -> RealUseResponseV1:
-    if request.operation != "analysis":
-        # Task 7 replaces this controlled boundary with report construction.
-        return _internal_error(request, trace_id)
-
     profile = BirthProfile(
         calendar_type=request.profile.calendar_type,
         birth_date=request.profile.birth_date,
@@ -277,30 +283,80 @@ def _execute_authorized_request(
     evidence_ids = tuple(
         sorted(unit.evidence_id for unit in load_approved_evidence_units())
     )
+    provenance = ApplicationProvenanceV1(
+        engine_version=calculation.engine_version,
+        ruleset_version=calculation.ruleset_version,
+        provider_version=(
+            f"{_PROVIDER_DISTRIBUTION}-{version(_PROVIDER_DISTRIBUTION)}"
+        ),
+        chart_source_type="calculated",
+        chart_source_confidence="deterministic_supported_range",
+        evidence_baseline_id=_EVIDENCE_BASELINE_ID,
+        evidence_ids=evidence_ids,
+    )
+
+    if request.operation == "analysis":
+        result = ApplicationAnalysisResultV1(
+            chart=serialize_chart(chart),
+            calculation=serialize_calculation_bundle(calculation),
+        )
+        privacy = _privacy()
+    else:
+        full_report = build_application_report(chart, calculation)
+        post_build_review = review_built_report(full_report)
+        if not post_build_review.allowed:
+            categories = list(post_build_review.red_line_categories)
+            if post_build_review.prohibited_phrases:
+                categories.append("absolute_destiny")
+            return _unsafe_refusal(
+                request,
+                trace_id,
+                categories=categories,
+                redirect_message=post_build_review.redirect_message,
+            )
+
+        include_profile = request.options.include_profile_in_report
+        public_report = (
+            full_report if include_profile else redact_report(full_report, profile)
+        )
+        report_format = request.options.report_format
+        if report_format == "json":
+            result = ApplicationReportResultV1(
+                report=serialize_report(public_report),
+                content=None,
+            )
+        elif report_format == "markdown":
+            result = ApplicationReportResultV1(
+                report=None,
+                content=ApplicationContentV1(
+                    media_type="text/markdown",
+                    content=render_markdown_report(public_report),
+                    contains_sensitive_profile=include_profile,
+                ),
+            )
+        elif report_format == "html":
+            result = ApplicationReportResultV1(
+                report=None,
+                content=ApplicationContentV1(
+                    media_type="text/html",
+                    content=render_html_report(public_report),
+                    contains_sensitive_profile=include_profile,
+                ),
+            )
+        else:
+            raise ValueError("report operation requires an output format")
+        privacy = _privacy(contains_sensitive_profile=include_profile)
 
     return RealUseResponseV1(
         schema_version=REAL_USE_RESPONSE_SCHEMA_VERSION,
         trace_id=trace_id,
-        operation="analysis",
+        operation=request.operation,
         status="ok",
-        result=ApplicationAnalysisResultV1(
-            chart=serialize_chart(chart),
-            calculation=serialize_calculation_bundle(calculation),
-        ),
+        result=result,
         safety=ApplicationSafetyV1(True, "allowed", (), "", False),
-        provenance=ApplicationProvenanceV1(
-            engine_version=calculation.engine_version,
-            ruleset_version=calculation.ruleset_version,
-            provider_version=(
-                f"{_PROVIDER_DISTRIBUTION}-{version(_PROVIDER_DISTRIBUTION)}"
-            ),
-            chart_source_type="calculated",
-            chart_source_confidence="deterministic_supported_range",
-            evidence_baseline_id=_EVIDENCE_BASELINE_ID,
-            evidence_ids=evidence_ids,
-        ),
+        provenance=provenance,
         warnings=(),
-        privacy=_privacy(),
+        privacy=privacy,
         error=None,
     )
 
