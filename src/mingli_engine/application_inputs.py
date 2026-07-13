@@ -1,4 +1,5 @@
 import json
+import math
 import re
 import unicodedata
 from datetime import date
@@ -102,6 +103,16 @@ def _reject_non_finite(_value: str) -> object:
     raise _StrictJsonError from None
 
 
+def _parse_finite_float(value: str) -> float:
+    try:
+        parsed = float(value)
+    except (OverflowError, ValueError):
+        raise _StrictJsonError from None
+    if not math.isfinite(parsed):
+        raise _StrictJsonError from None
+    return parsed
+
+
 def _parse_json(payload: bytes) -> object:
     if len(payload) > MAX_REQUEST_BYTES:
         raise ApplicationInputError("payload_too_large", None)
@@ -114,6 +125,7 @@ def _parse_json(payload: bytes) -> object:
             text,
             object_pairs_hook=_reject_duplicate_keys,
             parse_constant=_reject_non_finite,
+            parse_float=_parse_finite_float,
         )
     except (json.JSONDecodeError, _StrictJsonError, RecursionError):
         raise ApplicationInputError("invalid_json", None) from None
@@ -123,15 +135,19 @@ def _parse_json(payload: bytes) -> object:
 
 
 def _json_depth(value: object) -> int:
-    if isinstance(value, dict):
-        if not value:
-            return 1
-        return 1 + max(_json_depth(item) for item in value.values())
-    if isinstance(value, list):
-        if not value:
-            return 1
-        return 1 + max(_json_depth(item) for item in value)
-    return 0
+    maximum = 0
+    pending: list[tuple[object, int]] = [(value, 0)]
+    while pending:
+        current, parent_depth = pending.pop()
+        if isinstance(current, dict):
+            depth = parent_depth + 1
+            maximum = max(maximum, depth)
+            pending.extend((item, depth) for item in current.values())
+        elif isinstance(current, list):
+            depth = parent_depth + 1
+            maximum = max(maximum, depth)
+            pending.extend((item, depth) for item in current)
+    return maximum
 
 
 def _require_object(value: object, field_path: str) -> dict[str, object]:

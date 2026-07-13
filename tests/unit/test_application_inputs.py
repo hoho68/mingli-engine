@@ -6,6 +6,7 @@ from typing import Any
 
 import pytest
 
+import mingli_engine.application_inputs as application_inputs
 from mingli_engine.application_inputs import (
     MAX_REQUEST_BYTES,
     ApplicationInputError,
@@ -28,6 +29,13 @@ def _mapping(name: str = "valid_analysis_request.json") -> dict[str, Any]:
 
 def _encode(value: object) -> bytes:
     return json.dumps(value, ensure_ascii=False, separators=(",", ":")).encode()
+
+
+def _payload_with_attested_number(number: bytes) -> bytes:
+    payload = _encode(_mapping())
+    marker = b'"attested":true'
+    assert marker in payload
+    return payload.replace(marker, b'"attested":' + number)
 
 
 def _error(
@@ -148,12 +156,65 @@ def test_rejects_invalid_utf8_json_duplicates_and_non_finite_values(
     _error(payload, "invalid_json", None)
 
 
+@pytest.mark.parametrize("number", [b"1e400", b"-1e400", b"1e+400", b"-1e+400"])
+def test_rejects_float_exponents_that_overflow_to_infinity(number: bytes) -> None:
+    error = _error(
+        _payload_with_attested_number(number),
+        "invalid_json",
+        None,
+    )
+    raw_value = number.decode("ascii")
+    assert raw_value not in str(error)
+    assert raw_value not in repr(error)
+
+
+@pytest.mark.parametrize(
+    "number",
+    [b"1.5", b"-1.5", b"1e2", b"1e-2", b"-1e-2", b"1e-400"],
+)
+def test_finite_floats_pass_json_validation_before_strict_field_types(
+    number: bytes,
+) -> None:
+    error = _error(
+        _payload_with_attested_number(number),
+        "invalid_request",
+        "$.authorization.attested",
+    )
+    raw_value = number.decode("ascii")
+    assert raw_value not in str(error)
+    assert raw_value not in repr(error)
+
+
 def test_rejects_json_nesting_depth_above_eight() -> None:
     nested: object = 0
     for _ in range(9):
         nested = [nested]
 
     _error(_encode(nested), "invalid_json", "$")
+
+
+def test_deep_small_json_never_leaks_recursion_error_or_inner_value() -> None:
+    raw_value = "private-depth-sentinel"
+    payload = (b"[" * 600) + _encode(raw_value) + (b"]" * 600)
+    assert len(payload) < 2 * 1024
+
+    error = _error(payload, "invalid_json", "$")
+
+    assert raw_value not in str(error)
+    assert raw_value not in repr(error)
+
+
+def test_json_decoder_recursion_error_is_also_stable_invalid_json(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def raise_recursion_error(*_args: object, **_kwargs: object) -> object:
+        raise RecursionError("private decoder detail")
+
+    monkeypatch.setattr(application_inputs.json, "loads", raise_recursion_error)
+
+    error = _error(b"{}", "invalid_json", None)
+    assert "private decoder detail" not in str(error)
+    assert "private decoder detail" not in repr(error)
 
 
 @pytest.mark.parametrize(
