@@ -136,10 +136,10 @@
 
 ## Task 16: Prove Installed Application V1 And Advance Version
 
-- [ ] T079 Write failing final-release tests in `tests/contract/test_wheel_runtime_assets.py` and `tests/integration/test_installed_real_use.py` requiring `pyproject.toml` version 0.2.0, every calibration asset, installed real-use and calibration commands, equal final run/baseline/release `ExactVersionSet`, and `ready_with_guardrails`
-- [ ] T080 Run `tests/contract/test_wheel_runtime_assets.py`, `tests/integration/test_installed_package_baseline.py`, and `tests/integration/test_installed_real_use.py`; confirm all non-version gates pass and failures are limited to package version, absent final 0.2.0 run/snapshot/baseline, and dependent release status
-- [ ] T081 Update `pyproject.toml` to 0.2.0; rebuild and install the wheel; execute a fresh final calibration run and final metric snapshot through `src/mingli_engine/domain_calibration.py`; use the controlled release writer in `src/mingli_engine/domain_calibration_release.py` to replace and freeze `src/mingli_engine/data/domain_calibration/calibration_baseline.json`; then recompute the release decision from installed resources and verify exact run/baseline/release version equality in `tests/integration/test_installed_real_use.py`
-- [ ] T082 Verify `tests/contract/test_wheel_runtime_assets.py`, `tests/integration/test_installed_package_baseline.py`, `tests/integration/test_installed_real_use.py`, and `tests/unit/test_domain_calibration_release.py`, run mypy and Ruff, and commit `release: package calibrated application v1`
+- [ ] T079 Write failing final-release tests in `tests/contract/test_wheel_runtime_assets.py` and `tests/integration/test_installed_real_use.py` requiring `pyproject.toml` version 0.2.0, a wheel rebuilt after the frozen final baseline, every calibration asset, installed manifest and resource hashes, installed calibration summary and release decision, source isolation, equal final run/baseline/release `ExactVersionSet`, and `ready_with_guardrails`
+- [ ] T080 Run `tests/contract/test_wheel_runtime_assets.py`, `tests/integration/test_installed_package_baseline.py`, and `tests/integration/test_installed_real_use.py`; confirm all non-version gates pass and that the pre-baseline wheel fails as release evidence because it lacks the frozen final baseline and post-baseline build identity
+- [ ] T081 Update `pyproject.toml` to 0.2.0; build a pre-baseline wheel and install it only to execute a fresh final calibration run and metric snapshot through `src/mingli_engine/domain_calibration.py`; use the controlled release writer in `src/mingli_engine/domain_calibration_release.py` to replace and freeze `src/mingli_engine/data/domain_calibration/calibration_baseline.json`; discard the pre-baseline wheel as release evidence; build a new final wheel containing that frozen baseline; install the final wheel into a new empty temporary target; and from only that final installation verify manifest, calibration summary, release decision, resource SHA-256 map, source isolation, and exact run/baseline/release `ExactVersionSet` equality in `tests/contract/test_wheel_runtime_assets.py` and `tests/integration/test_installed_real_use.py`
+- [ ] T082 Verify `tests/contract/test_wheel_runtime_assets.py`, `tests/integration/test_installed_package_baseline.py`, `tests/integration/test_installed_real_use.py`, and `tests/unit/test_domain_calibration_release.py` against the post-baseline final wheel and fresh installation, run mypy and Ruff, and commit `release: package calibrated application v1`
 
 ## Task 17: Close Governance, Documentation, And Final Audit
 
@@ -162,7 +162,7 @@
 - Adjudication starts only after both review files are frozen and must finish before engine execution.
 - Task 14 generates candidate calibration objects for target application version 0.2.0 and never mutates the tracked final baseline.
 - Task 15 evaluates non-version gates but cannot release a candidate or a version-mismatched baseline.
-- Task 16 advances to 0.2.0, reruns final calibration from the installed artifact, freezes the final baseline through the sole controlled release writer, and recomputes release with equal run/baseline/release version sets.
+- Task 16 advances to 0.2.0, uses a pre-baseline installation only to compute final calibration, freezes the final baseline through the sole controlled release writer, rebuilds the final wheel after that freeze, installs it to a new target, and derives all release evidence from the final installation with equal run/baseline/release version sets.
 - Version 0.2.0 is the final non-governance implementation change in Task 16 and follows all non-version gates.
 - Formal 019 governance and completed-feature counts change atomically only in Task 17.
 

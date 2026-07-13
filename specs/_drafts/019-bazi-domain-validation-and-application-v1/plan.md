@@ -134,9 +134,9 @@ Every implementation task follows red-green-refactor. The detailed dependency-or
 
 ## Calibration Release Sequence
 
-Task 14 computes a candidate run, candidate metric snapshot, and test-local candidate baseline for target `application_version=0.2.0`; it does not mutate `src/mingli_engine/data/domain_calibration/calibration_baseline.json` and cannot create a final release decision. Task 15 proves all non-version gates while version/final-baseline checks remain blocked. Task 16 advances `pyproject.toml` to 0.2.0, rebuilds and installs the wheel, executes a fresh final calibration run and snapshot from installed resources, updates and freezes the tracked final baseline through the sole controlled release writer, and then recomputes release without cached Task 14 or Task 15 results.
+Task 14 computes a candidate run, candidate metric snapshot, and test-local candidate baseline for target `application_version=0.2.0`; it does not mutate `src/mingli_engine/data/domain_calibration/calibration_baseline.json` and cannot create a final release decision. Task 15 proves all non-version gates while version/final-baseline checks remain blocked. Task 16 advances `pyproject.toml` to 0.2.0 and builds a pre-baseline wheel used only to execute the fresh final calibration run and snapshot. The controlled release writer then updates and freezes the tracked final baseline. That pre-baseline wheel is discarded as release evidence. The workflow builds a second, final wheel after the baseline freeze, installs it into a new empty temporary target, and recomputes all release evidence from that final installation without cached Task 14 or Task 15 results.
 
-The final `CalibrationRun.version_set`, final baseline `MetricSnapshotV1.version_set`, and `CalibrationReleaseDecision.version_set` must be exactly equal. Runtime and Task 14 remain read-only with respect to the tracked final baseline.
+The final installation must verify its wheel manifest, calibration summary, release decision, resource SHA-256 map, source isolation, and exact equality of the final `CalibrationRun.version_set`, final baseline `MetricSnapshotV1.version_set`, and `CalibrationReleaseDecision.version_set`. Runtime and Task 14 remain read-only with respect to the tracked final baseline; the pre-baseline wheel never counts as publication or release evidence.
 
 ## Release Gates
 
@@ -148,7 +148,7 @@ The final `CalibrationRun.version_set`, final baseline `MetricSnapshotV1.version
 - Every counted assertion has two valid independent reviews.
 - Documentation repeats the claim boundary, procedural blindness limitation, no-engine-retention wording, exclusions, and exact version set.
 - `CalibrationRun.version_set`, baseline `MetricSnapshotV1.version_set`, and `CalibrationReleaseDecision.version_set` are exactly equal and contain only `application_version`, `engine_version`, `ruleset_version`, `provider_version`, `school_profile_version`, `fixture_version`, `evidence_baseline_id`, and `corpus_sha256`.
-- Final equality is evaluated only from the fresh Task 16 installed-0.2.0 run, final snapshot, controlled baseline freeze, and recomputed release; Task 14 candidate values never satisfy this gate.
+- Final equality and packaging gates are evaluated only from the post-baseline final wheel installed into a fresh target after the Task 16 run, snapshot, and controlled baseline freeze; neither Task 14 candidates nor the Task 16 pre-baseline wheel satisfy this gate.
 - JSON, Markdown, and HTML report tests each prove source and evidence traceability, disclaimer presence, non-absolute uncertainty language, and rejection of prohibited absolute destiny wording.
 
 ## Verification Commands

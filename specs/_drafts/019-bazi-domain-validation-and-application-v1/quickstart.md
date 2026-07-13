@@ -207,7 +207,9 @@ Task 14 produces only candidate objects for target `application_version=0.2.0`. 
 
 The release workflow builds a wheel without network access, inspects required JSON resources, installs into a temporary target, removes checkout `PYTHONPATH`, and runs chart analysis, evidence-backed report generation, calibration summary, and real-use CLI.
 
-The installed calibration child receives its local `PackagingVerification`; it does not recursively build another wheel. Version advances to 0.2.0 only after every non-version gate passes. Then rebuild and install the wheel, execute a fresh final calibration run, generate a fresh final snapshot, update and freeze `src/mingli_engine/data/domain_calibration/calibration_baseline.json` through the controlled release writer, and recompute release from installed resources. Do not reuse the Task 14 candidate or cached Task 15 status.
+The installed calibration child receives its local `PackagingVerification`; it does not recursively build another wheel. Version advances to 0.2.0 only after every non-version gate passes. Build and install a pre-baseline wheel only to execute the fresh final calibration run and snapshot, then update and freeze `src/mingli_engine/data/domain_calibration/calibration_baseline.json` through the controlled release writer. The pre-baseline wheel is candidate/red-test evidence only and must not be published or used for release.
+
+After the final baseline is frozen, build the wheel again so it contains that exact baseline. Install this post-baseline final wheel into a new empty temporary target that is different from the pre-baseline target. From only this final installation, verify the wheel manifest, calibration summary, release decision, resource SHA-256 map, source isolation, and exact run/baseline/release `ExactVersionSet` equality. Do not reuse the Task 14 candidate, cached Task 15 status, pre-baseline wheel, or pre-baseline installation.
 
 Before accepting `ready_with_guardrails`, compare the final installed run, final baseline snapshot, and recomputed release `ExactVersionSet` values for exact equality and confirm all three report `application_version=0.2.0`.
 

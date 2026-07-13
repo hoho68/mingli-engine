@@ -211,6 +211,8 @@ All conditions are mandatory:
 - Documentation repeats the claim boundary and exact version set.
 - Calibration run, baseline snapshot, and release decision carry exactly equal `ExactVersionSet` values.
 - The final run and snapshot are freshly recomputed after installing 0.2.0; no Task 14 candidate or cached Task 15 release result is reused.
+- The pre-baseline 0.2.0 wheel used to compute the final run and snapshot is candidate evidence only and cannot satisfy any packaging or release gate.
+- After the controlled writer freezes final `calibration_baseline.json`, a new final wheel is built and installed into a new empty temporary target. Manifest, calibration summary, release decision, resource hashes, source isolation, and `ExactVersionSet` equality are verified only from that final installation.
 
 Any failure blocks the 019 application and calibration release label without rewriting the historical 018 operational result.
 
@@ -218,4 +220,4 @@ Any failure blocks the 019 application and calibration release label without rew
 
 The built wheel includes every JSON resource under `mingli_engine/data/`, including all domain calibration files. Release verification builds without network access, inspects the wheel manifest, installs to a temporary target, and runs chart analysis, evidence-backed report generation, calibration summary, and real-use CLI outside the checkout.
 
-The installed calibration child receives an explicit local `PackagingVerification` so it verifies installed resources and source isolation without recursively building another wheel. Package version advances from 0.1.0 to 0.2.0 only after every non-version gate passes. After advancement, the workflow rebuilds and installs the wheel, executes a fresh final calibration run and snapshot, updates and freezes the final baseline through the controlled release writer, and recomputes the release decision from installed resources.
+The installed calibration child receives an explicit local `PackagingVerification` so it verifies installed resources and source isolation without recursively building another wheel. Package version advances from 0.1.0 to 0.2.0 only after every non-version gate passes. After advancement, the workflow builds and installs a pre-baseline wheel solely to execute the fresh final run and snapshot, freezes the resulting baseline through the controlled release writer, then builds a second final wheel containing that baseline. The final wheel is installed into a different empty temporary target, and only that installation supplies the manifest, calibration summary, release decision, resource SHA-256 map, source-isolation result, and version-equality release evidence.
