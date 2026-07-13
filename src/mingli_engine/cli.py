@@ -15,6 +15,12 @@ from mingli_engine.bazi.result_models import (
     ReasonedResult,
     StrengthContribution,
 )
+from mingli_engine.application_serialization import (
+    serialize_branch_relation,
+    serialize_calculation_bundle,
+    serialize_reasoned_result,
+    serialize_strength_contribution,
+)
 from mingli_engine.chart_calculator import ChartCalculationError, calculate_bazi_chart
 from mingli_engine.evidence_curation import build_knowledge_activation_summary
 from mingli_engine.high_risk import classify_high_risk_request
@@ -41,7 +47,6 @@ from mingli_engine.project_completion import (
     ProjectCompletionError,
     build_project_completion_summary,
 )
-from mingli_engine.public_assumptions import project_public_assumptions
 from mingli_engine.safety import safety_check
 from mingli_engine.validation import validate_birth_profile
 from mingli_engine import promotion
@@ -96,161 +101,23 @@ def _birth_datetime(profile: BirthProfile) -> datetime:
 
 
 def _public_reasoning(reasoning: ReasonedResult) -> dict[str, object]:
-    return {
-        "status": reasoning.status,
-        "conclusion": reasoning.conclusion,
-        "confidence": reasoning.confidence,
-        "supporting_signals": list(reasoning.supporting_signals),
-        "opposing_signals": list(reasoning.opposing_signals),
-        "assumptions": project_public_assumptions(reasoning.assumptions),
-        "missing_inputs": list(reasoning.missing_inputs),
-        "rule_ids": list(reasoning.rule_ids),
-    }
+    return serialize_reasoned_result(reasoning)
 
 
 def _public_relation(relation: BranchRelationResult) -> dict[str, object]:
-    return {
-        "relation_type": relation.relation_type,
-        "branches": list(relation.branches),
-        "pillar_names": list(relation.pillar_names),
-        "state": relation.state,
-        "transformed_element": relation.transformed_element,
-        "conditions": list(relation.conditions),
-        "blockers": list(relation.blockers),
-        "rule_id": relation.rule_id,
-    }
+    return serialize_branch_relation(relation)
 
 
 def _public_strength_contribution(
     contribution: StrengthContribution,
 ) -> dict[str, object]:
-    return {
-        "category": contribution.category,
-        "signal": contribution.signal,
-        "value": contribution.value,
-        "rule_id": contribution.rule_id,
-    }
+    return serialize_strength_contribution(contribution)
 
 
 def _public_calculation_payload(
     calculation: CalculationBundle,
 ) -> dict[str, object]:
-    facts = calculation.facts
-    return {
-        "engine_version": calculation.engine_version,
-        "ruleset_version": calculation.ruleset_version,
-        "facts": {
-            "day_master": facts.day_master,
-            "month_branch": facts.month_branch,
-            "exposed_stems": [
-                {
-                    "pillar_name": item.pillar_name,
-                    "stem": item.stem,
-                    "element": item.element,
-                    "polarity": item.polarity,
-                    "ten_god": item.ten_god,
-                }
-                for item in facts.exposed_stems
-            ],
-            "hidden_stems": [
-                {
-                    "pillar_name": item.pillar_name,
-                    "branch": item.branch,
-                    "stem": item.stem,
-                    "role": item.role,
-                    "element": item.element,
-                    "polarity": item.polarity,
-                    "ten_god": item.ten_god,
-                }
-                for item in facts.hidden_stems
-            ],
-            "roots": [
-                {
-                    "stem": item.stem,
-                    "stem_pillar": item.stem_pillar,
-                    "branch": item.branch,
-                    "branch_pillar": item.branch_pillar,
-                    "role": item.role,
-                    "exact_stem_root": item.exact_stem_root,
-                }
-                for item in facts.roots
-            ],
-            "twelve_growth_by_pillar": [
-                list(item) for item in facts.twelve_growth_by_pillar
-            ],
-            "assumptions": project_public_assumptions(facts.assumptions),
-        },
-        "branch_relations": [
-            _public_relation(item) for item in calculation.branch_relations
-        ],
-        "strength": {
-            "reasoning": _public_reasoning(calculation.strength.reasoning),
-            "score": calculation.strength.score,
-            "lower_bound": calculation.strength.lower_bound,
-            "upper_bound": calculation.strength.upper_bound,
-            "label": calculation.strength.label,
-            "contributions": [
-                _public_strength_contribution(item)
-                for item in calculation.strength.contributions
-            ],
-        },
-        "patterns": [
-            {
-                "pattern_id": item.pattern_id,
-                "name": item.name,
-                "rank": item.rank,
-                "reasoning": _public_reasoning(item.reasoning),
-                "formation_conditions": list(item.formation_conditions),
-                "damage_conditions": list(item.damage_conditions),
-                "rescue_conditions": list(item.rescue_conditions),
-            }
-            for item in calculation.patterns
-        ],
-        "useful_gods": [
-            {
-                "method": item.method,
-                "element": item.element,
-                "rank": item.rank,
-                "reasoning": _public_reasoning(item.reasoning),
-            }
-            for item in calculation.useful_gods
-        ],
-        "luck_cycles": {
-            "reasoning": _public_reasoning(calculation.luck_cycles.reasoning),
-            "forward": calculation.luck_cycles.forward,
-            "start_years": calculation.luck_cycles.start_years,
-            "start_months": calculation.luck_cycles.start_months,
-            "start_days": calculation.luck_cycles.start_days,
-            "start_solar": calculation.luck_cycles.start_solar,
-            "pillars": [
-                {
-                    "index": item.index,
-                    "gan_zhi": item.gan_zhi,
-                    "start_year": item.start_year,
-                    "end_year": item.end_year,
-                    "start_age": item.start_age,
-                    "end_age": item.end_age,
-                }
-                for item in calculation.luck_cycles.pillars
-            ],
-            "selected_year_relations": [
-                _public_relation(item)
-                for item in calculation.luck_cycles.selected_year_relations
-            ],
-        },
-        "schools": [
-            {
-                "school_id": item.school_id,
-                "profile_version": item.profile_version,
-                "reasoning": _public_reasoning(item.reasoning),
-                "preferred_pattern_ids": list(item.preferred_pattern_ids),
-                "preferred_useful_god_elements": list(
-                    item.preferred_useful_god_elements
-                ),
-            }
-            for item in calculation.schools
-        ],
-    }
+    return serialize_calculation_bundle(calculation)
 
 
 def _configure_stream_encoding(stream: Any) -> None:
