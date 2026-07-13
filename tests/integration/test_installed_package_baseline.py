@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from shutil import copytree
 from textwrap import dedent
 
 import pytest
@@ -54,6 +55,8 @@ def _run_isolated(
     environment = os.environ.copy()
     environment["PYTHONPATH"] = str(installed_target)
     environment["PYTHONDONTWRITEBYTECODE"] = "1"
+    environment["MINGLI_TEST_INSTALLED_ROOT"] = str(installed_target)
+    environment["MINGLI_TEST_FORBIDDEN_CHECKOUT_ROOT"] = str(REPO_ROOT)
     return subprocess.run(
         [sys.executable, "-c", script],
         cwd=cwd,
@@ -79,13 +82,17 @@ def test_installed_package_runs_chart_analysis_and_evidence_report_outside_check
     script = dedent(
         """
         from datetime import datetime
+        from importlib import resources
         import json
+        import os
         from pathlib import Path
+        import sys
 
         import mingli_engine
         from mingli_engine.bazi import analyze_bazi_chart
         from mingli_engine.chart_calculator import calculate_bazi_chart
         from mingli_engine.models import BirthProfile
+        from mingli_engine.packaging_validation import build_packaging_verification
         from mingli_engine.report_schema import build_report
 
         profile = BirthProfile(
@@ -103,14 +110,33 @@ def test_installed_package_runs_chart_analysis_and_evidence_report_outside_check
             selected_year=2030,
         )
         report = build_report(chart, analysis)
+        verification = build_packaging_verification(
+            installed_root=os.environ["MINGLI_TEST_INSTALLED_ROOT"],
+            forbidden_checkout_root=os.environ[
+                "MINGLI_TEST_FORBIDDEN_CHECKOUT_ROOT"
+            ],
+        )
+        module_files = sorted(
+            str(Path(module.__file__).resolve())
+            for name, module in sys.modules.items()
+            if (
+                name == "mingli_engine" or name.startswith("mingli_engine.")
+            )
+            and getattr(module, "__file__", None)
+        )
         print(json.dumps({
             "package_file": str(Path(mingli_engine.__file__).resolve()),
+            "resource_root": str(
+                Path(str(resources.files("mingli_engine"))).resolve()
+            ),
+            "module_files": module_files,
             "pillar_count": len(chart.pillars),
             "engine_version": analysis.engine_version,
             "formal_conclusion_count": len(
                 report.expanded_evidence.formal_conclusions
             ),
             "evidence_status": report.report_evidence_audit.audit_status,
+            "source_isolated": verification.source_isolated,
         }, sort_keys=True))
         """
     )
@@ -121,12 +147,21 @@ def test_installed_package_runs_chart_analysis_and_evidence_report_outside_check
     assert completed.stderr == ""
     result = json.loads(completed.stdout)
     assert Path(result["package_file"]).is_relative_to(installed_target)
+    runtime_paths = [Path(result["resource_root"])] + [
+        Path(path) for path in result["module_files"]
+    ]
+    assert runtime_paths
+    assert all(path.is_relative_to(installed_target) for path in runtime_paths)
+    assert all(not path.is_relative_to(REPO_ROOT) for path in runtime_paths)
     assert result == {
         "engine_version": "bazi-core-v1",
         "evidence_status": "complete_with_guardrails",
         "formal_conclusion_count": 10,
+        "module_files": result["module_files"],
         "package_file": result["package_file"],
         "pillar_count": 4,
+        "resource_root": result["resource_root"],
+        "source_isolated": True,
     }
     assert list(tmp_path.iterdir()) == []
 
@@ -139,11 +174,18 @@ def test_installed_packaging_verifier_is_exact_read_only_and_deterministic(
         """
         from dataclasses import asdict
         import json
+        import os
 
         from mingli_engine.packaging_validation import build_packaging_verification
 
-        first = asdict(build_packaging_verification())
-        second = asdict(build_packaging_verification())
+        context = {
+            "installed_root": os.environ["MINGLI_TEST_INSTALLED_ROOT"],
+            "forbidden_checkout_root": os.environ[
+                "MINGLI_TEST_FORBIDDEN_CHECKOUT_ROOT"
+            ],
+        }
+        first = asdict(build_packaging_verification(**context))
+        second = asdict(build_packaging_verification(**context))
         assert first == second
         print(json.dumps(first, sort_keys=True))
         """
@@ -170,3 +212,49 @@ def test_installed_packaging_verifier_is_exact_read_only_and_deterministic(
         path.relative_to(installed_target).as_posix()
         for path in installed_target.rglob("*")
     } == target_before
+
+
+def test_installed_verifier_fails_when_any_non_anchor_asset_is_missing(
+    installed_target: Path,
+    tmp_path: Path,
+) -> None:
+    damaged_target = tmp_path / "target"
+    isolated_cwd = tmp_path / "cwd"
+    copytree(installed_target, damaged_target)
+    isolated_cwd.mkdir()
+    missing_asset = (
+        damaged_target
+        / "mingli_engine"
+        / "data"
+        / "source_library"
+        / "source_priority_assessments.json"
+    )
+    missing_asset.unlink()
+    script = dedent(
+        """
+        from dataclasses import asdict
+        import json
+        import os
+
+        from mingli_engine.packaging_validation import build_packaging_verification
+
+        result = build_packaging_verification(
+            installed_root=os.environ["MINGLI_TEST_INSTALLED_ROOT"],
+            forbidden_checkout_root=os.environ[
+                "MINGLI_TEST_FORBIDDEN_CHECKOUT_ROOT"
+            ],
+        )
+        print(json.dumps(asdict(result), sort_keys=True))
+        """
+    )
+
+    completed = _run_isolated(damaged_target, isolated_cwd, script)
+
+    assert completed.returncode == 0, completed.stderr
+    assert completed.stderr == ""
+    result = json.loads(completed.stdout)
+    assert result["overall_status"] == "failed"
+    assert result["source_isolated"] is True
+    assert "data/source_library/source_priority_assessments.json" not in result[
+        "asset_sha256"
+    ]
