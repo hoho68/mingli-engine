@@ -90,20 +90,27 @@ tracked calibration corpus
 
 ```text
 src/mingli_engine/
-|-- application.py
 |-- application_models.py
 |-- application_inputs.py
 |-- application_serialization.py
+|-- application_service.py
+|-- application_reports.py
+|-- application_validation.py
+|-- packaging_validation.py
 |-- domain_calibration.py
 |-- domain_calibration_models.py
 |-- domain_calibration_release.py
 `-- data/domain_calibration/
     |-- calibration_cases.json
+    |-- input_fixtures.json
     |-- calibration_assertions.json
-    |-- review_assignments.json
+    |-- calibration_citations.json
+    |-- reviewer_packets.json
+    |-- reviewer_a_assignments.json
     |-- reviewer_a_reviews.json
+    |-- reviewer_b_assignments.json
     |-- reviewer_b_reviews.json
-    |-- adjudications.json
+    |-- adjudication.json
     `-- calibration_baseline.json
 ```
 
@@ -141,7 +148,7 @@ focus_topic
 
 ```text
 subject_relation: "self" | "authorized_other"
-attested: true
+attested: bool
 ```
 
 `RealUseOptionsV1` contains:
@@ -156,6 +163,10 @@ Rules:
 - `report_format` is null for `analysis`.
 - `report_format` is required for `report`.
 - `include_profile_in_report` defaults to false.
+- `attested=false` is schema-valid and produces `authorization_required`
+  before calculation.
+- Any `subject_relation` value outside the two allowed literals is an
+  `invalid_request` schema error and never reaches the authorization service.
 - Unknown fields are rejected at every object level.
 - External charts and precomputed bundles are rejected.
 
@@ -166,12 +177,12 @@ Rules:
 ```text
 schema_version: "real-use-response-v1"
 trace_id: random UUID4 string
-operation: "analysis" | "report"
+operation: "analysis" | "report" | null
 status: "ok" | "refused" | "error"
 result: explicit result DTO or null
 safety: ApplicationSafetyV1
 provenance: ApplicationProvenanceV1 or null
-warnings: tuple[ApplicationWarningV1, ...]
+warnings: immutable sequence of ApplicationWarningV1
 privacy: ApplicationPrivacyV1
 error: ApplicationErrorV1 or null
 ```
@@ -181,18 +192,49 @@ focus topic in metadata. A rendered report may contain those values only when
 `include_profile_in_report=true`; the response then marks the content
 `contains_sensitive_profile=true`.
 
+`operation` is null for every strict parsing failure. The parser never peeks at
+or partially trusts an otherwise invalid object. Every typed
+`handle_real_use()` response and every successfully parsed JSON response
+carries the request operation.
+
+The nested DTOs have exact V1 fields:
+
+```text
+ApplicationErrorV1: code, message, field_path, retryable, trace_id
+ApplicationSafetyV1: allowed, decision, categories, redirect_message, requires_narrowing
+ApplicationProvenanceV1: engine_version, ruleset_version, provider_version,
+  chart_source_type, chart_source_confidence, evidence_baseline_id, evidence_ids
+ApplicationWarningV1: code, message
+ApplicationPrivacyV1: retention, contains_sensitive_profile
+ApplicationContentV1: media_type, content, contains_sensitive_profile
+ApplicationAnalysisResultV1: chart, calculation
+ApplicationReportResultV1: report, content
+```
+
+All sequences are tuples, all maps are explicit public dictionaries, and all
+DTOs are frozen. `result` is exactly one of `ApplicationAnalysisResultV1`,
+`ApplicationReportResultV1`, or null according to operation and status.
+
 ### 6.3 Public Operations
 
 ```python
 def handle_real_use(request: RealUseRequestV1) -> RealUseResponseV1:
-    ...
+    """Execute one validated request in one process and return a typed envelope."""
 
 def handle_real_use_json(payload: bytes) -> bytes:
-    ...
+    """Parse, execute, serialize, and size-check one strict JSON request."""
+
+def response_status_from_json_bytes(payload: bytes) -> ResponseStatus:
+    """Read only the status from an internally generated response envelope."""
 ```
 
-The root package exports these two operations and the request/response DTOs.
-Existing low-level functions remain available.
+`handle_real_use_json` creates the trace ID before parsing, converts parser,
+authorization, safety, calculation, knowledge, and unexpected failures into the
+stable response envelope, and never leaks exception text. It enforces the
+response limit after serialization; if normal serialization is too large, it
+returns a small `response_too_large` envelope. The root package exports all
+three operations and the request/response DTOs. Existing low-level functions
+remain available.
 
 ## 7. Input And Output Limits
 
@@ -211,6 +253,10 @@ The strict JSON boundary enforces:
 - provider-supported dates: 1901-01-01 through 2099-12-31;
 - exactly Gregorian input under the documented UTC+08 wall-time assumption;
 - true solar time is not applied.
+
+File and stdin adapters read at most 32 KiB plus one sentinel byte. If the
+sentinel byte exists they stop reading and return `payload_too_large`; they do
+not buffer the remainder before rejection.
 
 Unicode is normalized with NFKC for validation and safety classification. The
 engine must not include raw invalid values in errors.
@@ -303,6 +349,14 @@ Existing CLI serializers remain compatibility surfaces. The new facade has an
 independent `schema_version` so engine or ruleset versions are not misused as
 wire-schema versions.
 
+When `include_profile_in_report=false`, redaction applies to the complete report
+object before any JSON, Markdown, or HTML renderer runs. Every raw and NFKC
+normalized occurrence of all six profile fields (`calendar_type`, `birth_date`,
+`birth_time`, `birthplace`, `gender`, and `focus_topic`) is removed from every
+report field, nested value, metadata value, and rendered output. Redaction is
+not limited to the chart card. Tests use unique sentinels for each field and
+scan the complete serialized result.
+
 ## 12. Markdown And HTML Safety
 
 The real-use facade must escape untrusted profile values in both Markdown and
@@ -322,11 +376,16 @@ Ordinary legacy output remains byte compatible.
 ```text
 case_id
 case_version
+input_fixture_file
 input_fixture_id
 input_sha256
+source_fixture_file
+source_fixture_id
+source_fixture_sha256
 stratum: calendrical | structural | school
 coverage_tags
 claim_scope
+contains_real_personal_data
 ```
 
 ### 13.2 CalibrationAssertion
@@ -347,33 +406,104 @@ limitations
 
 ### 13.3 Review Records
 
-`ReviewAssignment` records reviewer role, `reviewer_kind=agent_independent`,
-independence declaration, peer-label blindness, and engine-output blindness.
+The exact review and execution records are:
 
-`CalibrationReview` records assertion label, rationale, confidence,
-abstention, evidence IDs, and source locators.
+```text
+CalibrationFileEnvelopeV1: schema_version, suite_version, generated_from,
+  contains_real_personal_data, payload_sha256, records
+CalibrationInputFixture: fixture_id, schema_version, request_payload,
+  expected_boundary, source_fixture_file, source_fixture_id,
+  source_fixture_sha256
+CalibrationCitation: citation_id, assertion_id, evidence_ids, source_locators,
+  rule_ids, applicability, limitations
+BlindedAssertionProjection: assertion_id, synthetic_case_facts, rule_family,
+  school_id, assertion_kind, field_path, candidate_statuses, candidate_values,
+  candidate_rule_ids, candidate_evidence_ids, limitations
+ReviewerPacket: packet_id, assertion, citation_ids, evidence_excerpts,
+  source_locators, rule_scope, limitations, access_manifest
+ReviewAssignment: assignment_id, reviewer_id, reviewer_kind, packet_id,
+  packet_sha256, access_manifest, peer_labels_hidden, engine_output_hidden,
+  independence_attested
+CalibrationReview: review_id, assignment_id, assertion_id, label,
+  expected_statuses, acceptable_values, confidence, rationale,
+  evidence_ids, source_locators, packet_sha256
+AdjudicationDecision: adjudication_id, assertion_id, reviewer_a_review_id,
+  reviewer_b_review_id, agreement_state, decision, final_statuses,
+  final_acceptable_values, retained_alternatives, rationale, evidence_ids,
+  safety_critical
+CalibrationAssertionResult: assertion_id, actual_status, actual_values,
+  actual_rule_ids, actual_evidence_ids, matched, failure_codes
+CalibrationRun: run_id, engine_version, ruleset_version,
+  school_profile_version, evidence_baseline_id, fixture_version,
+  corpus_sha256, assertion_results
+MetricSnapshotV1: snapshot_id, schema_version, corpus_sha256, version_set, assertion_count,
+  determinism_rate, pillar_agreement_rate, trace_completeness_rate,
+  unsupported_computed_count, dependency_bypass_count,
+  school_disagreement_recall, silent_school_collapse_count,
+  mandatory_abstention_rate, reviewer_raw_agreement,
+  reviewer_stratum_agreement, weighted_kappa, jaccard_agreement,
+  adjudicated_engine_match, safety_critical_exact_match,
+  coverage, baseline_deltas
+CalibrationReleaseDecision: schema_version, release_status, checks, metrics,
+  blockers, claim_boundary, version_set, next_action
+```
 
-`AdjudicationDecision` records agreement, clerical correction, retained
-alternative, or unresolved disagreement. Legitimate school differences remain
-acceptable alternatives or `disputed`; adjudication cannot silently select a
-universal winner.
+Every calibration JSON file uses `CalibrationFileEnvelopeV1`.
+`payload_sha256` is SHA-256 over UTF-8 canonical JSON of `records` alone
+(`sort_keys=true`, separators `,` and `:`, no NaN); `generated_from` is a
+canonically sorted tuple of upstream SHA-256 values. `records` is sorted by its
+primary ID. Reviewer labels are exactly `accept`, `revise`, `reject`, or
+`abstain`.
+
+Primary IDs are `fixture_id`, `case_id`, `assertion_id`, `citation_id`,
+`packet_id`, `assignment_id`, `review_id`, `adjudication_id`, `run_id`, and
+`snapshot_id` for their corresponding record types. A release decision is a
+single-record envelope keyed by the constant schema version
+`domain-calibration-release-v1`. `label=abstain` is the only abstention source
+of truth and requires empty `expected_statuses` and `acceptable_values`; every
+other label requires at least one expected status.
+
+The blinded projection is a value embedded inside each packet, not a lookup.
+Its synthetic facts contain only the packaged, non-personal case facts needed
+to assess the candidate claim and never engine output. One packet's canonical
+bytes are canonical JSON of the `ReviewerPacket` value alone. Its exact access
+manifest is the tuple `provided_packet_bytes_only`, `tools_disabled`,
+`filesystem_disabled`, `peer_labels_absent`, `engine_output_absent`.
+
+`reviewer_kind` is exactly `agent_independent`. Legitimate school differences
+remain acceptable alternatives or `disputed`; adjudication cannot silently
+select a universal winner.
 
 All files have a suite version, canonical ordering, exact-key validation,
 privacy declaration, and SHA-256 integrity fields.
+
+The installed calibration input closure is
+`data/domain_calibration/input_fixtures.json`. It contains only the minimal
+synthetic input records needed by the frozen cases, including the explicit
+`safety_high_risk_lifespan_refusal_001` record. Each case executes this packaged
+file and separately records the original `tests/fixtures/` or safety-test
+source locator and hash as lineage. Runtime never reads `tests/` or the source
+checkout.
 
 ## 14. Calibration Workflow
 
 1. Curator selects and freezes cases before reviewers see engine output.
 2. Existing tracked evidence and source locators are bundled by assertion.
-3. Reviewer A and reviewer B independently label assertions without seeing
-   each other or current engine output.
-4. Review files are frozen and hashed.
-5. Adjudicator compares labels and evidence. It resolves clerical/evidence
+3. The controller creates a canonical allowlisted packet containing only the
+   assertion, exact evidence excerpts, locators, rule scope, limitations, and
+   packet manifest. The packet excludes engine output, expected fixtures,
+   peer labels, source-checkout paths, and unrelated corpus records.
+4. Reviewer A and reviewer B run in fresh `fork_context=false` agent contexts.
+   Each receives only the packet bytes and an instruction forbidding tools and
+   filesystem reads. The controller records packet SHA-256 and the declared
+   access manifest, then writes the returned structured review.
+5. Review files are frozen and hashed.
+6. Adjudicator compares labels and evidence. It resolves clerical/evidence
    errors and retains legitimate school disagreements.
-6. Adjudicated expectations are frozen before the engine run.
-7. Calibration runner executes the exact engine, ruleset, school profiles,
+7. Adjudicated expectations are frozen before the engine run.
+8. Calibration runner executes the exact engine, ruleset, school profiles,
    evidence baseline, and fixture versions.
-8. Metric snapshot and release decision are generated read-only.
+9. Metric snapshot and release decision are generated read-only.
 
 If only one valid review exists, the assertion is `self_reviewed` and cannot
 count toward the independent-calibration release label.
@@ -382,7 +512,7 @@ count toward the independent-calibration release label.
 
 The V1 release corpus requires:
 
-- at least 40 adjudicated assertions;
+- at least 42 adjudicated assertions;
 - every one of the 10 active rule families covered by positive,
   counterexample, and boundary/abstention behavior where applicable;
 - each enabled school covered by agreement, disagreement, counterexample, and
@@ -415,6 +545,21 @@ The V1 release corpus requires:
   versions.
 
 These are conformance metrics, not predictive-accuracy metrics.
+
+Raw agreement counts exact equality across all four reviewer labels. Weighted
+kappa uses only paired non-abstention labels ordered `reject=0`, `revise=1`,
+`accept=2`, with linear weight `1 - abs(i-j)/2`; it is null below 10 eligible
+pairs. The singular `weighted_kappa` field is the global value; when expected
+disagreement is zero it is 1.0. Jaccard compares acceptable-value sets and
+defines two empty sets as 1.0.
+
+`reviewer_stratum_agreement` is an exact map with only `calendrical`,
+`structural`, and `school` keys. Each denominator contains assertions in that
+case stratum with exactly two valid independent reviews and includes
+abstentions. The 0.60 release threshold applies only when that denominator is
+at least 10. Family, school ID, status, assertion-kind, and evidence-source
+coverage maps are informational coverage outputs and do not create additional
+per-stratum agreement gates.
 
 ## 17. Release Gates
 
@@ -452,6 +597,12 @@ The release test must:
 4. run chart analysis, evidence-backed report generation, calibration summary,
    and the real-use CLI from the installed distribution;
 5. verify no dependency on the source checkout.
+
+The installed calibration-summary child receives an explicit local
+`PackagingVerification` built from its installed resources. This dependency
+injection prevents the child's release summary from recursively building and
+launching another wheel. The outer release gate alone owns wheel construction;
+the child verifies only its own distribution assets and source isolation.
 
 The package version advances from `0.1.0` to `0.2.0` when the V1 application
 contract is released.
@@ -503,8 +654,9 @@ Required suites include:
 
 ## 21. Feature Governance
 
-Feature 019 gets a complete Spec Kit directory so project-completion counts no
-longer stop at 017:
+Feature 019 gets a complete Spec Kit package before implementation. While tasks
+remain open it lives below `specs/_drafts/` so the frozen completed baseline is
+not misreported. Final closure moves it atomically to:
 
 ```text
 specs/019-bazi-domain-validation-and-application-v1/
@@ -541,4 +693,3 @@ Feature 019 is complete only when:
    or stricter.
 8. The complete repository test suite and final read-only release commands
    pass from a clean worktree.
-
