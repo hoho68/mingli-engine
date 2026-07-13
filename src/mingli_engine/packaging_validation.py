@@ -38,6 +38,8 @@ EXPECTED_RUNTIME_JSON_ASSETS = (
     "data/domain_calibration/input_fixtures.json",
     "data/domain_calibration/reviewer_a_assignments.json",
     "data/domain_calibration/reviewer_a_reviews.json",
+    "data/domain_calibration/reviewer_b_assignments.json",
+    "data/domain_calibration/reviewer_b_reviews.json",
     "data/domain_calibration/reviewer_packets.json",
     "data/extraction_queue_intake/candidate_draft_slots.json",
     "data/extraction_queue_intake/extraction_tasks.json",
