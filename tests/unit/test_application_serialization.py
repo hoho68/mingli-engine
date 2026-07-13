@@ -1,5 +1,6 @@
 import json
 import math
+from copy import deepcopy
 from dataclasses import dataclass, fields, replace
 from datetime import datetime
 from pathlib import Path
@@ -158,6 +159,47 @@ def _non_ok_response(
         privacy=_privacy(),
         error=_error(code),
     )
+
+
+def _canonical_bytes(payload: dict[str, Any]) -> bytes:
+    return json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+
+
+def _valid_analysis_mapping(chart: BaziChart) -> dict[str, Any]:
+    calculation = _calculation(chart)
+    return serialize_response_mapping(
+        _ok_response(
+            result=ApplicationAnalysisResultV1(
+                serialize_chart(chart),
+                serialize_calculation_bundle(calculation),
+            )
+        )
+    )
+
+
+def _valid_report_mapping(chart: BaziChart) -> dict[str, Any]:
+    calculation = _calculation(chart)
+    report = build_report(chart, calculation)
+    return serialize_response_mapping(
+        _ok_response(
+            operation="report",
+            result=ApplicationReportResultV1(serialize_report(report), None),
+        )
+    )
+
+
+def _mapping_at(root: dict[str, Any], path: tuple[object, ...]) -> dict[str, Any]:
+    current: Any = root
+    for part in path:
+        current = current[part]
+    assert isinstance(current, dict)
+    return current
 
 
 def test_chart_serializer_has_exact_public_shape_without_birth_profile(
@@ -592,11 +634,14 @@ def test_non_ok_response_matrix_serializes_every_required_value(
     assert payload["error"] == serialize_application_error(response.error)
 
 
-def test_response_json_is_deterministic_utf8_sorted_compact_and_rejects_nan() -> None:
+def test_response_json_is_deterministic_utf8_sorted_compact_and_rejects_nan(
+    calculated_bazi_chart: BaziChart,
+) -> None:
+    calculation = serialize_calculation_bundle(_calculation(calculated_bazi_chart))
     response = _ok_response(
         result=ApplicationAnalysisResultV1(
-            chart={"z": "命", "a": "理"},
-            calculation={"nested": {"z": 2, "a": 1}},
+            chart=serialize_chart(calculated_bazi_chart),
+            calculation=calculation,
         )
     )
 
@@ -611,11 +656,16 @@ def test_response_json_is_deterministic_utf8_sorted_compact_and_rejects_nan() ->
         separators=(",", ":"),
         allow_nan=False,
     ).encode("utf-8")
-    assert "命".encode() in first
-    assert first.index(b'"a"') < first.index(b'"z"')
+    assert calculated_bazi_chart.day_master.encode() in first
+    assert b'"chart":{"chart_source":' in first
 
+    non_finite_calculation = deepcopy(calculation)
+    non_finite_calculation["strength"]["score"] = math.nan
     non_finite = _ok_response(
-        result=ApplicationAnalysisResultV1({}, {"score": math.nan})
+        result=ApplicationAnalysisResultV1(
+            serialize_chart(calculated_bazi_chart),
+            non_finite_calculation,
+        )
     )
     with pytest.raises(ValueError, match="JSON compliant"):
         serialize_response(non_finite)
@@ -637,10 +687,16 @@ def test_response_serializer_enforces_one_mib_limit_without_fallback() -> None:
         serialize_response(response)
 
 
-def test_response_status_reader_accepts_only_canonical_valid_internal_envelopes() -> (
-    None
-):
-    response = _ok_response()
+def test_response_status_reader_accepts_only_canonical_valid_internal_envelopes(
+    calculated_bazi_chart: BaziChart,
+) -> None:
+    payload_mapping = _valid_analysis_mapping(calculated_bazi_chart)
+    response = _ok_response(
+        result=ApplicationAnalysisResultV1(
+            payload_mapping["result"]["chart"],
+            payload_mapping["result"]["calculation"],
+        )
+    )
     payload = serialize_response(response)
 
     assert response_status_from_json_bytes(payload) == "ok"
@@ -707,3 +763,288 @@ def test_response_status_reader_rejects_illegal_error_matrix() -> None:
 
     with pytest.raises(ValueError, match="invalid internal response envelope"):
         response_status_from_json_bytes(invalid)
+
+
+def test_response_status_reader_accepts_all_complete_internal_envelope_variants(
+    calculated_bazi_chart: BaziChart,
+) -> None:
+    analysis_mapping = _valid_analysis_mapping(calculated_bazi_chart)
+    report_mapping = _valid_report_mapping(calculated_bazi_chart)
+    responses = (
+        _ok_response(
+            result=ApplicationAnalysisResultV1(
+                analysis_mapping["result"]["chart"],
+                analysis_mapping["result"]["calculation"],
+            )
+        ),
+        _ok_response(
+            operation="report",
+            result=ApplicationReportResultV1(
+                report_mapping["result"]["report"],
+                None,
+            ),
+        ),
+        _ok_response(
+            operation="report",
+            result=ApplicationReportResultV1(
+                None,
+                ApplicationContentV1("text/html", "<p>Report</p>", False),
+            ),
+        ),
+        _non_ok_response(
+            operation=None,
+            status="error",
+            safety=_safety("not_evaluated"),
+            code="invalid_json",
+        ),
+        _non_ok_response(
+            operation="analysis",
+            status="refused",
+            safety=_safety(
+                "authorization_required",
+                categories=("authorization",),
+                redirect_message=(
+                    "Provide a true self-use or authorized-other attestation."
+                ),
+            ),
+            code="authorization_required",
+        ),
+        _non_ok_response(
+            operation="report",
+            status="refused",
+            safety=_safety(
+                "unsafe_request",
+                categories=("professional_advice",),
+                redirect_message="Use a qualified professional.",
+                requires_narrowing=True,
+            ),
+            code="unsafe_request",
+        ),
+        _non_ok_response(
+            operation="analysis",
+            status="error",
+            safety=_safety("error"),
+            code="internal_error",
+        ),
+    )
+
+    for response in responses:
+        payload = serialize_response(response)
+        assert response_status_from_json_bytes(payload) == response.status
+
+
+@pytest.mark.parametrize(
+    "invalid_trace_id",
+    [
+        "not-a-uuid",
+        "00000000-0000-0000-0000-000000000000",
+        "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        "550E8400-E29B-41D4-A716-446655440000",
+        "{550e8400-e29b-41d4-a716-446655440000}",
+    ],
+)
+def test_response_status_reader_rejects_noncanonical_non_v4_trace_ids(
+    calculated_bazi_chart: BaziChart,
+    invalid_trace_id: str,
+) -> None:
+    payload = _valid_analysis_mapping(calculated_bazi_chart)
+    payload["trace_id"] = invalid_trace_id
+
+    with pytest.raises(ValueError, match="invalid internal response envelope"):
+        response_status_from_json_bytes(_canonical_bytes(payload))
+
+
+@pytest.mark.parametrize(
+    "invalid_trace_id",
+    ["not-a-uuid", "6ba7b810-9dad-11d1-80b4-00c04fd430c8"],
+)
+def test_response_status_reader_rejects_invalid_error_trace_uuid_even_when_matching(
+    invalid_trace_id: str,
+) -> None:
+    payload = serialize_response_mapping(
+        _non_ok_response(
+            operation=None,
+            status="error",
+            safety=_safety("not_evaluated"),
+            code="invalid_json",
+        )
+    )
+    payload["trace_id"] = invalid_trace_id
+    payload["error"]["trace_id"] = invalid_trace_id
+
+    with pytest.raises(ValueError, match="invalid internal response envelope"):
+        response_status_from_json_bytes(_canonical_bytes(payload))
+
+
+def test_response_status_reader_rejects_empty_missing_and_extra_public_structures(
+    calculated_bazi_chart: BaziChart,
+) -> None:
+    analysis = _valid_analysis_mapping(calculated_bazi_chart)
+    report = _valid_report_mapping(calculated_bazi_chart)
+    cases = (
+        ("empty-chart", analysis, ("result", "chart"), "empty", ""),
+        ("missing-chart", analysis, ("result", "chart"), "missing", "day_master"),
+        ("extra-chart", analysis, ("result", "chart"), "extra", "private"),
+        (
+            "empty-calculation",
+            analysis,
+            ("result", "calculation"),
+            "empty",
+            "",
+        ),
+        (
+            "missing-calculation",
+            analysis,
+            ("result", "calculation"),
+            "missing",
+            "facts",
+        ),
+        (
+            "extra-calculation",
+            analysis,
+            ("result", "calculation"),
+            "extra",
+            "private",
+        ),
+        ("empty-report", report, ("result", "report"), "empty", ""),
+        ("missing-report", report, ("result", "report"), "missing", "title"),
+        ("extra-report", report, ("result", "report"), "extra", "private"),
+    )
+
+    for _case_id, source, path, mutation, key in cases:
+        payload = deepcopy(source)
+        target = _mapping_at(payload, path)
+        if mutation == "empty":
+            target.clear()
+        elif mutation == "missing":
+            target.pop(key)
+        else:
+            target[key] = "INTERNAL_PRIVATE_VALUE"
+
+        with pytest.raises(ValueError, match="invalid internal response envelope"):
+            response_status_from_json_bytes(_canonical_bytes(payload))
+
+
+def test_response_status_reader_recursively_validates_public_result_structures(
+    calculated_bazi_chart: BaziChart,
+) -> None:
+    analysis = _valid_analysis_mapping(calculated_bazi_chart)
+    report = _valid_report_mapping(calculated_bazi_chart)
+    cases = (
+        (analysis, ("result", "chart", "chart_source"), "source_type"),
+        (analysis, ("result", "chart", "pillars", 0), "gan_zhi"),
+        (analysis, ("result", "calculation", "facts"), "day_master"),
+        (
+            analysis,
+            ("result", "calculation", "facts", "exposed_stems", 0),
+            "ten_god",
+        ),
+        (
+            analysis,
+            ("result", "calculation", "strength", "reasoning"),
+            "status",
+        ),
+        (report, ("result", "report", "report_evidence_audit"), "audit_status"),
+        (report, ("result", "report", "knowledge_activation"), "activation_status"),
+        (report, ("result", "report", "safety_review"), "allowed"),
+        (
+            report,
+            (
+                "result",
+                "report",
+                "expanded_evidence",
+                "formal_conclusions",
+                0,
+                "trace",
+            ),
+            "trace_id",
+        ),
+    )
+
+    for source, path, key in cases:
+        missing = deepcopy(source)
+        _mapping_at(missing, path).pop(key)
+        extra = deepcopy(source)
+        _mapping_at(extra, path)["private"] = "INTERNAL_PRIVATE_VALUE"
+
+        for payload in (missing, extra):
+            with pytest.raises(
+                ValueError,
+                match="invalid internal response envelope",
+            ):
+                response_status_from_json_bytes(_canonical_bytes(payload))
+
+
+def test_response_status_reader_rejects_public_result_value_type_mismatches(
+    calculated_bazi_chart: BaziChart,
+) -> None:
+    analysis = _valid_analysis_mapping(calculated_bazi_chart)
+    report = _valid_report_mapping(calculated_bazi_chart)
+    cases: tuple[
+        tuple[dict[str, Any], tuple[object, ...], str, object], ...
+    ] = (
+        (analysis, ("result", "chart"), "day_master", 1),
+        (analysis, ("result", "chart", "chart_source"), "confidence", False),
+        (analysis, ("result", "calculation"), "engine_version", []),
+        (analysis, ("result", "calculation", "strength"), "score", "high"),
+        (report, ("result", "report"), "title", []),
+        (report, ("result", "report", "safety_review"), "allowed", 1),
+    )
+
+    for source, path, key, invalid_value in cases:
+        payload = deepcopy(source)
+        _mapping_at(payload, path)[key] = invalid_value
+
+        with pytest.raises(ValueError, match="invalid internal response envelope"):
+            response_status_from_json_bytes(_canonical_bytes(payload))
+
+
+def test_response_status_reader_rejects_operation_result_schema_mismatches(
+    calculated_bazi_chart: BaziChart,
+) -> None:
+    analysis = _valid_analysis_mapping(calculated_bazi_chart)
+    report = _valid_report_mapping(calculated_bazi_chart)
+    analysis["result"] = report["result"]
+    report["result"] = _valid_analysis_mapping(calculated_bazi_chart)["result"]
+
+    for payload in (analysis, report):
+        with pytest.raises(ValueError, match="invalid internal response envelope"):
+            response_status_from_json_bytes(_canonical_bytes(payload))
+
+
+def test_response_status_reader_rejects_nested_envelope_key_and_type_anomalies(
+    calculated_bazi_chart: BaziChart,
+) -> None:
+    success = _valid_analysis_mapping(calculated_bazi_chart)
+    failure = serialize_response_mapping(
+        _non_ok_response(
+            operation=None,
+            status="error",
+            safety=_safety("not_evaluated"),
+            code="invalid_json",
+        )
+    )
+    cases = (
+        (success, ("provenance",), "engine_version", 1),
+        (success, ("provenance",), "private", "extra"),
+        (success, ("safety",), "allowed", 1),
+        (success, ("safety",), "private", "extra"),
+        (success, ("privacy",), "contains_sensitive_profile", 0),
+        (success, ("privacy",), "private", "extra"),
+        (success, ("warnings", 0), "code", False),
+        (success, ("warnings", 0), "private", "extra"),
+        (failure, ("error",), "retryable", 0),
+        (failure, ("error",), "private", "extra"),
+    )
+
+    for source, path, key, invalid_value in cases:
+        payload = deepcopy(source)
+        _mapping_at(payload, path)[key] = invalid_value
+
+        with pytest.raises(ValueError, match="invalid internal response envelope"):
+            response_status_from_json_bytes(_canonical_bytes(payload))
+
+
+def test_response_serializer_rejects_incomplete_internal_result_mapping() -> None:
+    with pytest.raises(ValueError, match="invalid internal response envelope"):
+        serialize_response(_ok_response())
