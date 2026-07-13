@@ -380,6 +380,81 @@ def test_malformed_direct_url_editable_metadata_fails_closed(
     assert result.overall_status == "failed"
 
 
+@pytest.mark.parametrize(
+    "direct_url",
+    (
+        '{"url":"file:///tmp/mingli.whl","archive_info":{}}',
+        (
+            '{"url":"https://example.com/mingli.whl","archive_info":'
+            '{"hash":"sha256=0123456789abcdef"}}'
+        ),
+        (
+            '{"url":"https://example.com/repo.git","vcs_info":'
+            '{"vcs":"git","requested_revision":"main",'
+            '"commit_id":"0123456789abcdef"},"subdirectory":"package"}'
+        ),
+        '{"url":"file:///tmp/source","dir_info":{"editable":false}}',
+    ),
+)
+def test_valid_pep610_direct_url_metadata_is_accepted(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    direct_url: str,
+) -> None:
+    installed_root, package_root = _copy_package_data(tmp_path)
+    distribution = _InstalledDistribution(
+        installed_root,
+        package_root,
+        direct_url=direct_url,
+    )
+    _patch_isolated_distribution(monkeypatch, package_root, distribution)
+
+    result = packaging_validation.build_packaging_verification()
+
+    assert result.source_isolated is True
+    assert result.overall_status == "verified"
+
+
+@pytest.mark.parametrize(
+    "direct_url",
+    (
+        (
+            '{"url":"file:///tmp/mingli.whl","archive_info":{},'
+            '"dir_info":{"editable":false}}'
+        ),
+        '{"url":"file:///tmp/mingli.whl","wheel_info":{}}',
+        (
+            '{"url":"file:///tmp/mingli.whl","archive_info":'
+            '{"unknown":"value"}}'
+        ),
+        '{"url":"relative/path.whl","archive_info":{}}',
+        (
+            '{"url":"https://user:secret@example.com/mingli.whl",'
+            '"archive_info":{}}'
+        ),
+        '{"url":"file://","archive_info":{}}',
+        '{"dir_info":{"editable":false}}',
+    ),
+)
+def test_unknown_conflicting_or_invalid_pep610_metadata_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    direct_url: str,
+) -> None:
+    installed_root, package_root = _copy_package_data(tmp_path)
+    distribution = _InstalledDistribution(
+        installed_root,
+        package_root,
+        direct_url=direct_url,
+    )
+    _patch_isolated_distribution(monkeypatch, package_root, distribution)
+
+    result = packaging_validation.build_packaging_verification()
+
+    assert result.source_isolated is False
+    assert result.overall_status == "failed"
+
+
 def test_record_must_cover_every_runtime_json(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,

@@ -11,9 +11,14 @@ from pathlib import Path
 import re
 import sys
 from typing import Iterator
+from urllib.parse import urlsplit
 
 
 _DISTRIBUTION_NAME = "mingli-engine"
+_DIRECT_URL_INFO_KEYS = frozenset({"archive_info", "vcs_info", "dir_info"})
+_DIRECT_URL_KEYS = _DIRECT_URL_INFO_KEYS | {"url", "subdirectory"}
+_ARCHIVE_HASH_PATTERN = re.compile(r"^[A-Za-z0-9_+.-]+=[A-Fa-f0-9]+$")
+_VCS_NAME_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*$")
 _VERSION_PATTERN = re.compile(
     r"^[0-9]+(?:\.[0-9]+)*(?:(?:a|b|rc)[0-9]+)?"
     r"(?:\.post[0-9]+)?(?:\.dev[0-9]+)?"
@@ -190,6 +195,95 @@ def _contains_dist_info_file(paths: frozenset[str], filename: str) -> bool:
     return any(path.endswith(f".dist-info/{filename}") for path in paths)
 
 
+def _valid_text(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and bool(value)
+        and value == value.strip()
+        and not any(character.isspace() or ord(character) < 32 for character in value)
+    )
+
+
+def _valid_direct_url_value(value: object) -> bool:
+    if not _valid_text(value):
+        return False
+    assert isinstance(value, str)
+    if re.search(r"%(?![0-9A-Fa-f]{2})", value):
+        return False
+    try:
+        parsed = urlsplit(value)
+        parsed.port
+    except ValueError:
+        return False
+    if not parsed.scheme or parsed.username is not None or parsed.password is not None:
+        return False
+    if parsed.scheme.lower() == "file":
+        return parsed.netloc in {"", "localhost"} and bool(parsed.path)
+    return bool(parsed.netloc)
+
+
+def _valid_subdirectory(value: object) -> bool:
+    if not _valid_text(value):
+        return False
+    assert isinstance(value, str)
+    parts = value.split("/")
+    return (
+        not value.startswith("/")
+        and "\\" not in value
+        and all(part not in {"", ".", ".."} for part in parts)
+    )
+
+
+def _valid_archive_info(value: object) -> bool:
+    if not isinstance(value, dict) or not set(value).issubset({"hash", "hashes"}):
+        return False
+    archive_hash = value.get("hash")
+    hashes = value.get("hashes")
+    if archive_hash is not None and hashes is not None:
+        return False
+    if archive_hash is not None:
+        return isinstance(archive_hash, str) and bool(
+            _ARCHIVE_HASH_PATTERN.fullmatch(archive_hash)
+        )
+    if hashes is None:
+        return True
+    return (
+        isinstance(hashes, dict)
+        and bool(hashes)
+        and all(
+            isinstance(algorithm, str)
+            and bool(_VCS_NAME_PATTERN.fullmatch(algorithm))
+            and isinstance(digest, str)
+            and bool(re.fullmatch(r"[A-Fa-f0-9]+", digest))
+            for algorithm, digest in hashes.items()
+        )
+    )
+
+
+def _valid_vcs_info(value: object) -> bool:
+    if not isinstance(value, dict):
+        return False
+    if not {"vcs", "commit_id"}.issubset(value) or not set(value).issubset(
+        {"vcs", "commit_id", "requested_revision"}
+    ):
+        return False
+    vcs = value["vcs"]
+    if not isinstance(vcs, str) or not _VCS_NAME_PATTERN.fullmatch(vcs):
+        return False
+    if not _valid_text(value["commit_id"]):
+        return False
+    return "requested_revision" not in value or _valid_text(
+        value["requested_revision"]
+    )
+
+
+def _valid_dir_info(value: object) -> bool:
+    if not isinstance(value, dict) or set(value) != {"editable"}:
+        return False
+    editable = value["editable"]
+    return isinstance(editable, bool) and editable is False
+
+
 def _valid_direct_url(distribution: metadata.Distribution) -> bool:
     direct_url = distribution.read_text("direct_url.json")
     if direct_url is None:
@@ -198,13 +292,26 @@ def _valid_direct_url(distribution: metadata.Distribution) -> bool:
         payload = json.loads(direct_url)
     except (TypeError, ValueError):
         return False
-    if not isinstance(payload, dict):
+    if (
+        not isinstance(payload, dict)
+        or not set(payload).issubset(_DIRECT_URL_KEYS)
+        or not _valid_direct_url_value(payload.get("url"))
+    ):
         return False
-    dir_info = payload.get("dir_info")
-    if not isinstance(dir_info, dict) or "editable" not in dir_info:
+    if "subdirectory" in payload and not _valid_subdirectory(
+        payload["subdirectory"]
+    ):
         return False
-    editable = dir_info["editable"]
-    return isinstance(editable, bool) and editable is False
+    present_info_keys = _DIRECT_URL_INFO_KEYS.intersection(payload)
+    if len(present_info_keys) != 1:
+        return False
+    info_key = next(iter(present_info_keys))
+    validators = {
+        "archive_info": _valid_archive_info,
+        "vcs_info": _valid_vcs_info,
+        "dir_info": _valid_dir_info,
+    }
+    return validators[info_key](payload[info_key])
 
 
 def _valid_wheel_metadata(
