@@ -38,6 +38,13 @@ def _payload_with_attested_number(number: bytes) -> bytes:
     return payload.replace(marker, b'"attested":' + number)
 
 
+def _payload_with_focus_json_string(encoded_string: bytes) -> bytes:
+    payload = _encode(_mapping())
+    marker = b'"focus_topic":"traditional structural overview"'
+    assert marker in payload
+    return payload.replace(marker, b'"focus_topic":' + encoded_string)
+
+
 def _error(
     payload: bytes,
     code: str,
@@ -185,12 +192,136 @@ def test_finite_floats_pass_json_validation_before_strict_field_types(
     assert raw_value not in repr(error)
 
 
+def test_json_integer_digit_limit_is_explicit() -> None:
+    assert application_inputs.MAX_JSON_INTEGER_DIGITS == 128
+
+
+@pytest.mark.parametrize("sign", [b"", b"-"])
+def test_integer_at_digit_limit_reaches_strict_field_types(sign: bytes) -> None:
+    number = sign + (b"9" * 128)
+
+    error = _error(
+        _payload_with_attested_number(number),
+        "invalid_request",
+        "$.authorization.attested",
+    )
+    raw_value = number.decode("ascii")
+    assert raw_value not in str(error)
+    assert raw_value not in repr(error)
+
+
+@pytest.mark.parametrize("sign", [b"", b"-"])
+def test_integer_above_digit_limit_is_invalid_json(sign: bytes) -> None:
+    number = sign + (b"9" * 129)
+
+    error = _error(
+        _payload_with_attested_number(number),
+        "invalid_json",
+        None,
+    )
+    raw_value = number.decode("ascii")
+    assert raw_value not in str(error)
+    assert raw_value not in repr(error)
+
+
+@pytest.mark.parametrize("exception_type", [ValueError, OverflowError])
+def test_json_decoder_numeric_errors_are_stable_invalid_json(
+    monkeypatch: pytest.MonkeyPatch,
+    exception_type: type[Exception],
+) -> None:
+    def raise_numeric_error(*_args: object, **_kwargs: object) -> object:
+        raise exception_type("private numeric parser detail")
+
+    monkeypatch.setattr(application_inputs.json, "loads", raise_numeric_error)
+
+    error = _error(b"{}", "invalid_json", None)
+    assert "private numeric parser detail" not in str(error)
+    assert "private numeric parser detail" not in repr(error)
+
+
+@pytest.mark.parametrize(
+    "encoded_string",
+    [b'"\\ud800"', b'"\\udabc"', b'"\\udfff"'],
+)
+def test_escaped_surrogates_are_invalid_request_without_echo(
+    encoded_string: bytes,
+) -> None:
+    error = _error(
+        _payload_with_focus_json_string(encoded_string),
+        "invalid_request",
+        "$",
+    )
+    raw_value = encoded_string.decode("ascii")
+    assert raw_value not in str(error)
+    assert raw_value not in repr(error)
+
+
+def test_escaped_surrogate_pair_decodes_to_normal_non_bmp_unicode() -> None:
+    request = parse_real_use_request(
+        _payload_with_focus_json_string(b'"\\ud83d\\ude00"')
+    )
+
+    assert request.profile.focus_topic == "\U0001f600"
+
+
+def test_surrogate_in_object_key_is_rejected_before_schema_validation() -> None:
+    payload = _encode(_mapping())
+    marker = b'"focus_topic":'
+    assert marker in payload
+    payload = payload.replace(marker, b'"\\ud800":', 1)
+
+    _error(payload, "invalid_request", "$")
+
+
+def test_direct_utf8_surrogate_encoding_is_invalid_json_without_echo() -> None:
+    encoded_surrogate = b"\xed\xa0\x80"
+    payload = _payload_with_focus_json_string(b'"' + encoded_surrogate + b'"')
+
+    error = _error(payload, "invalid_json", None)
+    assert repr(encoded_surrogate) not in str(error)
+    assert repr(encoded_surrogate) not in repr(error)
+
+
+def test_normal_non_bmp_unicode_is_preserved() -> None:
+    payload = _mapping()
+    focus_topic = "traditional structure \U0001f600"
+    payload["profile"]["focus_topic"] = focus_topic
+
+    request = parse_real_use_request(_encode(payload))
+
+    assert request.profile.focus_topic == focus_topic
+
+
 def test_rejects_json_nesting_depth_above_eight() -> None:
     nested: object = 0
     for _ in range(9):
         nested = [nested]
 
     _error(_encode(nested), "invalid_json", "$")
+
+
+def test_json_depth_eight_reaches_field_validation() -> None:
+    payload = _mapping()
+    nested: object = 0
+    for _ in range(6):
+        nested = [nested]
+    payload["profile"]["focus_topic"] = nested
+
+    _error(
+        _encode(payload),
+        "invalid_request",
+        "$.profile.focus_topic",
+    )
+
+
+def test_json_depth_nine_is_rejected_before_field_validation() -> None:
+    payload = _mapping()
+    nested: object = 0
+    for _ in range(7):
+        nested = [nested]
+    payload["profile"]["focus_topic"] = nested
+
+    _error(_encode(payload), "invalid_json", "$")
 
 
 def test_deep_small_json_never_leaks_recursion_error_or_inner_value() -> None:

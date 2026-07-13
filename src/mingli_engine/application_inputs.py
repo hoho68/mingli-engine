@@ -21,6 +21,7 @@ from mingli_engine.application_models import (
 
 MAX_REQUEST_BYTES = 32 * 1024
 MAX_JSON_DEPTH = 8
+MAX_JSON_INTEGER_DIGITS = 128
 
 _ROOT_FIELDS = (
     "schema_version",
@@ -113,6 +114,16 @@ def _parse_finite_float(value: str) -> float:
     return parsed
 
 
+def _parse_bounded_int(value: str) -> int:
+    digits = value[1:] if value.startswith("-") else value
+    if len(digits) > MAX_JSON_INTEGER_DIGITS:
+        raise _StrictJsonError from None
+    try:
+        return int(value)
+    except (OverflowError, ValueError):
+        raise _StrictJsonError from None
+
+
 def _parse_json(payload: bytes) -> object:
     if len(payload) > MAX_REQUEST_BYTES:
         raise ApplicationInputError("payload_too_large", None)
@@ -126,11 +137,13 @@ def _parse_json(payload: bytes) -> object:
             object_pairs_hook=_reject_duplicate_keys,
             parse_constant=_reject_non_finite,
             parse_float=_parse_finite_float,
+            parse_int=_parse_bounded_int,
         )
-    except (json.JSONDecodeError, _StrictJsonError, RecursionError):
+    except (OverflowError, RecursionError, ValueError):
         raise ApplicationInputError("invalid_json", None) from None
     if _json_depth(value) > MAX_JSON_DEPTH:
         raise ApplicationInputError("invalid_json", "$")
+    _reject_json_surrogates(value)
     return value
 
 
@@ -148,6 +161,20 @@ def _json_depth(value: object) -> int:
             maximum = max(maximum, depth)
             pending.extend((item, depth) for item in current)
     return maximum
+
+
+def _reject_json_surrogates(value: object) -> None:
+    pending = [value]
+    while pending:
+        current = pending.pop()
+        if isinstance(current, str):
+            if any("\ud800" <= character <= "\udfff" for character in current):
+                raise ApplicationInputError("invalid_request", "$")
+        elif isinstance(current, dict):
+            pending.extend(current.keys())
+            pending.extend(current.values())
+        elif isinstance(current, list):
+            pending.extend(current)
 
 
 def _require_object(value: object, field_path: str) -> dict[str, object]:
