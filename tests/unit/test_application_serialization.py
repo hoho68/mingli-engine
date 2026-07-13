@@ -262,7 +262,18 @@ def test_calculation_serializer_covers_complete_public_bundle(
     calculation = _calculation(calculated_bazi_chart)
     payload = serialize_calculation_bundle(calculation)
 
-    assert set(payload) == {field.name for field in fields(CalculationBundle)}
+    assert set(payload) == {
+        "engine_version",
+        "ruleset_version",
+        "facts",
+        "branch_relations",
+        "strength",
+        "patterns",
+        "useful_gods",
+        "luck_cycles",
+        "schools",
+    }
+    assert {"taboo_gods", "blind_images", "remedy_boundary"}.isdisjoint(payload)
     assert set(payload["facts"]) == {
         "day_master",
         "month_branch",

@@ -154,6 +154,9 @@ def test_result_model_fields_match_the_calculation_protocol():
             "useful_gods",
             "luck_cycles",
             "schools",
+            "taboo_gods",
+            "blind_images",
+            "remedy_boundary",
         ),
     }
 

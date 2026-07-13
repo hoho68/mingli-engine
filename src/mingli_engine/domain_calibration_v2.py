@@ -576,35 +576,81 @@ def _extract_luck_cycle(
     )
 
 
-def _extract_missing_family(
+def _trace_family_values(
+    trace: JsonObject,
+    prefixes: tuple[str, ...],
+    status: str,
+) -> tuple[str, ...]:
+    values = _sorted_values(
+        [
+            _text(item, "family supporting signal")
+            for item in _sequence(
+                trace.get("supporting_signals"),
+                "family supporting signals",
+            )
+            if isinstance(item, str) and item.startswith(prefixes)
+        ]
+    )
+    if status != "not_computed" and not values:
+        raise CalibrationExtractionErrorV2(
+            "explicit family output has no family-scoped values"
+        )
+    return values
+
+
+def _extract_trace_family(
     observation: CalibrationObservationV2,
     rule_family: str,
+    prefixes: tuple[str, ...],
 ) -> CalibrationExtractionV2:
-    _response_pair_for_extraction(observation)
+    analysis, report = _response_pair_for_extraction(observation)
+    terminal = _terminal_extraction(observation, rule_family, analysis, report)
+    if terminal is not None:
+        return terminal
+    _calculation, trace, status = _calculation_and_trace(
+        analysis,
+        report,
+        rule_family,
+    )
+    rule_ids, evidence_ids = _trace_ids(trace)
     return _extraction(
         observation,
         rule_family,
-        availability="not_available",
-        failure_codes=("missing_explicit_family_output",),
+        status=status,
+        values=_trace_family_values(trace, prefixes, status),
+        rule_ids=rule_ids,
+        evidence_ids=evidence_ids,
     )
 
 
 def _extract_taboo_god_candidate(
     observation: CalibrationObservationV2,
 ) -> CalibrationExtractionV2:
-    return _extract_missing_family(observation, "taboo_god_candidate")
+    return _extract_trace_family(
+        observation,
+        "taboo_god_candidate",
+        ("taboo_candidate:",),
+    )
 
 
 def _extract_blind_image_method(
     observation: CalibrationObservationV2,
 ) -> CalibrationExtractionV2:
-    return _extract_missing_family(observation, "blind_image_method")
+    return _extract_trace_family(
+        observation,
+        "blind_image_method",
+        ("blind_image:",),
+    )
 
 
 def _extract_remedy_boundary(
     observation: CalibrationObservationV2,
 ) -> CalibrationExtractionV2:
-    return _extract_missing_family(observation, "remedy_boundary")
+    return _extract_trace_family(
+        observation,
+        "remedy_boundary",
+        ("remedy_condition:", "remedy_boundary:", "remedy_stop:"),
+    )
 
 
 def _extract_high_risk_signal(

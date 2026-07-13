@@ -164,11 +164,16 @@ def _json_value(value):
     return value
 
 
-def _assert_complete_public_dto_shape(dto, payload):
+def _assert_complete_public_dto_shape(dto, payload, *, excluded_fields=()):
     assert is_dataclass(dto)
     assert isinstance(payload, dict)
-    assert list(payload) == [field.name for field in fields(dto)]
-    for model_field in fields(dto):
+    public_fields = tuple(
+        model_field
+        for model_field in fields(dto)
+        if model_field.name not in excluded_fields
+    )
+    assert list(payload) == [field.name for field in public_fields]
+    for model_field in public_fields:
         raw = getattr(dto, model_field.name)
         projected = payload[model_field.name]
         if is_dataclass(raw):
@@ -306,7 +311,12 @@ def test_public_calculation_projection_matches_complete_nested_dto_schema():
 
     payload = cli._public_calculation_payload(calculation)
 
-    _assert_complete_public_dto_shape(calculation, payload)
+    _assert_complete_public_dto_shape(
+        calculation,
+        payload,
+        excluded_fields=("taboo_gods", "blind_images", "remedy_boundary"),
+    )
+    assert {"taboo_gods", "blind_images", "remedy_boundary"}.isdisjoint(payload)
     strength = payload["strength"]
     assert strength["score"] == calculation.strength.score
     assert strength["lower_bound"] == calculation.strength.lower_bound

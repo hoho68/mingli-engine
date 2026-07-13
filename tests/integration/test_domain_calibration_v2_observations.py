@@ -29,13 +29,11 @@ AVAILABLE_FAMILIES = (
     "pattern_strength",
     "five_element_balance",
     "useful_god_candidate",
+    "taboo_god_candidate",
     "ten_god_relation",
     "branch_interaction",
-    "luck_cycle",
-)
-MISSING_FAMILIES = (
-    "taboo_god_candidate",
     "blind_image_method",
+    "luck_cycle",
     "remedy_boundary",
 )
 
@@ -271,17 +269,20 @@ def test_available_family_extractors_use_real_analysis_and_formal_trace(
     assert all("required-sentinel" not in value for value in extraction.actual_rule_ids)
 
 
-@pytest.mark.parametrize("rule_family", MISSING_FAMILIES)
-def test_missing_explicit_family_outputs_never_borrow_other_family_results(
+@pytest.mark.parametrize(
+    "rule_family",
+    ("taboo_god_candidate", "blind_image_method", "remedy_boundary"),
+)
+def test_new_explicit_family_outputs_are_available_without_borrowing(
     rule_family: str,
 ) -> None:
     extraction = extract_calibration_family_v2(_collect(), rule_family)
-    assert extraction.availability == "not_available"
-    assert extraction.actual_status == "not_computed"
-    assert extraction.actual_values == ()
-    assert extraction.actual_rule_ids == ()
-    assert extraction.actual_evidence_ids == ()
-    assert extraction.failure_codes == ("missing_explicit_family_output",)
+    assert extraction.availability == "available"
+    assert extraction.actual_status in {"computed", "indeterminate", "disputed"}
+    assert extraction.actual_values
+    assert extraction.actual_rule_ids
+    assert extraction.actual_evidence_ids
+    assert extraction.failure_codes == ()
 
 
 def test_ordinary_high_risk_extraction_uses_explicit_not_computed_trace() -> None:
@@ -353,7 +354,7 @@ def test_empty_family_conclusion_set_fails_closed() -> None:
 
 @pytest.mark.parametrize(
     "rule_family",
-    (*AVAILABLE_FAMILIES, *MISSING_FAMILIES, "high_risk_signal"),
+    (*AVAILABLE_FAMILIES, "high_risk_signal"),
 )
 def test_repeated_extraction_is_fully_deterministic(rule_family: str) -> None:
     observation = _collect()

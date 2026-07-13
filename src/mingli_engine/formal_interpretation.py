@@ -31,7 +31,7 @@ _SCHOOL_DISAGREEMENT_RULE_IDS = {
     "useful_god_candidate": (
         "school.cross_school_disagreement.useful_god_preferences"
     ),
-    "remedy_boundary": "school.cross_school_disagreement.useful_god_preferences",
+    "remedy_boundary": "remedy.boundary.school_disagreement",
 }
 
 
@@ -193,21 +193,22 @@ def _family_reasoning(
             reasonings += tuple(item.reasoning for item in calculation.patterns)
             reasonings += _school_reasonings(calculation, "pattern_preferences")
         return _aggregate_reasoning(rule_family, reasonings)
-    if rule_family in {"useful_god_candidate", "remedy_boundary"}:
+    if rule_family == "useful_god_candidate":
         reasonings = tuple(item.reasoning for item in calculation.useful_gods)
         reasonings += _school_reasonings(calculation, "useful_god_preferences")
         return _aggregate_reasoning(rule_family, reasonings)
+    if rule_family == "taboo_god_candidate":
+        return calculation.taboo_gods.reasoning
     if rule_family == "blind_image_method":
-        return _aggregate_reasoning(
-            rule_family,
-            _school_reasonings(calculation),
-        )
+        return calculation.blind_images.reasoning
     if rule_family == "luck_cycle":
         return calculation.luck_cycles.reasoning
     if rule_family == "ten_god_relation":
         return _ten_god_reasoning(calculation)
     if rule_family == "branch_interaction":
         return _branch_interaction_reasoning(calculation)
+    if rule_family == "remedy_boundary":
+        return calculation.remedy_boundary.reasoning
     return _not_computed_reasoning(rule_family)
 
 
@@ -438,10 +439,15 @@ def _school_disagreement_note(
     if calculation is None or calculation_status != "disputed":
         return ""
     disagreement_rule_id = _SCHOOL_DISAGREEMENT_RULE_IDS.get(rule_family)
-    if disagreement_rule_id is None or not any(
+    has_disagreement = any(
         disagreement_rule_id in item.reasoning.rule_ids
         for item in calculation.schools
-    ):
+    ) if disagreement_rule_id is not None else False
+    if rule_family == "remedy_boundary":
+        has_disagreement = (
+            disagreement_rule_id in calculation.remedy_boundary.reasoning.rule_ids
+        )
+    if not has_disagreement:
         return ""
     views = _school_view_signals(calculation, rule_family)
     if not views:
