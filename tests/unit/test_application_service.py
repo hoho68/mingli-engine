@@ -143,9 +143,8 @@ def test_authorized_request_runs_both_safety_checks_before_execution(
     response = service.handle_real_use(_request())
 
     assert events == ["high_risk", "focus_safety", "execution"]
-    assert response.status == "error"
-    assert response.error is not None
-    assert response.error.code == "internal_error"
+    assert response.status == "ok"
+    assert response.error is None
 
 
 def test_authorization_refusal_writes_nothing_logs_nothing_and_uses_no_stderr(

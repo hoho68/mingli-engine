@@ -1,16 +1,28 @@
+from datetime import datetime
+from importlib.metadata import version
 import unicodedata
 from uuid import uuid4
 
 from mingli_engine.application_models import (
     REAL_USE_RESPONSE_SCHEMA_VERSION,
+    ApplicationAnalysisResultV1,
     ApplicationErrorCode,
     ApplicationErrorV1,
     ApplicationPrivacyV1,
+    ApplicationProvenanceV1,
     ApplicationSafetyV1,
     RealUseRequestV1,
     RealUseResponseV1,
 )
+from mingli_engine.application_serialization import (
+    serialize_calculation_bundle,
+    serialize_chart,
+)
+from mingli_engine.bazi import analyze_bazi_chart, validate_calculation_binding
+from mingli_engine.chart_calculator import calculate_bazi_chart
+from mingli_engine.classical_sources import load_approved_evidence_units
 from mingli_engine.high_risk import classify_high_risk_request
+from mingli_engine.models import BirthProfile
 from mingli_engine.safety import safety_check
 
 
@@ -35,6 +47,8 @@ _ABSOLUTE_LANGUAGE_REDIRECT = (
 _UNSAFE_FOCUS_REDIRECT = (
     "Narrow the request to non-predictive traditional analysis that preserves user agency."
 )
+_EVIDENCE_BASELINE_ID = "report_acceptance_v1"
+_PROVIDER_DISTRIBUTION = "lunar-python"
 _SAFE_CONTEXT_MARKERS = (
     "不预测",
     "不看",
@@ -239,8 +253,56 @@ def _execute_authorized_request(
     request: RealUseRequestV1,
     trace_id: str,
 ) -> RealUseResponseV1:
-    # Task 6 replaces this controlled boundary with same-process calculation.
-    return _internal_error(request, trace_id)
+    if request.operation != "analysis":
+        # Task 7 replaces this controlled boundary with report construction.
+        return _internal_error(request, trace_id)
+
+    profile = BirthProfile(
+        calendar_type=request.profile.calendar_type,
+        birth_date=request.profile.birth_date,
+        birth_time=request.profile.birth_time,
+        birthplace=request.profile.birthplace,
+        gender=request.profile.gender,
+        focus_topic=request.profile.focus_topic,
+    )
+    birth_datetime = datetime.fromisoformat(
+        f"{profile.birth_date}T{profile.birth_time}"
+    )
+    chart = calculate_bazi_chart(profile)
+    calculation = analyze_bazi_chart(
+        chart,
+        birth_datetime=birth_datetime,
+    )
+    validate_calculation_binding(chart, calculation)
+    evidence_ids = tuple(
+        sorted(unit.evidence_id for unit in load_approved_evidence_units())
+    )
+
+    return RealUseResponseV1(
+        schema_version=REAL_USE_RESPONSE_SCHEMA_VERSION,
+        trace_id=trace_id,
+        operation="analysis",
+        status="ok",
+        result=ApplicationAnalysisResultV1(
+            chart=serialize_chart(chart),
+            calculation=serialize_calculation_bundle(calculation),
+        ),
+        safety=ApplicationSafetyV1(True, "allowed", (), "", False),
+        provenance=ApplicationProvenanceV1(
+            engine_version=calculation.engine_version,
+            ruleset_version=calculation.ruleset_version,
+            provider_version=(
+                f"{_PROVIDER_DISTRIBUTION}-{version(_PROVIDER_DISTRIBUTION)}"
+            ),
+            chart_source_type="calculated",
+            chart_source_confidence="deterministic_supported_range",
+            evidence_baseline_id=_EVIDENCE_BASELINE_ID,
+            evidence_ids=evidence_ids,
+        ),
+        warnings=(),
+        privacy=_privacy(),
+        error=None,
+    )
 
 
 def handle_real_use(request: RealUseRequestV1) -> RealUseResponseV1:
