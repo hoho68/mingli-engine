@@ -23,6 +23,8 @@ from mingli_engine.bazi.result_models import (
     StrengthContribution,
 )
 from mingli_engine.models import (
+    CALCULATION_CONFIDENCES,
+    CALCULATION_STATUSES,
     ActionReflectionItem,
     BaziChart,
     EvidenceTrace,
@@ -1163,6 +1165,10 @@ def _validate_evidence_trace(value: object) -> None:
         "calculation_confidence",
     ):
         _require_string(trace[key])
+    if trace["calculation_status"] not in CALCULATION_STATUSES:
+        _invalid_envelope()
+    if trace["calculation_confidence"] not in CALCULATION_CONFIDENCES:
+        _invalid_envelope()
     for key in (
         "chart_signals",
         "evidence_ids",
@@ -1308,6 +1314,42 @@ def _validate_report_result(value: object) -> None:
         _validate_application_content(result["content"])
 
 
+def _validate_success_cross_invariants(response: JsonObject) -> None:
+    if response["status"] != "ok":
+        return
+    result = response["result"]
+    provenance = response["provenance"]
+    if result is None or provenance is None or response["error"] is not None:
+        _invalid_envelope()
+    privacy = _exact_mapping(response["privacy"], _PRIVACY_KEYS)
+    if response["operation"] == "analysis":
+        analysis = _exact_mapping(result, _ANALYSIS_RESULT_KEYS)
+        calculation = _exact_mapping(analysis["calculation"], _CALCULATION_KEYS)
+        provenance_mapping = _exact_mapping(provenance, _PROVENANCE_KEYS)
+        if privacy["contains_sensitive_profile"]:
+            _invalid_envelope()
+        for key in ("engine_version", "ruleset_version"):
+            if provenance_mapping[key] != calculation[key]:
+                _invalid_envelope()
+        return
+    if response["operation"] == "report":
+        report_result = _exact_mapping(result, _REPORT_RESULT_KEYS)
+        if report_result["report"] is not None:
+            report = _exact_mapping(report_result["report"], _REPORT_KEYS)
+            safety = _exact_mapping(report["safety_review"], _REPORT_SAFETY_KEYS)
+            if not safety["allowed"]:
+                _invalid_envelope()
+            return
+        content = _exact_mapping(report_result["content"], _CONTENT_KEYS)
+        if (
+            content["contains_sensitive_profile"]
+            != privacy["contains_sensitive_profile"]
+        ):
+            _invalid_envelope()
+        return
+    _invalid_envelope()
+
+
 def _validate_response_mapping(value: object) -> JsonObject:
     response = _exact_mapping(value, _RESPONSE_KEYS)
     _require_string(response["schema_version"])
@@ -1328,6 +1370,7 @@ def _validate_response_mapping(value: object) -> JsonObject:
             _validate_report_result(response["result"])
         else:
             _invalid_envelope()
+    _validate_success_cross_invariants(response)
     return response
 
 

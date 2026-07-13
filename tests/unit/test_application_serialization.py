@@ -46,6 +46,10 @@ from mingli_engine.bazi import analyze_bazi_chart
 from mingli_engine.bazi.result_models import CalculationBundle
 from mingli_engine.chart_calculator import calculate_bazi_chart
 from mingli_engine.models import BaziChart, Report
+from mingli_engine.models import (
+    CALCULATION_CONFIDENCES,
+    CALCULATION_STATUSES,
+)
 from mingli_engine.report_inputs import birth_profile_from_dict
 from mingli_engine.report_schema import build_report
 
@@ -77,10 +81,14 @@ def _privacy() -> ApplicationPrivacyV1:
     return ApplicationPrivacyV1("not_stored_by_engine", False)
 
 
-def _provenance() -> ApplicationProvenanceV1:
+def _provenance(
+    *,
+    engine_version: str = "0.2.0",
+    ruleset_version: str = "bazi-rules-v1",
+) -> ApplicationProvenanceV1:
     return ApplicationProvenanceV1(
-        engine_version="0.2.0",
-        ruleset_version="bazi-rules-v1",
+        engine_version=engine_version,
+        ruleset_version=ruleset_version,
         provider_version="lunar-python-1.4.8",
         chart_source_type="calculated",
         chart_source_confidence="deterministic_supported_range",
@@ -120,6 +128,8 @@ def _ok_response(
     *,
     result: ApplicationAnalysisResultV1 | ApplicationReportResultV1 | None = None,
     operation: RealUseOperation = "analysis",
+    provenance: ApplicationProvenanceV1 | None = None,
+    privacy: ApplicationPrivacyV1 | None = None,
 ) -> RealUseResponseV1:
     if result is None:
         result = ApplicationAnalysisResultV1(
@@ -133,9 +143,9 @@ def _ok_response(
         status="ok",
         result=result,
         safety=_safety("allowed", allowed=True),
-        provenance=_provenance(),
+        provenance=provenance or _provenance(),
         warnings=(ApplicationWarningV1("limited_scope", "Scope is limited."),),
-        privacy=_privacy(),
+        privacy=privacy or _privacy(),
         error=None,
     )
 
@@ -178,7 +188,11 @@ def _valid_analysis_mapping(chart: BaziChart) -> dict[str, Any]:
             result=ApplicationAnalysisResultV1(
                 serialize_chart(chart),
                 serialize_calculation_bundle(calculation),
-            )
+            ),
+            provenance=_provenance(
+                engine_version=calculation.engine_version,
+                ruleset_version=calculation.ruleset_version,
+            ),
         )
     )
 
@@ -642,7 +656,11 @@ def test_response_json_is_deterministic_utf8_sorted_compact_and_rejects_nan(
         result=ApplicationAnalysisResultV1(
             chart=serialize_chart(calculated_bazi_chart),
             calculation=calculation,
-        )
+        ),
+        provenance=_provenance(
+            engine_version=calculation["engine_version"],
+            ruleset_version=calculation["ruleset_version"],
+        ),
     )
 
     first = serialize_response(response)
@@ -665,7 +683,11 @@ def test_response_json_is_deterministic_utf8_sorted_compact_and_rejects_nan(
         result=ApplicationAnalysisResultV1(
             serialize_chart(calculated_bazi_chart),
             non_finite_calculation,
-        )
+        ),
+        provenance=_provenance(
+            engine_version=calculation["engine_version"],
+            ruleset_version=calculation["ruleset_version"],
+        ),
     )
     with pytest.raises(ValueError, match="JSON compliant"):
         serialize_response(non_finite)
@@ -695,7 +717,15 @@ def test_response_status_reader_accepts_only_canonical_valid_internal_envelopes(
         result=ApplicationAnalysisResultV1(
             payload_mapping["result"]["chart"],
             payload_mapping["result"]["calculation"],
-        )
+        ),
+        provenance=_provenance(
+            engine_version=payload_mapping["result"]["calculation"][
+                "engine_version"
+            ],
+            ruleset_version=payload_mapping["result"]["calculation"][
+                "ruleset_version"
+            ],
+        ),
     )
     payload = serialize_response(response)
 
@@ -775,7 +805,15 @@ def test_response_status_reader_accepts_all_complete_internal_envelope_variants(
             result=ApplicationAnalysisResultV1(
                 analysis_mapping["result"]["chart"],
                 analysis_mapping["result"]["calculation"],
-            )
+            ),
+            provenance=_provenance(
+                engine_version=analysis_mapping["result"]["calculation"][
+                    "engine_version"
+                ],
+                ruleset_version=analysis_mapping["result"]["calculation"][
+                    "ruleset_version"
+                ],
+            ),
         ),
         _ok_response(
             operation="report",
@@ -790,6 +828,14 @@ def test_response_status_reader_accepts_all_complete_internal_envelope_variants(
                 None,
                 ApplicationContentV1("text/html", "<p>Report</p>", False),
             ),
+        ),
+        _ok_response(
+            operation="report",
+            result=ApplicationReportResultV1(
+                None,
+                ApplicationContentV1("text/html", "<p>Report</p>", True),
+            ),
+            privacy=ApplicationPrivacyV1("not_stored_by_engine", True),
         ),
         _non_ok_response(
             operation=None,
@@ -1048,3 +1094,125 @@ def test_response_status_reader_rejects_nested_envelope_key_and_type_anomalies(
 def test_response_serializer_rejects_incomplete_internal_result_mapping() -> None:
     with pytest.raises(ValueError, match="invalid internal response envelope"):
         serialize_response(_ok_response())
+
+
+@pytest.mark.parametrize(
+    ("field_name", "invalid_value"),
+    [
+        ("calculation_status", "partially_computed"),
+        ("calculation_confidence", "certain"),
+    ],
+)
+def test_response_status_reader_rejects_invalid_evidence_trace_enums_without_leak(
+    calculated_bazi_chart: BaziChart,
+    field_name: str,
+    invalid_value: str,
+) -> None:
+    payload = _valid_report_mapping(calculated_bazi_chart)
+    trace = _mapping_at(
+        payload,
+        (
+            "result",
+            "report",
+            "expanded_evidence",
+            "formal_conclusions",
+            0,
+            "trace",
+        ),
+    )
+    trace[field_name] = invalid_value
+
+    with pytest.raises(ValueError) as captured:
+        response_status_from_json_bytes(_canonical_bytes(payload))
+
+    assert str(captured.value) == "invalid internal response envelope"
+    assert invalid_value not in str(captured.value)
+
+
+@pytest.mark.parametrize(
+    ("field_name", "allowed_values"),
+    [
+        ("calculation_status", CALCULATION_STATUSES),
+        ("calculation_confidence", CALCULATION_CONFIDENCES),
+    ],
+)
+def test_response_status_reader_accepts_every_evidence_trace_enum_value(
+    calculated_bazi_chart: BaziChart,
+    field_name: str,
+    allowed_values: frozenset[str],
+) -> None:
+    for allowed_value in allowed_values:
+        payload = _valid_report_mapping(calculated_bazi_chart)
+        trace = _mapping_at(
+            payload,
+            (
+                "result",
+                "report",
+                "expanded_evidence",
+                "formal_conclusions",
+                0,
+                "trace",
+            ),
+        )
+        trace[field_name] = allowed_value
+
+        assert response_status_from_json_bytes(_canonical_bytes(payload)) == "ok"
+
+
+def test_response_status_reader_rejects_ok_json_report_with_blocked_safety(
+    calculated_bazi_chart: BaziChart,
+) -> None:
+    payload = _valid_report_mapping(calculated_bazi_chart)
+    report_safety = _mapping_at(payload, ("result", "report", "safety_review"))
+    report_safety["allowed"] = False
+
+    with pytest.raises(ValueError, match="invalid internal response envelope"):
+        response_status_from_json_bytes(_canonical_bytes(payload))
+
+
+@pytest.mark.parametrize(
+    ("content_sensitive", "privacy_sensitive"),
+    [(True, False), (False, True)],
+)
+def test_response_status_reader_requires_content_and_privacy_sensitivity_match(
+    content_sensitive: bool,
+    privacy_sensitive: bool,
+) -> None:
+    response = _ok_response(
+        operation="report",
+        result=ApplicationReportResultV1(
+            None,
+            ApplicationContentV1(
+                "text/html",
+                "<p>Report</p>",
+                content_sensitive,
+            ),
+        ),
+    )
+    payload = serialize_response_mapping(response)
+    payload["privacy"]["contains_sensitive_profile"] = privacy_sensitive
+
+    with pytest.raises(ValueError, match="invalid internal response envelope"):
+        response_status_from_json_bytes(_canonical_bytes(payload))
+
+
+def test_response_status_reader_rejects_sensitive_analysis_success(
+    calculated_bazi_chart: BaziChart,
+) -> None:
+    payload = _valid_analysis_mapping(calculated_bazi_chart)
+    payload["privacy"]["contains_sensitive_profile"] = True
+
+    with pytest.raises(ValueError, match="invalid internal response envelope"):
+        response_status_from_json_bytes(_canonical_bytes(payload))
+
+
+@pytest.mark.parametrize("version_field", ["engine_version", "ruleset_version"])
+def test_response_status_reader_requires_analysis_provenance_version_match(
+    calculated_bazi_chart: BaziChart,
+    version_field: str,
+) -> None:
+    payload = _valid_analysis_mapping(calculated_bazi_chart)
+    payload["provenance"][version_field] = "mismatched-version"
+
+    with pytest.raises(ValueError, match="invalid internal response envelope"):
+        response_status_from_json_bytes(_canonical_bytes(payload))
