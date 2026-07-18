@@ -282,7 +282,9 @@ The implementation is not accepted unless all of these tests pass:
 2. Change `acceptable_values`: actual observations must remain byte-for-byte equal.
 3. Change required rule/evidence IDs: actual trace IDs must remain unchanged.
 4. Remove one actual rule ID from the engine response: rule completeness must fall.
-5. Remove claim evidence trace: evidence completeness must fall.
+5. When claim-specific evidence trace is absent, evidence completeness must be zero,
+   `claim_evidence_trace_missing` must be recorded, and neither aggregate provenance
+   nor required IDs may be inherited as actual trace.
 6. Change one actual pillar: pillar agreement must fall.
 7. Reorder semantically unordered response lists: canonical observation must remain
    deterministic where the underlying contract treats order as irrelevant.
