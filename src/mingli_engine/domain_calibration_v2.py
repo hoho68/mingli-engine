@@ -1,20 +1,30 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
+from dataclasses import fields
 from hashlib import sha256
+from importlib import resources
 import json
+from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Protocol, cast
 
+from mingli_engine.application_inputs import MAX_REQUEST_BYTES
 from mingli_engine.application_serialization import response_status_from_json_bytes
 from mingli_engine.application_service import handle_real_use_json
-from mingli_engine.domain_calibration import canonical_json_bytes
+from mingli_engine.domain_calibration import (
+    canonical_json_bytes,
+    records_payload_sha256,
+)
 from mingli_engine.domain_calibration_v2_models import (
     CALIBRATION_EXTRACTION_SCHEMA_V2,
     CALIBRATION_OBSERVATION_SCHEMA_V2,
     DOMAIN_CALIBRATION_SUITE_V2,
     CalibrationActualStatusV2,
     CalibrationExtractionV2,
+    CalibrationFixtureEnvelopeV2,
+    CalibrationFixtureExecutionV2,
+    CalibrationFixtureV2,
     CalibrationObservationV2,
 )
 from mingli_engine.formal_interpretation import (
@@ -39,6 +49,10 @@ class CalibrationExtractionErrorV2(ValueError):
     pass
 
 
+class CalibrationFixtureErrorV2(ValueError):
+    pass
+
+
 class CalibrationApplicationExecutionErrorV2(CalibrationObservationErrorV2):
     def __init__(self, code: str) -> None:
         self.code = code
@@ -52,6 +66,43 @@ class ApplicationJsonExecutorV2(Protocol):
 class _HandleRealUseJsonExecutorV2:
     def execute(self, payload: bytes) -> bytes:
         return handle_real_use_json(payload)
+
+
+_FIXTURE_RESOURCE = (
+    "data/domain_calibration/v2/executable_fixtures.json"
+)
+_FORBIDDEN_FIXTURE_KEYS = frozenset(
+    {
+        "acceptable" + "_values",
+        "expected_domain_status",
+        "required" + "_rule_ids",
+        "required" + "_evidence_ids",
+        "engine_output",
+        "review",
+        "reviews",
+        "reviewer",
+        "adjudication",
+        "calibration_run",
+        "metrics",
+        "baseline",
+        "case" + "_signal",
+        "coverage" + "_tags",
+    }
+)
+_EXPECTED_SCENARIO_KINDS = frozenset(
+    {
+        "normal_analysis_report",
+        "aware_datetime_rejection",
+        "dependency_degradation",
+        "empty_branch_relations",
+        "severe_conflict",
+        "unknown_gender",
+        "high_risk_refusal",
+        "school_disagreement_ziping",
+        "school_disagreement_liang_xiangrun",
+        "school_disagreement_duan",
+    }
+)
 
 
 def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> JsonObject:
@@ -111,6 +162,116 @@ def _validate_request_pair(
         raise CalibrationObservationErrorV2(
             "analysis and report requests must use the same synthetic profile"
         )
+
+
+def _walk_mapping_keys(value: object) -> set[str]:
+    if isinstance(value, dict):
+        return set(value).union(
+            key for item in value.values() for key in _walk_mapping_keys(item)
+        )
+    if isinstance(value, list):
+        return {key for item in value for key in _walk_mapping_keys(item)}
+    return set()
+
+
+def _read_fixture_bytes(source: Path | None) -> bytes:
+    if source is not None:
+        return source.read_bytes()
+    return (
+        resources.files("mingli_engine")
+        .joinpath(*_FIXTURE_RESOURCE.split("/"))
+        .read_bytes()
+    )
+
+
+def load_executable_fixtures_v2(
+    source: Path | None = None,
+) -> CalibrationFixtureEnvelopeV2:
+    """Strictly load the pre-registered V2 synthetic fixture manifest."""
+    try:
+        payload = _read_fixture_bytes(source)
+        raw = _canonical_mapping(payload, "V2 executable fixture manifest")
+        envelope_fields = {item.name for item in fields(CalibrationFixtureEnvelopeV2)}
+        if set(raw) != envelope_fields:
+            raise CalibrationFixtureErrorV2("fixture envelope fields are invalid")
+        raw_records = raw.get("records")
+        if not isinstance(raw_records, list) or not raw_records:
+            raise CalibrationFixtureErrorV2("fixture records must be a nonempty list")
+        record_fields = {item.name for item in fields(CalibrationFixtureV2)}
+        if any(
+            not isinstance(record, dict) or set(record) != record_fields
+            for record in raw_records
+        ):
+            raise CalibrationFixtureErrorV2("fixture record fields are invalid")
+        if _walk_mapping_keys(raw) & _FORBIDDEN_FIXTURE_KEYS:
+            raise CalibrationFixtureErrorV2("fixture manifest contains forbidden data")
+        if raw.get("payload_sha256") != records_payload_sha256(raw_records):
+            raise CalibrationFixtureErrorV2("fixture payload hash does not match")
+        records = tuple(CalibrationFixtureV2(**record) for record in raw_records)
+        fixture_ids = tuple(item.fixture_id for item in records)
+        if fixture_ids != tuple(sorted(fixture_ids)) or len(fixture_ids) != len(
+            set(fixture_ids)
+        ):
+            raise CalibrationFixtureErrorV2(
+                "fixture IDs must be unique and canonically sorted"
+            )
+        scenario_kinds = tuple(item.scenario_kind for item in records)
+        if (
+            set(scenario_kinds) != _EXPECTED_SCENARIO_KINDS
+            or len(scenario_kinds) != len(set(scenario_kinds))
+        ):
+            raise CalibrationFixtureErrorV2(
+                "fixture scenarios must cover the pre-registered set exactly once"
+            )
+        expected_generated_from = tuple(
+            sorted(
+                request_hash
+                for item in records
+                for request_hash in (
+                    item.analysis_request_sha256,
+                    item.report_request_sha256,
+                )
+            )
+        )
+        if tuple(raw.get("generated_from", ())) != expected_generated_from:
+            raise CalibrationFixtureErrorV2("generated_from does not match requests")
+        for item in records:
+            analysis_bytes = item.analysis_request_json.encode("utf-8")
+            report_bytes = item.report_request_json.encode("utf-8")
+            if len(analysis_bytes) > MAX_REQUEST_BYTES or len(report_bytes) > (
+                MAX_REQUEST_BYTES
+            ):
+                raise CalibrationFixtureErrorV2("fixture request exceeds 32 KiB")
+            _validate_request_pair(analysis_bytes, report_bytes)
+            request = _canonical_mapping(analysis_bytes, "fixture analysis request")
+            profile = request.get("profile")
+            if (
+                request.get("schema_version") != "real-use-request-v1"
+                or not isinstance(request.get("request_id"), str)
+                or not request["request_id"].startswith("synthetic-")
+                or not isinstance(profile, dict)
+                or not isinstance(profile.get("birthplace"), str)
+                or not profile["birthplace"].startswith("Synthetic ")
+            ):
+                raise CalibrationFixtureErrorV2(
+                    "fixture requests must be explicitly synthetic"
+                )
+        return CalibrationFixtureEnvelopeV2(
+            schema_version=cast(Any, raw["schema_version"]),
+            suite_version=cast(Any, raw["suite_version"]),
+            generated_from=tuple(cast(list[str], raw["generated_from"])),
+            contains_real_personal_data=cast(
+                bool, raw["contains_real_personal_data"]
+            ),
+            payload_sha256=cast(str, raw["payload_sha256"]),
+            records=records,
+        )
+    except CalibrationFixtureErrorV2:
+        raise
+    except (OSError, TypeError, ValueError, KeyError):
+        raise CalibrationFixtureErrorV2(
+            "V2 executable fixture manifest is invalid"
+        ) from None
 
 
 def _validated_response(payload: bytes, context: str) -> JsonObject:
@@ -405,9 +566,17 @@ def _five_element_values(calculation: JsonObject, _status: str) -> tuple[str, ..
 
 
 def _useful_god_values(calculation: JsonObject, _status: str) -> tuple[str, ...]:
+    if _status != "computed":
+        return ()
     values: list[str] = []
     for item in _sequence(calculation.get("useful_gods"), "useful gods"):
         candidate = _mapping(item, "useful god")
+        reasoning = _mapping(candidate.get("reasoning"), "useful god reasoning")
+        candidate_status = reasoning.get("status")
+        if candidate_status in {"not_computed", "indeterminate", "disputed"}:
+            continue
+        if candidate_status != "computed":
+            raise CalibrationExtractionErrorV2("useful god status is invalid")
         values.append(
             "candidate:"
             f"{_text(candidate.get('method'), 'useful god method')}:"
@@ -718,3 +887,73 @@ def extract_calibration_family_v2(
             "rule family is not authoritative"
         ) from None
     return extractor(observation)
+
+
+def _interface_outcome(observation: CalibrationObservationV2) -> str:
+    response = _canonical_mapping(
+        observation.analysis_response_json,
+        "fixture analysis response",
+    )
+    status = response.get("status")
+    code = _error_code(response)
+    if status == "ok":
+        return "ok"
+    if status == "refused" and code == "unsafe_request":
+        return "unsafe_request"
+    if status == "error" and code == "unsupported_input":
+        return "unsupported_input"
+    raise CalibrationFixtureErrorV2("fixture produced an unsupported outcome")
+
+
+def execute_calibration_fixture_v2(
+    fixture: CalibrationFixtureV2,
+    executor: ApplicationJsonExecutorV2 | None = None,
+) -> CalibrationFixtureExecutionV2:
+    """Execute a frozen fixture through the real application and V2 extractors."""
+    if not isinstance(fixture, CalibrationFixtureV2):
+        raise TypeError("fixture must be CalibrationFixtureV2")
+    if fixture.execution_policy == "inject_calculation_failure" and executor is None:
+        raise CalibrationFixtureErrorV2(
+            "dependency degradation requires an explicit application executor"
+        )
+    try:
+        observation = collect_calibration_observation_v2(
+            f"{fixture.fixture_id}-observation",
+            fixture.analysis_request_json.encode("utf-8"),
+            fixture.report_request_json.encode("utf-8"),
+            executor,
+        )
+    except CalibrationApplicationExecutionErrorV2 as error:
+        if (
+            fixture.expected_interface_outcome != "calculation_failed"
+            or error.code != "calculation_failed"
+        ):
+            raise CalibrationFixtureErrorV2(
+                "fixture dependency outcome does not match pre-registration"
+            ) from None
+        return CalibrationFixtureExecutionV2(
+            fixture_id=fixture.fixture_id,
+            scenario_kind=fixture.scenario_kind,
+            actual_interface_outcome="calculation_failed",
+            observation=None,
+            extractions=(),
+        )
+    except (CalibrationObservationErrorV2, TypeError):
+        raise CalibrationFixtureErrorV2("fixture application execution failed") from None
+
+    actual_outcome = _interface_outcome(observation)
+    if actual_outcome != fixture.expected_interface_outcome:
+        raise CalibrationFixtureErrorV2(
+            "fixture interface outcome does not match pre-registration"
+        )
+    extractions = tuple(
+        extract_calibration_family_v2(observation, rule_family)
+        for rule_family in get_formal_interpretation_rule_families()
+    )
+    return CalibrationFixtureExecutionV2(
+        fixture_id=fixture.fixture_id,
+        scenario_kind=fixture.scenario_kind,
+        actual_interface_outcome=actual_outcome,
+        observation=observation,
+        extractions=extractions,
+    )

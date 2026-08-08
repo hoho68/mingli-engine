@@ -11,7 +11,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/59/45/5154c95ae7feaab7c
 [[package]]
 name = "mingli-engine"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "lunar-python" },
 ]
