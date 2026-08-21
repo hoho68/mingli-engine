@@ -1,4 +1,4 @@
-import hashlib
+﻿import hashlib
 import io
 import json
 import os
@@ -124,7 +124,7 @@ def test_calculate_report_outputs_markdown_from_birth_profile():
     assert "missing_rule_families=0" in markdown
     assert "conflict_high_risk_scope_001" in markdown
     assert "Report evidence audit: status=complete_with_guardrails" in markdown
-    assert "traced_evidence_units=111" in markdown
+    assert "traced_evidence_units=996" in markdown
     assert "rule_family=high_risk_signal" in markdown
     assert markdown.count("盘面信号：") == 10
     assert "traditional_high_risk_signal_boundary" not in markdown
@@ -161,7 +161,7 @@ def test_calculate_report_outputs_complete_html_from_birth_profile():
     assert "Knowledge activation: status=enabled_with_guardrails" in html
     assert "missing_rule_families=0" in html
     assert "Report evidence audit: status=complete_with_guardrails" in html
-    assert "traced_evidence_units=111" in html
+    assert "traced_evidence_units=996" in html
     assert html.count("盘面信号：") == 10
     assert "traditional_high_risk_signal_boundary" not in html
     assert html.count("<h3>正式知识综合</h3>") == 1
@@ -290,9 +290,9 @@ def test_calculate_report_default_markdown_is_byte_exact_renderer_output():
     assert result.returncode == 0, result.stderr
     assert result.stdout == expected
     encoded = result.stdout.encode("utf-8")
-    assert len(encoded) == 30900
+    assert len(encoded) == 60505
     assert hashlib.sha256(encoded).hexdigest() == (
-        "2b78db5f7bd28172a0eaf16f92f46c2a79142e9fe50ac81efd6f2d53daca4709"
+        "4023bd8b22157f516d9c0e3f6701aa1bfce0e1d1b06d08f107e006a89b52c28b"
     )
 
 
@@ -318,9 +318,9 @@ def test_calculate_report_default_html_is_byte_exact_renderer_output():
     assert result.returncode == 0, result.stderr
     assert result.stdout == expected
     encoded = result.stdout.encode("utf-8")
-    assert len(encoded) == 32823
+    assert len(encoded) == 62428
     assert hashlib.sha256(encoded).hexdigest() == (
-        "f3bb5beb3cfaafa99ae8384e454f5deff46c256c724bba2b82067ae3b119c579"
+        "49db7416aa0e2fd7c280d840b6981df4113d6e7d34a9f00108938bb7e3c48796"
     )
 
 

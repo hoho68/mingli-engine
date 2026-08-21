@@ -86,6 +86,20 @@ def validate_curation_quality(
                 f"{unit.evidence_id} references non-report-usable source "
                 f"{unit.source_id}"
             )
+    from mingli_engine.evidence_risk import (
+        ORDINARY_CONTENT,
+        classify_evidence_content,
+    )
+
+    for unit in evidence_units:
+        if unit.risk_tier != "ordinary":
+            continue
+        risk = classify_evidence_content(unit.summary, unit.limitations)
+        if risk.risk_class != ORDINARY_CONTENT:
+            failures.append(
+                f"{unit.evidence_id} ordinary report-usable evidence carries "
+                f"{risk.risk_class} content ({risk.matched_marker})"
+            )
     return failures
 
 

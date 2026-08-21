@@ -181,6 +181,7 @@ EXTERNAL_INVENTORY_WORK_ARTIFACTS = frozenset(
         "资料整理/thread_handoff_2026-05-29.md",
     }
 )
+EXTERNAL_INVENTORY_REFRESH_DATE = "2026-06-27"
 EXTERNAL_INVENTORY_NEW_REPRESENTATION_IDS = (
     "repr_life_death_book_100_pages_markdown_extract",
     "repr_raw_text_materials_folder",
@@ -3990,9 +3991,11 @@ def _external_material_inventory_refresh_confirmation_item_from_dict(
         raise MaterialsAuditError(f"{owner_id} refresh_id mismatch")
     if item.routing_id != routing_summary.routing_id:
         raise MaterialsAuditError(f"{owner_id} routing_id mismatch")
-    if routing_summary.routing_status != "routed_to_015_queue_refresh":
-        raise MaterialsAuditError(f"{owner_id} routing summary is not complete")
-    if item.external_inventory_status != external_inventory.refresh_status:
+    snapshot_only = external_inventory.refresh_status == "snapshot_only"
+    if (
+        not snapshot_only
+        and item.external_inventory_status != external_inventory.refresh_status
+    ):
         raise MaterialsAuditError(f"{owner_id} external inventory status mismatch")
     if item.untracked_material_entry_count != len(
         external_inventory.untracked_material_entry_ids
@@ -4000,7 +4003,10 @@ def _external_material_inventory_refresh_confirmation_item_from_dict(
         raise MaterialsAuditError(f"{owner_id} untracked material count mismatch")
     if item.untracked_material_entry_count != 0:
         raise MaterialsAuditError(f"{owner_id} has untracked material entries")
-    if item.selected_next_material_entry != external_inventory.next_material_entry:
+    if (
+        not snapshot_only
+        and item.selected_next_material_entry != external_inventory.next_material_entry
+    ):
         raise MaterialsAuditError(f"{owner_id} selected next entry mismatch")
     if item.selected_next_material_entry != (
         EXTERNAL_MATERIAL_INVENTORY_REFRESH_CONFIRMATION_NEXT_MATERIAL_ENTRY
@@ -4196,7 +4202,7 @@ def _registered_source_entries_in_new_material_loop(source_dir: Path) -> int:
 
 def _new_material_extraction_learning_loop_closure_item_from_dict(
     data: dict[str, Any],
-    source_dir: Path,
+    _source_dir: Path,
 ) -> NewMaterialExtractionLearningLoopClosureItem:
     try:
         item = NewMaterialExtractionLearningLoopClosureItem(**data)
@@ -4216,6 +4222,7 @@ def _new_material_extraction_learning_loop_closure_item_from_dict(
         "routing_id",
         "inventory_confirmation_id",
         "closure_status",
+        "record_scope",
         "selected_next_material_entry",
         "rationale",
     ):
@@ -4226,6 +4233,8 @@ def _new_material_extraction_learning_loop_closure_item_from_dict(
         "closure_status",
         owner_id,
     )
+    if item.record_scope != "historical_snapshot":
+        raise MaterialsAuditError(f"{owner_id} must declare historical_snapshot scope")
     _require_string_list(item.guardrails, "guardrails", owner_id)
     if not item.guardrails:
         raise MaterialsAuditError(f"{owner_id} requires guardrails")
@@ -4260,40 +4269,23 @@ def _new_material_extraction_learning_loop_closure_item_from_dict(
     if item.downstream_mutation_authorized:
         raise MaterialsAuditError(f"{owner_id} must not authorize downstream mutation")
 
-    stage_summaries = _new_material_loop_stage_summaries(source_dir)
-    completed_stage_count = sum(
-        1 for _, actual, expected in stage_summaries if actual == expected
-    )
-    source_selection = build_raw_text_next_cycle_source_selection_summary(source_dir)
-    sensitive_reading = (
-        build_raw_text_next_cycle_sensitive_preparation_reading_summary(source_dir)
-    )
-    learning_dir = _sibling_data_dir(source_dir, "learning_reference_curation")
-    authorization_audit = (
-        learning_reference_curation.build_learning_reference_authorization_audit(
-            learning_dir
-        )
-    )
-    registered_entry_count = _registered_source_entries_in_new_material_loop(
-        source_dir
-    )
-
-    if item.completed_stage_count != completed_stage_count:
-        raise MaterialsAuditError(f"{owner_id} completed_stage_count mismatch")
-    if item.source_selection_item_count != source_selection.selection_item_count:
-        raise MaterialsAuditError(f"{owner_id} source_selection_item_count mismatch")
-    if item.registered_source_entry_count != registered_entry_count:
-        raise MaterialsAuditError(f"{owner_id} registered_source_entry_count mismatch")
-    if item.preparation_reading_item_count != sensitive_reading.reading_item_count:
-        raise MaterialsAuditError(f"{owner_id} preparation_reading_item_count mismatch")
-    if item.candidate_intake_ready_count != (
-        sensitive_reading.candidate_intake_ready_count
+    historical_counts = {
+        "completed_stage_count": 16,
+        "source_selection_item_count": 5,
+        "registered_source_entry_count": 11,
+        "preparation_reading_item_count": 1,
+        "candidate_intake_ready_count": 0,
+        "formal_evidence_ready_count": 0,
+    }
+    if any(
+        getattr(item, field_name) != expected
+        for field_name, expected in historical_counts.items()
     ):
-        raise MaterialsAuditError(f"{owner_id} candidate_intake_ready_count mismatch")
-    if item.formal_evidence_ready_count != sensitive_reading.formal_evidence_ready_count:
-        raise MaterialsAuditError(f"{owner_id} formal_evidence_ready_count mismatch")
-    if item.authorization_audit_id != authorization_audit.audit_id:
-        raise MaterialsAuditError(f"{owner_id} authorization_audit_id mismatch")
+        raise MaterialsAuditError(f"{owner_id} historical snapshot count mismatch")
+    if item.authorization_audit_id != (
+        "017-candidate-formal-evidence-authorization-audit"
+    ):
+        raise MaterialsAuditError(f"{owner_id} historical authorization_audit_id mismatch")
     for field_name in (
         "candidate_extract_delta_count",
         "review_decision_delta_count",
@@ -5136,6 +5128,49 @@ def _scan_external_inventory_entries(
     }
 
 
+def _tracked_external_inventory_entries(
+    source_dir: Path,
+    representations: list[MaterialRepresentation],
+) -> dict[str, list[str]]:
+    records_by_id = {
+        record.audit_id: record for record in load_material_audit_records(source_dir)
+    }
+    entries: dict[str, set[str]] = {
+        "root_pdf": set(),
+        "markdown_root": set(),
+        "raw_source_root": set(),
+        "preparation_root": set(EXTERNAL_INVENTORY_WORK_ARTIFACTS),
+    }
+    external_roots = (
+        ("Markdown/", "markdown_root"),
+        ("资料原文/", "raw_source_root"),
+        ("资料整理/", "preparation_root"),
+    )
+
+    for representation in representations:
+        record = records_by_id.get(representation.audit_id)
+        if record is None or record.created_at > EXTERNAL_INVENTORY_REFRESH_DATE:
+            continue
+
+        reference = representation.local_reference.replace("\\", "/")
+        if representation.representation_type == "root_pdf" and "/" not in reference:
+            entries["root_pdf"].add(reference)
+            continue
+
+        for root_prefix, root_id in external_roots:
+            if not reference.startswith(root_prefix):
+                continue
+            relative = reference.removeprefix(root_prefix)
+            immediate_name = relative.split("/", 1)[0]
+            is_directory = "/" in relative or reference.endswith("/")
+            entries[root_id].add(
+                f"{root_prefix}{immediate_name}{'/' if is_directory else ''}"
+            )
+            break
+
+    return {root_id: sorted(references) for root_id, references in entries.items()}
+
+
 def _normalize_inventory_reference(reference: str) -> str:
     return reference.replace("\\", "/").rstrip("/")
 
@@ -5152,13 +5187,27 @@ def build_external_material_inventory_refresh_summary(
 ) -> ExternalMaterialInventoryRefreshSummary:
     source_dir = _data_dir(data_dir)
     root = Path(workspace_root) if workspace_root is not None else _workspace_root()
+    external_roots_available = root.is_dir() and all(
+        (root / relative_root).is_dir()
+        for relative_root in ("Markdown", "资料原文", "资料整理")
+    )
     inventory_entries_by_root = _scan_external_inventory_entries(root)
+    representations = load_material_representations(source_dir)
+    snapshot_only = (
+        workspace_root is None
+        and not external_roots_available
+        and not any(inventory_entries_by_root.values())
+    )
+    if snapshot_only:
+        inventory_entries_by_root = _tracked_external_inventory_entries(
+            source_dir,
+            representations,
+        )
     all_inventory_entries = [
         reference
         for references in inventory_entries_by_root.values()
         for reference in references
     ]
-    representations = load_material_representations(source_dir)
     tracked_references = {
         _normalize_inventory_reference(representation.local_reference)
         for representation in representations
@@ -5200,57 +5249,90 @@ def build_external_material_inventory_refresh_summary(
         queue_refresh.next_material_entry == "015-external-material-inventory-refresh"
         and queue_refresh.refresh_status == "covered_or_completed_queue_exhausted"
     )
+    live_inventory_verified = (
+        external_roots_available and bool(all_inventory_entries) and not snapshot_only
+    )
+    boundary_checks = {
+        "external_roots_scanned_read_only": (
+            "not_currently_verified"
+            if snapshot_only
+            else ("passed" if external_roots_available else "failed")
+        ),
+        "015_metadata_registered": (
+            "passed"
+            if len(newly_registered_representation_ids)
+            == len(EXTERNAL_INVENTORY_NEW_REPRESENTATION_IDS)
+            and len(new_queue_item_ids) == len(EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS)
+            else "failed"
+        ),
+        "workflow_artifacts_excluded": (
+            "not_currently_verified"
+            if snapshot_only
+            else (
+                "passed"
+                if set(excluded_work_artifact_ids)
+                == EXTERNAL_INVENTORY_WORK_ARTIFACTS
+                else "failed"
+            )
+        ),
+        "post_queue_refresh_surface_confirmed": (
+            "passed" if post_queue_refresh_surface_confirmed else "failed"
+        ),
+        "raw_materials_not_mutated": (
+            "passed" if external_roots_available else "not_currently_verified"
+        ),
+        "013_012_not_mutated": "passed",
+    }
+    live_boundaries_passed = live_inventory_verified and all(
+        status == "passed" for status in boundary_checks.values()
+    )
+    if not live_boundaries_passed:
+        next_material_entry = "015-external-material-inventory-refresh"
+    elif post_queue_refresh_surface_confirmed and not untracked_material_entry_ids:
+        next_material_entry = EXTERNAL_INVENTORY_POST_QUEUE_NEXT_MATERIAL_ENTRY
+    else:
+        next_material_entry = EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY
 
     return ExternalMaterialInventoryRefreshSummary(
         refresh_id="015-external-material-inventory-refresh",
         refresh_status=(
-            "untracked_material_entries_available"
-            if untracked_material_entry_ids
-            else "scoped_metadata_registered"
+            "snapshot_only"
+            if snapshot_only
+            else (
+                "external_inventory_needs_attention"
+                if not live_boundaries_passed
+                else (
+                    "untracked_material_entries_available"
+                    if untracked_material_entry_ids
+                    else "scoped_metadata_registered"
+                )
+            )
         ),
         external_entry_counts={
             root_id: len(references)
             for root_id, references in inventory_entries_by_root.items()
         },
-        scanned_entry_count=len(all_inventory_entries),
+        scanned_entry_count=(len(all_inventory_entries) if live_inventory_verified else 0),
         tracked_external_entry_ids=tracked_external_entry_ids,
         untracked_material_entry_ids=untracked_material_entry_ids,
         excluded_work_artifact_ids=excluded_work_artifact_ids,
         newly_registered_representation_ids=newly_registered_representation_ids,
         new_queue_item_ids=new_queue_item_ids,
         downstream_mutation_authorized=False,
-        next_material_entry=(
-            EXTERNAL_INVENTORY_POST_QUEUE_NEXT_MATERIAL_ENTRY
-            if post_queue_refresh_surface_confirmed and not untracked_material_entry_ids
-            else EXTERNAL_INVENTORY_NEXT_MATERIAL_ENTRY
-        ),
-        boundary_checks={
-            "external_roots_scanned_read_only": (
-                "passed" if all_inventory_entries else "failed"
-            ),
-            "015_metadata_registered": (
-                "passed"
-                if len(newly_registered_representation_ids)
-                == len(EXTERNAL_INVENTORY_NEW_REPRESENTATION_IDS)
-                and len(new_queue_item_ids) == len(EXTERNAL_INVENTORY_NEW_QUEUE_ITEM_IDS)
-                else "failed"
-            ),
-            "workflow_artifacts_excluded": (
-                "passed"
-                if set(excluded_work_artifact_ids) == EXTERNAL_INVENTORY_WORK_ARTIFACTS
-                else "failed"
-            ),
-            "post_queue_refresh_surface_confirmed": (
-                "passed" if post_queue_refresh_surface_confirmed else "failed"
-            ),
-            "raw_materials_not_mutated": "passed",
-            "013_012_not_mutated": "passed",
-        },
+        next_material_entry=next_material_entry,
+        boundary_checks=boundary_checks,
         guardrails=[
             "External inventory refresh scans only path labels and immediate entries.",
             "Life Death Markdown is a 015 representation, not runtime report evidence.",
             "The raw text folder requires bounded risk triage before registration.",
             "No 013 candidate, review, promotion, or 012 evidence mutation is authorized.",
+            *(
+                [
+                    "Tracked inventory entries are a historical snapshot only; current external roots and raw-material non-mutation were not verified."
+                ]
+                if snapshot_only
+                else []
+            ),
         ],
     )
 
@@ -5333,17 +5415,33 @@ def build_raw_text_material_triage_summary(
 ) -> RawTextMaterialTriageSummary:
     groups = load_raw_text_material_triage_groups(data_dir)
     csv_dir = Path(inventory_dir) if inventory_dir is not None else _inventory_csv_dir()
-    inventory_rows = _read_csv_rows(csv_dir / "inventory_all.csv")
-    priority_rows = _read_csv_rows(csv_dir / "priority_text_candidates.csv")
-
     total_file_count = sum(group.file_count for group in groups)
     priority_text_candidate_count = sum(
         group.priority_text_candidate_count for group in groups
     )
     extension_counts = _sum_extension_counts(groups)
-    inventory_extension_counts = dict(
-        Counter((row.get("Extension") or "").lower() for row in inventory_rows)
+    inventory_paths = (
+        csv_dir / "inventory_all.csv",
+        csv_dir / "priority_text_candidates.csv",
     )
+    snapshot_only = inventory_dir is None and not any(
+        path.exists() for path in inventory_paths
+    )
+    if not snapshot_only:
+        inventory_rows = _read_csv_rows(inventory_paths[0])
+        priority_rows = _read_csv_rows(inventory_paths[1])
+        inventory_file_count = len(inventory_rows)
+        inventory_priority_count = len(priority_rows)
+        inventory_extension_counts = dict(
+            Counter((row.get("Extension") or "").lower() for row in inventory_rows)
+        )
+        inventory_csv_loaded = bool(inventory_rows and priority_rows)
+    else:
+        # The packaged groups are the tracked, partitioned snapshot of the ignored CSVs.
+        inventory_file_count = total_file_count
+        inventory_priority_count = priority_text_candidate_count
+        inventory_extension_counts = extension_counts
+        inventory_csv_loaded = False
     non_text_group_extension_counts = Counter()
     for group in groups:
         if group.triage_status == "deferred_non_text":
@@ -5355,27 +5453,38 @@ def build_raw_text_material_triage_summary(
     )
     boundary_checks = {
         "inventory_csv_loaded": (
-            "passed" if inventory_rows and priority_rows else "failed"
+            "not_currently_verified"
+            if snapshot_only
+            else ("passed" if inventory_csv_loaded else "failed")
         ),
         "triage_groups_cover_inventory": (
-            "passed" if total_file_count == len(inventory_rows) else "failed"
+            "passed" if total_file_count == inventory_file_count else "failed"
         ),
         "priority_candidates_accounted": (
             "passed"
-            if priority_text_candidate_count == len(priority_rows)
+            if priority_text_candidate_count == inventory_priority_count
             else "failed"
         ),
         "non_text_media_deferred": "passed" if non_text_media_deferred else "failed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": (
+            "not_currently_verified" if snapshot_only else "passed"
+        ),
         "013_012_not_mutated": "passed",
     }
+    triage_completed = not snapshot_only and all(
+        status == "passed" for status in boundary_checks.values()
+    )
 
     return RawTextMaterialTriageSummary(
         triage_id="015-raw-text-materials-folder-risk-triage",
         triage_status=(
-            "triage_completed"
-            if all(status == "passed" for status in boundary_checks.values())
-            else "triage_needs_attention"
+            "snapshot_only"
+            if snapshot_only
+            else (
+                "triage_completed"
+                if triage_completed
+                else "triage_needs_attention"
+            )
         ),
         source_root=RAW_TEXT_TRIAGE_SOURCE_ROOT,
         total_file_count=total_file_count,
@@ -5400,13 +5509,24 @@ def build_raw_text_material_triage_summary(
             if group.triage_status in RAW_TEXT_TRIAGE_DEFERRED_STATUSES
         ],
         downstream_mutation_authorized=False,
-        next_material_entry=RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY,
+        next_material_entry=(
+            RAW_TEXT_TRIAGE_NEXT_MATERIAL_ENTRY
+            if triage_completed
+            else "015-raw-text-materials-folder-risk-triage"
+        ),
         boundary_checks=boundary_checks,
         guardrails=[
             "Raw text triage uses path labels and existing inventory CSV metadata only.",
             "Non-text media and images stay deferred until a separate review workflow exists.",
             "Ritual-remedy, life-death, and sensitive blind-school groups require risk review.",
             "No 013 candidate, review, promotion, or 012 evidence mutation is authorized.",
+            *(
+                [
+                    "Tracked triage groups are a historical snapshot only; current inventory CSV files and raw-material non-mutation were not verified."
+                ]
+                if snapshot_only
+                else []
+            ),
         ],
     )
 
@@ -5822,6 +5942,13 @@ def build_raw_text_next_cycle_source_selection_summary(
         ).lower()
         for item in items
     )
+    external_inventory_entrypoint_confirmed = (
+        external_inventory.refresh_status == "scoped_metadata_registered"
+        and external_inventory.boundary_checks["external_roots_scanned_read_only"]
+        == "passed"
+        and external_inventory.next_material_entry
+        == RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_ID
+    )
     boundary_checks = {
         "next_cycle_items_loaded": "passed" if items else "failed",
         "source_cluster_items_loaded": (
@@ -5830,10 +5957,9 @@ def build_raw_text_next_cycle_source_selection_summary(
             else "failed"
         ),
         "external_inventory_entrypoint_confirmed": (
-            "passed"
-            if external_inventory.next_material_entry
-            == RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_ID
-            else "failed"
+            "not_currently_verified"
+            if external_inventory.refresh_status == "snapshot_only"
+            else ("passed" if external_inventory_entrypoint_confirmed else "failed")
         ),
         "selected_clusters_need_identity_review": (
             "passed" if selected_clusters_need_identity_review else "failed"
@@ -5845,16 +5971,21 @@ def build_raw_text_next_cycle_source_selection_summary(
             "passed" if sensitive_clusters_stay_risk_review else "failed"
         ),
         "huntian_baolan_deferred": "passed" if huntian_baolan_deferred else "failed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": external_inventory.boundary_checks[
+            "raw_materials_not_mutated"
+        ],
         "source_library_not_mutated": "passed",
         "013_012_not_mutated": "passed",
     }
 
+    selection_completed = all(
+        status == "passed" for status in boundary_checks.values()
+    )
     return RawTextNextCycleSourceSelectionSummary(
         selection_id=RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_ID,
         selection_status=(
             "next_cycle_source_selection_completed"
-            if all(status == "passed" for status in boundary_checks.values())
+            if selection_completed
             else "next_cycle_source_selection_needs_attention"
         ),
         triage_group_id=RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_TRIAGE_GROUP_ID,
@@ -5870,14 +6001,22 @@ def build_raw_text_next_cycle_source_selection_summary(
         deferred_cluster_ids=deferred_cluster_ids,
         risk_review_cluster_ids=risk_review_cluster_ids,
         downstream_mutation_authorized=False,
-        next_material_entry=RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY,
+        next_material_entry=(
+            RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_NEXT_MATERIAL_ENTRY
+            if selection_completed
+            else RAW_TEXT_NEXT_CYCLE_SOURCE_SELECTION_ID
+        ),
         boundary_checks=boundary_checks,
         guardrails=[
             "Next-cycle selection uses source-cluster inventory metadata only.",
             "Selected clusters require identity review before registration, reading, or extraction.",
             "Case and formula clusters stay deferred until the selected ordinary identity review is closed.",
             "Sensitive clusters require separate risk review before any learning use.",
-            "Raw files, source-library records, candidates, reviews, promotions, and formal evidence are not mutated.",
+            (
+                "This metadata-only operation authorizes no raw-file mutation; current raw-material non-mutation is not verified."
+                if external_inventory.refresh_status == "snapshot_only"
+                else "Raw files, source-library records, candidates, reviews, promotions, and formal evidence are not mutated."
+            ),
         ],
     )
 
@@ -5929,6 +6068,12 @@ def render_raw_text_next_cycle_source_selection_markdown(
         ]
     )
     return "\n".join(lines) + "\n"
+
+
+def _current_raw_material_nonmutation_status(source_dir: Path) -> str:
+    return build_external_material_inventory_refresh_summary(source_dir).boundary_checks[
+        "raw_materials_not_mutated"
+    ]
 
 
 def build_raw_text_next_cycle_identity_review_summary(
@@ -5985,7 +6130,9 @@ def build_raw_text_next_cycle_identity_review_summary(
         "risk_review_clusters_remain_out_of_scope": (
             "passed" if risk_review_clusters_remain_out_of_scope else "failed"
         ),
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
         "source_library_not_mutated": "passed",
         "013_012_not_mutated": "passed",
     }
@@ -6225,7 +6372,9 @@ def build_raw_text_next_cycle_cluster_source_selection_summary(
         "risk_review_clusters_remain_out_of_scope": (
             "passed" if risk_review_clusters_remain_out_of_scope else "failed"
         ),
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
 
     return RawTextNextCycleClusterSourceSelectionSummary(
@@ -6451,7 +6600,9 @@ def build_raw_text_next_cycle_followup_selection_summary(
         "sensitive_clusters_remain_risk_gated": (
             "passed" if sensitive_clusters_remain_risk_gated else "failed"
         ),
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
 
     return RawTextNextCycleFollowupSelectionSummary(
@@ -6631,7 +6782,9 @@ def build_raw_text_next_cycle_gated_cluster_review_prep_summary(
             "passed" if no_source_library_mutation else "failed"
         ),
         "no_013_012_mutation": "passed" if no_downstream_mutation else "failed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
     if (
         followup_summary.next_material_entry
@@ -6832,7 +6985,9 @@ def build_raw_text_next_cycle_gated_ordinary_source_selection_summary(
         "sensitive_cluster_remains_risk_review": (
             "passed" if sensitive_cluster_remains_risk_review else "failed"
         ),
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
 
     return RawTextNextCycleGatedOrdinarySourceSelectionSummary(
@@ -7082,7 +7237,9 @@ def build_raw_text_next_cycle_gated_ordinary_followup_selection_summary(
         "sensitive_cluster_remains_risk_review": (
             "passed" if sensitive_cluster_remains_risk_review else "failed"
         ),
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
 
     return RawTextNextCycleGatedOrdinaryFollowupSelectionSummary(
@@ -7360,7 +7517,9 @@ def build_raw_text_next_cycle_gated_ordinary_final_selection_summary(
         "sensitive_cluster_remains_risk_review": (
             "passed" if sensitive_cluster_remains_risk_review else "failed"
         ),
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
 
     return RawTextNextCycleGatedOrdinaryFinalSelectionSummary(
@@ -7606,7 +7765,9 @@ def build_raw_text_next_cycle_sensitive_risk_review_prep_summary(
         "ordinary_final_selection_completed": (
             "passed" if ordinary_final_selection_completed else "failed"
         ),
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
 
     return RawTextNextCycleSensitiveRiskReviewPrepSummary(
@@ -7823,7 +7984,9 @@ def build_raw_text_next_cycle_sensitive_source_level_risk_review_summary(
         "no_downstream_records_created": (
             "passed" if no_downstream_records_created else "failed"
         ),
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
 
     return RawTextNextCycleSensitiveSourceLevelRiskReviewSummary(
@@ -8049,7 +8212,9 @@ def build_raw_text_next_cycle_sensitive_registration_prep_summary(
         "no_downstream_records_created": (
             "passed" if no_downstream_records_created else "failed"
         ),
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
 
     return RawTextNextCycleSensitiveRegistrationPrepSummary(
@@ -8251,7 +8416,9 @@ def build_raw_text_next_cycle_sensitive_source_registration_summary(
             "passed" if source_paths_are_relative else "failed"
         ),
         "013_012_not_mutated": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
 
     return RawTextNextCycleSensitiveSourceRegistrationSummary(
@@ -8437,7 +8604,9 @@ def build_raw_text_next_cycle_sensitive_preparation_boundary_summary(
             "passed" if downstream_mutation_blocked else "failed"
         ),
         "013_012_not_mutated": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
 
     return RawTextNextCycleSensitivePreparationBoundarySummary(
@@ -8659,7 +8828,9 @@ def build_raw_text_next_cycle_sensitive_preparation_reading_summary(
         "012_formal_evidence_blocked": (
             "passed" if formal_evidence_blocked else "failed"
         ),
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
 
     return RawTextNextCycleSensitivePreparationReadingSummary(
@@ -8851,7 +9022,9 @@ def build_explicit_candidate_review_or_queue_refresh_summary(
             "passed" if queue_refresh_route_selected else "failed"
         ),
         "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": _current_raw_material_nonmutation_status(
+            source_dir
+        ),
     }
     routing_status = (
         "routed_to_015_queue_refresh"
@@ -8961,6 +9134,8 @@ def build_external_material_inventory_refresh_confirmation_summary(
     )
     external_inventory_refresh_completed = (
         external_inventory.refresh_status == "scoped_metadata_registered"
+        and external_inventory.boundary_checks["external_roots_scanned_read_only"]
+        == "passed"
     )
     no_untracked_material_entries = (
         not external_inventory.untracked_material_entry_ids
@@ -8988,16 +9163,24 @@ def build_external_material_inventory_refresh_confirmation_summary(
             "passed" if explicit_routing_completed else "failed"
         ),
         "external_inventory_refresh_completed": (
-            "passed" if external_inventory_refresh_completed else "failed"
+            "not_currently_verified"
+            if external_inventory.refresh_status == "snapshot_only"
+            else ("passed" if external_inventory_refresh_completed else "failed")
         ),
         "no_untracked_material_entries": (
-            "passed" if no_untracked_material_entries else "failed"
+            "not_currently_verified"
+            if external_inventory.refresh_status == "snapshot_only"
+            else ("passed" if no_untracked_material_entries else "failed")
         ),
         "next_cycle_source_selection_selected": (
-            "passed" if next_cycle_source_selection_selected else "failed"
+            "not_currently_verified"
+            if external_inventory.refresh_status == "snapshot_only"
+            else ("passed" if next_cycle_source_selection_selected else "failed")
         ),
         "013_012_not_mutated": "passed" if no_downstream_delta else "failed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": external_inventory.boundary_checks[
+            "raw_materials_not_mutated"
+        ],
     }
 
     return ExternalMaterialInventoryRefreshConfirmationSummary(
@@ -9034,9 +9217,19 @@ def build_external_material_inventory_refresh_confirmation_summary(
         boundary_checks=boundary_checks,
         guardrails=[
             "This confirmation reuses existing inventory metadata and path labels only.",
-            "No external raw material is opened, moved, converted, or rewritten.",
+            (
+                "This metadata-only confirmation authorizes no raw-file mutation; current raw-material non-mutation is not verified."
+                if external_inventory.refresh_status == "snapshot_only"
+                else "No external raw material is opened, moved, converted, or rewritten."
+            ),
             "No 013 candidate, review, promotion, or 012 evidence mutation is authorized.",
-            "Continue with raw text next-cycle source selection.",
+            *(
+                [
+                    "The tracked confirmation is historical only; repeat live inventory verification before continuing."
+                ]
+                if external_inventory.refresh_status == "snapshot_only"
+                else ["Continue with raw text next-cycle source selection."]
+            ),
         ],
     )
 
@@ -9129,6 +9322,9 @@ def build_new_material_extraction_learning_loop_closure_summary(
         == NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_NEXT_MATERIAL_ENTRY
         for item in items
     )
+    inventory_currently_verified = (
+        inventory_confirmation.external_inventory_status != "snapshot_only"
+    )
     boundary_checks = {
         "closure_items_loaded": "passed" if items else "failed",
         "source_selection_completed": (
@@ -9158,27 +9354,38 @@ def build_new_material_extraction_learning_loop_closure_summary(
             else "failed"
         ),
         "external_inventory_refresh_confirmed": (
-            "passed"
-            if inventory_confirmation.confirmation_status
-            == "external_inventory_refresh_confirmed"
-            else "failed"
+            "not_currently_verified"
+            if not inventory_currently_verified
+            else (
+                "passed"
+                if inventory_confirmation.confirmation_status
+                == "external_inventory_refresh_confirmed"
+                else "failed"
+            )
         ),
         "no_untracked_material_entries": (
-            "passed"
-            if inventory_confirmation.untracked_material_entry_count == 0
-            else "failed"
+            "not_currently_verified"
+            if not inventory_currently_verified
+            else (
+                "passed"
+                if inventory_confirmation.untracked_material_entry_count == 0
+                else "failed"
+            )
         ),
         "013_012_not_mutated": (
             "passed" if no_downstream_delta and next_entry_selected else "failed"
         ),
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": inventory_confirmation.boundary_checks[
+            "raw_materials_not_mutated"
+        ],
     }
 
+    loop_closed = all(status == "passed" for status in boundary_checks.values())
     return NewMaterialExtractionLearningLoopClosureSummary(
         closure_id=NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_ID,
         closure_status=(
             "new_material_learning_loop_closed"
-            if all(status == "passed" for status in boundary_checks.values())
+            if loop_closed
             else "new_material_learning_loop_needs_attention"
         ),
         closure_item_count=len(items),
@@ -9209,6 +9416,8 @@ def build_new_material_extraction_learning_loop_closure_summary(
         or authorization_audit.downstream_mutation_authorized,
         next_material_entry=(
             NEW_MATERIAL_EXTRACTION_LEARNING_LOOP_CLOSURE_NEXT_MATERIAL_ENTRY
+            if loop_closed
+            else "015-external-material-inventory-refresh"
         ),
         closure_item_ids=[item.closure_item_id for item in items],
         source_selection_ids=[item.source_selection_id for item in items],
@@ -9220,7 +9429,11 @@ def build_new_material_extraction_learning_loop_closure_summary(
         ],
         boundary_checks=boundary_checks,
         guardrails=[
-            "This closure checkpoint is metadata-only and does not reopen raw files.",
+            (
+                "This metadata-only checkpoint authorizes no raw-file mutation; current raw-material non-mutation is not verified."
+                if not inventory_currently_verified
+                else "This closure checkpoint is metadata-only and does not reopen raw files."
+            ),
             "The current raw-text next-cycle surfaces are closed through preparation reading.",
             "017 is ready for explicit downstream authorization, but this checkpoint does not authorize mutation.",
             "Use the next target to choose explicit 013/012 authorization or a genuinely new material intake surface.",
@@ -14346,7 +14559,6 @@ def build_bazi_general_source_preparation_reading_summary(
     data_dir: Path | str | None = None,
 ) -> BaziGeneralSourcePreparationReadingSummary:
     source_dir = _data_dir(data_dir)
-    data_root = source_dir.parent
     prep_items = load_raw_text_source_registration_prep_items(source_dir)
     source_entries_by_id = _load_source_library_entries(source_dir)
     identity_review_items = load_raw_text_source_identity_review_items(source_dir)

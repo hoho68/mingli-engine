@@ -1,0 +1,40 @@
+{
+  "authorization_ledger_sha256": "f2b365d303f063b1f5e78d7ce502fa62a312760233ad13b78c1e4f744ee7943c",
+  "batch_id": "batch_20260714",
+  "extraction_tranches_sha256": "306a7d2872f048165efa3160b0983e211319d698bfca06eececf5c506d4dd884",
+  "generated_at": "2026-08-09T18:06:34Z",
+  "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+  "probe_ledger_sha256": "9c565ed35adc3f9048d9c754ea7e113b5d3006ec9fe5580fa4a67e16945f8c90",
+  "records": [
+    {
+      "artifact_count": 8,
+      "authorization_ledger_sha256": "f2b365d303f063b1f5e78d7ce502fa62a312760233ad13b78c1e4f744ee7943c",
+      "byte_count": 1961037,
+      "content_sha256s": [
+        "3c5c546056d94699c5f319f86f2c13217d6123f71382fdd384d679e51533bcb5",
+        "74c54a7afdc2288acda7cd754f615ef7fa41bb80370c22df74f644ffb64c0bf4",
+        "dc63fbe2a60723ae5d0d361492bdcb06c55e492af39e6d39bfdbdf66a12b45b7",
+        "244dc5f1d21d15f6fe12f80d73a4b54729cf9b2684f0efaea1141d298cd9f2b5",
+        "810a5b5874b91ab1bef306dfbab45d1322abc8b59ac78b211915c75bec89fa61",
+        "7e7df9172ec18ad8bc69463ea66287ed13986cd0d2068f192ae9ff6ac06ffd75",
+        "9767023ad9e2217541841769f61c8dc19d5ee6dd70700f289bb9c49885a5046a",
+        "53b20f070ee2407ba2cd35f54e0df823f5eac6cc5d3b69c0f2332ddc8b60429f"
+      ],
+      "extraction_packet_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2",
+      "file_sha256": "DC20C035EA07FA7F6E8FC1543D5079486AFF96C6A54AB66AD750BEDA938DB832",
+      "input_receipt_id": "3696ee58a19e95f6804b71f40243bd4ad8e6a89ec1b5d2a86bd4d8ab1f56b2c3",
+      "model_id": "kimi-for-coding/k3-256k",
+      "page_end": 8,
+      "page_start": 1,
+      "prepared_at": "2026-08-09T17:03:31Z",
+      "probe_ledger_sha256": "9c565ed35adc3f9048d9c754ea7e113b5d3006ec9fe5580fa4a67e16945f8c90",
+      "relative_path": "[三命堂藏版]子平管见.pdf",
+      "route": "kimi_multimodal",
+      "source_locator": "page:1-8",
+      "tool_identity": "poppler:pdftoppm.exe:sha256=dfaba6d6dd265b9f3d8ecfd58c887ea590942b4dfb45c6f5c7d4fa63927639d7",
+      "total_pages": 51,
+      "tranche_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2"
+    }
+  ],
+  "schema_version": "new-material-learning-prepared-inputs-v1"
+}

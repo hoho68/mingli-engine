@@ -17,10 +17,17 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+namespaces = false
 
 [tool.setuptools.package-data]
 mingli_engine = ["data/**/*.json"]
 
+[tool.setuptools.exclude-package-data]
+mingli_engine = ["data/new_material_learning/*.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+markers = [
+  "task8_post_audit: validates generated Task 8 evidence after the governed regression",
+]

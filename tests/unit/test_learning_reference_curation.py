@@ -1847,10 +1847,10 @@ def test_learning_reference_risk_review_sweep_closes_actions_without_evidence_ch
         "status:blocked": 1,
     }
     assert summary.formal_evidence_delta == 0
-    assert len(candidates) == 54
-    assert len(reviews) == 54
-    assert len(promotion_batches) == 34
-    assert len(evidence_units) == 111
+    assert len(candidates) == 998
+    assert len(reviews) == 998
+    assert len(promotion_batches) == 35
+    assert len(evidence_units) == 996
 
 
 def test_learning_reference_closes_remaining_draft_notes_without_evidence_changes():
@@ -1880,10 +1880,10 @@ def test_learning_reference_closes_remaining_draft_notes_without_evidence_change
     assert summary.note_counts == {"candidate_intake_started": 31}
     assert summary.next_action_ids == []
     assert summary.formal_evidence_delta == 0
-    assert len(candidates) == 54
-    assert len(reviews) == 54
-    assert len(promotion_batches) == 34
-    assert len(evidence_units) == 111
+    assert len(candidates) == 998
+    assert len(reviews) == 998
+    assert len(promotion_batches) == 35
+    assert len(evidence_units) == 996
 
 
 @pytest.mark.parametrize(
@@ -2155,10 +2155,10 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
     ]
     assert set(create_candidate_ids + reuse_candidate_ids) <= set(candidates)
 
-    assert len(candidates) == 54
+    assert len(candidates) == 998
     assert Counter(candidate.status for candidate in candidates.values()) == {
-        "promoted": 51,
-        "rejected": 2,
+        "promoted": 936,
+        "rejected": 61,
         "blocked": 1,
     }
     assert Counter(candidates[candidate_id].status for candidate_id in create_candidate_ids) == {
@@ -2173,10 +2173,10 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         for candidate_id in create_candidate_ids
     )
 
-    assert len(reviews) == 54
+    assert len(reviews) == 998
     assert Counter(review.decision for review in reviews) == {
-        "approved": 51,
-        "rejected": 2,
+        "approved": 936,
+        "rejected": 61,
         "blocked": 1,
     }
     assert Counter(
@@ -2185,12 +2185,12 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         if review.candidate_id in create_candidate_ids
     ) == {"approved": 42}
 
-    assert len(promotion_batches) == 34
+    assert len(promotion_batches) == 35
     assert Counter(batch.review_status for batch in promotion_batches) == {
-        "reviewed": 34
+        "reviewed": 35
     }
 
-    assert len(evidence_units) == 111
+    assert len(evidence_units) == 996
     assert Counter(unit.curation_batch_id for unit in evidence_units) == {
         "batch_012_seed_001": 8,
         "batch_012_taxonomy_001": 58,
@@ -2205,6 +2205,7 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         "batch_bazi_general_gated_ordinary_source_selection_001": 2,
         "batch_bazi_general_gated_ordinary_followup_selection_001": 2,
         "batch_bazi_general_gated_ordinary_final_selection_001": 2,
+        "batch_new_material_20260714_001": 885,
     }
     assert not any(
         unit.source_ref.startswith("learning-reference:")
@@ -2220,10 +2221,10 @@ def test_learning_reference_candidate_formal_evidence_boundary_audit_snapshot():
         "Candidate/Formal Evidence Boundary Audit",
         "`017-applied-decisions=45`",
         "`017-create-candidate-decisions=42`",
-        "`013-candidate-extracts=54`",
-        "`013-review-decisions=54`",
-        "`013-promotion-batches=34`",
-        "`012-formal-evidence-units=111`",
+        "`013-candidate-extracts=998`",
+        "`013-review-decisions=998`",
+        "`013-promotion-batches=35`",
+        "`012-formal-evidence-units=996`",
         "`formal_evidence_delta=0`",
         "`learning-reference-source-refs-in-012=0`",
         "`candidate-id-source-refs-in-012=0`",
@@ -2249,17 +2250,17 @@ def test_learning_reference_authorization_audit_confirms_local_boundary_clearanc
         "status:applied": 45,
     }
     assert audit.candidate_status_counts == {
-        "promoted": 51,
-        "rejected": 2,
+        "promoted": 936,
+        "rejected": 61,
         "blocked": 1,
     }
     assert audit.review_decision_counts == {
-        "approved": 51,
-        "rejected": 2,
+        "approved": 936,
+        "rejected": 61,
         "blocked": 1,
     }
-    assert audit.promotion_review_status_counts == {"reviewed": 34}
-    assert audit.formal_evidence_unit_count == 111
+    assert audit.promotion_review_status_counts == {"reviewed": 35}
+    assert audit.formal_evidence_unit_count == 996
     assert audit.formal_evidence_delta == 0
     assert audit.leakage_counts == {
         "learning_reference_source_refs_in_012": 0,
@@ -2340,10 +2341,10 @@ def test_downstream_authorization_summary_consumes_authorization_without_duplica
     )
     assert summary.pending_decision_count == 0
     assert summary.applied_decision_count == 45
-    assert summary.candidate_extract_count == 54
-    assert summary.review_decision_count == 54
-    assert summary.promotion_batch_count == 34
-    assert summary.formal_evidence_unit_count == 111
+    assert summary.candidate_extract_count == 998
+    assert summary.review_decision_count == 998
+    assert summary.promotion_batch_count == 35
+    assert summary.formal_evidence_unit_count == 996
     assert summary.candidate_extract_delta_count == 0
     assert summary.review_decision_delta_count == 0
     assert summary.promotion_batch_delta_count == 0
@@ -2382,10 +2383,10 @@ def test_downstream_authorization_markdown_and_docs_are_in_sync():
         "`authorization-scope=013_012_downstream`",
         "`pending-017-decisions=0`",
         "`017-applied-decisions=45`",
-        "`013-candidate-extracts=54`",
-        "`013-review-decisions=54`",
-        "`013-promotion-batches=34`",
-        "`012-formal-evidence-units=111`",
+        "`013-candidate-extracts=998`",
+        "`013-review-decisions=998`",
+        "`013-promotion-batches=35`",
+        "`012-formal-evidence-units=996`",
         "`candidate-extract-delta=0`",
         "`formal-evidence-delta=0`",
         "`downstream-mutation-authorized=true`",

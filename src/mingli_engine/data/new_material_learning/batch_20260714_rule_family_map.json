@@ -1,0 +1,643 @@
+{
+  "batch_id": "batch_20260714",
+  "family_rules": [
+    {
+      "governed_family": "remedy_boundary",
+      "keywords": [
+        "补救",
+        "補救",
+        "化解",
+        "调理",
+        "調理",
+        "修持",
+        "禳",
+        "养生",
+        "養生",
+        "改运",
+        "改運",
+        "趋避",
+        "趨避",
+        "regimen",
+        "adjustment",
+        "resolution"
+      ]
+    },
+    {
+      "governed_family": "high_risk_signal",
+      "keywords": [
+        "生死",
+        "夭",
+        "丧",
+        "喪",
+        "鳏",
+        "寡",
+        "寿命",
+        "壽命",
+        "死亡",
+        "寿元",
+        "壽元",
+        "凶災",
+        "凶灾",
+        "death",
+        "灾难",
+        "災難",
+        "灾祸",
+        "災禍",
+        "短命"
+      ]
+    },
+    {
+      "governed_family": "useful_god_candidate",
+      "keywords": [
+        "用神",
+        "喜用",
+        "喜忌",
+        "调候",
+        "調候",
+        "病药",
+        "病藥",
+        "扶抑"
+      ]
+    },
+    {
+      "governed_family": "taboo_god_candidate",
+      "keywords": [
+        "忌神",
+        "仇神",
+        "闲神",
+        "閒神"
+      ]
+    },
+    {
+      "governed_family": "pattern_strength",
+      "keywords": [
+        "旺衰",
+        "身旺",
+        "身弱",
+        "身强",
+        "身強",
+        "从格",
+        "從格",
+        "格局",
+        "清浊",
+        "清濁",
+        "强弱",
+        "強弱",
+        "月令",
+        "得令",
+        "通根",
+        "透干",
+        "专旺",
+        "專旺",
+        "假从",
+        "假從",
+        "羊刃",
+        "禄刃",
+        "祿刃",
+        "拱",
+        "格",
+        "root-seeking"
+      ]
+    },
+    {
+      "governed_family": "luck_cycle",
+      "keywords": [
+        "大运",
+        "大運",
+        "流年",
+        "岁运",
+        "歲運",
+        "限运",
+        "限運",
+        "运限",
+        "運限",
+        "行运",
+        "行運",
+        "太岁",
+        "太歲",
+        "小运",
+        "小運",
+        "应期",
+        "應期",
+        "身運",
+        "身运",
+        "dayun"
+      ]
+    },
+    {
+      "governed_family": "branch_interaction",
+      "keywords": [
+        "刑",
+        "冲",
+        "沖",
+        "合",
+        "害",
+        "会",
+        "會",
+        "穿",
+        "天克地",
+        "空亡",
+        "伏吟",
+        "返吟",
+        "void",
+        "combination",
+        "clash",
+        "六破",
+        "藏干",
+        "藏乾"
+      ]
+    },
+    {
+      "governed_family": "five_element_balance",
+      "keywords": [
+        "五行",
+        "金木水火土",
+        "纳音",
+        "納音",
+        "脏腑",
+        "臟腑",
+        "生剋",
+        "生克",
+        "organ",
+        "viscera",
+        "wuxing"
+      ]
+    },
+    {
+      "governed_family": "blind_image_method",
+      "keywords": [
+        "神煞",
+        "取象",
+        "象法",
+        "直读",
+        "直讀",
+        "口诀",
+        "口訣",
+        "断语",
+        "斷語",
+        "歌诀",
+        "歌訣",
+        "诀",
+        "訣",
+        "两头挂",
+        "直断",
+        "直斷",
+        "shen_sha",
+        "verse",
+        "读象",
+        "讀象",
+        "驿马",
+        "驛馬",
+        "桃花",
+        "關煞",
+        "关煞"
+      ]
+    },
+    {
+      "governed_family": "ten_god_relation",
+      "keywords": [
+        "十神",
+        "正官",
+        "七杀",
+        "七殺",
+        "七煞",
+        "偏官",
+        "正财",
+        "正財",
+        "偏财",
+        "偏財",
+        "正印",
+        "偏印",
+        "食神",
+        "伤官",
+        "傷官",
+        "比肩",
+        "劫财",
+        "劫財",
+        "比劫",
+        "官星",
+        "杀星",
+        "殺星",
+        "印星",
+        "财星",
+        "財星",
+        "食伤",
+        "食傷",
+        "官杀",
+        "官殺",
+        "财官",
+        "財官",
+        "枭神",
+        "梟神",
+        "六亲",
+        "六親",
+        "婚姻",
+        "配偶",
+        "夫",
+        "妻",
+        "子息",
+        "子女",
+        "父母",
+        "兄弟",
+        "女命",
+        "財印",
+        "印綬",
+        "印绶",
+        "財富",
+        "财富",
+        "科名",
+        "顯達",
+        "显达",
+        "權柄",
+        "权柄",
+        "文貴",
+        "武職",
+        "貴",
+        "父星",
+        "母星",
+        "福",
+        "spouse",
+        "marriage",
+        "husband",
+        "wife",
+        "seven_killings",
+        "day_stem",
+        "day_pillar",
+        "stem_pair",
+        "kuigang",
+        "jinshen",
+        "guansha"
+      ]
+    }
+  ],
+  "file_schools": [
+    {
+      "file_sha256": "EDF3DA09BB3D08A6BFFC3C59A3418EFCD397B867DDC9DD5C4C03C74A25A778B9",
+      "relative_path": "2800.《命理生死之书》100页.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "DC20C035EA07FA7F6E8FC1543D5079486AFF96C6A54AB66AD750BEDA938DB832",
+      "relative_path": "[三命堂藏版]子平管见.pdf",
+      "school": "子平"
+    },
+    {
+      "file_sha256": "D933ED5AA7E1C8A46871FFFF34ED81D807EC45E33EB43D4E0C3872293F526D18",
+      "relative_path": "[周易 相术 测字]图解八字宝鉴 (刘金仙).pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "DBAC2B50CB4F824D3CFA95800C6582C71FF5D9119ABF6E9B2EFD13CEF6E11B76",
+      "relative_path": "《解梦灵书》.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "58BEDB1BD90DAF56DDE68AA2095B6AA2D0A0B597FD0829262C1231DB74A8CFBA",
+      "relative_path": "八字命理，弟子密训秘籍，彩色扫描166页PDF无水印_1.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "02AE584AC6D1658C5B910642B92B7B73D042988EDA73A78AA72F350F16A510E2",
+      "relative_path": "六爻古籍经典合集 (易隐 易冒 易林卜疑 断易天机) .pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "8380311E3ADCEAF450FA83DAECA16B34B2676FFECD798E2747A8FD0EAB6C91A0",
+      "relative_path": "化解宝典破解笔记30法.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "080B27CCB186CFC5FBCA6F28C7299B4209FA9D55E0D1F007DF8D67FB44A86229",
+      "relative_path": "叅星秘要諏吉便覽.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "5E170A8881E170F8E37AD2AC2809CFAB8C4B4C1D76FBE5C20BBD06E11CE1B12D",
+      "relative_path": "命理精要  上.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "D9A207E745E6A6C96E9DADB45EDF33DDCB48943EF331B1C0D97A4E9AB7BF8213",
+      "relative_path": "命理精要下.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "9075A3B139C7D44AD4F8A2DD6BE39697DD0219BBFB78D2FA6BE93F26CCD4167B",
+      "relative_path": "姚亚峰 《盲派绝学断流年》ce.pdf",
+      "school": "盲派"
+    },
+    {
+      "file_sha256": "8754D6BCB1F5C0A25A0E50718292E64A959151FDECE354A36A0799C78588671E",
+      "relative_path": "子平三命通变渊源-精校.pdf",
+      "school": "子平"
+    },
+    {
+      "file_sha256": "A0787A7D7F59900CC42221A61C6AC480BF868C329E2C9396CFD0E846D96E2645",
+      "relative_path": "学六爻这本最好.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "D81262E64FE5469406C31E097575B6B7E443B05359254AAE1EB530E45A42D4C2",
+      "relative_path": "曾文迪选择宗镜.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "1FF4CE83FD5C41DF042CF3D68F5D14B305FBE099211917BE2E873AE5109016D0",
+      "relative_path": "梅花姓名断..陈春林.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "5D26F403F755539B3CC4286B97D5B526EA7D79DFC06A30AF3A563E5DCAD41358",
+      "relative_path": "梅花易数 .pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "A7C8AD0F0611398A905D66BB0D049775BA0702BEB70F29450E9266574830A1A7",
+      "relative_path": "梅花易数白话解(清晰版).pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "0B213EDD694616062D5AB16520071ACE0137DC73A5C433D0B7B501FDCC65030B",
+      "relative_path": "王亭之《中州派玄空学》(1上册).pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "781BC6B8D8487E7CDA73048FDF178149941DA471EE9982485EC3DF99F38F67E4",
+      "relative_path": "王亭之《中州派玄空学》(2中册).pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "F3311E39FD944FB0BAD469493DBEA652BF22AE4689F19D3F3BC2FE7566F7E7BF",
+      "relative_path": "王亭之《中州派玄空学》(3下册).pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+      "relative_path": "理命摘要.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+      "relative_path": "理命摘要1.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "9165C0733A5AEBFB7CAE98A00619B0EDB4140A0615758AB686779188AEA42E60",
+      "relative_path": "盲人断命秘典.pdf",
+      "school": "盲派"
+    },
+    {
+      "file_sha256": "EEC66E5B64555FCA5573A6A0B341C639065F3761B46F3678152B54F5497E7F9E",
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).docx",
+      "school": ""
+    },
+    {
+      "file_sha256": "BE9987F40E6F74D1F3094EFCC107ABB10172D58D3BD7968D17BEB4B9B38C7AD6",
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "C7D925A8715AF6141321FDB169C7FC0958FBBC21B45404F3F8E5C66B04821CBB",
+      "relative_path": "祖传八字金不换下武当山道长著(30000元内部资料、不能外泄).pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "3D8D644570BF6CE92E7F0B59010E3219817FC3299AC2FAE54138165B4D69119B",
+      "relative_path": "紫微斗数 2025-05-03 21.35(2).pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "D462148FE4D1099652ECBB9AA696D4B5D9F8459DC10247BC23EA0CFE17C725BE",
+      "relative_path": "给出已逝人的八字一眼看出不在人间.pdf",
+      "school": ""
+    },
+    {
+      "file_sha256": "2DF5DEA1A91EDCECEB2593140B2093963CA39FD5A41F11E9DBAE78239B371A87",
+      "relative_path": "鬼门十三针.佚名.民国抄本.德国柏林图书馆藏.pdf",
+      "school": ""
+    }
+  ],
+  "file_systems": [
+    {
+      "file_sha256": "EDF3DA09BB3D08A6BFFC3C59A3418EFCD397B867DDC9DD5C4C03C74A25A778B9",
+      "relative_path": "2800.《命理生死之书》100页.pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "DC20C035EA07FA7F6E8FC1543D5079486AFF96C6A54AB66AD750BEDA938DB832",
+      "relative_path": "[三命堂藏版]子平管见.pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "D933ED5AA7E1C8A46871FFFF34ED81D807EC45E33EB43D4E0C3872293F526D18",
+      "relative_path": "[周易 相术 测字]图解八字宝鉴 (刘金仙).pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "DBAC2B50CB4F824D3CFA95800C6582C71FF5D9119ABF6E9B2EFD13CEF6E11B76",
+      "relative_path": "《解梦灵书》.pdf",
+      "statement": "Dream-omen divination outside the engine rule-family scope.",
+      "system": "dream_omen"
+    },
+    {
+      "file_sha256": "58BEDB1BD90DAF56DDE68AA2095B6AA2D0A0B597FD0829262C1231DB74A8CFBA",
+      "relative_path": "八字命理，弟子密训秘籍，彩色扫描166页PDF无水印_1.pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "02AE584AC6D1658C5B910642B92B7B73D042988EDA73A78AA72F350F16A510E2",
+      "relative_path": "六爻古籍经典合集 (易隐 易冒 易林卜疑 断易天机) .pdf",
+      "statement": "Liuyao hexagram divination outside the engine rule-family scope.",
+      "system": "liuyao"
+    },
+    {
+      "file_sha256": "8380311E3ADCEAF450FA83DAECA16B34B2676FFECD798E2747A8FD0EAB6C91A0",
+      "relative_path": "化解宝典破解笔记30法.pdf",
+      "statement": "Ritual remedy content outside the engine rule-family scope.",
+      "system": "ritual_remedy"
+    },
+    {
+      "file_sha256": "080B27CCB186CFC5FBCA6F28C7299B4209FA9D55E0D1F007DF8D67FB44A86229",
+      "relative_path": "叅星秘要諏吉便覽.pdf",
+      "statement": "Date-selection (zeyi) outside the engine rule-family scope.",
+      "system": "date_selection"
+    },
+    {
+      "file_sha256": "5E170A8881E170F8E37AD2AC2809CFAB8C4B4C1D76FBE5C20BBD06E11CE1B12D",
+      "relative_path": "命理精要  上.pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "D9A207E745E6A6C96E9DADB45EDF33DDCB48943EF331B1C0D97A4E9AB7BF8213",
+      "relative_path": "命理精要下.pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "9075A3B139C7D44AD4F8A2DD6BE39697DD0219BBFB78D2FA6BE93F26CCD4167B",
+      "relative_path": "姚亚峰 《盲派绝学断流年》ce.pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "8754D6BCB1F5C0A25A0E50718292E64A959151FDECE354A36A0799C78588671E",
+      "relative_path": "子平三命通变渊源-精校.pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "A0787A7D7F59900CC42221A61C6AC480BF868C329E2C9396CFD0E846D96E2645",
+      "relative_path": "学六爻这本最好.pdf",
+      "statement": "Liuyao hexagram divination outside the engine rule-family scope.",
+      "system": "liuyao"
+    },
+    {
+      "file_sha256": "D81262E64FE5469406C31E097575B6B7E443B05359254AAE1EB530E45A42D4C2",
+      "relative_path": "曾文迪选择宗镜.pdf",
+      "statement": "Date-selection (zeyi) outside the engine rule-family scope.",
+      "system": "date_selection"
+    },
+    {
+      "file_sha256": "1FF4CE83FD5C41DF042CF3D68F5D14B305FBE099211917BE2E873AE5109016D0",
+      "relative_path": "梅花姓名断..陈春林.pdf",
+      "statement": "Nameology and meihua divination outside the engine rule-family scope.",
+      "system": "nameology_meihua"
+    },
+    {
+      "file_sha256": "5D26F403F755539B3CC4286B97D5B526EA7D79DFC06A30AF3A563E5DCAD41358",
+      "relative_path": "梅花易数 .pdf",
+      "statement": "Meihua Yishu plum-blossom divination outside the engine rule-family scope.",
+      "system": "meihua_yishu"
+    },
+    {
+      "file_sha256": "A7C8AD0F0611398A905D66BB0D049775BA0702BEB70F29450E9266574830A1A7",
+      "relative_path": "梅花易数白话解(清晰版).pdf",
+      "statement": "Meihua Yishu plum-blossom divination outside the engine rule-family scope.",
+      "system": "meihua_yishu"
+    },
+    {
+      "file_sha256": "0B213EDD694616062D5AB16520071ACE0137DC73A5C433D0B7B501FDCC65030B",
+      "relative_path": "王亭之《中州派玄空学》(1上册).pdf",
+      "statement": "Xuankong fengshui outside the engine rule-family scope.",
+      "system": "xuankong_fengshui"
+    },
+    {
+      "file_sha256": "781BC6B8D8487E7CDA73048FDF178149941DA471EE9982485EC3DF99F38F67E4",
+      "relative_path": "王亭之《中州派玄空学》(2中册).pdf",
+      "statement": "Xuankong fengshui outside the engine rule-family scope.",
+      "system": "xuankong_fengshui"
+    },
+    {
+      "file_sha256": "F3311E39FD944FB0BAD469493DBEA652BF22AE4689F19D3F3BC2FE7566F7E7BF",
+      "relative_path": "王亭之《中州派玄空学》(3下册).pdf",
+      "statement": "Xuankong fengshui outside the engine rule-family scope.",
+      "system": "xuankong_fengshui"
+    },
+    {
+      "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+      "relative_path": "理命摘要.pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+      "relative_path": "理命摘要1.pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "9165C0733A5AEBFB7CAE98A00619B0EDB4140A0615758AB686779188AEA42E60",
+      "relative_path": "盲人断命秘典.pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "EEC66E5B64555FCA5573A6A0B341C639065F3761B46F3678152B54F5497E7F9E",
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).docx",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "BE9987F40E6F74D1F3094EFCC107ABB10172D58D3BD7968D17BEB4B9B38C7AD6",
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "C7D925A8715AF6141321FDB169C7FC0958FBBC21B45404F3F8E5C66B04821CBB",
+      "relative_path": "祖传八字金不换下武当山道长著(30000元内部资料、不能外泄).pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "3D8D644570BF6CE92E7F0B59010E3219817FC3299AC2FAE54138165B4D69119B",
+      "relative_path": "紫微斗数 2025-05-03 21.35(2).pdf",
+      "statement": "Ziwei doushu astrology outside the engine rule-family scope.",
+      "system": "ziwei"
+    },
+    {
+      "file_sha256": "D462148FE4D1099652ECBB9AA696D4B5D9F8459DC10247BC23EA0CFE17C725BE",
+      "relative_path": "给出已逝人的八字一眼看出不在人间.pdf",
+      "statement": "Bazi (four-pillars) source inside the engine rule-family scope.",
+      "system": "bazi"
+    },
+    {
+      "file_sha256": "2DF5DEA1A91EDCECEB2593140B2093963CA39FD5A41F11E9DBAE78239B371A87",
+      "relative_path": "鬼门十三针.佚名.民国抄本.德国柏林图书馆藏.pdf",
+      "statement": "Acupuncture and ritual content outside the engine rule-family scope.",
+      "system": "acupuncture_ritual"
+    }
+  ],
+  "out_of_scope_keywords": [
+    "梦",
+    "夢",
+    "dream",
+    "六爻",
+    "卦",
+    "梅花",
+    "紫微",
+    "斗数",
+    "斗數",
+    "星曜",
+    "玄空",
+    "挨星",
+    "城門",
+    "城门",
+    "飞星",
+    "飛星",
+    "七星打劫",
+    "风水",
+    "風水",
+    "阳宅",
+    "陽宅",
+    "阴宅",
+    "陰宅",
+    "山向",
+    "针",
+    "針",
+    "穴",
+    "acupoint",
+    "符",
+    "籙",
+    "箓",
+    "镇宅",
+    "鎮宅",
+    "姓名",
+    "名学",
+    "名學",
+    "择吉",
+    "擇吉",
+    "诹吉",
+    "諏吉",
+    "日课",
+    "日課",
+    "雜占",
+    "杂占"
+  ],
+  "schema_version": "new-material-learning-rule-family-map-v1"
+}

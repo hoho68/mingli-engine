@@ -1,0 +1,828 @@
+{
+  "attempts": {
+    "authorization_ledger_sha256": "f2b365d303f063b1f5e78d7ce502fa62a312760233ad13b78c1e4f744ee7943c",
+    "batch_id": "batch_20260714",
+    "extraction_tranches_sha256": "306a7d2872f048165efa3160b0983e211319d698bfca06eececf5c506d4dd884",
+    "generated_at": "2026-08-09T18:09:53Z",
+    "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+    "prepared_inputs_sha256": "8c7972e4ab1b4ba5e7e7dcaf396521b534e1a475251c62b0573caef08b3b18c1",
+    "probe_ledger_sha256": "9c565ed35adc3f9048d9c754ea7e113b5d3006ec9fe5580fa4a67e16945f8c90",
+    "records": [
+      {
+        "attempt_id": "f12388354362e8db74085de88bf1a5ff58eb0b9c6f837d079b8d82ed63b28c82",
+        "attempt_ordinal": 1,
+        "canonical_output_sha256": "",
+        "completed_at": "2026-08-09T17:03:33Z",
+        "error_category": "provider_invocation_failed",
+        "extraction_packet_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2",
+        "input_receipt_id": "3696ee58a19e95f6804b71f40243bd4ad8e6a89ec1b5d2a86bd4d8ab1f56b2c3",
+        "input_receipt_sha256": "1d9d508ff55a41f78a1149f178602a8980c1a7da05e939c7962701e2a100de02",
+        "model_id": "kimi-for-coding/k3-256k",
+        "previous_attempt_id": "",
+        "provider": "kimi",
+        "response_sha256": "",
+        "started_at": "2026-08-09T17:03:32Z",
+        "status": "provider_error",
+        "tranche_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2"
+      },
+      {
+        "attempt_id": "7d8617b2d10d95d4eeeb487f8e55a2417d777d9189ffece93014789fbc87dd3b",
+        "attempt_ordinal": 2,
+        "canonical_output_sha256": "",
+        "completed_at": "2026-08-09T17:08:05Z",
+        "error_category": "response_validation_failed",
+        "extraction_packet_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2",
+        "input_receipt_id": "3696ee58a19e95f6804b71f40243bd4ad8e6a89ec1b5d2a86bd4d8ab1f56b2c3",
+        "input_receipt_sha256": "1d9d508ff55a41f78a1149f178602a8980c1a7da05e939c7962701e2a100de02",
+        "model_id": "kimi-for-coding/k3-256k",
+        "previous_attempt_id": "f12388354362e8db74085de88bf1a5ff58eb0b9c6f837d079b8d82ed63b28c82",
+        "provider": "kimi",
+        "response_sha256": "60951496853627b8038fea6ddc11b04d9a657b0008d1dfbc0b3a202a279ad94b",
+        "started_at": "2026-08-09T17:07:47Z",
+        "status": "validation_rejected",
+        "tranche_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2"
+      },
+      {
+        "attempt_id": "b3f46ab11fafbf150143ba6a332470c397409d2d27dea602b181dfb207e727e1",
+        "attempt_ordinal": 3,
+        "canonical_output_sha256": "",
+        "completed_at": "2026-08-09T17:10:02Z",
+        "error_category": "response_validation_failed",
+        "extraction_packet_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2",
+        "input_receipt_id": "3696ee58a19e95f6804b71f40243bd4ad8e6a89ec1b5d2a86bd4d8ab1f56b2c3",
+        "input_receipt_sha256": "1d9d508ff55a41f78a1149f178602a8980c1a7da05e939c7962701e2a100de02",
+        "model_id": "kimi-for-coding/k3-256k",
+        "previous_attempt_id": "7d8617b2d10d95d4eeeb487f8e55a2417d777d9189ffece93014789fbc87dd3b",
+        "provider": "kimi",
+        "response_sha256": "04221b6878b854118de3abdd959cffe9f8177955425175ba9072c44e38bf89e0",
+        "started_at": "2026-08-09T17:09:23Z",
+        "status": "validation_rejected",
+        "tranche_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2"
+      },
+      {
+        "attempt_id": "e8c5fd501ca3a8f2d88097911d0c8902c2405bb52d622b441ffd0e7457e1e279",
+        "attempt_ordinal": 4,
+        "canonical_output_sha256": "",
+        "completed_at": "2026-08-09T17:52:08Z",
+        "error_category": "response_validation_failed",
+        "extraction_packet_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2",
+        "input_receipt_id": "3696ee58a19e95f6804b71f40243bd4ad8e6a89ec1b5d2a86bd4d8ab1f56b2c3",
+        "input_receipt_sha256": "1d9d508ff55a41f78a1149f178602a8980c1a7da05e939c7962701e2a100de02",
+        "model_id": "kimi-for-coding/k3-256k",
+        "previous_attempt_id": "b3f46ab11fafbf150143ba6a332470c397409d2d27dea602b181dfb207e727e1",
+        "provider": "kimi",
+        "response_sha256": "c35a4d7f213b1dccd543138e4adba1afb6cb6ef31fc6c799d20e077ac6be6e99",
+        "started_at": "2026-08-09T17:48:13Z",
+        "status": "validation_rejected",
+        "tranche_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2"
+      },
+      {
+        "attempt_id": "43a881bc62d850cae2adaa75107f0b938b2f751b995a7aa9453058957f44ef94",
+        "attempt_ordinal": 5,
+        "canonical_output_sha256": "82cc43b7635a1172c948218dd6378ca2bf0bfa835d73824a21c1d000139da002",
+        "completed_at": "2026-08-09T18:09:53Z",
+        "error_category": "",
+        "extraction_packet_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2",
+        "input_receipt_id": "3696ee58a19e95f6804b71f40243bd4ad8e6a89ec1b5d2a86bd4d8ab1f56b2c3",
+        "input_receipt_sha256": "1d9d508ff55a41f78a1149f178602a8980c1a7da05e939c7962701e2a100de02",
+        "model_id": "kimi-for-coding/k3-256k",
+        "previous_attempt_id": "e8c5fd501ca3a8f2d88097911d0c8902c2405bb52d622b441ffd0e7457e1e279",
+        "provider": "kimi",
+        "response_sha256": "b53d847cf7b8a57a72c650f9922fea2c11dcf891e373fdbb0fc2553c8cd3b3e4",
+        "started_at": "2026-08-09T18:06:35Z",
+        "status": "succeeded",
+        "tranche_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2"
+      }
+    ],
+    "schema_version": "new-material-learning-model-attempts-v1"
+  },
+  "batch_id": "batch_20260714",
+  "coverage": {
+    "authorization_ledger_sha256": "f2b365d303f063b1f5e78d7ce502fa62a312760233ad13b78c1e4f744ee7943c",
+    "batch_id": "batch_20260714",
+    "extraction_tranches_sha256": "306a7d2872f048165efa3160b0983e211319d698bfca06eececf5c506d4dd884",
+    "generated_at": "2026-08-09T18:31:29Z",
+    "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+    "model_attempts_sha256": "85323ddc804a84bc136dd7c803d73390a192471cb220b31324f3aa1fffa11b9c",
+    "probe_ledger_sha256": "9c565ed35adc3f9048d9c754ea7e113b5d3006ec9fe5580fa4a67e16945f8c90",
+    "records": [
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "01dd4d76b38fbc91fc4eaaeac2afc779ebbeec7d14fb9f4e8a85ce8b5b56f517",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "EDF3DA09BB3D08A6BFFC3C59A3418EFCD397B867DDC9DD5C4C03C74A25A778B9",
+        "missing_page_ranges": [],
+        "relative_path": "2800.《命理生死之书》100页.pdf",
+        "route": "blocked",
+        "status": "blocked",
+        "total_pages": 0
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "28ee8140d2ae75187bc44043a69afe5aff06b73d28f127c20af005b1b63ce9e1",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "DC20C035EA07FA7F6E8FC1543D5079486AFF96C6A54AB66AD750BEDA938DB832",
+        "missing_page_ranges": [
+          "page:1-51"
+        ],
+        "relative_path": "[三命堂藏版]子平管见.pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 51
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "bdc99c3bb8775fc8637120f2efa3f36f9ad26d21e4a82ea62bae9015ddeb5370",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "D933ED5AA7E1C8A46871FFFF34ED81D807EC45E33EB43D4E0C3872293F526D18",
+        "missing_page_ranges": [
+          "page:1-261"
+        ],
+        "relative_path": "[周易 相术 测字]图解八字宝鉴 (刘金仙).pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 261
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "fbb4c72d82a29885d58960d9a2d3818c2d826a6abffa96f99cb2e35d9eda04c5",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "DBAC2B50CB4F824D3CFA95800C6582C71FF5D9119ABF6E9B2EFD13CEF6E11B76",
+        "missing_page_ranges": [
+          "page:1-63"
+        ],
+        "relative_path": "《解梦灵书》.pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 63
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "cdfb1a579ce2c9ab9822ee6d47278bb180b7a22a260b52e29e1b868a155f1cf9",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "58BEDB1BD90DAF56DDE68AA2095B6AA2D0A0B597FD0829262C1231DB74A8CFBA",
+        "missing_page_ranges": [],
+        "relative_path": "八字命理，弟子密训秘籍，彩色扫描166页PDF无水印_1.pdf",
+        "route": "blocked",
+        "status": "blocked",
+        "total_pages": 0
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "e01914b6e4915850ee2b1284ce5000ad5e91030f340bff5539fc152b9054a76f",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "02AE584AC6D1658C5B910642B92B7B73D042988EDA73A78AA72F350F16A510E2",
+        "missing_page_ranges": [
+          "page:1-1517"
+        ],
+        "relative_path": "六爻古籍经典合集 (易隐 易冒 易林卜疑 断易天机) .pdf",
+        "route": "deepseek_text",
+        "status": "uncovered",
+        "total_pages": 1517
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "6c73ed1f5d27a9beaa44a0697707f2470854b98bbe145432d29c96e1888779b6",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "8380311E3ADCEAF450FA83DAECA16B34B2676FFECD798E2747A8FD0EAB6C91A0",
+        "missing_page_ranges": [],
+        "relative_path": "化解宝典破解笔记30法.pdf",
+        "route": "blocked",
+        "status": "blocked",
+        "total_pages": 0
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "0d5bfb0e7c5a754e61c223e6ae422184fa71ab5924cf8ae931471c7cb35022bb",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "080B27CCB186CFC5FBCA6F28C7299B4209FA9D55E0D1F007DF8D67FB44A86229",
+        "missing_page_ranges": [
+          "page:1-23"
+        ],
+        "relative_path": "叅星秘要諏吉便覽.pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 23
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "d1a2a2d1ce38732255253b5fecf78385e4d533ac44d5b1f914fe22665f5b0e15",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "5E170A8881E170F8E37AD2AC2809CFAB8C4B4C1D76FBE5C20BBD06E11CE1B12D",
+        "missing_page_ranges": [
+          "page:1-352"
+        ],
+        "relative_path": "命理精要  上.pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 352
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "a7d6824647bd0fa9ff0d51919d4d82cbbe5ab91eb0c663a5b9bd9a0628174f7b",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "D9A207E745E6A6C96E9DADB45EDF33DDCB48943EF331B1C0D97A4E9AB7BF8213",
+        "missing_page_ranges": [
+          "page:1-339"
+        ],
+        "relative_path": "命理精要下.pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 339
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "4bd45aa7f30d87dcf1a462ca01eb7eccd200d9ceb08e0f497d6a35adc60585e7",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "9075A3B139C7D44AD4F8A2DD6BE39697DD0219BBFB78D2FA6BE93F26CCD4167B",
+        "missing_page_ranges": [
+          "page:1-506"
+        ],
+        "relative_path": "姚亚峰 《盲派绝学断流年》ce.pdf",
+        "route": "deepseek_text",
+        "status": "uncovered",
+        "total_pages": 506
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "798c3a256ce01009c6434af87adc4c8bd6176fc269ab4a048332a91faa0abc6d",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "8754D6BCB1F5C0A25A0E50718292E64A959151FDECE354A36A0799C78588671E",
+        "missing_page_ranges": [
+          "page:1-37"
+        ],
+        "relative_path": "子平三命通变渊源-精校.pdf",
+        "route": "deepseek_text",
+        "status": "uncovered",
+        "total_pages": 37
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "727a1d077819ac4e0167548c4bbb7801ed8022d0cf3635585dfedf3b35da1b44",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "A0787A7D7F59900CC42221A61C6AC480BF868C329E2C9396CFD0E846D96E2645",
+        "missing_page_ranges": [
+          "page:1-296"
+        ],
+        "relative_path": "学六爻这本最好.pdf",
+        "route": "deepseek_text",
+        "status": "uncovered",
+        "total_pages": 296
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "af23d11098e9604a9f1dbefd09f2395a44754ef260e82e20c41fbe3b85257d2f",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "D81262E64FE5469406C31E097575B6B7E443B05359254AAE1EB530E45A42D4C2",
+        "missing_page_ranges": [
+          "page:1-36"
+        ],
+        "relative_path": "曾文迪选择宗镜.pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 36
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "40b02eba42964abeeb026a9074be6f6d77641fa086d4ebcda7e5166a7fd4df7b",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "1FF4CE83FD5C41DF042CF3D68F5D14B305FBE099211917BE2E873AE5109016D0",
+        "missing_page_ranges": [
+          "page:1-79"
+        ],
+        "relative_path": "梅花姓名断..陈春林.pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 79
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "74c03a2cff5b7a76c98b72ca0231ddaef8c93d9c0622ac411eb7c92e7fbbb680",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "5D26F403F755539B3CC4286B97D5B526EA7D79DFC06A30AF3A563E5DCAD41358",
+        "missing_page_ranges": [
+          "page:1-204"
+        ],
+        "relative_path": "梅花易数 .pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 204
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "c1b94657c29b405319eead4b6ea400982659081935f14bd10cde3f21a1b7e20d",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "A7C8AD0F0611398A905D66BB0D049775BA0702BEB70F29450E9266574830A1A7",
+        "missing_page_ranges": [
+          "page:1-359"
+        ],
+        "relative_path": "梅花易数白话解(清晰版).pdf",
+        "route": "deepseek_text",
+        "status": "uncovered",
+        "total_pages": 359
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "8006fac4bf185fb14866d1d817e53414e7236178fc198ef81e323cac91e6e251",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "0B213EDD694616062D5AB16520071ACE0137DC73A5C433D0B7B501FDCC65030B",
+        "missing_page_ranges": [
+          "page:1-119"
+        ],
+        "relative_path": "王亭之《中州派玄空学》(1上册).pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 119
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "78a366fedb150a2311d162d769390fc0ac6884ca865e5f97695f9d6ba8068653",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "781BC6B8D8487E7CDA73048FDF178149941DA471EE9982485EC3DF99F38F67E4",
+        "missing_page_ranges": [
+          "page:1-122"
+        ],
+        "relative_path": "王亭之《中州派玄空学》(2中册).pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 122
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "c600adbdc3da964902cd4d165722ebbf808247a79d17d378031cd4c7f5341083",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "F3311E39FD944FB0BAD469493DBEA652BF22AE4689F19D3F3BC2FE7566F7E7BF",
+        "missing_page_ranges": [
+          "page:1-109"
+        ],
+        "relative_path": "王亭之《中州派玄空学》(3下册).pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 109
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "2d1b25856f7995e85a08e91e081f4703408c70fd15591dd247b6e92efa0b4dd9",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+        "missing_page_ranges": [
+          "page:1-47"
+        ],
+        "relative_path": "理命摘要.pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 47
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "7d7f94bced1e9990a9edcad55f0662aa231799abf0375cc7b85d33be65419eaf",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+        "missing_page_ranges": [
+          "page:1-47"
+        ],
+        "relative_path": "理命摘要1.pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 47
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "b475332601a051d95328f2aa26574fe638ce652d859ecd04f74e3925a034abea",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "9165C0733A5AEBFB7CAE98A00619B0EDB4140A0615758AB686779188AEA42E60",
+        "missing_page_ranges": [],
+        "relative_path": "盲人断命秘典.pdf",
+        "route": "blocked",
+        "status": "blocked",
+        "total_pages": 0
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "2f2dd866f2a429702ef69af211afac4fcd4efd352167267e8703296407f3639f",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "EEC66E5B64555FCA5573A6A0B341C639065F3761B46F3678152B54F5497E7F9E",
+        "missing_page_ranges": [],
+        "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).docx",
+        "route": "blocked",
+        "status": "blocked",
+        "total_pages": 0
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "2cc161f3d1a7fdae2ad25d89c941c36733470e482c1073daa020c86f6bd42eab",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "BE9987F40E6F74D1F3094EFCC107ABB10172D58D3BD7968D17BEB4B9B38C7AD6",
+        "missing_page_ranges": [],
+        "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).pdf",
+        "route": "blocked",
+        "status": "blocked",
+        "total_pages": 0
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "c0db5d0595017fd9aecd1e3cfc10ba9a37ae7ad0107cf0d76f4f01bfc03b4076",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "C7D925A8715AF6141321FDB169C7FC0958FBBC21B45404F3F8E5C66B04821CBB",
+        "missing_page_ranges": [],
+        "relative_path": "祖传八字金不换下武当山道长著(30000元内部资料、不能外泄).pdf",
+        "route": "blocked",
+        "status": "blocked",
+        "total_pages": 0
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "550e0119cc11b615b180de4fab23a9f03d0c865562a873070b6b1b5e8b8dd565",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "3D8D644570BF6CE92E7F0B59010E3219817FC3299AC2FAE54138165B4D69119B",
+        "missing_page_ranges": [
+          "page:1-82"
+        ],
+        "relative_path": "紫微斗数 2025-05-03 21.35(2).pdf",
+        "route": "kimi_multimodal",
+        "status": "uncovered",
+        "total_pages": 82
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "7612e753e27294e66c4369d9a11c17fcfe052fa45a2e585d5c3b0454fdc7d7d5",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "D462148FE4D1099652ECBB9AA696D4B5D9F8459DC10247BC23EA0CFE17C725BE",
+        "missing_page_ranges": [],
+        "relative_path": "给出已逝人的八字一眼看出不在人间.pdf",
+        "route": "blocked",
+        "status": "blocked",
+        "total_pages": 0
+      },
+      {
+        "accepted_validated_output_ids": [],
+        "coverage_id": "0b5bee74a788ca244de059444a9c085b17bdf7b53863fbae156e3c84c7523ff4",
+        "covered_page_count": 0,
+        "covered_page_ranges": [],
+        "file_sha256": "2DF5DEA1A91EDCECEB2593140B2093963CA39FD5A41F11E9DBAE78239B371A87",
+        "missing_page_ranges": [],
+        "relative_path": "鬼门十三针.佚名.民国抄本.德国柏林图书馆藏.pdf",
+        "route": "blocked",
+        "status": "blocked",
+        "total_pages": 0
+      }
+    ],
+    "schema_version": "new-material-learning-file-coverage-v1",
+    "validated_outputs_sha256": "56a2e057e06e06533f5fcd6ea0085091d3ef209b823bf4c92b37c44c53c1131c"
+  },
+  "dispatch_journal_sha256": "f943c63f63e509e4a91d09aea4cd863c91bf2076259141fb1c5214f01839b309",
+  "extraction_tranches_sha256": "306a7d2872f048165efa3160b0983e211319d698bfca06eececf5c506d4dd884",
+  "generated_at": "2026-08-09T18:31:29Z",
+  "outputs": {
+    "authorization_ledger_sha256": "f2b365d303f063b1f5e78d7ce502fa62a312760233ad13b78c1e4f744ee7943c",
+    "batch_id": "batch_20260714",
+    "extraction_tranches_sha256": "306a7d2872f048165efa3160b0983e211319d698bfca06eececf5c506d4dd884",
+    "generated_at": "2026-08-09T18:31:29Z",
+    "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+    "model_attempts_sha256": "85323ddc804a84bc136dd7c803d73390a192471cb220b31324f3aa1fffa11b9c",
+    "probe_ledger_sha256": "9c565ed35adc3f9048d9c754ea7e113b5d3006ec9fe5580fa4a67e16945f8c90",
+    "records": [
+      {
+        "acceptance_status": "quarantined",
+        "attempt_id": "43a881bc62d850cae2adaa75107f0b938b2f751b995a7aa9453058957f44ef94",
+        "dispositioned_at": "2026-08-09T18:31:29Z",
+        "dispositioned_by": "primary-agent-safety-review",
+        "quarantine_reasons": [
+          "retry_policy_exceeded",
+          "traditional_lifespan_content_requires_local_adjudication"
+        ],
+        "result": {
+          "authorization_ledger_sha256": "f2b365d303f063b1f5e78d7ce502fa62a312760233ad13b78c1e4f744ee7943c",
+          "authorization_receipt_id": "batch_20260714-auth-dc20c035ea07-002",
+          "authorization_receipt_sha256": "1429a2267ade79b1fc4b2ac7ddd5774311f29fe75334d95e0cdfb92a87abf60d",
+          "extraction_packet_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2",
+          "file_sha256": "DC20C035EA07FA7F6E8FC1543D5079486AFF96C6A54AB66AD750BEDA938DB832",
+          "learning_points": [
+            {
+              "conditions": [
+                "正官、時上偏官、時上偏財各節均明文強調止喜一位",
+                "多見、合多或官殺混雜時斷語轉凶"
+              ],
+              "limitations": [
+                "為頁4至頁6文本的候選歸納而非定論",
+                "未與其他命理文獻交叉核對",
+                "古籍斷語未經獨立驗證"
+              ],
+              "statement": "本書格局論呈現以「一位」為清、以「多見混雜」為濁的明顯傾向。"
+            },
+            {
+              "conditions": [
+                "頁4註文明言身強有制伏者為偏官、身弱無制伏者為七殺",
+                "身殺相停被視為妙，身弱殺旺或殺重身輕被視為不吉"
+              ],
+              "limitations": [
+                "屬對註文的候選性解讀",
+                "字形為木刻體掃描，個別字釋讀或有出入",
+                "不構成實務論斷依據"
+              ],
+              "statement": "偏官與七殺在本文中並非兩顆不同的星，而是同一星隨日主強弱與制伏有無而異名。"
+            },
+            {
+              "conditions": [
+                "羊刃合殺、食神制殺、印綬化殺並見於頁4註文",
+                "頁5明言陰日傷官駕殺、陽日傷官不能駕殺僅論傷官帶殺"
+              ],
+              "limitations": [
+                "機制分類為候選性整理",
+                "陰陽日限制的適用範圍文中未進一步界定",
+                "需原頁覆核後方可採信"
+              ],
+              "statement": "文本將制化殺星歸納為合、駕、制、化四種機制，且傷官駕殺受日干陰陽限制。"
+            },
+            {
+              "conditions": [
+                "正財格要求支下有根為貴，地支財伏暗生被稱為奇",
+                "比肩分財、比劫重見混亂偏財被列為忌"
+              ],
+              "limitations": [
+                "歸納自頁5至頁6正財、偏財、時上偏財三節",
+                "賦文引語的出處未在頁內標明",
+                "屬傳統命學陳述而非可驗證規律"
+              ],
+              "statement": "財格貴在財星有根、伏藏暗生，並以比劫爭財為主要破格因素。"
+            },
+            {
+              "conditions": [
+                "頁7明言用印見財十有九貧、財為印綬忌神",
+                "同頁又言柱中比劫重重見財反吉、財星破印宜逢比劫之鄕"
+              ],
+              "limitations": [
+                "反轉條件的邊界文中未量化",
+                "為候選性整理，需覆核原文",
+                "不宜直接移植為形式化規則"
+              ],
+              "statement": "印格中財通常為忌神，但比劫重重時見財反吉，顯示文本斷語存在條件反轉。"
+            },
+            {
+              "conditions": [
+                "火土、土金傷官被列為不宜見官",
+                "金水傷官喜見官印、水木傷官喜見財官、木火傷官有財見官不忌"
+              ],
+              "limitations": [
+                "頁8傷官格第二首詩註文未完，內容截斷",
+                "分類標準的細節或受未見後文影響",
+                "屬候選解讀而非定稿"
+              ],
+              "statement": "傷官見官的吉凶在本文中須按五行傷官類型區分，不能一概而論。"
+            }
+          ],
+          "limitations": [
+            "頁1為書名頁、頁2為自序、頁3為目錄，無規則性正文，故候選均出自頁4-8。",
+            "文本為木刻版式掃描之繁體文言文，部分字形（如囂囂、趦趄、仃伶等）釋讀存在不確定性，未逐字校勘。",
+            "頁8傷官格第二首註文起而未完，相關候選內容受截斷限制。",
+            "所有條目為對古籍斷語的候選性整理，屬傳統命學陳述，未經獨立來源頁驗證，不構成保證性斷語或專業建議。",
+            "序文與目錄中提及的下卷諸格（曲直、炎上、稼穡、從革、潤下等）內容不在本批頁面內，未作推測。"
+          ],
+          "model_id": "kimi-for-coding/k3-256k",
+          "output_sha256": "82cc43b7635a1172c948218dd6378ca2bf0bfa835d73824a21c1d000139da002",
+          "page_end": 8,
+          "page_start": 1,
+          "prompt_version": "batch_20260714_v1",
+          "relative_path": "[三命堂藏版]子平管见.pdf",
+          "risk_tier": "ordinary",
+          "route": "kimi_multimodal",
+          "rule_candidates": [
+            {
+              "conclusion": "文本認為一位正官配印或配財主權專、清高、忠良，屬吉格候選。",
+              "limitations": [
+                "源自頁4正官格詩訣與註文的候選解讀",
+                "古籍斷語未經獨立驗證",
+                "遇合多、刑衝破害或傷官時文本斷語轉凶"
+              ],
+              "rule_family": "正官格喜忌",
+              "trigger_conditions": [
+                "命局以正官格論",
+                "正官僅一位透干",
+                "柱中見印綬或財星"
+              ]
+            },
+            {
+              "conclusion": "文本認為官被合奪則不顯、遇刑衝破害則格局受損，傷官為正官格忌神，見之主壽不永之凶候選。",
+              "limitations": [
+                "為頁4註文的候選性整理",
+                "『貪合忘官』等語的具體操作定義文中未展開",
+                "需原頁覆核"
+              ],
+              "rule_family": "正官格禁忌",
+              "trigger_conditions": [
+                "正官格成立",
+                "內外合多或支干見刑衝破害",
+                "或傷官見官"
+              ]
+            },
+            {
+              "conclusion": "身強有制伏者文本稱偏官、身強殺淺可假殺為權；身弱無制伏者稱七殺；身殺相停為妙，身弱殺旺或殺重身輕俱不為佳。",
+              "limitations": [
+                "源自頁4偏官格註文",
+                "強弱與制伏的判準文中未量化",
+                "候選規則需覆核後使用"
+              ],
+              "rule_family": "偏官七殺辨別",
+              "trigger_conditions": [
+                "陽干尅陽干或陰干尅陰干之偏官透出",
+                "日主身強且有制伏",
+                "或身弱而無制伏"
+              ]
+            },
+            {
+              "conclusion": "文本認為羊刃能合殺、食神能制殺、印綬能化殺、陰日傷官能駕殺；陽日傷官不能駕殺僅論傷官帶殺；忌官殺混雜又無印化。",
+              "limitations": [
+                "合駕制化四者並見於頁4至頁5註文",
+                "陰陽日限制的細節未進一步界定",
+                "屬傳統命學陳述而非驗證結論"
+              ],
+              "rule_family": "制殺機制",
+              "trigger_conditions": [
+                "偏官或七殺格",
+                "柱中見羊刃、食神、印綬",
+                "或陰日干見傷官"
+              ]
+            },
+            {
+              "conclusion": "文本認為時上一位偏官得食制、刃合、財滋者主耿介磊落、以文學馳名；若傷食尅制太過又無財星生助，則為遇而不遇之寒儒候選。",
+              "limitations": [
+                "源自頁5時上偏官格一節",
+                "『再見者非也』僅針對一位之清而言",
+                "未與後文其他條件合參"
+              ],
+              "rule_family": "時上偏官格",
+              "trigger_conditions": [
+                "偏官僅一位見於時上",
+                "天干透食神制殺且地支藏羊刃合殺",
+                "或有財星生殺"
+              ]
+            },
+            {
+              "conclusion": "文本認為財有根氣主妻賢內助、多積財寶；再見官印為三奇全備主早登科第；比肩分財為不足，祿忌衝破、馬忌空亡。",
+              "limitations": [
+                "源自頁5至頁6正財格一節",
+                "三奇、祿馬等語依文本直述未加考據",
+                "候選規則需原頁覆核"
+              ],
+              "rule_family": "正財格",
+              "trigger_conditions": [
+                "正財格成立",
+                "財星支下有根或伏藏暗生",
+                "柱中原有生炁或成三合局"
+              ]
+            },
+            {
+              "conclusion": "文本認為月上偏財生旺、官殺一位不雜者主慷慨風流、有福有祿；比劫重見則混亂虧損，運臨墓庫死絕劫殺分奪則福壽參差。",
+              "limitations": [
+                "源自頁6偏財格一節",
+                "行運條件屬文本假設性情境",
+                "未經獨立驗證"
+              ],
+              "rule_family": "偏財格",
+              "trigger_conditions": [
+                "偏財生旺於月支",
+                "官或殺僅一位清純",
+                "無比肩劫財重見"
+              ]
+            },
+            {
+              "conclusion": "文本認為時上偏財一位、財有氣而日主強者主功名遠大、他鄉發福；年提又見財而日主無氣者為財多身弱、富屋貧人候選；忌別宮再見與比肩兄弟。",
+              "limitations": [
+                "源自頁6時上偏財格一節",
+                "喜一位、忌多見的界線依文本直述",
+                "需覆核原文字形"
+              ],
+              "rule_family": "時上偏財格",
+              "trigger_conditions": [
+                "偏財僅一位見於時上",
+                "時財有氣且日主剛強",
+                "或年提又見財而日主無氣"
+              ]
+            },
+            {
+              "conclusion": "文本認為印格以官殺為元神不可無、以財為忌神不可有；無官殺僅作清高技藝看，用印見財十有九貧；比劫重重見財反吉，印輕喜殺透成殺印相生；印綬重重見食神主暗相刑、孤苦風疾之凶候選。",
+              "limitations": [
+                "源自頁7正印格一節",
+                "條件反轉（比劫重重見財反吉）的邊界未量化",
+                "候選規則需覆核"
+              ],
+              "rule_family": "正印格",
+              "trigger_conditions": [
+                "正印格成立",
+                "柱中有官殺為印綬元神",
+                "不見財星破印或柱中比劫重重"
+              ]
+            },
+            {
+              "conclusion": "文本認為柱中無食曰印、有食曰梟，梟食相爭無官殺解救者不得令終；偏印柱無官殺為虛名虛利，偏財能尅偏印主愁苦，大運歲君逢食神則災殃立至之凶候選。",
+              "limitations": [
+                "源自頁7至頁8偏印格一節",
+                "梟印多主暗疾等斷語為文本經驗性陳述",
+                "未經獨立驗證"
+              ],
+              "rule_family": "偏印格（梟神）",
+              "trigger_conditions": [
+                "偏印居提綱",
+                "柱中見食神形成梟食相爭",
+                "無官殺解救"
+              ]
+            },
+            {
+              "conclusion": "文本認為火土、土金傷官不宜見官；金水傷官喜見官印；水木傷官喜見財官；木火傷官有財見官不忌、無財見官則凶；身旺用財、身弱用印主富貴，身旺無財、身弱無印主終身勞碌貧苦。",
+              "limitations": [
+                "源自頁8傷官格一節，第二首詩註文未完而截斷",
+                "五樣分類的細節或受未見後文影響",
+                "候選規則需原頁覆核後方可採信"
+              ],
+              "rule_family": "傷官格分類喜忌",
+              "trigger_conditions": [
+                "傷官格成立",
+                "按五行分火土、土金、金水、水木、木火五樣",
+                "參酌身旺身弱與財印有無"
+              ]
+            }
+          ],
+          "source_locators": [
+            "page:1-8"
+          ],
+          "summary": "頁1為書名頁（子平管見、明雷鳴夏先生著、三命堂藏板、辛卯年巳月三命堂刊印），頁2為自序（署丁酉歲仲夏月望日、八公山人秀泉子雷鳴夏識，述習命理緣起），頁3為目錄（上卷、下卷各格與篇名），頁4至頁8為卷上正文開端，依次含正官格、偏官格、時上偏官格、正財格、偏財格、時上偏財格、正印格、偏印格、傷官格（其二起而未完）之詩訣與註文。頁1-3屬書名、序、目錄性質，不直接出規則；規則候選均取自頁4-8可見文本，且僅為候選，需原頁覆核。",
+          "total_pages": 51
+        },
+        "supersedes_validated_output_id": "",
+        "tranche_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2",
+        "validated_at": "2026-08-09T18:09:53Z",
+        "validated_output_id": "c01a1071943118ba24a348d4568d36829b18910b2baa93fb65004fc78d0899e6"
+      }
+    ],
+    "schema_version": "new-material-learning-validated-outputs-v2"
+  },
+  "prepared_inputs": {
+    "authorization_ledger_sha256": "f2b365d303f063b1f5e78d7ce502fa62a312760233ad13b78c1e4f744ee7943c",
+    "batch_id": "batch_20260714",
+    "extraction_tranches_sha256": "306a7d2872f048165efa3160b0983e211319d698bfca06eececf5c506d4dd884",
+    "generated_at": "2026-08-09T18:06:34Z",
+    "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+    "probe_ledger_sha256": "9c565ed35adc3f9048d9c754ea7e113b5d3006ec9fe5580fa4a67e16945f8c90",
+    "records": [
+      {
+        "artifact_count": 8,
+        "authorization_ledger_sha256": "f2b365d303f063b1f5e78d7ce502fa62a312760233ad13b78c1e4f744ee7943c",
+        "byte_count": 1961037,
+        "content_sha256s": [
+          "3c5c546056d94699c5f319f86f2c13217d6123f71382fdd384d679e51533bcb5",
+          "74c54a7afdc2288acda7cd754f615ef7fa41bb80370c22df74f644ffb64c0bf4",
+          "dc63fbe2a60723ae5d0d361492bdcb06c55e492af39e6d39bfdbdf66a12b45b7",
+          "244dc5f1d21d15f6fe12f80d73a4b54729cf9b2684f0efaea1141d298cd9f2b5",
+          "810a5b5874b91ab1bef306dfbab45d1322abc8b59ac78b211915c75bec89fa61",
+          "7e7df9172ec18ad8bc69463ea66287ed13986cd0d2068f192ae9ff6ac06ffd75",
+          "9767023ad9e2217541841769f61c8dc19d5ee6dd70700f289bb9c49885a5046a",
+          "53b20f070ee2407ba2cd35f54e0df823f5eac6cc5d3b69c0f2332ddc8b60429f"
+        ],
+        "extraction_packet_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2",
+        "file_sha256": "DC20C035EA07FA7F6E8FC1543D5079486AFF96C6A54AB66AD750BEDA938DB832",
+        "input_receipt_id": "3696ee58a19e95f6804b71f40243bd4ad8e6a89ec1b5d2a86bd4d8ab1f56b2c3",
+        "model_id": "kimi-for-coding/k3-256k",
+        "page_end": 8,
+        "page_start": 1,
+        "prepared_at": "2026-08-09T17:03:31Z",
+        "probe_ledger_sha256": "9c565ed35adc3f9048d9c754ea7e113b5d3006ec9fe5580fa4a67e16945f8c90",
+        "relative_path": "[三命堂藏版]子平管见.pdf",
+        "route": "kimi_multimodal",
+        "source_locator": "page:1-8",
+        "tool_identity": "poppler:pdftoppm.exe:sha256=dfaba6d6dd265b9f3d8ecfd58c887ea590942b4dfb45c6f5c7d4fa63927639d7",
+        "total_pages": 51,
+        "tranche_id": "464ae0a77cd7d5e8695d3b3d2167a04d9d169705070c9e683eb73ba61c89e2a2"
+      }
+    ],
+    "schema_version": "new-material-learning-prepared-inputs-v1"
+  },
+  "schema_version": "new-material-learning-extraction-state-v1"
+}

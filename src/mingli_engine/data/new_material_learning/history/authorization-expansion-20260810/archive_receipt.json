@@ -1,0 +1,74 @@
+{
+  "archive_id": "authorization-expansion-20260810",
+  "archived_at": "2026-08-10T00:00:00Z",
+  "batch_id": "batch_20260714",
+  "reason": "Preserve the validated pre-expansion extraction generation before the user's explicit authorization of all 29 non-video files.",
+  "records": [
+    {
+      "byte_count": 14047,
+      "path": "batch_20260714_dispatch_journal.json",
+      "sha256": "f943c63f63e509e4a91d09aea4cd863c91bf2076259141fb1c5214f01839b309"
+    },
+    {
+      "byte_count": 39467,
+      "path": "batch_20260714_extraction_state.json",
+      "sha256": "476eb47e41433c2e429fc5b645806e1077147cd2a22faeb8d5280d0f0b019397"
+    },
+    {
+      "byte_count": 479786,
+      "path": "batch_20260714_extraction_tranches.json",
+      "sha256": "306a7d2872f048165efa3160b0983e211319d698bfca06eececf5c506d4dd884"
+    },
+    {
+      "byte_count": 15294,
+      "path": "batch_20260714_file_coverage.json",
+      "sha256": "8dab26a6e098ce26e346986e9d11fbc8bc3560c8819744139dc68abb7995ecdb"
+    },
+    {
+      "byte_count": 31301,
+      "path": "batch_20260714_file_results.json",
+      "sha256": "b12cc05d9b7b28e2b07994604fca68f00ebfba5a29bd8e0f3c395f6d899655bb"
+    },
+    {
+      "byte_count": 6247,
+      "path": "batch_20260714_final_audit.json",
+      "sha256": "619da92001edd010f15fdc90c5507f2b4246c60b61a32c23785b1cf80df8c28e"
+    },
+    {
+      "byte_count": 6598,
+      "path": "batch_20260714_manifest.json",
+      "sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3"
+    },
+    {
+      "byte_count": 5468,
+      "path": "batch_20260714_model_attempts.json",
+      "sha256": "85323ddc804a84bc136dd7c803d73390a192471cb220b31324f3aa1fffa11b9c"
+    },
+    {
+      "byte_count": 34360,
+      "path": "batch_20260714_model_runs.json",
+      "sha256": "9c565ed35adc3f9048d9c754ea7e113b5d3006ec9fe5580fa4a67e16945f8c90"
+    },
+    {
+      "byte_count": 2233,
+      "path": "batch_20260714_prepared_inputs.json",
+      "sha256": "8c7972e4ab1b4ba5e7e7dcaf396521b534e1a475251c62b0573caef08b3b18c1"
+    },
+    {
+      "byte_count": 27436,
+      "path": "batch_20260714_remote_authorizations.json",
+      "sha256": "f2b365d303f063b1f5e78d7ce502fa62a312760233ad13b78c1e4f744ee7943c"
+    },
+    {
+      "byte_count": 214261,
+      "path": "batch_20260714_task8_command_evidence.json",
+      "sha256": "bca2d894017a694eeae8fc34ee8ec405e57414b9ef458ccaf5c6cef0138d2596"
+    },
+    {
+      "byte_count": 14433,
+      "path": "batch_20260714_validated_outputs.json",
+      "sha256": "56a2e057e06e06533f5fcd6ea0085091d3ef209b823bf4c92b37c44c53c1131c"
+    }
+  ],
+  "schema_version": "new-material-learning-extraction-archive-v1"
+}

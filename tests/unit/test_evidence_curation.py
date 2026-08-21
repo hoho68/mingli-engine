@@ -223,7 +223,7 @@ def test_project_curation_quality_report_includes_conflicts_and_has_no_failures(
         "bazi_general_bazi_shizhan_mifa_luck_cycle_001",
     }
 
-    assert report.approved_evidence_count == 111
+    assert report.approved_evidence_count == 996
     assert report.open_conflicts == ["conflict_high_risk_scope_001"]
     assert set(report.sources_with_gaps) == {
         "blind_life_manual",
@@ -324,9 +324,9 @@ def test_project_knowledge_activation_summary_enables_formal_interpretation(
     expanded = build_formal_interpretation(sample_bazi_chart, evidence_units, conflicts)
 
     assert summary.activation_status == "enabled_with_guardrails"
-    assert summary.source_count == 29
-    assert summary.report_usable_source_count == 28
-    assert summary.approved_evidence_count == 111
+    assert summary.source_count == 42
+    assert summary.report_usable_source_count == 41
+    assert summary.approved_evidence_count == 996
     assert summary.missing_rule_families == []
     assert summary.unavailable_conclusion_count == 0
     assert summary.formal_conclusion_count == 10

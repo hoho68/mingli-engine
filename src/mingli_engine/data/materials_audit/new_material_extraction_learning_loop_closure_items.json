@@ -8,6 +8,7 @@
     "routing_id": "013-explicit-candidate-review-or-015-queue-refresh",
     "inventory_confirmation_id": "015-external-material-inventory-refresh",
     "closure_status": "new_material_learning_loop_closed",
+    "record_scope": "historical_snapshot",
     "selected_next_material_entry": "013-explicit-candidate-review-or-new-material-intake",
     "completed_stage_count": 16,
     "source_selection_item_count": 5,
@@ -20,7 +21,7 @@
     "promotion_batch_delta_count": 0,
     "formal_evidence_delta_count": 0,
     "downstream_mutation_authorized": false,
-    "rationale": "The refreshed inventory routes back to source selection, but the selected raw-text next-cycle surfaces are already closed through preparation reading and 017 authorization audit.",
+    "rationale": "Historical 2026-06-30 snapshot: the refreshed inventory routed back to source selection, while the selected raw-text next-cycle surfaces were closed through preparation reading and 017 authorization audit. Current readiness must be read from the recomputed closure summary.",
     "guardrails": [
       "Use tracked metadata only for loop closure.",
       "Do not reopen external raw materials during this checkpoint.",

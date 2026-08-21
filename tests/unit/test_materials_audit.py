@@ -174,6 +174,28 @@ def _write_source_library_fixture(
     return data_dir
 
 
+def _write_inventory_csv_fixture(tmp_path: Path) -> Path:
+    inventory_dir = tmp_path / "inventory"
+    inventory_dir.mkdir()
+    groups = materials_audit.load_raw_text_material_triage_groups()
+    extensions = [
+        extension
+        for group in groups
+        for extension, count in group.extension_counts.items()
+        for _ in range(count)
+    ]
+    priority_count = sum(group.priority_text_candidate_count for group in groups)
+    (inventory_dir / "inventory_all.csv").write_text(
+        "Extension\n" + "\n".join(extensions) + "\n",
+        encoding="utf-8",
+    )
+    (inventory_dir / "priority_text_candidates.csv").write_text(
+        "Extension\n" + ".pdf\n" * priority_count,
+        encoding="utf-8",
+    )
+    return inventory_dir
+
+
 def test_materials_audit_constants_cover_contract_values():
     assert models.MATERIAL_AUDIT_SCOPES == frozenset(
         {"bazi", "ziwei", "qimen", "ritual_remedy", "mixed", "out_of_scope"}
@@ -1862,18 +1884,22 @@ def test_materials_audit_queue_refresh_markdown_and_docs_are_in_sync():
         assert marker in handoff
 
 
-def test_external_material_inventory_refresh_summarizes_scoped_metadata():
+def test_external_material_inventory_refresh_reports_tracked_snapshot_truthfully(
+    monkeypatch,
+    tmp_path,
+):
+    monkeypatch.setattr(materials_audit, "_workspace_root", lambda: tmp_path)
     refresh = materials_audit.build_external_material_inventory_refresh_summary()
 
     assert refresh.refresh_id == "015-external-material-inventory-refresh"
-    assert refresh.refresh_status == "scoped_metadata_registered"
+    assert refresh.refresh_status == "snapshot_only"
     assert refresh.external_entry_counts == {
         "root_pdf": 9,
         "markdown_root": 11,
         "raw_source_root": 1,
         "preparation_root": 10,
     }
-    assert refresh.scanned_entry_count == 31
+    assert refresh.scanned_entry_count == 0
     assert "Markdown/2800.《命理生死之书》100页.md" in (
         refresh.tracked_external_entry_ids
     )
@@ -1890,18 +1916,97 @@ def test_external_material_inventory_refresh_summarizes_scoped_metadata():
     ]
     assert refresh.new_queue_item_ids == ["queue_raw_text_materials_folder_triage"]
     assert refresh.downstream_mutation_authorized is False
-    assert refresh.next_material_entry == "015-raw-text-next-cycle-source-selection"
+    assert refresh.next_material_entry == "015-external-material-inventory-refresh"
     assert refresh.boundary_checks == {
-        "external_roots_scanned_read_only": "passed",
+        "external_roots_scanned_read_only": "not_currently_verified",
         "015_metadata_registered": "passed",
-        "workflow_artifacts_excluded": "passed",
+        "workflow_artifacts_excluded": "not_currently_verified",
         "post_queue_refresh_surface_confirmed": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
         "013_012_not_mutated": "passed",
     }
+    assert any("historical snapshot only" in item for item in refresh.guardrails)
 
 
-def test_external_material_inventory_refresh_markdown_and_docs_are_in_sync():
+def test_external_material_inventory_refresh_keeps_explicit_empty_roots_strict(
+    tmp_path,
+):
+    empty_root = tmp_path / "empty"
+    empty_root.mkdir()
+
+    empty_refresh = materials_audit.build_external_material_inventory_refresh_summary(
+        workspace_root=empty_root
+    )
+
+    assert empty_refresh.refresh_status == "external_inventory_needs_attention"
+    assert empty_refresh.external_entry_counts == {
+        "root_pdf": 0,
+        "markdown_root": 0,
+        "raw_source_root": 0,
+        "preparation_root": 0,
+    }
+    assert empty_refresh.scanned_entry_count == 0
+    assert empty_refresh.boundary_checks["external_roots_scanned_read_only"] == (
+        "failed"
+    )
+    assert empty_refresh.boundary_checks["raw_materials_not_mutated"] == (
+        "not_currently_verified"
+    )
+    assert empty_refresh.next_material_entry == (
+        "015-external-material-inventory-refresh"
+    )
+
+
+def test_external_material_inventory_refresh_failed_workflow_artifact_boundary_stays_put(
+    tmp_path,
+):
+    live_root = tmp_path / "live"
+    live_root.mkdir()
+    for relative_root in ("Markdown", "资料原文", "资料整理"):
+        (live_root / relative_root).mkdir()
+    (live_root / "资料原文" / "文本类").mkdir()
+
+    live_refresh = materials_audit.build_external_material_inventory_refresh_summary(
+        workspace_root=live_root
+    )
+
+    assert live_refresh.refresh_status == "external_inventory_needs_attention"
+    assert live_refresh.scanned_entry_count == 1
+    assert live_refresh.untracked_material_entry_ids == []
+    assert live_refresh.boundary_checks["external_roots_scanned_read_only"] == "passed"
+    assert live_refresh.boundary_checks["workflow_artifacts_excluded"] == "failed"
+    assert live_refresh.next_material_entry == (
+        "015-external-material-inventory-refresh"
+    )
+
+
+def test_external_material_inventory_refresh_preserves_strict_live_success(tmp_path):
+    live_root = tmp_path / "live"
+    live_root.mkdir()
+    for relative_root in ("Markdown", "资料原文", "资料整理"):
+        (live_root / relative_root).mkdir()
+    (live_root / "资料原文" / "文本类").mkdir()
+    (live_root / "资料整理" / "_inventory").mkdir()
+    for filename in (
+        "new_thread_prompt_2026-05-29.md",
+        "thread_handoff_2026-05-29.md",
+    ):
+        (live_root / "资料整理" / filename).write_text("metadata", encoding="utf-8")
+
+    refresh = materials_audit.build_external_material_inventory_refresh_summary(
+        workspace_root=live_root
+    )
+
+    assert refresh.refresh_status == "scoped_metadata_registered"
+    assert all(status == "passed" for status in refresh.boundary_checks.values())
+    assert refresh.next_material_entry == "015-raw-text-next-cycle-source-selection"
+
+
+def test_external_material_inventory_refresh_markdown_and_docs_are_in_sync(
+    monkeypatch,
+    tmp_path,
+):
+    monkeypatch.setattr(materials_audit, "_workspace_root", lambda: tmp_path)
     refresh = materials_audit.build_external_material_inventory_refresh_summary()
     markdown = materials_audit.render_external_material_inventory_refresh_markdown(
         refresh
@@ -1915,14 +2020,16 @@ def test_external_material_inventory_refresh_markdown_and_docs_are_in_sync():
 
     for marker in (
         "015 External Material Inventory Refresh",
-        "`external-inventory-status=scoped_metadata_registered`",
-        "`external-entries=31`",
+        "`external-inventory-status=snapshot_only`",
+        "`external-entries=0`",
         "`new-015-representations=2`",
         "`new-015-queue-items=1`",
         "`untracked-material-entries=0`",
         "`excluded-work-artifacts=3`",
         "`downstream-mutation-authorized=false`",
-        "`next-material-entry=015-raw-text-next-cycle-source-selection`",
+        "`next-material-entry=015-external-material-inventory-refresh`",
+        "`external_roots_scanned_read_only`: `not_currently_verified`",
+        "`raw_materials_not_mutated`: `not_currently_verified`",
         "`post_queue_refresh_surface_confirmed`: `passed`",
     ):
         assert marker in markdown
@@ -1959,8 +2066,13 @@ def test_raw_text_material_triage_groups_load_current_inventory_split():
     )
 
 
-def test_raw_text_material_triage_summary_verifies_inventory_csv_counts():
-    summary = materials_audit.build_raw_text_material_triage_summary()
+def test_raw_text_material_triage_summary_verifies_explicit_inventory_csv_counts(
+    tmp_path,
+):
+    inventory_dir = _write_inventory_csv_fixture(tmp_path)
+    summary = materials_audit.build_raw_text_material_triage_summary(
+        inventory_dir=inventory_dir
+    )
 
     assert summary.triage_id == "015-raw-text-materials-folder-risk-triage"
     assert summary.triage_status == "triage_completed"
@@ -2010,7 +2122,95 @@ def test_raw_text_material_triage_summary_verifies_inventory_csv_counts():
     }
 
 
-def test_raw_text_material_triage_markdown_and_docs_are_in_sync():
+def test_raw_text_material_triage_reports_missing_default_csvs_as_snapshot_only(
+    monkeypatch,
+    tmp_path,
+):
+    monkeypatch.setattr(materials_audit, "_inventory_csv_dir", lambda: tmp_path)
+
+    summary = materials_audit.build_raw_text_material_triage_summary()
+
+    assert summary.triage_status == "snapshot_only"
+    assert summary.total_file_count == 1139
+    assert summary.priority_text_candidate_count == 832
+    assert summary.boundary_checks["inventory_csv_loaded"] == (
+        "not_currently_verified"
+    )
+    assert summary.boundary_checks["raw_materials_not_mutated"] == (
+        "not_currently_verified"
+    )
+    assert summary.next_material_entry == (
+        "015-raw-text-materials-folder-risk-triage"
+    )
+    assert any("historical snapshot only" in item for item in summary.guardrails)
+
+
+def test_raw_text_material_triage_keeps_explicit_inventory_csvs_strict(tmp_path):
+    inventory_dir = tmp_path / "incomplete_inventory"
+    inventory_dir.mkdir()
+    (inventory_dir / "inventory_all.csv").write_text(
+        "Extension\n.pdf\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(materials_audit.MaterialsAuditError, match="missing inventory CSV"):
+        materials_audit.build_raw_text_material_triage_summary(
+            inventory_dir=inventory_dir
+        )
+
+
+def test_raw_text_material_triage_empty_explicit_csvs_stay_put(tmp_path):
+    inventory_dir = tmp_path / "empty_inventory"
+    inventory_dir.mkdir()
+    for filename in ("inventory_all.csv", "priority_text_candidates.csv"):
+        (inventory_dir / filename).write_text("Extension\n", encoding="utf-8")
+
+    summary = materials_audit.build_raw_text_material_triage_summary(
+        inventory_dir=inventory_dir
+    )
+
+    assert summary.triage_status == "triage_needs_attention"
+    assert summary.boundary_checks["inventory_csv_loaded"] == "failed"
+    assert summary.next_material_entry == (
+        "015-raw-text-materials-folder-risk-triage"
+    )
+
+
+@pytest.mark.parametrize(
+    ("filename", "failed_check"),
+    (
+        ("inventory_all.csv", "triage_groups_cover_inventory"),
+        ("priority_text_candidates.csv", "priority_candidates_accounted"),
+    ),
+)
+def test_raw_text_material_triage_count_mismatched_explicit_csvs_stay_put(
+    tmp_path,
+    filename,
+    failed_check,
+):
+    inventory_dir = _write_inventory_csv_fixture(tmp_path)
+    csv_path = inventory_dir / filename
+    csv_path.write_text(
+        csv_path.read_text(encoding="utf-8") + ".pdf\n",
+        encoding="utf-8",
+    )
+
+    summary = materials_audit.build_raw_text_material_triage_summary(
+        inventory_dir=inventory_dir
+    )
+
+    assert summary.triage_status == "triage_needs_attention"
+    assert summary.boundary_checks[failed_check] == "failed"
+    assert summary.next_material_entry == (
+        "015-raw-text-materials-folder-risk-triage"
+    )
+
+
+def test_raw_text_material_triage_markdown_and_docs_are_in_sync(
+    monkeypatch,
+    tmp_path,
+):
+    monkeypatch.setattr(materials_audit, "_inventory_csv_dir", lambda: tmp_path)
     summary = materials_audit.build_raw_text_material_triage_summary()
     markdown = materials_audit.render_raw_text_material_triage_markdown(summary)
     materials_doc = Path("docs/classical_sources/materials_audit.md").read_text(
@@ -2022,14 +2222,16 @@ def test_raw_text_material_triage_markdown_and_docs_are_in_sync():
 
     for marker in (
         "015 Raw Text Materials Folder Risk Triage",
-        "`raw-text-triage-status=triage_completed`",
+        "`raw-text-triage-status=snapshot_only`",
         "`raw-text-total-files=1139`",
         "`raw-text-priority-candidates=832`",
         "`raw-text-triage-groups=11`",
         "`risk-review-groups=3`",
         "`deferred-groups=6`",
         "`downstream-mutation-authorized=false`",
-        "`next-material-entry=015-liang-bazi-core-source-selection`",
+        "`next-material-entry=015-raw-text-materials-folder-risk-triage`",
+        "`inventory_csv_loaded`: `not_currently_verified`",
+        "`raw_materials_not_mutated`: `not_currently_verified`",
     ):
         assert marker in markdown
         assert marker in materials_doc
@@ -2295,11 +2497,15 @@ def test_raw_text_next_cycle_source_selection_items_load_boundary_plan():
     ].risk_boundary == "sensitive"
 
 
-def test_raw_text_next_cycle_source_selection_summary_counts_boundary_plan():
+def test_raw_text_next_cycle_source_selection_summary_requires_live_inventory(
+    monkeypatch,
+    tmp_path,
+):
+    monkeypatch.setattr(materials_audit, "_workspace_root", lambda: tmp_path)
     summary = materials_audit.build_raw_text_next_cycle_source_selection_summary()
 
     assert summary.selection_id == "015-raw-text-next-cycle-source-selection"
-    assert summary.selection_status == "next_cycle_source_selection_completed"
+    assert summary.selection_status == "next_cycle_source_selection_needs_attention"
     assert summary.triage_group_id == "raw_text_triage_bazi_general"
     assert summary.source_root == materials_audit.RAW_TEXT_TRIAGE_SOURCE_ROOT
     assert summary.selection_item_count == 5
@@ -2335,22 +2541,26 @@ def test_raw_text_next_cycle_source_selection_summary_counts_boundary_plan():
         "bazi_general_sensitive_topic_cluster",
     ]
     assert summary.downstream_mutation_authorized is False
-    assert summary.next_material_entry == "015-raw-text-next-cycle-identity-review"
+    assert summary.next_material_entry == "015-raw-text-next-cycle-source-selection"
     assert summary.boundary_checks == {
         "next_cycle_items_loaded": "passed",
         "source_cluster_items_loaded": "passed",
-        "external_inventory_entrypoint_confirmed": "passed",
+        "external_inventory_entrypoint_confirmed": "not_currently_verified",
         "selected_clusters_need_identity_review": "passed",
         "deferred_clusters_stay_deferred": "passed",
         "sensitive_clusters_stay_risk_review": "passed",
         "huntian_baolan_deferred": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
         "source_library_not_mutated": "passed",
         "013_012_not_mutated": "passed",
     }
 
 
-def test_raw_text_next_cycle_source_selection_markdown_and_docs_are_in_sync():
+def test_raw_text_next_cycle_source_selection_markdown_and_docs_are_in_sync(
+    monkeypatch,
+    tmp_path,
+):
+    monkeypatch.setattr(materials_audit, "_workspace_root", lambda: tmp_path)
     summary = materials_audit.build_raw_text_next_cycle_source_selection_summary()
     markdown = materials_audit.render_raw_text_next_cycle_source_selection_markdown(
         summary
@@ -2364,13 +2574,15 @@ def test_raw_text_next_cycle_source_selection_markdown_and_docs_are_in_sync():
 
     for marker in (
         "015 Raw Text Next Cycle Source Selection",
-        "`next-cycle-source-selection-status=next_cycle_source_selection_completed`",
+        "`next-cycle-source-selection-status=next_cycle_source_selection_needs_attention`",
         "`next-cycle-source-selection-items=5`",
         "`selected-for-identity-review=2`",
         "`deferred-clusters=2`",
         "`risk-review-clusters=1`",
         "`downstream-mutation-authorized=false`",
-        "`next-material-entry=015-raw-text-next-cycle-identity-review`",
+        "`next-material-entry=015-raw-text-next-cycle-source-selection`",
+        "`external_inventory_entrypoint_confirmed`: `not_currently_verified`",
+        "`raw_materials_not_mutated`: `not_currently_verified`",
     ):
         assert marker in markdown
         assert marker in materials_doc
@@ -2414,7 +2626,7 @@ def test_raw_text_next_cycle_identity_review_summary_counts_selected_clusters():
     summary = materials_audit.build_raw_text_next_cycle_identity_review_summary()
 
     assert summary.review_id == "015-raw-text-next-cycle-identity-review"
-    assert summary.review_status == "next_cycle_identity_review_completed"
+    assert summary.review_status == "next_cycle_identity_review_needs_attention"
     assert summary.triage_group_id == "raw_text_triage_bazi_general"
     assert summary.source_root == materials_audit.RAW_TEXT_TRIAGE_SOURCE_ROOT
     assert summary.identity_review_item_count == 2
@@ -2456,7 +2668,7 @@ def test_raw_text_next_cycle_identity_review_summary_counts_selected_clusters():
         "cluster_counts_match_source_selection": "passed",
         "deferred_clusters_remain_out_of_scope": "passed",
         "risk_review_clusters_remain_out_of_scope": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
         "source_library_not_mutated": "passed",
         "013_012_not_mutated": "passed",
     }
@@ -2476,7 +2688,7 @@ def test_raw_text_next_cycle_identity_review_markdown_and_docs_are_in_sync():
 
     for marker in (
         "015 Raw Text Next Cycle Identity Review",
-        "`next-cycle-identity-review-status=next_cycle_identity_review_completed`",
+        "`next-cycle-identity-review-status=next_cycle_identity_review_needs_attention`",
         "`next-cycle-identity-review-items=2`",
         "`cluster-source-selection-required=2`",
         "`registration-prep-ready=0`",
@@ -2518,7 +2730,7 @@ def test_raw_text_next_cycle_cluster_source_selection_summary_counts_authorized_
     summary = materials_audit.build_raw_text_next_cycle_cluster_source_selection_summary()
 
     assert summary.selection_id == "015-raw-text-next-cycle-cluster-source-selection"
-    assert summary.selection_status == "next_cycle_cluster_source_selection_completed"
+    assert summary.selection_status == "next_cycle_cluster_source_selection_needs_attention"
     assert summary.source_selection_item_count == 2
     assert summary.selected_for_registration_count == 2
     assert summary.registered_source_entry_count == 2
@@ -2553,7 +2765,7 @@ def test_raw_text_next_cycle_cluster_source_selection_summary_counts_authorized_
         "012_evidence_promoted": "passed",
         "deferred_clusters_remain_out_of_scope": "passed",
         "risk_review_clusters_remain_out_of_scope": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -2571,7 +2783,7 @@ def test_raw_text_next_cycle_cluster_source_selection_markdown_and_docs_are_in_s
 
     for marker in (
         "015 Raw Text Next Cycle Cluster Source Selection",
-        "`next-cycle-cluster-source-selection-status=next_cycle_cluster_source_selection_completed`",
+        "`next-cycle-cluster-source-selection-status=next_cycle_cluster_source_selection_needs_attention`",
         "`next-cycle-cluster-source-selection-items=2`",
         "`selected-for-registration=2`",
         "`registered-source-entries=2`",
@@ -2614,7 +2826,7 @@ def test_raw_text_next_cycle_followup_selection_summary_counts_authorized_chain(
     summary = materials_audit.build_raw_text_next_cycle_followup_selection_summary()
 
     assert summary.selection_id == "015-raw-text-next-cycle-followup-selection"
-    assert summary.selection_status == "next_cycle_followup_selection_completed"
+    assert summary.selection_status == "next_cycle_followup_selection_needs_attention"
     assert summary.source_selection_item_count == 2
     assert summary.selected_for_registration_count == 2
     assert summary.registered_source_entry_count == 2
@@ -2651,7 +2863,7 @@ def test_raw_text_next_cycle_followup_selection_summary_counts_authorized_chain(
         "012_evidence_promoted": "passed",
         "case_formula_clusters_remain_deferred": "passed",
         "sensitive_clusters_remain_risk_gated": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -2669,7 +2881,7 @@ def test_raw_text_next_cycle_followup_selection_markdown_and_docs_are_in_sync():
 
     for marker in (
         "015 Raw Text Next Cycle Followup Selection",
-        "`next-cycle-followup-selection-status=next_cycle_followup_selection_completed`",
+        "`next-cycle-followup-selection-status=next_cycle_followup_selection_needs_attention`",
         "`next-cycle-followup-selection-items=2`",
         "`selected-for-registration=2`",
         "`registered-source-entries=2`",
@@ -2719,7 +2931,7 @@ def test_raw_text_next_cycle_gated_cluster_review_prep_summary_counts_boundaries
     summary = materials_audit.build_raw_text_next_cycle_gated_cluster_review_prep_summary()
 
     assert summary.prep_id == "015-raw-text-next-cycle-gated-cluster-review-prep"
-    assert summary.prep_status == "gated_cluster_review_prep_completed"
+    assert summary.prep_status == "gated_cluster_review_prep_needs_attention"
     assert summary.prep_item_count == 3
     assert summary.selected_for_source_selection_count == 2
     assert summary.risk_review_required_count == 1
@@ -2757,7 +2969,7 @@ def test_raw_text_next_cycle_gated_cluster_review_prep_summary_counts_boundaries
         "sensitive_cluster_stays_risk_review": "passed",
         "no_source_library_mutation": "passed",
         "no_013_012_mutation": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -2775,7 +2987,7 @@ def test_raw_text_next_cycle_gated_cluster_review_prep_markdown_and_docs_sync():
 
     for marker in (
         "015 Raw Text Next Cycle Gated Cluster Review Prep",
-        "`gated-cluster-review-prep-status=gated_cluster_review_prep_completed`",
+        "`gated-cluster-review-prep-status=gated_cluster_review_prep_needs_attention`",
         "`gated-cluster-review-prep-items=3`",
         "`selected-for-source-selection=2`",
         "`risk-review-required=1`",
@@ -2835,7 +3047,7 @@ def test_raw_text_next_cycle_gated_ordinary_source_selection_summary_counts_clos
     assert summary.selection_id == (
         "015-raw-text-next-cycle-gated-ordinary-source-selection"
     )
-    assert summary.selection_status == "gated_ordinary_source_selection_completed"
+    assert summary.selection_status == "gated_ordinary_source_selection_needs_attention"
     assert summary.source_selection_item_count == 2
     assert summary.source_file_count == 2
     assert summary.priority_text_candidate_count == 2
@@ -2886,7 +3098,7 @@ def test_raw_text_next_cycle_gated_ordinary_source_selection_summary_counts_clos
         "013_candidates_promoted": "passed",
         "012_evidence_promoted": "passed",
         "sensitive_cluster_remains_risk_review": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -2908,7 +3120,7 @@ def test_raw_text_next_cycle_gated_ordinary_source_selection_markdown_and_docs_s
 
     for marker in (
         "015 Raw Text Next Cycle Gated Ordinary Source Selection",
-        "`gated-ordinary-source-selection-status=gated_ordinary_source_selection_completed`",
+        "`gated-ordinary-source-selection-status=gated_ordinary_source_selection_needs_attention`",
         "`gated-ordinary-source-selection-items=2`",
         "`selected-for-registration=2`",
         "`registered-source-entries=2`",
@@ -2974,7 +3186,7 @@ def test_raw_text_next_cycle_gated_ordinary_followup_selection_summary_counts_cl
     assert summary.selection_id == (
         "015-raw-text-next-cycle-gated-ordinary-followup-selection"
     )
-    assert summary.selection_status == "gated_ordinary_followup_selection_completed"
+    assert summary.selection_status == "gated_ordinary_followup_selection_needs_attention"
     assert summary.source_selection_item_count == 2
     assert summary.source_file_count == 2
     assert summary.priority_text_candidate_count == 2
@@ -3027,7 +3239,7 @@ def test_raw_text_next_cycle_gated_ordinary_followup_selection_summary_counts_cl
         "013_candidates_promoted": "passed",
         "012_evidence_promoted": "passed",
         "sensitive_cluster_remains_risk_review": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -3049,7 +3261,7 @@ def test_raw_text_next_cycle_gated_ordinary_followup_selection_markdown_and_docs
 
     for marker in (
         "015 Raw Text Next Cycle Gated Ordinary Followup Selection",
-        "`gated-ordinary-followup-selection-status=gated_ordinary_followup_selection_completed`",
+        "`gated-ordinary-followup-selection-status=gated_ordinary_followup_selection_needs_attention`",
         "`gated-ordinary-followup-selection-items=2`",
         "`selected-for-registration=2`",
         "`registered-source-entries=2`",
@@ -3118,7 +3330,7 @@ def test_raw_text_next_cycle_gated_ordinary_final_selection_summary_counts_closu
     assert summary.selection_id == (
         "015-raw-text-next-cycle-gated-ordinary-final-selection"
     )
-    assert summary.selection_status == "gated_ordinary_final_selection_completed"
+    assert summary.selection_status == "gated_ordinary_final_selection_needs_attention"
     assert summary.source_selection_item_count == 2
     assert summary.source_file_count == 2
     assert summary.priority_text_candidate_count == 2
@@ -3172,7 +3384,7 @@ def test_raw_text_next_cycle_gated_ordinary_final_selection_summary_counts_closu
         "012_evidence_promoted": "passed",
         "ordinary_representative_paths_exhausted": "passed",
         "sensitive_cluster_remains_risk_review": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -3194,7 +3406,7 @@ def test_raw_text_next_cycle_gated_ordinary_final_selection_markdown_and_docs_sy
 
     for marker in (
         "015 Raw Text Next Cycle Gated Ordinary Final Selection",
-        "`gated-ordinary-final-selection-status=gated_ordinary_final_selection_completed`",
+        "`gated-ordinary-final-selection-status=gated_ordinary_final_selection_needs_attention`",
         "`gated-ordinary-final-selection-items=2`",
         "`selected-for-registration=2`",
         "`registered-source-entries=2`",
@@ -3264,7 +3476,7 @@ def test_raw_text_next_cycle_sensitive_risk_review_prep_summary_counts_closure()
     )
 
     assert summary.selection_id == "015-raw-text-next-cycle-sensitive-risk-review-prep"
-    assert summary.selection_status == "sensitive_risk_review_prep_completed"
+    assert summary.selection_status == "sensitive_risk_review_prep_needs_attention"
     assert summary.prep_item_count == 3
     assert summary.source_file_count == 3
     assert summary.priority_text_candidate_count == 3
@@ -3304,8 +3516,8 @@ def test_raw_text_next_cycle_sensitive_risk_review_prep_summary_counts_closure()
         "action_routing_valid": "passed",
         "source_library_mutation_blocked": "passed",
         "downstream_mutation_blocked": "passed",
-        "ordinary_final_selection_completed": "passed",
-        "raw_materials_not_mutated": "passed",
+            "ordinary_final_selection_completed": "failed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -3327,7 +3539,7 @@ def test_raw_text_next_cycle_sensitive_risk_review_prep_markdown_and_docs_sync()
 
     for marker in (
         "015 Raw Text Next Cycle Sensitive Risk Review Prep",
-        "`sensitive-risk-review-prep-status=sensitive_risk_review_prep_completed`",
+        "`sensitive-risk-review-prep-status=sensitive_risk_review_prep_needs_attention`",
         "`sensitive-risk-review-prep-items=3`",
         "`source-level-risk-review=1`",
         "`blocked-after-sensitive-prep=1`",
@@ -3385,7 +3597,7 @@ def test_raw_text_next_cycle_sensitive_source_level_risk_review_summary_counts_c
     assert summary.selection_id == (
         "015-raw-text-next-cycle-sensitive-source-level-risk-review"
     )
-    assert summary.selection_status == "sensitive_source_level_risk_review_completed"
+    assert summary.selection_status == "sensitive_source_level_risk_review_needs_attention"
     assert summary.review_item_count == 1
     assert summary.source_file_count == 1
     assert summary.priority_text_candidate_count == 1
@@ -3413,7 +3625,7 @@ def test_raw_text_next_cycle_sensitive_source_level_risk_review_summary_counts_c
     assert summary.target_rule_family_counts == {"ten_god_relation": 1}
     assert summary.boundary_checks == {
         "sensitive_source_level_risk_review_items_loaded": "passed",
-        "sensitive_risk_review_prep_completed": "passed",
+            "sensitive_risk_review_prep_completed": "failed",
         "only_prepared_prep_items_reviewed": "passed",
         "blocked_and_deferred_prep_retained": "passed",
         "source_paths_are_relative": "passed",
@@ -3421,7 +3633,7 @@ def test_raw_text_next_cycle_sensitive_source_level_risk_review_summary_counts_c
         "source_library_mutation_blocked": "passed",
         "downstream_mutation_blocked": "passed",
         "no_downstream_records_created": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -3443,7 +3655,7 @@ def test_raw_text_next_cycle_sensitive_source_level_risk_review_markdown_and_doc
 
     for marker in (
         "015 Raw Text Next Cycle Sensitive Source-Level Risk Review",
-        "`sensitive-source-level-risk-review-status=sensitive_source_level_risk_review_completed`",
+        "`sensitive-source-level-risk-review-status=sensitive_source_level_risk_review_needs_attention`",
         "`sensitive-source-level-risk-review-items=1`",
         "`cleared-for-registration-prep=1`",
         "`registered-source-entries=0`",
@@ -3494,7 +3706,7 @@ def test_raw_text_next_cycle_sensitive_registration_prep_summary_counts_closure(
     )
 
     assert summary.prep_id == "015-raw-text-next-cycle-sensitive-registration-prep"
-    assert summary.prep_status == "sensitive_registration_prep_completed"
+    assert summary.prep_status == "sensitive_registration_prep_needs_attention"
     assert summary.registration_prep_item_count == 1
     assert summary.proposed_source_file_count == 1
     assert summary.registered_source_entry_count == 1
@@ -3528,7 +3740,7 @@ def test_raw_text_next_cycle_sensitive_registration_prep_summary_counts_closure(
     )
     assert summary.boundary_checks == {
         "sensitive_registration_prep_items_loaded": "passed",
-        "source_level_risk_review_completed": "passed",
+            "source_level_risk_review_completed": "failed",
         "source_level_review_references_valid": "passed",
         "proposed_entries_available": "passed",
         "blocked_and_deferred_prep_retained": "passed",
@@ -3536,7 +3748,7 @@ def test_raw_text_next_cycle_sensitive_registration_prep_summary_counts_closure(
         "source_library_mutation_blocked": "passed",
         "downstream_mutation_blocked": "passed",
         "no_downstream_records_created": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -3556,7 +3768,7 @@ def test_raw_text_next_cycle_sensitive_registration_prep_markdown_and_docs_sync(
 
     for marker in (
         "015 Raw Text Next Cycle Sensitive Registration Prep",
-        "`sensitive-registration-prep-status=sensitive_registration_prep_completed`",
+        "`sensitive-registration-prep-status=sensitive_registration_prep_needs_attention`",
         "`sensitive-registration-prep-items=1`",
         "`proposed-source-files=1`",
         "`registered-source-entries=1`",
@@ -3599,7 +3811,7 @@ def test_raw_text_next_cycle_sensitive_source_registration_summary_counts_closur
     assert summary.registration_id == (
         "015-raw-text-next-cycle-sensitive-source-registration"
     )
-    assert summary.registration_status == "sensitive_source_registration_completed"
+    assert summary.registration_status == "sensitive_source_registration_needs_attention"
     assert summary.registered_entry_count == 1
     assert summary.registered_source_file_count == 1
     assert summary.candidate_extract_count == 0
@@ -3622,13 +3834,13 @@ def test_raw_text_next_cycle_sensitive_source_registration_summary_counts_closur
     )
     assert summary.boundary_checks == {
         "sensitive_source_registration_items_loaded": "passed",
-        "sensitive_registration_prep_completed": "passed",
+            "sensitive_registration_prep_completed": "failed",
         "source_library_entries_loaded": "passed",
         "registered_entries_match_prep_metadata": "passed",
         "blocked_and_deferred_prep_retained": "passed",
         "source_paths_are_relative": "passed",
         "013_012_not_mutated": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -3648,7 +3860,7 @@ def test_raw_text_next_cycle_sensitive_source_registration_markdown_and_docs_syn
 
     for marker in (
         "015 Raw Text Next Cycle Sensitive Source Registration",
-        "`sensitive-source-registration-status=sensitive_source_registration_completed`",
+        "`sensitive-source-registration-status=sensitive_source_registration_needs_attention`",
         "`registered-source-entries=1`",
         "`registered-source-files=1`",
         "`candidate-extracts=0`",
@@ -3697,7 +3909,7 @@ def test_raw_text_next_cycle_sensitive_preparation_boundary_summary_counts_closu
     assert summary.boundary_id == (
         "015-raw-text-next-cycle-sensitive-preparation-boundary"
     )
-    assert summary.boundary_status == "sensitive_preparation_boundary_completed"
+    assert summary.boundary_status == "sensitive_preparation_boundary_needs_attention"
     assert summary.boundary_item_count == 1
     assert summary.source_file_count == 1
     assert summary.preparation_allowed_count == 1
@@ -3720,14 +3932,14 @@ def test_raw_text_next_cycle_sensitive_preparation_boundary_summary_counts_closu
     )
     assert summary.boundary_checks == {
         "sensitive_preparation_boundary_items_loaded": "passed",
-        "source_registration_completed": "passed",
+            "source_registration_completed": "failed",
         "registered_source_references_valid": "passed",
         "source_library_entry_ready_for_preparation": "passed",
         "source_paths_are_relative": "passed",
         "action_routing_valid": "passed",
         "downstream_mutation_blocked": "passed",
         "013_012_not_mutated": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -3747,7 +3959,7 @@ def test_raw_text_next_cycle_sensitive_preparation_boundary_markdown_and_docs_sy
 
     for marker in (
         "015 Raw Text Next Cycle Sensitive Preparation Boundary",
-        "`sensitive-preparation-boundary-status=sensitive_preparation_boundary_completed`",
+        "`sensitive-preparation-boundary-status=sensitive_preparation_boundary_needs_attention`",
         "`sensitive-preparation-boundary-items=1`",
         "`preparation-allowed=1`",
         "`reading-allowed=0`",
@@ -3789,7 +4001,7 @@ def test_raw_text_next_cycle_sensitive_preparation_reading_summary_counts_closur
     )
 
     assert summary.reading_id == "015-raw-text-next-cycle-sensitive-preparation-reading"
-    assert summary.reading_status == "sensitive_preparation_reading_completed"
+    assert summary.reading_status == "sensitive_preparation_reading_needs_attention"
     assert summary.reading_item_count == 1
     assert summary.source_file_count == 1
     assert summary.safe_reading_note_count == 3
@@ -3815,7 +4027,7 @@ def test_raw_text_next_cycle_sensitive_preparation_reading_summary_counts_closur
     )
     assert summary.boundary_checks == {
         "sensitive_preparation_reading_items_loaded": "passed",
-        "preparation_boundary_completed": "passed",
+            "preparation_boundary_completed": "failed",
         "boundary_references_valid": "passed",
         "source_library_entry_still_preparation_gated": "passed",
         "safe_reading_notes_present": "passed",
@@ -3823,7 +4035,7 @@ def test_raw_text_next_cycle_sensitive_preparation_reading_summary_counts_closur
         "downstream_mutation_blocked": "passed",
         "013_candidate_intake_blocked": "passed",
         "012_formal_evidence_blocked": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -3843,7 +4055,7 @@ def test_raw_text_next_cycle_sensitive_preparation_reading_markdown_and_docs_syn
 
     for marker in (
         "015 Raw Text Next Cycle Sensitive Preparation Reading",
-        "`sensitive-preparation-reading-status=sensitive_preparation_reading_completed`",
+        "`sensitive-preparation-reading-status=sensitive_preparation_reading_needs_attention`",
         "`sensitive-preparation-reading-items=1`",
         "`safe-reading-notes=3`",
         "`candidate-intake-ready=0`",
@@ -3884,7 +4096,7 @@ def test_explicit_candidate_review_or_queue_refresh_summary_routes_to_inventory_
     summary = materials_audit.build_explicit_candidate_review_or_queue_refresh_summary()
 
     assert summary.routing_id == "013-explicit-candidate-review-or-015-queue-refresh"
-    assert summary.routing_status == "routed_to_015_queue_refresh"
+    assert summary.routing_status == "routing_needs_attention"
     assert summary.routing_item_count == 1
     assert summary.authorization_status == "ready_for_explicit_downstream_authorization"
     assert summary.queue_refresh_status == "covered_or_completed_queue_exhausted"
@@ -3897,13 +4109,13 @@ def test_explicit_candidate_review_or_queue_refresh_summary_routes_to_inventory_
     assert summary.next_material_entry == "015-external-material-inventory-refresh"
     assert summary.boundary_checks == {
         "routing_items_loaded": "passed",
-        "sensitive_preparation_reading_completed": "passed",
+            "sensitive_preparation_reading_completed": "failed",
         "authorization_audit_ready": "passed",
         "downstream_mutation_not_authorized": "passed",
         "queue_refresh_completed": "passed",
         "queue_refresh_route_selected": "passed",
         "013_012_not_mutated": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
@@ -3921,7 +4133,7 @@ def test_explicit_candidate_review_or_queue_refresh_markdown_and_docs_sync():
 
     for marker in (
         "013 Explicit Candidate Review Or 015 Queue Refresh",
-        "`explicit-routing-status=routed_to_015_queue_refresh`",
+        "`explicit-routing-status=routing_needs_attention`",
         "`authorization-status=ready_for_explicit_downstream_authorization`",
         "`queue-refresh-status=covered_or_completed_queue_exhausted`",
         "`candidate-extract-delta=0`",
@@ -3950,36 +4162,44 @@ def test_external_material_inventory_refresh_confirmation_items_load_record():
     assert item.downstream_mutation_authorized is False
 
 
-def test_external_material_inventory_refresh_confirmation_summary_routes_to_source_selection():
+def test_external_material_inventory_refresh_confirmation_summary_requires_live_refresh(
+    monkeypatch,
+    tmp_path,
+):
+    monkeypatch.setattr(materials_audit, "_workspace_root", lambda: tmp_path)
     summary = (
         materials_audit
         .build_external_material_inventory_refresh_confirmation_summary()
     )
 
     assert summary.confirmation_id == "015-external-material-inventory-refresh"
-    assert summary.confirmation_status == "external_inventory_refresh_confirmed"
+    assert summary.confirmation_status == "external_inventory_refresh_needs_attention"
     assert summary.confirmation_item_count == 1
-    assert summary.external_inventory_status == "scoped_metadata_registered"
-    assert summary.scanned_entry_count == 31
+    assert summary.external_inventory_status == "snapshot_only"
+    assert summary.scanned_entry_count == 0
     assert summary.untracked_material_entry_count == 0
     assert summary.candidate_extract_delta_count == 0
     assert summary.review_decision_delta_count == 0
     assert summary.promotion_batch_delta_count == 0
     assert summary.formal_evidence_delta_count == 0
     assert summary.downstream_mutation_authorized is False
-    assert summary.next_material_entry == "015-raw-text-next-cycle-source-selection"
+    assert summary.next_material_entry == "015-external-material-inventory-refresh"
     assert summary.boundary_checks == {
         "confirmation_items_loaded": "passed",
-        "explicit_routing_completed": "passed",
-        "external_inventory_refresh_completed": "passed",
-        "no_untracked_material_entries": "passed",
-        "next_cycle_source_selection_selected": "passed",
+        "explicit_routing_completed": "failed",
+        "external_inventory_refresh_completed": "not_currently_verified",
+        "no_untracked_material_entries": "not_currently_verified",
+        "next_cycle_source_selection_selected": "not_currently_verified",
         "013_012_not_mutated": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
-def test_external_material_inventory_refresh_confirmation_markdown_and_docs_sync():
+def test_external_material_inventory_refresh_confirmation_markdown_and_docs_sync(
+    monkeypatch,
+    tmp_path,
+):
+    monkeypatch.setattr(materials_audit, "_workspace_root", lambda: tmp_path)
     summary = (
         materials_audit
         .build_external_material_inventory_refresh_confirmation_summary()
@@ -3997,13 +4217,15 @@ def test_external_material_inventory_refresh_confirmation_markdown_and_docs_sync
 
     for marker in (
         "015 External Material Inventory Refresh Confirmation",
-        "`external-inventory-confirmation-status=external_inventory_refresh_confirmed`",
-        "`external-inventory-status=scoped_metadata_registered`",
+        "`external-inventory-confirmation-status=external_inventory_refresh_needs_attention`",
+        "`external-inventory-status=snapshot_only`",
         "`untracked-material-entries=0`",
         "`candidate-extract-delta=0`",
         "`formal-evidence-delta=0`",
         "`downstream-mutation-authorized=false`",
-        "`next-material-entry=015-raw-text-next-cycle-source-selection`",
+        "`next-material-entry=015-external-material-inventory-refresh`",
+        "`raw_materials_not_mutated`: `not_currently_verified`",
+        "`external_inventory_refresh_completed`: `not_currently_verified`",
     ):
         assert marker in markdown
         assert marker in materials_doc
@@ -4029,6 +4251,7 @@ def test_new_material_extraction_learning_loop_closure_items_load_record():
     assert item.routing_id == "013-explicit-candidate-review-or-015-queue-refresh"
     assert item.inventory_confirmation_id == "015-external-material-inventory-refresh"
     assert item.closure_status == "new_material_learning_loop_closed"
+    assert item.record_scope == "historical_snapshot"
     assert (
         item.selected_next_material_entry
         == "013-explicit-candidate-review-or-new-material-intake"
@@ -4043,13 +4266,37 @@ def test_new_material_extraction_learning_loop_closure_items_load_record():
     assert item.downstream_mutation_authorized is False
 
 
-def test_new_material_extraction_learning_loop_closure_summary_closes_loop():
+def test_historical_loop_item_loading_does_not_depend_on_current_summaries(
+    monkeypatch,
+):
+    def fail_current_summary(*args, **kwargs):
+        raise AssertionError("historical item loading must not evaluate current state")
+
+    for name in (
+        "_new_material_loop_stage_summaries",
+        "build_raw_text_next_cycle_source_selection_summary",
+        "build_raw_text_next_cycle_sensitive_preparation_reading_summary",
+        "build_external_material_inventory_refresh_summary",
+    ):
+        monkeypatch.setattr(materials_audit, name, fail_current_summary)
+
+    items = materials_audit.load_new_material_extraction_learning_loop_closure_items()
+
+    assert len(items) == 1
+    assert items[0].record_scope == "historical_snapshot"
+
+
+def test_new_material_extraction_learning_loop_closure_summary_requires_live_refresh(
+    monkeypatch,
+    tmp_path,
+):
+    monkeypatch.setattr(materials_audit, "_workspace_root", lambda: tmp_path)
     summary = materials_audit.build_new_material_extraction_learning_loop_closure_summary()
 
     assert summary.closure_id == "017-new-material-extraction-learning-loop-closure"
-    assert summary.closure_status == "new_material_learning_loop_closed"
+    assert summary.closure_status == "new_material_learning_loop_needs_attention"
     assert summary.closure_item_count == 1
-    assert summary.completed_stage_count == 16
+    assert summary.completed_stage_count == 0
     assert summary.source_selection_item_count == 5
     assert summary.registered_source_entry_count == 11
     assert summary.preparation_reading_item_count == 1
@@ -4065,23 +4312,27 @@ def test_new_material_extraction_learning_loop_closure_summary_closes_loop():
     assert summary.downstream_mutation_authorized is False
     assert (
         summary.next_material_entry
-        == "013-explicit-candidate-review-or-new-material-intake"
+        == "015-external-material-inventory-refresh"
     )
     assert summary.boundary_checks == {
         "closure_items_loaded": "passed",
-        "source_selection_completed": "passed",
-        "raw_text_next_cycle_completed": "passed",
-        "sensitive_preparation_reading_completed": "passed",
+        "source_selection_completed": "failed",
+        "raw_text_next_cycle_completed": "failed",
+        "sensitive_preparation_reading_completed": "failed",
         "017_authorization_audit_ready": "passed",
-        "explicit_routing_completed": "passed",
-        "external_inventory_refresh_confirmed": "passed",
-        "no_untracked_material_entries": "passed",
+        "explicit_routing_completed": "failed",
+        "external_inventory_refresh_confirmed": "not_currently_verified",
+        "no_untracked_material_entries": "not_currently_verified",
         "013_012_not_mutated": "passed",
-        "raw_materials_not_mutated": "passed",
+        "raw_materials_not_mutated": "not_currently_verified",
     }
 
 
-def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync():
+def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync(
+    monkeypatch,
+    tmp_path,
+):
+    monkeypatch.setattr(materials_audit, "_workspace_root", lambda: tmp_path)
     summary = materials_audit.build_new_material_extraction_learning_loop_closure_summary()
     markdown = (
         materials_audit
@@ -4099,8 +4350,8 @@ def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync():
 
     for marker in (
         "017 New Material Extraction Learning Loop Closure",
-        "`new-material-learning-loop-status=new_material_learning_loop_closed`",
-        "`completed-loop-stages=16`",
+        "`new-material-learning-loop-status=new_material_learning_loop_needs_attention`",
+        "`completed-loop-stages=0`",
         "`registered-source-entries=11`",
         "`preparation-reading-items=1`",
         "`candidate-intake-ready=0`",
@@ -4109,7 +4360,9 @@ def test_new_material_extraction_learning_loop_closure_markdown_and_docs_sync():
         "`candidate-extract-delta=0`",
         "`formal-evidence-delta=0`",
         "`downstream-mutation-authorized=false`",
-        "`next-material-entry=013-explicit-candidate-review-or-new-material-intake`",
+        "`next-material-entry=015-external-material-inventory-refresh`",
+        "`external_inventory_refresh_confirmed`: `not_currently_verified`",
+        "`raw_materials_not_mutated`: `not_currently_verified`",
     ):
         assert marker in markdown
         assert marker in materials_doc

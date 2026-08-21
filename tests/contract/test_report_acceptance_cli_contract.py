@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import subprocess
 import sys
@@ -38,9 +38,9 @@ def test_report_acceptance_summary_cli_outputs_release_baseline():
     assert payload["passed_case_count"] == 4
     assert payload["activation_status"] == "enabled_with_guardrails"
     assert payload["report_audit_status"] == "complete_with_guardrails"
-    assert payload["approved_evidence_count"] == 111
+    assert payload["approved_evidence_count"] == 996
     assert payload["rule_family_count"] == 10
-    assert payload["traced_evidence_unit_count"] == 111
+    assert payload["traced_evidence_unit_count"] == 996
     assert payload["missing_rule_families"] == []
     assert payload["open_conflicts"] == ["conflict_high_risk_scope_001"]
     assert [case["case_id"] for case in payload["cases"]] == [

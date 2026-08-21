@@ -1,4 +1,4 @@
-from dataclasses import replace
+﻿from dataclasses import replace
 from datetime import datetime
 
 import pytest
@@ -44,12 +44,12 @@ def _analyzed_bundle(birth_date: str):
                 "pattern_strength": "disputed",
                 "five_element_balance": "computed",
                 "useful_god_candidate": "disputed",
-                "taboo_god_candidate": "not_computed",
+                "taboo_god_candidate": "computed",
                 "ten_god_relation": "computed",
                 "branch_interaction": "computed",
-                "blind_image_method": "disputed",
+                "blind_image_method": "computed",
                 "luck_cycle": "computed",
-                "remedy_boundary": "disputed",
+                "remedy_boundary": "computed",
                 "high_risk_signal": "not_computed",
             },
         ),
@@ -59,7 +59,7 @@ def _analyzed_bundle(birth_date: str):
                 "pattern_strength": "computed",
                 "five_element_balance": "computed",
                 "useful_god_candidate": "indeterminate",
-                "taboo_god_candidate": "not_computed",
+                "taboo_god_candidate": "computed",
                 "ten_god_relation": "computed",
                 "branch_interaction": "computed",
                 "blind_image_method": "computed",
@@ -169,7 +169,6 @@ def test_disputed_calculation_without_family_school_rule_has_no_school_note():
     for rule_family in (
         "pattern_strength",
         "useful_god_candidate",
-        "blind_image_method",
     ):
         conclusion = _formal_family(report, rule_family)
         assert conclusion.strength == "disputed"
@@ -186,9 +185,13 @@ def test_disputed_calculation_without_family_school_rule_has_no_school_note():
     )
     assert all(":useful_gods=" in view for view in useful_views)
     assert all(":patterns=" not in view for view in useful_views)
-    blind_views = _school_view_signals(
-        _formal_family(report, "blind_image_method")
+    blind = _formal_family(report, "blind_image_method")
+    assert blind.strength == "candidate"
+    assert blind.trace.calculation_status == "computed"
+    assert "School calculation disagreement preserved" not in (
+        blind.trace.disagreement_note
     )
+    blind_views = _school_view_signals(blind)
     assert all(":patterns=" not in view for view in blind_views)
     assert all(":useful_gods=" not in view for view in blind_views)
 
@@ -237,7 +240,7 @@ def test_reasoned_calculation_reaches_formal_evidence_and_audit(sample_bazi_char
     }
     audit = report.report_evidence_audit
     assert len(conclusions) == 10
-    assert audit.traced_evidence_unit_count == 111
+    assert audit.traced_evidence_unit_count == 996
     assert (
         audit.computed_rule_family_count
         + audit.indeterminate_rule_family_count
@@ -249,7 +252,7 @@ def test_reasoned_calculation_reaches_formal_evidence_and_audit(sample_bazi_char
     assert conclusions["luck_cycle"].trace.calculation_status == "computed"
     assert conclusions["taboo_god_candidate"].strength == "weakly_supported"
     assert conclusions["taboo_god_candidate"].trace.calculation_status == (
-        "not_computed"
+        "indeterminate"
     )
     school_views = conclusions["blind_image_method"].trace.school_views
     assert {view.split(":", 2)[1] for view in school_views} == {
@@ -278,7 +281,7 @@ def test_reasoned_report_keeps_approved_evidence_and_guardrails(sample_bazi_char
         for conclusion in report.expanded_evidence.formal_conclusions
         for evidence_id in conclusion.trace.evidence_ids
     }
-    assert len(evidence_ids) == 111
+    assert len(evidence_ids) == 996
     assert report.expanded_evidence.high_risk_notes
     assert report.report_evidence_audit.guardrail_count > 0
     assert report.safety_review.disclaimer_present is True

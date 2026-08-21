@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import csv
+from base64 import urlsafe_b64encode
 from dataclasses import dataclass
 from hashlib import sha256
 from io import StringIO
 from importlib import metadata, resources
 from importlib.resources.abc import Traversable
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import sys
 from typing import Iterator
@@ -17,6 +18,8 @@ from urllib.parse import urlsplit
 _DISTRIBUTION_NAME = "mingli-engine"
 _DIRECT_URL_INFO_KEYS = frozenset({"archive_info", "vcs_info", "dir_info"})
 _DIRECT_URL_KEYS = _DIRECT_URL_INFO_KEYS | {"url", "subdirectory"}
+_SOURCE_ONLY_JSON_DIRECTORY = "data/new_material_learning"
+_SOURCE_ONLY_DISTRIBUTION_PATH = f"mingli_engine/{_SOURCE_ONLY_JSON_DIRECTORY}"
 _ARCHIVE_HASH_PATTERN = re.compile(r"^[A-Za-z0-9_+.-]+=[A-Fa-f0-9]+$")
 _VCS_NAME_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*$")
 _VERSION_PATTERN = re.compile(
@@ -24,6 +27,22 @@ _VERSION_PATTERN = re.compile(
     r"(?:\.post[0-9]+)?(?:\.dev[0-9]+)?"
     r"(?:\+[a-z0-9]+(?:[._-][a-z0-9]+)*)?$",
     re.IGNORECASE,
+)
+_EXPECTED_PACKAGE_MODULES_SHA256 = (
+    "2f69baabd7fd4037f16986f2c0a2a4d1206dc8906f9eb9b4ac2a55924b9d6f77"
+)
+_ALLOWED_DIST_INFO_MEMBERS = frozenset(
+    {
+        "INSTALLER",
+        "METADATA",
+        "RECORD",
+        "REQUESTED",
+        "WHEEL",
+        "direct_url.json",
+        "entry_points.txt",
+        "top_level.txt",
+        "uv_cache.json",
+    }
 )
 EXPECTED_RUNTIME_JSON_ASSETS = (
     "data/calculation/school_profiles.json",
@@ -42,6 +61,7 @@ EXPECTED_RUNTIME_JSON_ASSETS = (
     "data/domain_calibration/reviewer_b_assignments.json",
     "data/domain_calibration/reviewer_b_reviews.json",
     "data/domain_calibration/reviewer_packets.json",
+    "data/domain_calibration/v2/executable_fixtures.json",
     "data/extraction_queue_intake/candidate_draft_slots.json",
     "data/extraction_queue_intake/extraction_tasks.json",
     "data/extraction_queue_intake/extraction_work_packages.json",
@@ -127,6 +147,8 @@ def _iter_json_assets(
     for child in sorted(directory.iterdir(), key=lambda item: item.name):
         relative_path = f"{relative_directory}/{child.name}"
         if child.is_dir():
+            if relative_path == _SOURCE_ONLY_JSON_DIRECTORY:
+                continue
             yield from _iter_json_assets(child, relative_path)
         elif child.is_file() and child.name.endswith(".json"):
             yield relative_path, child.read_bytes()
@@ -162,6 +184,20 @@ def _iter_python_modules(
             yield f"mingli_engine/{relative_path}"
 
 
+def _iter_installed_package_files(
+    directory: Traversable,
+    relative_directory: str = "mingli_engine",
+) -> Iterator[str]:
+    for child in sorted(directory.iterdir(), key=lambda item: item.name):
+        if child.name == "__pycache__":
+            continue
+        relative_path = f"{relative_directory}/{child.name}"
+        if child.is_dir():
+            yield from _iter_installed_package_files(child, relative_path)
+        elif child.is_file() and not child.name.endswith((".pyc", ".pyo")):
+            yield relative_path
+
+
 def _expected_distribution_files(
     package_root: Traversable | None,
 ) -> frozenset[str] | None:
@@ -169,14 +205,17 @@ def _expected_distribution_files(
         return None
     try:
         modules = frozenset(_iter_python_modules(package_root))
+        installed_files = frozenset(_iter_installed_package_files(package_root))
     except Exception:
         return None
-    if "mingli_engine/packaging_validation.py" not in modules:
+    module_manifest = sha256(("\n".join(sorted(modules)) + "\n").encode()).hexdigest()
+    if module_manifest != _EXPECTED_PACKAGE_MODULES_SHA256:
         return None
     runtime_assets = {
         f"mingli_engine/{path}" for path in EXPECTED_RUNTIME_JSON_ASSETS
     }
-    return modules | runtime_assets
+    expected_files = modules | runtime_assets
+    return expected_files if installed_files == expected_files else None
 
 
 def _normalized_distribution_name(value: object) -> str | None:
@@ -191,18 +230,83 @@ def _valid_distribution_version(value: object) -> str | None:
     return value if _VERSION_PATTERN.fullmatch(value) else None
 
 
-def _record_paths(record: str) -> frozenset[str] | None:
+def _record_entries(record: str) -> dict[str, tuple[str, str]] | None:
     try:
         rows = tuple(csv.reader(StringIO(record)))
     except (csv.Error, TypeError):
         return None
-    if not rows or any(not row or not row[0] for row in rows):
+    if not rows or any(len(row) != 3 or not row[0] for row in rows):
         return None
-    return frozenset(row[0].replace("\\", "/") for row in rows)
+    entries: dict[str, tuple[str, str]] = {}
+    for path, record_hash, record_size in rows:
+        normalized_path = path.replace("\\", "/")
+        if normalized_path in entries:
+            return None
+        entries[normalized_path] = (record_hash, record_size)
+    return entries
+
+
+def _valid_record_payloads(
+    distribution: metadata.Distribution,
+    entries: dict[str, tuple[str, str]],
+    distribution_files: frozenset[str],
+) -> bool:
+    try:
+        record_paths = tuple(
+            path for path in distribution_files if path.endswith(".dist-info/RECORD")
+        )
+        if len(record_paths) != 1 or entries.get(record_paths[0]) != ("", ""):
+            return False
+        for path in distribution_files - frozenset(record_paths):
+            payload = Path(str(distribution.locate_file(path))).read_bytes()
+            expected_hash = "sha256=" + urlsafe_b64encode(
+                sha256(payload).digest()
+            ).rstrip(b"=").decode("ascii")
+            if entries.get(path) != (expected_hash, str(len(payload))):
+                return False
+    except (OSError, UnicodeError, ValueError):
+        return False
+    return True
 
 
 def _contains_dist_info_file(paths: frozenset[str], filename: str) -> bool:
     return any(path.endswith(f".dist-info/{filename}") for path in paths)
+
+
+def _contains_source_only_path(paths: frozenset[str]) -> bool:
+    return any(
+        path == _SOURCE_ONLY_DISTRIBUTION_PATH
+        or path.startswith(f"{_SOURCE_ONLY_DISTRIBUTION_PATH}/")
+        for path in paths
+    )
+
+
+def _valid_dist_info_paths(paths: frozenset[str], version: str) -> bool:
+    expected_directory = f"mingli_engine-{version}.dist-info"
+    dist_info_paths = frozenset(
+        path
+        for path in paths
+        if any(part.endswith(".dist-info") for part in PurePosixPath(path).parts)
+    )
+    required = {
+        f"{expected_directory}/{name}" for name in ("METADATA", "RECORD", "WHEEL")
+    }
+    allowed = {
+        f"{expected_directory}/{name}" for name in _ALLOWED_DIST_INFO_MEMBERS
+    }
+    return required.issubset(dist_info_paths) and dist_info_paths.issubset(allowed)
+
+
+def _distribution_payload_paths(paths: frozenset[str]) -> frozenset[str]:
+    return frozenset(
+        path
+        for path in paths
+        if ".dist-info/" not in path
+        and not re.fullmatch(
+            r"(?:(?:\.\./){3}Scripts|bin)/mingli-engine(?:\.exe)?",
+            path,
+        )
+    )
 
 
 def _valid_text(value: object) -> bool:
@@ -327,6 +431,7 @@ def _valid_direct_url(distribution: metadata.Distribution) -> bool:
 def _valid_wheel_metadata(
     distribution: metadata.Distribution,
     expected_package_files: frozenset[str] | None,
+    distribution_version: str,
 ) -> bool:
     if expected_package_files is None:
         return False
@@ -340,9 +445,12 @@ def _valid_wheel_metadata(
     file_paths = frozenset(
         str(path).replace("\\", "/") for path in distribution_files
     )
-    recorded_paths = _record_paths(record)
-    if recorded_paths is None:
+    record_entries = _record_entries(record)
+    if record_entries is None:
         return False
+    recorded_paths = frozenset(record_entries)
+    package_files = _distribution_payload_paths(file_paths)
+    recorded_package_files = _distribution_payload_paths(recorded_paths)
     metadata_files_present = all(
         _contains_dist_info_file(file_paths, filename)
         and _contains_dist_info_file(recorded_paths, filename)
@@ -350,8 +458,18 @@ def _valid_wheel_metadata(
     )
     return (
         metadata_files_present
-        and expected_package_files.issubset(file_paths)
-        and expected_package_files.issubset(recorded_paths)
+        and _valid_dist_info_paths(file_paths, distribution_version)
+        and _valid_dist_info_paths(recorded_paths, distribution_version)
+        and not _contains_source_only_path(file_paths)
+        and not _contains_source_only_path(recorded_paths)
+        and recorded_paths == file_paths
+        and package_files == expected_package_files
+        and recorded_package_files == expected_package_files
+        and _valid_record_payloads(
+            distribution,
+            record_entries,
+            file_paths,
+        )
         and _valid_direct_url(distribution)
     )
 
@@ -371,6 +489,7 @@ def _load_distribution(
         if (
             distribution_name != _DISTRIBUTION_NAME
             or metadata_version is None
+            or distribution_version is None
             or distribution_version != metadata_version
         ):
             raise ValueError("invalid distribution identity")
@@ -381,6 +500,7 @@ def _load_distribution(
         valid_wheel_metadata = _valid_wheel_metadata(
             distribution,
             expected_package_files,
+            distribution_version,
         )
     except Exception:
         return "not_installed", None, None, False

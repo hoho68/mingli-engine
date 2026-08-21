@@ -3,8 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from mingli_engine import classical_sources, promotion, source_intake
-from mingli_engine.models import CandidateExtract, PromotionBatch, ReviewDecision, SourceMaterial
+from mingli_engine import classical_sources, promotion
 
 
 def _write_json(path: Path, payload):

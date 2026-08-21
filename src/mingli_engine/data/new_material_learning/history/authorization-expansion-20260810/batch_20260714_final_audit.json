@@ -1,0 +1,148 @@
+{
+  "authorization_ledger_sha256": "f2b365d303f063b1f5e78d7ce502fa62a312760233ad13b78c1e4f744ee7943c",
+  "batch_id": "batch_20260714",
+  "command_evidence_sha256": "bca2d894017a694eeae8fc34ee8ec405e57414b9ef458ccaf5c6cef0138d2596",
+  "completed_at": "2026-08-09T14:43:58Z",
+  "file_results_sha256": "b12cc05d9b7b28e2b07994604fca68f00ebfba5a29bd8e0f3c395f6d899655bb",
+  "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+  "model_runs_sha256": "9c565ed35adc3f9048d9c754ea7e113b5d3006ec9fe5580fa4a67e16945f8c90",
+  "protected_legacy_knowledge_files": [
+    {
+      "path": "src/mingli_engine/data/classical_sources/evidence_units.json",
+      "sha256": "de49a18136c19c0ab9057e681ad38b4a9d1674fcc9b39ea87c676e2d6349b5e8"
+    },
+    {
+      "path": "src/mingli_engine/data/classical_sources/source_conflicts.json",
+      "sha256": "0f3f9a03124bdbd38c07b5ff4c7ec7adaab3ac1c8d24f0d081a07d3a1625b8d6"
+    },
+    {
+      "path": "src/mingli_engine/data/learning_reference_curation/candidate_intake_decisions.json",
+      "sha256": "6ffe2fdfd6159424e04f626283be10bc151b2277ad869c22573fa4de3fd228cf"
+    },
+    {
+      "path": "src/mingli_engine/data/learning_reference_curation/learning_points.json",
+      "sha256": "0e00d735b1abf636b4ce2a7601b5802f1cbc2819767dca90667c71cf248ce0c1"
+    },
+    {
+      "path": "src/mingli_engine/data/learning_reference_curation/learning_reference_notes.json",
+      "sha256": "c8460796b2b0e408d3097a1fd586cb9efd6361a0b7ccbb883d4bcdaa2b9152b3"
+    },
+    {
+      "path": "src/mingli_engine/data/source_intake/candidate_extracts.json",
+      "sha256": "6a8fce9ff2bee09af1c213d8ff88243548fff18284eb473f16e4509189285915"
+    },
+    {
+      "path": "src/mingli_engine/data/source_intake/promotion_batches.json",
+      "sha256": "3d1d5c4e585aa67be6dc6c8180a6f5b0e8b1a3aee2607b20d2b3b943079873f1"
+    },
+    {
+      "path": "src/mingli_engine/data/source_intake/review_decisions.json",
+      "sha256": "06fa9898c0376b952eb066e1665cfc5147892c44db457471f8580c21e51cd78c"
+    }
+  ],
+  "protected_legacy_knowledge_sha256": "b090ad5d30d5a4e8afd30c6743a13aead891cce62f91d10ea95fea330acad210",
+  "pytest_passed_count": 2299,
+  "pytest_skipped_count": 1,
+  "reviewed_files": [
+    {
+      "path": ".gitattributes",
+      "sha256": "989f889f884bd098d01a6b52219037c598dac5b73115a838cb0e21738c4ef0c9"
+    },
+    {
+      "path": ".opencode/instructions/model-routing.md",
+      "sha256": "50f2abef3cb1a0e645ce6de2366aebbc2e745c6b593c057458bb6fe9daba6f3f"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "91221ecdfaef57f3a3d46f31c24e3abd2607a1241741970e867e85a86f19ac08"
+    },
+    {
+      "path": "docs/classical_sources/materials_audit.md",
+      "sha256": "0e4b8e97c9de999a82fd92486d3fc5eab08b42c5cc0038b2939bb0fa5bbfea03"
+    },
+    {
+      "path": "docs/classical_sources/new_material_learning_handoff.md",
+      "sha256": "bd618ae1ae5fac1268059c4b390ce3215ce447661f7ecf61f323c5d75dfad5be"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-08-new-material-learning-opencode-handoff.md",
+      "sha256": "8e0595683ff8f93a88201fdd53e9a4eebb7c36e46e9dcee4a38f068b70040fe3"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-08-new-material-learning-restart.md",
+      "sha256": "040d76fd5d2fc224cb2a46437989ff9c93d743ec740a3dbf6984ad3fb54e5c53"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-08-08-new-material-learning-restart-design.md",
+      "sha256": "10ba570cce8f2578387fd25b50b5cb022fe6ae2a1bb5bac09e0296523e11b0d4"
+    },
+    {
+      "path": "opencode.jsonc",
+      "sha256": "2e3e17810f46bb3a6459d2a0fc6b7397ccbe279bcd393d330c6e7d033605dd9d"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "4347dfccc963cef8e5b33ddc17dc8251363284e62e6ba03de1e0132e01881520"
+    },
+    {
+      "path": "specs/017-learning-reference-curation/quickstart.md",
+      "sha256": "e2137da2135ce190978e5d50f88d93dd0d79ec3beafb4e460588e240dd55178c"
+    },
+    {
+      "path": "src/mingli_engine/cli.py",
+      "sha256": "6f9c97295c94f8116d5259a83100d771025e9eb610d38c6b3edc2b957d74337c"
+    },
+    {
+      "path": "src/mingli_engine/data/materials_audit/new_material_extraction_learning_loop_closure_items.json",
+      "sha256": "f09fb27ee8f4b906411479351d93fcaec30dafd8e9d1d691d00852cd533dd0b9"
+    },
+    {
+      "path": "src/mingli_engine/materials_audit.py",
+      "sha256": "b4616f5aa2d8e5c45bd6485c20c0aea05b70e0a90fb83f07611f327c57492ebf"
+    },
+    {
+      "path": "src/mingli_engine/models.py",
+      "sha256": "bc37188c1c1510df6f12d0afb5c589eb8344efeea0ff3c9c0ba9f46af2b85f0e"
+    },
+    {
+      "path": "src/mingli_engine/new_material_learning.py",
+      "sha256": "d4cc5540e719c516293f67d1a2334e2f27ff558edce6ed637368e182a49ce465"
+    },
+    {
+      "path": "src/mingli_engine/packaging_validation.py",
+      "sha256": "197861fea1ae514265b5e1db1e1bce41a040c5139c0241f370746f6e763d2b8b"
+    },
+    {
+      "path": "tests/contract/test_wheel_runtime_assets.py",
+      "sha256": "1ceee2166c9b29aa44c68b9a6b1a63f5e5550b1e7c8d535056602c9a302b0fa6"
+    },
+    {
+      "path": "tests/integration/test_installed_package_baseline.py",
+      "sha256": "28f64c4aa802a8b6dde6869f8ca794653db68d60a8379a7cf683a1023af4ff7c"
+    },
+    {
+      "path": "tests/integration/test_reasoned_report_pipeline.py",
+      "sha256": "914614533b9c7a6b04d1b6c825511b37930d7289097934027bd1fc033b4f4457"
+    },
+    {
+      "path": "tests/unit/test_classical_sources.py",
+      "sha256": "920dfd5272cd8dbe65d8d7990be18857af51b7b5b570927aa1dedef5756adde6"
+    },
+    {
+      "path": "tests/unit/test_materials_audit.py",
+      "sha256": "ab0b7889281395990bd23988ea5c2a663d3c4440c0958da08792792bf5a40ab5"
+    },
+    {
+      "path": "tests/unit/test_new_material_learning.py",
+      "sha256": "bb071f60456160adf5315d7e123e2fcf4d06d055bc45252a807e9acea27997ce"
+    },
+    {
+      "path": "tests/unit/test_source_intake.py",
+      "sha256": "fdd817f3e3f77910fb1d5f94e5b66735e4dcb779d6eb4524f70f4e872a33eec4"
+    }
+  ],
+  "reviewed_files_sha256": "391a25030bb8327b416454ffdbece02b1d86d5e5e34e2db5fbf72c07c79e9d54",
+  "schema_version": "new-material-learning-final-audit-v3",
+  "task8_checked_step_count": 3,
+  "task8_plan_sha256": "040d76fd5d2fc224cb2a46437989ff9c93d743ec740a3dbf6984ad3fb54e5c53"
+}

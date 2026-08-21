@@ -116,6 +116,21 @@ def _build_evidence_unit(
         raise PromotionError(
             f"{candidate.candidate_id} is not approved for promotion: {candidate.status}"
         )
+    from mingli_engine.evidence_risk import (
+        EvidenceContentRiskError,
+        enforce_promotion_content_gate,
+    )
+
+    try:
+        enforce_promotion_content_gate(
+            meaning=candidate.extracted_meaning,
+            limitations=candidate.proposed_limitations,
+            risk_tier=candidate.risk_tier,
+            rule_family=candidate.proposed_rule_family,
+            owner_id=target_evidence_id,
+        )
+    except EvidenceContentRiskError as error:
+        raise PromotionError(str(error)) from error
     material = material_by_id.get(candidate.material_id)
     if material is None:
         raise PromotionError(

@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import subprocess
 import sys
@@ -43,7 +43,7 @@ def test_report_release_summary_cli_outputs_private_release_packet():
     assert payload["distinct_report_output_count"] == 3
     assert payload["acceptance_baseline_id"] == "report_acceptance_v1"
     assert payload["acceptance_status"] == "ready_with_guardrails"
-    assert payload["approved_evidence_count"] == 111
+    assert payload["approved_evidence_count"] == 996
     assert payload["rule_family_count"] == 10
     assert payload["action_track_count"] == 4
     assert all(case["status"] == "passed" for case in payload["cases"])

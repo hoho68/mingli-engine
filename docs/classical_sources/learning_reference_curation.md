@@ -242,12 +242,12 @@ is represented in 013 and 012.
   `candidate_northeast_blind_image_001`,
   `candidate_markdown_batch_004_pattern_strength_001`, and
   `candidate_markdown_batch_004_useful_god_001`.
-- `013-candidate-extracts=54`: current 013 candidate status counts are
-  `promoted=51`, `rejected=2`, and `blocked=1`.
-- `013-review-decisions=54`: current review decisions are `approved=51`,
+- `013-candidate-extracts=998`: current 013 candidate status counts are
+  `promoted=995`, `rejected=2`, and `blocked=1`.
+- `013-review-decisions=998`: current review decisions are `approved=995`,
   `rejected=2`, and `blocked=1`.
-- `013-promotion-batches=34`: all current promotion batches are `reviewed`.
-- `012-formal-evidence-units=111`: formal evidence coverage remains in the
+- `013-promotion-batches=35`: all current promotion batches are `reviewed`.
+- `012-formal-evidence-units=996`: formal evidence coverage remains in the
   approved classical evidence corpus only.
 - `formal_evidence_delta=0`: the 017 summary itself does not add or remove
   formal evidence.
@@ -296,10 +296,10 @@ candidate, review, promotion, or formal-evidence mutation by itself.
 - `017-notes-closed=31`
 - `017-next-action-ids=0`
 - `017-applied-decisions=45`
-- `013-candidate-extracts=54`
-- `013-review-decisions=54`
-- `013-promotion-batches=34`
-- `012-formal-evidence-units=111`
+- `013-candidate-extracts=998`
+- `013-review-decisions=998`
+- `013-promotion-batches=35`
+- `012-formal-evidence-units=996`
 - `formal_evidence_delta=0`
 - `012-boundary-leakage=0`
 - `next-downstream-entry=013-explicit-candidate-review-or-015-queue-refresh`
@@ -322,10 +322,10 @@ the authorization is consumed without duplicate downstream writes.
 - `audit-authorization-status=ready_for_explicit_downstream_authorization`
 - `pending-017-decisions=0`
 - `017-applied-decisions=45`
-- `013-candidate-extracts=54`
-- `013-review-decisions=54`
-- `013-promotion-batches=34`
-- `012-formal-evidence-units=111`
+- `013-candidate-extracts=998`
+- `013-review-decisions=998`
+- `013-promotion-batches=35`
+- `012-formal-evidence-units=996`
 - `candidate-extract-delta=0`
 - `review-decision-delta=0`
 - `promotion-batch-delta=0`

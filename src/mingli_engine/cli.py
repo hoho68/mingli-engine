@@ -34,6 +34,13 @@ from mingli_engine.models import (
     BirthProfile,
     SafetyReviewResult,
 )
+from mingli_engine.new_material_learning import (
+    DEFAULT_BATCH_ID as NEW_MATERIAL_BATCH_ID,
+    ManifestError as NewMaterialLearningError,
+    build_new_material_learning_summary,
+    render_new_material_learning_markdown,
+    validate_new_material_learning,
+)
 from mingli_engine.report_inputs import (
     InputContractError,
     birth_profile_from_dict,
@@ -313,6 +320,21 @@ def _project_completion_summary(args: argparse.Namespace) -> int:
     return 4 if summary.completion_status == "blocked" else 0
 
 
+def _validate_new_material_learning(args: argparse.Namespace) -> int:
+    if args.batch != NEW_MATERIAL_BATCH_ID:
+        raise NewMaterialLearningError("the requested learning batch is unsupported")
+    _write_json(validate_new_material_learning())
+    return 0
+
+
+def _new_material_learning_summary(args: argparse.Namespace) -> int:
+    if args.batch != NEW_MATERIAL_BATCH_ID:
+        raise NewMaterialLearningError("the requested learning batch is unsupported")
+    summary = build_new_material_learning_summary()
+    sys.stdout.write(render_new_material_learning_markdown(summary))
+    return 0
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mingli-engine")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -370,6 +392,20 @@ def _build_parser() -> argparse.ArgumentParser:
     real_use_parser.add_argument("--input", required=True, type=Path)
     real_use_parser.set_defaults(handler=_real_use)
 
+    new_material_validation_parser = subparsers.add_parser(
+        "validate-new-material-learning"
+    )
+    new_material_validation_parser.add_argument("--batch", required=True)
+    new_material_validation_parser.set_defaults(
+        handler=_validate_new_material_learning
+    )
+
+    new_material_summary_parser = subparsers.add_parser(
+        "new-material-learning-summary"
+    )
+    new_material_summary_parser.add_argument("--batch", required=True)
+    new_material_summary_parser.set_defaults(handler=_new_material_learning_summary)
+
     return parser
 
 
@@ -407,6 +443,9 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     except ProjectCompletionError as error:
         print(f"Project completion error: {error}", file=sys.stderr)
+        return 1
+    except NewMaterialLearningError as error:
+        print(f"New material learning error: {error}", file=sys.stderr)
         return 1
     except (KeyError, TypeError, AttributeError) as error:
         print(f"Invalid input: {error}", file=sys.stderr)

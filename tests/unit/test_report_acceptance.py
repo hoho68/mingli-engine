@@ -1,4 +1,4 @@
-import pytest
+﻿import pytest
 
 from mingli_engine.models import KnowledgeActivationSummary, ReportAcceptanceCaseResult
 from mingli_engine.report_schema import KnowledgeActivationError
@@ -41,9 +41,9 @@ def test_report_acceptance_summary_certifies_current_release_baseline():
     assert summary.passed_case_count == 4
     assert summary.activation_status == "enabled_with_guardrails"
     assert summary.report_audit_status == "complete_with_guardrails"
-    assert summary.approved_evidence_count == 111
+    assert summary.approved_evidence_count == 996
     assert summary.rule_family_count == 10
-    assert summary.traced_evidence_unit_count == 111
+    assert summary.traced_evidence_unit_count == 996
     assert summary.missing_rule_families == []
     assert summary.open_conflicts == ["conflict_high_risk_scope_001"]
     assert [case.case_id for case in summary.cases] == [

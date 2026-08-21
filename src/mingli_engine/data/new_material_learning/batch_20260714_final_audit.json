@@ -1,0 +1,248 @@
+{
+  "authorization_ledger_sha256": "a23de2ee1325029966686ca8d60bd6ee21c43084ac43291d86fc6a5833f3b1af",
+  "batch_id": "batch_20260714",
+  "command_evidence_sha256": "61d7260feaaa432b3aedd2bc689d4400fdcfd08f1838cf914924fe9b35f82924",
+  "completed_at": "2026-08-21T15:55:49Z",
+  "file_results_sha256": "2ad8fc1e0587cdf5597a2f9d353d9c53c0ce3078cbd52d5cd4b24ecba5cf8414",
+  "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+  "model_runs_sha256": "18a1e869ecb76d254718c3bcc698f5ead66398cf3884c793f87b19dc5b462071",
+  "protected_legacy_knowledge_files": [
+    {
+      "path": "src/mingli_engine/data/classical_sources/curation_batches.json",
+      "sha256": "d6817441dddacbaa8080ab975b5e87e406567bf8454dc5c5c037d829113d115d"
+    },
+    {
+      "path": "src/mingli_engine/data/classical_sources/evidence_units.json",
+      "sha256": "d3a9bdc2385228826fb886eca7aba3a5ba736f8093fbf8dc52c9892dc2edd49e"
+    },
+    {
+      "path": "src/mingli_engine/data/classical_sources/source_conflicts.json",
+      "sha256": "82a9171582b4adc9a74c3e8c1709cc4c1986e1cf5c36ae5d570188397e87022c"
+    },
+    {
+      "path": "src/mingli_engine/data/classical_sources/sources.json",
+      "sha256": "a294c18cf98ef440f2100e4ac7f1794e7873761d3986829139818deeaf3e6102"
+    },
+    {
+      "path": "src/mingli_engine/data/learning_reference_curation/candidate_intake_decisions.json",
+      "sha256": "e40ee14ffbb5be15c7c1e0fc812bd298ac9adffb3a1a146937cca481cd0bf0ff"
+    },
+    {
+      "path": "src/mingli_engine/data/learning_reference_curation/learning_points.json",
+      "sha256": "7c6af0a5561bcaf302500dbbdfd997379f3958746be0e01efc53b422d0da53a8"
+    },
+    {
+      "path": "src/mingli_engine/data/learning_reference_curation/learning_reference_notes.json",
+      "sha256": "48c3134e92e79b4b385efae47cdb195537968753f0c5e526ad77b9221385a4e9"
+    },
+    {
+      "path": "src/mingli_engine/data/source_intake/candidate_extracts.json",
+      "sha256": "56c11cedfc881c0d4c7019ef32a6ac2d93261504dda85fe36c58f248aefa27c5"
+    },
+    {
+      "path": "src/mingli_engine/data/source_intake/promotion_batches.json",
+      "sha256": "0649d5e397a2cda2c0b7503bc4fb2108683910a3639f5e5adf9550544df03bf8"
+    },
+    {
+      "path": "src/mingli_engine/data/source_intake/review_decisions.json",
+      "sha256": "3ba64b1d60e694b2147942051350e9f21868b1f1e031290ae33a66265788f383"
+    },
+    {
+      "path": "src/mingli_engine/data/source_intake/source_materials.json",
+      "sha256": "4d339298e81dfd44340bb1a115a0f9993fafd8d108212846f1e3f87d87f68b26"
+    }
+  ],
+  "protected_legacy_knowledge_sha256": "dffdd5527eece9ae89bdea3f3df2813399c1d8b85baad557c0e6987625c8ddf5",
+  "pytest_passed_count": 2430,
+  "pytest_skipped_count": 1,
+  "reviewed_files": [
+    {
+      "path": ".gitattributes",
+      "sha256": "eedaf0b2f5cee2288a9ba198abe482e26b26ec5854500989eb933a6af0a3b0bd"
+    },
+    {
+      "path": ".opencode/instructions/model-routing.md",
+      "sha256": "1aef84d57e309c7c94beb83788d728777d015a3f60c3c0502476b848532c114c"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "2a419dd10644717be1bbaea40f969108232848ecc4dccf9be4717d689bba464c"
+    },
+    {
+      "path": "docs/classical_sources/intake.md",
+      "sha256": "d4a35e5f32cefe662697a53021ef45abc5e92a768278940d436d0bd99be6cd6e"
+    },
+    {
+      "path": "docs/classical_sources/learning_reference_curation.md",
+      "sha256": "3b68cafdfacccbe58e541c1491472777a860e2fa678bbb8968ba8182fd231dc6"
+    },
+    {
+      "path": "docs/classical_sources/materials_audit.md",
+      "sha256": "767c78eb74a14060eb7d0f04646884d972df16285b0310398bc4986993f03173"
+    },
+    {
+      "path": "docs/classical_sources/new_material_learning_handoff.md",
+      "sha256": "06a4e5a4aef8b9caa1706a5c8949fc7ea7cf70b67e952e8bf600852d0fe5a209"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-08-new-material-learning-opencode-handoff.md",
+      "sha256": "5b14c7d355dcb0119ee24c1a4492bef3e5e703780481172b912ac0ebb5194440"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-08-new-material-learning-restart.md",
+      "sha256": "040d76fd5d2fc224cb2a46437989ff9c93d743ec740a3dbf6984ad3fb54e5c53"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-09-new-material-multi-tranche-extraction.md",
+      "sha256": "6de3a5a7483b3c3c1f387de03d87f507e5554665fbfd4345771d826a8a250810"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-19-new-material-review-and-promotion.md",
+      "sha256": "7e8c9a788b967147100640a10a86f20e7d527ec22e6f0a4b38ae398945a68d24"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-08-08-new-material-learning-restart-design.md",
+      "sha256": "53cfb314edbce0d8dec8bba497e8e059a12fa3e3099fbf7f14c20cc05eb1e729"
+    },
+    {
+      "path": "opencode.jsonc",
+      "sha256": "2e3e17810f46bb3a6459d2a0fc6b7397ccbe279bcd393d330c6e7d033605dd9d"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "b1a9b038ef4b805d0b1fe47bf38ae0c1f716f341289e8c070bd62e1d22e6bb67"
+    },
+    {
+      "path": "specs/017-learning-reference-curation/quickstart.md",
+      "sha256": "5cfcf7bf8e0b36f145003477c19228ea8391f161e9dc6a284d759dc35da5e766"
+    },
+    {
+      "path": "src/mingli_engine/cli.py",
+      "sha256": "70e864c9cc5ca3026fefe50b73c2adb78f4bb56cf892ed77d3a70190212f6023"
+    },
+    {
+      "path": "src/mingli_engine/data/materials_audit/new_material_extraction_learning_loop_closure_items.json",
+      "sha256": "d8123f2edce29c87b481e7824f2d13fd3cb1868c87cb5eaf9e819c80c30ad6a4"
+    },
+    {
+      "path": "src/mingli_engine/data/new_material_learning/batch_20260714_policy_reclassifications.json",
+      "sha256": "b346a8ce02c440e931024e8f59b173774aee3db94974149e8ef007cd9c652ee2"
+    },
+    {
+      "path": "src/mingli_engine/data/new_material_learning/batch_20260714_corpus_usage_policy.json",
+      "sha256": "71b001889e8fd4d60fbb4327a24d8db6e1bf0c96258f3a8b3c4c2c311769a51d"
+    },
+    {
+      "path": "src/mingli_engine/data/new_material_learning/batch_20260714_retry_governance_resets.json",
+      "sha256": "1a8e8c015d7a6fcc5c17a9fb22a920546ad8a6395465cda0f2ba1d868d6e134d"
+    },
+    {
+      "path": "src/mingli_engine/data/new_material_learning/batch_20260714_rule_family_map.json",
+      "sha256": "2384a2fbdd635375a5ecf648ab78e129460d5555b19c4ea707c6ebc011e86053"
+    },
+    {
+      "path": "src/mingli_engine/data/new_material_learning/batch_20260714_learning_records.json",
+      "sha256": "c31474fc6c4f3d82050af948814ab9bce33ed2f59654073782955c37df525619"
+    },
+    {
+      "path": "src/mingli_engine/materials_audit.py",
+      "sha256": "96f238e2bf8bc64fb0f97dd32e77cc1d3a57c32c12cc3e2b2fc863b8724432e2"
+    },
+    {
+      "path": "src/mingli_engine/models.py",
+      "sha256": "1e72dda30225ee55d49cb16232fdce924ab2f86463e8b2d9688bef1f7aad15d3"
+    },
+    {
+      "path": "src/mingli_engine/new_material_learning.py",
+      "sha256": "a229f0609d4d2602566ac7f66251abf6066afefbbdb2658fdc044595af811abe"
+    },
+    {
+      "path": "src/mingli_engine/packaging_validation.py",
+      "sha256": "cc9dae434922f1bb948cb57edac933ff31b93d768d7fe9bf06504cc284c916ca"
+    },
+    {
+      "path": "src/mingli_engine/report_acceptance.py",
+      "sha256": "768dbd04b70a0b8e3cadf88ee2e04c2ea006585e6d2d59423103ac47b0417de7"
+    },
+    {
+      "path": "tests/contract/test_knowledge_activation_cli_contract.py",
+      "sha256": "980a41ac788bcc19222d00554c66b01c7b429305674a72dab92c4c5f3475665a"
+    },
+    {
+      "path": "tests/contract/test_report_acceptance_cli_contract.py",
+      "sha256": "d95a4860ccfecf90da8085fbf68c2fd3ad3832f12492e1b3421a26116146f2a5"
+    },
+    {
+      "path": "tests/contract/test_report_release_cli_contract.py",
+      "sha256": "c40a737b839a579611c22d0fb7d660a7707876397dfe53c7d5ed41825e9c2a4a"
+    },
+    {
+      "path": "tests/contract/test_wheel_runtime_assets.py",
+      "sha256": "a4333d20055779d762ce297dce8569e3ec723f7d33b7658f84748108844f519a"
+    },
+    {
+      "path": "tests/integration/test_calculate_report_cli.py",
+      "sha256": "3be60ab3301762051fd9a8946f614a9afe7ce98b8a80bdac562964782a4a1957"
+    },
+    {
+      "path": "tests/integration/test_explicit_calibrated_family_outputs.py",
+      "sha256": "854f8c77e1334ff815f315f1d7973924f9cd96d08af3ed765583a8142472e22d"
+    },
+    {
+      "path": "tests/integration/test_generate_markdown_report.py",
+      "sha256": "8dab93d21fc10d6dafec4ab1ca2ff802a299a26a071e60e2f15037d193ecfb03"
+    },
+    {
+      "path": "tests/integration/test_installed_package_baseline.py",
+      "sha256": "b2321d8c21379ad9bb6030d18822ad3ec65b37d0ab44c8a4ed4bbc607b040e8d"
+    },
+    {
+      "path": "tests/integration/test_reasoned_report_pipeline.py",
+      "sha256": "92df01cf321fa10ce9443eea66c656945455ad927d3bc236561e4f55b3d7371d"
+    },
+    {
+      "path": "tests/unit/test_classical_sources.py",
+      "sha256": "058991021451a49c24a176a33de43bb4cdc9bb576615b8c3baca0447a88c3d50"
+    },
+    {
+      "path": "tests/unit/test_evidence_curation.py",
+      "sha256": "2c1f8f3f4af678c50858fd3f0a5bfb8d7ba328518b8dc8504c1394c5f71d2692"
+    },
+    {
+      "path": "tests/unit/test_learning_reference_curation.py",
+      "sha256": "3d600837d31fc28de0dbaef0986fb144cce3d7e3b2fccb32d5ec8f32c3ffea41"
+    },
+    {
+      "path": "tests/unit/test_materials_audit.py",
+      "sha256": "c747d1c6ed5371efcea463ff90dd1b3a3a4ba0dd1c66c7780980d49345c3e42e"
+    },
+    {
+      "path": "tests/unit/test_new_material_learning.py",
+      "sha256": "6dc1d8e411e34e1578f455b702be2a88f5f906cfaefea7fd740aa8bf63225280"
+    },
+    {
+      "path": "tests/unit/test_project_completion.py",
+      "sha256": "960a16ac98a524da6f07f9ae047983c93536caa72f338f87040cc7db06ce2365"
+    },
+    {
+      "path": "tests/unit/test_report_acceptance.py",
+      "sha256": "270a63a082ff8b1a7430b3eaa5d0a0134a97ed69d6ee5def8d93e7e2e2110886"
+    },
+    {
+      "path": "tests/unit/test_report_release.py",
+      "sha256": "f9c4181e74507ead4e33d2f295e4baf065e5d4f756df0a85513519137fadc852"
+    },
+    {
+      "path": "tests/unit/test_report_schema.py",
+      "sha256": "6069b9be698cf85c4a9227ac6cf33f689023b81ac0adb5c304e573e10be5dc75"
+    },
+    {
+      "path": "tests/unit/test_source_intake.py",
+      "sha256": "69422ee1f36c64aa6516f80d2ce8f2ae524f223ce1fb54113c5c41b50ea27a61"
+    }
+  ],
+  "reviewed_files_sha256": "edc2ded3016014a45420279bd7898a96e2efd8145b852fe46b062ea421269eb1",
+  "schema_version": "new-material-learning-final-audit-v3",
+  "task8_checked_step_count": 3,
+  "task8_plan_sha256": "040d76fd5d2fc224cb2a46437989ff9c93d743ec740a3dbf6984ad3fb54e5c53"
+}

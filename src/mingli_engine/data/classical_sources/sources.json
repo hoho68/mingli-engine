@@ -367,5 +367,177 @@
     "risk_notes": [],
     "curation_gap_reason": "",
     "review_reference": "015-raw-text-next-cycle-gated-ordinary-final-selection"
+  },
+  {
+    "source_id": "source_batch_20260714_edf3da09bb3d_001",
+    "title": "batch_20260714 registered source 001",
+    "file_name": "batch_20260714_file_001.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [
+      "high_risk_signal"
+    ],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_dc20c035ea07_002",
+    "title": "batch_20260714 registered source 002",
+    "file_name": "batch_20260714_file_002.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_d933ed5aa7e1_003",
+    "title": "batch_20260714 registered source 003",
+    "file_name": "batch_20260714_file_003.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [
+      "high_risk_signal"
+    ],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_58bedb1bd90d_005",
+    "title": "batch_20260714 registered source 005",
+    "file_name": "batch_20260714_file_005.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_5e170a8881e1_009",
+    "title": "batch_20260714 registered source 009",
+    "file_name": "batch_20260714_file_009.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [
+      "high_risk_signal"
+    ],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_d9a207e745e6_010",
+    "title": "batch_20260714 registered source 010",
+    "file_name": "batch_20260714_file_010.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [
+      "high_risk_signal"
+    ],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_9075a3b139c7_011",
+    "title": "batch_20260714 registered source 011",
+    "file_name": "batch_20260714_file_011.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_8754d6bcb1f5_012",
+    "title": "batch_20260714 registered source 012",
+    "file_name": "batch_20260714_file_012.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_53a6bac42dbd_021",
+    "title": "batch_20260714 registered source 021",
+    "file_name": "batch_20260714_file_021.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [
+      "high_risk_signal"
+    ],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_53a6bac42dbd_022",
+    "title": "batch_20260714 registered source 022",
+    "file_name": "batch_20260714_file_022.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_9165c0733a5a_023",
+    "title": "batch_20260714 registered source 023",
+    "file_name": "batch_20260714_file_023.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [
+      "high_risk_signal"
+    ],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_be9987f40e6f_025",
+    "title": "batch_20260714 registered source 025",
+    "file_name": "batch_20260714_file_025.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [
+      "high_risk_signal"
+    ],
+    "curation_gap_reason": "",
+    "review_reference": ""
+  },
+  {
+    "source_id": "source_batch_20260714_c7d925a8715a_026",
+    "title": "batch_20260714 registered source 026",
+    "file_name": "batch_20260714_file_026.pdf",
+    "source_type": "pdf",
+    "extraction_status": "partial",
+    "review_status": "approved",
+    "scope_notes": "batch_20260714 multi-tranche extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": [
+      "high_risk_signal"
+    ],
+    "curation_gap_reason": "",
+    "review_reference": ""
   }
 ]

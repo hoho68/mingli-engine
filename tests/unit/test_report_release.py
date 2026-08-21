@@ -1,4 +1,4 @@
-import json
+﻿import json
 from dataclasses import asdict, replace
 
 import pytest
@@ -74,7 +74,7 @@ def test_release_summary_certifies_tracked_anonymous_matrix():
     assert summary.distinct_report_output_count == 3
     assert summary.acceptance_baseline_id == "report_acceptance_v1"
     assert summary.acceptance_status == "ready_with_guardrails"
-    assert summary.approved_evidence_count == 111
+    assert summary.approved_evidence_count == 996
     assert summary.rule_family_count == 10
     assert summary.action_track_count == 4
     assert [case.case_id for case in summary.cases] == EXPECTED_CASE_IDS

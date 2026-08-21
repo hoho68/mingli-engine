@@ -1,0 +1,742 @@
+{
+  "authorization_ledger_sha256": "a23de2ee1325029966686ca8d60bd6ee21c43084ac43291d86fc6a5833f3b1af",
+  "batch_id": "batch_20260714",
+  "extraction_tranches_sha256": "367a56f5bc2933e3e22b0b3d738f04b3e86652711b2a1ed844b96c356459ec03",
+  "generated_at": "2026-08-19T03:05:47Z",
+  "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+  "model_attempts_sha256": "10877cb1c638e462b7ae98fde6498ad6cc6316ec2d6c27fd0ad6f7f7a4fbb20b",
+  "probe_ledger_sha256": "18a1e869ecb76d254718c3bcc698f5ead66398cf3884c793f87b19dc5b462071",
+  "records": [
+    {
+      "accepted_validated_output_ids": [
+        "7051d4635bb9a06cc1013465494e7b985e0bed2f064b79c758fb17ca4150523d",
+        "57757f933cdd2b9e5214642a7882ae159e1d172b4ad673794b1adc0068fffc31",
+        "edaaeca6f6bac9a6c8581401d709a34699663656527830e404a54010145688ea",
+        "2e8aea60d228c3c3a8b35baa827b7137f5069c036148aedc77462e2339c6b496"
+      ],
+      "coverage_id": "01dd4d76b38fbc91fc4eaaeac2afc779ebbeec7d14fb9f4e8a85ce8b5b56f517",
+      "covered_page_count": 100,
+      "covered_page_ranges": [
+        "page:1-100"
+      ],
+      "file_sha256": "EDF3DA09BB3D08A6BFFC3C59A3418EFCD397B867DDC9DD5C4C03C74A25A778B9",
+      "missing_page_ranges": [],
+      "relative_path": "2800.《命理生死之书》100页.pdf",
+      "route": "deepseek_text",
+      "status": "complete",
+      "total_pages": 100
+    },
+    {
+      "accepted_validated_output_ids": [
+        "323aaa67e8b3fceaec0ef9888d5279e361fe1f4fb024d62ea444be1b3c271ec4",
+        "42baa9dcb164ba9c3f9353ef388642a0dcf31267657b77e0e9239952311424f6",
+        "26b7de12dbc0d23de58fa41e0e0bf1d38789b9495a8375cdb7a6ce3d9bb6d97b",
+        "6142fc178a87d22961cc26121cda3a048a2e793da0e6220704ce46b80c4967df"
+      ],
+      "coverage_id": "28ee8140d2ae75187bc44043a69afe5aff06b73d28f127c20af005b1b63ce9e1",
+      "covered_page_count": 51,
+      "covered_page_ranges": [
+        "page:1-51"
+      ],
+      "file_sha256": "DC20C035EA07FA7F6E8FC1543D5079486AFF96C6A54AB66AD750BEDA938DB832",
+      "missing_page_ranges": [],
+      "relative_path": "[三命堂藏版]子平管见.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 51
+    },
+    {
+      "accepted_validated_output_ids": [
+        "c74e299b597fcb12f02ff4c9c68be4dc11d64abcfa326d927981121d3f21429d",
+        "3abe1115f687f6eb14b69577d99ca6ce97aa012a0fc6dfecebcc4ece1f401a49",
+        "f87ca0d7629df23f75bcb22c02de5e63237dbb03c6b3e3f2fd9489eeff4d4514",
+        "9e9aeefb81e3551b42c556d616f3ce08f562887454eae905f383e1106ab7db42",
+        "c7659cfd3d6f731c99a160a7e6e5e15d5716d115a48505c27d23e4caf6d43008",
+        "93c47d59a02dfb022d681c69102dc68b992835d2fc469c9497a799d1e62de0a5",
+        "1d67d73d2279a1772028a7c993245d19fd63c2d5c8c1b5af0c1770a70c322004",
+        "0bfe401c2f27154cc2c0e21514ee44ebcceb80c9cd3212a5ff4d68a0d784ce4f",
+        "dbe4fc69b0ed96737d1ab6e96977acbf0ba89677e9a5e86a3546c574c40f828d",
+        "6cca4fd0c6499613cd61d77142da55e15dc14cab7244b3647db759511795fe6f",
+        "b46bb73ae381bcc2cb855ef68ee27245037e0eb44f92924fef7b6f07667f6e50",
+        "dbc083bef4815435336eb9ecf5f6503cf30245d66052b42cae14d7ec6f14a590",
+        "333ea9cc64f49a3c1b39fb2a815a8fdaeefb81046aee2b457f329a38c44ab3d2",
+        "9e2a93d618f75ae3eab104c294b266f19bae0a9328c7366fd07bda7b909a5085",
+        "7a987b23b7976fd8e2426e3b73e51b7207702637d0da6a2ef6b059d476743ee4",
+        "b80dddbf29b1570f197f0740046f2e40d8fc1ef67ff5d4ec83f9c77a768a125b",
+        "143d9eca668a3a9e49bfbf486a7f3672fceff21dc8c3249c19c07bf324cdbecd"
+      ],
+      "coverage_id": "bdc99c3bb8775fc8637120f2efa3f36f9ad26d21e4a82ea62bae9015ddeb5370",
+      "covered_page_count": 261,
+      "covered_page_ranges": [
+        "page:1-261"
+      ],
+      "file_sha256": "D933ED5AA7E1C8A46871FFFF34ED81D807EC45E33EB43D4E0C3872293F526D18",
+      "missing_page_ranges": [],
+      "relative_path": "[周易 相术 测字]图解八字宝鉴 (刘金仙).pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 261
+    },
+    {
+      "accepted_validated_output_ids": [
+        "34995cea28e71d7cdf244958f50b37c4ce6371dfb82fa339318090d5e7ccc2bd",
+        "d0b14aab653760ba64651bd248b5c7a119061f9829cddc9e99e9db3a89de85ec",
+        "5d70f415c8d096be0579eb31d6998ddc7006ce90be40d970671784240e05e637",
+        "fe100e9e9168794add3e91e1d3f8887b2f9ead780b1f159fc0697b40e25b163e"
+      ],
+      "coverage_id": "fbb4c72d82a29885d58960d9a2d3818c2d826a6abffa96f99cb2e35d9eda04c5",
+      "covered_page_count": 63,
+      "covered_page_ranges": [
+        "page:1-63"
+      ],
+      "file_sha256": "DBAC2B50CB4F824D3CFA95800C6582C71FF5D9119ABF6E9B2EFD13CEF6E11B76",
+      "missing_page_ranges": [],
+      "relative_path": "《解梦灵书》.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 63
+    },
+    {
+      "accepted_validated_output_ids": [
+        "89a25fc9c23584d75f707de0a3098d7644364dd39601a11a1fff95098e87a7c6",
+        "fc261be4fd5bc910f00b732285c74617e5321d54058e4575be6f11733ca84944",
+        "03ad270425ad175aa22d1ffd99bc5fb23f8e8434f871a7df2950c8190c59e0cb",
+        "0e26181815a4b7dba2a61abee985011a8dead5bc22cc6010119cf32dc2fc7419",
+        "7b56a40bb9335188ac5c19d270130b27b266c2ebc467aad404496f69bf13470d",
+        "2c63170fadffcdf1c82ef3bffa6a86759ba218ee72ada6103cd7c90374f7f5ff",
+        "5d86ce32acb2582365eaebdb701a8537de3a28d28f9c7a705660e96c5ec1bd7d",
+        "a06f2a687b4793cb259fa628f9080cba21ad4e5fb78b787b2fa544730ea567b2",
+        "33da97e585a8b17752d767f61679bccecc820026daea4e65852875b57b1bee83",
+        "574ab4d7b1c650bcfe4dc948dcf965e4892c187317fba2ca2e5f268bcb96e5af",
+        "ec5ccdaa9f2162b120bc5e4ecc29db4ac3c13043fb99489ecca1073ed30aab4f"
+      ],
+      "coverage_id": "cdfb1a579ce2c9ab9822ee6d47278bb180b7a22a260b52e29e1b868a155f1cf9",
+      "covered_page_count": 166,
+      "covered_page_ranges": [
+        "page:1-166"
+      ],
+      "file_sha256": "58BEDB1BD90DAF56DDE68AA2095B6AA2D0A0B597FD0829262C1231DB74A8CFBA",
+      "missing_page_ranges": [],
+      "relative_path": "八字命理，弟子密训秘籍，彩色扫描166页PDF无水印_1.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 166
+    },
+    {
+      "accepted_validated_output_ids": [
+        "ff9dd5a6e35ab16d4cb33a52d69fec62c9b7133c96b110e6a86837d54dcaed1c",
+        "717f84f95d9808b37ca821b7836fa413dfdb5fab52b0cd1ca63a714358b10456",
+        "c6223a5f7e5adfd5f854455d9090981286810363810ba3a9b6e1206da0d1f131",
+        "1551d525ae65c47a2024cb46b12eba2bcff19b5aff8a8defea418d7eef9460b6",
+        "4bf3298ffdeb1e5326eb1d938f49081acbd7b9a90a1e382c80ceee9467df2830",
+        "35060d5c306968a900ba357f232a284fab4908b9cd7bf40d79264b70f36a52b6",
+        "10059e1568adac1b2c714d58b13d917547034a75ea525813224bd87d1ea5c18e",
+        "155c5e5453676418d7b28ce08258f78817b1ee51dd4b20ea764e6075c8fe43be",
+        "46bb49798433bbe87e14fd0182c7e9033555bb560e29f19434747fcc26e450b5",
+        "8c5dcb60db0edbcef6b3bf7f9fc67dc4c0a54f3be4d6bae7b6178d9a0999bc73",
+        "8a8e922aa1c74e7e723410026501428854dd3b6887bfeb02440b87d7f89bb15d",
+        "4afc30909d553388b678a208a0fa384f8c8e1c06abd8f9ddf809c8911190d4dd",
+        "05105dab60c4e0e23e73d92a6fdd074a9b670afa6a6f8b6e28c80fb2c126deb4",
+        "4fb4076dbc6b06a02c08a8e9c29d95402ffd7287e3248d828c21909159eeafd4",
+        "61f52c65acfcedbdf2b30dea8609453524b6eb293d5c47618bffad5f48860b05",
+        "29e05d945e239ae869bf2a7fab65105cd139d0eb6f48524aecced3fbafbd01bd",
+        "50f2c3bb59d08b276bf41a29fe233735538f35a8afa025335ec21a888bd2d41c",
+        "006d2d7ab1fc0fe4b485f9f83a600eb43f9db45ec57895ad95cd5311e3e6a4c3",
+        "b5b52b483506e758fed393add87018f601c0861146fed54557e270172c517628",
+        "a91bac434a43329f2606e67e81c557b6322bffae0025d2af5f02541760140359",
+        "a3405c22104493a229103103becc20f52b266e0d1ca397768a85617241689902",
+        "2197fecaacf5ea67ab8da086b2b874270e3135e793733fa229308b59aa1c041d",
+        "2e9b23f3726da43e14da03da33bfa6489d34db98bb39cc1dc43721b453105de4",
+        "2123b5fb87abf3aa7713a5bd76988ca1397c7d93a8a9b89ab7210eb16f81bc2b",
+        "81009a19d9b827adc0619389903fdeee9e64af9dca4892ca43067a7dade290e8",
+        "0025d99d41e3e025a964c13e6dd8e56526f1d4b594bee1bf9992861761ca3d99",
+        "485680bd6552442879e279d3e462cbf547919592510f669c8d9ad498b6c92a45",
+        "6d7ce1105498f329a2b5a063afbede0f11bd52606528349da8057454e838e691",
+        "3937664425fdb17c84757ea1d39fb03bc8b009883cf40637abf7b20b480b3253",
+        "987b02b02625695a0443fc8e7dc4b4c86185d480ab6b23f83b17d92ca0a23c34",
+        "2fff423fc9946d134c264e2053c81cb0abebb7dbf2b45191df87881b79762ad3",
+        "1c6b23376fce1d4bea6e96d8d120a008841fe8142f9cf9ff4741eb7c090e315a",
+        "df6018fc9d68e92fd9a21d81ef4613b1319341ed033f1f41de9b478bc4a065eb",
+        "b42f6268e954b6f94f058fcb69210c0e7f6b29932a88b95824945f7ddb6a32f2",
+        "4ab7dbc65f1cbc37926c2fe97434134709736e651c72679dae2130128c8de329",
+        "f973ac73232ee01b35121e5427a1ea3b538040a5c67cbb21bd87539306948abe",
+        "e39333611e73716a8a0add47297e1ee5c8c1d5364b5b5d5852949e935efd989e",
+        "d9ea89f840bb82e7c6d118379b9a85e6b5e0437ab4a2c8be221dc405ce285e50",
+        "aa589b0073272eb7c37feb28110bea106a5e1be96e8b5b1f21888dd9e264c23f",
+        "326a8ba0180b03676f26e315bb885a1d10665d47a4b1bff8ab7c65c486f13ea1",
+        "7e4ef26c248635ba287168fe00433165284d5c85ba2f31c9135305e0b1ed0f21",
+        "06482ae78e46e41548b8c366d32c8da6142d96e1d2ef1bdc9213c030b61e499e",
+        "142a596cfc00b1d0c6db1cb54a7c01f4963461b345361be3a7e55e46ffdfe3e0",
+        "6e37a9a030ca927eb2470d8847be3524321939cbc2f2ec49f63a51af2360e1f2",
+        "1fbd4734624c87ff38c33c75408b7258862568009ba3cdc2f943802741cb7089",
+        "542871ed8cd22724cca039379d5c73340d2f5f1400c770123e4baadb7ae859d7",
+        "b91beaf604a591ed074abff045133045645b2b6bf8ac8d8d5a8f09ae069f9e71",
+        "0768c4f5556872bf24a0cb025b8c65bbcbf80153ead291e869e41db8b60d3112",
+        "e05bbf96094636542f7382e4c1a50a5ad8ee27d3462e7aa3bc32da8583f8d360",
+        "4edaed22ffa6464b9249f389e1feee5b9e05c38891ab6ad7fa7934d90ea7ae9a",
+        "a73ee4643c15a5095b3adc1bfe3dbe2d900555ea91940e82afa46365d149bea7",
+        "0025d68b9869c83f95e5b1f7655fa3e1c4a6d4bc00cd013b3e0f85692b04d8ef",
+        "3d36ae4188227ca66c8b8efe975f22f2bbbd5f8a075ff3e5b2e3b9c3cef101b3",
+        "e92e9b9f459ccdfea3d18f256416d4e0cc7275a168373157052893d09f2aa864",
+        "0b3b09a56d7b1340eb008f9064a82159e3b35b5cf5139150e4defe2c78ed6bd0",
+        "47d0b39791e5e21a5584b5789441f73dee5954ec550fb531ab738b4b26de2076",
+        "35334074fbb2bd5de7b807662173c1eb8f703ebc1c0bcce4aa7e3c9ea83ecc20",
+        "1143e75d18743a22a564a1f2a20d02984fe1119b7940e212f93a8d93746a205a",
+        "5c825b0f3c57c89daded0dd2a9b0c0cd4e03bd3aafd5f1c55a0845995237baaf",
+        "abc8058dcc3054f6c01891c4162d9721c8f77a99f5ba1d2fba7df03159f1dd7f"
+      ],
+      "coverage_id": "e01914b6e4915850ee2b1284ce5000ad5e91030f340bff5539fc152b9054a76f",
+      "covered_page_count": 1517,
+      "covered_page_ranges": [
+        "page:1-1517"
+      ],
+      "file_sha256": "02AE584AC6D1658C5B910642B92B7B73D042988EDA73A78AA72F350F16A510E2",
+      "missing_page_ranges": [],
+      "relative_path": "六爻古籍经典合集 (易隐 易冒 易林卜疑 断易天机) .pdf",
+      "route": "deepseek_text",
+      "status": "complete",
+      "total_pages": 1517
+    },
+    {
+      "accepted_validated_output_ids": [
+        "bea1d5595d9df14cc12cf60c25b896563be0118b458b69c934d23a52adcd8a7d",
+        "0cc5e41f649462f2541c92d18ce61ed0454fa2e2410c7ac1c4223a851320d2b1"
+      ],
+      "coverage_id": "6c73ed1f5d27a9beaa44a0697707f2470854b98bbe145432d29c96e1888779b6",
+      "covered_page_count": 35,
+      "covered_page_ranges": [
+        "page:1-35"
+      ],
+      "file_sha256": "8380311E3ADCEAF450FA83DAECA16B34B2676FFECD798E2747A8FD0EAB6C91A0",
+      "missing_page_ranges": [],
+      "relative_path": "化解宝典破解笔记30法.pdf",
+      "route": "deepseek_text",
+      "status": "complete",
+      "total_pages": 35
+    },
+    {
+      "accepted_validated_output_ids": [
+        "dacc6a177bb43625b2dafe67897216e9c16b3df1693eb4d43d46a40c82d1e8d3",
+        "247eb7f42659cc0e51f7d98444544ea6516117c5916e964048bfc46550fdf682"
+      ],
+      "coverage_id": "0d5bfb0e7c5a754e61c223e6ae422184fa71ab5924cf8ae931471c7cb35022bb",
+      "covered_page_count": 23,
+      "covered_page_ranges": [
+        "page:1-23"
+      ],
+      "file_sha256": "080B27CCB186CFC5FBCA6F28C7299B4209FA9D55E0D1F007DF8D67FB44A86229",
+      "missing_page_ranges": [],
+      "relative_path": "叅星秘要諏吉便覽.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 23
+    },
+    {
+      "accepted_validated_output_ids": [
+        "aff5f2f310f289588e87d9ad04a06db2bf6e4bce8719469a4261b5f988a08f23",
+        "7d589d5e746be77a5ebb0f312a4889cc52955e1f3120dab5d89c4cee1296fdde",
+        "7694fd54c13deceda8aeba9d9cd8a49bb8166e7430ad3a3988b34900fef59c43",
+        "25d20e177576162f8e718e7291bb6ff054217ffe0bd77099c4efbe2a642f6fbf",
+        "2d0b6c56ba9715599fc382be03ffdc86e9e1b8fe4c565de5d943f8b1ece7208e",
+        "5e913eb89b2352b02b37f057bd7f9feded7936ff785c7e8b20e8f2afda77cd4b",
+        "55345447646526739306855be73ec97a6f4fe996910b19aad43a46f8a43f5838",
+        "71fdfa068dbc004ef06fe31b30af7c9a4954c5979d190c3b335438e0cfc870a1",
+        "ab2498ecf6b46e893bad6aac502736dee0027ee6f10549e0a22c1afda19ddae0",
+        "d10a388359a331694c843b999fd6b21a038cf940123500d6b5b3fed9d605fccf",
+        "bd26295e4de4ec53df34f916258da9d23141f55f5683a5510a61dc06dd27cb1d",
+        "5c38b2734c12ee9eba659febdc20c9a502cc532babb2efbfa3c90cde60b9be08",
+        "de1e147148f636d80c724ac1240709e8343a568f75553efd332fe234447d1ce7",
+        "63e5fa421f7db2a611374ad921ec1445a4ce11baeb19c0ce4af4c40f98ce9dff",
+        "a9e6144f1daeec25c43dbf549c058b1ab5ebb0d756b120f7de4b8b008cdf91db",
+        "09a6cf1e736d22a9444dab4bc6b7bd63ce59c812072569d8aef7641be3906bb7",
+        "8c0535ad0468be5de35ff61ab95ef02734f526ba4e46ebd3e9c7dd38560aaf39",
+        "b60008b30e3e263bc8d9d100858401c01eaa019396d05586a81be3aeb71c91f1",
+        "97da63239faa860b339b10abf7e793b9ad4dd0178e7f164e122d01a7a9422fb4",
+        "6fde6e30ad0353387d7527afe23fffc3ace201fc634eab26ca8485532557cc3f",
+        "0b82d52c4a34be26d7565fa7cb47ccd3e2ab19358fe4f28baaed2b3a6baf2152",
+        "7e5b8c7263d7fa6b28f6eb925de03626a280e5e124604dbebcc256f26f59d753"
+      ],
+      "coverage_id": "d1a2a2d1ce38732255253b5fecf78385e4d533ac44d5b1f914fe22665f5b0e15",
+      "covered_page_count": 352,
+      "covered_page_ranges": [
+        "page:1-352"
+      ],
+      "file_sha256": "5E170A8881E170F8E37AD2AC2809CFAB8C4B4C1D76FBE5C20BBD06E11CE1B12D",
+      "missing_page_ranges": [],
+      "relative_path": "命理精要  上.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 352
+    },
+    {
+      "accepted_validated_output_ids": [
+        "16ca5f50bf536561c77ac8b5c3c780efe7f9ec6e929d30a026c6b67bf1d2a95d",
+        "63e6b3e93e1b49aad4cbadf975b6e6b4c2f9cdb1baf3e0177552bade5791c736",
+        "1b4c51bc82150fe73dbb201d0971a57c04ae12d9ac9944547f3aadfcbd99a013",
+        "6ba44e07e1a2e0d9a6d97fe6968b3228de170b289c67d5be6ec69749f7a6b067",
+        "b93d84cf32759e6110fa9f3b4c13538ceaf123916badf0ee36ca08d063f5d37a",
+        "adce4bf5cc3d5414ccaa95375729e53def5f8bcf32641583a19cc90684d5d409",
+        "14b9f4227362804f052100121a9eceba68b9446f3d2e26f0a729c1e2a71cf54c",
+        "de9a2924f4cda18fc0fc8c8fded89f6742481f50af81c0b176c2c55f4937545b",
+        "bdf7d57a654f4ce2a1cb66ade1434f17b592438ef7de85b1c58f89aea6f6d04b",
+        "191e1d7669b513f434ea5a8adf01a95648f60223523b436e20a42b8e771d6d94",
+        "03db86e3636db6241deff05a167ae12e002c02a83ca04368011b3087ecb70713",
+        "2d1bfb2b13fee6bc5ee4042a299f0b0163c0d5525d293d47d1542148ae1cd71a",
+        "e08d5ce4f690a7f6c44e3f0187c884974927b91fb417a31769bf47500e7daeb3",
+        "e0307d1dfc3e9b71b0f4b9b9ae4eb8425bde7d0b0422f531e242c66482034089",
+        "fa71196c6489059e31c89fad372b8c9c808c2e7fc70d6307dfb9da1b27f9370a",
+        "887b0279c56582ecf76dbf30419b962750db011278379de0903fd7206e28a186",
+        "b84221c7025000d5f5b0506cbaeca87a82084ad1a786c113b466c56a67fb6508",
+        "e9a6057a0fb8cdc4853eb228c500ca48ac6b34506ed88efa599f3a58a116f537",
+        "cf4e3ca15fe845d4bbde18f180dc29ef6f94b19bb3f868ea1077f9330aa2b594",
+        "6bbcf6774ee23f6a0631267ce94e538062aaf140fddbd2970d01844a4c0a7f4a",
+        "7ae92239322d09cfb74aef9070435f90d3414e96bdf2b401728e5c2e085e90e6",
+        "4fd4dec0b93e4443d39c65e059d6f51bb6bcdc96c379fc3f7f3ade57948d1c50"
+      ],
+      "coverage_id": "a7d6824647bd0fa9ff0d51919d4d82cbbe5ab91eb0c663a5b9bd9a0628174f7b",
+      "covered_page_count": 339,
+      "covered_page_ranges": [
+        "page:1-339"
+      ],
+      "file_sha256": "D9A207E745E6A6C96E9DADB45EDF33DDCB48943EF331B1C0D97A4E9AB7BF8213",
+      "missing_page_ranges": [],
+      "relative_path": "命理精要下.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 339
+    },
+    {
+      "accepted_validated_output_ids": [
+        "e50c16d6e55e63ecb092e7cc1bd444a0eb995b7fc4deb512a7082ac1d833f824",
+        "0b2a458d7afd1a52ddb218fd897becf938a2713a7577e01e20fd16fa1571e19c",
+        "65d1c4b86ac3908a22d08d6e70824609d534ef46c6fa31b2411330ca558fd5ba",
+        "36cb1664436fad4d2d3f38efc7a3b4bb875c857d682480a8ca3eca4a12c2921b",
+        "3b47f0099abdb244857959c986b580f65c05d24a0d29915b2c304f26f3b60bb0",
+        "2cbc0429d8034dc3490b91073c0e8d714345d9b1c228814e4e496b79f0efdc56",
+        "02347317514dff1b7d5d4d4496cee2bbb2e9cf6b9cd19c33bd5c200a304ec921",
+        "a9cd81e3799a13a712267a4538867e835af0a8c437aa93e2fb79f6a7bc663a13",
+        "b7b0c15f8c5a6b11108f2640e1ef5083a8b70fe471424019163b2925c67381e0",
+        "ae0d4065eead7be718eebf938e00232b0a46bcc8b21a2a39fa3f5b6041854e06",
+        "f5861424a52ace7f706e2a06306f50a88a446b0d73288bfd1214f6bc90dc172e",
+        "d9e063b3819988283c040a48fa631734c7b32aaf24c12ab691b43e38eaf7131b",
+        "97596e82f68a70b524b557da4ab006a07643ed8d467c1002431b8e1613588830",
+        "28c1a7dfbbe52f2b4b5e07f24afcd114e737b3d926d415c9821a06b26ebbfa32",
+        "863a05e3e69937a1017cad57a147b01c6df8240e254d7b311ad431c2b0a665eb",
+        "441ed6815ec43e7c023ca47366b672390d1d33a882b2584ca07e5563539606a8"
+      ],
+      "coverage_id": "4bd45aa7f30d87dcf1a462ca01eb7eccd200d9ceb08e0f497d6a35adc60585e7",
+      "covered_page_count": 506,
+      "covered_page_ranges": [
+        "page:1-506"
+      ],
+      "file_sha256": "9075A3B139C7D44AD4F8A2DD6BE39697DD0219BBFB78D2FA6BE93F26CCD4167B",
+      "missing_page_ranges": [],
+      "relative_path": "姚亚峰 《盲派绝学断流年》ce.pdf",
+      "route": "deepseek_text",
+      "status": "complete",
+      "total_pages": 506
+    },
+    {
+      "accepted_validated_output_ids": [
+        "a30a246563c9a62266c18cc384edd0ff9169d5a5fcee32e14f580c5da5d93fcc",
+        "7e232b2cf8f7122997911af2a4f0fbafec81bb4534b08fa43fdabe38f8fef0b5"
+      ],
+      "coverage_id": "798c3a256ce01009c6434af87adc4c8bd6176fc269ab4a048332a91faa0abc6d",
+      "covered_page_count": 37,
+      "covered_page_ranges": [
+        "page:1-37"
+      ],
+      "file_sha256": "8754D6BCB1F5C0A25A0E50718292E64A959151FDECE354A36A0799C78588671E",
+      "missing_page_ranges": [],
+      "relative_path": "子平三命通变渊源-精校.pdf",
+      "route": "deepseek_text",
+      "status": "complete",
+      "total_pages": 37
+    },
+    {
+      "accepted_validated_output_ids": [
+        "caf77adcaedd98bfda1e227cdfa1041a85ed07de1924687cebb911c0c731cf31",
+        "883bae660e970f13d46b2d1a4a4663dde8032fabd2d0af02fd47fbbdcd265dee",
+        "37caa07dee21a35c6a2133b6ece28d1eebaa0abdb5f1028ba90f4f12e9691bc3",
+        "a652484fc18430d413a8ad7a274d044efb48824b326e25ad4a23205313b2fcaa",
+        "f0db926c7fd2b7fc8621ecebad74552f2feda056c849f51d7d47a60393c6c48b",
+        "49d89512863d3b57341a25b07e0e97fdbf518591c84ab5ded5e9a4cb9c25100a",
+        "cdf9d574d4ac458e572cd22c0c95dc09a75cdce230c0ca7beb1fd5b631937978",
+        "0564c8af67ebaf9f87095a83bdaa20d4181ba783ae716e6df903746105fa314d",
+        "7f24a16706a534b3eebec6664448080833b06bd42f33053639553d7203406928",
+        "ba0daae1dff9e5287d0b2538ddcdce02c6374b3733e0387d19cbd21e83a0c654"
+      ],
+      "coverage_id": "727a1d077819ac4e0167548c4bbb7801ed8022d0cf3635585dfedf3b35da1b44",
+      "covered_page_count": 296,
+      "covered_page_ranges": [
+        "page:1-296"
+      ],
+      "file_sha256": "A0787A7D7F59900CC42221A61C6AC480BF868C329E2C9396CFD0E846D96E2645",
+      "missing_page_ranges": [],
+      "relative_path": "学六爻这本最好.pdf",
+      "route": "deepseek_text",
+      "status": "complete",
+      "total_pages": 296
+    },
+    {
+      "accepted_validated_output_ids": [
+        "4bfc121eec98899e95a8bb2c956462f7b6e8f1558cc2506daf44f8e1b2cf99a3",
+        "893f7f4fcb4556f135c3949360425b5c0807d63d65cd463f7cf4e5dd9412caee",
+        "15d1d0aa93043d2f6c0fc7b0d70cdaf866afdab7edf6310fb8ca69369794d54a",
+        "4f532388b1081225016e4763e41f21ad1a380ddfb0e25817f03e3fe138dd7e78",
+        "03d5759218fe8e720a00006ac718108bae18e85a91aba7fdb42200b7d13d047a"
+      ],
+      "coverage_id": "af23d11098e9604a9f1dbefd09f2395a44754ef260e82e20c41fbe3b85257d2f",
+      "covered_page_count": 36,
+      "covered_page_ranges": [
+        "page:1-36"
+      ],
+      "file_sha256": "D81262E64FE5469406C31E097575B6B7E443B05359254AAE1EB530E45A42D4C2",
+      "missing_page_ranges": [],
+      "relative_path": "曾文迪选择宗镜.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 36
+    },
+    {
+      "accepted_validated_output_ids": [
+        "4a175a01003bdd11b0412409a127fa7e06204829ae93e4b986117b9d7f223d08",
+        "b9c3ead47649bf1dcd7b446a5f2c23ba41520465764cda7cf4db73d1e4251d5c",
+        "4795440d9027bf2545d429e54766b18609c7b00d718260bfe5da9f2ea794044d",
+        "29838a19261842a5054536aa31f711a60e87f215bd6fd8aa9ad01ad232998e73",
+        "6079a82f6423de7f0cbce809baa1d60dea7f0fae83c46656151ce54d111a198c"
+      ],
+      "coverage_id": "40b02eba42964abeeb026a9074be6f6d77641fa086d4ebcda7e5166a7fd4df7b",
+      "covered_page_count": 79,
+      "covered_page_ranges": [
+        "page:1-79"
+      ],
+      "file_sha256": "1FF4CE83FD5C41DF042CF3D68F5D14B305FBE099211917BE2E873AE5109016D0",
+      "missing_page_ranges": [],
+      "relative_path": "梅花姓名断..陈春林.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 79
+    },
+    {
+      "accepted_validated_output_ids": [
+        "7d0e17fbc95b6582d9520fe376571eadc92eaaa122d241d32c2f45da3883559c",
+        "a0587277dc5bb8fbe5caa9bd45e33f8f1213877f2645f9c80182a2b118db57d7",
+        "ffd3197ad4061364d1b253bb7e7edb12ae76746bb2dc4f7ae12f4e8b25731945",
+        "88c090dae0200ce821a73425c52c1fe46482adebf69faacff3cc286e604afffc",
+        "199db7dcb1ae1c2e9542bf6a1e9b6e1656e461accd2e3f0a68c4075ea3b53211",
+        "456c8a9d0c32b12ec0bb7085b10313ac0cd90ed4ee08706f12d9628acb37fac7",
+        "c2a1b69b7f2ba27e4951449341fb2823b7030860961f385ea3d5103e5a88d82c",
+        "4a4a8f9f462c27fc2db4df45b1ce64ded1619a7fa7d809c3d1b30a51117ba0db",
+        "2df3551461c9c47a2e0f1a1f9c8d73b0375b531b69cde9b9c080a42eaf0ece02",
+        "5784cb6b798b420d039e4e7e98f53d98fcf8414d29d0452afafc40954d614d33",
+        "e841663233cf1f7e48a02e224e58fae4014e46e19e43c3453cc005fa9783085e",
+        "8fd2c871b89cd9c249463ed2490ec5a3423f25aea7e701e55e3d1e807451e8ee",
+        "fb79bea8afa1009daf8ad24fdd67d856516e31739af732f707937c5dcab58c8e"
+      ],
+      "coverage_id": "74c03a2cff5b7a76c98b72ca0231ddaef8c93d9c0622ac411eb7c92e7fbbb680",
+      "covered_page_count": 204,
+      "covered_page_ranges": [
+        "page:1-204"
+      ],
+      "file_sha256": "5D26F403F755539B3CC4286B97D5B526EA7D79DFC06A30AF3A563E5DCAD41358",
+      "missing_page_ranges": [],
+      "relative_path": "梅花易数 .pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 204
+    },
+    {
+      "accepted_validated_output_ids": [
+        "30b6b0a8fdd4d9985a23b88736bfb204207fe8a7c9a68daf95827746e8d5f41a",
+        "677f993b899f316485d001aef2a10fcfdb324c38ff81bd61dec751b3a4ff05c6",
+        "58cc7f91820737614df1899a9bac9c1efaf23065876a59b3f9689cb946e3b5ae",
+        "40907a04c94a635c9cbbc68e83b07ff7e33b2520d17600543922c2d29dbe17c1",
+        "42ac5d4a495acf75c90af872c168a30a878526d20f5e15886bedca9133223b0a",
+        "588d0df4ef6ce61916d074c099e4f79c16fc7221d9a33dd47ac15f030168899a",
+        "66ee1f31d0b79e92959e6e8cefb6fa49d055907f769c5d3d11fb8a8d861cca8e",
+        "304dee70981161f96e2df22bc087505a4c2636adcbe5706d62c475b4a4908c25",
+        "c7d8e804c26e50c86e6973dc4be3135deb551d2556154a1f8aa8f7dff8911be8",
+        "b06379d34b0209ef98ed81efcde66f20092f51142b65357783c725087804c1ea",
+        "d65eeaac24d5513bf759cc27ba32c880a94539236163fce890be73df74bc6149",
+        "d7db427454cb883134388c5c35e39c1dfe5517bc104bded975b05be88a39795e"
+      ],
+      "coverage_id": "c1b94657c29b405319eead4b6ea400982659081935f14bd10cde3f21a1b7e20d",
+      "covered_page_count": 359,
+      "covered_page_ranges": [
+        "page:1-359"
+      ],
+      "file_sha256": "A7C8AD0F0611398A905D66BB0D049775BA0702BEB70F29450E9266574830A1A7",
+      "missing_page_ranges": [],
+      "relative_path": "梅花易数白话解(清晰版).pdf",
+      "route": "deepseek_text",
+      "status": "complete",
+      "total_pages": 359
+    },
+    {
+      "accepted_validated_output_ids": [
+        "49e4e714b43485f149e60f0535e27aa4264a3101057021d00915e18645fd9d19",
+        "31242c3d5d9cefd2342ce317e57bf2ee418e2ca357d17ecff1ea9ea350443516",
+        "b4bbd12e41214506bb9e7697357eb0949a69304a08d69c88b5122fd063518cce",
+        "ecab9c799e8af293ee5db316dec2646c30dec9758878668c45805fc76e5b13a8",
+        "57c9696a52bfeedc30797c64e6b6c2d84fef92790287ce68074728b667f08c88",
+        "8f5c2d02dfd4fb10cb445dcc4c4ae374dc1bc332aba16ca18cab5b751b859161",
+        "507089cfe5399376fda8b11b972d0ed9dfd0b90b5ef67eed2727ac488b5c64da",
+        "327dc62581e26717053bc19e06d1b0d538b1b505955cebd08ca5046732d4dfb9"
+      ],
+      "coverage_id": "8006fac4bf185fb14866d1d817e53414e7236178fc198ef81e323cac91e6e251",
+      "covered_page_count": 119,
+      "covered_page_ranges": [
+        "page:1-119"
+      ],
+      "file_sha256": "0B213EDD694616062D5AB16520071ACE0137DC73A5C433D0B7B501FDCC65030B",
+      "missing_page_ranges": [],
+      "relative_path": "王亭之《中州派玄空学》(1上册).pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 119
+    },
+    {
+      "accepted_validated_output_ids": [
+        "6c86d4684986889281658833f893a241708894f056cd68ed183b69e628c12b1a",
+        "d8ee89fb30821032399caa36de6ec6283f66439b1501a7aceeaff9262dd5f73d",
+        "3e83081d7ec5a75c30f412fd15160223702fc375d5f3b8c123b342807d0b36ac",
+        "258c74d5dd40df6a55f88713c4c688fa74e6aa9689b09a96b697c1ffd07fa816",
+        "d6eb2fbd97619710011a1b4098574d368bb4c81762a24827a02be777c507a5a2",
+        "4fd4279047b8213cfd62f40a9a1c19e8db3aa3f5bc2ec0e5b303a9ac3f6c62bc",
+        "b975449b23034a0f0f7b3ab8c78bd4215a920aff5991247d8001a92eceefa2dd",
+        "16946945a1465bbbd72caf28e85a8c42d718e3b8801a4903db7ea1f1c0dcac88"
+      ],
+      "coverage_id": "78a366fedb150a2311d162d769390fc0ac6884ca865e5f97695f9d6ba8068653",
+      "covered_page_count": 122,
+      "covered_page_ranges": [
+        "page:1-122"
+      ],
+      "file_sha256": "781BC6B8D8487E7CDA73048FDF178149941DA471EE9982485EC3DF99F38F67E4",
+      "missing_page_ranges": [],
+      "relative_path": "王亭之《中州派玄空学》(2中册).pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 122
+    },
+    {
+      "accepted_validated_output_ids": [
+        "612aee755b3f84de09ae08ab27548223f1d626e844a7799e4864aaeb1764eeb6",
+        "2b649efe2890184da9f7fc46f957ab8600afa7b9ae410c140f213a9673c3d825",
+        "2c9abf2a33676e103b0a1c58bc1ea9537aa55625b058b720071223f45d84a677",
+        "0ced19592078333e9a69c85fa5cd44dafc57718ef688279efcd4a8b2ecbdc024",
+        "f50f4c555dab7fb9dde1decc8a2dfd9b7b1c661cfd889f04486aafde97f95171",
+        "298c433f8f4f0aa39d9013415e6311919f8a07bc8cf8bcff89a467b9e99a48ce",
+        "e40f7890d450085da5272946d0438aa8f935589bc44242d0ca4e08ca0aea4065"
+      ],
+      "coverage_id": "c600adbdc3da964902cd4d165722ebbf808247a79d17d378031cd4c7f5341083",
+      "covered_page_count": 109,
+      "covered_page_ranges": [
+        "page:1-109"
+      ],
+      "file_sha256": "F3311E39FD944FB0BAD469493DBEA652BF22AE4689F19D3F3BC2FE7566F7E7BF",
+      "missing_page_ranges": [],
+      "relative_path": "王亭之《中州派玄空学》(3下册).pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 109
+    },
+    {
+      "accepted_validated_output_ids": [
+        "062a6f0588b87ed6352e8c5e2bd720b0403d7bb05dfb5211e5999969dbac2e4d",
+        "79d5c3d6b4c0c86fc1d622d8c5a53d823df4a19ea254a30a0590ae5df2c14df0",
+        "db9f45e2555c65cc8508de9e74c653884b69b84500cf8a626e761a691ef10e7c"
+      ],
+      "coverage_id": "2d1b25856f7995e85a08e91e081f4703408c70fd15591dd247b6e92efa0b4dd9",
+      "covered_page_count": 47,
+      "covered_page_ranges": [
+        "page:1-47"
+      ],
+      "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+      "missing_page_ranges": [],
+      "relative_path": "理命摘要.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 47
+    },
+    {
+      "accepted_validated_output_ids": [
+        "eaa5306d721f7f028e37bb3ae2771191f26e1faa2c75f3705797ba73eefea834",
+        "12f45659cb0c26d286c4512c17c963ac596ca8615d29f78d8c33ba158e4baa0a",
+        "cfe853986d72063e6b2eea9e86a9c94b11f453d893e7ced450ce1713bf09896e"
+      ],
+      "coverage_id": "7d7f94bced1e9990a9edcad55f0662aa231799abf0375cc7b85d33be65419eaf",
+      "covered_page_count": 47,
+      "covered_page_ranges": [
+        "page:1-47"
+      ],
+      "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+      "missing_page_ranges": [],
+      "relative_path": "理命摘要1.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 47
+    },
+    {
+      "accepted_validated_output_ids": [
+        "f68806cd6adb8a213c4001f10657c9dbf36892ad56c4514329f11d7c2dc69159",
+        "d53e30f81111ad67eb1e3ab0bad4fdd9b41660fc6cd69869cdbfe623d3547336"
+      ],
+      "coverage_id": "b475332601a051d95328f2aa26574fe638ce652d859ecd04f74e3925a034abea",
+      "covered_page_count": 31,
+      "covered_page_ranges": [
+        "page:1-31"
+      ],
+      "file_sha256": "9165C0733A5AEBFB7CAE98A00619B0EDB4140A0615758AB686779188AEA42E60",
+      "missing_page_ranges": [],
+      "relative_path": "盲人断命秘典.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 31
+    },
+    {
+      "accepted_validated_output_ids": [
+        "2cc00dae3292503fc2161acbe7ad7a4b37ed22a49048b4d02a5ecf4f29b78f40",
+        "1a47c97289292aecefb9360d492d7dcfedad7dc50b7e3eaf721d4b859065a4ff"
+      ],
+      "coverage_id": "2f2dd866f2a429702ef69af211afac4fcd4efd352167267e8703296407f3639f",
+      "covered_page_count": 2,
+      "covered_page_ranges": [
+        "page:1-2"
+      ],
+      "file_sha256": "EEC66E5B64555FCA5573A6A0B341C639065F3761B46F3678152B54F5497E7F9E",
+      "missing_page_ranges": [],
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).docx",
+      "route": "deepseek_text",
+      "status": "complete",
+      "total_pages": 2
+    },
+    {
+      "accepted_validated_output_ids": [
+        "6e874935a461ee83d065a5dc3ebd8d615e3c766340f64e632de33c6009f1f830",
+        "234cc6e507529ba5d86645922e6d0a6d894901349370cb8bba1952cbc8259a00",
+        "56a5a8fb7f3f355abc9f224d5a55622394a51370306493b4164841db3e5edf80",
+        "2193c18fdb38ff2dea1523ba0626d0fb80f5c41371b0c918c24b44dadf69942d",
+        "66c04a64fc5a53aecb2da9b6dcf5152ef587ec8a3adb3df0a244b8208e2d6aa6",
+        "b1150febcbba2baf78fc4ead853532a47f97b9d15580858896994eb83e1718b9",
+        "9c0460ebb0a942b66eb2a8628e3e21e67a8f161a2e1f274debb917e110e32edf",
+        "7c32e23ee7c79427d96f5b6da291f2077309c86180bb19363416a8fb963244bd",
+        "9c383b01c1a4250bbf104fb0bcabc17f49161d6b9b7d3d1ddb17c4484c931a2f",
+        "9cfb6cac79bb6bc29c345bb41ec1cf7cf7af326b31a703b9ff8ec54306516edb",
+        "524f59c7b9dbe208db1f23258fee737348755b805caff35b607ed11ba7a814eb",
+        "d75a6e67a4aac1d7282e88fb34b786ab9b4c62c8a09a01cc824e4b0a481bd218",
+        "69c85b1408a50c40a98001d469412b1e1c12a477cd7ee28ee55846ae6a7a4d74",
+        "04b49fa70062fcbd4948cb93447003990adce6a9581158fd15f10e7011451669",
+        "51b1d40ea0e4fab7db76c745c65042024e1a090a807f4ac4ed96bf673d8d8811",
+        "2bcca6bf78adaa544866610d06d98b1b7a1647f9e3d099718b90a9b929080df6",
+        "12cbe9872e9c5c1394f58aa4f289588e6bfc7481873e562ee33a3ab9419d65b6",
+        "d839cb11aa3f1ad068686caff352713931d3a4a2b2f5db052c4c4497258f28cf",
+        "4b5877fe2bb895d4efc1c0795136723397734123bbf4184f808561e162b90580",
+        "77431ec36c3e51f1466eab8538822e49730437ec926557f14d30ae055d6b00c1"
+      ],
+      "coverage_id": "2cc161f3d1a7fdae2ad25d89c941c36733470e482c1073daa020c86f6bd42eab",
+      "covered_page_count": 320,
+      "covered_page_ranges": [
+        "page:1-320"
+      ],
+      "file_sha256": "BE9987F40E6F74D1F3094EFCC107ABB10172D58D3BD7968D17BEB4B9B38C7AD6",
+      "missing_page_ranges": [],
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 320
+    },
+    {
+      "accepted_validated_output_ids": [
+        "5f791bafe0e3429628f9d37408e951013181d084da3f7925f5ec2fe20f7688f7",
+        "385a7976fc2878ec3673a42fdd159b9a10b6c7df2cc21187feb55ee5c0df7f85",
+        "1969163affec2886d00c4b9ddb136419d104c0446b551ba53a29594d5ca4b59f",
+        "67e0a5607ada649ca95d70d35cb10f1c0e65188bec4a3617a4e6d3d3f3a01949",
+        "f205a4f240439658d87db34ee747a748240b32edf690537273c157789178c60f",
+        "4171e6b988c204759ce8573b2f3fcffa36d5c89603fd174ebff1064270530663",
+        "16495156b80f1973ff953dcfe232e4df2135771463989db88a0c1226a63d3784",
+        "ef8bd5c5388b12aa6637f328a072cd3991806f30a343bf2165f69e5df1a7308f",
+        "646fdaa456b463791f3ffa8e10070f4d27cd894e9d29ff3bf4cdf8b5756b6f1a",
+        "393010a224f4019686dcd0a6b82b37db2d86abe76f3ed7f86471d965eeb43512",
+        "bbabaa09f5bb20939a88cf4a1dbe0171724bb2709c4219160211f7ba4731622d",
+        "695478dda9935c3f2da8a4d4662c15886ed1181f846714038ef256a6023e9241",
+        "87af474d2bed872c334a4deb088c3d82ea583e7fc713cac1e9789ef9ce03d04a",
+        "aad0f1c5a7ceb4eac35547ad760cfa46c492122211c74911dbacfe6946e6acf4",
+        "b095fec35fd1c582eca2a2f3e8085262c69a8fcc7b668a4c7858a590bc538236",
+        "8f47221f5b9c2cf928be1b24e8ac482b056492214532f11bafdc9dcb028fec5b",
+        "5926f06388fd01e9cc707aa110caac58b415369261405d3fc065f8836f7a8f3f",
+        "f1e66ce6098c03a42de30a62f095f9d2438a4052d25824ae61f5881a836e3d8a",
+        "b01ba00a9334d6661f67b0a38c706b9e83be56e79f834db5810d3a88fa25f8c5"
+      ],
+      "coverage_id": "c0db5d0595017fd9aecd1e3cfc10ba9a37ae7ad0107cf0d76f4f01bfc03b4076",
+      "covered_page_count": 302,
+      "covered_page_ranges": [
+        "page:1-302"
+      ],
+      "file_sha256": "C7D925A8715AF6141321FDB169C7FC0958FBBC21B45404F3F8E5C66B04821CBB",
+      "missing_page_ranges": [],
+      "relative_path": "祖传八字金不换下武当山道长著(30000元内部资料、不能外泄).pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 302
+    },
+    {
+      "accepted_validated_output_ids": [
+        "daf8da48214b78cbfba2612ddfa2c90dc746d60ff3a391e01f2e4da2cd2bd301",
+        "666ee6e4a6c3141835386457a6ac9653123ea4138d45d39675f55bb6336a4e7c",
+        "76a0dab00cb555d6843d766ad9074b8de593b3f59abcd3513aa26a3c6235c3da",
+        "214ee375a0903c754adf7fa2ff52a46068b746a284b900cb27014e72eec2b367",
+        "ee38e525e2a000097d3285011cced15f465ad4acb896b73f0d117b50387af3a4",
+        "97e8ef1dee432d47b1a5c8ea34e3023123d93bc4321bdffc14f0d6f5beacded0"
+      ],
+      "coverage_id": "550e0119cc11b615b180de4fab23a9f03d0c865562a873070b6b1b5e8b8dd565",
+      "covered_page_count": 82,
+      "covered_page_ranges": [
+        "page:1-82"
+      ],
+      "file_sha256": "3D8D644570BF6CE92E7F0B59010E3219817FC3299AC2FAE54138165B4D69119B",
+      "missing_page_ranges": [],
+      "relative_path": "紫微斗数 2025-05-03 21.35(2).pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 82
+    },
+    {
+      "accepted_validated_output_ids": [
+        "4a6b20c542bc1d61badb7dc1ac0036421904446887a53a01bbc5820316141427"
+      ],
+      "coverage_id": "7612e753e27294e66c4369d9a11c17fcfe052fa45a2e585d5c3b0454fdc7d7d5",
+      "covered_page_count": 5,
+      "covered_page_ranges": [
+        "page:1-5"
+      ],
+      "file_sha256": "D462148FE4D1099652ECBB9AA696D4B5D9F8459DC10247BC23EA0CFE17C725BE",
+      "missing_page_ranges": [],
+      "relative_path": "给出已逝人的八字一眼看出不在人间.pdf",
+      "route": "deepseek_text",
+      "status": "complete",
+      "total_pages": 5
+    },
+    {
+      "accepted_validated_output_ids": [
+        "74f4a5a169b140125838f60dcb554207f0be6d446deb2c3fa0bbeaa0c5e2fafd",
+        "55c2b174a7f3cff4ffc2054f84260349151f11844cdb50e51c77af1c1f4056fe",
+        "b4c74e846cbb05fc57eb8686ce8d3103b4ca9e5d72e41247eaaeeff84e5a6c92",
+        "d28e6ba4e1fb99745e405eadc35a3bf34ea8f378f979fed28391be3d88ff1c1f"
+      ],
+      "coverage_id": "0b5bee74a788ca244de059444a9c085b17bdf7b53863fbae156e3c84c7523ff4",
+      "covered_page_count": 64,
+      "covered_page_ranges": [
+        "page:1-64"
+      ],
+      "file_sha256": "2DF5DEA1A91EDCECEB2593140B2093963CA39FD5A41F11E9DBAE78239B371A87",
+      "missing_page_ranges": [],
+      "relative_path": "鬼门十三针.佚名.民国抄本.德国柏林图书馆藏.pdf",
+      "route": "kimi_multimodal",
+      "status": "complete",
+      "total_pages": 64
+    }
+  ],
+  "schema_version": "new-material-learning-file-coverage-v1",
+  "validated_outputs_sha256": "5d09662695e9c7ab398875e5133376de1af790036cca2afafd5354fe42acb0d1"
+}
