@@ -1,4 +1,4 @@
-import json
+﻿import json
 import shutil
 from dataclasses import asdict, replace
 from pathlib import Path
@@ -131,7 +131,7 @@ def test_project_completion_summary_certifies_local_delivery():
     assert summary.release_status == "ready_with_guardrails"
     assert summary.acceptance_baseline_id == "report_acceptance_v1"
     assert summary.acceptance_status == "ready_with_guardrails"
-    assert summary.approved_evidence_count == 111
+    assert summary.approved_evidence_count == 996
     assert summary.rule_family_count == 10
     assert summary.action_track_count == 4
     assert summary.open_conflicts == ["conflict_high_risk_scope_001"]

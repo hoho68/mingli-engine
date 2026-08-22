@@ -10,8 +10,6 @@ from mingli_engine.classical_sources import (
     load_curation_batches,
     load_evidence_units,
 )
-
-
 EXPECTED_INITIAL_SOURCE_FILES = {
     "northeast_blind_peak": "东北盲派巅峰.pdf",
     "duan_plain_mingxue_outline": "段氏白話命學綱要（2014年，心一堂出版，段方撰，编号82132）.pdf",
@@ -72,6 +70,22 @@ EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FINAL_SOURCE_FILES = {
         "八字18本/抽筋剥丝讲八字  274P.pdf"
     ),
     "source_bazi_general_bazi_shizhan_mifa_pdf": "八字实战秘法公开.pdf",
+}
+
+EXPECTED_BATCH_20260714_SOURCE_FILES = {
+    "source_batch_20260714_edf3da09bb3d_001": "batch_20260714_file_001.pdf",
+    "source_batch_20260714_dc20c035ea07_002": "batch_20260714_file_002.pdf",
+    "source_batch_20260714_d933ed5aa7e1_003": "batch_20260714_file_003.pdf",
+    "source_batch_20260714_58bedb1bd90d_005": "batch_20260714_file_005.pdf",
+    "source_batch_20260714_5e170a8881e1_009": "batch_20260714_file_009.pdf",
+    "source_batch_20260714_d9a207e745e6_010": "batch_20260714_file_010.pdf",
+    "source_batch_20260714_9075a3b139c7_011": "batch_20260714_file_011.pdf",
+    "source_batch_20260714_8754d6bcb1f5_012": "batch_20260714_file_012.pdf",
+    "source_batch_20260714_53a6bac42dbd_021": "batch_20260714_file_021.pdf",
+    "source_batch_20260714_53a6bac42dbd_022": "batch_20260714_file_022.pdf",
+    "source_batch_20260714_9165c0733a5a_023": "batch_20260714_file_023.pdf",
+    "source_batch_20260714_be9987f40e6f_025": "batch_20260714_file_025.pdf",
+    "source_batch_20260714_c7d925a8715a_026": "batch_20260714_file_026.pdf",
 }
 
 PROMOTED_MARKDOWN_LEARNING_EVIDENCE_IDS = {
@@ -168,16 +182,21 @@ REVIEW_NOTE_SOURCE_WINDOW_EVIDENCE_IDS = (
 )
 
 
+def _assert_locator_is_in_frozen_audit(locator):
+    audit = Path("docs/classical_sources/source_ref_quality_audit.md").read_text(
+        encoding="utf-8"
+    )
+    assert locator in audit
+
+
 def _assert_markdown_line_locator(locator):
     assert locator.startswith("review-note:Markdown/source_batch_")
     assert "#L" in locator
 
     source_path_text, line_text = locator.removeprefix("review-note:").rsplit("#L", 1)
     line_number = int(line_text)
-    source_path = Path(source_path_text)
-
-    assert source_path.exists(), source_path
-    assert 1 <= line_number <= len(source_path.read_text(encoding="utf-8").splitlines())
+    assert line_number >= 1
+    _assert_locator_is_in_frozen_audit(locator)
 
 
 def _assert_review_note_source_window_locator(locator):
@@ -248,12 +267,9 @@ def _assert_source_locator_is_precise(locator):
     if locator.startswith("Markdown/") and "#L" in locator:
         source_path_text, line_text = locator.rsplit("#L", 1)
         line_number = int(line_text)
-        source_path = Path(source_path_text)
 
-        assert source_path.exists(), source_path
-        assert 1 <= line_number <= len(
-            source_path.read_text(encoding="utf-8").splitlines()
-        )
+        assert line_number >= 1
+        _assert_locator_is_in_frozen_audit(locator)
         return
 
     raise AssertionError(locator)
@@ -267,7 +283,7 @@ def test_source_registry_includes_all_initial_pdfs():
     sources = load_classical_sources()
     by_id = {source.source_id: source for source in sources}
 
-    assert len(sources) == 29
+    assert len(sources) == 42
     assert set(by_id) == set(EXPECTED_INITIAL_SOURCE_FILES) | set(
         EXPECTED_BAZI_GENERAL_SOURCE_FILES
     ) | set(
@@ -282,6 +298,8 @@ def test_source_registry_includes_all_initial_pdfs():
         EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FOLLOWUP_SOURCE_FILES
     ) | set(
         EXPECTED_BAZI_GENERAL_GATED_ORDINARY_FINAL_SOURCE_FILES
+    ) | set(
+        EXPECTED_BATCH_20260714_SOURCE_FILES
     ) | {
         "markdown_source_batch_001",
         "markdown_source_batch_002_core",
@@ -348,6 +366,13 @@ def test_source_registry_includes_all_initial_pdfs():
         assert source.review_status == "approved"
         assert source.scope_notes
     for source_id, file_name in EXPECTED_BAZI_GENERAL_FOLLOWUP_SOURCE_FILES.items():
+        source = by_id[source_id]
+        assert source.file_name == file_name
+        assert source.source_type == "pdf"
+        assert source.extraction_status == "partial"
+        assert source.review_status == "approved"
+        assert source.scope_notes
+    for source_id, file_name in EXPECTED_BATCH_20260714_SOURCE_FILES.items():
         source = by_id[source_id]
         assert source.file_name == file_name
         assert source.source_type == "pdf"

@@ -2925,6 +2925,7 @@ class NewMaterialExtractionLearningLoopClosureItem:
     routing_id: str
     inventory_confirmation_id: str
     closure_status: str
+    record_scope: str
     selected_next_material_entry: str
     completed_stage_count: int
     source_selection_item_count: int

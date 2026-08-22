@@ -1,0 +1,27 @@
+{
+  "batch_id": "batch_20260714",
+  "records": [
+    {
+      "authorized_by": "workspace-user",
+      "decided_at": "2026-08-18T03:30:00Z",
+      "file_sha256": "58BEDB1BD90DAF56DDE68AA2095B6AA2D0A0B597FD0829262C1231DB74A8CFBA",
+      "statement": "The owner explicitly authorizes a retry-governance reset for this tranche: its only attempt ended as an administrative unknown_after_interruption with no response bytes, no candidate, and no sibling evidence, so a fresh bounded retry under the five-attempt limit carries no duplicated or mixed evidence. All tranche content remains governed by the frozen extraction contract and the batch corpus usage policy.",
+      "tranche_id": "13a87bbf2dd7a7d52418e93211702e74e870f64081e8af6d35f3b3244d3c3069"
+    },
+    {
+      "authorized_by": "workspace-user",
+      "decided_at": "2026-08-18T05:35:00Z",
+      "file_sha256": "9075A3B139C7D44AD4F8A2DD6BE39697DD0219BBFB78D2FA6BE93F26CCD4167B",
+      "statement": "The owner explicitly authorizes a retry-governance reset for this tranche: its latest attempt ended as an administrative unknown_after_interruption after an external controller abort, with no response bytes, no candidate, and no sibling evidence, so a fresh bounded retry under the five-attempt limit carries no duplicated or mixed evidence. All tranche content remains governed by the frozen extraction contract and the batch corpus usage policy.",
+      "tranche_id": "21330a12c351b67b8ac3b9d9da8fd1eaf60c0a8cc3f194540639d25542f939ee"
+    },
+    {
+      "authorized_by": "workspace-user",
+      "decided_at": "2026-08-19T02:50:03Z",
+      "file_sha256": "C7D925A8715AF6141321FDB169C7FC0958FBBC21B45404F3F8E5C66B04821CBB",
+      "statement": "The owner explicitly authorizes a retry-governance reset for this tranche: its only dispatch ended as an administrative unknown_after_interruption after an external controller abort, with no response bytes, no candidate, and no sibling evidence, so a fresh bounded retry under the five-attempt limit carries no duplicated or mixed evidence. All tranche content remains governed by the frozen extraction contract and the batch corpus usage policy.",
+      "tranche_id": "4650f699b36b1a965d317d1a135d62d6f3281b64afadc4234965b70f1fd45bc9"
+    }
+  ],
+  "schema_version": "new-material-learning-retry-governance-resets-v1"
+}

@@ -1,0 +1,13 @@
+{
+  "batch_id": "batch_20260714",
+  "directive": {
+    "authorized_by": "workspace-user",
+    "contact_identifier_enforcement": "disabled_for_batch_extraction",
+    "decided_at": "2026-08-17T19:10:14Z",
+    "high_risk_quarantine_enforcement": "disabled_for_batch_extraction",
+    "safety_classifier_enforcement": "disabled_for_batch_extraction",
+    "statement": "All 29 manifest-bound non-video files are owner-provided materials cleared for bounded remote extraction. The owner explicitly directs that no high-risk or safety classification applies to this batch's extraction, quarantine, or retry governance: descriptive transcriptions and candidates from these sources are ordinary candidates. The owner further directs that every contact identifier found in these sources is advertising content to be ignored, so contact-identifier rejection is disabled for this batch's extraction governance, and that all 'internal material', 'do not distribute', and equivalent non-disclosure wording in filenames or embedded notices is likewise advertising and is ignored. Source-grounding quality controls (locators, response contract, prohibited-absolute-wording rejection) and the runtime user-facing safety classifiers remain in force and are unchanged."
+  },
+  "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+  "schema_version": "new-material-learning-corpus-usage-policy-v2"
+}

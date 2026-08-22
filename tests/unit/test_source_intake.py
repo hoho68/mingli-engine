@@ -5,6 +5,7 @@ import pytest
 
 from mingli_engine import models
 from mingli_engine import source_intake
+from mingli_engine.classical_sources import load_evidence_units
 
 
 def test_source_intake_constants_cover_contract_values():
@@ -302,16 +303,27 @@ PROMOTED_KSKELETON_CANDIDATE_IDS = {
 }
 
 
+def _assert_locator_is_in_frozen_audit(locator):
+    audit = Path("docs/classical_sources/source_ref_quality_audit.md").read_text(
+        encoding="utf-8"
+    )
+    assert locator in audit
+
+
 def _assert_markdown_line_locator(locator):
     assert locator.startswith("review-note:Markdown/source_batch_")
     assert "#L" in locator
 
     source_path_text, line_text = locator.removeprefix("review-note:").rsplit("#L", 1)
     line_number = int(line_text)
-    source_path = Path(source_path_text)
+    assert line_number >= 1
+    _assert_locator_is_in_frozen_audit(locator)
 
-    assert source_path.exists(), source_path
-    assert 1 <= line_number <= len(source_path.read_text(encoding="utf-8").splitlines())
+
+def _assert_candidate_locator_matches_evidence(candidate, evidence_by_id):
+    assert len(candidate.related_evidence_ids) == 1
+    evidence = evidence_by_id[candidate.related_evidence_ids[0]]
+    assert candidate.source_locator == evidence.source_ref
 
 
 def _manual_application_candidate_payloads() -> list[dict[str, object]]:
@@ -12619,8 +12631,8 @@ def test_seeded_intake_candidate_review_closure_packet_is_documented():
             f"`013-promotion-batches={len(batches)}`",
             "`013-pending-review-candidates=0`",
             "`013-approved-not-promoted=0`",
-            "`013-promoted-candidates=51`",
-            "`013-rejected-candidates=2`",
+            "`013-promoted-candidates=936`",
+            "`013-rejected-candidates=61`",
             "`013-blocked-candidates=1`",
             "`pending-review-worklist-items=0`",
             "`pending-review-action-items=0`",
@@ -12638,12 +12650,15 @@ def test_promoted_markdown_learning_candidates_use_source_file_locators():
         candidate.candidate_id: candidate
         for candidate in source_intake.load_candidate_extracts()
     }
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
 
     assert PROMOTED_MARKDOWN_LEARNING_CANDIDATE_IDS <= set(candidates_by_id)
     for candidate_id in PROMOTED_MARKDOWN_LEARNING_CANDIDATE_IDS:
-        source_locator = candidates_by_id[candidate_id].source_locator
+        candidate = candidates_by_id[candidate_id]
+        source_locator = candidate.source_locator
 
         _assert_markdown_line_locator(source_locator)
+        _assert_candidate_locator_matches_evidence(candidate, evidence_by_id)
         assert "learning-reference:" not in source_locator
         assert "note_markdown_batch_005_001" not in source_locator
 
@@ -12656,6 +12671,7 @@ def test_markdown_batch_002_extension_candidates_are_promoted():
     candidates_by_id = {candidate.candidate_id: candidate for candidate in candidates}
     reviews_by_id = {review.decision_id: review for review in reviews}
     batches_by_id = {batch.promotion_batch_id: batch for batch in batches}
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
 
     expected_candidates = {
         "candidate_markdown_batch_002_branch_route_001": (
@@ -12682,6 +12698,7 @@ def test_markdown_batch_002_extension_candidates_are_promoted():
         assert candidate.related_conflict_ids == []
         assert candidate.related_gap_ids == []
         _assert_markdown_line_locator(candidate.source_locator)
+        _assert_candidate_locator_matches_evidence(candidate, evidence_by_id)
         assert len(candidate.extracted_meaning) <= 280
         assert len(candidate.short_quote) <= 80
 
@@ -12710,17 +12727,20 @@ def test_promoted_kskeleton_candidates_use_review_note_locators():
         candidate.candidate_id: candidate
         for candidate in source_intake.load_candidate_extracts()
     }
+    evidence_by_id = {unit.evidence_id: unit for unit in load_evidence_units()}
 
     assert PROMOTED_KSKELETON_CANDIDATE_IDS <= set(candidates_by_id)
     for candidate_id in PROMOTED_KSKELETON_CANDIDATE_IDS:
-        source_locator = candidates_by_id[candidate_id].source_locator
+        candidate = candidates_by_id[candidate_id]
+        source_locator = candidate.source_locator
 
         assert source_locator.startswith("review-note:knowledge_skeleton/"), (
             candidate_id,
             source_locator,
         )
         assert "learning-reference:" not in source_locator
-        assert (Path("资料整理") / source_locator.removeprefix("review-note:")).exists()
+        _assert_locator_is_in_frozen_audit(source_locator)
+        _assert_candidate_locator_matches_evidence(candidate, evidence_by_id)
 
 
 def test_validate_intake_quality_reports_blocking_failures(tmp_path):

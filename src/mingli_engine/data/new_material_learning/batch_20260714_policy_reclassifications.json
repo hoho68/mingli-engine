@@ -1,0 +1,56 @@
+{
+  "batch_id": "batch_20260714",
+  "generated_at": "2026-08-11T04:13:07Z",
+  "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+  "records": [
+    {
+      "authorization_basis": "The workspace owner explicitly reclassified these exact DOCX bytes as ordinary, non-confidential material despite the legacy filename, confirming on 2026-08-16 that the filename's non-disclosure wording does not establish the rights classification for these exact bytes.",
+      "authorized_by": "workspace-user",
+      "decided_at": "2026-08-16T18:41:32Z",
+      "decision": "ordinary_exact_sha_override",
+      "file_sha256": "EEC66E5B64555FCA5573A6A0B341C639065F3761B46F3678152B54F5497E7F9E",
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).docx"
+    },
+    {
+      "authorization_basis": "The workspace owner explicitly reclassified these exact PDF bytes as ordinary, non-confidential material despite the legacy filename.",
+      "authorized_by": "workspace-user",
+      "decided_at": "2026-08-10T00:02:00Z",
+      "decision": "ordinary_exact_sha_override",
+      "file_sha256": "BE9987F40E6F74D1F3094EFCC107ABB10172D58D3BD7968D17BEB4B9B38C7AD6",
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).pdf"
+    },
+    {
+      "authorization_basis": "The workspace owner explicitly reclassified these exact PDF bytes as ordinary, non-confidential material despite the legacy filename.",
+      "authorized_by": "workspace-user",
+      "decided_at": "2026-08-10T00:02:00Z",
+      "decision": "ordinary_exact_sha_override",
+      "file_sha256": "C7D925A8715AF6141321FDB169C7FC0958FBBC21B45404F3F8E5C66B04821CBB",
+      "relative_path": "祖传八字金不换下武当山道长著(30000元内部资料、不能外泄).pdf"
+    },
+    {
+      "authorization_basis": "The workspace owner explicitly confirmed on 2026-08-16 that the embedded internal-material notice and visible contact identifier in these exact bytes are cleared for bounded remote processing: the owner holds the rights to the material, the legacy notice does not establish a non-disclosure classification, and the third-party contact identifier may leave the local boundary inside bounded page tranches; output-side contact-identifier rejection and redaction controls remain in force.",
+      "authorized_by": "workspace-user",
+      "decided_at": "2026-08-16T18:41:32Z",
+      "decision": "embedded_notice_owner_clearance",
+      "file_sha256": "5E170A8881E170F8E37AD2AC2809CFAB8C4B4C1D76FBE5C20BBD06E11CE1B12D",
+      "relative_path": "命理精要  上.pdf"
+    },
+    {
+      "authorization_basis": "The workspace owner explicitly confirmed on 2026-08-16 that the visible contact identifiers and the social-contact QR code in these exact bytes are cleared for bounded remote processing: the owner holds the rights to the material and accepts the privacy exposure of the embedded third-party contact channels inside bounded page tranches; output-side contact-identifier rejection and redaction controls remain in force.",
+      "authorized_by": "workspace-user",
+      "decided_at": "2026-08-16T18:41:32Z",
+      "decision": "embedded_notice_owner_clearance",
+      "file_sha256": "D9A207E745E6A6C96E9DADB45EDF33DDCB48943EF331B1C0D97A4E9AB7BF8213",
+      "relative_path": "命理精要下.pdf"
+    },
+    {
+      "authorization_basis": "The workspace owner explicitly confirmed on 2026-08-16 that the embedded internal-material notice in these exact bytes is cleared for bounded remote processing: the owner holds the rights to the material and the legacy notice does not establish a non-disclosure classification.",
+      "authorized_by": "workspace-user",
+      "decided_at": "2026-08-16T18:41:32Z",
+      "decision": "embedded_notice_owner_clearance",
+      "file_sha256": "9075A3B139C7D44AD4F8A2DD6BE39697DD0219BBFB78D2FA6BE93F26CCD4167B",
+      "relative_path": "姚亚峰 《盲派绝学断流年》ce.pdf"
+    }
+  ],
+  "schema_version": "new-material-learning-policy-reclassifications-v2"
+}

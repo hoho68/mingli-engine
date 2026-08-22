@@ -81,13 +81,13 @@ future candidate sessions. The current seeded data has no active
 ## 013 Candidate Review Closure Packet
 
 - `candidate-review-status=closed_no_pending_review_candidates`
-- `013-candidate-extracts=54`
-- `013-review-decisions=54`
-- `013-promotion-batches=34`
+- `013-candidate-extracts=998`
+- `013-review-decisions=998`
+- `013-promotion-batches=35`
 - `013-pending-review-candidates=0`
 - `013-approved-not-promoted=0`
-- `013-promoted-candidates=51`
-- `013-rejected-candidates=2`
+- `013-promoted-candidates=936`
+- `013-rejected-candidates=61`
 - `013-blocked-candidates=1`
 - `pending-review-worklist-items=0`
 - `pending-review-action-items=0`

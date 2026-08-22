@@ -1,4 +1,4 @@
-import re
+﻿import re
 from collections import Counter
 from dataclasses import replace
 from dataclasses import fields
@@ -361,11 +361,11 @@ def test_build_report_attaches_expanded_source_backed_evidence(sample_bazi_chart
     assert report.report_evidence_audit.audit_status == "complete_with_guardrails"
     assert report.report_evidence_audit.rule_family_count == 10
     assert report.report_evidence_audit.formal_conclusion_count == 10
-    assert report.report_evidence_audit.traced_evidence_unit_count == 111
+    assert report.report_evidence_audit.traced_evidence_unit_count == 996
     assert report.report_evidence_audit.unavailable_conclusion_count == 0
     assert report.report_evidence_audit.missing_rule_families == []
     assert "Report evidence audit: status=complete_with_guardrails" in report.evidence_notes
-    assert "traced_evidence_units=111" in report.evidence_notes
+    assert "traced_evidence_units=996" in report.evidence_notes
     for rule_family in report.knowledge_activation.enabled_rule_families:
         assert rule_family in report.report_evidence_audit.conclusion_rule_families
         assert f"rule_family={rule_family}" in report.evidence_notes
@@ -457,7 +457,7 @@ def test_build_report_exposes_complete_formal_synthesis(sample_bazi_chart):
     for rule_family in expected_rule_families:
         assert synthesis.count(f"rule_family={rule_family}") == 1
     assert "完整（含护栏）" in synthesis
-    assert report.report_evidence_audit.traced_evidence_unit_count == 111
+    assert report.report_evidence_audit.traced_evidence_unit_count == 996
     assert synthesis.count("盘面信号：") == 10
     assert "traditional_high_risk_signal_boundary" not in synthesis
     assert "traditional_high_risk_signal_boundary" not in report.evidence_notes
@@ -880,8 +880,8 @@ def test_formal_synthesis_changes_with_chart_signals_without_changing_evidence(
         )
         assert first_item.conditions != second_item.conditions
 
-    assert first_report.report_evidence_audit.traced_evidence_unit_count == 111
-    assert second_report.report_evidence_audit.traced_evidence_unit_count == 111
+    assert first_report.report_evidence_audit.traced_evidence_unit_count == 996
+    assert second_report.report_evidence_audit.traced_evidence_unit_count == 996
     assert first_report.report_evidence_audit.open_conflicts == (
         second_report.report_evidence_audit.open_conflicts
     )

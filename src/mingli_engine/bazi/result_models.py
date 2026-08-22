@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field, fields
+import math
 from typing import Literal, get_args, get_origin
 
 
@@ -31,7 +32,7 @@ def _normalize_tuple_value(value: object, annotation: object) -> object:
 
 class _ImmutableSequences:
     def __post_init__(self) -> None:
-        for model_field in fields(self):
+        for model_field in fields(self):  # type: ignore[arg-type]
             value = getattr(self, model_field.name)
             normalized = _normalize_tuple_value(value, model_field.type)
             if normalized is not value:
@@ -147,6 +148,145 @@ class UsefulGodCandidateResult(_ImmutableSequences):
     reasoning: ReasonedResult
 
 
+def _require_string(value: object, field_name: str) -> None:
+    if not isinstance(value, str) or not value:
+        raise TypeError(f"{field_name} must be a nonempty string")
+
+
+def _require_string_tuple(value: object, field_name: str) -> None:
+    if not isinstance(value, tuple) or not all(
+        isinstance(item, str) and item for item in value
+    ):
+        raise TypeError(f"{field_name} must be a tuple of nonempty strings")
+
+
+def _require_reasoning(value: object, field_name: str) -> None:
+    if not isinstance(value, ReasonedResult):
+        raise TypeError(f"{field_name} must be a ReasonedResult")
+
+
+@dataclass(frozen=True)
+class TabooGodCandidate(_ImmutableSequences):
+    element: str
+    rank: int
+    pressure_score: float
+    reasons: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        _require_string(self.element, "element")
+        if isinstance(self.rank, bool) or not isinstance(self.rank, int) or self.rank < 1:
+            raise TypeError("rank must be a positive integer")
+        if (
+            isinstance(self.pressure_score, bool)
+            or not isinstance(self.pressure_score, (int, float))
+            or not math.isfinite(self.pressure_score)
+        ):
+            raise TypeError("pressure_score must be a finite number")
+        _require_string_tuple(self.reasons, "reasons")
+
+
+@dataclass(frozen=True)
+class TabooGodResult(_ImmutableSequences):
+    reasoning: ReasonedResult
+    candidates: tuple[TabooGodCandidate, ...]
+    evidence_ids: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        _require_reasoning(self.reasoning, "reasoning")
+        if not isinstance(self.candidates, tuple) or not all(
+            isinstance(item, TabooGodCandidate) for item in self.candidates
+        ):
+            raise TypeError("candidates must be a tuple of TabooGodCandidate")
+        _require_string_tuple(self.evidence_ids, "evidence_ids")
+
+
+@dataclass(frozen=True)
+class BlindImageSignal(_ImmutableSequences):
+    image_id: str
+    category: str
+    value: str
+    structural_signals: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        _require_string(self.image_id, "image_id")
+        _require_string(self.category, "category")
+        _require_string(self.value, "value")
+        _require_string_tuple(self.structural_signals, "structural_signals")
+
+
+@dataclass(frozen=True)
+class BlindImageResult(_ImmutableSequences):
+    reasoning: ReasonedResult
+    images: tuple[BlindImageSignal, ...]
+    evidence_ids: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        _require_reasoning(self.reasoning, "reasoning")
+        if not isinstance(self.images, tuple) or not all(
+            isinstance(item, BlindImageSignal) for item in self.images
+        ):
+            raise TypeError("images must be a tuple of BlindImageSignal")
+        _require_string_tuple(self.evidence_ids, "evidence_ids")
+
+
+@dataclass(frozen=True)
+class RemedyBoundaryResult(_ImmutableSequences):
+    reasoning: ReasonedResult
+    conditions: tuple[str, ...]
+    applicable_boundaries: tuple[str, ...]
+    stop_conditions: tuple[str, ...]
+    evidence_ids: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        _require_reasoning(self.reasoning, "reasoning")
+        _require_string_tuple(self.conditions, "conditions")
+        _require_string_tuple(self.applicable_boundaries, "applicable_boundaries")
+        _require_string_tuple(self.stop_conditions, "stop_conditions")
+        _require_string_tuple(self.evidence_ids, "evidence_ids")
+
+
+def _missing_family_reasoning(rule_family: str) -> ReasonedResult:
+    reason = f"no_v1_calculation_for:{rule_family}"
+    return ReasonedResult(
+        status="not_computed",
+        conclusion=f"No V1 calculation is available for {rule_family}.",
+        confidence="low",
+        missing_inputs=(reason,),
+        rule_ids=(reason,),
+    )
+
+
+def _missing_taboo_gods() -> TabooGodResult:
+    return TabooGodResult(
+        reasoning=_missing_family_reasoning("taboo_god_candidate"),
+        candidates=(),
+        evidence_ids=(),
+    )
+
+
+def _missing_blind_images() -> BlindImageResult:
+    return BlindImageResult(
+        reasoning=_missing_family_reasoning("blind_image_method"),
+        images=(),
+        evidence_ids=(),
+    )
+
+
+def _missing_remedy_boundary() -> RemedyBoundaryResult:
+    return RemedyBoundaryResult(
+        reasoning=_missing_family_reasoning("remedy_boundary"),
+        conditions=(),
+        applicable_boundaries=(),
+        stop_conditions=(),
+        evidence_ids=(),
+    )
+
+
 @dataclass(frozen=True)
 class LuckPillar(_ImmutableSequences):
     index: int
@@ -191,3 +331,8 @@ class CalculationBundle(_ImmutableSequences):
     useful_gods: tuple[UsefulGodCandidateResult, ...]
     luck_cycles: LuckCycleResult
     schools: tuple[SchoolInterpretation, ...]
+    taboo_gods: TabooGodResult = field(default_factory=_missing_taboo_gods)
+    blind_images: BlindImageResult = field(default_factory=_missing_blind_images)
+    remedy_boundary: RemedyBoundaryResult = field(
+        default_factory=_missing_remedy_boundary
+    )

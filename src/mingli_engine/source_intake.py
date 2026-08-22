@@ -16521,4 +16521,23 @@ def validate_intake_quality(
                 f"{candidate.candidate_id} promoted candidate requires "
                 "reviewed or approved promotion batch"
             )
+
+    from mingli_engine.evidence_risk import (
+        ORDINARY_CONTENT,
+        classify_evidence_content,
+    )
+
+    for candidate in candidates:
+        if candidate.status not in {"approved", "promoted"}:
+            continue
+        if candidate.risk_tier != "ordinary":
+            continue
+        risk = classify_evidence_content(
+            candidate.extracted_meaning, candidate.proposed_limitations
+        )
+        if risk.risk_class != ORDINARY_CONTENT:
+            failures.append(
+                f"{candidate.candidate_id} ordinary report-usable candidate "
+                f"carries {risk.risk_class} content ({risk.matched_marker})"
+            )
     return failures

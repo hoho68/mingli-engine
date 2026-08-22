@@ -145,16 +145,26 @@ The 015 raw text next-cycle sensitive preparation reading is complete:
 - `completed-loop-stages=16`
 - `registered-source-entries=11`
 
+Current clean-checkout verification retains the records above as historical
+snapshots but does not treat absent external roots as a fresh scan:
+
+- `external-inventory-status=snapshot_only`
+- `external-inventory-confirmation-status=external_inventory_refresh_needs_attention`
+- `new-material-learning-loop-status=new_material_learning_loop_needs_attention`
+- `completed-loop-stages=0`
+- `external_inventory_refresh_confirmed`: `not_currently_verified`
+- `next-material-entry=015-external-material-inventory-refresh`
+
 Explicit Downstream Authorization Receipt:
 
 - `downstream-authorization-status=downstream_authorization_consumed`
 - `authorization-scope=013_012_downstream`
 - `pending-017-decisions=0`
 - `017-applied-decisions=45`
-- `013-candidate-extracts=54`
-- `013-review-decisions=54`
-- `013-promotion-batches=34`
-- `012-formal-evidence-units=111`
+- `013-candidate-extracts=998`
+- `013-review-decisions=998`
+- `013-promotion-batches=35`
+- `012-formal-evidence-units=996`
 - `candidate-extract-delta=0`
 - `formal-evidence-delta=0`
 - `downstream-mutation-authorized=true`

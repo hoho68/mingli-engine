@@ -270,26 +270,30 @@ Authorization Audit Packet:
 
 015 External Material Inventory Refresh:
 
-- `external-inventory-status=scoped_metadata_registered`
-- `external-entries=31`
+- `external-inventory-status=snapshot_only`
+- `external-entries=0`
 - `new-015-representations=2`
 - `new-015-queue-items=1`
 - `untracked-material-entries=0`
 - `excluded-work-artifacts=3`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-raw-text-next-cycle-source-selection`
+- `next-material-entry=015-external-material-inventory-refresh`
+- `external_roots_scanned_read_only`: `not_currently_verified`
 - `post_queue_refresh_surface_confirmed`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 015 Raw Text Materials Folder Risk Triage:
 
-- `raw-text-triage-status=triage_completed`
+- `raw-text-triage-status=snapshot_only`
 - `raw-text-total-files=1139`
 - `raw-text-priority-candidates=832`
 - `raw-text-triage-groups=11`
 - `risk-review-groups=3`
 - `deferred-groups=6`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-liang-bazi-core-source-selection`
+- `next-material-entry=015-raw-text-materials-folder-risk-triage`
+- `inventory_csv_loaded`: `not_currently_verified`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 015 Bazi General Source Cluster Selection:
 
@@ -339,13 +343,15 @@ Authorization Audit Packet:
 
 015 Raw Text Next Cycle Source Selection:
 
-- `next-cycle-source-selection-status=next_cycle_source_selection_completed`
+- `next-cycle-source-selection-status=next_cycle_source_selection_needs_attention`
 - `next-cycle-source-selection-items=5`
 - `selected-for-identity-review=2`
 - `deferred-clusters=2`
 - `risk-review-clusters=1`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-raw-text-next-cycle-identity-review`
+- `next-material-entry=015-raw-text-next-cycle-source-selection`
+- `external_inventory_entrypoint_confirmed`: `not_currently_verified`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Selected next-cycle clusters:
 
@@ -423,10 +429,10 @@ Risk-review items:
 
 013 and 012 boundary state:
 
-- `013-candidate-extracts=54`
-- `013-review-decisions=54`
-- `013-promotion-batches=34`
-- `012-formal-evidence-units=111`
+- `013-candidate-extracts=998`
+- `013-review-decisions=998`
+- `013-promotion-batches=35`
+- `012-formal-evidence-units=996`
 - `formal_evidence_delta=0`
 
 ## New Material Goal Completion State
@@ -716,29 +722,49 @@ Risk-review items:
   `formal-evidence-delta=0`,
   `downstream-mutation-authorized=false`, and
   `next-material-entry=015-external-material-inventory-refresh`.
-- 015 External Material Inventory Refresh Confirmation is completed:
-  `external-inventory-confirmation-status=external_inventory_refresh_confirmed`,
-  `external-inventory-status=scoped_metadata_registered`,
+- 015 External Material Inventory Refresh Confirmation needs a live refresh:
+  `external-inventory-confirmation-status=external_inventory_refresh_needs_attention`,
+  `external-inventory-status=snapshot_only`,
   `untracked-material-entries=0`,
   `candidate-extract-delta=0`,
   `formal-evidence-delta=0`,
   `downstream-mutation-authorized=false`, and
-  `next-material-entry=015-raw-text-next-cycle-source-selection`.
-- 017 New Material Extraction Learning Loop Closure is completed:
-  `new-material-learning-loop-status=new_material_learning_loop_closed`,
-  `completed-loop-stages=16`, `registered-source-entries=11`,
+  `next-material-entry=015-external-material-inventory-refresh`.
+- 017 New Material Extraction Learning Loop Closure needs attention:
+  `new-material-learning-loop-status=new_material_learning_loop_needs_attention`,
+  `completed-loop-stages=0`, `registered-source-entries=11`,
   `preparation-reading-items=1`, `candidate-intake-ready=0`,
   `formal-evidence-ready=0`,
   `authorization-status=ready_for_explicit_downstream_authorization`,
   `candidate-extract-delta=0`, `formal-evidence-delta=0`,
   `downstream-mutation-authorized=false`, and
-  `next-material-entry=013-explicit-candidate-review-or-new-material-intake`.
+  `next-material-entry=015-external-material-inventory-refresh`.
+- Current external verification checks are
+  `external_inventory_refresh_completed`: `not_currently_verified`,
+  `external_inventory_refresh_confirmed`: `not_currently_verified` and
+  `no_untracked_material_entries`: `not_currently_verified`, and
+  `raw_materials_not_mutated`: `not_currently_verified`.
+- Historical completion records remain preserved, but current downstream validation reports:
+  `next-cycle-identity-review-status=next_cycle_identity_review_needs_attention`,
+  `next-cycle-cluster-source-selection-status=next_cycle_cluster_source_selection_needs_attention`,
+  `next-cycle-followup-selection-status=next_cycle_followup_selection_needs_attention`,
+  `gated-cluster-review-prep-status=gated_cluster_review_prep_needs_attention`,
+  `gated-ordinary-source-selection-status=gated_ordinary_source_selection_needs_attention`,
+  `gated-ordinary-followup-selection-status=gated_ordinary_followup_selection_needs_attention`,
+  `gated-ordinary-final-selection-status=gated_ordinary_final_selection_needs_attention`,
+  `sensitive-risk-review-prep-status=sensitive_risk_review_prep_needs_attention`,
+  `sensitive-source-level-risk-review-status=sensitive_source_level_risk_review_needs_attention`,
+  `sensitive-registration-prep-status=sensitive_registration_prep_needs_attention`,
+  `sensitive-source-registration-status=sensitive_source_registration_needs_attention`,
+  `sensitive-preparation-boundary-status=sensitive_preparation_boundary_needs_attention`,
+  `sensitive-preparation-reading-status=sensitive_preparation_reading_needs_attention`, and
+  `explicit-routing-status=routing_needs_attention` until live raw-material verification is restored.
 - Explicit Downstream Authorization Receipt is consumed:
   `downstream-authorization-status=downstream_authorization_consumed`,
   `authorization-scope=013_012_downstream`, `pending-017-decisions=0`,
-  `017-applied-decisions=45`, `013-candidate-extracts=54`,
-  `013-review-decisions=54`, `013-promotion-batches=34`,
-  `012-formal-evidence-units=111`, `candidate-extract-delta=0`,
+  `017-applied-decisions=45`, `013-candidate-extracts=998`,
+  `013-review-decisions=998`, `013-promotion-batches=35`,
+  `012-formal-evidence-units=996`, `candidate-extract-delta=0`,
   `formal-evidence-delta=0`, `downstream-mutation-authorized=true`, and
   `next-downstream-entry=015-new-material-intake`.
 - 015 New Material Intake is completed:
@@ -1218,13 +1244,13 @@ chooses to resume 013 candidate review work.
 ## 013 Candidate Review Closure Packet
 
 - `candidate-review-status=closed_no_pending_review_candidates`
-- `013-candidate-extracts=54`
-- `013-review-decisions=54`
-- `013-promotion-batches=34`
+- `013-candidate-extracts=998`
+- `013-review-decisions=998`
+- `013-promotion-batches=35`
 - `013-pending-review-candidates=0`
 - `013-approved-not-promoted=0`
-- `013-promoted-candidates=51`
-- `013-rejected-candidates=2`
+- `013-promoted-candidates=936`
+- `013-rejected-candidates=61`
 - `013-blocked-candidates=1`
 - `pending-review-worklist-items=0`
 - `pending-review-action-items=0`

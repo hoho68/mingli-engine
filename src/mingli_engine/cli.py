@@ -15,6 +15,15 @@ from mingli_engine.bazi.result_models import (
     ReasonedResult,
     StrengthContribution,
 )
+from mingli_engine.application_serialization import (
+    response_status_from_json_bytes,
+    serialize_branch_relation,
+    serialize_calculation_bundle,
+    serialize_reasoned_result,
+    serialize_strength_contribution,
+)
+from mingli_engine.application_inputs import MAX_REQUEST_BYTES
+from mingli_engine.application_service import handle_real_use_json
 from mingli_engine.chart_calculator import ChartCalculationError, calculate_bazi_chart
 from mingli_engine.evidence_curation import build_knowledge_activation_summary
 from mingli_engine.high_risk import classify_high_risk_request
@@ -24,6 +33,13 @@ from mingli_engine.models import (
     BaziChart,
     BirthProfile,
     SafetyReviewResult,
+)
+from mingli_engine.new_material_learning import (
+    DEFAULT_BATCH_ID as NEW_MATERIAL_BATCH_ID,
+    ManifestError as NewMaterialLearningError,
+    build_new_material_learning_summary,
+    render_new_material_learning_markdown,
+    validate_new_material_learning,
 )
 from mingli_engine.report_inputs import (
     InputContractError,
@@ -41,7 +57,6 @@ from mingli_engine.project_completion import (
     ProjectCompletionError,
     build_project_completion_summary,
 )
-from mingli_engine.public_assumptions import project_public_assumptions
 from mingli_engine.safety import safety_check
 from mingli_engine.validation import validate_birth_profile
 from mingli_engine import promotion
@@ -96,167 +111,55 @@ def _birth_datetime(profile: BirthProfile) -> datetime:
 
 
 def _public_reasoning(reasoning: ReasonedResult) -> dict[str, object]:
-    return {
-        "status": reasoning.status,
-        "conclusion": reasoning.conclusion,
-        "confidence": reasoning.confidence,
-        "supporting_signals": list(reasoning.supporting_signals),
-        "opposing_signals": list(reasoning.opposing_signals),
-        "assumptions": project_public_assumptions(reasoning.assumptions),
-        "missing_inputs": list(reasoning.missing_inputs),
-        "rule_ids": list(reasoning.rule_ids),
-    }
+    return serialize_reasoned_result(reasoning)
 
 
 def _public_relation(relation: BranchRelationResult) -> dict[str, object]:
-    return {
-        "relation_type": relation.relation_type,
-        "branches": list(relation.branches),
-        "pillar_names": list(relation.pillar_names),
-        "state": relation.state,
-        "transformed_element": relation.transformed_element,
-        "conditions": list(relation.conditions),
-        "blockers": list(relation.blockers),
-        "rule_id": relation.rule_id,
-    }
+    return serialize_branch_relation(relation)
 
 
 def _public_strength_contribution(
     contribution: StrengthContribution,
 ) -> dict[str, object]:
-    return {
-        "category": contribution.category,
-        "signal": contribution.signal,
-        "value": contribution.value,
-        "rule_id": contribution.rule_id,
-    }
+    return serialize_strength_contribution(contribution)
 
 
 def _public_calculation_payload(
     calculation: CalculationBundle,
 ) -> dict[str, object]:
-    facts = calculation.facts
-    return {
-        "engine_version": calculation.engine_version,
-        "ruleset_version": calculation.ruleset_version,
-        "facts": {
-            "day_master": facts.day_master,
-            "month_branch": facts.month_branch,
-            "exposed_stems": [
-                {
-                    "pillar_name": item.pillar_name,
-                    "stem": item.stem,
-                    "element": item.element,
-                    "polarity": item.polarity,
-                    "ten_god": item.ten_god,
-                }
-                for item in facts.exposed_stems
-            ],
-            "hidden_stems": [
-                {
-                    "pillar_name": item.pillar_name,
-                    "branch": item.branch,
-                    "stem": item.stem,
-                    "role": item.role,
-                    "element": item.element,
-                    "polarity": item.polarity,
-                    "ten_god": item.ten_god,
-                }
-                for item in facts.hidden_stems
-            ],
-            "roots": [
-                {
-                    "stem": item.stem,
-                    "stem_pillar": item.stem_pillar,
-                    "branch": item.branch,
-                    "branch_pillar": item.branch_pillar,
-                    "role": item.role,
-                    "exact_stem_root": item.exact_stem_root,
-                }
-                for item in facts.roots
-            ],
-            "twelve_growth_by_pillar": [
-                list(item) for item in facts.twelve_growth_by_pillar
-            ],
-            "assumptions": project_public_assumptions(facts.assumptions),
-        },
-        "branch_relations": [
-            _public_relation(item) for item in calculation.branch_relations
-        ],
-        "strength": {
-            "reasoning": _public_reasoning(calculation.strength.reasoning),
-            "score": calculation.strength.score,
-            "lower_bound": calculation.strength.lower_bound,
-            "upper_bound": calculation.strength.upper_bound,
-            "label": calculation.strength.label,
-            "contributions": [
-                _public_strength_contribution(item)
-                for item in calculation.strength.contributions
-            ],
-        },
-        "patterns": [
-            {
-                "pattern_id": item.pattern_id,
-                "name": item.name,
-                "rank": item.rank,
-                "reasoning": _public_reasoning(item.reasoning),
-                "formation_conditions": list(item.formation_conditions),
-                "damage_conditions": list(item.damage_conditions),
-                "rescue_conditions": list(item.rescue_conditions),
-            }
-            for item in calculation.patterns
-        ],
-        "useful_gods": [
-            {
-                "method": item.method,
-                "element": item.element,
-                "rank": item.rank,
-                "reasoning": _public_reasoning(item.reasoning),
-            }
-            for item in calculation.useful_gods
-        ],
-        "luck_cycles": {
-            "reasoning": _public_reasoning(calculation.luck_cycles.reasoning),
-            "forward": calculation.luck_cycles.forward,
-            "start_years": calculation.luck_cycles.start_years,
-            "start_months": calculation.luck_cycles.start_months,
-            "start_days": calculation.luck_cycles.start_days,
-            "start_solar": calculation.luck_cycles.start_solar,
-            "pillars": [
-                {
-                    "index": item.index,
-                    "gan_zhi": item.gan_zhi,
-                    "start_year": item.start_year,
-                    "end_year": item.end_year,
-                    "start_age": item.start_age,
-                    "end_age": item.end_age,
-                }
-                for item in calculation.luck_cycles.pillars
-            ],
-            "selected_year_relations": [
-                _public_relation(item)
-                for item in calculation.luck_cycles.selected_year_relations
-            ],
-        },
-        "schools": [
-            {
-                "school_id": item.school_id,
-                "profile_version": item.profile_version,
-                "reasoning": _public_reasoning(item.reasoning),
-                "preferred_pattern_ids": list(item.preferred_pattern_ids),
-                "preferred_useful_god_elements": list(
-                    item.preferred_useful_god_elements
-                ),
-            }
-            for item in calculation.schools
-        ],
-    }
+    return serialize_calculation_bundle(calculation)
 
 
 def _configure_stream_encoding(stream: Any) -> None:
     reconfigure = getattr(stream, "reconfigure", None)
     if reconfigure is not None:
         reconfigure(encoding="utf-8")
+
+
+def _read_real_use_input(path: Path) -> bytes:
+    if str(path) == "-":
+        return sys.stdin.buffer.read(MAX_REQUEST_BYTES + 1)
+    with path.open("rb") as stream:
+        return stream.read(MAX_REQUEST_BYTES + 1)
+
+
+def _write_real_use_response(payload: bytes) -> None:
+    output = getattr(sys.stdout, "buffer", None)
+    if output is None:
+        sys.stdout.write(payload.decode("utf-8"))
+    else:
+        output.write(payload)
+
+
+def _real_use(args: argparse.Namespace) -> int:
+    try:
+        request_payload = _read_real_use_input(args.input)
+    except OSError:
+        request_payload = b""
+    response_payload = handle_real_use_json(request_payload)
+    _write_real_use_response(response_payload)
+    status = response_status_from_json_bytes(response_payload)
+    return {"ok": 0, "refused": 3, "error": 1}[status]
 
 
 def _validate_intake(args: argparse.Namespace) -> int:
@@ -417,6 +320,21 @@ def _project_completion_summary(args: argparse.Namespace) -> int:
     return 4 if summary.completion_status == "blocked" else 0
 
 
+def _validate_new_material_learning(args: argparse.Namespace) -> int:
+    if args.batch != NEW_MATERIAL_BATCH_ID:
+        raise NewMaterialLearningError("the requested learning batch is unsupported")
+    _write_json(validate_new_material_learning())
+    return 0
+
+
+def _new_material_learning_summary(args: argparse.Namespace) -> int:
+    if args.batch != NEW_MATERIAL_BATCH_ID:
+        raise NewMaterialLearningError("the requested learning batch is unsupported")
+    summary = build_new_material_learning_summary()
+    sys.stdout.write(render_new_material_learning_markdown(summary))
+    return 0
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mingli-engine")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -470,6 +388,24 @@ def _build_parser() -> argparse.ArgumentParser:
     completion_parser = subparsers.add_parser("project-completion-summary")
     completion_parser.set_defaults(handler=_project_completion_summary)
 
+    real_use_parser = subparsers.add_parser("real-use")
+    real_use_parser.add_argument("--input", required=True, type=Path)
+    real_use_parser.set_defaults(handler=_real_use)
+
+    new_material_validation_parser = subparsers.add_parser(
+        "validate-new-material-learning"
+    )
+    new_material_validation_parser.add_argument("--batch", required=True)
+    new_material_validation_parser.set_defaults(
+        handler=_validate_new_material_learning
+    )
+
+    new_material_summary_parser = subparsers.add_parser(
+        "new-material-learning-summary"
+    )
+    new_material_summary_parser.add_argument("--batch", required=True)
+    new_material_summary_parser.set_defaults(handler=_new_material_learning_summary)
+
     return parser
 
 
@@ -507,6 +443,9 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     except ProjectCompletionError as error:
         print(f"Project completion error: {error}", file=sys.stderr)
+        return 1
+    except NewMaterialLearningError as error:
+        print(f"New material learning error: {error}", file=sys.stderr)
         return 1
     except (KeyError, TypeError, AttributeError) as error:
         print(f"Invalid input: {error}", file=sys.stderr)

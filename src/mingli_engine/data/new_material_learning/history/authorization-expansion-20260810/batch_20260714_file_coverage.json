@@ -1,0 +1,401 @@
+{
+  "authorization_ledger_sha256": "f2b365d303f063b1f5e78d7ce502fa62a312760233ad13b78c1e4f744ee7943c",
+  "batch_id": "batch_20260714",
+  "extraction_tranches_sha256": "306a7d2872f048165efa3160b0983e211319d698bfca06eececf5c506d4dd884",
+  "generated_at": "2026-08-09T18:31:29Z",
+  "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+  "model_attempts_sha256": "85323ddc804a84bc136dd7c803d73390a192471cb220b31324f3aa1fffa11b9c",
+  "probe_ledger_sha256": "9c565ed35adc3f9048d9c754ea7e113b5d3006ec9fe5580fa4a67e16945f8c90",
+  "records": [
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "01dd4d76b38fbc91fc4eaaeac2afc779ebbeec7d14fb9f4e8a85ce8b5b56f517",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "EDF3DA09BB3D08A6BFFC3C59A3418EFCD397B867DDC9DD5C4C03C74A25A778B9",
+      "missing_page_ranges": [],
+      "relative_path": "2800.《命理生死之书》100页.pdf",
+      "route": "blocked",
+      "status": "blocked",
+      "total_pages": 0
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "28ee8140d2ae75187bc44043a69afe5aff06b73d28f127c20af005b1b63ce9e1",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "DC20C035EA07FA7F6E8FC1543D5079486AFF96C6A54AB66AD750BEDA938DB832",
+      "missing_page_ranges": [
+        "page:1-51"
+      ],
+      "relative_path": "[三命堂藏版]子平管见.pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 51
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "bdc99c3bb8775fc8637120f2efa3f36f9ad26d21e4a82ea62bae9015ddeb5370",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "D933ED5AA7E1C8A46871FFFF34ED81D807EC45E33EB43D4E0C3872293F526D18",
+      "missing_page_ranges": [
+        "page:1-261"
+      ],
+      "relative_path": "[周易 相术 测字]图解八字宝鉴 (刘金仙).pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 261
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "fbb4c72d82a29885d58960d9a2d3818c2d826a6abffa96f99cb2e35d9eda04c5",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "DBAC2B50CB4F824D3CFA95800C6582C71FF5D9119ABF6E9B2EFD13CEF6E11B76",
+      "missing_page_ranges": [
+        "page:1-63"
+      ],
+      "relative_path": "《解梦灵书》.pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 63
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "cdfb1a579ce2c9ab9822ee6d47278bb180b7a22a260b52e29e1b868a155f1cf9",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "58BEDB1BD90DAF56DDE68AA2095B6AA2D0A0B597FD0829262C1231DB74A8CFBA",
+      "missing_page_ranges": [],
+      "relative_path": "八字命理，弟子密训秘籍，彩色扫描166页PDF无水印_1.pdf",
+      "route": "blocked",
+      "status": "blocked",
+      "total_pages": 0
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "e01914b6e4915850ee2b1284ce5000ad5e91030f340bff5539fc152b9054a76f",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "02AE584AC6D1658C5B910642B92B7B73D042988EDA73A78AA72F350F16A510E2",
+      "missing_page_ranges": [
+        "page:1-1517"
+      ],
+      "relative_path": "六爻古籍经典合集 (易隐 易冒 易林卜疑 断易天机) .pdf",
+      "route": "deepseek_text",
+      "status": "uncovered",
+      "total_pages": 1517
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "6c73ed1f5d27a9beaa44a0697707f2470854b98bbe145432d29c96e1888779b6",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "8380311E3ADCEAF450FA83DAECA16B34B2676FFECD798E2747A8FD0EAB6C91A0",
+      "missing_page_ranges": [],
+      "relative_path": "化解宝典破解笔记30法.pdf",
+      "route": "blocked",
+      "status": "blocked",
+      "total_pages": 0
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "0d5bfb0e7c5a754e61c223e6ae422184fa71ab5924cf8ae931471c7cb35022bb",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "080B27CCB186CFC5FBCA6F28C7299B4209FA9D55E0D1F007DF8D67FB44A86229",
+      "missing_page_ranges": [
+        "page:1-23"
+      ],
+      "relative_path": "叅星秘要諏吉便覽.pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 23
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "d1a2a2d1ce38732255253b5fecf78385e4d533ac44d5b1f914fe22665f5b0e15",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "5E170A8881E170F8E37AD2AC2809CFAB8C4B4C1D76FBE5C20BBD06E11CE1B12D",
+      "missing_page_ranges": [
+        "page:1-352"
+      ],
+      "relative_path": "命理精要  上.pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 352
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "a7d6824647bd0fa9ff0d51919d4d82cbbe5ab91eb0c663a5b9bd9a0628174f7b",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "D9A207E745E6A6C96E9DADB45EDF33DDCB48943EF331B1C0D97A4E9AB7BF8213",
+      "missing_page_ranges": [
+        "page:1-339"
+      ],
+      "relative_path": "命理精要下.pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 339
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "4bd45aa7f30d87dcf1a462ca01eb7eccd200d9ceb08e0f497d6a35adc60585e7",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "9075A3B139C7D44AD4F8A2DD6BE39697DD0219BBFB78D2FA6BE93F26CCD4167B",
+      "missing_page_ranges": [
+        "page:1-506"
+      ],
+      "relative_path": "姚亚峰 《盲派绝学断流年》ce.pdf",
+      "route": "deepseek_text",
+      "status": "uncovered",
+      "total_pages": 506
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "798c3a256ce01009c6434af87adc4c8bd6176fc269ab4a048332a91faa0abc6d",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "8754D6BCB1F5C0A25A0E50718292E64A959151FDECE354A36A0799C78588671E",
+      "missing_page_ranges": [
+        "page:1-37"
+      ],
+      "relative_path": "子平三命通变渊源-精校.pdf",
+      "route": "deepseek_text",
+      "status": "uncovered",
+      "total_pages": 37
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "727a1d077819ac4e0167548c4bbb7801ed8022d0cf3635585dfedf3b35da1b44",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "A0787A7D7F59900CC42221A61C6AC480BF868C329E2C9396CFD0E846D96E2645",
+      "missing_page_ranges": [
+        "page:1-296"
+      ],
+      "relative_path": "学六爻这本最好.pdf",
+      "route": "deepseek_text",
+      "status": "uncovered",
+      "total_pages": 296
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "af23d11098e9604a9f1dbefd09f2395a44754ef260e82e20c41fbe3b85257d2f",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "D81262E64FE5469406C31E097575B6B7E443B05359254AAE1EB530E45A42D4C2",
+      "missing_page_ranges": [
+        "page:1-36"
+      ],
+      "relative_path": "曾文迪选择宗镜.pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 36
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "40b02eba42964abeeb026a9074be6f6d77641fa086d4ebcda7e5166a7fd4df7b",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "1FF4CE83FD5C41DF042CF3D68F5D14B305FBE099211917BE2E873AE5109016D0",
+      "missing_page_ranges": [
+        "page:1-79"
+      ],
+      "relative_path": "梅花姓名断..陈春林.pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 79
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "74c03a2cff5b7a76c98b72ca0231ddaef8c93d9c0622ac411eb7c92e7fbbb680",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "5D26F403F755539B3CC4286B97D5B526EA7D79DFC06A30AF3A563E5DCAD41358",
+      "missing_page_ranges": [
+        "page:1-204"
+      ],
+      "relative_path": "梅花易数 .pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 204
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "c1b94657c29b405319eead4b6ea400982659081935f14bd10cde3f21a1b7e20d",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "A7C8AD0F0611398A905D66BB0D049775BA0702BEB70F29450E9266574830A1A7",
+      "missing_page_ranges": [
+        "page:1-359"
+      ],
+      "relative_path": "梅花易数白话解(清晰版).pdf",
+      "route": "deepseek_text",
+      "status": "uncovered",
+      "total_pages": 359
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "8006fac4bf185fb14866d1d817e53414e7236178fc198ef81e323cac91e6e251",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "0B213EDD694616062D5AB16520071ACE0137DC73A5C433D0B7B501FDCC65030B",
+      "missing_page_ranges": [
+        "page:1-119"
+      ],
+      "relative_path": "王亭之《中州派玄空学》(1上册).pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 119
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "78a366fedb150a2311d162d769390fc0ac6884ca865e5f97695f9d6ba8068653",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "781BC6B8D8487E7CDA73048FDF178149941DA471EE9982485EC3DF99F38F67E4",
+      "missing_page_ranges": [
+        "page:1-122"
+      ],
+      "relative_path": "王亭之《中州派玄空学》(2中册).pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 122
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "c600adbdc3da964902cd4d165722ebbf808247a79d17d378031cd4c7f5341083",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "F3311E39FD944FB0BAD469493DBEA652BF22AE4689F19D3F3BC2FE7566F7E7BF",
+      "missing_page_ranges": [
+        "page:1-109"
+      ],
+      "relative_path": "王亭之《中州派玄空学》(3下册).pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 109
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "2d1b25856f7995e85a08e91e081f4703408c70fd15591dd247b6e92efa0b4dd9",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+      "missing_page_ranges": [
+        "page:1-47"
+      ],
+      "relative_path": "理命摘要.pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 47
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "7d7f94bced1e9990a9edcad55f0662aa231799abf0375cc7b85d33be65419eaf",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+      "missing_page_ranges": [
+        "page:1-47"
+      ],
+      "relative_path": "理命摘要1.pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 47
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "b475332601a051d95328f2aa26574fe638ce652d859ecd04f74e3925a034abea",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "9165C0733A5AEBFB7CAE98A00619B0EDB4140A0615758AB686779188AEA42E60",
+      "missing_page_ranges": [],
+      "relative_path": "盲人断命秘典.pdf",
+      "route": "blocked",
+      "status": "blocked",
+      "total_pages": 0
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "2f2dd866f2a429702ef69af211afac4fcd4efd352167267e8703296407f3639f",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "EEC66E5B64555FCA5573A6A0B341C639065F3761B46F3678152B54F5497E7F9E",
+      "missing_page_ranges": [],
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).docx",
+      "route": "blocked",
+      "status": "blocked",
+      "total_pages": 0
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "2cc161f3d1a7fdae2ad25d89c941c36733470e482c1073daa020c86f6bd42eab",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "BE9987F40E6F74D1F3094EFCC107ABB10172D58D3BD7968D17BEB4B9B38C7AD6",
+      "missing_page_ranges": [],
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).pdf",
+      "route": "blocked",
+      "status": "blocked",
+      "total_pages": 0
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "c0db5d0595017fd9aecd1e3cfc10ba9a37ae7ad0107cf0d76f4f01bfc03b4076",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "C7D925A8715AF6141321FDB169C7FC0958FBBC21B45404F3F8E5C66B04821CBB",
+      "missing_page_ranges": [],
+      "relative_path": "祖传八字金不换下武当山道长著(30000元内部资料、不能外泄).pdf",
+      "route": "blocked",
+      "status": "blocked",
+      "total_pages": 0
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "550e0119cc11b615b180de4fab23a9f03d0c865562a873070b6b1b5e8b8dd565",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "3D8D644570BF6CE92E7F0B59010E3219817FC3299AC2FAE54138165B4D69119B",
+      "missing_page_ranges": [
+        "page:1-82"
+      ],
+      "relative_path": "紫微斗数 2025-05-03 21.35(2).pdf",
+      "route": "kimi_multimodal",
+      "status": "uncovered",
+      "total_pages": 82
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "7612e753e27294e66c4369d9a11c17fcfe052fa45a2e585d5c3b0454fdc7d7d5",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "D462148FE4D1099652ECBB9AA696D4B5D9F8459DC10247BC23EA0CFE17C725BE",
+      "missing_page_ranges": [],
+      "relative_path": "给出已逝人的八字一眼看出不在人间.pdf",
+      "route": "blocked",
+      "status": "blocked",
+      "total_pages": 0
+    },
+    {
+      "accepted_validated_output_ids": [],
+      "coverage_id": "0b5bee74a788ca244de059444a9c085b17bdf7b53863fbae156e3c84c7523ff4",
+      "covered_page_count": 0,
+      "covered_page_ranges": [],
+      "file_sha256": "2DF5DEA1A91EDCECEB2593140B2093963CA39FD5A41F11E9DBAE78239B371A87",
+      "missing_page_ranges": [],
+      "relative_path": "鬼门十三针.佚名.民国抄本.德国柏林图书馆藏.pdf",
+      "route": "blocked",
+      "status": "blocked",
+      "total_pages": 0
+    }
+  ],
+  "schema_version": "new-material-learning-file-coverage-v1",
+  "validated_outputs_sha256": "56a2e057e06e06533f5fcd6ea0085091d3ef209b823bf4c92b37c44c53c1131c"
+}

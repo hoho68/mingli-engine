@@ -1,6 +1,37 @@
 """Bazi knowledge and report engine."""
 
+from mingli_engine.application_models import (
+    ApplicationAnalysisResultV1,
+    ApplicationContentV1,
+    ApplicationErrorV1,
+    ApplicationPrivacyV1,
+    ApplicationProvenanceV1,
+    ApplicationReportResultV1,
+    ApplicationSafetyV1,
+    ApplicationWarningV1,
+    AuthorizationAttestationV1,
+    RealUseOptionsV1,
+    RealUseProfileV1,
+    RealUseRequestV1,
+    RealUseResponseV1,
+)
+from mingli_engine.application_serialization import response_status_from_json_bytes
+from mingli_engine.application_service import handle_real_use, handle_real_use_json
+
 __all__ = [
+    "ApplicationAnalysisResultV1",
+    "ApplicationContentV1",
+    "ApplicationErrorV1",
+    "ApplicationPrivacyV1",
+    "ApplicationProvenanceV1",
+    "ApplicationReportResultV1",
+    "ApplicationSafetyV1",
+    "ApplicationWarningV1",
+    "AuthorizationAttestationV1",
+    "RealUseOptionsV1",
+    "RealUseProfileV1",
+    "RealUseRequestV1",
+    "RealUseResponseV1",
     "models",
     "validation",
     "safety",
@@ -13,5 +44,8 @@ __all__ = [
     "source_library",
     "materials_audit",
     "extraction_queue_intake",
+    "handle_real_use",
+    "handle_real_use_json",
     "learning_reference_curation",
+    "response_status_from_json_bytes",
 ]

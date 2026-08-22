@@ -1,0 +1,16 @@
+# The governance chain (extraction ledgers, frozen digests, Task 8 command
+# evidence, final audit, legacy-knowledge protection, calibration lineage and
+# test baselines) binds files by exact byte SHA-256. Every checkout must
+# therefore produce LF bytes regardless of core.autocrlf.
+* text eol=lf
+
+# Explicitly listed byte-bound files (covered by the global rule above):
+tests/safety/test_real_use_safety.py text eol=lf
+src/mingli_engine/data/new_material_learning/batch_20260714_policy_reclassifications.json text eol=lf
+src/mingli_engine/data/new_material_learning/batch_20260714_corpus_usage_policy.json text eol=lf
+src/mingli_engine/data/new_material_learning/batch_20260714_rule_family_map.json text eol=lf
+src/mingli_engine/data/classical_sources/source_conflicts.json text eol=lf
+tests/fixtures/bazi_calculation/luck_cycle_boundary_cases.json text eol=lf
+tests/fixtures/bazi_calculation/pattern_counterexamples.json text eol=lf
+tests/fixtures/bazi_calculation/strength_boundary_cases.json text eol=lf
+tests/fixtures/bazi_calculation/verified_charts.json text eol=lf

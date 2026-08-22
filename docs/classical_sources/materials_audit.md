@@ -221,24 +221,26 @@ than returning to an already completed stage.
 
 ## 015 External Material Inventory Refresh
 
-The 2026-06-27 external inventory refresh scanned root PDFs, `Markdown/`,
-`资料原文/`, and `资料整理/` as path labels and immediate entries only. It did not
-open, parse, move, convert, or rewrite external material files.
+The tracked 2026-06-27 inventory is retained as a historical snapshot. When the
+external roots are absent, the current audit does not claim a fresh scan and
+does not advance beyond external inventory verification.
 
-- `external-inventory-status=scoped_metadata_registered`
-- `external-entries=31`
+- `external-inventory-status=snapshot_only`
+- `external-entries=0`
 - `new-015-representations=2`
 - `new-015-queue-items=1`
 - `untracked-material-entries=0`
 - `excluded-work-artifacts=3`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-raw-text-next-cycle-source-selection`
+- `next-material-entry=015-external-material-inventory-refresh`
+- `external_roots_scanned_read_only`: `not_currently_verified`
+- `workflow_artifacts_excluded`: `not_currently_verified`
 - `post_queue_refresh_surface_confirmed`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
-The post-selected-variant queue refresh confirms that the existing local 015
-queue surface is covered or locally completed. The next material entry is
-therefore a next-cycle raw-text source selection pass, not a return to the
-already completed raw-text folder triage.
+The snapshot still exposes the historical 31 tracked entry labels for
+readability, but those labels do not verify the current filesystem. A live
+read-only scan is required before selecting a downstream material entry.
 
 ### New Material Goal Completion State
 
@@ -324,19 +326,20 @@ Excluded workflow artifacts:
 
 ## 015 Raw Text Materials Folder Risk Triage
 
-The 2026-06-28 raw text triage uses only path labels and the existing CSV
-inventory under `资料整理/_inventory/`. It does not open source files, read PDF or
-document contents, transcribe media, OCR images, mutate external materials,
-create 013 candidate/review/promotion records, or alter 012 formal evidence.
+The tracked 2026-06-28 triage groups remain readable as a historical snapshot.
+When `资料整理/_inventory/` is absent, the current audit does not claim that its
+CSV files were loaded and does not route into source selection.
 
-- `raw-text-triage-status=triage_completed`
+- `raw-text-triage-status=snapshot_only`
 - `raw-text-total-files=1139`
 - `raw-text-priority-candidates=832`
 - `raw-text-triage-groups=11`
 - `risk-review-groups=3`
 - `deferred-groups=6`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-liang-bazi-core-source-selection`
+- `next-material-entry=015-raw-text-materials-folder-risk-triage`
+- `inventory_csv_loaded`: `not_currently_verified`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Exclusive triage groups:
 
@@ -795,13 +798,13 @@ files, create source-library records, create 013 candidate/review/promotion
 records, or alter 012 formal evidence.
 
 - Selection id: `015-raw-text-next-cycle-source-selection`
-- `next-cycle-source-selection-status=next_cycle_source_selection_completed`
+- `next-cycle-source-selection-status=next_cycle_source_selection_needs_attention`
 - `next-cycle-source-selection-items=5`
 - `selected-for-identity-review=2`
 - `deferred-clusters=2`
 - `risk-review-clusters=1`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-raw-text-next-cycle-identity-review`
+- `next-material-entry=015-raw-text-next-cycle-source-selection`
 
 Selected clusters:
 
@@ -821,12 +824,12 @@ Boundary checks:
 
 - `next_cycle_items_loaded`: `passed`
 - `source_cluster_items_loaded`: `passed`
-- `external_inventory_entrypoint_confirmed`: `passed`
+- `external_inventory_entrypoint_confirmed`: `not_currently_verified`
 - `selected_clusters_need_identity_review`: `passed`
 - `deferred_clusters_stay_deferred`: `passed`
 - `sensitive_clusters_stay_risk_review`: `passed`
 - `huntian_baolan_deferred`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 - `source_library_not_mutated`: `passed`
 - `013_012_not_mutated`: `passed`
 
@@ -838,8 +841,8 @@ Guardrails:
 - Case and formula clusters stay deferred until the selected ordinary identity
   review is closed.
 - Sensitive clusters require separate risk review before any learning use.
-- Raw files, source-library records, candidates, reviews, promotions, and formal
-  evidence are not mutated.
+- This metadata-only operation authorizes no raw-file mutation; current
+  raw-material non-mutation is not verified.
 
 ## 015 Raw Text Next Cycle Identity Review
 
@@ -849,7 +852,7 @@ open raw source files, create source-library records, create 013 candidate/
 review/promotion records, or alter 012 formal evidence.
 
 - Review id: `015-raw-text-next-cycle-identity-review`
-- `next-cycle-identity-review-status=next_cycle_identity_review_completed`
+- `next-cycle-identity-review-status=next_cycle_identity_review_needs_attention`
 - `next-cycle-identity-review-items=2`
 - `cluster-source-selection-required=2`
 - `registration-prep-ready=0`
@@ -876,7 +879,7 @@ Boundary checks:
 - `cluster_counts_match_source_selection`: `passed`
 - `deferred_clusters_remain_out_of_scope`: `passed`
 - `risk_review_clusters_remain_out_of_scope`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 - `source_library_not_mutated`: `passed`
 - `013_012_not_mutated`: `passed`
 
@@ -897,7 +900,7 @@ clusters, then records the authorized source-library, 013, and 012 weak-locator
 metadata chain. It does not move, convert, or rewrite external raw materials.
 
 - Selection id: `015-raw-text-next-cycle-cluster-source-selection`
-- `next-cycle-cluster-source-selection-status=next_cycle_cluster_source_selection_completed`
+- `next-cycle-cluster-source-selection-status=next_cycle_cluster_source_selection_needs_attention`
 - `next-cycle-cluster-source-selection-items=2`
 - `selected-for-registration=2`
 - `registered-source-entries=2`
@@ -938,7 +941,7 @@ Boundary checks:
 - `012_evidence_promoted`: `passed`
 - `deferred_clusters_remain_out_of_scope`: `passed`
 - `risk_review_clusters_remain_out_of_scope`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 
@@ -956,7 +959,7 @@ records the authorized source-library, 013, and 012 weak-locator metadata chain.
 It does not move, convert, or rewrite external raw materials.
 
 - Selection id: `015-raw-text-next-cycle-followup-selection`
-- `next-cycle-followup-selection-status=next_cycle_followup_selection_completed`
+- `next-cycle-followup-selection-status=next_cycle_followup_selection_needs_attention`
 - `next-cycle-followup-selection-items=2`
 - `selected-for-registration=2`
 - `registered-source-entries=2`
@@ -997,7 +1000,7 @@ Boundary checks:
 - `012_evidence_promoted`: `passed`
 - `case_formula_clusters_remain_deferred`: `passed`
 - `sensitive_clusters_remain_risk_gated`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 
@@ -1014,7 +1017,7 @@ keeps the sensitive-topic cluster behind risk review, and performs no
 source-library, 013, or 012 mutation.
 
 - Prep id: `015-raw-text-next-cycle-gated-cluster-review-prep`
-- `gated-cluster-review-prep-status=gated_cluster_review_prep_completed`
+- `gated-cluster-review-prep-status=gated_cluster_review_prep_needs_attention`
 - `gated-cluster-review-prep-items=3`
 - `selected-for-source-selection=2`
 - `risk-review-required=1`
@@ -1040,7 +1043,7 @@ Boundary checks:
 - `sensitive_cluster_stays_risk_review`: `passed`
 - `no_source_library_mutation`: `passed`
 - `no_013_012_mutation`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 
@@ -1055,7 +1058,7 @@ Guardrails:
 This selection layer advances the two prepared ordinary gated clusters from cluster-level prep into bounded source-level registration. It selects one case-collection PDF and one practical-formula PDF, keeps the sensitive-topic cluster behind risk review, and records weak-locator source-library, 016/017, 013, and 012 metadata without mutating external raw materials.
 
 - Selection id: `015-raw-text-next-cycle-gated-ordinary-source-selection`
-- `gated-ordinary-source-selection-status=gated_ordinary_source_selection_completed`
+- `gated-ordinary-source-selection-status=gated_ordinary_source_selection_needs_attention`
 - `gated-ordinary-source-selection-items=2`
 - `selected-for-registration=2`
 - `registered-source-entries=2`
@@ -1093,7 +1096,7 @@ Boundary checks:
 - `013_candidates_promoted`: `passed`
 - `012_evidence_promoted`: `passed`
 - `sensitive_cluster_remains_risk_review`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 - Only two ordinary gated source-level records are selected in this pass.
@@ -1106,7 +1109,7 @@ Guardrails:
 This followup layer selects the next ordinary source-level records from the already prepared case/formula gated clusters. It references the first ordinary selection to avoid duplicated paths, keeps the sensitive-topic cluster behind risk review, and records weak-locator source-library, 016/017, 013, and 012 metadata without mutating external raw materials.
 
 - Selection id: `015-raw-text-next-cycle-gated-ordinary-followup-selection`
-- `gated-ordinary-followup-selection-status=gated_ordinary_followup_selection_completed`
+- `gated-ordinary-followup-selection-status=gated_ordinary_followup_selection_needs_attention`
 - `gated-ordinary-followup-selection-items=2`
 - `selected-for-registration=2`
 - `registered-source-entries=2`
@@ -1150,7 +1153,7 @@ Boundary checks:
 - `013_candidates_promoted`: `passed`
 - `012_evidence_promoted`: `passed`
 - `sensitive_cluster_remains_risk_review`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 - Only two ordinary gated followup source-level records are selected.
@@ -1162,7 +1165,7 @@ Guardrails:
 ## 015 Raw Text Next Cycle Gated Ordinary Final Selection
 
 - Selection id: `015-raw-text-next-cycle-gated-ordinary-final-selection`
-- `gated-ordinary-final-selection-status=gated_ordinary_final_selection_completed`
+- `gated-ordinary-final-selection-status=gated_ordinary_final_selection_needs_attention`
 - `gated-ordinary-final-selection-items=2`
 - `selected-for-registration=2`
 - `registered-source-entries=2`
@@ -1207,7 +1210,7 @@ Boundary checks:
 - `012_evidence_promoted`: `passed`
 - `ordinary_representative_paths_exhausted`: `passed`
 - `sensitive_cluster_remains_risk_review`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 - Only the remaining ordinary gated source-level records are selected.
@@ -1219,7 +1222,7 @@ Guardrails:
 ## 015 Raw Text Next Cycle Sensitive Risk Review Prep
 
 - Selection id: `015-raw-text-next-cycle-sensitive-risk-review-prep`
-- `sensitive-risk-review-prep-status=sensitive_risk_review_prep_completed`
+- `sensitive-risk-review-prep-status=sensitive_risk_review_prep_needs_attention`
 - `sensitive-risk-review-prep-items=3`
 - `source-level-risk-review=1`
 - `blocked-after-sensitive-prep=1`
@@ -1255,8 +1258,8 @@ Boundary checks:
 - `action_routing_valid`: `passed`
 - `source_library_mutation_blocked`: `passed`
 - `downstream_mutation_blocked`: `passed`
-- `ordinary_final_selection_completed`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `ordinary_final_selection_completed`: `failed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 - Only path-label metadata is used for sensitive prep routing.
@@ -1268,7 +1271,7 @@ Guardrails:
 ## 015 Raw Text Next Cycle Sensitive Source-Level Risk Review
 
 - Selection id: `015-raw-text-next-cycle-sensitive-source-level-risk-review`
-- `sensitive-source-level-risk-review-status=sensitive_source_level_risk_review_completed`
+- `sensitive-source-level-risk-review-status=sensitive_source_level_risk_review_needs_attention`
 - `sensitive-source-level-risk-review-items=1`
 - `cleared-for-registration-prep=1`
 - `registered-source-entries=0`
@@ -1298,7 +1301,7 @@ Reviewed paths:
 
 Boundary checks:
 - `sensitive_source_level_risk_review_items_loaded`: `passed`
-- `sensitive_risk_review_prep_completed`: `passed`
+- `sensitive_risk_review_prep_completed`: `failed`
 - `only_prepared_prep_items_reviewed`: `passed`
 - `blocked_and_deferred_prep_retained`: `passed`
 - `source_paths_are_relative`: `passed`
@@ -1306,7 +1309,7 @@ Boundary checks:
 - `source_library_mutation_blocked`: `passed`
 - `downstream_mutation_blocked`: `passed`
 - `no_downstream_records_created`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 - Cleared-for-registration-prep is not source-library registration.
@@ -1318,7 +1321,7 @@ Guardrails:
 ## 015 Raw Text Next Cycle Sensitive Registration Prep
 
 - Prep id: `015-raw-text-next-cycle-sensitive-registration-prep`
-- `sensitive-registration-prep-status=sensitive_registration_prep_completed`
+- `sensitive-registration-prep-status=sensitive_registration_prep_needs_attention`
 - `sensitive-registration-prep-items=1`
 - `proposed-source-files=1`
 - `registered-source-entries=1`
@@ -1348,7 +1351,7 @@ Prep items retained deferred:
 
 Boundary checks:
 - `sensitive_registration_prep_items_loaded`: `passed`
-- `source_level_risk_review_completed`: `passed`
+- `source_level_risk_review_completed`: `failed`
 - `source_level_review_references_valid`: `passed`
 - `proposed_entries_available`: `passed`
 - `blocked_and_deferred_prep_retained`: `passed`
@@ -1356,7 +1359,7 @@ Boundary checks:
 - `source_library_mutation_blocked`: `passed`
 - `downstream_mutation_blocked`: `passed`
 - `no_downstream_records_created`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 - Registration prep records proposed source-library metadata only.
@@ -1368,7 +1371,7 @@ Guardrails:
 ## 015 Raw Text Next Cycle Sensitive Source Registration
 
 - Registration id: `015-raw-text-next-cycle-sensitive-source-registration`
-- `sensitive-source-registration-status=sensitive_source_registration_completed`
+- `sensitive-source-registration-status=sensitive_source_registration_needs_attention`
 - `registered-source-entries=1`
 - `registered-source-files=1`
 - `candidate-extracts=0`
@@ -1394,13 +1397,13 @@ Prep items retained deferred:
 
 Boundary checks:
 - `sensitive_source_registration_items_loaded`: `passed`
-- `sensitive_registration_prep_completed`: `passed`
+- `sensitive_registration_prep_completed`: `failed`
 - `source_library_entries_loaded`: `passed`
 - `registered_entries_match_prep_metadata`: `passed`
 - `blocked_and_deferred_prep_retained`: `passed`
 - `source_paths_are_relative`: `passed`
 - `013_012_not_mutated`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 - Only source-library metadata registration is authorized in this stage.
@@ -1412,7 +1415,7 @@ Guardrails:
 ## 015 Raw Text Next Cycle Sensitive Preparation Boundary
 
 - Boundary id: `015-raw-text-next-cycle-sensitive-preparation-boundary`
-- `sensitive-preparation-boundary-status=sensitive_preparation_boundary_completed`
+- `sensitive-preparation-boundary-status=sensitive_preparation_boundary_needs_attention`
 - `sensitive-preparation-boundary-items=1`
 - `source-files=1`
 - `preparation-allowed=1`
@@ -1451,14 +1454,14 @@ Target rule family counts:
 
 Boundary checks:
 - `sensitive_preparation_boundary_items_loaded`: `passed`
-- `source_registration_completed`: `passed`
+- `source_registration_completed`: `failed`
 - `registered_source_references_valid`: `passed`
 - `source_library_entry_ready_for_preparation`: `passed`
 - `source_paths_are_relative`: `passed`
 - `action_routing_valid`: `passed`
 - `downstream_mutation_blocked`: `passed`
 - `013_012_not_mutated`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 - This stage clears metadata-only preparation for one sensitive source.
@@ -1470,7 +1473,7 @@ Guardrails:
 ## 015 Raw Text Next Cycle Sensitive Preparation Reading
 
 - Reading id: `015-raw-text-next-cycle-sensitive-preparation-reading`
-- `sensitive-preparation-reading-status=sensitive_preparation_reading_completed`
+- `sensitive-preparation-reading-status=sensitive_preparation_reading_needs_attention`
 - `sensitive-preparation-reading-items=1`
 - `source-files=1`
 - `safe-reading-notes=3`
@@ -1509,7 +1512,7 @@ Target rule family counts:
 
 Boundary checks:
 - `sensitive_preparation_reading_items_loaded`: `passed`
-- `preparation_boundary_completed`: `passed`
+- `preparation_boundary_completed`: `failed`
 - `boundary_references_valid`: `passed`
 - `source_library_entry_still_preparation_gated`: `passed`
 - `safe_reading_notes_present`: `passed`
@@ -1517,7 +1520,7 @@ Boundary checks:
 - `downstream_mutation_blocked`: `passed`
 - `013_candidate_intake_blocked`: `passed`
 - `012_formal_evidence_blocked`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 - This stage records safe preparation-reading controls only.
@@ -1529,7 +1532,7 @@ Guardrails:
 ## 013 Explicit Candidate Review Or 015 Queue Refresh
 
 - Routing id: `013-explicit-candidate-review-or-015-queue-refresh`
-- `explicit-routing-status=routed_to_015_queue_refresh`
+- `explicit-routing-status=routing_needs_attention`
 - `routing-items=1`
 - `authorization-status=ready_for_explicit_downstream_authorization`
 - `queue-refresh-status=covered_or_completed_queue_exhausted`
@@ -1551,13 +1554,13 @@ Queue refresh ids:
 
 Boundary checks:
 - `routing_items_loaded`: `passed`
-- `sensitive_preparation_reading_completed`: `passed`
+- `sensitive_preparation_reading_completed`: `failed`
 - `authorization_audit_ready`: `passed`
 - `downstream_mutation_not_authorized`: `passed`
 - `queue_refresh_completed`: `passed`
 - `queue_refresh_route_selected`: `passed`
 - `013_012_not_mutated`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 - This routing stage is read-only and does not mutate 013 or 012.
@@ -1568,17 +1571,17 @@ Guardrails:
 ## 015 External Material Inventory Refresh Confirmation
 
 - Confirmation id: `015-external-material-inventory-refresh`
-- `external-inventory-confirmation-status=external_inventory_refresh_confirmed`
+- `external-inventory-confirmation-status=external_inventory_refresh_needs_attention`
 - `confirmation-items=1`
-- `external-inventory-status=scoped_metadata_registered`
-- `external-entries=31`
+- `external-inventory-status=snapshot_only`
+- `external-entries=0`
 - `untracked-material-entries=0`
 - `candidate-extract-delta=0`
 - `review-decision-delta=0`
 - `promotion-batch-delta=0`
 - `formal-evidence-delta=0`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=015-raw-text-next-cycle-source-selection`
+- `next-material-entry=015-external-material-inventory-refresh`
 
 Refresh ids:
 - `015-external-material-inventory-refresh`
@@ -1588,25 +1591,27 @@ Routing ids:
 
 Boundary checks:
 - `confirmation_items_loaded`: `passed`
-- `explicit_routing_completed`: `passed`
-- `external_inventory_refresh_completed`: `passed`
-- `no_untracked_material_entries`: `passed`
-- `next_cycle_source_selection_selected`: `passed`
+- `explicit_routing_completed`: `failed`
+- `external_inventory_refresh_completed`: `not_currently_verified`
+- `no_untracked_material_entries`: `not_currently_verified`
+- `next_cycle_source_selection_selected`: `not_currently_verified`
 - `013_012_not_mutated`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
 - This confirmation reuses existing inventory metadata and path labels only.
-- No external raw material is opened, moved, converted, or rewritten.
+- This metadata-only confirmation authorizes no raw-file mutation; current
+  raw-material non-mutation is not verified.
 - No 013 candidate, review, promotion, or 012 evidence mutation is authorized.
-- Continue with raw text next-cycle source selection.
+- The tracked confirmation is historical only; repeat live inventory
+  verification before continuing.
 
 ## 017 New Material Extraction Learning Loop Closure
 
 - Closure id: `017-new-material-extraction-learning-loop-closure`
-- `new-material-learning-loop-status=new_material_learning_loop_closed`
+- `new-material-learning-loop-status=new_material_learning_loop_needs_attention`
 - `closure-items=1`
-- `completed-loop-stages=16`
+- `completed-loop-stages=0`
 - `source-selection-items=5`
 - `registered-source-entries=11`
 - `preparation-reading-items=1`
@@ -1618,7 +1623,7 @@ Guardrails:
 - `promotion-batch-delta=0`
 - `formal-evidence-delta=0`
 - `downstream-mutation-authorized=false`
-- `next-material-entry=013-explicit-candidate-review-or-new-material-intake`
+- `next-material-entry=015-external-material-inventory-refresh`
 
 Closure item ids:
 - `new_material_loop_closure_001`
@@ -1640,18 +1645,19 @@ Inventory confirmation ids:
 
 Boundary checks:
 - `closure_items_loaded`: `passed`
-- `source_selection_completed`: `passed`
-- `raw_text_next_cycle_completed`: `passed`
-- `sensitive_preparation_reading_completed`: `passed`
+- `source_selection_completed`: `failed`
+- `raw_text_next_cycle_completed`: `failed`
+- `sensitive_preparation_reading_completed`: `failed`
 - `017_authorization_audit_ready`: `passed`
-- `explicit_routing_completed`: `passed`
-- `external_inventory_refresh_confirmed`: `passed`
-- `no_untracked_material_entries`: `passed`
+- `explicit_routing_completed`: `failed`
+- `external_inventory_refresh_confirmed`: `not_currently_verified`
+- `no_untracked_material_entries`: `not_currently_verified`
 - `013_012_not_mutated`: `passed`
-- `raw_materials_not_mutated`: `passed`
+- `raw_materials_not_mutated`: `not_currently_verified`
 
 Guardrails:
-- This closure checkpoint is metadata-only and does not reopen raw files.
+- This metadata-only checkpoint authorizes no raw-file mutation; current
+  raw-material non-mutation is not verified.
 - The current raw-text next-cycle surfaces are closed through preparation reading.
 - 017 is ready for explicit downstream authorization, but this checkpoint does not authorize mutation.
 - Use the next target to choose explicit 013/012 authorization or a genuinely new material intake surface.

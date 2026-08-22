@@ -7,6 +7,11 @@ from threading import Lock
 from weakref import ReferenceType, ref
 
 from mingli_engine.bazi.branch_relations import detect_branch_relations
+from mingli_engine.bazi.calibrated_families import (
+    calculate_blind_image_method,
+    calculate_remedy_boundary,
+    calculate_taboo_god_candidates,
+)
 from mingli_engine.bazi.facts import build_chart_facts
 from mingli_engine.bazi.luck_cycles import calculate_luck_cycles
 from mingli_engine.bazi.patterns import calculate_pattern_candidates
@@ -129,6 +134,23 @@ def analyze_bazi_chart(
         patterns=patterns,
         useful_gods=useful_gods,
     )
+    taboo_gods = calculate_taboo_god_candidates(
+        facts,
+        strength,
+        patterns,
+        schools,
+    )
+    blind_images = calculate_blind_image_method(
+        facts,
+        relations,
+        strength,
+        schools,
+    )
+    remedy_boundary = calculate_remedy_boundary(
+        strength,
+        useful_gods,
+        schools,
+    )
     bundle = CalculationBundle(
         engine_version=ENGINE_VERSION,
         ruleset_version=RULESET_VERSION,
@@ -139,5 +161,8 @@ def analyze_bazi_chart(
         useful_gods=useful_gods,
         luck_cycles=luck_cycles,
         schools=schools,
+        taboo_gods=taboo_gods,
+        blind_images=blind_images,
+        remedy_boundary=remedy_boundary,
     )
     return _bind_calculation_bundle(bundle, chart)

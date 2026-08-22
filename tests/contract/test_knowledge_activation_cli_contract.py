@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import subprocess
 import sys
@@ -33,9 +33,9 @@ def test_knowledge_activation_summary_cli_outputs_enabled_packet():
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
     assert payload["activation_status"] == "enabled_with_guardrails"
-    assert payload["source_count"] == 29
-    assert payload["report_usable_source_count"] == 28
-    assert payload["approved_evidence_count"] == 111
+    assert payload["source_count"] == 42
+    assert payload["report_usable_source_count"] == 41
+    assert payload["approved_evidence_count"] == 996
     assert len(payload["enabled_rule_families"]) == 10
     assert payload["missing_rule_families"] == []
     assert payload["unavailable_conclusion_count"] == 0

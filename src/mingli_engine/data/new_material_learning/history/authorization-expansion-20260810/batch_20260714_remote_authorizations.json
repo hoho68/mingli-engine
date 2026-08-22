@@ -1,0 +1,574 @@
+{
+  "batch_id": "batch_20260714",
+  "generated_at": "2026-08-09T14:03:45Z",
+  "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
+  "records": [
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09. Dispatch remains denied by policy: remote_processing_requires_high_risk_review.",
+      "authorization_receipt_id": "batch_20260714-auth-edf3da09bb3d-001",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [],
+      "authorized_routes": [],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "denied",
+      "file_sha256": "EDF3DA09BB3D08A6BFFC3C59A3418EFCD397B867DDC9DD5C4C03C74A25A778B9",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "2800.《命理生死之书》100页.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "high_risk"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-dc20c035ea07-002",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "DC20C035EA07FA7F6E8FC1543D5079486AFF96C6A54AB66AD750BEDA938DB832",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "[三命堂藏版]子平管见.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-d933ed5aa7e1-003",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "D933ED5AA7E1C8A46871FFFF34ED81D807EC45E33EB43D4E0C3872293F526D18",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "[周易 相术 测字]图解八字宝鉴 (刘金仙).pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-dbac2b50cb4f-004",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "DBAC2B50CB4F824D3CFA95800C6582C71FF5D9119ABF6E9B2EFD13CEF6E11B76",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "《解梦灵书》.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09. Dispatch remains denied by policy: remote_processing_prohibited_by_non_disclosure_marker.",
+      "authorization_receipt_id": "batch_20260714-auth-58bedb1bd90d-005",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [],
+      "authorized_routes": [],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "denied",
+      "file_sha256": "58BEDB1BD90DAF56DDE68AA2095B6AA2D0A0B597FD0829262C1231DB74A8CFBA",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "八字命理，弟子密训秘籍，彩色扫描166页PDF无水印_1.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "sensitive"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-02ae584ac6d1-006",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "02AE584AC6D1658C5B910642B92B7B73D042988EDA73A78AA72F350F16A510E2",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "六爻古籍经典合集 (易隐 易冒 易林卜疑 断易天机) .pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09. Dispatch remains denied by policy: remote_processing_requires_high_risk_review.",
+      "authorization_receipt_id": "batch_20260714-auth-8380311e3adc-007",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [],
+      "authorized_routes": [],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "denied",
+      "file_sha256": "8380311E3ADCEAF450FA83DAECA16B34B2676FFECD798E2747A8FD0EAB6C91A0",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "化解宝典破解笔记30法.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "high_risk"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-080b27ccb186-008",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "080B27CCB186CFC5FBCA6F28C7299B4209FA9D55E0D1F007DF8D67FB44A86229",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "叅星秘要諏吉便覽.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-5e170a8881e1-009",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "5E170A8881E170F8E37AD2AC2809CFAB8C4B4C1D76FBE5C20BBD06E11CE1B12D",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "命理精要  上.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-d9a207e745e6-010",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "D9A207E745E6A6C96E9DADB45EDF33DDCB48943EF331B1C0D97A4E9AB7BF8213",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "命理精要下.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-9075a3b139c7-011",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "9075A3B139C7D44AD4F8A2DD6BE39697DD0219BBFB78D2FA6BE93F26CCD4167B",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "姚亚峰 《盲派绝学断流年》ce.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-8754d6bcb1f5-012",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "8754D6BCB1F5C0A25A0E50718292E64A959151FDECE354A36A0799C78588671E",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "子平三命通变渊源-精校.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-a0787a7d7f59-013",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "A0787A7D7F59900CC42221A61C6AC480BF868C329E2C9396CFD0E846D96E2645",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "学六爻这本最好.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-d81262e64fe5-014",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "D81262E64FE5469406C31E097575B6B7E443B05359254AAE1EB530E45A42D4C2",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "曾文迪选择宗镜.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-1ff4ce83fd5c-015",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "1FF4CE83FD5C41DF042CF3D68F5D14B305FBE099211917BE2E873AE5109016D0",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "梅花姓名断..陈春林.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-5d26f403f755-016",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "5D26F403F755539B3CC4286B97D5B526EA7D79DFC06A30AF3A563E5DCAD41358",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "梅花易数 .pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-a7c8ad0f0611-017",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "A7C8AD0F0611398A905D66BB0D049775BA0702BEB70F29450E9266574830A1A7",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "梅花易数白话解(清晰版).pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-0b213edd6946-018",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "0B213EDD694616062D5AB16520071ACE0137DC73A5C433D0B7B501FDCC65030B",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "王亭之《中州派玄空学》(1上册).pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-781bc6b8d848-019",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "781BC6B8D8487E7CDA73048FDF178149941DA471EE9982485EC3DF99F38F67E4",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "王亭之《中州派玄空学》(2中册).pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-f3311e39fd94-020",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "F3311E39FD944FB0BAD469493DBEA652BF22AE4689F19D3F3BC2FE7566F7E7BF",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "王亭之《中州派玄空学》(3下册).pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-53a6bac42dbd-021",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "理命摘要.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-53a6bac42dbd-022",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "53A6BAC42DBDA7D7CCDDC9861982BF573BB0ABB796E6C64772163F3DD476805B",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "理命摘要1.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09. Dispatch remains denied by policy: remote_processing_requires_high_risk_review.",
+      "authorization_receipt_id": "batch_20260714-auth-9165c0733a5a-023",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [],
+      "authorized_routes": [],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "denied",
+      "file_sha256": "9165C0733A5AEBFB7CAE98A00619B0EDB4140A0615758AB686779188AEA42E60",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "盲人断命秘典.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "high_risk"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09. Dispatch remains denied by policy: remote_processing_prohibited_by_non_disclosure_marker.",
+      "authorization_receipt_id": "batch_20260714-auth-eec66e5b6455-024",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [],
+      "authorized_routes": [],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "denied",
+      "file_sha256": "EEC66E5B64555FCA5573A6A0B341C639065F3761B46F3678152B54F5497E7F9E",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).docx",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "sensitive"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09. Dispatch remains denied by policy: remote_processing_prohibited_by_non_disclosure_marker.",
+      "authorization_receipt_id": "batch_20260714-auth-be9987f40e6f-025",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [],
+      "authorized_routes": [],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "denied",
+      "file_sha256": "BE9987F40E6F74D1F3094EFCC107ABB10172D58D3BD7968D17BEB4B9B38C7AD6",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "祖传八字金不换上武当山道长著(30000元内部资料、不能外泄).pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "sensitive"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09. Dispatch remains denied by policy: remote_processing_prohibited_by_non_disclosure_marker.",
+      "authorization_receipt_id": "batch_20260714-auth-c7d925a8715a-026",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [],
+      "authorized_routes": [],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "denied",
+      "file_sha256": "C7D925A8715AF6141321FDB169C7FC0958FBBC21B45404F3F8E5C66B04821CBB",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "祖传八字金不换下武当山道长著(30000元内部资料、不能外泄).pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "sensitive"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09.",
+      "authorization_receipt_id": "batch_20260714-auth-3d8d644570bf-027",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "kimi-for-coding/k3",
+        "kimi-for-coding/k3-256k"
+      ],
+      "authorized_routes": [
+        "deepseek_text",
+        "kimi_multimodal"
+      ],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "authorized",
+      "file_sha256": "3D8D644570BF6CE92E7F0B59010E3219817FC3299AC2FAE54138165B4D69119B",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "紫微斗数 2025-05-03 21.35(2).pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "ordinary"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09. Dispatch remains denied by policy: remote_processing_requires_high_risk_review.",
+      "authorization_receipt_id": "batch_20260714-auth-d462148fe4d1-028",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [],
+      "authorized_routes": [],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "denied",
+      "file_sha256": "D462148FE4D1099652ECBB9AA696D4B5D9F8459DC10247BC23EA0CFE17C725BE",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "给出已逝人的八字一眼看出不在人间.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "high_risk"
+    },
+    {
+      "authorization_basis": "The workspace user authorized DeepSeek and Kimi; each listed SHA received an explicit local pre-dispatch ordinary-risk title and probe-metadata review on 2026-08-09. Dispatch remains denied by policy: remote_processing_requires_high_risk_review.",
+      "authorization_receipt_id": "batch_20260714-auth-2df5dea1a91e-029",
+      "authorized_by": "workspace-user",
+      "authorized_model_ids": [],
+      "authorized_routes": [],
+      "decided_at": "2026-08-09T14:03:45Z",
+      "decision": "denied",
+      "file_sha256": "2DF5DEA1A91EDCECEB2593140B2093963CA39FD5A41F11E9DBAE78239B371A87",
+      "privacy_clearance": "cleared_for_remote_processing",
+      "relative_path": "鬼门十三针.佚名.民国抄本.德国柏林图书馆藏.pdf",
+      "rights_clearance": "cleared_for_remote_processing",
+      "risk_tier": "high_risk"
+    }
+  ],
+  "schema_version": "new-material-learning-remote-authorizations-v2"
+}

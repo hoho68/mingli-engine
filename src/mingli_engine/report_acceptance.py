@@ -187,7 +187,7 @@ def _ordinary_production_case(report: Report) -> ReportAcceptanceCaseResult:
             in {"complete", "complete_with_guardrails"}
         ),
         "evidence_trace_count": _check(
-            report.report_evidence_audit.traced_evidence_unit_count == 111
+            report.report_evidence_audit.traced_evidence_unit_count == 996
         ),
         "rule_family_coverage": _check(
             report.report_evidence_audit.rule_family_count == 10
