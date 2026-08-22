@@ -156,5 +156,28 @@
     ],
     "review_status": "reviewed",
     "review_notes": "Governed 021 round-3 gap promotion closing the zero-evidence families shi_ying_relation and yingqi_timing inside the independent liuyao evidence namespace; append-only over the frozen base batch."
+  },
+  {
+    "promotion_batch_id": "liuyao_promotion_batch_20260822_001",
+    "candidate_ids": [
+      "liuyao_candidate_batch_20260714_0071",
+      "liuyao_candidate_batch_20260714_0072",
+      "liuyao_candidate_batch_20260714_0073",
+      "liuyao_candidate_batch_20260714_0074",
+      "liuyao_candidate_batch_20260714_0075",
+      "liuyao_candidate_batch_20260714_0076",
+      "liuyao_candidate_batch_20260714_0077"
+    ],
+    "target_evidence_ids": [
+      "liuyao_evidence_batch_20260714_0071",
+      "liuyao_evidence_batch_20260714_0072",
+      "liuyao_evidence_batch_20260714_0073",
+      "liuyao_evidence_batch_20260714_0074",
+      "liuyao_evidence_batch_20260714_0075",
+      "liuyao_evidence_batch_20260714_0076",
+      "liuyao_evidence_batch_20260714_0077"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Governed 022 targeted classics promotion appending 7 single-page evidence units from the frozen review ledger inside the independent liuyao evidence namespace; evidence only, no inference interface or status change; append-only over the frozen base and gap batches."
   }
 ]

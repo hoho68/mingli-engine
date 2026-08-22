@@ -1016,5 +1016,110 @@
       "Any application to real decisions would require independent verification and is beyond the scope of this source."
     ],
     "batch_record_id": "batch_20260714-a0787a7d7f59-013-o002-candidate-004"
+  },
+  {
+    "candidate_id": "liuyao_candidate_batch_20260714_0071",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_locator": "page:28",
+    "extracted_meaning": "确定事项用神后，生用神者为原神，克用神者为忌神，克制原神并生助忌神者为仇神；仍须结合各爻旺衰与动静。",
+    "proposed_rule_family": "yong_shen_selection",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "传统文献规则陈述，仅作文化解读与自我反思材料",
+      "不构成对现实结果的保证，不替代专业意见",
+      "原忌仇神是否实际起作用仍须结合旺衰、动静与空破条件判断"
+    ],
+    "batch_record_id": "liuyao_classics_review_20260822_0001"
+  },
+  {
+    "candidate_id": "liuyao_candidate_batch_20260714_0072",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_locator": "page:71",
+    "extracted_meaning": "应期观察综合静动、旺衰、墓绝、冲合、月破、旬空及其解除条件；只保留候选信号，不直接给出日期。",
+    "proposed_rule_family": "yingqi_timing",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "传统文献规则陈述，仅作文化解读与自我反思材料",
+      "不构成对现实结果的保证，不替代专业意见",
+      "不提供具体日期，不把候选条件当作必然应验"
+    ],
+    "batch_record_id": "liuyao_classics_review_20260822_0002"
+  },
+  {
+    "candidate_id": "liuyao_candidate_batch_20260714_0073",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_locator": "page:332",
+    "extracted_meaning": "涉及自身与他人时，世爻表自身、应爻表对方；具体关系人仍按题意选相应六亲为用神，不能把所有他人一概只看应爻。",
+    "proposed_rule_family": "shi_ying_relation",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "传统文献规则陈述，仅作文化解读与自我反思材料",
+      "不构成对现实结果的保证，不替代专业意见",
+      "具体关系人仍以相应六亲为用神，世应只表示主宾位置"
+    ],
+    "batch_record_id": "liuyao_classics_review_20260822_0003"
+  },
+  {
+    "candidate_id": "liuyao_candidate_batch_20260714_0074",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_locator": "page:333",
+    "extracted_meaning": "原神、忌神是否实际起作用必须结合用神显伏旺衰、空破、日冲、墓绝、化退及仇神克制等条件。",
+    "proposed_rule_family": "yong_shen_selection",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "传统文献规则陈述，仅作文化解读与自我反思材料",
+      "不构成对现实结果的保证，不替代专业意见",
+      "作用判断须逐爻核实显伏、空破、日冲、墓绝与化退条件"
+    ],
+    "batch_record_id": "liuyao_classics_review_20260822_0004"
+  },
+  {
+    "candidate_id": "liuyao_candidate_batch_20260714_0075",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_locator": "page:493",
+    "extracted_meaning": "旬空区分受支持而暂待条件的空与无生受克的真空；仅前者可作为后续可能起作用的候选信号。",
+    "proposed_rule_family": "yingqi_timing",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "传统文献规则陈述，仅作文化解读与自我反思材料",
+      "不构成对现实结果的保证，不替代专业意见",
+      "不提供具体日期，不把候选条件当作必然应验"
+    ],
+    "batch_record_id": "liuyao_classics_review_20260822_0005"
+  },
+  {
+    "candidate_id": "liuyao_candidate_batch_20260714_0076",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_locator": "page:498",
+    "extracted_meaning": "月破爻若发动且获生扶，可把出破、填实、合破作为后续候选条件；安静且受克无生者不据此生成时点。",
+    "proposed_rule_family": "yingqi_timing",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "传统文献规则陈述，仅作文化解读与自我反思材料",
+      "不构成对现实结果的保证，不替代专业意见",
+      "不提供具体日期，不把候选条件当作必然应验"
+    ],
+    "batch_record_id": "liuyao_classics_review_20260822_0006"
+  },
+  {
+    "candidate_id": "liuyao_candidate_batch_20260714_0077",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_locator": "page:501",
+    "extracted_meaning": "用神不现时，伏神须获日月生扶、飞神衰弱或受制，且自身不陷休囚空破墓绝，方可取用。",
+    "proposed_rule_family": "yong_shen_selection",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "传统文献规则陈述，仅作文化解读与自我反思材料",
+      "不构成对现实结果的保证，不替代专业意见",
+      "伏神取用须同时满足日月生扶、飞神衰弱或受制与自身不陷休囚空破墓绝"
+    ],
+    "batch_record_id": "liuyao_classics_review_20260822_0007"
   }
 ]
