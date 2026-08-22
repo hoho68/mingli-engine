@@ -141,5 +141,20 @@
     ],
     "review_status": "reviewed",
     "review_notes": "Governed batch_20260714 liuyao review pipeline promotion into the independent liuyao evidence namespace."
+  },
+  {
+    "promotion_batch_id": "liuyao_promotion_batch_20260714_002",
+    "candidate_ids": [
+      "liuyao_candidate_batch_20260714_0068",
+      "liuyao_candidate_batch_20260714_0069",
+      "liuyao_candidate_batch_20260714_0070"
+    ],
+    "target_evidence_ids": [
+      "liuyao_evidence_batch_20260714_0068",
+      "liuyao_evidence_batch_20260714_0069",
+      "liuyao_evidence_batch_20260714_0070"
+    ],
+    "review_status": "reviewed",
+    "review_notes": "Governed 021 round-3 gap promotion closing the zero-evidence families shi_ying_relation and yingqi_timing inside the independent liuyao evidence namespace; append-only over the frozen base batch."
   }
 ]

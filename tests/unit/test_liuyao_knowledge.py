@@ -147,10 +147,12 @@ def test_promote_rolls_back_on_validation_failure(
 
 
 def _stage_promoted(tmp_path: Path) -> Path:
-    data_dir = tmp_path / "liuyao"
-    data_dir.mkdir()
-    for name in LEDGER_NAMES:
-        (data_dir / name).write_bytes((LIUYAO_DATA_DIR / name).read_bytes())
+    data_dir = _stage(tmp_path)
+    promote_liuyao_batch_candidates(
+        BATCH_DATA_ROOT,
+        generated_at="2026-08-19T03:00:00Z",
+        data_dir=data_dir,
+    )
     return data_dir
 
 

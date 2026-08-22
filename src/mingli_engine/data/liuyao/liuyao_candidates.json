@@ -972,5 +972,49 @@
       "不同作者对同一卦象的判断方法可能存在根本差异"
     ],
     "batch_record_id": "batch_20260714-a0787a7d7f59-013-o009-candidate-001"
+  },
+  {
+    "candidate_id": "liuyao_candidate_batch_20260714_0068",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_locator": "page:545-576",
+    "extracted_meaning": "The text states that the world and response lines are determined by the hexagram position within its palace, following a fixed pattern.",
+    "proposed_rule_family": "shi_ying_relation",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "This rule is part of a specific divination system and may not apply universally",
+      "The source text's character errors may obscure exact details"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o022-candidate-004"
+  },
+  {
+    "candidate_id": "liuyao_candidate_batch_20260714_0069",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_locator": "page:705-736",
+    "extracted_meaning": "婚姻占断以世应生合为吉、冲克为凶，并叠加财鬼关系与神煞（如咸池、玄武）判断婚姻质量与变数。",
+    "proposed_rule_family": "shi_ying_relation",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "此规则仅存于古籍占筮文献，不适用于现代婚恋关系咨询",
+      "原文对‘淫’‘嫉妒’等描述带有时代价值偏见",
+      "断语未提供任何可检验的实证样本"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o027-candidate-002"
+  },
+  {
+    "candidate_id": "liuyao_candidate_batch_20260714_0070",
+    "source_id": "liuyao_source_batch_20260714_002",
+    "source_locator": "page:33-64",
+    "extracted_meaning": "Use the stated rules to estimate that outcomes manifest when the beneficial spirit is strong (in auspicious cases) or when the harmful spirit is strong (in inauspicious cases), and consider other line states such as emptiness and movement for timing.",
+    "proposed_rule_family": "yingqi_timing",
+    "risk_tier": "ordinary",
+    "status": "promoted",
+    "proposed_limitations": [
+      "Timing predictions are highly speculative and not based on reproducible evidence.",
+      "The text itself describes the basic timing method as inflexible and recommends a more nuanced approach.",
+      "Any application to real decisions would require independent verification and is beyond the scope of this source."
+    ],
+    "batch_record_id": "batch_20260714-a0787a7d7f59-013-o002-candidate-004"
   }
 ]

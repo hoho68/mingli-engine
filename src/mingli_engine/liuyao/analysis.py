@@ -300,16 +300,27 @@ def analyze_liuyao_chart(
     family_observations: list[LiuyaoFamilyObservation] = []
     for family in config.families:
         if family.rule_family == "yingqi_timing":
+            yingqi_citations = tuple(
+                citation_from_unit(unit)
+                for unit in evidence_index.family(family.rule_family)
+            )
             family_observations.append(
                 LiuyaoFamilyObservation(
                     rule_family=family.rule_family,
                     status="degraded",
                     headline=family.headline,
                     observations=(
-                        "应期推断需要明确所问事项与更多传统证据，现阶段只提示空亡、月破、动爻等候选位置。",
+                        "应期推断需要明确的用神指定与事项吉凶趋向输入方可计算；"
+                        "当前输入未提供该口径，保持降级，"
+                        "仅提示空亡、月破、动爻等候选位置。",
                     ),
                     limitations=config.shared_limitations,
-                    evidence_note=config.evidence_pending_note,
+                    evidence_note=(
+                        config.evidence_activated_note
+                        if yingqi_citations
+                        else config.evidence_pending_note
+                    ),
+                    evidence_citations=yingqi_citations,
                 )
             )
             continue

@@ -1,9 +1,10 @@
 """Deterministic evidence activation layer for liuyao analysis (021).
 
-Activates the 67 governed liuyao evidence units promoted by the
-batch_20260714 review pipeline. This module only reads through
-``mingli_engine.liuyao.knowledge`` loaders; it never re-implements ledger
-parsing and never mutates any knowledge ledger.
+Activates the 70 governed liuyao evidence units promoted by the
+batch_20260714 review pipeline (67 base units plus the round-3 gap
+promotion closing shi_ying_relation and yingqi_timing). This module only
+reads through ``mingli_engine.liuyao.knowledge`` loaders; it never
+re-implements ledger parsing and never mutates any knowledge ledger.
 """
 
 from __future__ import annotations
@@ -30,7 +31,7 @@ EVIDENCE_ACTIVATED_NOTE = (
     "证据单元、来源与页级定位，仅作传统文献学习参考，不构成任何现实预测。"
 )
 
-_EXPECTED_TOTAL = 67
+_EXPECTED_TOTAL = 70
 
 
 @dataclass(frozen=True)

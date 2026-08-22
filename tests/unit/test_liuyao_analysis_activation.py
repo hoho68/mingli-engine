@@ -35,12 +35,12 @@ _EMPTY_INDEX = LiuyaoEvidenceIndex(
 
 EXPECTED_CITATION_COUNTS = {
     "yong_shen_selection": 6,
-    "shi_ying_relation": 0,
+    "shi_ying_relation": 2,
     "moving_line_dynamics": 5,
     "six_spirits_attachment": 3,
     "month_day_strength": 4,
     "void_break_state": 2,
-    "yingqi_timing": 0,
+    "yingqi_timing": 1,
     "category_judgment": 0,
 }
 
@@ -109,13 +109,60 @@ def test_observations_and_statuses_match_v1_exactly() -> None:
         assert observation.evidence_citations == (), family
 
 
-def test_empty_families_keep_pending_note() -> None:
+def test_only_category_judgment_keeps_pending_note() -> None:
     config = load_analysis_config()
     analysis = analyze_liuyao_chart(_chart((1, 1, 1, 1, 0, 1)))
     families = _by_family(analysis)
-    for family in ("shi_ying_relation", "yingqi_timing", "category_judgment"):
-        assert families[family].evidence_citations == ()
-        assert families[family].evidence_note == config.evidence_pending_note
+    assert families["category_judgment"].evidence_citations == ()
+    assert families["category_judgment"].evidence_note == config.evidence_pending_note
+
+
+def test_shi_ying_relation_combines_chart_computation_with_citations() -> None:
+    config = load_analysis_config()
+    analysis = analyze_liuyao_chart(_chart((1, 1, 1, 1, 0, 1), moving=(4,)))
+    shi_ying = _by_family(analysis)["shi_ying_relation"]
+    assert shi_ying.status == "computed"
+    text = "".join(shi_ying.observations)
+    assert "世爻居" in text and "应爻居" in text
+    assert "世应五行关系" in text
+    citations = shi_ying.evidence_citations
+    assert len(citations) == 2
+    assert {citation.source_ref for citation in citations} == {
+        "page:545-576",
+        "page:705-736",
+    }
+    assert all(
+        citation.source_id == "liuyao_source_batch_20260714_001"
+        for citation in citations
+    )
+    assert shi_ying.evidence_note == config.evidence_activated_note
+
+
+def test_yingqi_timing_stays_degraded_with_citations_and_missing_inputs() -> None:
+    config = load_analysis_config()
+    analysis = analyze_liuyao_chart(_chart((1, 1, 1, 1, 0, 1), moving=(4,)))
+    yingqi = _by_family(analysis)["yingqi_timing"]
+    assert yingqi.status == "degraded"
+    text = "".join(yingqi.observations)
+    assert "用神" in text
+    assert "降级" in text
+    citations = yingqi.evidence_citations
+    assert len(citations) == 1
+    assert citations[0].rule_family == "yingqi_timing"
+    assert citations[0].source_id == "liuyao_source_batch_20260714_002"
+    assert citations[0].source_ref == "page:33-64"
+    assert yingqi.evidence_note == config.evidence_activated_note
+
+
+def test_yingqi_timing_without_evidence_keeps_pending_note() -> None:
+    config = load_analysis_config()
+    analysis = analyze_liuyao_chart(
+        _chart((1, 1, 1, 1, 0, 1)), evidence_index=_EMPTY_INDEX
+    )
+    yingqi = _by_family(analysis)["yingqi_timing"]
+    assert yingqi.status == "degraded"
+    assert yingqi.evidence_citations == ()
+    assert yingqi.evidence_note == config.evidence_pending_note
 
 
 def test_activated_families_use_activated_note() -> None:
