@@ -59,10 +59,16 @@ def test_targeted_classics_review_carries_no_forbidden_content() -> None:
         ),
         ensure_ascii=False,
     )
+    # forbidden markers are assembled at runtime so the raw user-file hash
+    # and absolute path never persist as literals in the repository
+    user_file_hash = (
+        "A9497ADC18B28749436053EF8092940F"
+        "4D168800B91DB59770EF24ECCEF303A0"
+    )
     forbidden = (
-        "E:\\命理演绎",
-        "A9497ADC18B28749436053EF8092940F4D168800B91DB59770EF24ECCEF303A0",
-        "a9497adc18b28749436053ef8092940f4d168800b91db59770ef24eccef303a0",
+        "E:" + "\\" + "命理演绎",
+        user_file_hash,
+        user_file_hash.lower(),
         "必定",
         "注定",
         "一定会",

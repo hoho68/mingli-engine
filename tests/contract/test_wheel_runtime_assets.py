@@ -172,6 +172,7 @@ def _copy_package_data(
         "liuyao_review_decisions.json",
         "liuyao_promotion_batches.json",
         "liuyao_evidence_units.json",
+        "liuyao_targeted_classics_reviews.json",
         "batch_20260714_liuyao_family_map.json",
         "calibration",
     )
