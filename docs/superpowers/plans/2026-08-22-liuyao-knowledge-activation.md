@@ -136,3 +136,35 @@ git diff da96f7451d07aa4edeaac0c9c4a68e7e910735cd -- `
   （0035）、疾病/医药/神灵病因条（0018/0019/0051/0056/0057/0058）、婚育寿夭
   混合条（0054）、祭祀禳解条（0021）及通用方法论条（0016/0022-0026/0040/
   0042-0045/0048/0060-0063/0065-0067）；对应事项按未知类别或高风险类别拒绝。
+
+## 追加执行记录：世应关系与应期证据缺口闭环（2026-08-22，第三轮）
+
+- 证据审查结论：仓库内 batch_20260714 提取层存在 3 条未晋升但直接对应两族的
+  rule_candidate（治理门禁 `out_of_scope_system→liuyao` 已通过，仅因冻结关键字
+  族映射按"候选标签"匹配而落入 unmapped_family，未入 67 条基础台账）：
+  - `o022-candidate-004`（source 001，page:545-576）：世应爻位按八宫卦序固定口诀
+    确定（含游魂、归魂特例）→ `shi_ying_relation`；
+  - `o027-candidate-002`（source 001，page:705-736）：世应相生相合为吉、相冲相克
+    为凶（婚姻占断语境）→ `shi_ying_relation`；
+  - `o002-candidate-004`（source 002，page:33-64）：应期以用神旺衰结合空亡、动爻
+    状态判定 → `yingqi_timing`。
+  三条均通过既有 `_liuyao_gate_candidate`（无绝对化措辞、safety/high_risk 分类器
+  通过）。未改类任何已晋升 category_judgment 证据，未新增任何规则文本。
+- 治理入库：新增 `promote_liuyao_family_gap_candidates`（追加式第二批晋升，
+  `liuyao_promotion_batch_20260714_002` / `liuyao_curation_batch_20260822_001`），
+  裁决清单固化为 `LIUYAO_GAP_PROMOTION_ADJUDICATIONS`；同一套门禁、签名去重、
+  链校验与失败回滚。台账 67→70，前 67 条字节序不变（append-only，diff 纯插入
+  159 行）；族映射文件与前一轮冻结哈希不动。本轮有意修订第二轮的"台账字节不变"
+  基线为"append-only 扩展"——依据是本轮任务书第 3 条"沿用现有治理、晋升和引用
+  模型完成证据入库"。
+- 分析激活：`_EXPECTED_TOTAL` 67→70；`shi_ying_relation` 走通用路径携带 2 条引用
+  （输出仍由实际卦象计算：世应爻位＋五行关系，附 source_id 与 page 定位）；
+  `yingqi_timing` 保持 `degraded`，挂载 1 条引用并改写观察文本，明确缺少"用神
+  指定与事项吉凶趋向输入"方可计算——当前无该治理输入口径，故不升级 computed。
+- 验证：六爻专项 140 项通过；mypy（liuyao+cli）零问题；Ruff src+tests 全净；
+  `git diff --check` 干净；全项目回归（排除 task8_post_audit）
+  2570 passed, 1 skipped, 0 failed。
+- 未闭环/剩余缺口：应期升 computed 需治理化的"用神指定＋吉凶趋向"输入口径与
+  《增删卜易》《卜筮正宗》应期专章证据（当前仅 1 条现代作者文本证据，且为候选
+  观察级）；世应关系现有 2 条证据中 1 条为婚姻语境特化，通用世应生克冲合规则
+  仍建议从《增删卜易》世应章补充页级证据。
