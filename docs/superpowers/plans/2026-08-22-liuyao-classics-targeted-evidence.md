@@ -673,3 +673,39 @@ Task 8 生成物必须按既有治理流程提交；post-audit 与全量回归�
 - [ ] **Step 7.3：最终声明条件**
 
 只有以下条件全部成立，才可声明 022 完成：source 仍为 2；正式证据 77；前 70 条不变；应期 4 条引用但状态仍 degraded；API/schema 不变；全部专项、全量、Task 8、mypy、Ruff、diff 和独立审查通过；main 已按批准推送。
+
+## 执行记录（2026-08-22，Task 1-6 完成）
+
+- 新增证据 ID：`liuyao_evidence_batch_20260714_0071` 至 `0077`，对应复核记录
+  `liuyao_classics_review_20260822_0001`-`0007`（《增删卜易》p28、p71；
+  《卜筮正宗》p332、p333、p493、p498、p501），晋升批次
+  `liuyao_promotion_batch_20260822_001`，curated batch
+  `liuyao_curation_batch_20260822_002`。
+- 最终 family 分布：yong_shen_selection 9、shi_ying_relation 3、
+  moving_line_dynamics 5、six_spirits_attachment 3、month_day_strength 4、
+  void_break_state 2、yingqi_timing 4、category_judgment 47，合计 77；
+  默认报告引用总数 30；`yingqi_timing.status` 仍为 `degraded`。
+- 测试结果：六爻专项 7 个测试文件 75 passed；
+  `tests/contract/test_wheel_runtime_assets.py` 48 passed；全项目回归
+  （排除 task8_post_audit）2595 passed, 1 skipped, 0 failed。
+- 静态门禁：mypy 1.17.1（src/mingli_engine/liuyao，12 文件）零问题；
+  Ruff 0.12.11 全部目标文件零告警；`git diff --check` 干净。
+- 审计：用户绝对路径与用户文件二进制哈希在 src/台账/tests 零命中；
+  复核台账与证据台账无绝对化措辞；`liuyao_sources.json` 与族映射文件相对
+  基线 `c391ad8` 零 diff；四个知识台账为纯尾部追加（7/7/1/7）。
+- 独立审查结论：首轮 REQUEST CHANGES（4 个 Major：loader 类型/页码/ID 序列
+  严格性、对既有 70 条的语义签名查重、冻结前置批次顺序与计数校验、
+  theme/applicability 安全门禁），已在 `772d154` 全部修复并重跑测试；
+  复审 APPROVE WITH MINOR（1 个 Minor：门禁测试需同时覆盖 theme 与
+  applicability），已在 `c433058` 参数化修复。
+- 提交链：
+  - `89b1f25` docs(liuyao): correct classical source coverage
+  - `c35919e` data(liuyao): freeze targeted classics review
+  - `29a370c` feat(liuyao): add targeted classics promotion
+  - `3caa2f9` data(liuyao): append targeted classics evidence
+  - `73e242e` test(liuyao): activate targeted classics citations
+  - `a48ec39` test(liuyao): align wheel assets and privacy markers
+  - `772d154` fix(liuyao): harden classics promotion gates
+  - `c433058` test(liuyao): parameterize classics context gate
+- 状态：未合并、未推送、未运行 main 的 Task 8 审计；Task 7 需所有者明确
+  批准后方可执行。
