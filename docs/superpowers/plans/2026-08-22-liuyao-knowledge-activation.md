@@ -115,3 +115,24 @@ git diff da96f7451d07aa4edeaac0c9c4a68e7e910735cd -- `
 - [x] 全部任务提交完成，工作区干净。
 - [x] 设计 D5 全部不变量有测试断言且通过。
 - [x] 不推送、不合 main；汇报提交清单与测试结果。
+
+## 追加执行记录：事项类别输入与类别证据激活（2026-08-22，第二轮）
+
+- 类别映射严格取自 47 条 category_judgment 已晋升证据：9 个普通类别
+  （weather 4 条 / annual_fortune 3 条 / wealth 3 条 / career 2 条 / marriage 1 条 /
+  travel 1 条 / lost_items 3 条 / house 1 条 / agriculture 2 条），映射快照锁定在
+  `tests/unit/test_liuyao_matter_category.py`；17 个被映射证据单元逐条通过
+  既有 high_risk/safety/绝对化措辞边界复核。
+- 高风险类别（medical/legal/investment/lifespan）复用 `high_risk.REFUSAL_MESSAGE`
+  在分析前拒绝；未知类别返回输入校验错误；缺省保持 V1 `not_computed` 逐字兼容。
+- 贯通链路：CLI JSON（可选 `matter_category`）→ `LiuyaoCastRequest` →
+  `analyze_liuyao_chart(matter_category=...)` → 报告引用渲染；卦盘 JSON 不变。
+- 提交链：`0a72f19` 类别词表/门禁/索引 → `195f897` 请求模型与分析激活 →
+  `790544f` CLI 贯通与 020 契约 V1.1 注记 → `a483818` lint 预算内修正。
+- 验证：专项 82 项通过；全量（排除 task8_post_audit）2560 passed, 1 skipped,
+  0 failed；mypy 六爻+CLI 范围零问题；Ruff 维持基线 13 项既有告警（无新增）；
+  `git diff --check` 干净；六个冻结台账相对 `da96f745` 字节不变。
+- 未闭环：47 条中 30 条本轮不挂载——坟茔（0020）、从师（0030）、诉讼混合条
+  （0035）、疾病/医药/神灵病因条（0018/0019/0051/0056/0057/0058）、婚育寿夭
+  混合条（0054）、祭祀禳解条（0021）及通用方法论条（0016/0022-0026/0040/
+  0042-0045/0048/0060-0063/0065-0067）；对应事项按未知类别或高风险类别拒绝。
