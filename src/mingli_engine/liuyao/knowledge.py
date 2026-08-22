@@ -31,9 +31,12 @@ LIUYAO_PROMOTION_BATCH_ID = "liuyao_promotion_batch_20260714_001"
 LIUYAO_CURATION_BATCH_ID = "liuyao_curation_batch_20260714_001"
 LIUYAO_GAP_PROMOTION_BATCH_ID = "liuyao_promotion_batch_20260714_002"
 LIUYAO_GAP_CURATION_BATCH_ID = "liuyao_curation_batch_20260822_001"
+LIUYAO_CLASSICS_PROMOTION_BATCH_ID = "liuyao_promotion_batch_20260822_001"
+LIUYAO_CLASSICS_CURATION_BATCH_ID = "liuyao_curation_batch_20260822_002"
 _LIUYAO_REVIEW_ACTOR = "liuyao_batch_20260714_review_pipeline"
 _LIUYAO_REVIEW_DATE = "2026-08-19"
 _LIUYAO_GAP_REVIEW_DATE = "2026-08-22"
+_LIUYAO_CLASSICS_REVIEW_DATE = "2026-08-22"
 
 # Governed adjudications closing the two zero-evidence families (021 round 3).
 # Each entry binds an already-extracted batch_20260714 rule candidate (gated
@@ -553,6 +556,60 @@ def validate_liuyao_knowledge_chain(data_dir: Path | None = None) -> None:
                 raise LiuyaoKnowledgeError(
                     f"{batch.promotion_batch_id} references unknown liuyao evidence"
                 )
+    classics_prefix = "liuyao_classics_review_"
+    if any(
+        item.batch_record_id.startswith(classics_prefix)
+        for item in candidates
+    ) or any(
+        item.batch_record_id.startswith(classics_prefix)
+        for item in units
+    ):
+        ledger = load_liuyao_targeted_classics_reviews(
+            _data_path("liuyao_targeted_classics_reviews.json", data_dir)
+        )
+        record_by_id = {
+            item.record_id: item for item in ledger.promotion_records
+        }
+        for candidate in candidates:
+            if not candidate.batch_record_id.startswith(classics_prefix):
+                continue
+            record = record_by_id.get(candidate.batch_record_id)
+            if record is None:
+                raise LiuyaoKnowledgeError(
+                    f"{candidate.candidate_id} references an unknown "
+                    "liuyao classics review record"
+                )
+            if (
+                candidate.source_id != ledger.source_id
+                or candidate.source_locator != record.source_ref
+                or candidate.proposed_rule_family != record.rule_family
+                or candidate.extracted_meaning != record.summary
+                or candidate.proposed_limitations != record.limitations
+            ):
+                raise LiuyaoKnowledgeError(
+                    f"{candidate.candidate_id} diverges from its liuyao "
+                    "classics review record"
+                )
+        for unit in units:
+            if not unit.batch_record_id.startswith(classics_prefix):
+                continue
+            record = record_by_id.get(unit.batch_record_id)
+            if record is None:
+                raise LiuyaoKnowledgeError(
+                    f"{unit.evidence_id} references an unknown "
+                    "liuyao classics review record"
+                )
+            if (
+                unit.source_id != ledger.source_id
+                or unit.source_ref != record.source_ref
+                or unit.rule_family != record.rule_family
+                or unit.summary != record.summary
+                or unit.limitations != record.limitations
+            ):
+                raise LiuyaoKnowledgeError(
+                    f"{unit.evidence_id} diverges from its liuyao "
+                    "classics review record"
+                )
 
 
 @dataclass(frozen=True)
@@ -1025,5 +1082,187 @@ def promote_liuyao_family_gap_candidates(
         "generated_at": generated_at,
         "promoted_count": len(LIUYAO_GAP_PROMOTION_ADJUDICATIONS),
         "promotion_batch_id": LIUYAO_GAP_PROMOTION_BATCH_ID,
+        "total_evidence_count": len(units),
+    }
+
+
+def promote_liuyao_targeted_classics_candidates(
+    *,
+    generated_at: str,
+    data_dir: Path | None = None,
+) -> dict[str, object]:
+    """Promote the 7 adjudicated classics review records (append-only).
+
+    Reads the frozen targeted classics review ledger (a read-only input that
+    stays outside the five-ledger rollback write set), reuses the same
+    deterministic gates as the base and gap promotions, and appends the
+    candidates, review decisions, promotion batch, and evidence units. Any
+    failure rolls all five ledgers back to their pre-call bytes.
+    """
+    data_dir = Path(data_dir) if data_dir is not None else _liuyao_data_dir()
+    sources = load_liuyao_sources(data_dir)
+    candidates = list(load_liuyao_candidates(data_dir))
+    reviews = list(load_liuyao_review_decisions(data_dir))
+    batches = list(load_liuyao_promotion_batches(data_dir))
+    units = list(load_liuyao_evidence_units(data_dir))
+    batch_ids = {item.promotion_batch_id for item in batches}
+    if LIUYAO_CLASSICS_PROMOTION_BATCH_ID in batch_ids:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics promotion was already applied"
+        )
+    if LIUYAO_PROMOTION_BATCH_ID not in batch_ids:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics promotion requires the base "
+            "promotion first"
+        )
+    if LIUYAO_GAP_PROMOTION_BATCH_ID not in batch_ids:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics promotion requires the gap "
+            "promotion first"
+        )
+    ledger = load_liuyao_targeted_classics_reviews(
+        _data_path("liuyao_targeted_classics_reviews.json", data_dir)
+    )
+    if ledger.source_id not in {item.source_id for item in sources}:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics review references an unknown "
+            "liuyao source"
+        )
+    existing_text_pairs = {
+        (item.extracted_meaning, item.proposed_limitations) for item in candidates
+    }
+    seen_signatures: set[str] = set()
+    family_counts: dict[str, int] = {}
+    for record in ledger.promotion_records:
+        if record.rule_family not in LIUYAO_RULE_FAMILIES:
+            raise LiuyaoKnowledgeError(
+                "the liuyao classics review targets a family outside the "
+                "namespace"
+            )
+        if record.risk_tier != "ordinary":
+            raise LiuyaoKnowledgeError(
+                "the liuyao classics promotion only accepts ordinary records"
+            )
+        if "-" in record.source_ref:
+            raise LiuyaoKnowledgeError(
+                "the liuyao classics promotion requires a single page locator"
+            )
+        reason = _liuyao_gate_candidate(record.summary, record.limitations)
+        if reason is not None:
+            raise LiuyaoKnowledgeError(f"rejected_boundary: {reason}")
+        signature = rule_candidate_signature(
+            RuleCandidate(
+                rule_family=record.rule_family,
+                trigger_conditions=record.applicability,
+                conclusion=record.summary,
+                limitations=record.limitations,
+            )
+        )
+        if (
+            signature in seen_signatures
+            or (record.summary, record.limitations) in existing_text_pairs
+        ):
+            raise LiuyaoKnowledgeError(
+                "duplicate_batch: an equivalent liuyao candidate was already "
+                "retained"
+            )
+        seen_signatures.add(signature)
+        sequence = len(candidates) + 1
+        candidate_id = f"liuyao_candidate_batch_20260714_{sequence:04d}"
+        evidence_id = f"liuyao_evidence_batch_20260714_{sequence:04d}"
+        candidates.append(
+            LiuyaoCandidate(
+                candidate_id=candidate_id,
+                source_id=ledger.source_id,
+                source_locator=record.source_ref,
+                extracted_meaning=record.summary,
+                proposed_rule_family=record.rule_family,
+                risk_tier=record.risk_tier,
+                status="promoted",
+                proposed_limitations=record.limitations,
+                batch_record_id=record.record_id,
+            )
+        )
+        reviews.append(
+            LiuyaoReviewDecision(
+                decision_id=f"liuyao_review_{candidate_id}",
+                candidate_id=candidate_id,
+                decision="approved",
+                reviewer=_LIUYAO_REVIEW_ACTOR,
+                reviewed_at=_LIUYAO_CLASSICS_REVIEW_DATE,
+                rationale=(
+                    "Passes the deterministic liuyao promotion gates under "
+                    "the 022 targeted classics review: adjudicated single-page "
+                    "locator verified against the original page, governed "
+                    "namespace family assignment, conditionally narrowed "
+                    "wording, no prohibited absolute wording, safety and "
+                    "high-risk classifiers passed, unified without conflict, "
+                    "and no ledger-internal signature duplicate."
+                ),
+                approval_limitations=record.limitations,
+            )
+        )
+        units.append(
+            LiuyaoEvidenceUnit(
+                evidence_id=evidence_id,
+                source_id=ledger.source_id,
+                source_ref=record.source_ref,
+                theme=record.theme,
+                rule_family=record.rule_family,
+                risk_tier=record.risk_tier,
+                summary=record.summary,
+                applicability=record.applicability,
+                limitations=record.limitations,
+                batch_record_id=record.record_id,
+                curation_batch_id=LIUYAO_CLASSICS_CURATION_BATCH_ID,
+            )
+        )
+        family_counts[record.rule_family] = (
+            family_counts.get(record.rule_family, 0) + 1
+        )
+    promoted_total = len(ledger.promotion_records)
+    batches.append(
+        LiuyaoPromotionBatch(
+            promotion_batch_id=LIUYAO_CLASSICS_PROMOTION_BATCH_ID,
+            candidate_ids=tuple(
+                item.candidate_id for item in candidates[-promoted_total:]
+            ),
+            target_evidence_ids=tuple(
+                item.evidence_id for item in units[-promoted_total:]
+            ),
+            review_status="reviewed",
+            review_notes=(
+                "Governed 022 targeted classics promotion appending 7 "
+                "single-page evidence units from the frozen review ledger "
+                "inside the independent liuyao evidence namespace; evidence "
+                "only, no inference interface or status change; append-only "
+                "over the frozen base and gap batches."
+            ),
+        )
+    )
+    paths = {
+        "sources": data_dir / "liuyao_sources.json",
+        "candidates": data_dir / "liuyao_candidates.json",
+        "reviews": data_dir / "liuyao_review_decisions.json",
+        "batches": data_dir / "liuyao_promotion_batches.json",
+        "evidence": data_dir / "liuyao_evidence_units.json",
+    }
+    rollback_bytes = {path: path.read_bytes() for path in paths.values()}
+    try:
+        _write_model_list(paths["sources"], sources)
+        _write_model_list(paths["candidates"], tuple(candidates))
+        _write_model_list(paths["reviews"], tuple(reviews))
+        _write_model_list(paths["batches"], tuple(batches))
+        _write_model_list(paths["evidence"], tuple(units))
+        validate_liuyao_knowledge_chain(data_dir)
+    except Exception:
+        for path, payload in rollback_bytes.items():
+            path.write_bytes(payload)
+        raise
+    return {
+        "family_counts": dict(sorted(family_counts.items())),
+        "generated_at": generated_at,
+        "promoted_count": promoted_total,
+        "promotion_batch_id": LIUYAO_CLASSICS_PROMOTION_BATCH_ID,
         "total_evidence_count": len(units),
     }
