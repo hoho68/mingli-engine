@@ -1,8 +1,8 @@
 {
   "authorization_ledger_sha256": "a23de2ee1325029966686ca8d60bd6ee21c43084ac43291d86fc6a5833f3b1af",
   "batch_id": "batch_20260714",
-  "command_evidence_sha256": "97e9b174724f408d134d7dfb9cd0b17acf839f9b165d2ad2fd06fa3d0d50d75b",
-  "completed_at": "2026-08-22T11:48:22Z",
+  "command_evidence_sha256": "84ec7eab0cb93f2de8acc1d571afef48f6962c36918b614900fb24fec5166520",
+  "completed_at": "2026-08-22T18:07:04Z",
   "file_results_sha256": "2ad8fc1e0587cdf5597a2f9d353d9c53c0ce3078cbd52d5cd4b24ecba5cf8414",
   "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
   "model_runs_sha256": "18a1e869ecb76d254718c3bcc698f5ead66398cf3884c793f87b19dc5b462071",
@@ -53,7 +53,7 @@
     }
   ],
   "protected_legacy_knowledge_sha256": "dffdd5527eece9ae89bdea3f3df2813399c1d8b85baad557c0e6987625c8ddf5",
-  "pytest_passed_count": 2570,
+  "pytest_passed_count": 2599,
   "pytest_skipped_count": 1,
   "reviewed_files": [
     {
@@ -130,7 +130,7 @@
     },
     {
       "path": "specs/_drafts/020-liuyao-najia-engine/plan.md",
-      "sha256": "cbb458bfca1c02cec61555f17906c44de583d8dd1547e57a79c18c3e29643504"
+      "sha256": "ee0d48b39b0bd893fee36eb777700f9ee3e4465de4c959b7abacd3053a15f963"
     },
     {
       "path": "specs/_drafts/020-liuyao-najia-engine/quickstart.md",
@@ -142,7 +142,7 @@
     },
     {
       "path": "specs/_drafts/020-liuyao-najia-engine/spec.md",
-      "sha256": "34d7951dcc3a9f68151d45155ee21aa9966ed39d3f51227cedcaf256d29fd4e5"
+      "sha256": "a85210a43d61081b17de4747d193412a4c79085ede236a60a5351b5695a95db8"
     },
     {
       "path": "specs/_drafts/020-liuyao-najia-engine/tasks.md",
@@ -186,19 +186,19 @@
     },
     {
       "path": "src/mingli_engine/data/liuyao/liuyao_candidates.json",
-      "sha256": "78e889f11b5da4d82c8b2d3837619d0e86dd249d70ab424bde7e98896ce548ec"
+      "sha256": "c517fa4e5460547aa3f726eb09e39d45ea1448778863496c3912c9c223fb9a63"
     },
     {
       "path": "src/mingli_engine/data/liuyao/liuyao_evidence_units.json",
-      "sha256": "aa6de66ee13d5cb5b54f0662633cd8dbbd6aad573f9054a7918770d043839a03"
+      "sha256": "e8d0317d201a79eaa6789f97985beaa2eecc52b0bd3d807f20e87011239241bc"
     },
     {
       "path": "src/mingli_engine/data/liuyao/liuyao_promotion_batches.json",
-      "sha256": "d611af8bf0a6c9672f4ae9c46e3aaf9fd6cb665aa561585f20b5caeff3511b2e"
+      "sha256": "98a06e451db63a27115b27d7b17e969df1dba07427c6869329db5dc89076c539"
     },
     {
       "path": "src/mingli_engine/data/liuyao/liuyao_review_decisions.json",
-      "sha256": "bd86557a6a4ca056eadc1553f467a3b64dceb93fc3b8ebddf71466b79cfc3e03"
+      "sha256": "7799b4129d3fc3278c9ab4739efc94740d803766ec5fbdd708f19f6978402293"
     },
     {
       "path": "src/mingli_engine/data/liuyao/liuyao_sources.json",
@@ -254,7 +254,7 @@
     },
     {
       "path": "src/mingli_engine/liuyao/knowledge.py",
-      "sha256": "dd88d329d1b7f7c2e92992d301df4817137d892126b76234bd9ccd911b4e14f8"
+      "sha256": "7595bd5e4c7732122e6347f2b7fb22245cc00bb01fb2ff881ac1c491865cc0c7"
     },
     {
       "path": "src/mingli_engine/liuyao/najia.py",
@@ -306,7 +306,7 @@
     },
     {
       "path": "tests/contract/test_wheel_runtime_assets.py",
-      "sha256": "88b68e7d21c39717841af1acad404f02ed87b92dd897a1ed159a28f029905bf6"
+      "sha256": "8ca8091f7d6e35e7d8bf56366f9b140f86391561fc20e6a6b61c0effbb448341"
     },
     {
       "path": "tests/fixtures/liuyao/golden_vectors.json",
@@ -366,7 +366,7 @@
     },
     {
       "path": "tests/unit/test_liuyao_knowledge.py",
-      "sha256": "b8a297e375a4aadf6bed51e9386fdc195ff54c8557658cbd36d7314627d7fc94"
+      "sha256": "6e65ca7eaf98e501e63766ea9024b6e1f4ee1f65aca8881ee93d14f18caf17ca"
     },
     {
       "path": "tests/unit/test_liuyao_najia.py",
@@ -405,7 +405,7 @@
       "sha256": "69422ee1f36c64aa6516f80d2ce8f2ae524f223ce1fb54113c5c41b50ea27a61"
     }
   ],
-  "reviewed_files_sha256": "f50737568ee32482f9ec4889ef77b0b18347535821e218c625271be435b0016e",
+  "reviewed_files_sha256": "77d9a839461702aaf1df35a9947bd13b82a527cca72566b3a61199cf7cae8066",
   "schema_version": "new-material-learning-final-audit-v3",
   "task8_checked_step_count": 3,
   "task8_plan_sha256": "040d76fd5d2fc224cb2a46437989ff9c93d743ec740a3dbf6984ad3fb54e5c53"
