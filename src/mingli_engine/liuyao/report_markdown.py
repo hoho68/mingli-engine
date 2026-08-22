@@ -71,6 +71,12 @@ def render_liuyao_markdown(report: LiuyaoReport) -> str:
         lines.append("")
         for text in observation.observations:
             lines.append(f"- {text}")
+        for citation in observation.evidence_citations:
+            lines.append(
+                f"- 证据引用：{citation.evidence_id}（{citation.rule_family}，"
+                f"{citation.source_id}，{citation.source_ref}）：{citation.summary}"
+                f"；限制：{'；'.join(citation.limitations)}"
+            )
         for limitation in observation.limitations:
             lines.append(f"- 限制：{limitation}")
         lines.append(f"- 证据说明：{observation.evidence_note}")

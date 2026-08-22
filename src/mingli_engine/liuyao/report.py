@@ -49,7 +49,11 @@ def build_liuyao_report(analysis: LiuyaoAnalysis) -> LiuyaoReport:
     if not isinstance(analysis, LiuyaoAnalysis):
         raise TypeError("report requires a LiuyaoAnalysis")
     composed = " ".join(
-        f"{item.headline} {' '.join(item.observations)} {' '.join(item.limitations)}"
+        f"{item.headline} {' '.join(item.observations)} {' '.join(item.limitations)} "
+        + " ".join(
+            f"{citation.summary} {' '.join(citation.limitations)}"
+            for citation in item.evidence_citations
+        )
         for item in analysis.family_observations
     )
     normalized = unicodedata.normalize("NFKC", composed).casefold()
