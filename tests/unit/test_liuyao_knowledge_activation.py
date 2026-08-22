@@ -11,10 +11,12 @@ from mingli_engine.liuyao.knowledge import (
     load_liuyao_evidence_units,
 )
 from mingli_engine.liuyao.knowledge_activation import (
+    LiuyaoActivationSummary,
     LiuyaoEvidenceCitation,
     LiuyaoEvidenceIndex,
     build_liuyao_evidence_index,
     citation_from_unit,
+    validate_liuyao_evidence_activation,
 )
 
 EXPECTED_FAMILY_COUNTS = {
@@ -153,3 +155,43 @@ class TestBuildEvidenceIndex:
         )
         with pytest.raises(LiuyaoKnowledgeError):
             build_liuyao_evidence_index(tmp_path)
+
+
+class TestValidateEvidenceActivation:
+    def test_summary_matches_frozen_facts(self) -> None:
+        summary = validate_liuyao_evidence_activation()
+        assert isinstance(summary, LiuyaoActivationSummary)
+        assert summary.total_count == 67
+        assert dict(summary.family_counts) == EXPECTED_FAMILY_COUNTS
+        assert tuple(family for family, _ in summary.family_counts) == (
+            LIUYAO_RULE_FAMILIES
+        )
+
+    def test_summary_confirms_governance_invariants(self) -> None:
+        summary = validate_liuyao_evidence_activation()
+        assert summary.all_ordinary_risk is True
+        assert summary.all_moderate_confidence is True
+        assert summary.all_page_locators is True
+
+    def test_non_page_locator_fails_closed(self, tmp_path) -> None:
+        import json
+        from dataclasses import asdict
+        from importlib import resources
+
+        source_dir = resources.files("mingli_engine").joinpath("data/liuyao")
+        for name in (
+            "liuyao_sources.json",
+            "liuyao_candidates.json",
+            "liuyao_review_decisions.json",
+            "liuyao_promotion_batches.json",
+        ):
+            (tmp_path / name).write_bytes(source_dir.joinpath(name).read_bytes())
+        units = list(load_liuyao_evidence_units())
+        payload = asdict(units[0])
+        payload["source_ref"] = "chapter:3"
+        (tmp_path / "liuyao_evidence_units.json").write_text(
+            json.dumps([payload] + [asdict(item) for item in units[1:]], ensure_ascii=False),
+            encoding="utf-8",
+        )
+        with pytest.raises(LiuyaoKnowledgeError):
+            validate_liuyao_evidence_activation(tmp_path)

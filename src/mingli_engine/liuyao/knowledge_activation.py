@@ -124,3 +124,47 @@ def build_liuyao_evidence_index(
             for family in LIUYAO_RULE_FAMILIES
         )
     )
+
+
+@dataclass(frozen=True)
+class LiuyaoActivationSummary:
+    """Validated activation facts over the frozen evidence namespace."""
+
+    total_count: int
+    family_counts: tuple[tuple[str, int], ...]
+    all_ordinary_risk: bool
+    all_moderate_confidence: bool
+    all_page_locators: bool
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self, "family_counts", tuple(self.family_counts)
+        )
+        if self.total_count <= 0:
+            raise ValueError("activation summary requires activated evidence")
+        if not self.all_page_locators:
+            raise ValueError("activated evidence requires page-level locators")
+
+
+def validate_liuyao_evidence_activation(
+    data_dir: Path | None = None,
+) -> LiuyaoActivationSummary:
+    """Validate the activation layer and return its governed facts."""
+    index = build_liuyao_evidence_index(data_dir)
+    units = tuple(
+        unit for _, family_units in index.family_evidence for unit in family_units
+    )
+    return LiuyaoActivationSummary(
+        total_count=len(units),
+        family_counts=tuple(
+            (family, len(family_units))
+            for family, family_units in index.family_evidence
+        ),
+        all_ordinary_risk=all(unit.risk_tier == "ordinary" for unit in units),
+        all_moderate_confidence=all(
+            unit.confidence == "moderate" for unit in units
+        ),
+        all_page_locators=all(
+            unit.source_ref.startswith("page:") for unit in units
+        ),
+    )
