@@ -264,7 +264,7 @@ class LiuyaoTargetedClassicsReviewLedger:
 }
 ```
 
-把本计划“已裁定的 7 条新增证据”逐条写入 `promotion_records`。每条 limitations 至少包含：传统文献边界、不可作现实保证，以及 family 特有边界。三个 `yingqi_timing` 记录必须额外写明“不提供具体日期、不把候选条件当作必然应验”。coverage 使用 Step 2.1 的 19 段；p340-344 的争议只记录观点并存，不晋升为唯一规则。
+把本计划“已裁定的 7 条新增证据”逐条写入 `promotion_records`。每条 limitations 至少包含：传统文献边界、不可作现实保证，以及 family 特有边界。三个 `yingqi_timing` 记录必须额外写明“不提供具体日期、不把候选条件当作必然应验”。coverage 使用 Step 2.1 的 20 段；p340-344 的争议只记录观点并存，不晋升为唯一规则。
 
 - [ ] **Step 2.4：通过测试并提交**
 
@@ -722,7 +722,7 @@ Task 8 生成物必须按既有治理流程提交；post-audit 与全量回归�
 - `page:477-492` 拆分为三段：`page:477-482` support_only；`page:483`
   duplicate（有明确的原神生用、用神旺衰及待时条件，与复核记录
   `liuyao_classics_review_20260822_0004` 重复并建立关联）；
-  `page:484-492` support_only。覆盖段数 18 → 19。
+  `page:484-492` support_only。覆盖段数 18 → 20。
 - `page:524`：保持 duplicate；理由更正为用神多现（两现）取舍与证据
   `liuyao_evidence_batch_20260714_0011` 重复，删除"进退神判定"错误表述。
 - 新增语义防回归测试 3 项（p61 反吟伏吟、p483 关联 0004、p524 两现取舍），
