@@ -1,10 +1,10 @@
 # 六爻古籍定向证据补强设计（022）
 
-**Status**: Approved design baseline  
-**Date**: 2026-08-22  
-**Branch**: `codex/022-liuyao-classics-targeted-evidence`  
-**Base**: 已发布的六爻 V1 主分支提交 `c391ad88d91cbd634e8392026fa705c3cfd6586a`  
-**Scope decision**: 只补证据，不新增推理输入，不把应期升级为 `computed`
+- **Status**: Approved design baseline
+- **Date**: 2026-08-22
+- **Branch**: `codex/022-liuyao-classics-targeted-evidence`
+- **Base**: 已发布的六爻 V1 主分支提交 `c391ad88d91cbd634e8392026fa705c3cfd6586a`
+- **Scope decision**: 只补证据，不新增推理输入，不把应期升级为 `computed`
 
 ## 背景与事实基线
 
