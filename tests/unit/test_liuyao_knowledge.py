@@ -597,15 +597,21 @@ class TestTargetedClassicsPromotion:
                 data_dir=data_dir,
             )
 
+    @pytest.mark.parametrize("field", ("theme", "applicability"))
     def test_targeted_classics_gates_theme_and_applicability(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, field: str
     ) -> None:
         data_dir = _stage_gap_promoted(tmp_path)
 
         def _mutate(ledger, records) -> None:
-            object.__setattr__(
-                records[0], "theme", "占断结果必定如期"
-            )
+            if field == "theme":
+                object.__setattr__(records[0], "theme", "占断结果必定如期")
+            else:
+                object.__setattr__(
+                    records[0],
+                    "applicability",
+                    (*records[0].applicability, "结果必定如期"),
+                )
 
         _tamper_review_ledger(monkeypatch, data_dir, _mutate)
         with pytest.raises(LiuyaoKnowledgeError, match="rejected_boundary"):
