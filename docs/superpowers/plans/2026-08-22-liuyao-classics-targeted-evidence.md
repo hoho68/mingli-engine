@@ -672,7 +672,7 @@ git diff --check
 
 Task 8 生成物必须按既有治理流程提交；post-audit 与全量回归均通过后，方可推送 main。
 
-- [ ] **Step 7.3：最终声明条件**
+- [x] **Step 7.3：最终声明条件**
 
 只有以下条件全部成立，才可声明 022 完成：source 仍为 2；正式证据 77；前 70 条不变；应期 4 条引用但状态仍 degraded；API/schema 不变；全部专项、全量、Task 8、mypy、Ruff、diff 和独立审查通过；main 已按批准推送。
 
@@ -712,7 +712,7 @@ Task 8 生成物必须按既有治理流程提交；post-audit 与全量回归�
   - `772d154` fix(liuyao): harden classics promotion gates
   - `c433058` test(liuyao): parameterize classics context gate
 - 状态：所有者已批准，本地 `main` 已完成非破坏式快进合并并运行 Task 8；
-  尚未推送，Step 7.3 最终发布条件待完成。
+  已通过 HTTPS 快进推送至 GitHub，Step 7.3 最终发布条件已完成。
 
 ## 覆盖台账修正记录（2026-08-22，第二轮）
 
@@ -728,7 +728,7 @@ Task 8 生成物必须按既有治理流程提交；post-audit 与全量回归�
 - 新增语义防回归测试 3 项（p61 反吟伏吟、p483 关联 0004、p524 两现取舍），
   同时验证页码、disposition 与关键理由文本。
 - 未新增或删除证据：正式证据仍为 77 条，前 70 条不变，推理接口与 schema
-  不变；当前已合并并运行 Task 8，尚未推送。
+  不变；当前已合并、运行 Task 8 并推送。
 
 ## main 集成与 Task 8 审计记录（2026-08-23）
 
@@ -740,5 +740,5 @@ Task 8 生成物必须按既有治理流程提交；post-audit 与全量回归�
   动态审计哈希只记录在 Task 8 生成物中，避免受治理计划形成自引用更新。
 - post-audit 专项 7 passed；包含 post-audit 的全项目回归 2606 passed、
   1 skipped、0 failed；mypy、Ruff、`git diff --check` 均通过。
-- 本轮仅更新既有 Task 8 治理生成物和本执行记录；未推送远端，Step 7.3
-  仍保持未完成。
+- `main` 已通过 HTTPS 快进推送，远端与本地提交 `a4ab057` 一致；本最终状态
+  记录提交后重新运行 Task 8 并只更新治理生成物，不再修改受治理输入。
