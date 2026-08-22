@@ -178,7 +178,7 @@ def test_targeted_classics_review_is_complete_and_sanitized() -> None:
 ```python
 EXPECTED_COVERAGE = (
     ("page:27-29", "promote_and_duplicate"),
-    ("page:61", "duplicate"),
+    ("page:61", "support_only"),
     ("page:65", "duplicate"),
     ("page:69-71", "promote_and_duplicate"),
     ("page:72-81", "duplicate_and_conflict"),
@@ -186,7 +186,9 @@ EXPECTED_COVERAGE = (
     ("page:300-310", "duplicate"),
     ("page:332-339", "promote_and_duplicate"),
     ("page:340-344", "conflict_logged"),
-    ("page:477-492", "support_only"),
+    ("page:477-482", "support_only"),
+    ("page:483", "duplicate"),
+    ("page:484-492", "support_only"),
     ("page:493", "promote"),
     ("page:494-497", "support_only"),
     ("page:498", "promote"),
@@ -262,7 +264,7 @@ class LiuyaoTargetedClassicsReviewLedger:
 }
 ```
 
-把本计划“已裁定的 7 条新增证据”逐条写入 `promotion_records`。每条 limitations 至少包含：传统文献边界、不可作现实保证，以及 family 特有边界。三个 `yingqi_timing` 记录必须额外写明“不提供具体日期、不把候选条件当作必然应验”。coverage 使用 Step 2.1 的 18 段；p340-344 的争议只记录观点并存，不晋升为唯一规则。
+把本计划“已裁定的 7 条新增证据”逐条写入 `promotion_records`。每条 limitations 至少包含：传统文献边界、不可作现实保证，以及 family 特有边界。三个 `yingqi_timing` 记录必须额外写明“不提供具体日期、不把候选条件当作必然应验”。coverage 使用 Step 2.1 的 19 段；p340-344 的争议只记录观点并存，不晋升为唯一规则。
 
 - [ ] **Step 2.4：通过测试并提交**
 
@@ -685,9 +687,11 @@ Task 8 生成物必须按既有治理流程提交；post-audit 与全量回归�
   moving_line_dynamics 5、six_spirits_attachment 3、month_day_strength 4、
   void_break_state 2、yingqi_timing 4、category_judgment 47，合计 77；
   默认报告引用总数 30；`yingqi_timing.status` 仍为 `degraded`。
-- 测试结果：六爻专项 7 个测试文件 75 passed；
+- 测试结果：六爻专项 7 个测试文件 78 passed；
   `tests/contract/test_wheel_runtime_assets.py` 48 passed；全项目回归
-  （排除 task8_post_audit）2595 passed, 1 skipped, 0 failed。
+  （排除 task8_post_audit）2599 passed, 1 skipped, 0 failed。
+  （覆盖台账修正轮前：专项 75 passed、全量 2596 passed；更早记录中的
+  2595 为参数化测试加入前的过时数字，已被取代。）
 - 静态门禁：mypy 1.17.1（src/mingli_engine/liuyao，12 文件）零问题；
   Ruff 0.12.11 全部目标文件零告警；`git diff --check` 干净。
 - 审计：用户绝对路径与用户文件二进制哈希在 src/台账/tests 零命中；
@@ -709,3 +713,19 @@ Task 8 生成物必须按既有治理流程提交；post-audit 与全量回归�
   - `c433058` test(liuyao): parameterize classics context gate
 - 状态：未合并、未推送、未运行 main 的 Task 8 审计；Task 7 需所有者明确
   批准后方可执行。
+
+## 覆盖台账修正记录（2026-08-22，第二轮）
+
+- `page:61`：duplicate → support_only；该页为反伏章（反吟、伏吟），已完成
+  复核，不属于本轮三个弱族定向范围，留待后续 `moving_line_dynamics` 专项；
+  设计文档中"第 61 页飞伏"的错误表述同步更正。
+- `page:477-492` 拆分为三段：`page:477-482` support_only；`page:483`
+  duplicate（有明确的原神生用、用神旺衰及待时条件，与复核记录
+  `liuyao_classics_review_20260822_0004` 重复并建立关联）；
+  `page:484-492` support_only。覆盖段数 18 → 19。
+- `page:524`：保持 duplicate；理由更正为用神多现（两现）取舍与证据
+  `liuyao_evidence_batch_20260714_0011` 重复，删除"进退神判定"错误表述。
+- 新增语义防回归测试 3 项（p61 反吟伏吟、p483 关联 0004、p524 两现取舍），
+  同时验证页码、disposition 与关键理由文本。
+- 未新增或删除证据：正式证据仍为 77 条，前 70 条不变，推理接口与 schema
+  不变；未合并、未推送、未运行 Task 8。

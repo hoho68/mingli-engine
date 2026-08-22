@@ -153,8 +153,8 @@
     },
     {
       "source_ref": "page:61",
-      "disposition": "duplicate",
-      "rationale": "飞伏内容与前 70 条已晋升的伏神取舍记录签名等价，不重复晋升。",
+      "disposition": "support_only",
+      "rationale": "反伏章，内容为反吟、伏吟：该页已完成复核，但不属于本轮用神、世应、应期三个弱族的定向补强范围，留待后续 moving_line_dynamics 专项处理。",
       "linked_record_ids": []
     },
     {
@@ -203,9 +203,21 @@
       "linked_record_ids": []
     },
     {
-      "source_ref": "page:477-492",
+      "source_ref": "page:477-482",
       "disposition": "support_only",
       "rationale": "十八问答前段占验仅作规则适用条件佐证，无新增直接规则陈述，不晋升。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:483",
+      "disposition": "duplicate",
+      "rationale": "该页有明确的原神生用、用神旺衰及待时条件规则陈述，但与本轮复核记录 liuyao_classics_review_20260822_0004 的原神忌神作用条件规则重复，不再次晋升。",
+      "linked_record_ids": ["liuyao_classics_review_20260822_0004"]
+    },
+    {
+      "source_ref": "page:484-492",
+      "disposition": "support_only",
+      "rationale": "占验叙述仅作规则适用条件佐证，无新增直接规则陈述，不晋升。",
       "linked_record_ids": []
     },
     {
@@ -247,7 +259,7 @@
     {
       "source_ref": "page:524",
       "disposition": "duplicate",
-      "rationale": "内容与已晋升的进退神判定记录重复，不重复晋升。",
+      "rationale": "该页为用神多现（两现）取舍内容，与现有两现取舍证据 liuyao_evidence_batch_20260714_0011 重复，不重复晋升。",
       "linked_record_ids": []
     },
     {

@@ -14,7 +14,7 @@ LIUYAO_DATA_DIR = (
 
 EXPECTED_COVERAGE = (
     ("page:27-29", "promote_and_duplicate"),
-    ("page:61", "duplicate"),
+    ("page:61", "support_only"),
     ("page:65", "duplicate"),
     ("page:69-71", "promote_and_duplicate"),
     ("page:72-81", "duplicate_and_conflict"),
@@ -22,7 +22,9 @@ EXPECTED_COVERAGE = (
     ("page:300-310", "duplicate"),
     ("page:332-339", "promote_and_duplicate"),
     ("page:340-344", "conflict_logged"),
-    ("page:477-492", "support_only"),
+    ("page:477-482", "support_only"),
+    ("page:483", "duplicate"),
+    ("page:484-492", "support_only"),
     ("page:493", "promote"),
     ("page:494-497", "support_only"),
     ("page:498", "promote"),
@@ -164,3 +166,47 @@ class TestTargetedClassicsReviewLoaderStrictness:
         )
         with pytest.raises(LiuyaoKnowledgeError):
             load_liuyao_targeted_classics_reviews(variant)
+
+
+class TestCoverageSemantics:
+    """Semantic regression guards for adjudicated coverage rationales."""
+
+    def _decision(self, source_ref: str):
+        ledger = load_liuyao_targeted_classics_reviews()
+        matches = [
+            item for item in ledger.coverage if item.source_ref == source_ref
+        ]
+        assert len(matches) == 1, source_ref
+        return matches[0]
+
+    def test_page_61_is_fan_fu_chapter_not_fei_fu(self) -> None:
+        decision = self._decision("page:61")
+        assert decision.disposition == "support_only"
+        assert "反吟" in decision.rationale
+        assert "伏吟" in decision.rationale
+        assert "飞伏" not in decision.rationale
+        assert "moving_line_dynamics" in decision.rationale
+        assert decision.linked_record_ids == ()
+
+    def test_page_483_is_standalone_duplicate_of_record_0004(self) -> None:
+        decision = self._decision("page:483")
+        assert decision.disposition == "duplicate"
+        assert decision.linked_record_ids == (
+            "liuyao_classics_review_20260822_0004",
+        )
+        assert "原神" in decision.rationale
+        assert "用神旺衰" in decision.rationale
+        assert "待时" in decision.rationale
+        assert "不再次晋升" in decision.rationale
+        # the former blanket segment no longer exists
+        ledger = load_liuyao_targeted_classics_reviews()
+        assert all(
+            item.source_ref != "page:477-492" for item in ledger.coverage
+        )
+
+    def test_page_524_is_yong_shen_duo_xian_not_jin_tui_shen(self) -> None:
+        decision = self._decision("page:524")
+        assert decision.disposition == "duplicate"
+        assert "用神多现" in decision.rationale or "两现" in decision.rationale
+        assert "liuyao_evidence_batch_20260714_0011" in decision.rationale
+        assert "进退神" not in decision.rationale
