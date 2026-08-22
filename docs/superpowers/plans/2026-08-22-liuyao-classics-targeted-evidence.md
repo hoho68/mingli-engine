@@ -649,11 +649,11 @@ git status --short --branch
 
 > 本任务是硬授权门。只有所有者明确说“同意合并/推送 022”后才能执行。
 
-- [ ] **Step 7.1：将已审查分支合并到 main**
+- [x] **Step 7.1：将已审查分支合并到 main**
 
 在主工作树确认 main 干净、远端状态明确后，以非破坏方式合并；不得使用 `reset --hard` 或覆盖用户改动。
 
-- [ ] **Step 7.2：在 main 运行受控 Task 8**
+- [x] **Step 7.2：在 main 运行受控 Task 8**
 
 ```powershell
 $env:PYTHONPATH='src'
@@ -711,8 +711,8 @@ Task 8 生成物必须按既有治理流程提交；post-audit 与全量回归�
   - `a48ec39` test(liuyao): align wheel assets and privacy markers
   - `772d154` fix(liuyao): harden classics promotion gates
   - `c433058` test(liuyao): parameterize classics context gate
-- 状态：未合并、未推送、未运行 main 的 Task 8 审计；Task 7 需所有者明确
-  批准后方可执行。
+- 状态：所有者已批准，本地 `main` 已完成非破坏式快进合并并运行 Task 8；
+  尚未推送，Step 7.3 最终发布条件待完成。
 
 ## 覆盖台账修正记录（2026-08-22，第二轮）
 
@@ -728,4 +728,17 @@ Task 8 生成物必须按既有治理流程提交；post-audit 与全量回归�
 - 新增语义防回归测试 3 项（p61 反吟伏吟、p483 关联 0004、p524 两现取舍），
   同时验证页码、disposition 与关键理由文本。
 - 未新增或删除证据：正式证据仍为 77 条，前 70 条不变，推理接口与 schema
-  不变；未合并、未推送、未运行 Task 8。
+  不变；当前已合并并运行 Task 8，尚未推送。
+
+## main 集成与 Task 8 审计记录（2026-08-23）
+
+- `main` 由 `c391ad8` 非破坏式快进至 `727211b`，合并后预审计全量回归
+  2599 passed、1 skipped、7 deselected。
+- `run-task8-regression` 执行 7 条受控命令，退出码均为 0，回归前后治理
+  快照一致。
+- `finalize-task8-audit` 状态为 passed：29 个文件完成审计，0 个文件待处理；
+  动态审计哈希只记录在 Task 8 生成物中，避免受治理计划形成自引用更新。
+- post-audit 专项 7 passed；包含 post-audit 的全项目回归 2606 passed、
+  1 skipped、0 failed；mypy、Ruff、`git diff --check` 均通过。
+- 本轮仅更新既有 Task 8 治理生成物和本执行记录；未推送远端，Step 7.3
+  仍保持未完成。
