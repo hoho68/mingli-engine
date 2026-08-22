@@ -29,7 +29,8 @@ Both commands:
     {"position": 1, "yin_yang": "yang", "moving": false}
   ],
   "numbers": [7, 9],
-  "request_id": null
+  "request_id": null,
+  "matter_category": null
 }
 ```
 
@@ -40,6 +41,17 @@ Mode-specific rules:
 - `number`: `numbers` required with exactly two positive integers; `lines` must be absent; `cast_datetime` required (used for month/day states and six spirits).
 
 Unknown fields, wrong types, out-of-range values, and mode/field mismatches are rejected before any computation. `request_id` is echoed in the chart JSON but never persisted.
+
+`matter_category` (V1.1, optional): activates the `category_judgment` family in
+`liuyao-report`. Supported values are derived solely from the promoted
+category_judgment evidence of batch_20260714: `weather`, `annual_fortune`,
+`wealth`, `career`, `marriage`, `travel`, `lost_items`, `house`, `agriculture`.
+High-risk categories (`medical`, `legal`, `investment`, `lifespan`) are
+recognized only to be refused through the existing safety mechanism before any
+analysis; any other value is an input validation error. When the field is
+absent or `null`, behavior is byte-identical to V1 (`category_judgment` stays
+`not_computed`). The chart JSON of `liuyao-calculate` is unchanged and never
+echoes `matter_category`.
 
 ## Chart JSON Response (V1)
 
@@ -81,6 +93,8 @@ Field notes:
 |---|---|
 | Malformed JSON / oversize / over-deep | exit 1, `Liuyao error: invalid request envelope` |
 | Unknown or missing fields | exit 1, `Liuyao error: invalid request fields` |
+| Unsupported `matter_category` value | exit 1, `Liuyao error: unsupported matter category` |
+| High-risk `matter_category` (`medical`/`legal`/`investment`/`lifespan`) | exit 1, `Liuyao error: request cannot be answered within the safety boundary` |
 | Mode/field mismatch | exit 1, `Liuyao error: cast mode requirements are not met` |
 | Date out of range | exit 1, `Liuyao error: cast datetime is out of range` |
 | Safety or high-risk refusal | exit 1, `Liuyao error: request cannot be answered within the safety boundary` |
@@ -88,4 +102,5 @@ Field notes:
 ## Versioning
 
 - The V1 schema adds no fields silently; any future field addition requires a new schema version and a migration note.
+- V1.1 migration note: the optional `matter_category` field is additive only; requests without it (or with `null`) produce byte-identical V1 behavior, and the chart JSON schema is unchanged.
 - The contract is independent of the bazi application envelope; bazi contracts remain unchanged.

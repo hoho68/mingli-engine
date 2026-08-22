@@ -37,6 +37,10 @@ from mingli_engine.models import (
 from mingli_engine.liuyao.analysis import analyze_liuyao_chart
 from mingli_engine.liuyao.calendar_bridge import CalendarBridgeError
 from mingli_engine.liuyao.casting import CastingError, assemble_liuyao_chart
+from mingli_engine.liuyao.knowledge_activation import (
+    RefusedLiuyaoMatterCategoryError,
+    resolve_matter_category,
+)
 from mingli_engine.liuyao.najia import NajiaError
 from mingli_engine.liuyao.report import LiuyaoReportError, build_liuyao_report
 from mingli_engine.liuyao.report_markdown import render_liuyao_markdown
@@ -454,7 +458,14 @@ def _read_bounded_liuyao_json(path: Path) -> dict[str, Any]:
 
 
 def _liuyao_cast_request_from_dict(payload: dict[str, Any]) -> LiuyaoCastRequest:
-    allowed = {"cast_mode", "cast_datetime", "lines", "numbers", "request_id"}
+    allowed = {
+        "cast_mode",
+        "cast_datetime",
+        "lines",
+        "numbers",
+        "request_id",
+        "matter_category",
+    }
     if any(key not in allowed for key in payload):
         raise InputContractError("invalid request fields")
     if "cast_mode" not in payload or "cast_datetime" not in payload:
@@ -462,7 +473,10 @@ def _liuyao_cast_request_from_dict(payload: dict[str, Any]) -> LiuyaoCastRequest
     lines_raw = payload.get("lines")
     numbers_raw = payload.get("numbers")
     request_id = payload.get("request_id")
+    matter_category = payload.get("matter_category")
     if request_id is not None and not isinstance(request_id, str):
+        raise InputContractError("invalid request fields")
+    if matter_category is not None and not isinstance(matter_category, str):
         raise InputContractError("invalid request fields")
     lines: tuple[LiuyaoLineInput, ...] = ()
     if lines_raw is not None:
@@ -502,27 +516,35 @@ def _liuyao_cast_request_from_dict(payload: dict[str, Any]) -> LiuyaoCastRequest
             lines=lines,
             numbers=numbers,
             request_id=request_id,
+            matter_category=matter_category,
         )
     except (TypeError, ValueError) as error:
         message = str(error)
         if "cast_datetime must use" in message:
             raise InputContractError("invalid request fields") from None
+        if "matter category" in message:
+            raise InputContractError("unsupported matter category") from None
         raise InputContractError(
             "cast mode requirements are not met"
         ) from None
 
 
-def _liuyao_chart_from_args(args: argparse.Namespace) -> Any:
+def _liuyao_request_from_args(args: argparse.Namespace) -> LiuyaoCastRequest:
     payload = _read_bounded_liuyao_json(args.input)
-    request = _liuyao_cast_request_from_dict(payload)
-    return assemble_liuyao_chart(request)
+    return _liuyao_cast_request_from_dict(payload)
 
 
 def _liuyao_calculate(args: argparse.Namespace) -> int:
     try:
-        chart = _liuyao_chart_from_args(args)
+        request = _liuyao_request_from_args(args)
+        resolve_matter_category(request.matter_category)
+        chart = assemble_liuyao_chart(request)
     except InputContractError as error:
         return _liuyao_error(str(error))
+    except RefusedLiuyaoMatterCategoryError:
+        return _liuyao_error(
+            "request cannot be answered within the safety boundary"
+        )
     except CalendarBridgeError as error:
         return _liuyao_error(str(error))
     except (CastingError, NajiaError) as error:
@@ -533,10 +555,17 @@ def _liuyao_calculate(args: argparse.Namespace) -> int:
 
 def _liuyao_report(args: argparse.Namespace) -> int:
     try:
-        chart = _liuyao_chart_from_args(args)
-        report = build_liuyao_report(analyze_liuyao_chart(chart))
+        request = _liuyao_request_from_args(args)
+        chart = assemble_liuyao_chart(request)
+        report = build_liuyao_report(
+            analyze_liuyao_chart(chart, matter_category=request.matter_category)
+        )
     except InputContractError as error:
         return _liuyao_error(str(error))
+    except RefusedLiuyaoMatterCategoryError:
+        return _liuyao_error(
+            "request cannot be answered within the safety boundary"
+        )
     except CalendarBridgeError as error:
         return _liuyao_error(str(error))
     except (CastingError, NajiaError) as error:
