@@ -4,6 +4,10 @@
 
 **Input**: Owner-approved scope: najia-only method, three casting modes (explicit lines, time casting, number casting), independent rule-family namespace, reuse extracted batch candidates first and supplement 《增删卜易》《卜筮正宗》 later.
 
+> 2026-08-22 更正：`liuyao_source_batch_20260714_001` 已包含《增删卜易》
+> 与《卜筮正宗》。此前“后续新增来源”的表述源于目录识别不足；022 只做既有
+> 来源内的定向证据补强，不登记重复来源。
+
 ## Summary
 
 Build a deterministic, fully offline najia (六爻纳甲) calculation engine as a sibling package to the existing bazi core: explicit six-line input, time casting, and number casting all resolve to one canonical `LiuyaoChart`; a najia assembly layer computes palace, ganzhi, six-relations, shi/ying, hidden spirits, six spirits, month-command/day-hour states (kong, po); an analysis layer produces governed rule-family observations; and a boundary-guarded report layer mirrors the bazi report's disclaimer, weakening, and high-risk refusal behavior. The 64-gua najia tables are derived programmatically from first-principle trigram/palace rules and frozen by golden test vectors rather than hand-transcribed. Knowledge promotion and calibration reuse the proven batch_20260714 pipeline patterns in a separate liuyao namespace so every bazi chain, calibration baseline, and report remains bit-identical.
