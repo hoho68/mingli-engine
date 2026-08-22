@@ -341,9 +341,11 @@ def analyze_liuyao_chart(
                     headline=family.headline,
                     observations=(
                         f"所问事项类别：{gate.label}。",
-                        f"本族按事项类别激活{len(category_citations)}条"
-                        "已晋升的分类占断证据，仅呈现传统文献信号，"
-                        "不作现实预测。",
+                        (
+                            f"本族按事项类别激活{len(category_citations)}条"
+                            "已晋升的分类占断证据，仅呈现传统文献信号，"
+                            "不作现实预测。"
+                        ),
                     ),
                     limitations=config.shared_limitations,
                     evidence_note=config.evidence_activated_note,

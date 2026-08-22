@@ -26,6 +26,7 @@ def _run_cli(*args: str, payload: dict) -> subprocess.CompletedProcess:
         text=True,
         input=json.dumps(payload),
         timeout=60,
+        check=False,
     )
 
 

@@ -232,10 +232,10 @@ def _by_family(analysis: LiuyaoAnalysis) -> dict[str, LiuyaoFamilyObservation]:
 
 
 def test_cast_request_accepts_optional_matter_category() -> None:
-    base = dict(
-        cast_mode="time",
-        cast_datetime="1990-02-28T08:30",
-    )
+    base = {
+        "cast_mode": "time",
+        "cast_datetime": "1990-02-28T08:30",
+    }
     assert LiuyaoCastRequest(**base).matter_category is None
     assert (
         LiuyaoCastRequest(**base, matter_category="weather").matter_category
@@ -247,10 +247,10 @@ def test_cast_request_accepts_optional_matter_category() -> None:
 
 
 def test_cast_request_rejects_unknown_matter_category() -> None:
-    base = dict(
-        cast_mode="time",
-        cast_datetime="1990-02-28T08:30",
-    )
+    base = {
+        "cast_mode": "time",
+        "cast_datetime": "1990-02-28T08:30",
+    }
     with pytest.raises(ValueError, match="matter category"):
         LiuyaoCastRequest(**base, matter_category="astrology")
     with pytest.raises(TypeError):
@@ -283,8 +283,10 @@ def test_analysis_with_supported_category_computes_citations() -> None:
     assert observation.status == "computed"
     assert observation.observations == (
         "所问事项类别：天气晴雨。",
-        "本族按事项类别激活4条已晋升的分类占断证据，"
-        "仅呈现传统文献信号，不作现实预测。",
+        (
+            "本族按事项类别激活4条已晋升的分类占断证据，"
+            "仅呈现传统文献信号，不作现实预测。"
+        ),
     )
     assert observation.evidence_note == config.evidence_activated_note
     citation_ids = tuple(
