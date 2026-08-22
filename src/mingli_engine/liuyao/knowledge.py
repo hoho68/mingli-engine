@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from hashlib import sha256
 import json
+import re
 import unicodedata
 
 from importlib import resources
@@ -402,6 +403,13 @@ class LiuyaoTargetedClassicsReviewLedger:
 _LIUYAO_CLASSICS_REVIEW_SCHEMA = "liuyao-targeted-classics-review-v1"
 _LIUYAO_CLASSICS_REVIEW_ID = "liuyao_targeted_classics_review_20260822_001"
 _LIUYAO_CLASSICS_SOURCE_ID = "liuyao_source_batch_20260714_001"
+_LIUYAO_CLASSICS_RECORD_IDS = tuple(
+    f"liuyao_classics_review_20260822_{index:04d}" for index in range(1, 8)
+)
+_LIUYAO_CLASSICS_SINGLE_PAGE = re.compile(r"page:[1-9][0-9]*")
+_LIUYAO_CLASSICS_PAGE_RANGE = re.compile(
+    r"page:([1-9][0-9]*)(?:-([1-9][0-9]*))?"
+)
 _LIUYAO_CLASSICS_REVIEW_RECORD_FIELDS = {
     "record_id",
     "work_title",
@@ -421,6 +429,25 @@ _LIUYAO_CLASSICS_COVERAGE_FIELDS = {
     "rationale",
     "linked_record_ids",
 }
+_LIUYAO_CLASSICS_RECORD_SCALAR_FIELDS = (
+    _LIUYAO_CLASSICS_REVIEW_RECORD_FIELDS - {"applicability", "limitations"}
+)
+
+
+def _liuyao_classics_str_list(value: object) -> bool:
+    return (
+        isinstance(value, list)
+        and bool(value)
+        and all(isinstance(item, str) and item.strip() for item in value)
+    )
+
+
+def _liuyao_classics_page_range_valid(locator: str) -> bool:
+    match = _LIUYAO_CLASSICS_PAGE_RANGE.fullmatch(locator)
+    if match is None:
+        return False
+    start, end = match.groups()
+    return end is None or int(start) <= int(end)
 
 
 def load_liuyao_targeted_classics_reviews(
@@ -469,32 +496,71 @@ def load_liuyao_targeted_classics_reviews(
         raise LiuyaoKnowledgeError(
             "the liuyao targeted classics review must carry exactly 7 records"
         )
+    for item in raw_records:
+        if (
+            not isinstance(item, dict)
+            or set(item) != _LIUYAO_CLASSICS_REVIEW_RECORD_FIELDS
+        ):
+            raise LiuyaoKnowledgeError(
+                "the liuyao targeted classics review record fields are invalid"
+            )
+        if not all(
+            isinstance(item[key], str)
+            for key in _LIUYAO_CLASSICS_RECORD_SCALAR_FIELDS
+        ) or not (
+            _liuyao_classics_str_list(item["applicability"])
+            and _liuyao_classics_str_list(item["limitations"])
+        ):
+            raise LiuyaoKnowledgeError(
+                "the liuyao targeted classics review record values are invalid"
+            )
+    for item in raw_coverage:
+        if not isinstance(item, dict) or set(item) != _LIUYAO_CLASSICS_COVERAGE_FIELDS:
+            raise LiuyaoKnowledgeError(
+                "the liuyao targeted classics coverage fields are invalid"
+            )
+        if not all(
+            isinstance(item[key], str)
+            for key in ("source_ref", "disposition", "rationale")
+        ) or not (
+            isinstance(item["linked_record_ids"], list)
+            and all(
+                isinstance(link, str) and link.strip()
+                for link in item["linked_record_ids"]
+            )
+        ):
+            raise LiuyaoKnowledgeError(
+                "the liuyao targeted classics coverage values are invalid"
+            )
     try:
         records = tuple(
-            LiuyaoClassicsReviewRecord(**item)
-            for item in raw_records
-            if isinstance(item, dict)
-            and set(item) == _LIUYAO_CLASSICS_REVIEW_RECORD_FIELDS
+            LiuyaoClassicsReviewRecord(**item) for item in raw_records
         )
         coverage = tuple(
-            LiuyaoClassicsCoverageDecision(**item)
-            for item in raw_coverage
-            if isinstance(item, dict) and set(item) == _LIUYAO_CLASSICS_COVERAGE_FIELDS
+            LiuyaoClassicsCoverageDecision(**item) for item in raw_coverage
         )
     except (TypeError, ValueError) as error:
         raise LiuyaoKnowledgeError(
             "the liuyao targeted classics review ledger is invalid"
         ) from error
-    if len(records) != len(raw_records) or len(coverage) != len(raw_coverage):
+    if tuple(item.record_id for item in records) != _LIUYAO_CLASSICS_RECORD_IDS:
         raise LiuyaoKnowledgeError(
-            "the liuyao targeted classics review ledger has unknown fields"
+            "the liuyao targeted classics review record ids are not the "
+            "frozen sequence"
         )
-    record_ids = [item.record_id for item in records]
-    if len(set(record_ids)) != len(record_ids):
-        raise LiuyaoKnowledgeError(
-            "the liuyao targeted classics review record ids must be unique"
-        )
-    known_ids = set(record_ids)
+    for record in records:
+        if _LIUYAO_CLASSICS_SINGLE_PAGE.fullmatch(record.source_ref) is None:
+            raise LiuyaoKnowledgeError(
+                "the liuyao targeted classics review locator is not a "
+                "canonical single page"
+            )
+    for decision in coverage:
+        if not _liuyao_classics_page_range_valid(decision.source_ref):
+            raise LiuyaoKnowledgeError(
+                "the liuyao targeted classics coverage locator is not a "
+                "canonical page range"
+            )
+    known_ids = set(_LIUYAO_CLASSICS_RECORD_IDS)
     for decision in coverage:
         if not set(decision.linked_record_ids) <= known_ids:
             raise LiuyaoKnowledgeError(
@@ -708,6 +774,23 @@ def _liuyao_gate_candidate(
         return "the candidate text exceeds the evidence boundary"
     normalized = unicodedata.normalize("NFKC", meaning + " " + " ".join(limitations))
     folded = normalized.casefold()
+    if any(marker.casefold() in folded for marker in _PROHIBITED_ABSOLUTE_WORDING):
+        return "the candidate contains prohibited absolute wording"
+    if not safety_check(folded, disclaimer_present=True).allowed:
+        return "the candidate fails the existing safety classifier"
+    if not classify_high_risk_request(folded).allowed:
+        return "the candidate fails the existing high-risk classifier"
+    return None
+
+
+def _liuyao_gate_classics_context(
+    record: LiuyaoClassicsReviewRecord,
+) -> str | None:
+    """Gate the theme and applicability texts copied into formal evidence."""
+    texts = (record.theme, *record.applicability)
+    if any(len(item) > _TEXT_LIMIT for item in texts):
+        return "the candidate text exceeds the evidence boundary"
+    folded = unicodedata.normalize("NFKC", " ".join(texts)).casefold()
     if any(marker.casefold() in folded for marker in _PROHIBITED_ABSOLUTE_WORDING):
         return "the candidate contains prohibited absolute wording"
     if not safety_check(folded, disclaimer_present=True).allowed:
@@ -1120,6 +1203,28 @@ def promote_liuyao_targeted_classics_candidates(
             "the liuyao targeted classics promotion requires the gap "
             "promotion first"
         )
+    if tuple(item.promotion_batch_id for item in batches) != (
+        LIUYAO_PROMOTION_BATCH_ID,
+        LIUYAO_GAP_PROMOTION_BATCH_ID,
+    ):
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics promotion requires the frozen "
+            "base-then-gap batch sequence"
+        )
+    if len(candidates) != 70 or len(reviews) != 70 or len(units) != 70:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics promotion requires the frozen "
+            "70-record predecessor state"
+        )
+    if tuple(item.candidate_id for item in candidates) != tuple(
+        f"liuyao_candidate_batch_20260714_{index:04d}" for index in range(1, 71)
+    ) or tuple(item.evidence_id for item in units) != tuple(
+        f"liuyao_evidence_batch_20260714_{index:04d}" for index in range(1, 71)
+    ):
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics promotion requires the frozen "
+            "predecessor id sequence"
+        )
     ledger = load_liuyao_targeted_classics_reviews(
         _data_path("liuyao_targeted_classics_reviews.json", data_dir)
     )
@@ -1128,8 +1233,16 @@ def promote_liuyao_targeted_classics_candidates(
             "the liuyao targeted classics review references an unknown "
             "liuyao source"
         )
-    existing_text_pairs = {
-        (item.extracted_meaning, item.proposed_limitations) for item in candidates
+    existing_signatures = {
+        rule_candidate_signature(
+            RuleCandidate(
+                rule_family=item.rule_family,
+                trigger_conditions=item.applicability,
+                conclusion=item.summary,
+                limitations=item.limitations,
+            )
+        )
+        for item in units
     }
     seen_signatures: set[str] = set()
     family_counts: dict[str, int] = {}
@@ -1148,6 +1261,8 @@ def promote_liuyao_targeted_classics_candidates(
                 "the liuyao classics promotion requires a single page locator"
             )
         reason = _liuyao_gate_candidate(record.summary, record.limitations)
+        if reason is None:
+            reason = _liuyao_gate_classics_context(record)
         if reason is not None:
             raise LiuyaoKnowledgeError(f"rejected_boundary: {reason}")
         signature = rule_candidate_signature(
@@ -1158,10 +1273,7 @@ def promote_liuyao_targeted_classics_candidates(
                 limitations=record.limitations,
             )
         )
-        if (
-            signature in seen_signatures
-            or (record.summary, record.limitations) in existing_text_pairs
-        ):
+        if signature in seen_signatures or signature in existing_signatures:
             raise LiuyaoKnowledgeError(
                 "duplicate_batch: an equivalent liuyao candidate was already "
                 "retained"

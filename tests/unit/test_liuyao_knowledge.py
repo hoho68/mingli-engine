@@ -539,18 +539,76 @@ class TestTargetedClassicsPromotion:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         data_dir = _stage_gap_promoted(tmp_path)
-        existing = load_liuyao_candidates(data_dir)[0]
+        # semantically equivalent to an existing evidence unit after
+        # normalization, but not byte-identical (trailing punctuation)
+        existing = load_liuyao_evidence_units(data_dir)[0]
 
         def _mutate(ledger, records) -> None:
             object.__setattr__(
-                records[0], "summary", existing.extracted_meaning
+                records[0], "rule_family", existing.rule_family
             )
             object.__setattr__(
-                records[0], "limitations", existing.proposed_limitations
+                records[0], "summary", existing.summary + "，"
+            )
+            object.__setattr__(
+                records[0], "applicability", existing.applicability
+            )
+            object.__setattr__(
+                records[0], "limitations", existing.limitations
             )
 
         _tamper_review_ledger(monkeypatch, data_dir, _mutate)
         with pytest.raises(LiuyaoKnowledgeError, match="duplicate"):
+            promote_liuyao_targeted_classics_candidates(
+                generated_at="2026-08-22T08:00:00Z",
+                data_dir=data_dir,
+            )
+
+    def test_targeted_classics_rejects_reversed_batch_sequence(
+        self, tmp_path: Path
+    ) -> None:
+        data_dir = _stage_gap_promoted(tmp_path)
+        batches_path = data_dir / "liuyao_promotion_batches.json"
+        payload = json.loads(batches_path.read_text(encoding="utf-8"))
+        payload.reverse()
+        batches_path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        with pytest.raises(LiuyaoKnowledgeError, match="batch sequence"):
+            promote_liuyao_targeted_classics_candidates(
+                generated_at="2026-08-22T08:00:00Z",
+                data_dir=data_dir,
+            )
+
+    def test_targeted_classics_rejects_altered_predecessor_state(
+        self, tmp_path: Path
+    ) -> None:
+        data_dir = _stage_gap_promoted(tmp_path)
+        candidates_path = data_dir / "liuyao_candidates.json"
+        payload = json.loads(candidates_path.read_text(encoding="utf-8"))
+        candidates_path.write_text(
+            json.dumps(payload[:-1], ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        with pytest.raises(LiuyaoKnowledgeError, match="70-record"):
+            promote_liuyao_targeted_classics_candidates(
+                generated_at="2026-08-22T08:00:00Z",
+                data_dir=data_dir,
+            )
+
+    def test_targeted_classics_gates_theme_and_applicability(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        data_dir = _stage_gap_promoted(tmp_path)
+
+        def _mutate(ledger, records) -> None:
+            object.__setattr__(
+                records[0], "theme", "占断结果必定如期"
+            )
+
+        _tamper_review_ledger(monkeypatch, data_dir, _mutate)
+        with pytest.raises(LiuyaoKnowledgeError, match="rejected_boundary"):
             promote_liuyao_targeted_classics_candidates(
                 generated_at="2026-08-22T08:00:00Z",
                 data_dir=data_dir,

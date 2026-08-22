@@ -1,7 +1,12 @@
 import json
 from pathlib import Path
 
-from mingli_engine.liuyao.knowledge import load_liuyao_targeted_classics_reviews
+import pytest
+
+from mingli_engine.liuyao.knowledge import (
+    LiuyaoKnowledgeError,
+    load_liuyao_targeted_classics_reviews,
+)
 
 LIUYAO_DATA_DIR = (
     Path(__file__).resolve().parents[2] / "src" / "mingli_engine" / "data" / "liuyao"
@@ -79,3 +84,83 @@ def test_targeted_classics_review_carries_no_forbidden_content() -> None:
         # every promoted record is a single-page locator
         assert record.source_ref.startswith("page:")
         assert "-" not in record.source_ref
+
+
+def _write_variant(tmp_path: Path, mutate) -> Path:
+    payload = json.loads(
+        (LIUYAO_DATA_DIR / "liuyao_targeted_classics_reviews.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    mutate(payload)
+    variant = tmp_path / "variant.json"
+    variant.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return variant
+
+
+class TestTargetedClassicsReviewLoaderStrictness:
+    def test_rejects_non_list_sequence_fields(self, tmp_path: Path) -> None:
+        variant = _write_variant(
+            tmp_path,
+            lambda payload: payload["promotion_records"][0].update(
+                applicability="not-a-list"
+            ),
+        )
+        with pytest.raises(LiuyaoKnowledgeError):
+            load_liuyao_targeted_classics_reviews(variant)
+
+    def test_rejects_unknown_record_fields(self, tmp_path: Path) -> None:
+        variant = _write_variant(
+            tmp_path,
+            lambda payload: payload["promotion_records"][0].update(extra="x"),
+        )
+        with pytest.raises(LiuyaoKnowledgeError):
+            load_liuyao_targeted_classics_reviews(variant)
+
+    @pytest.mark.parametrize("locator", ("page:abc", "page:", "page:0"))
+    def test_rejects_non_canonical_single_page_locators(
+        self, tmp_path: Path, locator: str
+    ) -> None:
+        variant = _write_variant(
+            tmp_path,
+            lambda payload: payload["promotion_records"][0].update(
+                source_ref=locator
+            ),
+        )
+        with pytest.raises(LiuyaoKnowledgeError):
+            load_liuyao_targeted_classics_reviews(variant)
+
+    def test_rejects_non_frozen_record_id_sequence(self, tmp_path: Path) -> None:
+        def _swap(payload) -> None:
+            records = payload["promotion_records"]
+            records[0]["record_id"], records[1]["record_id"] = (
+                records[1]["record_id"],
+                records[0]["record_id"],
+            )
+
+        variant = _write_variant(tmp_path, _swap)
+        with pytest.raises(LiuyaoKnowledgeError):
+            load_liuyao_targeted_classics_reviews(variant)
+
+    def test_rejects_reversed_coverage_page_range(self, tmp_path: Path) -> None:
+        variant = _write_variant(
+            tmp_path,
+            lambda payload: payload["coverage"][0].update(
+                source_ref="page:29-27"
+            ),
+        )
+        with pytest.raises(LiuyaoKnowledgeError):
+            load_liuyao_targeted_classics_reviews(variant)
+
+    def test_rejects_unknown_coverage_links(self, tmp_path: Path) -> None:
+        variant = _write_variant(
+            tmp_path,
+            lambda payload: payload["coverage"][0].update(
+                linked_record_ids=["liuyao_classics_review_20260822_0099"]
+            ),
+        )
+        with pytest.raises(LiuyaoKnowledgeError):
+            load_liuyao_targeted_classics_reviews(variant)
