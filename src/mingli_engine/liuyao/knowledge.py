@@ -29,8 +29,36 @@ from mingli_engine.safety import safety_check
 
 LIUYAO_PROMOTION_BATCH_ID = "liuyao_promotion_batch_20260714_001"
 LIUYAO_CURATION_BATCH_ID = "liuyao_curation_batch_20260714_001"
+LIUYAO_GAP_PROMOTION_BATCH_ID = "liuyao_promotion_batch_20260714_002"
+LIUYAO_GAP_CURATION_BATCH_ID = "liuyao_curation_batch_20260822_001"
 _LIUYAO_REVIEW_ACTOR = "liuyao_batch_20260714_review_pipeline"
 _LIUYAO_REVIEW_DATE = "2026-08-19"
+_LIUYAO_GAP_REVIEW_DATE = "2026-08-22"
+
+# Governed adjudications closing the two zero-evidence families (021 round 3).
+# Each entry binds an already-extracted batch_20260714 rule candidate (gated
+# out_of_scope_system -> liuyao by the intake pipeline but left unpromoted by
+# the frozen keyword family map) to its governed family. The selections were
+# adjudicated by direct reading of the recorded payloads: every entry carries
+# a tranche-bound page locator and directly addresses the target family. No
+# promoted category_judgment unit is re-scoped, and no rule is fabricated.
+LIUYAO_GAP_PROMOTION_ADJUDICATIONS: tuple[tuple[str, str], ...] = (
+    (
+        # 世应爻位由八宫卦序固定口诀确定（含游魂、归魂特例）——世应结构规则
+        "batch_20260714-02ae584ac6d1-006-o022-candidate-004",
+        "shi_ying_relation",
+    ),
+    (
+        # 世应相生相合为吉、相冲相克为凶（婚姻占断语境）——世应关系动态
+        "batch_20260714-02ae584ac6d1-006-o027-candidate-002",
+        "shi_ying_relation",
+    ),
+    (
+        # 应期以用神旺衰并结合空亡、动爻状态判定——应期推断规则
+        "batch_20260714-a0787a7d7f59-013-o002-candidate-004",
+        "yingqi_timing",
+    ),
+)
 _PROHIBITED_ABSOLUTE_WORDING = (
     "必定",
     "注定",
@@ -607,4 +635,194 @@ def promote_liuyao_batch_candidates(
         "promoted_count": len(mapped),
         "registered_source_count": len(sources),
         "reviewed_candidate_count": len(liuyao_records),
+    }
+
+
+def promote_liuyao_family_gap_candidates(
+    batch_data_root: Path,
+    *,
+    generated_at: str,
+    data_dir: Path | None = None,
+) -> dict[str, object]:
+    """Promote adjudicated gap candidates into the namespace (append-only).
+
+    Closes the two zero-evidence families (``shi_ying_relation`` and
+    ``yingqi_timing``) using the governed adjudications in
+    ``LIUYAO_GAP_PROMOTION_ADJUDICATIONS``. Reuses the same deterministic
+    gates as the base promotion; existing records stay byte-identical in
+    order, and any failure rolls the five ledgers back.
+    """
+    data_dir = Path(data_dir) if data_dir is not None else _liuyao_data_dir()
+    sources = load_liuyao_sources(data_dir)
+    candidates = list(load_liuyao_candidates(data_dir))
+    reviews = list(load_liuyao_review_decisions(data_dir))
+    batches = list(load_liuyao_promotion_batches(data_dir))
+    units = list(load_liuyao_evidence_units(data_dir))
+    batch_ids = {item.promotion_batch_id for item in batches}
+    if LIUYAO_GAP_PROMOTION_BATCH_ID in batch_ids:
+        raise LiuyaoKnowledgeError("the liuyao gap promotion was already applied")
+    if LIUYAO_PROMOTION_BATCH_ID not in batch_ids:
+        raise LiuyaoKnowledgeError(
+            "the liuyao gap promotion requires the base promotion first"
+        )
+    records = load_learning_records(
+        Path(batch_data_root) / "batch_20260714_learning_records.json"
+    )
+    file_results = load_file_results(
+        Path(batch_data_root) / "batch_20260714_file_results.json"
+    )
+    result_id_by_path = {
+        item.relative_path: item.file_result_id for item in file_results.records
+    }
+    source_id_by_result_id = {
+        item.batch_file_result_id: item.source_id for item in sources
+    }
+    record_by_id = {item.record_id: item for item in records.records}
+    promoted_record_ids = {item.batch_record_id for item in candidates}
+    # The base ledger stores no trigger conditions on candidates, so the
+    # cross-ledger duplicate check compares conclusion+limitations against the
+    # existing rows, while full signatures dedupe the new gap rows themselves.
+    base_text_pairs = {
+        (item.extracted_meaning, item.proposed_limitations) for item in candidates
+    }
+    seen_signatures: set[str] = set()
+    family_counts: dict[str, int] = {}
+    for record_id, family in LIUYAO_GAP_PROMOTION_ADJUDICATIONS:
+        if family not in LIUYAO_RULE_FAMILIES:
+            raise LiuyaoKnowledgeError(
+                "the liuyao gap adjudication targets a family outside the namespace"
+            )
+        record = record_by_id.get(record_id)
+        if record is None:
+            raise LiuyaoKnowledgeError(
+                f"the liuyao gap adjudication references an unknown record {record_id}"
+            )
+        if record.kind != "rule_candidate" or record.mapping_outcome != "liuyao":
+            raise LiuyaoKnowledgeError(
+                f"{record_id} is not a liuyao-mapped rule candidate"
+            )
+        if record_id in promoted_record_ids:
+            raise LiuyaoKnowledgeError(f"{record_id} is already promoted")
+        meaning = record.payload["conclusion"]
+        limitations = tuple(record.payload["limitations"])
+        reason = _liuyao_gate_candidate(meaning, limitations)
+        if reason is not None:
+            raise LiuyaoKnowledgeError(f"rejected_boundary: {reason}")
+        signature = rule_candidate_signature(
+            RuleCandidate(
+                rule_family=family,
+                trigger_conditions=tuple(record.payload["trigger_conditions"]),
+                conclusion=meaning,
+                limitations=limitations,
+            )
+        )
+        if signature in seen_signatures or (meaning, limitations) in base_text_pairs:
+            raise LiuyaoKnowledgeError(
+                "duplicate_batch: an equivalent liuyao candidate was already retained"
+            )
+        seen_signatures.add(signature)
+        source_id = source_id_by_result_id.get(
+            result_id_by_path.get(record.relative_path, "")
+        )
+        if source_id is None:
+            raise LiuyaoKnowledgeError(
+                f"{record_id} maps to no registered liuyao source"
+            )
+        sequence = len(candidates) + 1
+        candidate_id = f"liuyao_candidate_batch_20260714_{sequence:04d}"
+        evidence_id = f"liuyao_evidence_batch_20260714_{sequence:04d}"
+        source_locator = record.source_locators[0]
+        candidates.append(
+            LiuyaoCandidate(
+                candidate_id=candidate_id,
+                source_id=source_id,
+                source_locator=source_locator,
+                extracted_meaning=meaning,
+                proposed_rule_family=family,
+                risk_tier=record.risk_tier,
+                status="promoted",
+                proposed_limitations=limitations,
+                batch_record_id=record.record_id,
+            )
+        )
+        reviews.append(
+            LiuyaoReviewDecision(
+                decision_id=f"liuyao_review_{candidate_id}",
+                candidate_id=candidate_id,
+                decision="approved",
+                reviewer=_LIUYAO_REVIEW_ACTOR,
+                reviewed_at=_LIUYAO_GAP_REVIEW_DATE,
+                rationale=(
+                    "Passes the deterministic liuyao promotion gates under the "
+                    "021 round-3 gap adjudication: tranche-bound page locators, "
+                    "governed namespace family assignment recorded in "
+                    "LIUYAO_GAP_PROMOTION_ADJUDICATIONS, no prohibited absolute "
+                    "wording, safety and high-risk classifiers passed, and no "
+                    "ledger-internal signature duplicate."
+                ),
+                approval_limitations=limitations,
+            )
+        )
+        units.append(
+            LiuyaoEvidenceUnit(
+                evidence_id=evidence_id,
+                source_id=source_id,
+                source_ref=source_locator,
+                theme=record.payload["rule_family"],
+                rule_family=family,
+                risk_tier=record.risk_tier,
+                summary=meaning,
+                applicability=tuple(record.payload["trigger_conditions"]),
+                limitations=limitations,
+                batch_record_id=record.record_id,
+                curation_batch_id=LIUYAO_GAP_CURATION_BATCH_ID,
+            )
+        )
+        family_counts[family] = family_counts.get(family, 0) + 1
+    new_candidate_ids = tuple(
+        item.candidate_id for item in candidates[-len(LIUYAO_GAP_PROMOTION_ADJUDICATIONS):]
+    )
+    new_evidence_ids = tuple(
+        item.evidence_id for item in units[-len(LIUYAO_GAP_PROMOTION_ADJUDICATIONS):]
+    )
+    batches.append(
+        LiuyaoPromotionBatch(
+            promotion_batch_id=LIUYAO_GAP_PROMOTION_BATCH_ID,
+            candidate_ids=new_candidate_ids,
+            target_evidence_ids=new_evidence_ids,
+            review_status="reviewed",
+            review_notes=(
+                "Governed 021 round-3 gap promotion closing the zero-evidence "
+                "families shi_ying_relation and yingqi_timing inside the "
+                "independent liuyao evidence namespace; append-only over the "
+                "frozen base batch."
+            ),
+        )
+    )
+    paths = {
+        "sources": data_dir / "liuyao_sources.json",
+        "candidates": data_dir / "liuyao_candidates.json",
+        "reviews": data_dir / "liuyao_review_decisions.json",
+        "batches": data_dir / "liuyao_promotion_batches.json",
+        "evidence": data_dir / "liuyao_evidence_units.json",
+    }
+    rollback_bytes = {path: path.read_bytes() for path in paths.values()}
+    try:
+        _write_model_list(paths["sources"], sources)
+        _write_model_list(paths["candidates"], tuple(candidates))
+        _write_model_list(paths["reviews"], tuple(reviews))
+        _write_model_list(paths["batches"], tuple(batches))
+        _write_model_list(paths["evidence"], tuple(units))
+        validate_liuyao_knowledge_chain(data_dir)
+    except Exception:
+        for path, payload in rollback_bytes.items():
+            path.write_bytes(payload)
+        raise
+    return {
+        "batch_id": "batch_20260714",
+        "family_counts": dict(sorted(family_counts.items())),
+        "generated_at": generated_at,
+        "promoted_count": len(LIUYAO_GAP_PROMOTION_ADJUDICATIONS),
+        "promotion_batch_id": LIUYAO_GAP_PROMOTION_BATCH_ID,
+        "total_evidence_count": len(units),
     }

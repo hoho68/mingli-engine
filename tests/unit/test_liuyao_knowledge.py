@@ -12,6 +12,7 @@ from mingli_engine.liuyao.knowledge import (
     load_liuyao_promotion_batches,
     load_liuyao_review_decisions,
     promote_liuyao_batch_candidates,
+    promote_liuyao_family_gap_candidates,
     validate_liuyao_knowledge_chain,
 )
 
@@ -143,3 +144,179 @@ def test_promote_rolls_back_on_validation_failure(
     assert {
         name: (data_dir / name).read_bytes() for name in LEDGER_NAMES
     } == before
+
+
+def _stage_promoted(tmp_path: Path) -> Path:
+    data_dir = tmp_path / "liuyao"
+    data_dir.mkdir()
+    for name in LEDGER_NAMES:
+        (data_dir / name).write_bytes((LIUYAO_DATA_DIR / name).read_bytes())
+    return data_dir
+
+
+class TestGapPromotion:
+    """Append-only governed promotion closing the two zero-evidence families."""
+
+    def test_gap_promotion_appends_three_units(self, tmp_path: Path) -> None:
+        data_dir = _stage_promoted(tmp_path)
+        base_candidates = load_liuyao_candidates(data_dir)
+        summary = promote_liuyao_family_gap_candidates(
+            BATCH_DATA_ROOT,
+            generated_at="2026-08-22T02:00:00Z",
+            data_dir=data_dir,
+        )
+        assert summary["promoted_count"] == 3
+        assert summary["family_counts"] == {
+            "shi_ying_relation": 2,
+            "yingqi_timing": 1,
+        }
+        candidates = load_liuyao_candidates(data_dir)
+        reviews = load_liuyao_review_decisions(data_dir)
+        batches = load_liuyao_promotion_batches(data_dir)
+        units = load_liuyao_evidence_units(data_dir)
+        assert len(candidates) == len(base_candidates) + 3 == 70
+        assert len(reviews) == 70
+        assert len(units) == 70
+        assert len(batches) == 2
+        # append-only: the frozen base segment is byte-order identical
+        assert tuple(item.candidate_id for item in candidates[:67]) == tuple(
+            item.candidate_id for item in base_candidates
+        )
+        new_candidates = candidates[67:]
+        assert tuple(item.candidate_id for item in new_candidates) == (
+            "liuyao_candidate_batch_20260714_0068",
+            "liuyao_candidate_batch_20260714_0069",
+            "liuyao_candidate_batch_20260714_0070",
+        )
+        assert tuple(item.proposed_rule_family for item in new_candidates) == (
+            "shi_ying_relation",
+            "shi_ying_relation",
+            "yingqi_timing",
+        )
+        new_units = units[67:]
+        assert tuple(item.evidence_id for item in new_units) == (
+            "liuyao_evidence_batch_20260714_0068",
+            "liuyao_evidence_batch_20260714_0069",
+            "liuyao_evidence_batch_20260714_0070",
+        )
+        assert tuple(item.rule_family for item in new_units) == (
+            "shi_ying_relation",
+            "shi_ying_relation",
+            "yingqi_timing",
+        )
+        for unit in new_units:
+            assert unit.risk_tier == "ordinary"
+            assert unit.confidence == "moderate"
+            assert unit.source_ref.startswith("page:")
+            assert unit.source_id.startswith("liuyao_source_batch_20260714_")
+        validate_liuyao_knowledge_chain(data_dir)
+
+    def test_gap_promotion_is_append_only_and_idempotent(
+        self, tmp_path: Path
+    ) -> None:
+        data_dir = _stage_promoted(tmp_path)
+        promote_liuyao_family_gap_candidates(
+            BATCH_DATA_ROOT,
+            generated_at="2026-08-22T02:00:00Z",
+            data_dir=data_dir,
+        )
+        with pytest.raises(LiuyaoKnowledgeError, match="already applied"):
+            promote_liuyao_family_gap_candidates(
+                BATCH_DATA_ROOT,
+                generated_at="2026-08-22T03:00:00Z",
+                data_dir=data_dir,
+            )
+
+    def test_gap_promotion_requires_the_base_batch(self, tmp_path: Path) -> None:
+        data_dir = _stage(tmp_path)
+        with pytest.raises(LiuyaoKnowledgeError, match="base promotion"):
+            promote_liuyao_family_gap_candidates(
+                BATCH_DATA_ROOT,
+                generated_at="2026-08-22T02:00:00Z",
+                data_dir=data_dir,
+            )
+
+    def test_gap_promotion_rejects_unknown_records(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        data_dir = _stage_promoted(tmp_path)
+        monkeypatch.setattr(
+            knowledge,
+            "LIUYAO_GAP_PROMOTION_ADJUDICATIONS",
+            (("batch_20260714-bogus-record", "shi_ying_relation"),),
+        )
+        with pytest.raises(LiuyaoKnowledgeError, match="unknown"):
+            promote_liuyao_family_gap_candidates(
+                BATCH_DATA_ROOT,
+                generated_at="2026-08-22T02:00:00Z",
+                data_dir=data_dir,
+            )
+
+    def test_gap_promotion_rejects_already_promoted_records(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        data_dir = _stage_promoted(tmp_path)
+        monkeypatch.setattr(
+            knowledge,
+            "LIUYAO_GAP_PROMOTION_ADJUDICATIONS",
+            (
+                (
+                    "batch_20260714-02ae584ac6d1-006-o001-candidate-002",
+                    "shi_ying_relation",
+                ),
+            ),
+        )
+        with pytest.raises(LiuyaoKnowledgeError, match="already promoted"):
+            promote_liuyao_family_gap_candidates(
+                BATCH_DATA_ROOT,
+                generated_at="2026-08-22T02:00:00Z",
+                data_dir=data_dir,
+            )
+
+    def test_gap_promotion_rolls_back_on_validation_failure(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        data_dir = _stage_promoted(tmp_path)
+        before = {name: (data_dir / name).read_bytes() for name in LEDGER_NAMES}
+
+        def _boom(data_dir=None):
+            raise LiuyaoKnowledgeError("forced chain failure")
+
+        monkeypatch.setattr(knowledge, "validate_liuyao_knowledge_chain", _boom)
+        with pytest.raises(LiuyaoKnowledgeError, match="forced chain failure"):
+            promote_liuyao_family_gap_candidates(
+                BATCH_DATA_ROOT,
+                generated_at="2026-08-22T02:00:00Z",
+                data_dir=data_dir,
+            )
+        assert {
+            name: (data_dir / name).read_bytes() for name in LEDGER_NAMES
+        } == before
+
+    def test_gap_promotion_never_leaks_intake_paths_or_hashes(
+        self, tmp_path: Path
+    ) -> None:
+        data_dir = _stage_promoted(tmp_path)
+        promote_liuyao_family_gap_candidates(
+            BATCH_DATA_ROOT,
+            generated_at="2026-08-22T02:00:00Z",
+            data_dir=data_dir,
+        )
+        manifest = json.loads(
+            (BATCH_DATA_ROOT / "batch_20260714_manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        forbidden = [manifest["intake_root"]] + [
+            item["relative_path"] for item in manifest["files"]
+        ] + [item["sha256"] for item in manifest["files"]] + [
+            item["sha256"].lower() for item in manifest["files"]
+        ]
+        payload = json.dumps(
+            [
+                json.loads((data_dir / name).read_text(encoding="utf-8"))
+                for name in LEDGER_NAMES
+            ],
+            ensure_ascii=False,
+        )
+        assert not any(value and value in payload for value in forbidden)
