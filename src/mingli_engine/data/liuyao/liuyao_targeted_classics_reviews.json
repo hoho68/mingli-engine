@@ -1,0 +1,260 @@
+{
+  "schema_version": "liuyao-targeted-classics-review-v1",
+  "review_id": "liuyao_targeted_classics_review_20260822_001",
+  "source_id": "liuyao_source_batch_20260714_001",
+  "promotion_records": [
+    {
+      "record_id": "liuyao_classics_review_20260822_0001",
+      "work_title": "增删卜易",
+      "source_ref": "page:28",
+      "theme": "原神忌神仇神取用",
+      "rule_family": "yong_shen_selection",
+      "risk_tier": "ordinary",
+      "confidence": "moderate",
+      "summary": "确定事项用神后，生用神者为原神，克用神者为忌神，克制原神并生助忌神者为仇神；仍须结合各爻旺衰与动静。",
+      "applicability": [
+        "已按题意确定事项用神的六爻卦例",
+        "需要梳理原神、忌神、仇神关系的分析场景"
+      ],
+      "limitations": [
+        "传统文献规则陈述，仅作文化解读与自我反思材料",
+        "不构成对现实结果的保证，不替代专业意见",
+        "原忌仇神是否实际起作用仍须结合旺衰、动静与空破条件判断"
+      ],
+      "conflict_status": "no_conflict"
+    },
+    {
+      "record_id": "liuyao_classics_review_20260822_0002",
+      "work_title": "增删卜易",
+      "source_ref": "page:71",
+      "theme": "应期综合观察条件",
+      "rule_family": "yingqi_timing",
+      "risk_tier": "ordinary",
+      "confidence": "moderate",
+      "summary": "应期观察综合静动、旺衰、墓绝、冲合、月破、旬空及其解除条件；只保留候选信号，不直接给出日期。",
+      "applicability": [
+        "需要整理应期候选信号的六爻卦例",
+        "已具备装卦与月日信息的分析场景"
+      ],
+      "limitations": [
+        "传统文献规则陈述，仅作文化解读与自我反思材料",
+        "不构成对现实结果的保证，不替代专业意见",
+        "不提供具体日期，不把候选条件当作必然应验"
+      ],
+      "conflict_status": "no_conflict"
+    },
+    {
+      "record_id": "liuyao_classics_review_20260822_0003",
+      "work_title": "卜筮正宗",
+      "source_ref": "page:332",
+      "theme": "世应分主宾",
+      "rule_family": "shi_ying_relation",
+      "risk_tier": "ordinary",
+      "confidence": "moderate",
+      "summary": "涉及自身与他人时，世爻表自身、应爻表对方；具体关系人仍按题意选相应六亲为用神，不能把所有他人一概只看应爻。",
+      "applicability": [
+        "占问涉及自身与他人关系的六爻卦例",
+        "需要区分世应角色与六亲用神的分析场景"
+      ],
+      "limitations": [
+        "传统文献规则陈述，仅作文化解读与自我反思材料",
+        "不构成对现实结果的保证，不替代专业意见",
+        "具体关系人仍以相应六亲为用神，世应只表示主宾位置"
+      ],
+      "conflict_status": "no_conflict"
+    },
+    {
+      "record_id": "liuyao_classics_review_20260822_0004",
+      "work_title": "卜筮正宗",
+      "source_ref": "page:333",
+      "theme": "原神忌神作用条件",
+      "rule_family": "yong_shen_selection",
+      "risk_tier": "ordinary",
+      "confidence": "moderate",
+      "summary": "原神、忌神是否实际起作用必须结合用神显伏旺衰、空破、日冲、墓绝、化退及仇神克制等条件。",
+      "applicability": [
+        "已确定用神并需评估原神、忌神作用的六爻卦例",
+        "需要综合显伏、旺衰与空破状态的分析场景"
+      ],
+      "limitations": [
+        "传统文献规则陈述，仅作文化解读与自我反思材料",
+        "不构成对现实结果的保证，不替代专业意见",
+        "作用判断须逐爻核实显伏、空破、日冲、墓绝与化退条件"
+      ],
+      "conflict_status": "no_conflict"
+    },
+    {
+      "record_id": "liuyao_classics_review_20260822_0005",
+      "work_title": "卜筮正宗",
+      "source_ref": "page:493",
+      "theme": "旬空虚实之别",
+      "rule_family": "yingqi_timing",
+      "risk_tier": "ordinary",
+      "confidence": "moderate",
+      "summary": "旬空区分受支持而暂待条件的空与无生受克的真空；仅前者可作为后续可能起作用的候选信号。",
+      "applicability": [
+        "卦中存在旬空爻且需评估其后续作用的六爻卦例",
+        "需要区分暂待之空与真空的分析场景"
+      ],
+      "limitations": [
+        "传统文献规则陈述，仅作文化解读与自我反思材料",
+        "不构成对现实结果的保证，不替代专业意见",
+        "不提供具体日期，不把候选条件当作必然应验"
+      ],
+      "conflict_status": "no_conflict"
+    },
+    {
+      "record_id": "liuyao_classics_review_20260822_0006",
+      "work_title": "卜筮正宗",
+      "source_ref": "page:498",
+      "theme": "月破出破条件",
+      "rule_family": "yingqi_timing",
+      "risk_tier": "ordinary",
+      "confidence": "moderate",
+      "summary": "月破爻若发动且获生扶，可把出破、填实、合破作为后续候选条件；安静且受克无生者不据此生成时点。",
+      "applicability": [
+        "卦中存在月破爻且需评估其后续作用的六爻卦例",
+        "需要区分可出破与不可出破情形的分析场景"
+      ],
+      "limitations": [
+        "传统文献规则陈述，仅作文化解读与自我反思材料",
+        "不构成对现实结果的保证，不替代专业意见",
+        "不提供具体日期，不把候选条件当作必然应验"
+      ],
+      "conflict_status": "no_conflict"
+    },
+    {
+      "record_id": "liuyao_classics_review_20260822_0007",
+      "work_title": "卜筮正宗",
+      "source_ref": "page:501",
+      "theme": "伏神取用条件",
+      "rule_family": "yong_shen_selection",
+      "risk_tier": "ordinary",
+      "confidence": "moderate",
+      "summary": "用神不现时，伏神须获日月生扶、飞神衰弱或受制，且自身不陷休囚空破墓绝，方可取用。",
+      "applicability": [
+        "用神不上卦而需考察伏神的六爻卦例",
+        "需要评估伏神是否可取用的分析场景"
+      ],
+      "limitations": [
+        "传统文献规则陈述，仅作文化解读与自我反思材料",
+        "不构成对现实结果的保证，不替代专业意见",
+        "伏神取用须同时满足日月生扶、飞神衰弱或受制与自身不陷休囚空破墓绝"
+      ],
+      "conflict_status": "no_conflict"
+    }
+  ],
+  "coverage": [
+    {
+      "source_ref": "page:27-29",
+      "disposition": "promote_and_duplicate",
+      "rationale": "用神、原神、忌神、仇神章：p28 精确页级规则晋升为 0001；其余粗粒度用神取舍内容已在前 70 条证据中，不重复晋升。",
+      "linked_record_ids": ["liuyao_classics_review_20260822_0001"]
+    },
+    {
+      "source_ref": "page:61",
+      "disposition": "duplicate",
+      "rationale": "飞伏内容与前 70 条已晋升的伏神取舍记录签名等价，不重复晋升。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:65",
+      "disposition": "duplicate",
+      "rationale": "旬空判定内容与前 70 条已晋升的旬空判定记录签名等价，不重复晋升。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:69-71",
+      "disposition": "promote_and_duplicate",
+      "rationale": "生克墓绝与各门类题头中，生旺墓绝等粗粒度记录已晋升；p71 应期总注的精确页级观察晋升为 0002。",
+      "linked_record_ids": ["liuyao_classics_review_20260822_0002"]
+    },
+    {
+      "source_ref": "page:72-81",
+      "disposition": "duplicate_and_conflict",
+      "rationale": "游魂归魂、月破、飞伏神、进退神内容与已晋升记录重复；个别表述差异按观点并存登记，不晋升为唯一规则。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:133-291",
+      "disposition": "support_only",
+      "rationale": "分类占例仅用于核对规则适用条件与反例，无直接规则陈述，不晋升。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:300-310",
+      "disposition": "duplicate",
+      "rationale": "启蒙节要、用神不上卦、日辰、旬空、月破等定例与前 70 条已晋升记录重复，不重复晋升。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:332-339",
+      "disposition": "promote_and_duplicate",
+      "rationale": "用神分类、原忌仇神、飞伏、月破、旬空、进退神章：p332 世应主宾晋升为 0003，p333 原忌作用条件晋升为 0004；其余内容与已晋升记录重复。",
+      "linked_record_ids": [
+        "liuyao_classics_review_20260822_0003",
+        "liuyao_classics_review_20260822_0004"
+      ]
+    },
+    {
+      "source_ref": "page:340-344",
+      "disposition": "conflict_logged",
+      "rationale": "流派辨析段存在观点分歧，只记录观点并存，不晋升为唯一规则。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:477-492",
+      "disposition": "support_only",
+      "rationale": "十八问答前段占验仅作规则适用条件佐证，无新增直接规则陈述，不晋升。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:493",
+      "disposition": "promote",
+      "rationale": "旬空虚实之别的精确页级规则晋升为 0005。",
+      "linked_record_ids": ["liuyao_classics_review_20260822_0005"]
+    },
+    {
+      "source_ref": "page:494-497",
+      "disposition": "support_only",
+      "rationale": "占验叙述仅作旬空规则佐证，无新增直接规则陈述，不晋升。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:498",
+      "disposition": "promote",
+      "rationale": "月破出破条件的精确页级规则晋升为 0006。",
+      "linked_record_ids": ["liuyao_classics_review_20260822_0006"]
+    },
+    {
+      "source_ref": "page:499-500",
+      "disposition": "support_only",
+      "rationale": "占验叙述仅作月破规则佐证，无新增直接规则陈述，不晋升。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:501",
+      "disposition": "promote",
+      "rationale": "伏神取用条件的精确页级规则晋升为 0007。",
+      "linked_record_ids": ["liuyao_classics_review_20260822_0007"]
+    },
+    {
+      "source_ref": "page:502-523",
+      "disposition": "support_only",
+      "rationale": "十八问答后段占验仅作规则适用条件佐证，无新增直接规则陈述，不晋升。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:524",
+      "disposition": "duplicate",
+      "rationale": "内容与已晋升的进退神判定记录重复，不重复晋升。",
+      "linked_record_ids": []
+    },
+    {
+      "source_ref": "page:525-526",
+      "disposition": "support_only",
+      "rationale": "末段占验仅作规则佐证，无新增直接规则陈述，不晋升。",
+      "linked_record_ids": []
+    }
+  ]
+}

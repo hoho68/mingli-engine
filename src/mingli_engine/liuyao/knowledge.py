@@ -305,6 +305,207 @@ def load_liuyao_evidence_units(
     return _load_model_list("liuyao_evidence_units.json", LiuyaoEvidenceUnit, data_dir)
 
 
+@dataclass(frozen=True)
+class LiuyaoClassicsReviewRecord:
+    record_id: str
+    work_title: str
+    source_ref: str
+    theme: str
+    rule_family: str
+    risk_tier: str
+    confidence: str
+    summary: str
+    applicability: tuple[str, ...]
+    limitations: tuple[str, ...]
+    conflict_status: str
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "applicability", tuple(self.applicability))
+        object.__setattr__(self, "limitations", tuple(self.limitations))
+        for value, field_name in (
+            (self.record_id, "record_id"),
+            (self.work_title, "work_title"),
+            (self.source_ref, "source_ref"),
+            (self.theme, "theme"),
+            (self.summary, "summary"),
+            (self.conflict_status, "conflict_status"),
+        ):
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"liuyao classics review {field_name} is required")
+        if not self.source_ref.startswith("page:") or "-" in self.source_ref:
+            raise ValueError("liuyao classics review locator must be a single page")
+        if self.rule_family not in LIUYAO_RULE_FAMILIES:
+            raise ValueError("liuyao classics review family is outside the namespace")
+        if self.risk_tier != "ordinary":
+            raise ValueError("liuyao classics review risk tier must be ordinary")
+        if self.confidence != "moderate":
+            raise ValueError("liuyao classics review confidence must be moderate")
+        if not self.applicability or not self.limitations:
+            raise ValueError(
+                "liuyao classics review requires applicability and limitations"
+            )
+
+
+@dataclass(frozen=True)
+class LiuyaoClassicsCoverageDecision:
+    source_ref: str
+    disposition: str
+    rationale: str
+    linked_record_ids: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self, "linked_record_ids", tuple(self.linked_record_ids)
+        )
+        for value, field_name in (
+            (self.source_ref, "source_ref"),
+            (self.disposition, "disposition"),
+            (self.rationale, "rationale"),
+        ):
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(
+                    f"liuyao classics coverage {field_name} is required"
+                )
+        if not self.source_ref.startswith("page:"):
+            raise ValueError(
+                "liuyao classics coverage locator must reference a page range"
+            )
+        if self.disposition not in {
+            "promote",
+            "promote_and_duplicate",
+            "duplicate",
+            "duplicate_and_conflict",
+            "support_only",
+            "conflict_logged",
+        }:
+            raise ValueError("liuyao classics coverage disposition is invalid")
+
+
+@dataclass(frozen=True)
+class LiuyaoTargetedClassicsReviewLedger:
+    schema_version: str
+    review_id: str
+    source_id: str
+    promotion_records: tuple[LiuyaoClassicsReviewRecord, ...]
+    coverage: tuple[LiuyaoClassicsCoverageDecision, ...]
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self, "promotion_records", tuple(self.promotion_records)
+        )
+        object.__setattr__(self, "coverage", tuple(self.coverage))
+
+
+_LIUYAO_CLASSICS_REVIEW_SCHEMA = "liuyao-targeted-classics-review-v1"
+_LIUYAO_CLASSICS_REVIEW_ID = "liuyao_targeted_classics_review_20260822_001"
+_LIUYAO_CLASSICS_SOURCE_ID = "liuyao_source_batch_20260714_001"
+_LIUYAO_CLASSICS_REVIEW_RECORD_FIELDS = {
+    "record_id",
+    "work_title",
+    "source_ref",
+    "theme",
+    "rule_family",
+    "risk_tier",
+    "confidence",
+    "summary",
+    "applicability",
+    "limitations",
+    "conflict_status",
+}
+_LIUYAO_CLASSICS_COVERAGE_FIELDS = {
+    "source_ref",
+    "disposition",
+    "rationale",
+    "linked_record_ids",
+}
+
+
+def load_liuyao_targeted_classics_reviews(
+    path: str | Path | None = None,
+) -> LiuyaoTargetedClassicsReviewLedger:
+    ledger_path = (
+        Path(path)
+        if path is not None
+        else _data_path("liuyao_targeted_classics_reviews.json")
+    )
+    try:
+        raw = json.loads(ledger_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics review ledger is unavailable"
+        ) from error
+    if not isinstance(raw, dict) or set(raw) != {
+        "schema_version",
+        "review_id",
+        "source_id",
+        "promotion_records",
+        "coverage",
+    }:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics review root fields are invalid"
+        )
+    if raw["schema_version"] != _LIUYAO_CLASSICS_REVIEW_SCHEMA:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics review schema version is invalid"
+        )
+    if raw["review_id"] != _LIUYAO_CLASSICS_REVIEW_ID:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics review id is invalid"
+        )
+    if raw["source_id"] != _LIUYAO_CLASSICS_SOURCE_ID:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics review references an unknown source"
+        )
+    raw_records = raw["promotion_records"]
+    raw_coverage = raw["coverage"]
+    if not isinstance(raw_records, list) or not isinstance(raw_coverage, list):
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics review sections are invalid"
+        )
+    if len(raw_records) != 7:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics review must carry exactly 7 records"
+        )
+    try:
+        records = tuple(
+            LiuyaoClassicsReviewRecord(**item)
+            for item in raw_records
+            if isinstance(item, dict)
+            and set(item) == _LIUYAO_CLASSICS_REVIEW_RECORD_FIELDS
+        )
+        coverage = tuple(
+            LiuyaoClassicsCoverageDecision(**item)
+            for item in raw_coverage
+            if isinstance(item, dict) and set(item) == _LIUYAO_CLASSICS_COVERAGE_FIELDS
+        )
+    except (TypeError, ValueError) as error:
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics review ledger is invalid"
+        ) from error
+    if len(records) != len(raw_records) or len(coverage) != len(raw_coverage):
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics review ledger has unknown fields"
+        )
+    record_ids = [item.record_id for item in records]
+    if len(set(record_ids)) != len(record_ids):
+        raise LiuyaoKnowledgeError(
+            "the liuyao targeted classics review record ids must be unique"
+        )
+    known_ids = set(record_ids)
+    for decision in coverage:
+        if not set(decision.linked_record_ids) <= known_ids:
+            raise LiuyaoKnowledgeError(
+                "the liuyao targeted classics coverage links an unknown record"
+            )
+    return LiuyaoTargetedClassicsReviewLedger(
+        schema_version=raw["schema_version"],
+        review_id=raw["review_id"],
+        source_id=raw["source_id"],
+        promotion_records=records,
+        coverage=coverage,
+    )
+
+
 def validate_liuyao_knowledge_chain(data_dir: Path | None = None) -> None:
     """Validate cross-record links across the liuyao namespace."""
     sources = load_liuyao_sources(data_dir)
