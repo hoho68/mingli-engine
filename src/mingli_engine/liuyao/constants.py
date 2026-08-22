@@ -133,6 +133,32 @@ LIUYAO_RULE_FAMILIES: tuple[str, ...] = (
     "category_judgment",
 )
 
+# Matter category vocabulary (021 follow-up; fixed order). Supported
+# categories are backed solely by the promoted category_judgment evidence of
+# batch_20260714; high-risk categories are recognized only to be refused
+# through the existing safety mechanism before any analysis.
+LIUYAO_MATTER_CATEGORY_LABELS: dict[str, str] = {
+    "weather": "天气晴雨",
+    "annual_fortune": "年运与自身气运",
+    "wealth": "求财营生",
+    "career": "功名科考",
+    "marriage": "婚姻",
+    "travel": "出行",
+    "lost_items": "失物寻人",
+    "house": "家宅",
+    "agriculture": "农事蚕桑",
+}
+LIUYAO_HIGH_RISK_MATTER_CATEGORY_LABELS: dict[str, str] = {
+    "medical": "疾病医疗",
+    "legal": "官司诉讼",
+    "investment": "投资理财",
+    "lifespan": "寿命生死",
+}
+LIUYAO_MATTER_CATEGORIES: tuple[str, ...] = (
+    tuple(LIUYAO_MATTER_CATEGORY_LABELS)
+    + tuple(LIUYAO_HIGH_RISK_MATTER_CATEGORY_LABELS)
+)
+
 # Palace-sequence flip sets (lines differing from the palace head gua).
 _SEQUENCE_FLIPS: dict[int, tuple[int, ...]] = {
     0: (),
