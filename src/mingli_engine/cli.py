@@ -3,7 +3,7 @@ import json
 import sys
 from collections.abc import Mapping, Sequence
 from dataclasses import fields, is_dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -34,6 +34,17 @@ from mingli_engine.models import (
     BirthProfile,
     SafetyReviewResult,
 )
+from mingli_engine.liuyao.analysis import analyze_liuyao_chart
+from mingli_engine.liuyao.calendar_bridge import CalendarBridgeError
+from mingli_engine.liuyao.casting import CastingError, assemble_liuyao_chart
+from mingli_engine.liuyao.knowledge_activation import (
+    RefusedLiuyaoMatterCategoryError,
+    resolve_matter_category,
+)
+from mingli_engine.liuyao.najia import NajiaError
+from mingli_engine.liuyao.report import LiuyaoReportError, build_liuyao_report
+from mingli_engine.liuyao.report_markdown import render_liuyao_markdown
+from mingli_engine.liuyao.result_models import LiuyaoCastRequest, LiuyaoLineInput
 from mingli_engine.new_material_learning import (
     DEFAULT_BATCH_ID as NEW_MATERIAL_BATCH_ID,
     ManifestError as NewMaterialLearningError,
@@ -392,6 +403,19 @@ def _build_parser() -> argparse.ArgumentParser:
     real_use_parser.add_argument("--input", required=True, type=Path)
     real_use_parser.set_defaults(handler=_real_use)
 
+    liuyao_calculate_parser = subparsers.add_parser("liuyao-calculate")
+    liuyao_calculate_parser.add_argument("--input", required=True, type=Path)
+    liuyao_calculate_parser.set_defaults(handler=_liuyao_calculate)
+
+    liuyao_report_parser = subparsers.add_parser("liuyao-report")
+    liuyao_report_parser.add_argument("--input", required=True, type=Path)
+    liuyao_report_parser.set_defaults(handler=_liuyao_report)
+
+    liuyao_promote_parser = subparsers.add_parser("liuyao-promote-batch")
+    liuyao_promote_parser.add_argument("--batch", required=True)
+    liuyao_promote_parser.add_argument("--confirm-promotion", action="store_true")
+    liuyao_promote_parser.set_defaults(handler=_liuyao_promote_batch)
+
     new_material_validation_parser = subparsers.add_parser(
         "validate-new-material-learning"
     )
@@ -407,6 +431,178 @@ def _build_parser() -> argparse.ArgumentParser:
     new_material_summary_parser.set_defaults(handler=_new_material_learning_summary)
 
     return parser
+
+
+def _liuyao_error(message: str) -> int:
+    print(f"Liuyao error: {message}", file=sys.stderr)
+    return 1
+
+
+def _read_bounded_liuyao_json(path: Path) -> dict[str, Any]:
+    try:
+        if str(path) == "-":
+            raw = sys.stdin.buffer.read(MAX_REQUEST_BYTES + 1)
+        else:
+            raw = path.read_bytes()
+    except OSError:
+        raise InputContractError("invalid request envelope") from None
+    if len(raw) > MAX_REQUEST_BYTES:
+        raise InputContractError("invalid request envelope")
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        raise InputContractError("invalid request envelope") from None
+    if not isinstance(payload, dict):
+        raise InputContractError("invalid request envelope")
+    return payload
+
+
+def _liuyao_cast_request_from_dict(payload: dict[str, Any]) -> LiuyaoCastRequest:
+    allowed = {
+        "cast_mode",
+        "cast_datetime",
+        "lines",
+        "numbers",
+        "request_id",
+        "matter_category",
+    }
+    if any(key not in allowed for key in payload):
+        raise InputContractError("invalid request fields")
+    if "cast_mode" not in payload or "cast_datetime" not in payload:
+        raise InputContractError("invalid request fields")
+    lines_raw = payload.get("lines")
+    numbers_raw = payload.get("numbers")
+    request_id = payload.get("request_id")
+    matter_category = payload.get("matter_category")
+    if request_id is not None and not isinstance(request_id, str):
+        raise InputContractError("invalid request fields")
+    if matter_category is not None and not isinstance(matter_category, str):
+        raise InputContractError("invalid request fields")
+    lines: tuple[LiuyaoLineInput, ...] = ()
+    if lines_raw is not None:
+        if not isinstance(lines_raw, list):
+            raise InputContractError("invalid request fields")
+        parsed_lines: list[LiuyaoLineInput] = []
+        for item in lines_raw:
+            if not isinstance(item, dict) or set(item) != {
+                "position",
+                "yin_yang",
+                "moving",
+            }:
+                raise InputContractError("invalid request fields")
+            try:
+                parsed_lines.append(
+                    LiuyaoLineInput(
+                        position=item["position"],
+                        yin_yang=item["yin_yang"],
+                        moving=item["moving"],
+                    )
+                )
+            except (TypeError, ValueError):
+                raise InputContractError("invalid request fields") from None
+        lines = tuple(parsed_lines)
+    numbers: tuple[int, ...] = ()
+    if numbers_raw is not None:
+        if not isinstance(numbers_raw, list) or any(
+            not isinstance(value, int) or isinstance(value, bool)
+            for value in numbers_raw
+        ):
+            raise InputContractError("invalid request fields")
+        numbers = tuple(numbers_raw)
+    try:
+        return LiuyaoCastRequest(
+            cast_mode=payload["cast_mode"],
+            cast_datetime=payload["cast_datetime"],
+            lines=lines,
+            numbers=numbers,
+            request_id=request_id,
+            matter_category=matter_category,
+        )
+    except (TypeError, ValueError) as error:
+        message = str(error)
+        if "cast_datetime must use" in message:
+            raise InputContractError("invalid request fields") from None
+        if "matter category" in message:
+            raise InputContractError("unsupported matter category") from None
+        raise InputContractError(
+            "cast mode requirements are not met"
+        ) from None
+
+
+def _liuyao_request_from_args(args: argparse.Namespace) -> LiuyaoCastRequest:
+    payload = _read_bounded_liuyao_json(args.input)
+    return _liuyao_cast_request_from_dict(payload)
+
+
+def _liuyao_calculate(args: argparse.Namespace) -> int:
+    try:
+        request = _liuyao_request_from_args(args)
+        resolve_matter_category(request.matter_category)
+        chart = assemble_liuyao_chart(request)
+    except InputContractError as error:
+        return _liuyao_error(str(error))
+    except RefusedLiuyaoMatterCategoryError:
+        return _liuyao_error(
+            "request cannot be answered within the safety boundary"
+        )
+    except CalendarBridgeError as error:
+        return _liuyao_error(str(error))
+    except (CastingError, NajiaError) as error:
+        return _liuyao_error(f"cast mode requirements are not met ({error})")
+    _write_json(chart)
+    return 0
+
+
+def _liuyao_report(args: argparse.Namespace) -> int:
+    try:
+        request = _liuyao_request_from_args(args)
+        chart = assemble_liuyao_chart(request)
+        report = build_liuyao_report(
+            analyze_liuyao_chart(chart, matter_category=request.matter_category)
+        )
+    except InputContractError as error:
+        return _liuyao_error(str(error))
+    except RefusedLiuyaoMatterCategoryError:
+        return _liuyao_error(
+            "request cannot be answered within the safety boundary"
+        )
+    except CalendarBridgeError as error:
+        return _liuyao_error(str(error))
+    except (CastingError, NajiaError) as error:
+        return _liuyao_error(f"cast mode requirements are not met ({error})")
+    except LiuyaoReportError:
+        return _liuyao_error(
+            "request cannot be answered within the safety boundary"
+        )
+    markdown = render_liuyao_markdown(report)
+    sys.stdout.write(markdown)
+    if not markdown.endswith("\n"):
+        sys.stdout.write("\n")
+    return 0
+
+
+def _liuyao_promote_batch(args: argparse.Namespace) -> int:
+    if args.batch != "batch_20260714":
+        return _liuyao_error("the requested learning batch is unsupported")
+    if not args.confirm_promotion:
+        return _liuyao_error("batch promotion requires explicit confirmation")
+    from mingli_engine.liuyao.knowledge import (
+        LiuyaoKnowledgeError,
+        promote_liuyao_batch_candidates,
+    )
+
+    batch_root = (
+        Path(__file__).resolve().parent / "data" / "new_material_learning"
+    )
+    try:
+        summary = promote_liuyao_batch_candidates(
+            batch_root,
+            generated_at=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        )
+    except LiuyaoKnowledgeError as error:
+        return _liuyao_error(str(error))
+    _write_json(summary)
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:

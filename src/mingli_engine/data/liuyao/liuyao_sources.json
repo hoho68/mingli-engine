@@ -1,0 +1,16 @@
+[
+  {
+    "source_id": "liuyao_source_batch_20260714_001",
+    "title": "batch_20260714 liuyao source 001",
+    "batch_file_result_id": "batch_20260714-02ae584ac6d1-006",
+    "scope_notes": "batch_20260714 liuyao extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": []
+  },
+  {
+    "source_id": "liuyao_source_batch_20260714_002",
+    "title": "batch_20260714 liuyao source 002",
+    "batch_file_result_id": "batch_20260714-a0787a7d7f59-013",
+    "scope_notes": "batch_20260714 liuyao extraction source registered by the governed review pipeline; the tracked relative path is withheld from packaged assets for privacy.",
+    "risk_notes": []
+  }
+]

@@ -1,0 +1,123 @@
+{
+  "batch_id": "batch_20260714",
+  "family_rules": [
+    {
+      "governed_family": "yong_shen_selection",
+      "keywords": [
+        "用神",
+        "伏神",
+        "两现",
+        "取舍",
+        "原神",
+        "忌神",
+        "仇神"
+      ]
+    },
+    {
+      "governed_family": "shi_ying_relation",
+      "keywords": [
+        "世应",
+        "世爻",
+        "应爻"
+      ]
+    },
+    {
+      "governed_family": "six_spirits_attachment",
+      "keywords": [
+        "六神",
+        "青龙",
+        "朱雀",
+        "勾陈",
+        "螣蛇",
+        "白虎",
+        "玄武",
+        "神煞"
+      ]
+    },
+    {
+      "governed_family": "void_break_state",
+      "keywords": [
+        "旬空",
+        "空亡",
+        "月破",
+        "日破",
+        "空"
+      ]
+    },
+    {
+      "governed_family": "moving_line_dynamics",
+      "keywords": [
+        "动爻",
+        "动变",
+        "变卦",
+        "暗动",
+        "独发",
+        "独静",
+        "进退",
+        "进神",
+        "退神",
+        "回头",
+        "化",
+        "动"
+      ]
+    },
+    {
+      "governed_family": "month_day_strength",
+      "keywords": [
+        "月建",
+        "日辰",
+        "旺衰",
+        "生旺墓绝",
+        "长生",
+        "休囚",
+        "月日",
+        "旺相",
+        "墓"
+      ]
+    },
+    {
+      "governed_family": "yingqi_timing",
+      "keywords": [
+        "应期"
+      ]
+    },
+    {
+      "governed_family": "category_judgment",
+      "keywords": [
+        "占",
+        "断",
+        "医疗",
+        "疾病",
+        "医药",
+        "农事",
+        "蚕桑",
+        "财富",
+        "官讼",
+        "诉讼",
+        "天气",
+        "weather",
+        "lawsuit",
+        "destiny",
+        "fortune",
+        "grave",
+        "medication",
+        "disease",
+        "employment",
+        "servants",
+        "career",
+        "relationship",
+        "terms",
+        "attribution",
+        "methodology",
+        "criticism",
+        "omen",
+        "assessment",
+        "directional",
+        "industry",
+        "ritual",
+        "spirit"
+      ]
+    }
+  ],
+  "schema_version": "liuyao-family-map-v1"
+}

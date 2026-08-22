@@ -1,0 +1,578 @@
+[
+  {
+    "assertion_id": "ly-qian_quiet-001",
+    "case_id": "qian_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "contains",
+    "expected": "六亲分布",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_quiet-002",
+    "case_id": "qian_quiet",
+    "rule_family": "month_day_strength",
+    "check_type": "contains",
+    "expected": "月建寅",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_quiet-003",
+    "case_id": "qian_quiet",
+    "rule_family": "void_break_state",
+    "check_type": "contains",
+    "expected": "戌亥",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_quiet-004",
+    "case_id": "qian_quiet",
+    "rule_family": "shi_ying_relation",
+    "check_type": "contains",
+    "expected": "世爻居",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_quiet-005",
+    "case_id": "qian_quiet",
+    "rule_family": "moving_line_dynamics",
+    "check_type": "contains",
+    "expected": "安静无动爻",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_quiet-006",
+    "case_id": "qian_quiet",
+    "rule_family": "yingqi_timing",
+    "check_type": "status_equals",
+    "expected": "degraded",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_quiet-007",
+    "case_id": "qian_quiet",
+    "rule_family": "category_judgment",
+    "check_type": "status_equals",
+    "expected": "not_computed",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_quiet-008",
+    "case_id": "qian_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "not_contains",
+    "expected": "必定",
+    "safety_critical": true
+  },
+  {
+    "assertion_id": "ly-gou_quiet-009",
+    "case_id": "gou_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "contains",
+    "expected": "六亲分布",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-gou_quiet-010",
+    "case_id": "gou_quiet",
+    "rule_family": "month_day_strength",
+    "check_type": "contains",
+    "expected": "月建寅",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-gou_quiet-011",
+    "case_id": "gou_quiet",
+    "rule_family": "void_break_state",
+    "check_type": "contains",
+    "expected": "戌亥",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-gou_quiet-012",
+    "case_id": "gou_quiet",
+    "rule_family": "shi_ying_relation",
+    "check_type": "contains",
+    "expected": "世爻居",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-gou_quiet-013",
+    "case_id": "gou_quiet",
+    "rule_family": "moving_line_dynamics",
+    "check_type": "contains",
+    "expected": "安静无动爻",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-gou_quiet-014",
+    "case_id": "gou_quiet",
+    "rule_family": "yingqi_timing",
+    "check_type": "status_equals",
+    "expected": "degraded",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-gou_quiet-015",
+    "case_id": "gou_quiet",
+    "rule_family": "category_judgment",
+    "check_type": "status_equals",
+    "expected": "not_computed",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-gou_quiet-016",
+    "case_id": "gou_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "not_contains",
+    "expected": "必定",
+    "safety_critical": true
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-017",
+    "case_id": "dayou_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "contains",
+    "expected": "六亲分布",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-018",
+    "case_id": "dayou_quiet",
+    "rule_family": "month_day_strength",
+    "check_type": "contains",
+    "expected": "月建寅",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-019",
+    "case_id": "dayou_quiet",
+    "rule_family": "void_break_state",
+    "check_type": "contains",
+    "expected": "戌亥",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-020",
+    "case_id": "dayou_quiet",
+    "rule_family": "shi_ying_relation",
+    "check_type": "contains",
+    "expected": "世爻居",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-021",
+    "case_id": "dayou_quiet",
+    "rule_family": "moving_line_dynamics",
+    "check_type": "contains",
+    "expected": "安静无动爻",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-022",
+    "case_id": "dayou_quiet",
+    "rule_family": "yingqi_timing",
+    "check_type": "status_equals",
+    "expected": "degraded",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-023",
+    "case_id": "dayou_quiet",
+    "rule_family": "category_judgment",
+    "check_type": "status_equals",
+    "expected": "not_computed",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-024",
+    "case_id": "dayou_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "not_contains",
+    "expected": "必定",
+    "safety_critical": true
+  },
+  {
+    "assertion_id": "ly-jian_quiet-025",
+    "case_id": "jian_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "contains",
+    "expected": "六亲分布",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-jian_quiet-026",
+    "case_id": "jian_quiet",
+    "rule_family": "month_day_strength",
+    "check_type": "contains",
+    "expected": "月建寅",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-jian_quiet-027",
+    "case_id": "jian_quiet",
+    "rule_family": "void_break_state",
+    "check_type": "contains",
+    "expected": "戌亥",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-jian_quiet-028",
+    "case_id": "jian_quiet",
+    "rule_family": "shi_ying_relation",
+    "check_type": "contains",
+    "expected": "世爻居",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-jian_quiet-029",
+    "case_id": "jian_quiet",
+    "rule_family": "moving_line_dynamics",
+    "check_type": "contains",
+    "expected": "安静无动爻",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-jian_quiet-030",
+    "case_id": "jian_quiet",
+    "rule_family": "yingqi_timing",
+    "check_type": "status_equals",
+    "expected": "degraded",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-jian_quiet-031",
+    "case_id": "jian_quiet",
+    "rule_family": "category_judgment",
+    "check_type": "status_equals",
+    "expected": "not_computed",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-jian_quiet-032",
+    "case_id": "jian_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "not_contains",
+    "expected": "必定",
+    "safety_critical": true
+  },
+  {
+    "assertion_id": "ly-qian_moving-033",
+    "case_id": "qian_moving",
+    "rule_family": "yong_shen_selection",
+    "check_type": "contains",
+    "expected": "六亲分布",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_moving-034",
+    "case_id": "qian_moving",
+    "rule_family": "month_day_strength",
+    "check_type": "contains",
+    "expected": "月建寅",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_moving-035",
+    "case_id": "qian_moving",
+    "rule_family": "void_break_state",
+    "check_type": "contains",
+    "expected": "戌亥",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_moving-036",
+    "case_id": "qian_moving",
+    "rule_family": "shi_ying_relation",
+    "check_type": "contains",
+    "expected": "世爻居",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_moving-037",
+    "case_id": "qian_moving",
+    "rule_family": "moving_line_dynamics",
+    "check_type": "contains",
+    "expected": "变出",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_moving-038",
+    "case_id": "qian_moving",
+    "rule_family": "yingqi_timing",
+    "check_type": "status_equals",
+    "expected": "degraded",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_moving-039",
+    "case_id": "qian_moving",
+    "rule_family": "category_judgment",
+    "check_type": "status_equals",
+    "expected": "not_computed",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_moving-040",
+    "case_id": "qian_moving",
+    "rule_family": "yong_shen_selection",
+    "check_type": "not_contains",
+    "expected": "必定",
+    "safety_critical": true
+  },
+  {
+    "assertion_id": "ly-tai_moving-041",
+    "case_id": "tai_moving",
+    "rule_family": "yong_shen_selection",
+    "check_type": "contains",
+    "expected": "六亲分布",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-tai_moving-042",
+    "case_id": "tai_moving",
+    "rule_family": "month_day_strength",
+    "check_type": "contains",
+    "expected": "月建寅",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-tai_moving-043",
+    "case_id": "tai_moving",
+    "rule_family": "void_break_state",
+    "check_type": "contains",
+    "expected": "戌亥",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-tai_moving-044",
+    "case_id": "tai_moving",
+    "rule_family": "shi_ying_relation",
+    "check_type": "contains",
+    "expected": "世爻居",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-tai_moving-045",
+    "case_id": "tai_moving",
+    "rule_family": "moving_line_dynamics",
+    "check_type": "contains",
+    "expected": "变出",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-tai_moving-046",
+    "case_id": "tai_moving",
+    "rule_family": "yingqi_timing",
+    "check_type": "status_equals",
+    "expected": "degraded",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-tai_moving-047",
+    "case_id": "tai_moving",
+    "rule_family": "category_judgment",
+    "check_type": "status_equals",
+    "expected": "not_computed",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-tai_moving-048",
+    "case_id": "tai_moving",
+    "rule_family": "yong_shen_selection",
+    "check_type": "not_contains",
+    "expected": "必定",
+    "safety_critical": true
+  },
+  {
+    "assertion_id": "ly-kun_quiet-049",
+    "case_id": "kun_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "contains",
+    "expected": "六亲分布",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-kun_quiet-050",
+    "case_id": "kun_quiet",
+    "rule_family": "month_day_strength",
+    "check_type": "contains",
+    "expected": "月建寅",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-kun_quiet-051",
+    "case_id": "kun_quiet",
+    "rule_family": "void_break_state",
+    "check_type": "contains",
+    "expected": "戌亥",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-kun_quiet-052",
+    "case_id": "kun_quiet",
+    "rule_family": "shi_ying_relation",
+    "check_type": "contains",
+    "expected": "世爻居",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-kun_quiet-053",
+    "case_id": "kun_quiet",
+    "rule_family": "moving_line_dynamics",
+    "check_type": "contains",
+    "expected": "安静无动爻",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-kun_quiet-054",
+    "case_id": "kun_quiet",
+    "rule_family": "yingqi_timing",
+    "check_type": "status_equals",
+    "expected": "degraded",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-kun_quiet-055",
+    "case_id": "kun_quiet",
+    "rule_family": "category_judgment",
+    "check_type": "status_equals",
+    "expected": "not_computed",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-kun_quiet-056",
+    "case_id": "kun_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "not_contains",
+    "expected": "必定",
+    "safety_critical": true
+  },
+  {
+    "assertion_id": "ly-li_quiet-057",
+    "case_id": "li_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "contains",
+    "expected": "六亲分布",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-li_quiet-058",
+    "case_id": "li_quiet",
+    "rule_family": "month_day_strength",
+    "check_type": "contains",
+    "expected": "月建寅",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-li_quiet-059",
+    "case_id": "li_quiet",
+    "rule_family": "void_break_state",
+    "check_type": "contains",
+    "expected": "戌亥",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-li_quiet-060",
+    "case_id": "li_quiet",
+    "rule_family": "shi_ying_relation",
+    "check_type": "contains",
+    "expected": "世爻居",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-li_quiet-061",
+    "case_id": "li_quiet",
+    "rule_family": "moving_line_dynamics",
+    "check_type": "contains",
+    "expected": "安静无动爻",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-li_quiet-062",
+    "case_id": "li_quiet",
+    "rule_family": "yingqi_timing",
+    "check_type": "status_equals",
+    "expected": "degraded",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-li_quiet-063",
+    "case_id": "li_quiet",
+    "rule_family": "category_judgment",
+    "check_type": "status_equals",
+    "expected": "not_computed",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-li_quiet-064",
+    "case_id": "li_quiet",
+    "rule_family": "yong_shen_selection",
+    "check_type": "not_contains",
+    "expected": "必定",
+    "safety_critical": true
+  },
+  {
+    "assertion_id": "ly-qian_quiet-065",
+    "case_id": "qian_quiet",
+    "rule_family": "six_spirits_attachment",
+    "check_type": "contains",
+    "expected": "临",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-gou_quiet-066",
+    "case_id": "gou_quiet",
+    "rule_family": "six_spirits_attachment",
+    "check_type": "contains",
+    "expected": "临",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-067",
+    "case_id": "dayou_quiet",
+    "rule_family": "six_spirits_attachment",
+    "check_type": "contains",
+    "expected": "临",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-jian_quiet-068",
+    "case_id": "jian_quiet",
+    "rule_family": "six_spirits_attachment",
+    "check_type": "contains",
+    "expected": "临",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-qian_moving-069",
+    "case_id": "qian_moving",
+    "rule_family": "six_spirits_attachment",
+    "check_type": "contains",
+    "expected": "临",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-tai_moving-070",
+    "case_id": "tai_moving",
+    "rule_family": "six_spirits_attachment",
+    "check_type": "contains",
+    "expected": "临",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-kun_quiet-071",
+    "case_id": "kun_quiet",
+    "rule_family": "six_spirits_attachment",
+    "check_type": "contains",
+    "expected": "临",
+    "safety_critical": false
+  },
+  {
+    "assertion_id": "ly-li_quiet-072",
+    "case_id": "li_quiet",
+    "rule_family": "six_spirits_attachment",
+    "check_type": "contains",
+    "expected": "临",
+    "safety_critical": false
+  }
+]

@@ -1276,3 +1276,22 @@ Next target: `wait-new-material-or-maintain-promoted-evidence`. Material
 extraction is closed on local `main`, the 013 seeded candidate-review queue has
 no pending candidates, external inventory refresh found no new pending source,
 and remote push is not required for local use.
+
+## Liuyao V1 Engine Boundary (2026-08-20)
+
+- The liuyao najia engine V1 (specs/_drafts/020-liuyao-najia-engine) is a
+  separate capability line with an independent rule-family namespace
+  (eight liuyao families) and its own evidence ledgers under
+  data/liuyao/; the bazi 013/012 chains are untouched.
+- batch_20260714 liuyao candidates promoted into the liuyao namespace:
+  67 of 101 reviewed candidates; the remainder stay as batch learning
+  records with durable reasons.
+- Liuyao V1 evidence is structural-first: analysis degrades with
+  explicit evidence-pending wording where promoted evidence is absent;
+  the six-spirits attachment, yingqi timing, and category judgment
+  families remain conservative.
+- Synthetic-only liuyao calibration: 8 cases, 72 assertions, dual
+  independent reviews, adjudication 72 counted, engine match 1.0,
+  reviewer agreement 1.0, safety-critical match 1.0.
+- The out-of-scope batch systems (dream omen, meihua, ziwei, xuankong,
+  date selection, acupuncture) remain batch learning records only.

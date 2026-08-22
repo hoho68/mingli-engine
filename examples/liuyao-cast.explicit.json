@@ -1,0 +1,13 @@
+{
+  "cast_mode": "explicit",
+  "cast_datetime": "1990-02-28T08:30",
+  "lines": [
+    {"position": 1, "yin_yang": "yang", "moving": false},
+    {"position": 2, "yin_yang": "yang", "moving": false},
+    {"position": 3, "yin_yang": "yang", "moving": false},
+    {"position": 4, "yin_yang": "yang", "moving": true},
+    {"position": 5, "yin_yang": "yin", "moving": false},
+    {"position": 6, "yin_yang": "yin", "moving": false}
+  ],
+  "request_id": null
+}

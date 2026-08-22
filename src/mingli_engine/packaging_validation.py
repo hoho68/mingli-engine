@@ -29,7 +29,7 @@ _VERSION_PATTERN = re.compile(
     re.IGNORECASE,
 )
 _EXPECTED_PACKAGE_MODULES_SHA256 = (
-    "2f69baabd7fd4037f16986f2c0a2a4d1206dc8906f9eb9b4ac2a55924b9d6f77"
+    "958cdcf4d5926ac344e4607de9cc02f94f2fd1dadcfa7fc1015e3a3579ebde27"
 )
 _ALLOWED_DIST_INFO_MEMBERS = frozenset(
     {
@@ -79,6 +79,8 @@ EXPECTED_RUNTIME_JSON_ASSETS = (
     "data/learning_reference_curation/new_material_expanded_corrected_learning_note_draft_items.json",
     "data/learning_reference_curation/new_material_expanded_corrected_learning_note_prep_items.json",
     "data/learning_reference_curation/prerequisite_action_notes.json",
+    "data/liuyao/analysis_config.json",
+    "data/liuyao/gua_reference.json",
     "data/materials_audit/bazi_general_variant_deferred_review_items.json",
     "data/materials_audit/explicit_candidate_review_or_queue_refresh_items.json",
     "data/materials_audit/external_material_inventory_refresh_confirmation_items.json",
