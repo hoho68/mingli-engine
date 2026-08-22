@@ -13,6 +13,13 @@ from mingli_engine.liuyao.constants import (
     SHENG_CYCLE,
     six_relation,
 )
+from mingli_engine.liuyao.knowledge_activation import (
+    EVIDENCE_ACTIVATED_NOTE,
+    LiuyaoEvidenceCitation,
+    LiuyaoEvidenceIndex,
+    build_liuyao_evidence_index,
+    citation_from_unit,
+)
 from mingli_engine.liuyao.result_models import LiuyaoChart
 
 
@@ -32,6 +39,7 @@ class AnalysisConfig:
     families: tuple[FamilyConfig, ...]
     evidence_pending_note: str
     shared_limitations: tuple[str, ...]
+    evidence_activated_note: str = EVIDENCE_ACTIVATED_NOTE
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "families", tuple(self.families))
@@ -74,6 +82,9 @@ def load_analysis_config() -> AnalysisConfig:
             shared_limitations=tuple(
                 str(item) for item in raw["shared_limitations"]
             ),
+            evidence_activated_note=str(
+                raw.get("evidence_activated_note") or EVIDENCE_ACTIVATED_NOTE
+            ),
         )
     except (KeyError, TypeError, ValueError) as error:
         raise AnalysisConfigError("the liuyao analysis config is invalid") from error
@@ -87,10 +98,14 @@ class LiuyaoFamilyObservation:
     observations: tuple[str, ...]
     limitations: tuple[str, ...]
     evidence_note: str
+    evidence_citations: tuple[LiuyaoEvidenceCitation, ...] = ()
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "observations", tuple(self.observations))
         object.__setattr__(self, "limitations", tuple(self.limitations))
+        object.__setattr__(
+            self, "evidence_citations", tuple(self.evidence_citations)
+        )
         if self.rule_family not in LIUYAO_RULE_FAMILIES:
             raise ValueError("unknown liuyao rule family")
         if self.status not in {"computed", "degraded", "not_computed"}:
@@ -101,6 +116,15 @@ class LiuyaoFamilyObservation:
             raise ValueError("observations require limitation language")
         if not self.evidence_note.strip():
             raise ValueError("observation evidence note is required")
+        for citation in self.evidence_citations:
+            if not isinstance(citation, LiuyaoEvidenceCitation):
+                raise TypeError(
+                    "evidence citations must be LiuyaoEvidenceCitation values"
+                )
+            if citation.rule_family != self.rule_family:
+                raise ValueError(
+                    "evidence citation family must match the observation family"
+                )
 
 
 @dataclass(frozen=True)
@@ -233,11 +257,22 @@ def analyze_liuyao_chart(
     chart: LiuyaoChart,
     *,
     config: AnalysisConfig | None = None,
+    evidence_index: LiuyaoEvidenceIndex | None = None,
 ) -> LiuyaoAnalysis:
-    """Produce governed structural observations for the eight families."""
+    """Produce governed structural observations for the eight families.
+
+    When ``evidence_index`` is omitted, the governed evidence index is built
+    from the frozen knowledge ledgers (failing closed on corruption). Each
+    computed family with governed evidence carries the full citations of its
+    family; observation text and family statuses are unchanged from V1.
+    """
     if not isinstance(chart, LiuyaoChart):
         raise TypeError("analysis requires a LiuyaoChart")
     config = config or load_analysis_config()
+    if evidence_index is None:
+        evidence_index = build_liuyao_evidence_index()
+    if not isinstance(evidence_index, LiuyaoEvidenceIndex):
+        raise TypeError("evidence_index must be a LiuyaoEvidenceIndex")
     observations: dict[str, tuple[str, ...]] = {
         "yong_shen_selection": _yong_shen_selection(chart),
         "shi_ying_relation": _shi_ying_relation(chart),
@@ -276,6 +311,8 @@ def analyze_liuyao_chart(
                 )
             )
             continue
+        family_units = evidence_index.family(family.rule_family)
+        citations = tuple(citation_from_unit(unit) for unit in family_units)
         family_observations.append(
             LiuyaoFamilyObservation(
                 rule_family=family.rule_family,
@@ -283,7 +320,12 @@ def analyze_liuyao_chart(
                 headline=family.headline,
                 observations=observations[family.rule_family],
                 limitations=config.shared_limitations,
-                evidence_note=config.evidence_pending_note,
+                evidence_note=(
+                    config.evidence_activated_note
+                    if citations
+                    else config.evidence_pending_note
+                ),
+                evidence_citations=citations,
             )
         )
     return LiuyaoAnalysis(
