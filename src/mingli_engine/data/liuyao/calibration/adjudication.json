@@ -1,0 +1,578 @@
+[
+  {
+    "assertion_id": "ly-qian_quiet-001",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_quiet-001",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_quiet-001",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_quiet-002",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_quiet-002",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_quiet-002",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_quiet-003",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_quiet-003",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_quiet-003",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_quiet-004",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_quiet-004",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_quiet-004",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_quiet-005",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_quiet-005",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_quiet-005",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_quiet-006",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_quiet-006",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_quiet-006",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_quiet-007",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_quiet-007",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_quiet-007",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_quiet-008",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_quiet-008",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_quiet-008",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-gou_quiet-009",
+    "reviewer_a_review_id": "review-reviewer-a-ly-gou_quiet-009",
+    "reviewer_b_review_id": "review-reviewer-b-ly-gou_quiet-009",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-gou_quiet-010",
+    "reviewer_a_review_id": "review-reviewer-a-ly-gou_quiet-010",
+    "reviewer_b_review_id": "review-reviewer-b-ly-gou_quiet-010",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-gou_quiet-011",
+    "reviewer_a_review_id": "review-reviewer-a-ly-gou_quiet-011",
+    "reviewer_b_review_id": "review-reviewer-b-ly-gou_quiet-011",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-gou_quiet-012",
+    "reviewer_a_review_id": "review-reviewer-a-ly-gou_quiet-012",
+    "reviewer_b_review_id": "review-reviewer-b-ly-gou_quiet-012",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-gou_quiet-013",
+    "reviewer_a_review_id": "review-reviewer-a-ly-gou_quiet-013",
+    "reviewer_b_review_id": "review-reviewer-b-ly-gou_quiet-013",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-gou_quiet-014",
+    "reviewer_a_review_id": "review-reviewer-a-ly-gou_quiet-014",
+    "reviewer_b_review_id": "review-reviewer-b-ly-gou_quiet-014",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-gou_quiet-015",
+    "reviewer_a_review_id": "review-reviewer-a-ly-gou_quiet-015",
+    "reviewer_b_review_id": "review-reviewer-b-ly-gou_quiet-015",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-gou_quiet-016",
+    "reviewer_a_review_id": "review-reviewer-a-ly-gou_quiet-016",
+    "reviewer_b_review_id": "review-reviewer-b-ly-gou_quiet-016",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-017",
+    "reviewer_a_review_id": "review-reviewer-a-ly-dayou_quiet-017",
+    "reviewer_b_review_id": "review-reviewer-b-ly-dayou_quiet-017",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-018",
+    "reviewer_a_review_id": "review-reviewer-a-ly-dayou_quiet-018",
+    "reviewer_b_review_id": "review-reviewer-b-ly-dayou_quiet-018",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-019",
+    "reviewer_a_review_id": "review-reviewer-a-ly-dayou_quiet-019",
+    "reviewer_b_review_id": "review-reviewer-b-ly-dayou_quiet-019",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-020",
+    "reviewer_a_review_id": "review-reviewer-a-ly-dayou_quiet-020",
+    "reviewer_b_review_id": "review-reviewer-b-ly-dayou_quiet-020",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-021",
+    "reviewer_a_review_id": "review-reviewer-a-ly-dayou_quiet-021",
+    "reviewer_b_review_id": "review-reviewer-b-ly-dayou_quiet-021",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-022",
+    "reviewer_a_review_id": "review-reviewer-a-ly-dayou_quiet-022",
+    "reviewer_b_review_id": "review-reviewer-b-ly-dayou_quiet-022",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-023",
+    "reviewer_a_review_id": "review-reviewer-a-ly-dayou_quiet-023",
+    "reviewer_b_review_id": "review-reviewer-b-ly-dayou_quiet-023",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-024",
+    "reviewer_a_review_id": "review-reviewer-a-ly-dayou_quiet-024",
+    "reviewer_b_review_id": "review-reviewer-b-ly-dayou_quiet-024",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-jian_quiet-025",
+    "reviewer_a_review_id": "review-reviewer-a-ly-jian_quiet-025",
+    "reviewer_b_review_id": "review-reviewer-b-ly-jian_quiet-025",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-jian_quiet-026",
+    "reviewer_a_review_id": "review-reviewer-a-ly-jian_quiet-026",
+    "reviewer_b_review_id": "review-reviewer-b-ly-jian_quiet-026",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-jian_quiet-027",
+    "reviewer_a_review_id": "review-reviewer-a-ly-jian_quiet-027",
+    "reviewer_b_review_id": "review-reviewer-b-ly-jian_quiet-027",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-jian_quiet-028",
+    "reviewer_a_review_id": "review-reviewer-a-ly-jian_quiet-028",
+    "reviewer_b_review_id": "review-reviewer-b-ly-jian_quiet-028",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-jian_quiet-029",
+    "reviewer_a_review_id": "review-reviewer-a-ly-jian_quiet-029",
+    "reviewer_b_review_id": "review-reviewer-b-ly-jian_quiet-029",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-jian_quiet-030",
+    "reviewer_a_review_id": "review-reviewer-a-ly-jian_quiet-030",
+    "reviewer_b_review_id": "review-reviewer-b-ly-jian_quiet-030",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-jian_quiet-031",
+    "reviewer_a_review_id": "review-reviewer-a-ly-jian_quiet-031",
+    "reviewer_b_review_id": "review-reviewer-b-ly-jian_quiet-031",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-jian_quiet-032",
+    "reviewer_a_review_id": "review-reviewer-a-ly-jian_quiet-032",
+    "reviewer_b_review_id": "review-reviewer-b-ly-jian_quiet-032",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_moving-033",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_moving-033",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_moving-033",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_moving-034",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_moving-034",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_moving-034",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_moving-035",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_moving-035",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_moving-035",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_moving-036",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_moving-036",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_moving-036",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_moving-037",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_moving-037",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_moving-037",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_moving-038",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_moving-038",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_moving-038",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_moving-039",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_moving-039",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_moving-039",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_moving-040",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_moving-040",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_moving-040",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-tai_moving-041",
+    "reviewer_a_review_id": "review-reviewer-a-ly-tai_moving-041",
+    "reviewer_b_review_id": "review-reviewer-b-ly-tai_moving-041",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-tai_moving-042",
+    "reviewer_a_review_id": "review-reviewer-a-ly-tai_moving-042",
+    "reviewer_b_review_id": "review-reviewer-b-ly-tai_moving-042",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-tai_moving-043",
+    "reviewer_a_review_id": "review-reviewer-a-ly-tai_moving-043",
+    "reviewer_b_review_id": "review-reviewer-b-ly-tai_moving-043",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-tai_moving-044",
+    "reviewer_a_review_id": "review-reviewer-a-ly-tai_moving-044",
+    "reviewer_b_review_id": "review-reviewer-b-ly-tai_moving-044",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-tai_moving-045",
+    "reviewer_a_review_id": "review-reviewer-a-ly-tai_moving-045",
+    "reviewer_b_review_id": "review-reviewer-b-ly-tai_moving-045",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-tai_moving-046",
+    "reviewer_a_review_id": "review-reviewer-a-ly-tai_moving-046",
+    "reviewer_b_review_id": "review-reviewer-b-ly-tai_moving-046",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-tai_moving-047",
+    "reviewer_a_review_id": "review-reviewer-a-ly-tai_moving-047",
+    "reviewer_b_review_id": "review-reviewer-b-ly-tai_moving-047",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-tai_moving-048",
+    "reviewer_a_review_id": "review-reviewer-a-ly-tai_moving-048",
+    "reviewer_b_review_id": "review-reviewer-b-ly-tai_moving-048",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-kun_quiet-049",
+    "reviewer_a_review_id": "review-reviewer-a-ly-kun_quiet-049",
+    "reviewer_b_review_id": "review-reviewer-b-ly-kun_quiet-049",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-kun_quiet-050",
+    "reviewer_a_review_id": "review-reviewer-a-ly-kun_quiet-050",
+    "reviewer_b_review_id": "review-reviewer-b-ly-kun_quiet-050",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-kun_quiet-051",
+    "reviewer_a_review_id": "review-reviewer-a-ly-kun_quiet-051",
+    "reviewer_b_review_id": "review-reviewer-b-ly-kun_quiet-051",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-kun_quiet-052",
+    "reviewer_a_review_id": "review-reviewer-a-ly-kun_quiet-052",
+    "reviewer_b_review_id": "review-reviewer-b-ly-kun_quiet-052",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-kun_quiet-053",
+    "reviewer_a_review_id": "review-reviewer-a-ly-kun_quiet-053",
+    "reviewer_b_review_id": "review-reviewer-b-ly-kun_quiet-053",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-kun_quiet-054",
+    "reviewer_a_review_id": "review-reviewer-a-ly-kun_quiet-054",
+    "reviewer_b_review_id": "review-reviewer-b-ly-kun_quiet-054",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-kun_quiet-055",
+    "reviewer_a_review_id": "review-reviewer-a-ly-kun_quiet-055",
+    "reviewer_b_review_id": "review-reviewer-b-ly-kun_quiet-055",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-kun_quiet-056",
+    "reviewer_a_review_id": "review-reviewer-a-ly-kun_quiet-056",
+    "reviewer_b_review_id": "review-reviewer-b-ly-kun_quiet-056",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-li_quiet-057",
+    "reviewer_a_review_id": "review-reviewer-a-ly-li_quiet-057",
+    "reviewer_b_review_id": "review-reviewer-b-ly-li_quiet-057",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-li_quiet-058",
+    "reviewer_a_review_id": "review-reviewer-a-ly-li_quiet-058",
+    "reviewer_b_review_id": "review-reviewer-b-ly-li_quiet-058",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-li_quiet-059",
+    "reviewer_a_review_id": "review-reviewer-a-ly-li_quiet-059",
+    "reviewer_b_review_id": "review-reviewer-b-ly-li_quiet-059",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-li_quiet-060",
+    "reviewer_a_review_id": "review-reviewer-a-ly-li_quiet-060",
+    "reviewer_b_review_id": "review-reviewer-b-ly-li_quiet-060",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-li_quiet-061",
+    "reviewer_a_review_id": "review-reviewer-a-ly-li_quiet-061",
+    "reviewer_b_review_id": "review-reviewer-b-ly-li_quiet-061",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-li_quiet-062",
+    "reviewer_a_review_id": "review-reviewer-a-ly-li_quiet-062",
+    "reviewer_b_review_id": "review-reviewer-b-ly-li_quiet-062",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-li_quiet-063",
+    "reviewer_a_review_id": "review-reviewer-a-ly-li_quiet-063",
+    "reviewer_b_review_id": "review-reviewer-b-ly-li_quiet-063",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-li_quiet-064",
+    "reviewer_a_review_id": "review-reviewer-a-ly-li_quiet-064",
+    "reviewer_b_review_id": "review-reviewer-b-ly-li_quiet-064",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_quiet-065",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_quiet-065",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_quiet-065",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-gou_quiet-066",
+    "reviewer_a_review_id": "review-reviewer-a-ly-gou_quiet-066",
+    "reviewer_b_review_id": "review-reviewer-b-ly-gou_quiet-066",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-dayou_quiet-067",
+    "reviewer_a_review_id": "review-reviewer-a-ly-dayou_quiet-067",
+    "reviewer_b_review_id": "review-reviewer-b-ly-dayou_quiet-067",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-jian_quiet-068",
+    "reviewer_a_review_id": "review-reviewer-a-ly-jian_quiet-068",
+    "reviewer_b_review_id": "review-reviewer-b-ly-jian_quiet-068",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-qian_moving-069",
+    "reviewer_a_review_id": "review-reviewer-a-ly-qian_moving-069",
+    "reviewer_b_review_id": "review-reviewer-b-ly-qian_moving-069",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-tai_moving-070",
+    "reviewer_a_review_id": "review-reviewer-a-ly-tai_moving-070",
+    "reviewer_b_review_id": "review-reviewer-b-ly-tai_moving-070",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-kun_quiet-071",
+    "reviewer_a_review_id": "review-reviewer-a-ly-kun_quiet-071",
+    "reviewer_b_review_id": "review-reviewer-b-ly-kun_quiet-071",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  },
+  {
+    "assertion_id": "ly-li_quiet-072",
+    "reviewer_a_review_id": "review-reviewer-a-ly-li_quiet-072",
+    "reviewer_b_review_id": "review-reviewer-b-ly-li_quiet-072",
+    "agreement_state": "agreement",
+    "decision": "counted",
+    "rationale": "Both independent reviews accept: the expected value matches the documented najia assembly for this synthetic chart."
+  }
+]

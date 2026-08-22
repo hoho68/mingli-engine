@@ -1,6 +1,6 @@
 {
   "after_regression": {
-    "captured_at": "2026-08-21T15:55:23Z",
+    "captured_at": "2026-08-22T04:45:54Z",
     "files": [
       {
         "path": ".agents/skills/speckit-analyze/SKILL.md",
@@ -160,7 +160,7 @@
       },
       {
         "path": ".specify/feature.json",
-        "sha256": "d8abef9c97f3a82ddf122fab2f6073fbec338cf24c45946f79ef19dbb5512d49"
+        "sha256": "968f51a1a8a70dda012b3a22fc257e93a5bd4dcf8954031786d93f2d5b4b4f90"
       },
       {
         "path": ".specify/init-options.json",
@@ -232,7 +232,7 @@
       },
       {
         "path": "AGENTS.md",
-        "sha256": "2a419dd10644717be1bbaea40f969108232848ecc4dccf9be4717d689bba464c"
+        "sha256": "dae472f19be3ad8d6e8b6bc01e453863428f46577b6345a5e5dbda94c8a61565"
       },
       {
         "path": "docs/classical_sources/README.md",
@@ -308,7 +308,7 @@
       },
       {
         "path": "docs/classical_sources/new_material_learning_handoff.md",
-        "sha256": "06a4e5a4aef8b9caa1706a5c8949fc7ea7cf70b67e952e8bf600852d0fe5a209"
+        "sha256": "bd97b3f0f8130dcaec1a1d44dac46972c17a5c403424085400ffa232fbb4caa6"
       },
       {
         "path": "docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md",
@@ -783,6 +783,10 @@
         "sha256": "e317944f1fa3a31258f5c040c006af0c4ef76afe6de671f8babc09f5cce21d4f"
       },
       {
+        "path": "examples/liuyao-cast.explicit.json",
+        "sha256": "180f84f1ca8bb95dff3d940c572457790a12e0fe51ae14a0878e77c23d2c35c9"
+      },
+      {
         "path": "examples/red-line.lifespan.json",
         "sha256": "d6287874f0c0b91fd328293ac6e2de2bec79f1ae8fdd8a3961df2c1cd2206873"
       },
@@ -796,7 +800,7 @@
       },
       {
         "path": "pyproject.toml",
-        "sha256": "b1a9b038ef4b805d0b1fe47bf38ae0c1f716f341289e8c070bd62e1d22e6bb67"
+        "sha256": "c3609442fa67ee356ec1935a982297d7b832e538b5fe97f56b89e92e24c48607"
       },
       {
         "path": "specs/001-bazi-report-engine/checklists/requirements.md",
@@ -1363,6 +1367,38 @@
         "sha256": "c50d15f4992aff1cc9b062f9a16a210b40d096a7118994e555de22050712d9fe"
       },
       {
+        "path": "specs/_drafts/020-liuyao-najia-engine/checklists/requirements.md",
+        "sha256": "8a52e99de075f03ba97be8ab015aa4c162961e88717638f9234410a611a06c41"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/contracts/liuyao-v1-contract.md",
+        "sha256": "33f6dd0c737adfe63aacbb522000685178cb6c8efc1b57beeae87790e8671a3a"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/data-model.md",
+        "sha256": "8ce86c88a8799071c4b2c5f9f48ff4082a595246773c9f05087eedf02542258f"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/plan.md",
+        "sha256": "cbb458bfca1c02cec61555f17906c44de583d8dd1547e57a79c18c3e29643504"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/quickstart.md",
+        "sha256": "29d29b004b9638c75e1a2a3d2eb25e477f7318c842c64a69401914955225bb0a"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/research.md",
+        "sha256": "4938f2e937960fba058cf87b74978e490b26ee072814b834562dc6bdfa500f1c"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/spec.md",
+        "sha256": "34d7951dcc3a9f68151d45155ee21aa9966ed39d3f51227cedcaf256d29fd4e5"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/tasks.md",
+        "sha256": "f2282511ce85d749e2f1238ff44c86dea01050aa4f9a3d9964fda9b5db2e0ff4"
+      },
+      {
         "path": "src/mingli_engine/__init__.py",
         "sha256": "f1132cb131d6cc30f7e71ab115cb870cc87a3c4b3c01a2fe42207b02cff81fe6"
       },
@@ -1484,7 +1520,7 @@
       },
       {
         "path": "src/mingli_engine/cli.py",
-        "sha256": "70e864c9cc5ca3026fefe50b73c2adb78f4bb56cf892ed77d3a70190212f6023"
+        "sha256": "93b96a4dad717c5793ed14af1815afbfe52806fb7890dfa9de7d08cc1655fd3e"
       },
       {
         "path": "src/mingli_engine/data/calculation/school_profiles.json",
@@ -1629,6 +1665,58 @@
       {
         "path": "src/mingli_engine/data/learning_reference_curation/prerequisite_action_notes.json",
         "sha256": "fdd28efc00b7c57a544f5e31af26569cf9720fb7f527788cfac82d8061b7ee37"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/analysis_config.json",
+        "sha256": "9d5695e6e7f5f063fe7b051c1fc6e8785a2bcaea70140df910446bfa3f7a631d"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/batch_20260714_liuyao_family_map.json",
+        "sha256": "445ab72638bbee3f2829a141748b8c5ca8e92ec41fad1cfca850115da897dd13"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/calibration/adjudication.json",
+        "sha256": "1181fed5416f39e7ad11b98e9235ae001e2356007dc27dd797d7fa0a5218efc6"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/calibration/calibration_assertions.json",
+        "sha256": "4ea47898dbf73100ba6dcddf726c85917824b098bbb8552408dd96668bc2c61e"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/calibration/calibration_cases.json",
+        "sha256": "666218daf450397d9ec5cb129d96587585550695fdf87d9d8c1b07f557ac03ab"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/calibration/reviewer_a_reviews.json",
+        "sha256": "9cf06bd1ae3efe148622d1695730efe00490b8a2d73f9989f929aa756510b2ba"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/calibration/reviewer_b_reviews.json",
+        "sha256": "73cf35a129c76b8fcda538a30c22bfec38f1347b965a71105737f540010a2820"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/gua_reference.json",
+        "sha256": "356f2af9c455563dbabb859bd6eb005afed6d28486e1b62baf02246d2e195107"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/liuyao_candidates.json",
+        "sha256": "b3e4b8fcd696404918a8b291321d9838560b52ca18c907193a67a098a42f99d3"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/liuyao_evidence_units.json",
+        "sha256": "a836a90933cefdba904fa5f6590d28c8b184bedcc2846a16a65a8dc5fd42c30e"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/liuyao_promotion_batches.json",
+        "sha256": "b01fd8300ff5613d2ec63572a088c16d99bf0f33db61293c91a5608a2f8f9386"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/liuyao_review_decisions.json",
+        "sha256": "d24180c7e268f392ca8591c82c063fc31fb46b30ef91f4e583fe5b42f0e8f844"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/liuyao_sources.json",
+        "sha256": "f18b9408673524d83dbad2af7dbccbf64c5e84b2cbd07adccd13b9d2dcebb286"
       },
       {
         "path": "src/mingli_engine/data/materials_audit/.gitkeep",
@@ -2015,6 +2103,50 @@
         "sha256": "38faeaf4eedfdd037a841fe954d6a8dab32abc438787cbbc08880f0516de5b92"
       },
       {
+        "path": "src/mingli_engine/liuyao/__init__.py",
+        "sha256": "581ec3e2d5c75a8155150b740f14836ecce9c12b2f7ec56f7182f9f3f5a418fe"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/analysis.py",
+        "sha256": "81dab202735c45b7f18d9943406a5caf868580e8c7e0fa3ff18913edda160c99"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/calendar_bridge.py",
+        "sha256": "78537f77dc8ab24e0a40ee8f066f89bf770f2f99b03b8bcc4ee2f0f1523f1140"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/calibration.py",
+        "sha256": "4eb9a8b02e0fe6fb4701a1b8dabf828a9a8626d49656a719ec33adbf36fd08de"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/casting.py",
+        "sha256": "4d0e7d154144dd8364f6aa37b8aea70585e44f5edb643bd2894f96f28f08a127"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/constants.py",
+        "sha256": "3ec28def39a65cc23cf546c17dcf304316ff55f3ba95c76ab660734ffd86ff4f"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/knowledge.py",
+        "sha256": "c220a992fdd672f4598e45aa264e2f47bb31f35d21d02a7369ee57827078d1b9"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/najia.py",
+        "sha256": "031d4a66eb8506b788df428c0be70435fdbb4562e052cbce8e41a7ace0c6f9b0"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/report.py",
+        "sha256": "770e044ebeaf7512f6d339633dd475a9876b0c4c50aaa8f8a7728e21ab23175c"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/report_markdown.py",
+        "sha256": "c263bb677dad09ad34d0ff1766964e6d1a8a063246c5a4a2783068b9029701b3"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/result_models.py",
+        "sha256": "5691053b611c8f1c6478f37eae681282123e951a06e04894495110191b4f9776"
+      },
+      {
         "path": "src/mingli_engine/markdown.py",
         "sha256": "6e903287446228a9c0a5b398a309bbcb0b52ba80ea7850956538dec7e08512db"
       },
@@ -2028,11 +2160,11 @@
       },
       {
         "path": "src/mingli_engine/new_material_learning.py",
-        "sha256": "a229f0609d4d2602566ac7f66251abf6066afefbbdb2658fdc044595af811abe"
+        "sha256": "7b5a00b59bc4f1643f705e670f7d8777f9cb58df22580a1d94abba550747b668"
       },
       {
         "path": "src/mingli_engine/packaging_validation.py",
-        "sha256": "cc9dae434922f1bb948cb57edac933ff31b93d768d7fe9bf06504cc284c916ca"
+        "sha256": "262e368c80d0c168a762ced1c499179f212bab684a144a06e350825ccb2419e8"
       },
       {
         "path": "src/mingli_engine/project_completion.py",
@@ -2124,7 +2256,7 @@
       },
       {
         "path": "tests/contract/test_wheel_runtime_assets.py",
-        "sha256": "a4333d20055779d762ce297dce8569e3ec723f7d33b7658f84748108844f519a"
+        "sha256": "88b68e7d21c39717841af1acad404f02ed87b92dd897a1ed159a28f029905bf6"
       },
       {
         "path": "tests/fixtures/application/valid_analysis_request.json",
@@ -2149,6 +2281,10 @@
       {
         "path": "tests/fixtures/bazi_calculation/verified_charts.json",
         "sha256": "e5a49e55beb4fabeb8d25db70f629f26083a767e4b63a8c4c52656e427a4d22e"
+      },
+      {
+        "path": "tests/fixtures/liuyao/golden_vectors.json",
+        "sha256": "6e65ed40916c5595c0275ff02102c7ba2df82faef61bac7ec7b45105a03cc20c"
       },
       {
         "path": "tests/integration/test_bazi_analysis_pipeline.py",
@@ -2180,7 +2316,11 @@
       },
       {
         "path": "tests/integration/test_installed_package_baseline.py",
-        "sha256": "b2321d8c21379ad9bb6030d18822ad3ec65b37d0ab44c8a4ed4bbc607b040e8d"
+        "sha256": "6addc4ea8a386aa1d9d24d8692f4c5d92ef3c2b02e26561861dfb70c2130d708"
+      },
+      {
+        "path": "tests/integration/test_liuyao_cli.py",
+        "sha256": "337f24dfcaedd49386f6697e78c3498dc888ffe2aa90b8a510734a7030d5cce0"
       },
       {
         "path": "tests/integration/test_real_use_analysis.py",
@@ -2359,6 +2499,34 @@
         "sha256": "3d600837d31fc28de0dbaef0986fb144cce3d7e3b2fccb32d5ec8f32c3ffea41"
       },
       {
+        "path": "tests/unit/test_liuyao_analysis.py",
+        "sha256": "bf79e189259e9b6cf7b46cb691a3aed9e6447f05294fab1667814133ff549377"
+      },
+      {
+        "path": "tests/unit/test_liuyao_calibration.py",
+        "sha256": "a837ea959679479286c391062106e5210e7b4b410b5b8d75d2588097b79137ef"
+      },
+      {
+        "path": "tests/unit/test_liuyao_casting.py",
+        "sha256": "45e4558499ae8c986ccbf8b859fefbd0e716c6db734c27730474a6b369bfdbc7"
+      },
+      {
+        "path": "tests/unit/test_liuyao_constants.py",
+        "sha256": "14a92000728d7aa0bb0a213c935651e4ef647591fb3ab85def2ab9db0e149f84"
+      },
+      {
+        "path": "tests/unit/test_liuyao_knowledge.py",
+        "sha256": "24adc2b913de070fdba14062f9f75b7b7db9e8b3262163b1a250208cac6a8cdd"
+      },
+      {
+        "path": "tests/unit/test_liuyao_najia.py",
+        "sha256": "44192a08db32f6661d06d071365bce606675f21d164c9cfe65df2c38e239fba3"
+      },
+      {
+        "path": "tests/unit/test_liuyao_report.py",
+        "sha256": "e1f36e06aa8fe933b82c4ba18e9522488e4e12e6ac370add52d4be2572368eb6"
+      },
+      {
         "path": "tests/unit/test_markdown_renderer.py",
         "sha256": "91a04545bd46d1383e0170eff5402aa86e9e202de461713eee44577e52096548"
       },
@@ -2415,11 +2583,11 @@
         "sha256": "0a64931fc9f385c869558853525a940576c56e34a269d1e1a9a927e5a9a9cc4c"
       }
     ],
-    "files_sha256": "0ccc602b8bffd28336a1d5cfb699b52cb7d95f1224dd20264c9c3d42bcb82a59"
+    "files_sha256": "d78c51eaf1109f95bf55b7107ae4a0664c6927c4be35f8ea10b7c10998b83bfe"
   },
   "batch_id": "batch_20260714",
   "before_regression": {
-    "captured_at": "2026-08-21T15:36:04Z",
+    "captured_at": "2026-08-22T04:25:00Z",
     "files": [
       {
         "path": ".agents/skills/speckit-analyze/SKILL.md",
@@ -2579,7 +2747,7 @@
       },
       {
         "path": ".specify/feature.json",
-        "sha256": "d8abef9c97f3a82ddf122fab2f6073fbec338cf24c45946f79ef19dbb5512d49"
+        "sha256": "968f51a1a8a70dda012b3a22fc257e93a5bd4dcf8954031786d93f2d5b4b4f90"
       },
       {
         "path": ".specify/init-options.json",
@@ -2651,7 +2819,7 @@
       },
       {
         "path": "AGENTS.md",
-        "sha256": "2a419dd10644717be1bbaea40f969108232848ecc4dccf9be4717d689bba464c"
+        "sha256": "dae472f19be3ad8d6e8b6bc01e453863428f46577b6345a5e5dbda94c8a61565"
       },
       {
         "path": "docs/classical_sources/README.md",
@@ -2727,7 +2895,7 @@
       },
       {
         "path": "docs/classical_sources/new_material_learning_handoff.md",
-        "sha256": "06a4e5a4aef8b9caa1706a5c8949fc7ea7cf70b67e952e8bf600852d0fe5a209"
+        "sha256": "bd97b3f0f8130dcaec1a1d44dac46972c17a5c403424085400ffa232fbb4caa6"
       },
       {
         "path": "docs/classical_sources/prepared_text/xiahai_suanmingji_corrected.md",
@@ -3202,6 +3370,10 @@
         "sha256": "e317944f1fa3a31258f5c040c006af0c4ef76afe6de671f8babc09f5cce21d4f"
       },
       {
+        "path": "examples/liuyao-cast.explicit.json",
+        "sha256": "180f84f1ca8bb95dff3d940c572457790a12e0fe51ae14a0878e77c23d2c35c9"
+      },
+      {
         "path": "examples/red-line.lifespan.json",
         "sha256": "d6287874f0c0b91fd328293ac6e2de2bec79f1ae8fdd8a3961df2c1cd2206873"
       },
@@ -3215,7 +3387,7 @@
       },
       {
         "path": "pyproject.toml",
-        "sha256": "b1a9b038ef4b805d0b1fe47bf38ae0c1f716f341289e8c070bd62e1d22e6bb67"
+        "sha256": "c3609442fa67ee356ec1935a982297d7b832e538b5fe97f56b89e92e24c48607"
       },
       {
         "path": "specs/001-bazi-report-engine/checklists/requirements.md",
@@ -3782,6 +3954,38 @@
         "sha256": "c50d15f4992aff1cc9b062f9a16a210b40d096a7118994e555de22050712d9fe"
       },
       {
+        "path": "specs/_drafts/020-liuyao-najia-engine/checklists/requirements.md",
+        "sha256": "8a52e99de075f03ba97be8ab015aa4c162961e88717638f9234410a611a06c41"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/contracts/liuyao-v1-contract.md",
+        "sha256": "33f6dd0c737adfe63aacbb522000685178cb6c8efc1b57beeae87790e8671a3a"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/data-model.md",
+        "sha256": "8ce86c88a8799071c4b2c5f9f48ff4082a595246773c9f05087eedf02542258f"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/plan.md",
+        "sha256": "cbb458bfca1c02cec61555f17906c44de583d8dd1547e57a79c18c3e29643504"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/quickstart.md",
+        "sha256": "29d29b004b9638c75e1a2a3d2eb25e477f7318c842c64a69401914955225bb0a"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/research.md",
+        "sha256": "4938f2e937960fba058cf87b74978e490b26ee072814b834562dc6bdfa500f1c"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/spec.md",
+        "sha256": "34d7951dcc3a9f68151d45155ee21aa9966ed39d3f51227cedcaf256d29fd4e5"
+      },
+      {
+        "path": "specs/_drafts/020-liuyao-najia-engine/tasks.md",
+        "sha256": "f2282511ce85d749e2f1238ff44c86dea01050aa4f9a3d9964fda9b5db2e0ff4"
+      },
+      {
         "path": "src/mingli_engine/__init__.py",
         "sha256": "f1132cb131d6cc30f7e71ab115cb870cc87a3c4b3c01a2fe42207b02cff81fe6"
       },
@@ -3903,7 +4107,7 @@
       },
       {
         "path": "src/mingli_engine/cli.py",
-        "sha256": "70e864c9cc5ca3026fefe50b73c2adb78f4bb56cf892ed77d3a70190212f6023"
+        "sha256": "93b96a4dad717c5793ed14af1815afbfe52806fb7890dfa9de7d08cc1655fd3e"
       },
       {
         "path": "src/mingli_engine/data/calculation/school_profiles.json",
@@ -4048,6 +4252,58 @@
       {
         "path": "src/mingli_engine/data/learning_reference_curation/prerequisite_action_notes.json",
         "sha256": "fdd28efc00b7c57a544f5e31af26569cf9720fb7f527788cfac82d8061b7ee37"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/analysis_config.json",
+        "sha256": "9d5695e6e7f5f063fe7b051c1fc6e8785a2bcaea70140df910446bfa3f7a631d"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/batch_20260714_liuyao_family_map.json",
+        "sha256": "445ab72638bbee3f2829a141748b8c5ca8e92ec41fad1cfca850115da897dd13"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/calibration/adjudication.json",
+        "sha256": "1181fed5416f39e7ad11b98e9235ae001e2356007dc27dd797d7fa0a5218efc6"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/calibration/calibration_assertions.json",
+        "sha256": "4ea47898dbf73100ba6dcddf726c85917824b098bbb8552408dd96668bc2c61e"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/calibration/calibration_cases.json",
+        "sha256": "666218daf450397d9ec5cb129d96587585550695fdf87d9d8c1b07f557ac03ab"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/calibration/reviewer_a_reviews.json",
+        "sha256": "9cf06bd1ae3efe148622d1695730efe00490b8a2d73f9989f929aa756510b2ba"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/calibration/reviewer_b_reviews.json",
+        "sha256": "73cf35a129c76b8fcda538a30c22bfec38f1347b965a71105737f540010a2820"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/gua_reference.json",
+        "sha256": "356f2af9c455563dbabb859bd6eb005afed6d28486e1b62baf02246d2e195107"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/liuyao_candidates.json",
+        "sha256": "b3e4b8fcd696404918a8b291321d9838560b52ca18c907193a67a098a42f99d3"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/liuyao_evidence_units.json",
+        "sha256": "a836a90933cefdba904fa5f6590d28c8b184bedcc2846a16a65a8dc5fd42c30e"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/liuyao_promotion_batches.json",
+        "sha256": "b01fd8300ff5613d2ec63572a088c16d99bf0f33db61293c91a5608a2f8f9386"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/liuyao_review_decisions.json",
+        "sha256": "d24180c7e268f392ca8591c82c063fc31fb46b30ef91f4e583fe5b42f0e8f844"
+      },
+      {
+        "path": "src/mingli_engine/data/liuyao/liuyao_sources.json",
+        "sha256": "f18b9408673524d83dbad2af7dbccbf64c5e84b2cbd07adccd13b9d2dcebb286"
       },
       {
         "path": "src/mingli_engine/data/materials_audit/.gitkeep",
@@ -4434,6 +4690,50 @@
         "sha256": "38faeaf4eedfdd037a841fe954d6a8dab32abc438787cbbc08880f0516de5b92"
       },
       {
+        "path": "src/mingli_engine/liuyao/__init__.py",
+        "sha256": "581ec3e2d5c75a8155150b740f14836ecce9c12b2f7ec56f7182f9f3f5a418fe"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/analysis.py",
+        "sha256": "81dab202735c45b7f18d9943406a5caf868580e8c7e0fa3ff18913edda160c99"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/calendar_bridge.py",
+        "sha256": "78537f77dc8ab24e0a40ee8f066f89bf770f2f99b03b8bcc4ee2f0f1523f1140"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/calibration.py",
+        "sha256": "4eb9a8b02e0fe6fb4701a1b8dabf828a9a8626d49656a719ec33adbf36fd08de"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/casting.py",
+        "sha256": "4d0e7d154144dd8364f6aa37b8aea70585e44f5edb643bd2894f96f28f08a127"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/constants.py",
+        "sha256": "3ec28def39a65cc23cf546c17dcf304316ff55f3ba95c76ab660734ffd86ff4f"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/knowledge.py",
+        "sha256": "c220a992fdd672f4598e45aa264e2f47bb31f35d21d02a7369ee57827078d1b9"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/najia.py",
+        "sha256": "031d4a66eb8506b788df428c0be70435fdbb4562e052cbce8e41a7ace0c6f9b0"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/report.py",
+        "sha256": "770e044ebeaf7512f6d339633dd475a9876b0c4c50aaa8f8a7728e21ab23175c"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/report_markdown.py",
+        "sha256": "c263bb677dad09ad34d0ff1766964e6d1a8a063246c5a4a2783068b9029701b3"
+      },
+      {
+        "path": "src/mingli_engine/liuyao/result_models.py",
+        "sha256": "5691053b611c8f1c6478f37eae681282123e951a06e04894495110191b4f9776"
+      },
+      {
         "path": "src/mingli_engine/markdown.py",
         "sha256": "6e903287446228a9c0a5b398a309bbcb0b52ba80ea7850956538dec7e08512db"
       },
@@ -4447,11 +4747,11 @@
       },
       {
         "path": "src/mingli_engine/new_material_learning.py",
-        "sha256": "a229f0609d4d2602566ac7f66251abf6066afefbbdb2658fdc044595af811abe"
+        "sha256": "7b5a00b59bc4f1643f705e670f7d8777f9cb58df22580a1d94abba550747b668"
       },
       {
         "path": "src/mingli_engine/packaging_validation.py",
-        "sha256": "cc9dae434922f1bb948cb57edac933ff31b93d768d7fe9bf06504cc284c916ca"
+        "sha256": "262e368c80d0c168a762ced1c499179f212bab684a144a06e350825ccb2419e8"
       },
       {
         "path": "src/mingli_engine/project_completion.py",
@@ -4543,7 +4843,7 @@
       },
       {
         "path": "tests/contract/test_wheel_runtime_assets.py",
-        "sha256": "a4333d20055779d762ce297dce8569e3ec723f7d33b7658f84748108844f519a"
+        "sha256": "88b68e7d21c39717841af1acad404f02ed87b92dd897a1ed159a28f029905bf6"
       },
       {
         "path": "tests/fixtures/application/valid_analysis_request.json",
@@ -4568,6 +4868,10 @@
       {
         "path": "tests/fixtures/bazi_calculation/verified_charts.json",
         "sha256": "e5a49e55beb4fabeb8d25db70f629f26083a767e4b63a8c4c52656e427a4d22e"
+      },
+      {
+        "path": "tests/fixtures/liuyao/golden_vectors.json",
+        "sha256": "6e65ed40916c5595c0275ff02102c7ba2df82faef61bac7ec7b45105a03cc20c"
       },
       {
         "path": "tests/integration/test_bazi_analysis_pipeline.py",
@@ -4599,7 +4903,11 @@
       },
       {
         "path": "tests/integration/test_installed_package_baseline.py",
-        "sha256": "b2321d8c21379ad9bb6030d18822ad3ec65b37d0ab44c8a4ed4bbc607b040e8d"
+        "sha256": "6addc4ea8a386aa1d9d24d8692f4c5d92ef3c2b02e26561861dfb70c2130d708"
+      },
+      {
+        "path": "tests/integration/test_liuyao_cli.py",
+        "sha256": "337f24dfcaedd49386f6697e78c3498dc888ffe2aa90b8a510734a7030d5cce0"
       },
       {
         "path": "tests/integration/test_real_use_analysis.py",
@@ -4778,6 +5086,34 @@
         "sha256": "3d600837d31fc28de0dbaef0986fb144cce3d7e3b2fccb32d5ec8f32c3ffea41"
       },
       {
+        "path": "tests/unit/test_liuyao_analysis.py",
+        "sha256": "bf79e189259e9b6cf7b46cb691a3aed9e6447f05294fab1667814133ff549377"
+      },
+      {
+        "path": "tests/unit/test_liuyao_calibration.py",
+        "sha256": "a837ea959679479286c391062106e5210e7b4b410b5b8d75d2588097b79137ef"
+      },
+      {
+        "path": "tests/unit/test_liuyao_casting.py",
+        "sha256": "45e4558499ae8c986ccbf8b859fefbd0e716c6db734c27730474a6b369bfdbc7"
+      },
+      {
+        "path": "tests/unit/test_liuyao_constants.py",
+        "sha256": "14a92000728d7aa0bb0a213c935651e4ef647591fb3ab85def2ab9db0e149f84"
+      },
+      {
+        "path": "tests/unit/test_liuyao_knowledge.py",
+        "sha256": "24adc2b913de070fdba14062f9f75b7b7db9e8b3262163b1a250208cac6a8cdd"
+      },
+      {
+        "path": "tests/unit/test_liuyao_najia.py",
+        "sha256": "44192a08db32f6661d06d071365bce606675f21d164c9cfe65df2c38e239fba3"
+      },
+      {
+        "path": "tests/unit/test_liuyao_report.py",
+        "sha256": "e1f36e06aa8fe933b82c4ba18e9522488e4e12e6ac370add52d4be2572368eb6"
+      },
+      {
         "path": "tests/unit/test_markdown_renderer.py",
         "sha256": "91a04545bd46d1383e0170eff5402aa86e9e202de461713eee44577e52096548"
       },
@@ -4834,28 +5170,28 @@
         "sha256": "0a64931fc9f385c869558853525a940576c56e34a269d1e1a9a927e5a9a9cc4c"
       }
     ],
-    "files_sha256": "0ccc602b8bffd28336a1d5cfb699b52cb7d95f1224dd20264c9c3d42bcb82a59"
+    "files_sha256": "d78c51eaf1109f95bf55b7107ae4a0664c6927c4be35f8ea10b7c10998b83bfe"
   },
   "commands": [
     {
       "command": "uv sync --frozen",
-      "completed_at": "2026-08-21T15:36:04Z",
+      "completed_at": "2026-08-22T04:25:00Z",
       "exit_code": 0,
       "name": "dependency_sync",
       "result": "frozen dependency sync completed",
-      "started_at": "2026-08-21T15:36:04Z",
-      "stderr": "Checked 2 packages in 0.57ms\n",
-      "stderr_sha256": "1f7caab6c4a0238716ac5ca9f39e288c91a274a8b5b3cfa08f55e769cfdf1f28",
+      "started_at": "2026-08-22T04:25:00Z",
+      "stderr": "Checked 2 packages in 0.52ms\n",
+      "stderr_sha256": "77f4c801c8c555abe7e3cc8d0555277750e6a8ccb85211194506697712825930",
       "stdout": "",
       "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
       "command": "$env:PYTHONPATH='src'; uv run --frozen python -m mingli_engine.new_material_learning validate-pre-audit --batch batch_20260714",
-      "completed_at": "2026-08-21T15:36:11Z",
+      "completed_at": "2026-08-22T04:25:08Z",
       "exit_code": 0,
       "name": "source_rehash",
       "result": "{\"active_validated_output_count\":294,\"attempt_count\":457,\"batch_id\":\"batch_20260714\",\"coverage_counts\":{\"blocked\":0,\"complete\":29,\"partial\":0,\"uncovered\":0},\"file_count\":29,\"prepared_input_count\":300,\"quarantined_output_count\":0,\"rejected_output_count\":0,\"source_rehash\":\"matched\",\"tranche_count\":300,\"validated_output_count\":294}",
-      "started_at": "2026-08-21T15:36:04Z",
+      "started_at": "2026-08-22T04:25:00Z",
       "stderr": "",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "stdout": "{\"active_validated_output_count\":294,\"attempt_count\":457,\"batch_id\":\"batch_20260714\",\"coverage_counts\":{\"blocked\":0,\"complete\":29,\"partial\":0,\"uncovered\":0},\"file_count\":29,\"prepared_input_count\":300,\"quarantined_output_count\":0,\"rejected_output_count\":0,\"source_rehash\":\"matched\",\"tranche_count\":300,\"validated_output_count\":294}\r\n",
@@ -4863,35 +5199,35 @@
     },
     {
       "command": "$env:PYTHONPATH='src'; $env:PYTHONDONTWRITEBYTECODE='1'; uv run --frozen --with pytest==8.4.1 python -m pytest tests/unit/test_new_material_learning.py -m \"not task8_post_audit\" -q -p no:cacheprovider",
-      "completed_at": "2026-08-21T15:37:56Z",
+      "completed_at": "2026-08-22T04:26:52Z",
       "exit_code": 0,
       "name": "focused_pytest",
       "result": "158 passed, 1 skipped",
-      "started_at": "2026-08-21T15:36:11Z",
+      "started_at": "2026-08-22T04:25:08Z",
       "stderr": "",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout": "....s................................................................... [ 45%]\r\n........................................................................ [ 90%]\r\n...............                                                          [100%]\r\n158 passed, 1 skipped, 7 deselected in 95.22s (0:01:35)\r\n",
-      "stdout_sha256": "af1c79193b5fe40b02d208be4f1c13c16846fc33d437ba6e0c60c7bb317875a8"
+      "stdout": "....s................................................................... [ 45%]\r\n........................................................................ [ 90%]\r\n...............                                                          [100%]\r\n158 passed, 1 skipped, 7 deselected in 100.31s (0:01:40)\r\n",
+      "stdout_sha256": "dfcdaa9fd0e92889a69fc735df5e2ae238975c5943c26ff135a9adff8b3f66f9"
     },
     {
       "command": "$env:PYTHONPATH='src'; $env:PYTHONDONTWRITEBYTECODE='1'; uv run --frozen --with pytest==8.4.1 python -m pytest -m \"not task8_post_audit\" -q -p no:cacheprovider",
-      "completed_at": "2026-08-21T15:55:10Z",
+      "completed_at": "2026-08-22T04:45:44Z",
       "exit_code": 0,
       "name": "full_pytest",
-      "result": "2430 passed, 1 skipped",
-      "started_at": "2026-08-21T15:37:56Z",
+      "result": "2503 passed, 1 skipped",
+      "started_at": "2026-08-22T04:26:52Z",
       "stderr": "",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout": "........................................................................ [  2%]\r\n........................................................................ [  5%]\r\n........................................................................ [  8%]\r\n........................................................................ [ 11%]\r\n........................................................................ [ 14%]\r\n........................................................................ [ 17%]\r\n........................................................................ [ 20%]\r\n........................................................................ [ 23%]\r\n........................................................................ [ 26%]\r\n........................................................................ [ 29%]\r\n........................................................................ [ 32%]\r\n........................................................................ [ 35%]\r\n........................................................................ [ 38%]\r\n........................................................................ [ 41%]\r\n........................................................................ [ 44%]\r\n........................................................................ [ 47%]\r\n........................................................................ [ 50%]\r\n........................................................................ [ 53%]\r\n........................................................................ [ 56%]\r\n........................................................................ [ 59%]\r\n........................................................................ [ 62%]\r\n........................................................................ [ 65%]\r\n........................................................................ [ 68%]\r\n........................................................................ [ 71%]\r\n........................................................................ [ 74%]\r\n.............................................................s.......... [ 77%]\r\n........................................................................ [ 79%]\r\n........................................................................ [ 82%]\r\n........................................................................ [ 85%]\r\n........................................................................ [ 88%]\r\n........................................................................ [ 91%]\r\n........................................................................ [ 94%]\r\n........................................................................ [ 97%]\r\n.......................................................                  [100%]\r\n2430 passed, 1 skipped, 7 deselected in 1030.97s (0:17:10)\r\n",
-      "stdout_sha256": "63b5b88e79a1aa9311078ade80ad8f98b80a99c483afe209acb9e56b439e9819"
+      "stdout": "........................................................................ [  2%]\r\n........................................................................ [  5%]\r\n........................................................................ [  8%]\r\n........................................................................ [ 11%]\r\n........................................................................ [ 14%]\r\n........................................................................ [ 17%]\r\n........................................................................ [ 20%]\r\n........................................................................ [ 23%]\r\n........................................................................ [ 25%]\r\n........................................................................ [ 28%]\r\n........................................................................ [ 31%]\r\n........................................................................ [ 34%]\r\n........................................................................ [ 37%]\r\n........................................................................ [ 40%]\r\n........................................................................ [ 43%]\r\n........................................................................ [ 46%]\r\n........................................................................ [ 48%]\r\n........................................................................ [ 51%]\r\n........................................................................ [ 54%]\r\n........................................................................ [ 57%]\r\n........................................................................ [ 60%]\r\n........................................................................ [ 63%]\r\n........................................................................ [ 66%]\r\n........................................................................ [ 69%]\r\n........................................................................ [ 71%]\r\n........................................................................ [ 74%]\r\n..............................................................s......... [ 77%]\r\n........................................................................ [ 80%]\r\n........................................................................ [ 83%]\r\n........................................................................ [ 86%]\r\n........................................................................ [ 89%]\r\n........................................................................ [ 92%]\r\n........................................................................ [ 94%]\r\n........................................................................ [ 97%]\r\n........................................................                 [100%]\r\n2503 passed, 1 skipped, 7 deselected in 1128.90s (0:18:48)\r\n",
+      "stdout_sha256": "7e9125f3a66403d431cc5f1c1fcbbfaaec9cb197816d2980e16e8eacc5a44002"
     },
     {
       "command": "$env:PYTHONPATH='src'; uv run --frozen --with mypy==1.17.1 python -m mypy src/mingli_engine/new_material_learning.py src/mingli_engine/cli.py --follow-imports=skip",
-      "completed_at": "2026-08-21T15:55:21Z",
+      "completed_at": "2026-08-22T04:45:52Z",
       "exit_code": 0,
       "name": "focused_mypy",
       "result": "Success: no issues found in 2 source files",
-      "started_at": "2026-08-21T15:55:10Z",
+      "started_at": "2026-08-22T04:45:44Z",
       "stderr": "",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "stdout": "Success: no issues found in 2 source files\r\n",
@@ -4899,11 +5235,11 @@
     },
     {
       "command": "uv run --frozen --with ruff==0.12.11 ruff check src/mingli_engine/new_material_learning.py src/mingli_engine/cli.py tests/unit/test_new_material_learning.py",
-      "completed_at": "2026-08-21T15:55:23Z",
+      "completed_at": "2026-08-22T04:45:54Z",
       "exit_code": 0,
       "name": "focused_ruff",
       "result": "All checks passed!",
-      "started_at": "2026-08-21T15:55:21Z",
+      "started_at": "2026-08-22T04:45:52Z",
       "stderr": "",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "stdout": "All checks passed!\n",
@@ -4911,11 +5247,11 @@
     },
     {
       "command": "git diff --check",
-      "completed_at": "2026-08-21T15:55:23Z",
+      "completed_at": "2026-08-22T04:45:54Z",
       "exit_code": 0,
       "name": "git_diff_check",
       "result": "clean",
-      "started_at": "2026-08-21T15:55:23Z",
+      "started_at": "2026-08-22T04:45:54Z",
       "stderr": "",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "stdout": "",

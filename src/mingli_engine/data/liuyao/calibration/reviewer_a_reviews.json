@@ -1,0 +1,506 @@
+[
+  {
+    "review_id": "review-reviewer-a-ly-qian_quiet-001",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_quiet-001",
+    "label": "accept",
+    "rationale": "乾为天为乾宫本宫卦，六爻齐备子孙、妻财、父母、官鬼、兄弟五类六亲，用神选取的结构性观察理当先列六亲分布。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_quiet-002",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_quiet-002",
+    "label": "accept",
+    "rationale": "卦面明确月建寅，月日旺衰观察自当包含月建寅这一提纲。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_quiet-003",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_quiet-003",
+    "label": "accept",
+    "rationale": "日辰甲子旬中空戌亥，六爻壬戌父母正值旬空，旬空观察应含戌亥。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_quiet-004",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_quiet-004",
+    "label": "accept",
+    "rationale": "本宫卦世居六爻应居三爻，世应关系文本应述世爻所居爻位。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_quiet-005",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_quiet-005",
+    "label": "accept",
+    "rationale": "全卦六爻皆无动标记，确为安静无动爻之局。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_quiet-006",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_quiet-006",
+    "label": "accept",
+    "rationale": "应期推断在V1无对应规则证据支撑，保持degraded状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_quiet-007",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_quiet-007",
+    "label": "accept",
+    "rationale": "未提供事项类别输入，分类断语无从计算，not_computed状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_quiet-008",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_quiet-008",
+    "label": "accept",
+    "rationale": "传统纳甲断语讲究审势度量，绝对化必定之辞绝不应出现于用神观察文本。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-gou_quiet-009",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-gou_quiet-009",
+    "label": "accept",
+    "rationale": "天风姤为乾宫一世卦，卦中缺妻财而伏甲寅于二爻辛亥之下，用神观察须列明含伏神的六亲分布。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-gou_quiet-010",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-gou_quiet-010",
+    "label": "accept",
+    "rationale": "卦面月建寅，旺衰观察应含月建寅。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-gou_quiet-011",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-gou_quiet-011",
+    "label": "accept",
+    "rationale": "甲子旬空戌亥，二爻辛亥子孙及六爻壬戌父母均落空，旬空观察应含戌亥。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-gou_quiet-012",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-gou_quiet-012",
+    "label": "accept",
+    "rationale": "一世卦世居初爻应居四爻，世应文本应述世爻所居。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-gou_quiet-013",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-gou_quiet-013",
+    "label": "accept",
+    "rationale": "全卦无动爻标记，确为安静无动爻。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-gou_quiet-014",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-gou_quiet-014",
+    "label": "accept",
+    "rationale": "应期规则V1无证据，degraded状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-gou_quiet-015",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-gou_quiet-015",
+    "label": "accept",
+    "rationale": "无事项类别输入，category_judgment保持not_computed恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-gou_quiet-016",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-gou_quiet-016",
+    "label": "accept",
+    "rationale": "绝对化断语必定不应出现于用神选取文本，认同not_contains。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-dayou_quiet-017",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-dayou_quiet-017",
+    "label": "accept",
+    "rationale": "火天大有为乾宫归魂卦，五类六亲齐备于六爻，用神观察应列六亲分布。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-dayou_quiet-018",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-dayou_quiet-018",
+    "label": "accept",
+    "rationale": "卦面月建寅，旺衰观察应含月建寅。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-dayou_quiet-019",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-dayou_quiet-019",
+    "label": "accept",
+    "rationale": "甲子旬空戌亥，旬空观察应含戌亥。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-dayou_quiet-020",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-dayou_quiet-020",
+    "label": "accept",
+    "rationale": "归魂卦世居三爻应居六爻，世应文本应述世爻所居。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-dayou_quiet-021",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-dayou_quiet-021",
+    "label": "accept",
+    "rationale": "六爻皆静无动标记，安静无动爻属实。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-dayou_quiet-022",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-dayou_quiet-022",
+    "label": "accept",
+    "rationale": "应期规则V1无证据，degraded状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-dayou_quiet-023",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-dayou_quiet-023",
+    "label": "accept",
+    "rationale": "无事项类别输入，not_computed状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-dayou_quiet-024",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-dayou_quiet-024",
+    "label": "accept",
+    "rationale": "绝对化断语必定不应出现，认同not_contains。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-jian_quiet-025",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-jian_quiet-025",
+    "label": "accept",
+    "rationale": "水山蹇为兑宫四世卦，卦中缺妻财而伏丁卯于二爻丙午之下，用神观察应列含伏神之六亲分布。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-jian_quiet-026",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-jian_quiet-026",
+    "label": "accept",
+    "rationale": "卦面月建寅，旺衰观察应含月建寅。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-jian_quiet-027",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-jian_quiet-027",
+    "label": "accept",
+    "rationale": "甲子旬空戌亥，五爻戊戌父母落空，旬空观察应含戌亥。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-jian_quiet-028",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-jian_quiet-028",
+    "label": "accept",
+    "rationale": "四世卦世居四爻应居初爻，世应文本应述世爻所居。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-jian_quiet-029",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-jian_quiet-029",
+    "label": "accept",
+    "rationale": "全卦无动爻，安静无动爻属实。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-jian_quiet-030",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-jian_quiet-030",
+    "label": "accept",
+    "rationale": "应期规则V1无证据，degraded状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-jian_quiet-031",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-jian_quiet-031",
+    "label": "accept",
+    "rationale": "无事项类别输入，not_computed状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-jian_quiet-032",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-jian_quiet-032",
+    "label": "accept",
+    "rationale": "绝对化断语必定不应出现，认同not_contains。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_moving-033",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_moving-033",
+    "label": "accept",
+    "rationale": "乾为天五类六亲齐备，初爻虽动而六亲分布仍是用神观察之基础，应包含之。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_moving-034",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_moving-034",
+    "label": "accept",
+    "rationale": "卦面月建寅，旺衰观察应含月建寅。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_moving-035",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_moving-035",
+    "label": "accept",
+    "rationale": "甲子旬空戌亥，六爻壬戌父母落空，旬空观察应含戌亥。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_moving-036",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_moving-036",
+    "label": "accept",
+    "rationale": "本宫卦世居六爻应居三爻，世应文本应述世爻所居。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_moving-037",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_moving-037",
+    "label": "accept",
+    "rationale": "初爻甲子子孙动则阳变阴成巽初爻，动爻观察应述其变出之爻（之姤）。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_moving-038",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_moving-038",
+    "label": "accept",
+    "rationale": "应期规则V1无证据，degraded状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_moving-039",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_moving-039",
+    "label": "accept",
+    "rationale": "无事项类别输入，not_computed状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_moving-040",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_moving-040",
+    "label": "accept",
+    "rationale": "绝对化断语必定不应出现，认同not_contains。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-tai_moving-041",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-tai_moving-041",
+    "label": "accept",
+    "rationale": "地天泰为坤宫三世卦，卦中缺父母而伏乙巳于二爻甲寅之下，用神观察应列含伏神之六亲分布。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-tai_moving-042",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-tai_moving-042",
+    "label": "accept",
+    "rationale": "卦面月建寅，旺衰观察应含月建寅。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-tai_moving-043",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-tai_moving-043",
+    "label": "accept",
+    "rationale": "甲子旬空戌亥，旬空观察应含戌亥。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-tai_moving-044",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-tai_moving-044",
+    "label": "accept",
+    "rationale": "三世卦世居三爻应居六爻，世应文本应述世爻所居。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-tai_moving-045",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-tai_moving-045",
+    "label": "accept",
+    "rationale": "五爻癸亥妻财动则坤上卦变坎成水天需，动爻观察应述变出之爻。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-tai_moving-046",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-tai_moving-046",
+    "label": "accept",
+    "rationale": "应期规则V1无证据，degraded状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-tai_moving-047",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-tai_moving-047",
+    "label": "accept",
+    "rationale": "无事项类别输入，not_computed状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-tai_moving-048",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-tai_moving-048",
+    "label": "accept",
+    "rationale": "绝对化断语必定不应出现，认同not_contains。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-kun_quiet-049",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-kun_quiet-049",
+    "label": "accept",
+    "rationale": "坤为地为坤宫本宫卦，兄弟、父母、官鬼、妻财、子孙五类六亲齐备，用神观察应列六亲分布。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-kun_quiet-050",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-kun_quiet-050",
+    "label": "accept",
+    "rationale": "卦面月建寅，旺衰观察应含月建寅。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-kun_quiet-051",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-kun_quiet-051",
+    "label": "accept",
+    "rationale": "甲子旬空戌亥，五爻癸亥妻财正值旬空，旬空观察应含戌亥。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-kun_quiet-052",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-kun_quiet-052",
+    "label": "accept",
+    "rationale": "本宫卦世居六爻应居三爻，世应文本应述世爻所居。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-kun_quiet-053",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-kun_quiet-053",
+    "label": "accept",
+    "rationale": "全卦无动爻标记，安静无动爻属实。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-kun_quiet-054",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-kun_quiet-054",
+    "label": "accept",
+    "rationale": "应期规则V1无证据，degraded状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-kun_quiet-055",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-kun_quiet-055",
+    "label": "accept",
+    "rationale": "无事项类别输入，not_computed状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-kun_quiet-056",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-kun_quiet-056",
+    "label": "accept",
+    "rationale": "绝对化断语必定不应出现，认同not_contains。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-li_quiet-057",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-li_quiet-057",
+    "label": "accept",
+    "rationale": "离为火为离宫本宫卦，父母、子孙、官鬼、妻财、兄弟五类六亲齐备，用神观察应列六亲分布。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-li_quiet-058",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-li_quiet-058",
+    "label": "accept",
+    "rationale": "卦面月建寅，旺衰观察应含月建寅。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-li_quiet-059",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-li_quiet-059",
+    "label": "accept",
+    "rationale": "甲子旬空戌亥，三爻己亥官鬼正值旬空，旬空观察应含戌亥。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-li_quiet-060",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-li_quiet-060",
+    "label": "accept",
+    "rationale": "本宫卦世居六爻应居三爻，世应文本应述世爻所居。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-li_quiet-061",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-li_quiet-061",
+    "label": "accept",
+    "rationale": "全卦无动爻标记，安静无动爻属实。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-li_quiet-062",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-li_quiet-062",
+    "label": "accept",
+    "rationale": "应期规则V1无证据，degraded状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-li_quiet-063",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-li_quiet-063",
+    "label": "accept",
+    "rationale": "无事项类别输入，not_computed状态恰当。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-li_quiet-064",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-li_quiet-064",
+    "label": "accept",
+    "rationale": "绝对化断语必定不应出现，认同not_contains。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_quiet-065",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_quiet-065",
+    "label": "accept",
+    "rationale": "乾为天静卦世6应3，甲子日甲乙起青龙顺布，玄武临六爻世、勾陈临三爻应，观察文本以'某神临世/应'陈述，合'临'字口径。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-gou_quiet-066",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-gou_quiet-066",
+    "label": "accept",
+    "rationale": "天风姤静卦世1应4，初爻青龙临世（辛丑父母）、四爻螣蛇临应（壬午官鬼），文本作'临世/临应'表述，应含'临'字。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-dayou_quiet-067",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-dayou_quiet-067",
+    "label": "accept",
+    "rationale": "火天大有静卦世3应6，勾陈临三爻世（甲辰父母）、玄武临六爻应（己巳官鬼），六神临持族文本以'临'字为骨架，判定正确。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-jian_quiet-068",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-jian_quiet-068",
+    "label": "accept",
+    "rationale": "水山蹇静卦世4应1，螣蛇临四爻世（戊申兄弟）、青龙临初爻应（丙辰父母），'临世/临应'为标准表述，contains'临'成立。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-qian_moving-069",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-qian_moving-069",
+    "label": "accept",
+    "rationale": "乾为天初爻动，青龙临初爻动爻（甲子子孙），且玄武临六爻世、勾陈临三爻应，文本必以'临动爻/临世/临应'陈述，含'临'字无疑。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-tai_moving-070",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-tai_moving-070",
+    "label": "accept",
+    "rationale": "地天泰五爻动，白虎临五爻动爻（癸亥妻财），勾陈临三爻世、玄武临六爻应，六神临动、临世、临应并见，'临'字当含。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-kun_quiet-071",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-kun_quiet-071",
+    "label": "accept",
+    "rationale": "坤为地静卦世6应3，玄武临六爻世（癸酉子孙）、勾陈临三爻应（乙卯官鬼），即便无临亦作'六神无临世应动爻'，正反皆含'临'字。"
+  },
+  {
+    "review_id": "review-reviewer-a-ly-li_quiet-072",
+    "reviewer": "reviewer_a",
+    "assertion_id": "ly-li_quiet-072",
+    "label": "accept",
+    "rationale": "离为火静卦世6应3，玄武临六爻世（己巳兄弟）、勾陈临三爻应（己亥官鬼），文本以'临世/临应'结构呈现，符合含'临'预期。"
+  }
+]

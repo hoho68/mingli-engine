@@ -62,9 +62,9 @@
 - Remote authorizations SHA-256: `a23de2ee1325029966686ca8d60bd6ee21c43084ac43291d86fc6a5833f3b1af`
 - Model runs SHA-256: `18a1e869ecb76d254718c3bcc698f5ead66398cf3884c793f87b19dc5b462071`
 - File results SHA-256: `2ad8fc1e0587cdf5597a2f9d353d9c53c0ce3078cbd52d5cd4b24ecba5cf8414`
-- Task 8 command evidence SHA-256: `61d7260feaaa432b3aedd2bc689d4400fdcfd08f1838cf914924fe9b35f82924`
-- Reviewed files binding SHA-256: `edc2ded3016014a45420279bd7898a96e2efd8145b852fe46b062ea421269eb1`
+- Task 8 command evidence SHA-256: `2a7b74eda132256782e4ac130c9655d08ba4de2fb9de6e52f8930f15a350d2d0`
+- Reviewed files binding SHA-256: `ee72fb057004e427de0ef0329c6dca8fa60a19b109fd66f29ae0d9634c779263`
 - Protected legacy knowledge binding SHA-256: `dffdd5527eece9ae89bdea3f3df2813399c1d8b85baad557c0e6987625c8ddf5`
-- Final audit SHA-256: `6f12654b8c1734d1cc062c49a111e20203dbd1834a1b08c77dfef1ab270300b1`
+- Final audit SHA-256: `1840ea1f847bf080c56024a31c9a58b001c59dea74eadc8ea7f6a9b0d0be3f82`
 
-Task 8 passed source rehash, governed pre-audit regression (2430 passed, 1 skipped), focused mypy/Ruff, git diff validation, Git privacy status, and legacy-preservation checks.
+Task 8 passed source rehash, governed pre-audit regression (2503 passed, 1 skipped), focused mypy/Ruff, git diff validation, Git privacy status, and legacy-preservation checks.

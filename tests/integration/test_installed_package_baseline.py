@@ -17,6 +17,15 @@ pytest_plugins = ("tests.contract.test_wheel_runtime_assets",)
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_ROOT = REPO_ROOT / "src" / "mingli_engine"
 SOURCE_ONLY_DATA_ROOT = PACKAGE_ROOT / "data" / "new_material_learning"
+LIUYAO_GOVERNANCE_DATA_ROOT = PACKAGE_ROOT / "data" / "liuyao"
+
+
+def _is_governance_only_liuyao_asset(path: Path) -> bool:
+    if not path.is_relative_to(LIUYAO_GOVERNANCE_DATA_ROOT):
+        return False
+    if path.name in {"gua_reference.json", "analysis_config.json"}:
+        return False
+    return True
 
 
 @pytest.fixture(scope="module")
@@ -75,6 +84,7 @@ def _source_asset_hashes() -> dict[str, str]:
         path.relative_to(PACKAGE_ROOT).as_posix(): sha256(path.read_bytes()).hexdigest()
         for path in sorted((PACKAGE_ROOT / "data").rglob("*.json"))
         if not path.is_relative_to(SOURCE_ONLY_DATA_ROOT)
+        and not _is_governance_only_liuyao_asset(path)
     }
 
 

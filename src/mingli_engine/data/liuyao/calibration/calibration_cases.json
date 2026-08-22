@@ -1,0 +1,330 @@
+[
+  {
+    "case_id": "qian_quiet",
+    "request": {
+      "cast_mode": "explicit",
+      "cast_datetime": "1990-02-28T08:30",
+      "lines": [
+        {
+          "position": 1,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 2,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 3,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 4,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 5,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 6,
+          "yin_yang": "yang",
+          "moving": false
+        }
+      ],
+      "request_id": null
+    },
+    "note": "乾为天静卦（纯阳、世六应三）"
+  },
+  {
+    "case_id": "gou_quiet",
+    "request": {
+      "cast_mode": "explicit",
+      "cast_datetime": "1990-02-28T08:30",
+      "lines": [
+        {
+          "position": 1,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 2,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 3,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 4,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 5,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 6,
+          "yin_yang": "yang",
+          "moving": false
+        }
+      ],
+      "request_id": null
+    },
+    "note": "天风姤静卦（一世、妻财伏二爻）"
+  },
+  {
+    "case_id": "dayou_quiet",
+    "request": {
+      "cast_mode": "explicit",
+      "cast_datetime": "1990-02-28T08:30",
+      "lines": [
+        {
+          "position": 1,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 2,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 3,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 4,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 5,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 6,
+          "yin_yang": "yang",
+          "moving": false
+        }
+      ],
+      "request_id": null
+    },
+    "note": "火天大有静卦（归魂、世三应六）"
+  },
+  {
+    "case_id": "jian_quiet",
+    "request": {
+      "cast_mode": "explicit",
+      "cast_datetime": "1990-02-28T08:30",
+      "lines": [
+        {
+          "position": 1,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 2,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 3,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 4,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 5,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 6,
+          "yin_yang": "yin",
+          "moving": false
+        }
+      ],
+      "request_id": null
+    },
+    "note": "水山蹇静卦（四世、妻财伏二爻）"
+  },
+  {
+    "case_id": "qian_moving",
+    "request": {
+      "cast_mode": "explicit",
+      "cast_datetime": "1990-02-28T08:30",
+      "lines": [
+        {
+          "position": 1,
+          "yin_yang": "yang",
+          "moving": true
+        },
+        {
+          "position": 2,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 3,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 4,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 5,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 6,
+          "yin_yang": "yang",
+          "moving": false
+        }
+      ],
+      "request_id": null
+    },
+    "note": "乾为天初爻动之姤"
+  },
+  {
+    "case_id": "tai_moving",
+    "request": {
+      "cast_mode": "explicit",
+      "cast_datetime": "1990-02-28T08:30",
+      "lines": [
+        {
+          "position": 1,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 2,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 3,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 4,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 5,
+          "yin_yang": "yin",
+          "moving": true
+        },
+        {
+          "position": 6,
+          "yin_yang": "yin",
+          "moving": false
+        }
+      ],
+      "request_id": null
+    },
+    "note": "地天泰五爻动之需"
+  },
+  {
+    "case_id": "kun_quiet",
+    "request": {
+      "cast_mode": "explicit",
+      "cast_datetime": "1990-02-28T08:30",
+      "lines": [
+        {
+          "position": 1,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 2,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 3,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 4,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 5,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 6,
+          "yin_yang": "yin",
+          "moving": false
+        }
+      ],
+      "request_id": null
+    },
+    "note": "坤为地静卦（纯阴）"
+  },
+  {
+    "case_id": "li_quiet",
+    "request": {
+      "cast_mode": "explicit",
+      "cast_datetime": "1990-02-28T08:30",
+      "lines": [
+        {
+          "position": 1,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 2,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 3,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 4,
+          "yin_yang": "yang",
+          "moving": false
+        },
+        {
+          "position": 5,
+          "yin_yang": "yin",
+          "moving": false
+        },
+        {
+          "position": 6,
+          "yin_yang": "yang",
+          "moving": false
+        }
+      ],
+      "request_id": null
+    },
+    "note": "离为火静卦"
+  }
+]

@@ -139,7 +139,15 @@ def _source_runtime_json_assets() -> set[str]:
         path.relative_to(PACKAGE_ROOT).as_posix()
         for path in (PACKAGE_ROOT / "data").rglob("*.json")
         if not path.is_relative_to(SOURCE_ONLY_DATA_ROOT)
+        and not _is_governance_only_liuyao_asset(path)
     }
+
+
+def _is_governance_only_liuyao_asset(path: Path) -> bool:
+    liuyao_root = PACKAGE_ROOT / "data" / "liuyao"
+    if not path.is_relative_to(liuyao_root):
+        return False
+    return path.name not in {"gua_reference.json", "analysis_config.json"}
 
 
 def _asset_hashes(package_root: Path) -> dict[str, str]:
@@ -158,11 +166,20 @@ def _copy_package_data(
 ) -> tuple[Path, Path]:
     installed_root = tmp_path / "target"
     package_root = installed_root / "mingli_engine"
+    liuyao_governance_names = (
+        "liuyao_sources.json",
+        "liuyao_candidates.json",
+        "liuyao_review_decisions.json",
+        "liuyao_promotion_batches.json",
+        "liuyao_evidence_units.json",
+        "batch_20260714_liuyao_family_map.json",
+        "calibration",
+    )
     copytree(
         PACKAGE_ROOT,
         package_root,
         ignore=ignore_patterns(
-            *(".gitkeep", "__pycache__", "new_material_learning")
+            *(".gitkeep", "__pycache__", "new_material_learning", *liuyao_governance_names)
             if not include_source_only_data
             else (".gitkeep", "__pycache__")
         ),

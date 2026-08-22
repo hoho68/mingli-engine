@@ -23,7 +23,7 @@ namespaces = false
 mingli_engine = ["data/**/*.json"]
 
 [tool.setuptools.exclude-package-data]
-mingli_engine = ["data/new_material_learning/*.json"]
+mingli_engine = ["data/new_material_learning/*.json", "data/liuyao/liuyao_*.json", "data/liuyao/batch_20260714_liuyao_family_map.json", "data/liuyao/calibration/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

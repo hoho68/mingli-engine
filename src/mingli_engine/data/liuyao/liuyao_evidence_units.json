@@ -1,0 +1,1407 @@
+[
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0001",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:1-32",
+    "theme": "起卦与变卦操作规则",
+    "rule_family": "moving_line_dynamics",
+    "risk_tier": "ordinary",
+    "summary": "原文描述的起卦与变卦规则为传统摇钱起卦法的一部分，包括排卦顺序与动爻变化，该操作流程为历史文化内容，不构成任何可验证的实际功能。",
+    "applicability": [
+      "采用三枚铜钱抛掷六次，根据背与字组合确定爻性（单、拆、重、交）",
+      "重（三个背）为阳爻动，交（三个字）为阴爻动，单为少阳、拆为少阴",
+      "动爻须变，变出之爻依据动爻变卦排定，不动之爻不变",
+      "点卦从下往上，装卦需结合浑天甲子与六亲规则"
+    ],
+    "limitations": [
+      "此规则仅存在于术数文献中，其预测功能无科学依据",
+      "原文对背、字的文字描述受异体字影响，可能需对照校勘版本理解",
+      "不建议在现实决策中使用该起卦法，以免产生误导"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o001-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0002",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:33-64",
+    "theme": "六爻纳甲神煞判断",
+    "rule_family": "six_spirits_attachment",
+    "risk_tier": "ordinary",
+    "summary": "六神不宜单独作为吉凶判断依据，需结合用神旺衰及整体卦象。",
+    "applicability": [
+      "卦中出现青龙、白虎等六神",
+      "爻神旺衰需结合月日",
+      "卦象吉凶需综合判断"
+    ],
+    "limitations": [
+      "原文引用不同古籍观点存在分歧",
+      "缺乏系统实证支持",
+      "文本存在异体字可能影响解读"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o002-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0003",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:33-64",
+    "theme": "六爻暗动规则",
+    "rule_family": "moving_line_dynamics",
+    "risk_tier": "ordinary",
+    "summary": "暗动之爻具有作用，其吉凶取决于与用神的关系，暗动若为原神生用神则吉，若为忌神克用神则凶。",
+    "applicability": [
+      "旺相静爻被日辰冲动",
+      "需判断暗动爻与用神的关系",
+      "用神休囚时暗动之吉凶取决于原神或忌神"
+    ],
+    "limitations": [
+      "原文以个案说明，未提供系统规则",
+      "暗动规则需结合其他因素综合判断",
+      "应验性依赖个人经验"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o002-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0004",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:65-96",
+    "theme": "旬空判定",
+    "rule_family": "void_break_state",
+    "risk_tier": "ordinary",
+    "summary": "The text suggests that such a line is considered void (旬空), and its influence may be diminished or require a day that fills the void to become effective.",
+    "applicability": [
+      "When a divination hexagram is cast and the day falls within a specific ten-day cycle (e.g., 甲子旬 through 甲寅旬).",
+      "When a line's earthly branch belongs to the void set for that cycle."
+    ],
+    "limitations": [
+      "This rule is part of a traditional divination system and lacks external validation.",
+      "The exact application depends on additional factors like moving lines and month strength, as noted in the text."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o003-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0005",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:65-96",
+    "theme": "生旺墓绝",
+    "rule_family": "month_day_strength",
+    "risk_tier": "ordinary",
+    "summary": "The text indicates that the traditional phases (生旺墓绝) are conditionally applied, and that some classical formulas are disputed.",
+    "applicability": [
+      "When analyzing the phase of a line based on its five-element nature and the current day or month branch.",
+      "When considering whether a phase like 长生 or 墓 actually applies given the line's strength."
+    ],
+    "limitations": [
+      "The source text presents conflicting classical sources, so the rule is not fixed.",
+      "The rule is rooted in a symbolic system with no empirical basis."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o003-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0006",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:65-96",
+    "theme": "进退神判定",
+    "rule_family": "moving_line_dynamics",
+    "risk_tier": "ordinary",
+    "summary": "The text provides four rules each for advance and retreat, judging based on the strength or weakness of the moving line and its counterpart, and the presence of supporting factors.",
+    "applicability": [
+      "When a moving line transforms into an advance (进) or retreat (退) spirit based on the specific branch pairs listed.",
+      "When evaluating whether the transformation is auspicious or inauspicious for the queried matter."
+    ],
+    "limitations": [
+      "The rules are complex and context-dependent, with examples of disagreement in interpretation.",
+      "This is a descriptive divination system, not a predictive science."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o003-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0007",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:65-96",
+    "theme": "月破判断",
+    "rule_family": "void_break_state",
+    "risk_tier": "ordinary",
+    "summary": "The text suggests that a broken line is weakened and may regain strength in unbroken months or days, but the effect varies if the line moves or is a useful spirit.",
+    "applicability": [
+      "When a line's branch clashes with the current month's branch according to the listed order."
+    ],
+    "limitations": [
+      "The source text notes that the rule is not absolute and depends on detailed conditions.",
+      "The concept is cultural and not empirically validated."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o003-candidate-004",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0008",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:65-96",
+    "theme": "伏神取舍",
+    "rule_family": "yong_shen_selection",
+    "risk_tier": "ordinary",
+    "summary": "The text indicates that a useful hidden spirit can substitute for the absent line, while a useless one cannot, and that sometimes re-casting is recommended.",
+    "applicability": [
+      "When the needed line (用神) does not appear in the hexagram, and a hidden spirit is sought from the corresponding palace hexagram.",
+      "When evaluating whether the hidden spirit is useful based on receiving life from month, flying spirit, or moving lines."
+    ],
+    "limitations": [
+      "The method relies on traditional palace structures and is subject to practitioner disagreement.",
+      "The examples are historical and unverified."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o003-candidate-005",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0009",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:65-96",
+    "theme": "鬼墓判断",
+    "rule_family": "month_day_strength",
+    "risk_tier": "ordinary",
+    "summary": "The text suggests that this condition can indicate severe or fatal outcomes in certain contexts, but if the line is strong, it may not be fatal.",
+    "applicability": [
+      "When the self line or day ghost line enters a tomb (辰戌丑未) via month, moving line, or transformation.",
+      "When the self or useful line is weak."
+    ],
+    "limitations": [
+      "This describes potentially fatal outcomes and must remain descriptive, with no actionable guidance.",
+      "The rule is context-dependent and not empirically validated."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o003-candidate-006",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0010",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:65-96",
+    "theme": "独发独静",
+    "rule_family": "moving_line_dynamics",
+    "risk_tier": "ordinary",
+    "summary": "The text presents these as special conditions that can be significant, but notes that practitioners disagree on whether to prioritize them over the useful spirit.",
+    "applicability": [
+      "When five lines move and one is static (独静), or five lines are static and one moves (独发)."
+    ],
+    "limitations": [
+      "The source text acknowledges that these conditions are not always reliable.",
+      "Interpretation requires full hexagram context and is not fixed."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o003-candidate-007",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0011",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:65-96",
+    "theme": "两现取舍",
+    "rule_family": "yong_shen_selection",
+    "risk_tier": "ordinary",
+    "summary": "The text suggests choosing the stronger, moving, unbroken, or non-void line over its counterpart.",
+    "applicability": [
+      "When the useful spirit appears twice in the hexagram."
+    ],
+    "limitations": [
+      "The source text notes that experience may differ from the written rules.",
+      "This is part of a complex system requiring holistic analysis."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o003-candidate-008",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0012",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:129-160",
+    "theme": "traditional weather divination via hexagrams",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The text proposes that weather can be predicted by the presence, movement, and mutual generation/control among the six yao types and their Five Elements, with specific rules like 子孙发动万里晴 (descendant moves, clear sky for miles) and 父母发动雨纷纷 (parent moves, rain falls).",
+    "applicability": [
+      "When someone asks about rain or clear sky (or other weather) using the described hexagram method.",
+      "The relevant yao types (父母 for rain, 子孙 for clear sky, etc.) are identified in the hexagram, along with their interactions with the moon and day branches.",
+      "The movement (动) or stillness (静) of the yao lines and their transformations (化) are considered crucial."
+    ],
+    "limitations": [
+      "This is a historical divination method without scientific validation.",
+      "The rules are highly context-dependent and require expert interpretation.",
+      "The text itself warns against rigid application, stressing that actual verification is needed."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o005-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0013",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:129-160",
+    "theme": "traditional fortune-telling for wealth and career",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The text states that the presence and strength of certain yao types determine aspects of one's fortune, such as wealth, career advancement, support from others, and potential pitfalls, e.g., 财福俱旺必是富贵之命 (wealth and offspring both strong implies a wealthy and honorable life).",
+    "applicability": [
+      "When a person asks about lifetime fortune, wealth, or career using the hexagram method.",
+      "The 世 (self) yao, 妻财 (wealth), 子孙 (offspring/leisure), and 官鬼 (career/position) yao types are analyzed in terms of their strength, voids, tombs, and mutual influences.",
+      "The lunar month, day stem-branch, and movement/transformation of lines are considered."
+    ],
+    "limitations": [
+      "These are traditional cultural beliefs, not empirical or professional advice.",
+      "The text warns that misinterpretation is common and that multiple factors must be weighed.",
+      "Outcomes are not predictive in any verifiable way and may be harmful if taken as destiny."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o005-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0014",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:161-192",
+    "theme": "占卜卦象解读",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "古籍认为六亲持世状态结合月日可判断疾病、功名、婚姻等吉凶。",
+    "applicability": [
+      "出现'持世'、'生扶'、'月破'等六爻术语",
+      "涉及官鬼、子孙、妻财等六亲爻位",
+      "有具体干支、月建记录"
+    ],
+    "limitations": [
+      "仅是对古籍内容的客观描述，不构成实际占卜指引",
+      "文本讹误多，规则内涵存疑",
+      "系历史文献观点，无实证依据"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o006-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0015",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:193-224",
+    "theme": "六爻占筮用神判断规则",
+    "rule_family": "yong_shen_selection",
+    "risk_tier": "ordinary",
+    "summary": "文本提出以特定六亲爻为用神，并依据月建、日辰、动爻生克及墓绝空破等状态判断吉凶的做法。",
+    "applicability": [
+      "文本中涉及科举考试、仕途升迁、求财等占问主题",
+      "卦象中出现官鬼、父母、妻财、子孙、兄弟等六亲配置"
+    ],
+    "limitations": [
+      "该规则仅见于所给古籍片段，属于传统术数理论，未有现代实证支持",
+      "文本用词晦涩且多处缺字讹误，规则边界难以精确定义"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o007-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0016",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:193-224",
+    "theme": "六爻断卦中生克冲合关系运用",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "文中依据爻与月日及爻间生克冲合关系，推断吉凶方向。",
+    "applicability": [
+      "卦爻之间存在生、克、冲、合等关系描述",
+      "文本出现化进神、化退神、反吟、伏吟等术语"
+    ],
+    "limitations": [
+      "相关判断依赖具体卦例，无法脱离文本语境直接推广",
+      "原文存在大量无法识别的字符，可能影响规则提取的完整性"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o007-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0017",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:193-224",
+    "theme": "六神与神煞辅助断卦",
+    "rule_family": "six_spirits_attachment",
+    "risk_tier": "ordinary",
+    "summary": "文本将六神及月破、旬空等视为辅助判断吉凶的要素。",
+    "applicability": [
+      "文本中出现青龙、白虎、螣蛇等六神标记",
+      "涉及月破、旬空、墓库等神煞概念"
+    ],
+    "limitations": [
+      "这些概念为古籍内部体系，缺乏现代可操作性",
+      "各注家观点在文本中即有分歧，无法统一为单一规则"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o007-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0018",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:257-288",
+    "theme": "disease_prognosis_patterns",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The text associates certain line states and transformations with recovery likelihood or worsening illness, expressed as conditional prognostic judgments.",
+    "applicability": [
+      "Illness consultation is recorded",
+      "Hexagram chart includes children or ghost line holdings",
+      "Transformations show auspicious or inauspicious changes"
+    ],
+    "limitations": [
+      "Descriptive historical divination only",
+      "Medical validity unverified",
+      "Fragmentation complicates complete interpretation"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o009-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0019",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:257-288",
+    "theme": "medication_appropriateness",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The text recommends or discourages specific medications based on the strength and transformation of relevant lines, particularly favoring children lines as healing indicators.",
+    "applicability": [
+      "Consultation concerns whether to use medication",
+      "Children line or parents line is analyzed",
+      "Month/day and hexagram factors are considered"
+    ],
+    "limitations": [
+      "Not medical advice and not empirically validated",
+      "Text is corrupted and may not be fully legible",
+      "Recommendations are historically conditioned"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o009-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0020",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:257-288",
+    "theme": "grave_selection_interpretations",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The text indicates adverse conditions or recommends caution when certain line transformations suggest damaged qi or structural issues.",
+    "applicability": [
+      "Burial or grave selection consultation is recorded",
+      "Hexagram shows unfavorable line movements",
+      "Transformations involve opposing or repeating trigrams"
+    ],
+    "limitations": [
+      "Cultural and historical in nature",
+      "Geomantic claims lack scientific support",
+      "Text corruption limits accuracy of details"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o009-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0021",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:257-288",
+    "theme": "spirit_and_ritual_causation",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The text links specific ghost-line elements to spirit categories and suggests the use of ritual supplications or offerings as remedial measures.",
+    "applicability": [
+      "Illness is attributed to possible spirit involvement",
+      "Ghost lines show specific elements or strengths",
+      "Rituall offerings or location searches are described"
+    ],
+    "limitations": [
+      "Descriptive of historical beliefs",
+      "Actionable ritual content flagged for local adjudication",
+      "Not a recommendation that supersedes modern medical care"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o009-candidate-004",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0022",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:289-320",
+    "theme": "六爻占断规则",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "根据所问事项，选择用神，并参照日辰、月建、飞伏神生克关系判断吉凶趋势。",
+    "applicability": [
+      "卦中出现父母爻克子孙、官鬼持世等特定六亲关系时",
+      "遇到旬空、月破、长生、墓绝等状态"
+    ],
+    "limitations": [
+      "属于古代占卜体系，无实证基础",
+      "原文用字讹误较多，规则细节可能不准确"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o010-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0023",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:321-352",
+    "theme": "traditional_divination_terms",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "该文本属于传统易学占卜文献《俭爻卍籍绉俵卟集》的部分章节，主要记载六爻纳甲的伏神取法与各类占断论说。",
+    "applicability": [
+      "文本中存在自称《俭爻卍籍绉俵卟集》的易学古籍摘录内容",
+      "文本包含六爻纳甲、伏神、用神、原忌仇神、月破旬空等传统术数术语"
+    ],
+    "limitations": [
+      "仅基于所提供文本页321至352的内容归纳，未核对全书其他部分",
+      "文本中部分文字疑似异体字或讹字，影响精确解读"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o011-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0024",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:321-352",
+    "theme": "historical_text_attribution",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "文本显示作者对前代卜筮著作既有继承亦有批评，并以个人经验补充论证，其具体身份与成书年代未在文内明示。",
+    "applicability": [
+      "文本中多次提及《增删卜易》《易林补遗》《卜筮元龟》《黄金策》等书名",
+      "作者在文本中以'予'自称并引用自身经历"
+    ],
+    "limitations": [
+      "文内未提供作者姓名、朝代或版本信息，无法据此确定其准确归属",
+      "所引书名或有异体写法，对应关系需另行考证"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o011-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0025",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:321-352",
+    "theme": "divination_methodology",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "文本呈现一种强调'用神旺衰与生克制化'为纲的六爻断卦方法论，并认为各种吉凶神煞不应独立作为断卦依据。",
+    "applicability": [
+      "文本主张断卦应以用神为核心，结合月建、日辰、动爻、生克冲合、旬空月破等因素综合判断",
+      "文本对仅凭世应、神煞、禄马等单一因素断卦提出批评"
+    ],
+    "limitations": [
+      "该方法论属于传统术数流派内部主张，与现代科学方法论不具可比性",
+      "不同古籍对同一概念的界定存在差异，本文观点不代表整个卜筮传统"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o011-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0026",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:321-352",
+    "theme": "textual_criticism",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "文本构成对若干传统卜筮著作具体观点的系统性批评，并提出修正意见。",
+    "applicability": [
+      "文本明确列出'辟《增删卜易》之谬'、'辟《易林补遗》伏神之谬'等章节",
+      "文本对相关著作的具体条文进行反驳并给出自认为正确的替代规则"
+    ],
+    "limitations": [
+      "批评内容基于作者个人立场与经验，并非定论",
+      "所批评著作的原文未在本文本中完整呈现，难以独立验证其反驳是否成立"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o011-candidate-004",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0027",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:353-384",
+    "theme": "hexagram-weather-correlation",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The hexagram configuration is used to infer rain, clear weather, clouds, or clearing in the traditional divination system.",
+    "applicability": [
+      "When divining about weather and the Parents line is active or strong",
+      "When the Wealth line activates with strength",
+      "When the Officer line is present and active",
+      "When the Descendant line activates"
+    ],
+    "limitations": [
+      "The rule is part of a historical divination framework with no empirical basis.",
+      "Actual weather conditions are influenced by meteorological factors not considered in the text.",
+      "The text itself acknowledges the limitations of single-line interpretation."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o012-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0028",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:353-384",
+    "theme": "annual-omen-analysis",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "Based on these interactions, the year may be interpreted as auspicious, disastrous, or normal in terms of harvest, peace, or calamities.",
+    "applicability": [
+      "When the Year Star interacts with the six relatives",
+      "When the self or responding line shows specific states",
+      "When certain divine animals like 螣蛇 or 朱雀 are present"
+    ],
+    "limitations": [
+      "This is a symbolic divination practice and does not predict actual events.",
+      "Interpretations are highly conditional and may vary between practitioners.",
+      "The historical and cultural context limits its applicability to modern times."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o012-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0029",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:353-384",
+    "theme": "personal-destiny-assessment",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The condition of the self-line indicates general life fortune, including health, career, and family prospects.",
+    "applicability": [
+      "When the self-line is strong or weak",
+      "When the self-line is in void, tomb, or absolute state",
+      "When specific six relatives hold the self-line"
+    ],
+    "limitations": [
+      "The rule is derived from a classical divination manual and lacks scientific validation.",
+      "Individual destiny is complex and cannot be determined solely by hexagram lines.",
+      "Text implies need for additional divinations for precise life-span assessments."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o012-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0030",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:353-384",
+    "theme": "teacher-student-relationship",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The teacher's competence and the harmony of the teacher-student relationship are inferred from line strengths and interactions.",
+    "applicability": [
+      "When the Parents line represents the teacher and shows strength or weakness",
+      "When the self and responding lines generate each other",
+      "When the Parents line is in certain trigram positions"
+    ],
+    "limitations": [
+      "This is a divination-based evaluation, not a real assessment of teaching ability.",
+      "The text's rules are traditional and should be interpreted with caution.",
+      "No objective standards are provided for evaluating the teacher."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o012-candidate-004",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0031",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:417-424",
+    "theme": "六爻占断之农事占候",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "官鬼属水动主水灾，属火动主干旱；父母爻旺相及妻财有气则收成可期。",
+    "applicability": [
+      "卦中父母爻为田地、子孙爻为收成",
+      "官鬼爻动且属水或火",
+      "妻财爻旺相及日辰生扶"
+    ],
+    "limitations": [
+      "古代农业占卜方法，未考虑现代气象与农艺",
+      "推断具有概率性和象征性"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o014-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0032",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:417-424",
+    "theme": "六爻占断之蚕桑吉凶",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "子孙爻旺相有气则蚕苗好，妻财爻有气则茧丝收成；官鬼动主损，兄弟动主缺饲。",
+    "applicability": [
+      "子孙爻代表蚕，妻财爻代表茧丝",
+      "官鬼爻动或兄弟爻动",
+      "日辰及月建生扶用神"
+    ],
+    "limitations": [
+      "基于传统信仰，非养殖科学指导",
+      "实际养蚕需依赖现代技术和管理"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o014-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0033",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:429-432",
+    "theme": "traditional_divination_directional_rules",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "该歌诀指示财来就世则财易得，世往求财则财难获。",
+    "applicability": [
+      "财爻与世爻存在生克关系"
+    ],
+    "limitations": [
+      "属源文本所载民间占卜歌诀内容",
+      "非实证知识，仅供文本研究，不应作为现实决策依据"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o016-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0034",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:429-432",
+    "theme": "traditional_divination_industry_rules",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "该歌诀按六亲生克提出相应吉凶判断，如鬼爻克世主惊忧、子孙持世有获利等。",
+    "applicability": [
+      "涉及经商、借贷、置货、出行、教书等事项且卦爻六亲配置确定"
+    ],
+    "limitations": [
+      "皆为源文本单向陈述，未提供验证依据",
+      "表述为框架内规则，不可推广为普遍法则"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o016-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0035",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:433-440",
+    "theme": "Divination for employment and lawsuits",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The text proposes that favorable or unfavorable outcomes in employment and litigation can be inferred from the state and interactions of hexagram lines, such as a strong parent line indicating that a petition will be accepted.",
+    "applicability": [
+      "When assessing employment or litigation through hexagram divination.",
+      "When specific line types (parent, officer, wealth, brother, descendant) are moving or static.",
+      "When considering the influence of daily, monthly, or seasonal markers."
+    ],
+    "limitations": [
+      "These rules are prescriptive only within the traditional divination belief system.",
+      "They are not empirically validated and are not suitable for professional or legal decision-making.",
+      "The archaic and corrupted text limits the reliability of the extracted rules.",
+      "Application requires subjective interpretation by a practitioner, leading to variability."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o017-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0036",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:433-440",
+    "theme": "Divination for locating escaped servants",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The text suggests that the direction of an escape can be inferred from the branch position or movement of the relevant line, such as a line at 寅 indicating movement toward the east or north.",
+    "applicability": [
+      "When the question concerns a missing or escaped servant.",
+      "When the relevant line is static or moving and located in a particular branch (e.g., 寅).",
+      "When evaluating the line's relationship to the day or month."
+    ],
+    "limitations": [
+      "No empirical basis supports these directional claims.",
+      "The text's language is ambiguous and may not correctly represent the original method.",
+      "This guidance is not actionable for real-world location of missing persons and should be treated as cultural lore."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o017-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0037",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:441-448",
+    "theme": "卦爻方位推断规则",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "根据原文，用神所在卦位和五行属性可用于推断事物所在方位或类别，但此仅为传统占卜理论框架。",
+    "applicability": [
+      "用神爻位于内卦或外卦",
+      "用神五行属性与水、火、木、金、土相关",
+      "涉及伏神、动爻、日辰等关系"
+    ],
+    "limitations": [
+      "属于古代术数文献记载，未经现代科学验证",
+      "具体对应关系依赖原文表述，可能存在版本或理解差异",
+      "推断结果不具备普遍适用性或现实确定性"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o018-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0038",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:441-448",
+    "theme": "捕盗寻物推断规则",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "原文主张通过分析鬼爻状态、伏神所在、日辰关系等可推断盗贼特征、藏匿地点或失物去向。",
+    "applicability": [
+      "卦中出现鬼爻、财爻、子孙爻等六亲",
+      "涉及动爻、伏神、墓库、日辰合冲等条件",
+      "原文列有地支与物象对应关系"
+    ],
+    "limitations": [
+      "内容源于古代占卜文本，非可靠侦查或寻物方法",
+      "凶吉判断和具体对应关系带有文化主观性",
+      "不应作为现实决策依据"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o018-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0039",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:441-448",
+    "theme": "占宅断语规则",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "原文认为通过卦中主爻与内外卦的五行生克、六神配置等，可判断家宅新旧、门前气象和家族兴衰。",
+    "applicability": [
+      "涉及主爻、内外卦、六神、月日岁君",
+      "需考虑六亲相生相克关系",
+      "原文以韵文形式给出判断"
+    ],
+    "limitations": [
+      "属于历史术数文本内容，无现代实证支持",
+      "解释主观且依赖于具体卦象编排",
+      "不适用于现代居住环境评估或决策"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o018-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0040",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:545-576",
+    "theme": "Trigram element attribution",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The text provides a table-like mnemonic for associating each trigram with an element.",
+    "applicability": [
+      "When the source text lists the attributions of the eight trigrams to the five elements",
+      "The text attributes Qian and Dui to metal, Zhen and Xun to wood, Kan to water, Li to fire, and Kun and Gen to earth"
+    ],
+    "limitations": [
+      "This attribution is specific to the text's divination tradition and may differ in other systems",
+      "The text uses non-standard characters for some trigram names"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o022-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0041",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:577-608",
+    "theme": "六亲伏神排布规则",
+    "rule_family": "yong_shen_selection",
+    "risk_tier": "ordinary",
+    "summary": "若某卦为‘丌俩卦’（疑为‘不俩卦’），某些六亲被伏藏，伏神位置与卦变代人的对象有关，如《咸》《蹇》等卦的妻财丁卯木均伏于官鬼丙午火之下。",
+    "applicability": [
+      "在‘伏神’列中标注妻财、父母、官鬼、子孙等六亲",
+      "并在‘本卦’中列出对应五行与爻位，如‘妻财丁卯木’伏于‘官鬼丙午火’之下"
+    ],
+    "limitations": [
+      "对‘伏藏’规则的具体推导原理未在文中展开，仅截图了部分排列，不能作为完整断卦法则",
+      "不同卦的伏神排列可能存在差异，未做全局校验"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o023-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0042",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:641-672",
+    "theme": "六爻占术术语体系",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "文本可作为研究古代占卜文化中六爻术语和论断方式的参考资料，但所述规则不具备现实预测功能。",
+    "applicability": [
+      "当进行六爻占卜解读时",
+      "当涉及用神、忌神、元神、仇神、世应、六神、月破、旬空等概念时"
+    ],
+    "limitations": [
+      "该规则体系源于古代术数，缺乏科学验证",
+      "文本传抄讹误较多，需结合校勘研究使用",
+      "不构成任何决策或健康建议"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o025-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0043",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:641-672",
+    "theme": "传统占断口诀",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "这些口诀是古代占卜实践的经验表述，可作为民俗或历史文献研究的内容，但不应作为现代行为准则。",
+    "applicability": [
+      "当阅读或研究古代易学占卜文献时",
+      "当遇到爻动、生克、合冲、空亡等情形所对应的传统歌诀时"
+    ],
+    "limitations": [
+      "口诀为术数论断方式，非科学规律",
+      "文本中可能存在遗漏和误抄，理解需谨慎",
+      "仅限文化研究参考，不赋予指导现实行为的效力"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o025-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0044",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:673-704",
+    "theme": "六爻占断规则",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "文本提出可依据卦内用爻的休囚、冲合、生克以及六神（青龙、白虎、朱雀、玄武、螣蛇、勾陈）的临持情况来推断某一事项的吉凶。",
+    "applicability": [
+      "以六爻起卦后问某类特定事务",
+      "需要判断六亲、六神、五行、月日、世应等要素的旺衰和组合关系"
+    ],
+    "limitations": [
+      "该规则仅为古籍占卜体系内部法则，不具备现实预测效力",
+      "文本中的神煞月日对应存在版本异文，原文注释也指出与其他占书（如《卜筮全书》）有出入，建议以文献比对为准",
+      "原文多处字词残缺或写法奇异，判断所依据的卦爻关系可能有误读风险"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o026-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0045",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:705-736",
+    "theme": "六爻占断符号体系",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "文本呈现一套基于六爻卦象、五行、六亲与神煞组合的占断规则，各章口诀均以此体系推演具体事务结果。",
+    "applicability": [
+      "文本称‘卦丛三爻’等六爻位置对应人事各层面",
+      "以‘用爻’（妻财、官鬼、子孙等）作为占断核心",
+      "以‘生扶拱合’‘休囚墓绝’‘月建日辰’等作为吉凶判据"
+    ],
+    "limitations": [
+      "该体系为传统术数内部自洽的符号语言，未经外部实证检验",
+      "文本多处提醒‘不可一概而论’‘万无一失’，承认其局限性",
+      "不能将其中断语视为对现实事件的确定性预测"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o027-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0046",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:705-736",
+    "theme": "六亲旺衰与吉凶对应",
+    "rule_family": "month_day_strength",
+    "risk_tier": "ordinary",
+    "summary": "六亲（官鬼、妻财、子孙、父母、兄弟）在不同占题中承担不同角色，其旺衰、动变、受生克构成占断主线索。",
+    "applicability": [
+      "官鬼爻在求仕、讼狱、盗贼诸章被视为核心‘用神’",
+      "妻财爻在求财、失物占断中为核心‘用神’",
+      "子孙爻被统称为‘福德’‘解厄之神’，克制官鬼"
+    ],
+    "limitations": [
+      "六亲五行生克关系是术数内部约定，非自然规律表述",
+      "文本各章对同一六亲的吉凶定性可能依据占题而调整",
+      "未提供现代逻辑或实证框架支撑"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o027-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0047",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:705-736",
+    "theme": "神煞吉凶赋值",
+    "rule_family": "six_spirits_attachment",
+    "risk_tier": "ordinary",
+    "summary": "文本为数十种神煞赋予固定吉凶属性，并按临爻位置与动态给出趋吉避凶建议。",
+    "applicability": [
+      "青龙、天喜、禄马、月德等被标记为‘吉神’",
+      "白虎、玄武、螣蛇、勾陈、劫杀、咸池等被标记为‘凶煞’",
+      "神煞临爻、发动、生克世应用爻时触发相应断语"
+    ],
+    "limitations": [
+      "神煞系统流派众多，原文仅代表一种整理文本",
+      "吉凶属性为象征性赋值，无客观测量依据",
+      "同一神煞在不同章节的表述可能存在细微差异"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o027-candidate-004",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0048",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:737-768",
+    "theme": "六爻占断原则",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "原文主张以日辰、月建、动爻及生扶拱合关系综合判定用神强弱，辅以神煞观感，但强调五行生克之理重于神煞名目。",
+    "applicability": [
+      "进行传统六爻起卦占问时",
+      "需判断用神旺衰及吉凶"
+    ],
+    "limitations": [
+      "该规则源自古籍残篇，缺乏完整验证",
+      "属古代术数范畴，不适用于现代科学决策",
+      "应结合其他权威典籍及上下文谨慎使用"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o028-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0049",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:737-768",
+    "theme": "晴雨占断规则",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "文中认为水爻动而生克关系影响雨势，又以父母爻为雨象，妻财爻旺动为晴象，提倡综合卦爻旺衰判断。",
+    "applicability": [
+      "占问天气晴雨时",
+      "依据卦中水火爻及父母爻状态"
+    ],
+    "limitations": [
+      "此为传统占卜说法，未经气象科学验证",
+      "文本残缺可能导致规则理解偏差",
+      "不应用于实际天气预报"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o028-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0050",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:769-800",
+    "theme": "Hexagram weather interpretation",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "Based on the text, moving 父母 lines tend to indicate rain, while moving 妻财 lines indicate sunshine; elemental associations and seasonal strength modify the outcome.",
+    "applicability": [
+      "A hexagram is cast for weather forecasting.",
+      "Specific lines such as 父母 or 妻财 move or are present with certain elements and seasonal strength."
+    ],
+    "limitations": [
+      "This rule is a descriptive summary of the source text's divination system, not a verified meteorological rule.",
+      "The source text uses variant characters and may be ambiguous."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o029-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0051",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:825-832",
+    "theme": "占卜推演规则",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "文本提供了一套以五行、爻位和化爻关系推演疾病症候及预后的占卜框架，所有结论均局限于该文献自身的话语体系。",
+    "applicability": [
+      "卦中鬼爻属火且临青龙，文本称可能因酒食过度致病",
+      "鬼爻化长生或化墓，文本称病势可能相应加重或有转机",
+      "用爻入墓或受冲克，文本称病情可能沉重难愈"
+    ],
+    "limitations": [
+      "此为古籍占卜文本的内部规则，不具实证效力",
+      "语词生僻、断句模糊，规则的具体适用难以精确还原",
+      "涉及疾病与死亡判断，应仅作文献研究而非操作指引"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o034-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0052",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:993-1024",
+    "theme": "六爻占断之取用神规则",
+    "rule_family": "yong_shen_selection",
+    "risk_tier": "ordinary",
+    "summary": "文本描述：占天气以子孙为晴、父母为雨；占婚以财官为要；占子嗣以子孙为用；占寿命以用爻为主等，各事项用神不同，须按章取象断之。",
+    "applicability": [
+      "进行某类事务占问时",
+      "根据占问事项确定对应六亲或六神为用神"
+    ],
+    "limitations": [
+      "此为古籍术数之叙述性规则，不具现代实证效力",
+      "文字讹误可能影响规则之准确表述"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o040-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0053",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:993-1024",
+    "theme": "爻象旺衰生克之吉凶判断倾向",
+    "rule_family": "month_day_strength",
+    "risk_tier": "ordinary",
+    "summary": "文本倾向描述：用神得生扶、乘旺相为吉，逢旬空、月破、入墓、受克泄则趋向凶咎；但若遇冲散或合处逢冲，吉凶亦会转化。",
+    "applicability": [
+      "用神得生扶、临旺相、不被冲克时"
+    ],
+    "limitations": [
+      "吉凶判断为传统占验体系之内在逻辑，非现实因果关系",
+      "断语须结合具体卦例与起卦时空，无法作为普遍事实或行为指导"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o040-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0054",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:993-1024",
+    "theme": "婚育寿夭类占断之禁忌与喜忌",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "文本描述：此类占断多用六亲象意，如子孙空亡不利子嗣，官鬼动则有灾病之忧，用神衰弱受克主夭折等。",
+    "applicability": [
+      "凡占婚姻、子嗣、孕产、寿命等事项时",
+      "用神逢空破、化绝化墓、受忌神冲克等情形"
+    ],
+    "limitations": [
+      "皆为古籍占例之叙述性结论，不具预测实证价值",
+      "涉及生命与健康的占断描述为框架性、条件性表达，不应作为实际医疗或生活决策依据"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o040-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0055",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:993-1024",
+    "theme": "出行、营生、科考等杂占之象意对应",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "文本描述：出行看内外卦生克与游魂归魂，营生看财福与官鬼，科考看父母与官鬼之旺衰等，结合生合冲克断其成败趋向。",
+    "applicability": [
+      "占问出行、谋业、读书、请师等事项时",
+      "以相应卦爻、神煞及五行方位为断"
+    ],
+    "limitations": [
+      "杂占断法依古籍口诀而成，逻辑属传统术数体系而非科学方法",
+      "成事与否之判断受众多人为与客观因素影响，文本断语不能作为现实结果之保证"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o040-candidate-004",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0056",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:1025-1056",
+    "theme": "divination_disease",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "Recovery may be indicated.",
+    "applicability": [
+      "divination about disease prognosis",
+      "offspring line is strong or active",
+      "official/ghost line is weak or inactive"
+    ],
+    "limitations": [
+      "Not medical advice; traditional divination only.",
+      "Source text is archaic and partly obscure.",
+      "Outcome is conditional and unverified."
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o041-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0057",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:1057-1088",
+    "theme": "spirit_identification",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "The text proposes that illness can be traced to specific spirits based on hexagram positions, but this is a belief system without empirical support.",
+    "applicability": [
+      "When a hexagram line carries a six-spirit like Qinglong, Zhuque, or Xuanwu",
+      "When the line is paired with a 'ghost' line, the text identifies the spirit responsible for illness",
+      "The text specifies different spirits for different elements and directions"
+    ],
+    "limitations": [
+      "The associations are traditional beliefs, not verified facts",
+      "The text is partially illegible due to character corruption",
+      "Ritual actions described are for cultural context, not endorsed"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o042-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0058",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:1193-1196",
+    "theme": "占病吉凶判定",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "按该体系，若用神有生扶且不被克破则病可愈，否则为凶。",
+    "applicability": [
+      "卦中现用神",
+      "用神得生扶或化生",
+      "忌神、仇神未发动或受制"
+    ],
+    "limitations": [
+      "此为占卜术数规则，非医学判断",
+      "具体判定尚需结合日月、动爻等多种因素"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o047-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0059",
+    "source_id": "liuyao_source_batch_20260714_001",
+    "source_ref": "page:1193-1196",
+    "theme": "用神分类规则",
+    "rule_family": "yong_shen_selection",
+    "risk_tier": "ordinary",
+    "summary": "按该体系，占父母用父母爻，占妻用妻财爻，占子孙用子孙爻，占兄弟用兄弟爻，占尊长则用相应调整后的用神。",
+    "applicability": [
+      "占问对象为亲属",
+      "需明确与占卜者的亲缘关系",
+      "卦中六亲对应不同用神"
+    ],
+    "limitations": [
+      "此为古代六亲分类法，不具有现代通用性",
+      "原文对部分关系的用神选取存在注释分歧"
+    ],
+    "batch_record_id": "batch_20260714-02ae584ac6d1-006-o047-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0060",
+    "source_id": "liuyao_source_batch_20260714_002",
+    "source_ref": "page:33-64",
+    "theme": "divinatory_auspiciousness_assessment",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "Apply the stated rule that strong or following-weak 世爻 favors restraining lines as auspicious, while weak or following-strong 世爻 favors supporting lines as auspicious, to assess overall favorability.",
+    "applicability": [
+      "When conducting a hexagram reading, identify whether the 世爻 (self line) is strong or weak based on its relationship with the 应爻 (other line) and whether any lines are empty."
+    ],
+    "limitations": [
+      "This rule belongs to a specific divination school and is not an established general principle.",
+      "Its predictive value is unverified and it is unsuitable as professional guidance.",
+      "The text itself notes that many matters have no clear auspicious or inauspicious outcome."
+    ],
+    "batch_record_id": "batch_20260714-a0787a7d7f59-013-o002-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0061",
+    "source_id": "liuyao_source_batch_20260714_002",
+    "source_ref": "page:33-64",
+    "theme": "six_spirits_symbolic_keying",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "Use the traditional associations of each spirit (e.g., 青龙 for joy, wealth, and new beginnings; 白虎 for danger, violence, and mourning; 玄武 for concealment, water, and theft) as interpretive clues within the divination process.",
+    "applicability": [
+      "When interpreting a hexagram, look at which of the six spirits (青龙, 朱雀, 勾陈, 腾蛇, 白虎, 玄武) is associated with the relevant line to gain symbolic meaning."
+    ],
+    "limitations": [
+      "The symbolic meanings are culturally specific and not empirically validated.",
+      "Same spirit can indicate opposite outcomes depending on context, so the rule is not deterministic.",
+      "This is descriptive of a traditional practice, not an actionable instruction for decision-making."
+    ],
+    "batch_record_id": "batch_20260714-a0787a7d7f59-013-o002-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0062",
+    "source_id": "liuyao_source_batch_20260714_002",
+    "source_ref": "page:65-96",
+    "theme": "六爻从弱卦吉凶判断规则",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "按此规则，静则吉、动则凶，动爻临空力量减半故凶力小，可据世爻动象及六神推断与家中水器相关之事。",
+    "applicability": [
+      "世应同空",
+      "世持戌土从弱",
+      "卦中安静无动爻",
+      "占问家中事务"
+    ],
+    "limitations": [
+      "系传统术数规则表述，非经过实证检验的普遍规律",
+      "依据单一案例事后解说，存在过度拟合风险"
+    ],
+    "batch_record_id": "batch_20260714-a0787a7d7f59-013-o003-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0063",
+    "source_id": "liuyao_source_batch_20260714_002",
+    "source_ref": "page:65-96",
+    "theme": "断卦先断来意（来人不用问）原则",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "作者主张无法断对来意则不足以谈断卦水平，断来意为基本功。",
+    "applicability": [
+      "求测者未明言所问事项",
+      "占者需先判断来意再断结果"
+    ],
+    "limitations": [
+      "为作者个人教学主张，无客观验证标准",
+      "不同术数流派对此要求不一"
+    ],
+    "batch_record_id": "batch_20260714-a0787a7d7f59-013-o003-candidate-002",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0064",
+    "source_id": "liuyao_source_batch_20260714_002",
+    "source_ref": "page:65-96",
+    "theme": "动不如静判断规则",
+    "rule_family": "moving_line_dynamics",
+    "risk_tier": "ordinary",
+    "summary": "按此规则，妄动则更不利，静守原位为好。",
+    "applicability": [
+      "卦课弱而官旺克日",
+      "世动化忌神",
+      "占问工作调动等变动事项"
+    ],
+    "limitations": [
+      "为术数推断结论，不构成职业决策建议",
+      "案例反馈为单一客户函测记录"
+    ],
+    "batch_record_id": "batch_20260714-a0787a7d7f59-013-o003-candidate-005",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0065",
+    "source_id": "liuyao_source_batch_20260714_002",
+    "source_ref": "page:129-160",
+    "theme": "六爻断卦方法（教学性规则）",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "可参考作者展示的唱和验证法，即结合日课、克应、卦象、爻位关系等进行综合判断，同时注意具体人事背景。",
+    "applicability": [
+      "用户询问六爻占卜案例或断卦思路",
+      "文本提供卦象、日时、用神等完整信息",
+      "请求者要求教学式解说"
+    ],
+    "limitations": [
+      "仅为传统术数经验总结，不具备科学验证性",
+      "个案化特征明显，难以推广为普遍规则",
+      "所含人事判断属主观推测，不构成确定结论"
+    ],
+    "batch_record_id": "batch_20260714-a0787a7d7f59-013-o005-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0066",
+    "source_id": "liuyao_source_batch_20260714_002",
+    "source_ref": "page:129-160",
+    "theme": "处理占卜请求的伦理规则",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "占卜者需谨慎处理敏感信息，可拒绝或委婉回应，避免直接造成恐慌或诱导违法。",
+    "applicability": [
+      "占卜结果涉及死亡、重病、违法、感情等敏感事项",
+      "案例中作者曾回避断重病结果",
+      "涉及金钱或关系操作建议"
+    ],
+    "limitations": [
+      "作者仅在某些案例中体现该倾向，未系统化",
+      "此类伦理规则属于传统从业者自觉，无统一标准",
+      "不构成法律或心理咨询建议"
+    ],
+    "batch_record_id": "batch_20260714-a0787a7d7f59-013-o005-candidate-003",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  },
+  {
+    "evidence_id": "liuyao_evidence_batch_20260714_0067",
+    "source_id": "liuyao_source_batch_20260714_002",
+    "source_ref": "page:257-288",
+    "theme": "六爻断卦方法",
+    "rule_family": "category_judgment",
+    "risk_tier": "ordinary",
+    "summary": "作者主张断卦应超越传统卦书的具体条文，以卦象整体意向为准绳，综合动爻位置、旺衰生克、六亲象征等因素灵活判断事情成败、应期与方位。",
+    "applicability": [
+      "作者在第6.2节提出断卦应以“卦在意先”为核心原则",
+      "作者在多个案例中强调应综合动爻、世应、五行六亲关系整体判断",
+      "作者声称拘泥传统卦书条文会导致误判，需按卦象整体含义灵活处理"
+    ],
+    "limitations": [
+      "该结论仅为本书作者个人经验的总结，未经系统验证",
+      "六爻断卦体系本身缺乏可重复检验的客观标准",
+      "不同作者对同一卦象的判断方法可能存在根本差异"
+    ],
+    "batch_record_id": "batch_20260714-a0787a7d7f59-013-o009-candidate-001",
+    "curation_batch_id": "liuyao_curation_batch_20260714_001",
+    "confidence": "moderate"
+  }
+]

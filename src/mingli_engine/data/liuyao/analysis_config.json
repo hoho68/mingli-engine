@@ -1,0 +1,50 @@
+{
+  "schema_version": "liuyao-analysis-config-v1",
+  "evidence_pending_note": "六爻证据链尚未晋升，以下为装卦结构性观察，仅作传统文献学习参考，不构成任何现实预测。",
+  "shared_limitations": [
+    "结构性观察只描述卦面事实与传统对应，不作确定性判断。",
+    "现实决策请咨询合格专业人士。"
+  ],
+  "families": [
+    {
+      "rule_family": "yong_shen_selection",
+      "label": "用神取用",
+      "headline": "六亲与伏神结构"
+    },
+    {
+      "rule_family": "shi_ying_relation",
+      "label": "世应关系",
+      "headline": "世应爻位与五行关系"
+    },
+    {
+      "rule_family": "moving_line_dynamics",
+      "label": "动爻生克",
+      "headline": "动爻与变出之爻"
+    },
+    {
+      "rule_family": "six_spirits_attachment",
+      "label": "六神临持",
+      "headline": "六神临爻分布"
+    },
+    {
+      "rule_family": "month_day_strength",
+      "label": "月日旺衰",
+      "headline": "月建日辰扶抑"
+    },
+    {
+      "rule_family": "void_break_state",
+      "label": "空亡月破",
+      "headline": "空亡与月破日破"
+    },
+    {
+      "rule_family": "yingqi_timing",
+      "label": "应期推断",
+      "headline": "应期仅作候选观察"
+    },
+    {
+      "rule_family": "category_judgment",
+      "label": "分类事项",
+      "headline": "分类事项需明确输入"
+    }
+  ]
+}

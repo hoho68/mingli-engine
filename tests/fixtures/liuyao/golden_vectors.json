@@ -1,0 +1,1075 @@
+{
+  "day_context": {
+    "cast_datetime": "1990-02-28T08:30",
+    "day_ganzhi": "甲子",
+    "month_command": "寅",
+    "xun_void": [
+      "戌",
+      "亥"
+    ],
+    "spirits_bottom_up": [
+      "青龙",
+      "朱雀",
+      "勾陈",
+      "螣蛇",
+      "白虎",
+      "玄武"
+    ]
+  },
+  "vectors": [
+    {
+      "name": "乾为天",
+      "lines": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "乾为天",
+        "palace": "乾",
+        "palace_sequence": 0,
+        "shi_position": 6,
+        "ying_position": 3,
+        "bian_gua": null,
+        "hu_gua": "乾为天",
+        "relations": [
+          "子孙",
+          "妻财",
+          "父母",
+          "官鬼",
+          "兄弟",
+          "父母"
+        ],
+        "ganzhi": [
+          "甲子",
+          "甲寅",
+          "甲辰",
+          "壬午",
+          "壬申",
+          "壬戌"
+        ],
+        "hidden": {},
+        "void_positions": [
+          6
+        ],
+        "month_break_positions": [
+          5
+        ],
+        "day_break_positions": [
+          4
+        ]
+      }
+    },
+    {
+      "name": "坎为水",
+      "lines": [
+        0,
+        1,
+        0,
+        0,
+        1,
+        0
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "坎为水",
+        "palace": "坎",
+        "palace_sequence": 0,
+        "shi_position": 6,
+        "ying_position": 3,
+        "bian_gua": null,
+        "hu_gua": "山雷颐",
+        "relations": [
+          "子孙",
+          "官鬼",
+          "妻财",
+          "父母",
+          "官鬼",
+          "兄弟"
+        ],
+        "ganzhi": [
+          "戊寅",
+          "戊辰",
+          "戊午",
+          "戊申",
+          "戊戌",
+          "戊子"
+        ],
+        "hidden": {},
+        "void_positions": [
+          5
+        ],
+        "month_break_positions": [
+          4
+        ],
+        "day_break_positions": [
+          3
+        ]
+      }
+    },
+    {
+      "name": "艮为山",
+      "lines": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "艮为山",
+        "palace": "艮",
+        "palace_sequence": 0,
+        "shi_position": 6,
+        "ying_position": 3,
+        "bian_gua": null,
+        "hu_gua": "雷水解",
+        "relations": [
+          "兄弟",
+          "父母",
+          "子孙",
+          "兄弟",
+          "妻财",
+          "官鬼"
+        ],
+        "ganzhi": [
+          "丙辰",
+          "丙午",
+          "丙申",
+          "丙戌",
+          "丙子",
+          "丙寅"
+        ],
+        "hidden": {},
+        "void_positions": [
+          4
+        ],
+        "month_break_positions": [
+          3
+        ],
+        "day_break_positions": [
+          2
+        ]
+      }
+    },
+    {
+      "name": "震为雷",
+      "lines": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "震为雷",
+        "palace": "震",
+        "palace_sequence": 0,
+        "shi_position": 6,
+        "ying_position": 3,
+        "bian_gua": null,
+        "hu_gua": "水山蹇",
+        "relations": [
+          "父母",
+          "兄弟",
+          "妻财",
+          "子孙",
+          "官鬼",
+          "妻财"
+        ],
+        "ganzhi": [
+          "庚子",
+          "庚寅",
+          "庚辰",
+          "庚午",
+          "庚申",
+          "庚戌"
+        ],
+        "hidden": {},
+        "void_positions": [
+          6
+        ],
+        "month_break_positions": [
+          5
+        ],
+        "day_break_positions": [
+          4
+        ]
+      }
+    },
+    {
+      "name": "巽为风",
+      "lines": [
+        0,
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "巽为风",
+        "palace": "巽",
+        "palace_sequence": 0,
+        "shi_position": 6,
+        "ying_position": 3,
+        "bian_gua": null,
+        "hu_gua": "火泽睽",
+        "relations": [
+          "妻财",
+          "父母",
+          "官鬼",
+          "妻财",
+          "子孙",
+          "兄弟"
+        ],
+        "ganzhi": [
+          "辛丑",
+          "辛亥",
+          "辛酉",
+          "辛未",
+          "辛巳",
+          "辛卯"
+        ],
+        "hidden": {},
+        "void_positions": [
+          2
+        ],
+        "month_break_positions": [],
+        "day_break_positions": []
+      }
+    },
+    {
+      "name": "离为火",
+      "lines": [
+        1,
+        0,
+        1,
+        1,
+        0,
+        1
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "离为火",
+        "palace": "离",
+        "palace_sequence": 0,
+        "shi_position": 6,
+        "ying_position": 3,
+        "bian_gua": null,
+        "hu_gua": "泽风大过",
+        "relations": [
+          "父母",
+          "子孙",
+          "官鬼",
+          "妻财",
+          "子孙",
+          "兄弟"
+        ],
+        "ganzhi": [
+          "己卯",
+          "己丑",
+          "己亥",
+          "己酉",
+          "己未",
+          "己巳"
+        ],
+        "hidden": {},
+        "void_positions": [
+          3
+        ],
+        "month_break_positions": [],
+        "day_break_positions": []
+      }
+    },
+    {
+      "name": "坤为地",
+      "lines": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "坤为地",
+        "palace": "坤",
+        "palace_sequence": 0,
+        "shi_position": 6,
+        "ying_position": 3,
+        "bian_gua": null,
+        "hu_gua": "坤为地",
+        "relations": [
+          "兄弟",
+          "父母",
+          "官鬼",
+          "兄弟",
+          "妻财",
+          "子孙"
+        ],
+        "ganzhi": [
+          "乙未",
+          "乙巳",
+          "乙卯",
+          "癸丑",
+          "癸亥",
+          "癸酉"
+        ],
+        "hidden": {},
+        "void_positions": [
+          5
+        ],
+        "month_break_positions": [],
+        "day_break_positions": []
+      }
+    },
+    {
+      "name": "兑为泽",
+      "lines": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        0
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "兑为泽",
+        "palace": "兑",
+        "palace_sequence": 0,
+        "shi_position": 6,
+        "ying_position": 3,
+        "bian_gua": null,
+        "hu_gua": "风火家人",
+        "relations": [
+          "官鬼",
+          "妻财",
+          "父母",
+          "子孙",
+          "兄弟",
+          "父母"
+        ],
+        "ganzhi": [
+          "丁巳",
+          "丁卯",
+          "丁丑",
+          "丁亥",
+          "丁酉",
+          "丁未"
+        ],
+        "hidden": {},
+        "void_positions": [
+          4
+        ],
+        "month_break_positions": [],
+        "day_break_positions": []
+      }
+    },
+    {
+      "name": "天风姤",
+      "lines": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "天风姤",
+        "palace": "乾",
+        "palace_sequence": 1,
+        "shi_position": 1,
+        "ying_position": 4,
+        "bian_gua": null,
+        "hu_gua": "乾为天",
+        "relations": [
+          "父母",
+          "子孙",
+          "兄弟",
+          "官鬼",
+          "兄弟",
+          "父母"
+        ],
+        "ganzhi": [
+          "辛丑",
+          "辛亥",
+          "辛酉",
+          "壬午",
+          "壬申",
+          "壬戌"
+        ],
+        "hidden": {
+          "2": [
+            "甲寅",
+            "妻财"
+          ]
+        },
+        "void_positions": [
+          2,
+          6
+        ],
+        "month_break_positions": [
+          5
+        ],
+        "day_break_positions": [
+          4
+        ]
+      }
+    },
+    {
+      "name": "水山蹇",
+      "lines": [
+        0,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "水山蹇",
+        "palace": "兑",
+        "palace_sequence": 4,
+        "shi_position": 4,
+        "ying_position": 1,
+        "bian_gua": null,
+        "hu_gua": "火水未济",
+        "relations": [
+          "父母",
+          "官鬼",
+          "兄弟",
+          "兄弟",
+          "父母",
+          "子孙"
+        ],
+        "ganzhi": [
+          "丙辰",
+          "丙午",
+          "丙申",
+          "戊申",
+          "戊戌",
+          "戊子"
+        ],
+        "hidden": {
+          "2": [
+            "丁卯",
+            "妻财"
+          ]
+        },
+        "void_positions": [
+          5
+        ],
+        "month_break_positions": [
+          3,
+          4
+        ],
+        "day_break_positions": [
+          2
+        ]
+      }
+    },
+    {
+      "name": "火天大有",
+      "lines": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "火天大有",
+        "palace": "乾",
+        "palace_sequence": 7,
+        "shi_position": 3,
+        "ying_position": 6,
+        "bian_gua": null,
+        "hu_gua": "泽天夬",
+        "relations": [
+          "子孙",
+          "妻财",
+          "父母",
+          "兄弟",
+          "父母",
+          "官鬼"
+        ],
+        "ganzhi": [
+          "甲子",
+          "甲寅",
+          "甲辰",
+          "己酉",
+          "己未",
+          "己巳"
+        ],
+        "hidden": {},
+        "void_positions": [],
+        "month_break_positions": [],
+        "day_break_positions": []
+      }
+    },
+    {
+      "name": "乾为天初爻动之姤",
+      "lines": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "moving": [
+        1
+      ],
+      "expected": {
+        "ben_gua": "乾为天",
+        "palace": "乾",
+        "palace_sequence": 0,
+        "shi_position": 6,
+        "ying_position": 3,
+        "bian_gua": "天风姤",
+        "hu_gua": "乾为天",
+        "relations": [
+          "子孙",
+          "妻财",
+          "父母",
+          "官鬼",
+          "兄弟",
+          "父母"
+        ],
+        "ganzhi": [
+          "甲子",
+          "甲寅",
+          "甲辰",
+          "壬午",
+          "壬申",
+          "壬戌"
+        ],
+        "hidden": {},
+        "void_positions": [
+          6
+        ],
+        "month_break_positions": [
+          5
+        ],
+        "day_break_positions": [
+          4
+        ]
+      }
+    },
+    {
+      "name": "地天泰五爻动之需",
+      "lines": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "moving": [
+        5
+      ],
+      "expected": {
+        "ben_gua": "地天泰",
+        "palace": "坤",
+        "palace_sequence": 3,
+        "shi_position": 3,
+        "ying_position": 6,
+        "bian_gua": "水天需",
+        "hu_gua": "雷泽归妹",
+        "relations": [
+          "妻财",
+          "官鬼",
+          "兄弟",
+          "兄弟",
+          "妻财",
+          "子孙"
+        ],
+        "ganzhi": [
+          "甲子",
+          "甲寅",
+          "甲辰",
+          "癸丑",
+          "癸亥",
+          "癸酉"
+        ],
+        "hidden": {
+          "2": [
+            "乙巳",
+            "父母"
+          ]
+        },
+        "void_positions": [
+          5
+        ],
+        "month_break_positions": [],
+        "day_break_positions": []
+      }
+    },
+    {
+      "name": "天地否",
+      "lines": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "天地否",
+        "palace": "乾",
+        "palace_sequence": 3,
+        "shi_position": 3,
+        "ying_position": 6,
+        "bian_gua": null,
+        "hu_gua": "风山渐",
+        "relations": [
+          "父母",
+          "官鬼",
+          "妻财",
+          "官鬼",
+          "兄弟",
+          "父母"
+        ],
+        "ganzhi": [
+          "乙未",
+          "乙巳",
+          "乙卯",
+          "壬午",
+          "壬申",
+          "壬戌"
+        ],
+        "hidden": {
+          "1": [
+            "甲子",
+            "子孙"
+          ]
+        },
+        "void_positions": [
+          6
+        ],
+        "month_break_positions": [
+          5
+        ],
+        "day_break_positions": [
+          4
+        ]
+      }
+    },
+    {
+      "name": "水雷屯",
+      "lines": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "水雷屯",
+        "palace": "坎",
+        "palace_sequence": 2,
+        "shi_position": 2,
+        "ying_position": 5,
+        "bian_gua": null,
+        "hu_gua": "山地剥",
+        "relations": [
+          "兄弟",
+          "子孙",
+          "官鬼",
+          "父母",
+          "官鬼",
+          "兄弟"
+        ],
+        "ganzhi": [
+          "庚子",
+          "庚寅",
+          "庚辰",
+          "戊申",
+          "戊戌",
+          "戊子"
+        ],
+        "hidden": {
+          "3": [
+            "戊午",
+            "妻财"
+          ]
+        },
+        "void_positions": [
+          5
+        ],
+        "month_break_positions": [
+          4
+        ],
+        "day_break_positions": []
+      }
+    },
+    {
+      "name": "山天大畜",
+      "lines": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        1
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "山天大畜",
+        "palace": "艮",
+        "palace_sequence": 2,
+        "shi_position": 2,
+        "ying_position": 5,
+        "bian_gua": null,
+        "hu_gua": "雷泽归妹",
+        "relations": [
+          "妻财",
+          "官鬼",
+          "兄弟",
+          "兄弟",
+          "妻财",
+          "官鬼"
+        ],
+        "ganzhi": [
+          "甲子",
+          "甲寅",
+          "甲辰",
+          "丙戌",
+          "丙子",
+          "丙寅"
+        ],
+        "hidden": {
+          "2": [
+            "丙午",
+            "父母"
+          ],
+          "3": [
+            "丙申",
+            "子孙"
+          ]
+        },
+        "void_positions": [
+          4
+        ],
+        "month_break_positions": [],
+        "day_break_positions": []
+      }
+    },
+    {
+      "name": "雷风恒",
+      "lines": [
+        0,
+        1,
+        1,
+        1,
+        0,
+        0
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "雷风恒",
+        "palace": "震",
+        "palace_sequence": 3,
+        "shi_position": 3,
+        "ying_position": 6,
+        "bian_gua": null,
+        "hu_gua": "泽天夬",
+        "relations": [
+          "妻财",
+          "父母",
+          "官鬼",
+          "子孙",
+          "官鬼",
+          "妻财"
+        ],
+        "ganzhi": [
+          "辛丑",
+          "辛亥",
+          "辛酉",
+          "庚午",
+          "庚申",
+          "庚戌"
+        ],
+        "hidden": {
+          "2": [
+            "庚寅",
+            "兄弟"
+          ]
+        },
+        "void_positions": [
+          2,
+          6
+        ],
+        "month_break_positions": [
+          5
+        ],
+        "day_break_positions": [
+          4
+        ]
+      }
+    },
+    {
+      "name": "风天小畜",
+      "lines": [
+        1,
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "风天小畜",
+        "palace": "巽",
+        "palace_sequence": 1,
+        "shi_position": 1,
+        "ying_position": 4,
+        "bian_gua": null,
+        "hu_gua": "火泽睽",
+        "relations": [
+          "父母",
+          "兄弟",
+          "妻财",
+          "妻财",
+          "子孙",
+          "兄弟"
+        ],
+        "ganzhi": [
+          "甲子",
+          "甲寅",
+          "甲辰",
+          "辛未",
+          "辛巳",
+          "辛卯"
+        ],
+        "hidden": {
+          "3": [
+            "辛酉",
+            "官鬼"
+          ]
+        },
+        "void_positions": [],
+        "month_break_positions": [],
+        "day_break_positions": []
+      }
+    },
+    {
+      "name": "天雷无妄",
+      "lines": [
+        1,
+        0,
+        0,
+        1,
+        1,
+        1
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "天雷无妄",
+        "palace": "巽",
+        "palace_sequence": 4,
+        "shi_position": 4,
+        "ying_position": 1,
+        "bian_gua": null,
+        "hu_gua": "风山渐",
+        "relations": [
+          "父母",
+          "兄弟",
+          "妻财",
+          "子孙",
+          "官鬼",
+          "妻财"
+        ],
+        "ganzhi": [
+          "庚子",
+          "庚寅",
+          "庚辰",
+          "壬午",
+          "壬申",
+          "壬戌"
+        ],
+        "hidden": {},
+        "void_positions": [
+          6
+        ],
+        "month_break_positions": [
+          5
+        ],
+        "day_break_positions": [
+          4
+        ]
+      }
+    },
+    {
+      "name": "泽山咸",
+      "lines": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "泽山咸",
+        "palace": "兑",
+        "palace_sequence": 3,
+        "shi_position": 3,
+        "ying_position": 6,
+        "bian_gua": null,
+        "hu_gua": "天风姤",
+        "relations": [
+          "父母",
+          "官鬼",
+          "兄弟",
+          "子孙",
+          "兄弟",
+          "父母"
+        ],
+        "ganzhi": [
+          "丙辰",
+          "丙午",
+          "丙申",
+          "丁亥",
+          "丁酉",
+          "丁未"
+        ],
+        "hidden": {
+          "2": [
+            "丁卯",
+            "妻财"
+          ]
+        },
+        "void_positions": [
+          4
+        ],
+        "month_break_positions": [
+          3
+        ],
+        "day_break_positions": [
+          2
+        ]
+      }
+    },
+    {
+      "name": "地天泰",
+      "lines": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "地天泰",
+        "palace": "坤",
+        "palace_sequence": 3,
+        "shi_position": 3,
+        "ying_position": 6,
+        "bian_gua": null,
+        "hu_gua": "雷泽归妹",
+        "relations": [
+          "妻财",
+          "官鬼",
+          "兄弟",
+          "兄弟",
+          "妻财",
+          "子孙"
+        ],
+        "ganzhi": [
+          "甲子",
+          "甲寅",
+          "甲辰",
+          "癸丑",
+          "癸亥",
+          "癸酉"
+        ],
+        "hidden": {
+          "2": [
+            "乙巳",
+            "父母"
+          ]
+        },
+        "void_positions": [
+          5
+        ],
+        "month_break_positions": [],
+        "day_break_positions": []
+      }
+    },
+    {
+      "name": "火水未济",
+      "lines": [
+        0,
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      "moving": [],
+      "expected": {
+        "ben_gua": "火水未济",
+        "palace": "离",
+        "palace_sequence": 3,
+        "shi_position": 3,
+        "ying_position": 6,
+        "bian_gua": null,
+        "hu_gua": "水火既济",
+        "relations": [
+          "父母",
+          "子孙",
+          "兄弟",
+          "妻财",
+          "子孙",
+          "兄弟"
+        ],
+        "ganzhi": [
+          "戊寅",
+          "戊辰",
+          "戊午",
+          "己酉",
+          "己未",
+          "己巳"
+        ],
+        "hidden": {
+          "3": [
+            "己亥",
+            "官鬼"
+          ]
+        },
+        "void_positions": [],
+        "month_break_positions": [],
+        "day_break_positions": [
+          3
+        ]
+      }
+    }
+  ]
+}

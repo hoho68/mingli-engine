@@ -1,0 +1,842 @@
+[
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0001",
+    "candidate_id": "liuyao_candidate_batch_20260714_0001",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "此规则仅存在于术数文献中，其预测功能无科学依据",
+      "原文对背、字的文字描述受异体字影响，可能需对照校勘版本理解",
+      "不建议在现实决策中使用该起卦法，以免产生误导"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0002",
+    "candidate_id": "liuyao_candidate_batch_20260714_0002",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "原文引用不同古籍观点存在分歧",
+      "缺乏系统实证支持",
+      "文本存在异体字可能影响解读"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0003",
+    "candidate_id": "liuyao_candidate_batch_20260714_0003",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "原文以个案说明，未提供系统规则",
+      "暗动规则需结合其他因素综合判断",
+      "应验性依赖个人经验"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0004",
+    "candidate_id": "liuyao_candidate_batch_20260714_0004",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "This rule is part of a traditional divination system and lacks external validation.",
+      "The exact application depends on additional factors like moving lines and month strength, as noted in the text."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0005",
+    "candidate_id": "liuyao_candidate_batch_20260714_0005",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "The source text presents conflicting classical sources, so the rule is not fixed.",
+      "The rule is rooted in a symbolic system with no empirical basis."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0006",
+    "candidate_id": "liuyao_candidate_batch_20260714_0006",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "The rules are complex and context-dependent, with examples of disagreement in interpretation.",
+      "This is a descriptive divination system, not a predictive science."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0007",
+    "candidate_id": "liuyao_candidate_batch_20260714_0007",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "The source text notes that the rule is not absolute and depends on detailed conditions.",
+      "The concept is cultural and not empirically validated."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0008",
+    "candidate_id": "liuyao_candidate_batch_20260714_0008",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "The method relies on traditional palace structures and is subject to practitioner disagreement.",
+      "The examples are historical and unverified."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0009",
+    "candidate_id": "liuyao_candidate_batch_20260714_0009",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "This describes potentially fatal outcomes and must remain descriptive, with no actionable guidance.",
+      "The rule is context-dependent and not empirically validated."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0010",
+    "candidate_id": "liuyao_candidate_batch_20260714_0010",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "The source text acknowledges that these conditions are not always reliable.",
+      "Interpretation requires full hexagram context and is not fixed."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0011",
+    "candidate_id": "liuyao_candidate_batch_20260714_0011",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "The source text notes that experience may differ from the written rules.",
+      "This is part of a complex system requiring holistic analysis."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0012",
+    "candidate_id": "liuyao_candidate_batch_20260714_0012",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "This is a historical divination method without scientific validation.",
+      "The rules are highly context-dependent and require expert interpretation.",
+      "The text itself warns against rigid application, stressing that actual verification is needed."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0013",
+    "candidate_id": "liuyao_candidate_batch_20260714_0013",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "These are traditional cultural beliefs, not empirical or professional advice.",
+      "The text warns that misinterpretation is common and that multiple factors must be weighed.",
+      "Outcomes are not predictive in any verifiable way and may be harmful if taken as destiny."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0014",
+    "candidate_id": "liuyao_candidate_batch_20260714_0014",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "仅是对古籍内容的客观描述，不构成实际占卜指引",
+      "文本讹误多，规则内涵存疑",
+      "系历史文献观点，无实证依据"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0015",
+    "candidate_id": "liuyao_candidate_batch_20260714_0015",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "该规则仅见于所给古籍片段，属于传统术数理论，未有现代实证支持",
+      "文本用词晦涩且多处缺字讹误，规则边界难以精确定义"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0016",
+    "candidate_id": "liuyao_candidate_batch_20260714_0016",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "相关判断依赖具体卦例，无法脱离文本语境直接推广",
+      "原文存在大量无法识别的字符，可能影响规则提取的完整性"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0017",
+    "candidate_id": "liuyao_candidate_batch_20260714_0017",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "这些概念为古籍内部体系，缺乏现代可操作性",
+      "各注家观点在文本中即有分歧，无法统一为单一规则"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0018",
+    "candidate_id": "liuyao_candidate_batch_20260714_0018",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "Descriptive historical divination only",
+      "Medical validity unverified",
+      "Fragmentation complicates complete interpretation"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0019",
+    "candidate_id": "liuyao_candidate_batch_20260714_0019",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "Not medical advice and not empirically validated",
+      "Text is corrupted and may not be fully legible",
+      "Recommendations are historically conditioned"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0020",
+    "candidate_id": "liuyao_candidate_batch_20260714_0020",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "Cultural and historical in nature",
+      "Geomantic claims lack scientific support",
+      "Text corruption limits accuracy of details"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0021",
+    "candidate_id": "liuyao_candidate_batch_20260714_0021",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "Descriptive of historical beliefs",
+      "Actionable ritual content flagged for local adjudication",
+      "Not a recommendation that supersedes modern medical care"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0022",
+    "candidate_id": "liuyao_candidate_batch_20260714_0022",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "属于古代占卜体系，无实证基础",
+      "原文用字讹误较多，规则细节可能不准确"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0023",
+    "candidate_id": "liuyao_candidate_batch_20260714_0023",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "仅基于所提供文本页321至352的内容归纳，未核对全书其他部分",
+      "文本中部分文字疑似异体字或讹字，影响精确解读"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0024",
+    "candidate_id": "liuyao_candidate_batch_20260714_0024",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "文内未提供作者姓名、朝代或版本信息，无法据此确定其准确归属",
+      "所引书名或有异体写法，对应关系需另行考证"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0025",
+    "candidate_id": "liuyao_candidate_batch_20260714_0025",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "该方法论属于传统术数流派内部主张，与现代科学方法论不具可比性",
+      "不同古籍对同一概念的界定存在差异，本文观点不代表整个卜筮传统"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0026",
+    "candidate_id": "liuyao_candidate_batch_20260714_0026",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "批评内容基于作者个人立场与经验，并非定论",
+      "所批评著作的原文未在本文本中完整呈现，难以独立验证其反驳是否成立"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0027",
+    "candidate_id": "liuyao_candidate_batch_20260714_0027",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "The rule is part of a historical divination framework with no empirical basis.",
+      "Actual weather conditions are influenced by meteorological factors not considered in the text.",
+      "The text itself acknowledges the limitations of single-line interpretation."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0028",
+    "candidate_id": "liuyao_candidate_batch_20260714_0028",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "This is a symbolic divination practice and does not predict actual events.",
+      "Interpretations are highly conditional and may vary between practitioners.",
+      "The historical and cultural context limits its applicability to modern times."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0029",
+    "candidate_id": "liuyao_candidate_batch_20260714_0029",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "The rule is derived from a classical divination manual and lacks scientific validation.",
+      "Individual destiny is complex and cannot be determined solely by hexagram lines.",
+      "Text implies need for additional divinations for precise life-span assessments."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0030",
+    "candidate_id": "liuyao_candidate_batch_20260714_0030",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "This is a divination-based evaluation, not a real assessment of teaching ability.",
+      "The text's rules are traditional and should be interpreted with caution.",
+      "No objective standards are provided for evaluating the teacher."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0031",
+    "candidate_id": "liuyao_candidate_batch_20260714_0031",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "古代农业占卜方法，未考虑现代气象与农艺",
+      "推断具有概率性和象征性"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0032",
+    "candidate_id": "liuyao_candidate_batch_20260714_0032",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "基于传统信仰，非养殖科学指导",
+      "实际养蚕需依赖现代技术和管理"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0033",
+    "candidate_id": "liuyao_candidate_batch_20260714_0033",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "属源文本所载民间占卜歌诀内容",
+      "非实证知识，仅供文本研究，不应作为现实决策依据"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0034",
+    "candidate_id": "liuyao_candidate_batch_20260714_0034",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "皆为源文本单向陈述，未提供验证依据",
+      "表述为框架内规则，不可推广为普遍法则"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0035",
+    "candidate_id": "liuyao_candidate_batch_20260714_0035",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "These rules are prescriptive only within the traditional divination belief system.",
+      "They are not empirically validated and are not suitable for professional or legal decision-making.",
+      "The archaic and corrupted text limits the reliability of the extracted rules.",
+      "Application requires subjective interpretation by a practitioner, leading to variability."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0036",
+    "candidate_id": "liuyao_candidate_batch_20260714_0036",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "No empirical basis supports these directional claims.",
+      "The text's language is ambiguous and may not correctly represent the original method.",
+      "This guidance is not actionable for real-world location of missing persons and should be treated as cultural lore."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0037",
+    "candidate_id": "liuyao_candidate_batch_20260714_0037",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "属于古代术数文献记载，未经现代科学验证",
+      "具体对应关系依赖原文表述，可能存在版本或理解差异",
+      "推断结果不具备普遍适用性或现实确定性"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0038",
+    "candidate_id": "liuyao_candidate_batch_20260714_0038",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "内容源于古代占卜文本，非可靠侦查或寻物方法",
+      "凶吉判断和具体对应关系带有文化主观性",
+      "不应作为现实决策依据"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0039",
+    "candidate_id": "liuyao_candidate_batch_20260714_0039",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "属于历史术数文本内容，无现代实证支持",
+      "解释主观且依赖于具体卦象编排",
+      "不适用于现代居住环境评估或决策"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0040",
+    "candidate_id": "liuyao_candidate_batch_20260714_0040",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "This attribution is specific to the text's divination tradition and may differ in other systems",
+      "The text uses non-standard characters for some trigram names"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0041",
+    "candidate_id": "liuyao_candidate_batch_20260714_0041",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "对‘伏藏’规则的具体推导原理未在文中展开，仅截图了部分排列，不能作为完整断卦法则",
+      "不同卦的伏神排列可能存在差异，未做全局校验"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0042",
+    "candidate_id": "liuyao_candidate_batch_20260714_0042",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "该规则体系源于古代术数，缺乏科学验证",
+      "文本传抄讹误较多，需结合校勘研究使用",
+      "不构成任何决策或健康建议"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0043",
+    "candidate_id": "liuyao_candidate_batch_20260714_0043",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "口诀为术数论断方式，非科学规律",
+      "文本中可能存在遗漏和误抄，理解需谨慎",
+      "仅限文化研究参考，不赋予指导现实行为的效力"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0044",
+    "candidate_id": "liuyao_candidate_batch_20260714_0044",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "该规则仅为古籍占卜体系内部法则，不具备现实预测效力",
+      "文本中的神煞月日对应存在版本异文，原文注释也指出与其他占书（如《卜筮全书》）有出入，建议以文献比对为准",
+      "原文多处字词残缺或写法奇异，判断所依据的卦爻关系可能有误读风险"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0045",
+    "candidate_id": "liuyao_candidate_batch_20260714_0045",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "该体系为传统术数内部自洽的符号语言，未经外部实证检验",
+      "文本多处提醒‘不可一概而论’‘万无一失’，承认其局限性",
+      "不能将其中断语视为对现实事件的确定性预测"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0046",
+    "candidate_id": "liuyao_candidate_batch_20260714_0046",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "六亲五行生克关系是术数内部约定，非自然规律表述",
+      "文本各章对同一六亲的吉凶定性可能依据占题而调整",
+      "未提供现代逻辑或实证框架支撑"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0047",
+    "candidate_id": "liuyao_candidate_batch_20260714_0047",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "神煞系统流派众多，原文仅代表一种整理文本",
+      "吉凶属性为象征性赋值，无客观测量依据",
+      "同一神煞在不同章节的表述可能存在细微差异"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0048",
+    "candidate_id": "liuyao_candidate_batch_20260714_0048",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "该规则源自古籍残篇，缺乏完整验证",
+      "属古代术数范畴，不适用于现代科学决策",
+      "应结合其他权威典籍及上下文谨慎使用"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0049",
+    "candidate_id": "liuyao_candidate_batch_20260714_0049",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "此为传统占卜说法，未经气象科学验证",
+      "文本残缺可能导致规则理解偏差",
+      "不应用于实际天气预报"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0050",
+    "candidate_id": "liuyao_candidate_batch_20260714_0050",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "This rule is a descriptive summary of the source text's divination system, not a verified meteorological rule.",
+      "The source text uses variant characters and may be ambiguous."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0051",
+    "candidate_id": "liuyao_candidate_batch_20260714_0051",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "此为古籍占卜文本的内部规则，不具实证效力",
+      "语词生僻、断句模糊，规则的具体适用难以精确还原",
+      "涉及疾病与死亡判断，应仅作文献研究而非操作指引"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0052",
+    "candidate_id": "liuyao_candidate_batch_20260714_0052",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "此为古籍术数之叙述性规则，不具现代实证效力",
+      "文字讹误可能影响规则之准确表述"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0053",
+    "candidate_id": "liuyao_candidate_batch_20260714_0053",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "吉凶判断为传统占验体系之内在逻辑，非现实因果关系",
+      "断语须结合具体卦例与起卦时空，无法作为普遍事实或行为指导"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0054",
+    "candidate_id": "liuyao_candidate_batch_20260714_0054",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "皆为古籍占例之叙述性结论，不具预测实证价值",
+      "涉及生命与健康的占断描述为框架性、条件性表达，不应作为实际医疗或生活决策依据"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0055",
+    "candidate_id": "liuyao_candidate_batch_20260714_0055",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "杂占断法依古籍口诀而成，逻辑属传统术数体系而非科学方法",
+      "成事与否之判断受众多人为与客观因素影响，文本断语不能作为现实结果之保证"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0056",
+    "candidate_id": "liuyao_candidate_batch_20260714_0056",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "Not medical advice; traditional divination only.",
+      "Source text is archaic and partly obscure.",
+      "Outcome is conditional and unverified."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0057",
+    "candidate_id": "liuyao_candidate_batch_20260714_0057",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "The associations are traditional beliefs, not verified facts",
+      "The text is partially illegible due to character corruption",
+      "Ritual actions described are for cultural context, not endorsed"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0058",
+    "candidate_id": "liuyao_candidate_batch_20260714_0058",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "此为占卜术数规则，非医学判断",
+      "具体判定尚需结合日月、动爻等多种因素"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0059",
+    "candidate_id": "liuyao_candidate_batch_20260714_0059",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "此为古代六亲分类法，不具有现代通用性",
+      "原文对部分关系的用神选取存在注释分歧"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0060",
+    "candidate_id": "liuyao_candidate_batch_20260714_0060",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "This rule belongs to a specific divination school and is not an established general principle.",
+      "Its predictive value is unverified and it is unsuitable as professional guidance.",
+      "The text itself notes that many matters have no clear auspicious or inauspicious outcome."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0061",
+    "candidate_id": "liuyao_candidate_batch_20260714_0061",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "The symbolic meanings are culturally specific and not empirically validated.",
+      "Same spirit can indicate opposite outcomes depending on context, so the rule is not deterministic.",
+      "This is descriptive of a traditional practice, not an actionable instruction for decision-making."
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0062",
+    "candidate_id": "liuyao_candidate_batch_20260714_0062",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "系传统术数规则表述，非经过实证检验的普遍规律",
+      "依据单一案例事后解说，存在过度拟合风险"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0063",
+    "candidate_id": "liuyao_candidate_batch_20260714_0063",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "为作者个人教学主张，无客观验证标准",
+      "不同术数流派对此要求不一"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0064",
+    "candidate_id": "liuyao_candidate_batch_20260714_0064",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "为术数推断结论，不构成职业决策建议",
+      "案例反馈为单一客户函测记录"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0065",
+    "candidate_id": "liuyao_candidate_batch_20260714_0065",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "仅为传统术数经验总结，不具备科学验证性",
+      "个案化特征明显，难以推广为普遍规则",
+      "所含人事判断属主观推测，不构成确定结论"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0066",
+    "candidate_id": "liuyao_candidate_batch_20260714_0066",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "作者仅在某些案例中体现该倾向，未系统化",
+      "此类伦理规则属于传统从业者自觉，无统一标准",
+      "不构成法律或心理咨询建议"
+    ]
+  },
+  {
+    "decision_id": "liuyao_review_liuyao_candidate_batch_20260714_0067",
+    "candidate_id": "liuyao_candidate_batch_20260714_0067",
+    "decision": "approved",
+    "reviewer": "liuyao_batch_20260714_review_pipeline",
+    "reviewed_at": "2026-08-19",
+    "rationale": "Passes the deterministic liuyao promotion gates: tranche-bound page locators, governed namespace family mapping, no prohibited absolute wording, safety and high-risk classifiers passed, and no batch-internal signature duplicate.",
+    "approval_limitations": [
+      "该结论仅为本书作者个人经验的总结，未经系统验证",
+      "六爻断卦体系本身缺乏可重复检验的客观标准",
+      "不同作者对同一卦象的判断方法可能存在根本差异"
+    ]
+  }
+]
