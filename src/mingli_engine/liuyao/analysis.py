@@ -18,7 +18,9 @@ from mingli_engine.liuyao.knowledge_activation import (
     LiuyaoEvidenceCitation,
     LiuyaoEvidenceIndex,
     build_liuyao_evidence_index,
+    build_liuyao_matter_category_index,
     citation_from_unit,
+    resolve_matter_category,
 )
 from mingli_engine.liuyao.result_models import LiuyaoChart
 
@@ -258,6 +260,7 @@ def analyze_liuyao_chart(
     *,
     config: AnalysisConfig | None = None,
     evidence_index: LiuyaoEvidenceIndex | None = None,
+    matter_category: str | None = None,
 ) -> LiuyaoAnalysis:
     """Produce governed structural observations for the eight families.
 
@@ -265,14 +268,27 @@ def analyze_liuyao_chart(
     from the frozen knowledge ledgers (failing closed on corruption). Each
     computed family with governed evidence carries the full citations of its
     family; observation text and family statuses are unchanged from V1.
+
+    The optional ``matter_category`` activates the category_judgment family:
+    a supported category yields a computed observation carrying that
+    category's governed citations; a high-risk category is refused through
+    the existing safety mechanism before any analysis; an unknown category
+    raises an input validation error. When omitted, the family keeps its V1
+    ``not_computed`` behavior.
     """
     if not isinstance(chart, LiuyaoChart):
         raise TypeError("analysis requires a LiuyaoChart")
+    gate = resolve_matter_category(matter_category)
     config = config or load_analysis_config()
     if evidence_index is None:
         evidence_index = build_liuyao_evidence_index()
     if not isinstance(evidence_index, LiuyaoEvidenceIndex):
         raise TypeError("evidence_index must be a LiuyaoEvidenceIndex")
+    category_index = (
+        build_liuyao_matter_category_index(evidence_index)
+        if gate.status == "accepted"
+        else None
+    )
     observations: dict[str, tuple[str, ...]] = {
         "yong_shen_selection": _yong_shen_selection(chart),
         "shi_ying_relation": _shi_ying_relation(chart),
@@ -298,16 +314,40 @@ def analyze_liuyao_chart(
             )
             continue
         if family.rule_family == "category_judgment":
+            if gate.status != "accepted":
+                family_observations.append(
+                    LiuyaoFamilyObservation(
+                        rule_family=family.rule_family,
+                        status="not_computed",
+                        headline=family.headline,
+                        observations=(
+                            "V1 未提供事项类别输入，分类占断不启用。",
+                        ),
+                        limitations=config.shared_limitations,
+                        evidence_note=config.evidence_pending_note,
+                    )
+                )
+                continue
+            assert category_index is not None
+            assert gate.category is not None
+            category_units = category_index.units_for(gate.category)
+            category_citations = tuple(
+                citation_from_unit(unit) for unit in category_units
+            )
             family_observations.append(
                 LiuyaoFamilyObservation(
                     rule_family=family.rule_family,
-                    status="not_computed",
+                    status="computed",
                     headline=family.headline,
                     observations=(
-                        "V1 未提供事项类别输入，分类占断不启用。",
+                        f"所问事项类别：{gate.label}。",
+                        f"本族按事项类别激活{len(category_citations)}条"
+                        "已晋升的分类占断证据，仅呈现传统文献信号，"
+                        "不作现实预测。",
                     ),
                     limitations=config.shared_limitations,
-                    evidence_note=config.evidence_pending_note,
+                    evidence_note=config.evidence_activated_note,
+                    evidence_citations=category_citations,
                 )
             )
             continue

@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 import re
 
+from mingli_engine.liuyao.constants import LIUYAO_MATTER_CATEGORIES
+
 CAST_MODES: tuple[str, ...] = ("explicit", "time", "number")
 _DATETIME_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$")
 
@@ -38,6 +40,7 @@ class LiuyaoCastRequest:
     lines: tuple[LiuyaoLineInput, ...] = ()
     numbers: tuple[int, ...] = ()
     request_id: str | None = None
+    matter_category: str | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "lines", tuple(self.lines))
@@ -51,6 +54,11 @@ class LiuyaoCastRequest:
             not isinstance(self.request_id, str) or len(self.request_id) > 128
         ):
             raise ValueError("request_id must be a short string or null")
+        if self.matter_category is not None:
+            if not isinstance(self.matter_category, str):
+                raise TypeError("matter_category must be a string or null")
+            if self.matter_category not in LIUYAO_MATTER_CATEGORIES:
+                raise ValueError("unknown liuyao matter category")
         if self.cast_mode == "explicit":
             if len(self.lines) != 6:
                 raise ValueError("explicit casting requires exactly six lines")

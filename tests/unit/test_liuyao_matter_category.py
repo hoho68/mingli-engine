@@ -10,6 +10,13 @@ from __future__ import annotations
 import pytest
 
 from mingli_engine.high_risk import REFUSAL_MESSAGE
+from mingli_engine.liuyao.analysis import (
+    LiuyaoAnalysis,
+    LiuyaoFamilyObservation,
+    analyze_liuyao_chart,
+    load_analysis_config,
+)
+from mingli_engine.liuyao.casting import assemble_liuyao_chart
 from mingli_engine.liuyao.constants import (
     LIUYAO_HIGH_RISK_MATTER_CATEGORY_LABELS,
     LIUYAO_MATTER_CATEGORIES,
@@ -28,6 +35,13 @@ from mingli_engine.liuyao.knowledge_activation import (
     build_liuyao_evidence_index,
     build_liuyao_matter_category_index,
     resolve_matter_category,
+)
+from mingli_engine.liuyao.report import build_liuyao_report
+from mingli_engine.liuyao.report_markdown import render_liuyao_markdown
+from mingli_engine.liuyao.result_models import (
+    LiuyaoCastRequest,
+    LiuyaoChart,
+    LiuyaoLineInput,
 )
 
 EXPECTED_CATEGORY_LABELS = {
@@ -194,3 +208,179 @@ def test_resolve_matter_category_rejects_unknown_categories() -> None:
     for bad in ("astrology", "", "天气晴雨", "WEATHER", " weather", 123, True):
         with pytest.raises(UnknownLiuyaoMatterCategoryError):
             resolve_matter_category(bad)
+
+
+def _chart(lines: tuple[int, ...], moving: tuple[int, ...] = ()) -> LiuyaoChart:
+    return assemble_liuyao_chart(
+        LiuyaoCastRequest(
+            cast_mode="explicit",
+            cast_datetime="1990-02-28T08:30",
+            lines=tuple(
+                LiuyaoLineInput(
+                    position=index + 1,
+                    yin_yang="yang" if value else "yin",
+                    moving=(index + 1) in moving,
+                )
+                for index, value in enumerate(lines)
+            ),
+        )
+    )
+
+
+def _by_family(analysis: LiuyaoAnalysis) -> dict[str, LiuyaoFamilyObservation]:
+    return {item.rule_family: item for item in analysis.family_observations}
+
+
+def test_cast_request_accepts_optional_matter_category() -> None:
+    base = dict(
+        cast_mode="time",
+        cast_datetime="1990-02-28T08:30",
+    )
+    assert LiuyaoCastRequest(**base).matter_category is None
+    assert (
+        LiuyaoCastRequest(**base, matter_category="weather").matter_category
+        == "weather"
+    )
+    assert (
+        LiuyaoCastRequest(**base, matter_category=None).matter_category is None
+    )
+
+
+def test_cast_request_rejects_unknown_matter_category() -> None:
+    base = dict(
+        cast_mode="time",
+        cast_datetime="1990-02-28T08:30",
+    )
+    with pytest.raises(ValueError, match="matter category"):
+        LiuyaoCastRequest(**base, matter_category="astrology")
+    with pytest.raises(TypeError):
+        LiuyaoCastRequest(**base, matter_category=7)
+
+
+def test_analysis_without_category_keeps_v1_not_computed() -> None:
+    config = load_analysis_config()
+    chart = _chart((1, 1, 1, 1, 0, 1), moving=(4,))
+    default_run = _by_family(analyze_liuyao_chart(chart))["category_judgment"]
+    explicit_none = _by_family(
+        analyze_liuyao_chart(chart, matter_category=None)
+    )["category_judgment"]
+    for observation in (default_run, explicit_none):
+        assert observation.status == "not_computed"
+        assert observation.observations == (
+            "V1 未提供事项类别输入，分类占断不启用。",
+        )
+        assert observation.evidence_citations == ()
+        assert observation.evidence_note == config.evidence_pending_note
+    assert default_run == explicit_none
+
+
+def test_analysis_with_supported_category_computes_citations() -> None:
+    config = load_analysis_config()
+    chart = _chart((1, 1, 1, 1, 0, 1), moving=(4,))
+    analysis = analyze_liuyao_chart(chart, matter_category="weather")
+    families = _by_family(analysis)
+    observation = families["category_judgment"]
+    assert observation.status == "computed"
+    assert observation.observations == (
+        "所问事项类别：天气晴雨。",
+        "本族按事项类别激活4条已晋升的分类占断证据，"
+        "仅呈现传统文献信号，不作现实预测。",
+    )
+    assert observation.evidence_note == config.evidence_activated_note
+    citation_ids = tuple(
+        citation.evidence_id for citation in observation.evidence_citations
+    )
+    assert citation_ids == EXPECTED_CATEGORY_EVIDENCE["weather"]
+    for citation in observation.evidence_citations:
+        assert citation.rule_family == "category_judgment"
+        assert citation.source_id.startswith("liuyao_source_batch_20260714_")
+        assert citation.source_ref.startswith("page:")
+        assert citation.limitations
+    legacy = _by_family(analyze_liuyao_chart(chart))
+    for family, item in legacy.items():
+        if family == "category_judgment":
+            continue
+        current = families[family]
+        assert current.status == item.status, family
+        assert current.observations == item.observations, family
+        assert current.evidence_citations == item.evidence_citations, family
+
+
+def test_analysis_every_supported_category_has_ledger_citations() -> None:
+    chart = _chart((0, 1, 1, 1, 1, 1))
+    for category, expected_ids in EXPECTED_CATEGORY_EVIDENCE.items():
+        observation = _by_family(
+            analyze_liuyao_chart(chart, matter_category=category)
+        )["category_judgment"]
+        assert observation.status == "computed", category
+        citation_ids = tuple(
+            citation.evidence_id for citation in observation.evidence_citations
+        )
+        assert citation_ids == expected_ids, category
+        assert category and observation.observations[0].endswith("。")
+
+
+def test_analysis_refuses_high_risk_category_before_analysis() -> None:
+    chart = _chart((1, 1, 1, 1, 0, 1), moving=(4,))
+    for category in EXPECTED_HIGH_RISK_CATEGORY_LABELS:
+        with pytest.raises(RefusedLiuyaoMatterCategoryError) as excinfo:
+            analyze_liuyao_chart(chart, matter_category=category)
+        assert str(excinfo.value) == REFUSAL_MESSAGE
+
+
+def test_analysis_rejects_unknown_category() -> None:
+    chart = _chart((1, 1, 1, 1, 0, 1), moving=(4,))
+    with pytest.raises(UnknownLiuyaoMatterCategoryError):
+        analyze_liuyao_chart(chart, matter_category="astrology")
+
+
+def test_category_analysis_is_deterministic() -> None:
+    chart = _chart((1, 1, 1, 1, 0, 1), moving=(4,))
+    first = analyze_liuyao_chart(chart, matter_category="agriculture")
+    second = analyze_liuyao_chart(chart, matter_category="agriculture")
+    assert first == second
+
+
+def test_category_analysis_with_empty_index_fails_closed() -> None:
+    chart = _chart((1, 1, 1, 1, 0, 1), moving=(4,))
+    with pytest.raises(LiuyaoKnowledgeError):
+        analyze_liuyao_chart(
+            chart,
+            matter_category="weather",
+            evidence_index=_EMPTY_INDEX,
+        )
+
+
+def test_report_renders_category_section_with_citations() -> None:
+    chart = _chart((1, 1, 1, 1, 0, 1), moving=(4,))
+    report = build_liuyao_report(
+        analyze_liuyao_chart(chart, matter_category="weather")
+    )
+    markdown = render_liuyao_markdown(report)
+    assert "所问事项类别：天气晴雨。" in markdown
+    assert "（已观察）" in markdown
+    for evidence_id in EXPECTED_CATEGORY_EVIDENCE["weather"]:
+        assert f"证据引用：{evidence_id}" in markdown
+    assert "liuyao_source_batch_20260714_001" in markdown
+    assert "page:129-160" in markdown
+
+
+def test_report_boundary_holds_for_every_supported_category() -> None:
+    chart = _chart((1, 1, 1, 1, 0, 1), moving=(4,))
+    for category in EXPECTED_CATEGORY_EVIDENCE:
+        report = build_liuyao_report(
+            analyze_liuyao_chart(chart, matter_category=category)
+        )
+        markdown = render_liuyao_markdown(report)
+        for marker in ("必定", "注定", "一定会", "死定"):
+            assert marker not in markdown
+
+
+def test_report_without_category_is_unchanged() -> None:
+    chart = _chart((1, 1, 1, 1, 0, 1), moving=(4,))
+    legacy = render_liuyao_markdown(build_liuyao_report(analyze_liuyao_chart(chart)))
+    explicit_none = render_liuyao_markdown(
+        build_liuyao_report(analyze_liuyao_chart(chart, matter_category=None))
+    )
+    assert legacy == explicit_none
+    assert "未提供事项类别输入" in legacy
