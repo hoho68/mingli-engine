@@ -63,9 +63,9 @@ def test_markdown_renders_full_citation_lines() -> None:
     citation_lines = [
         line for line in text.splitlines() if line.startswith("- 证据引用：")
     ]
-    # 6 + 2 + 5 + 3 + 4 + 2 + 1 activated citations across the seven
+    # 9 + 3 + 5 + 3 + 4 + 2 + 4 activated citations across the seven
     # evidence families (category_judgment stays not_computed by default).
-    assert len(citation_lines) == 23
+    assert len(citation_lines) == 30
     for line in citation_lines:
         assert "liuyao_evidence_batch_20260714_" in line
         assert "liuyao_source_batch_20260714_" in line

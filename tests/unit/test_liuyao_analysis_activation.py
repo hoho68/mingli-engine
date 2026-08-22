@@ -34,13 +34,13 @@ _EMPTY_INDEX = LiuyaoEvidenceIndex(
 )
 
 EXPECTED_CITATION_COUNTS = {
-    "yong_shen_selection": 6,
-    "shi_ying_relation": 2,
+    "yong_shen_selection": 9,
+    "shi_ying_relation": 3,
     "moving_line_dynamics": 5,
     "six_spirits_attachment": 3,
     "month_day_strength": 4,
     "void_break_state": 2,
-    "yingqi_timing": 1,
+    "yingqi_timing": 4,
     "category_judgment": 0,
 }
 
@@ -126,16 +126,29 @@ def test_shi_ying_relation_combines_chart_computation_with_citations() -> None:
     assert "世爻居" in text and "应爻居" in text
     assert "世应五行关系" in text
     citations = shi_ying.evidence_citations
-    assert len(citations) == 2
+    assert len(citations) == 3
     assert {citation.source_ref for citation in citations} == {
         "page:545-576",
         "page:705-736",
+        "page:332",
     }
     assert all(
         citation.source_id == "liuyao_source_batch_20260714_001"
         for citation in citations
     )
     assert shi_ying.evidence_note == config.evidence_activated_note
+
+
+def test_yong_shen_selection_citations_include_targeted_classics_pages() -> None:
+    analysis = analyze_liuyao_chart(_chart((1, 1, 1, 1, 0, 1), moving=(4,)))
+    yong_shen = _by_family(analysis)["yong_shen_selection"]
+    citations = yong_shen.evidence_citations
+    assert len(citations) == 9
+    assert {citation.source_ref for citation in citations} >= {
+        "page:28",
+        "page:333",
+        "page:501",
+    }
 
 
 def test_yingqi_timing_stays_degraded_with_citations_and_missing_inputs() -> None:
@@ -147,7 +160,12 @@ def test_yingqi_timing_stays_degraded_with_citations_and_missing_inputs() -> Non
     assert "用神" in text
     assert "降级" in text
     citations = yingqi.evidence_citations
-    assert len(citations) == 1
+    assert len(citations) == 4
+    assert {citation.source_ref for citation in citations} >= {
+        "page:71",
+        "page:493",
+        "page:498",
+    }
     assert citations[0].rule_family == "yingqi_timing"
     assert citations[0].source_id == "liuyao_source_batch_20260714_002"
     assert citations[0].source_ref == "page:33-64"

@@ -29,8 +29,8 @@ def test_liuyao_report_emits_governed_evidence_citations() -> None:
     citation_lines = [
         line for line in markdown.splitlines() if line.startswith("- 证据引用：")
     ]
-    # 6 + 2 + 5 + 3 + 4 + 2 + 1 citations across the seven evidence families.
-    assert len(citation_lines) == 23
+    # 9 + 3 + 5 + 3 + 4 + 2 + 4 citations across the seven evidence families.
+    assert len(citation_lines) == 30
     for line in citation_lines:
         assert "liuyao_evidence_batch_20260714_" in line
         assert "liuyao_source_batch_20260714_" in line
@@ -54,13 +54,13 @@ def test_liuyao_report_citation_families_match_frozen_distribution() -> None:
             family = line.split("（", 1)[1].split("，", 1)[0]
             counts[family] = counts.get(family, 0) + 1
     assert counts == {
-        "yong_shen_selection": 6,
-        "shi_ying_relation": 2,
+        "yong_shen_selection": 9,
+        "shi_ying_relation": 3,
         "moving_line_dynamics": 5,
         "six_spirits_attachment": 3,
         "month_day_strength": 4,
         "void_break_state": 2,
-        "yingqi_timing": 1,
+        "yingqi_timing": 4,
     }
     # category_judgment without a matter category keeps the pending note.
     assert "证据链尚未晋升" in result.stdout

@@ -20,13 +20,13 @@ from mingli_engine.liuyao.knowledge_activation import (
 )
 
 EXPECTED_FAMILY_COUNTS = {
-    "yong_shen_selection": 6,
-    "shi_ying_relation": 2,
+    "yong_shen_selection": 9,
+    "shi_ying_relation": 3,
     "moving_line_dynamics": 5,
     "six_spirits_attachment": 3,
     "month_day_strength": 4,
     "void_break_state": 2,
-    "yingqi_timing": 1,
+    "yingqi_timing": 4,
     "category_judgment": 47,
 }
 
@@ -117,7 +117,7 @@ class TestBuildEvidenceIndex:
         index = build_liuyao_evidence_index()
         counts = {family: len(units) for family, units in index.family_evidence}
         assert counts == EXPECTED_FAMILY_COUNTS
-        assert sum(counts.values()) == 70
+        assert sum(counts.values()) == 77
 
     def test_family_lookup_returns_ledger_order(self) -> None:
         index = build_liuyao_evidence_index()
@@ -161,7 +161,7 @@ class TestValidateEvidenceActivation:
     def test_summary_matches_frozen_facts(self) -> None:
         summary = validate_liuyao_evidence_activation()
         assert isinstance(summary, LiuyaoActivationSummary)
-        assert summary.total_count == 70
+        assert summary.total_count == 77
         assert dict(summary.family_counts) == EXPECTED_FAMILY_COUNTS
         assert tuple(family for family, _ in summary.family_counts) == (
             LIUYAO_RULE_FAMILIES
