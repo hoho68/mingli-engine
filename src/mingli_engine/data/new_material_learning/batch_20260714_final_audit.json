@@ -1,8 +1,8 @@
 {
   "authorization_ledger_sha256": "a23de2ee1325029966686ca8d60bd6ee21c43084ac43291d86fc6a5833f3b1af",
   "batch_id": "batch_20260714",
-  "command_evidence_sha256": "84ec7eab0cb93f2de8acc1d571afef48f6962c36918b614900fb24fec5166520",
-  "completed_at": "2026-08-22T18:07:04Z",
+  "command_evidence_sha256": "7f500acc1054bab54b9546f37f0af4ad693d8f7db7b97722dff9148489992aaf",
+  "completed_at": "2026-08-22T19:11:11Z",
   "file_results_sha256": "2ad8fc1e0587cdf5597a2f9d353d9c53c0ce3078cbd52d5cd4b24ecba5cf8414",
   "manifest_sha256": "dcec5b55971905f8d48a80faa2e685cea1a5f880613a7c22e91fe37720c8cea3",
   "model_runs_sha256": "18a1e869ecb76d254718c3bcc698f5ead66398cf3884c793f87b19dc5b462071",
